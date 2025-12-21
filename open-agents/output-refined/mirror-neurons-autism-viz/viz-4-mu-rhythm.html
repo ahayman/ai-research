@@ -1,0 +1,146 @@
+<!-- Visualization: Mu Rhythm Suppression -->
+<!-- Generated: 2025-12-20 -->
+<!-- Type: bar-chart -->
+<!-- Source: Fox et al., 2016 meta-analysis -->
+
+<figure class="data-viz" id="viz-mu-rhythm">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 700px; margin: 0 auto; padding: 20px;">
+    <h3 style="text-align: center; color: #1e293b; margin-bottom: 10px; font-family: system-ui, -apple-system, sans-serif;">Mu Rhythm Suppression During Action Observation</h3>
+    <p style="text-align: center; color: #64748b; margin-bottom: 25px; font-size: 0.9rem;">Lower values indicate greater mirror neuron system activation</p>
+    <canvas id="chart-mu-rhythm"></canvas>
+  </div>
+
+  <div style="max-width: 700px; margin: 20px auto 0; padding: 15px; background: #f1f5f9; border-radius: 10px;">
+    <h4 style="color: #334155; margin: 0 0 10px; font-size: 0.95rem;">What is Mu Rhythm?</h4>
+    <p style="color: #475569; font-size: 0.85rem; margin: 0; line-height: 1.5;">
+      Mu rhythm (8-13 Hz) is an EEG brain wave pattern observed over the motor cortex. When mirror neurons are active (during both action execution AND observation), mu rhythm is suppressed. This suppression serves as a key marker for mirror neuron system activation in human research.
+    </p>
+  </div>
+
+  <figcaption style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #666; font-family: system-ui, -apple-system, sans-serif;">
+    <strong>Figure 4:</strong> Mu rhythm power during different conditions - suppression indicates MNS activation
+    <span style="display: block; font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Source: Fox et al., 2016 meta-analysis of 85 mu suppression studies</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-mu-rhythm').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Rest Baseline', 'Watching Hand Action', 'Performing Hand Action'],
+      datasets: [{
+        label: 'Mu Rhythm Power (%)',
+        data: [100, 65, 55],
+        backgroundColor: [
+          'rgba(148, 163, 184, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(16, 185, 129, 0.8)'
+        ],
+        borderColor: [
+          'rgba(100, 116, 139, 1)',
+          'rgba(37, 99, 235, 1)',
+          'rgba(5, 150, 105, 1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+        barPercentage: 0.7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = context.parsed.y;
+              const suppression = 100 - value;
+              return [
+                `Mu Power: ${value}%`,
+                `Suppression: ${suppression}%`
+              ];
+            }
+          },
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont: { size: 13 },
+          padding: 12,
+          cornerRadius: 8
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 120,
+          title: {
+            display: true,
+            text: 'Mu Rhythm Power (% of baseline)',
+            font: { size: 13, weight: '500' },
+            color: '#475569'
+          },
+          ticks: {
+            callback: function(value) {
+              return value + '%';
+            },
+            font: { size: 12 },
+            color: '#64748b'
+          },
+          grid: {
+            color: 'rgba(148, 163, 184, 0.2)'
+          }
+        },
+        x: {
+          ticks: {
+            font: { size: 12, weight: '500' },
+            color: '#334155'
+          },
+          grid: {
+            display: false
+          }
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeOutQuart'
+      }
+    },
+    plugins: [{
+      id: 'annotationPlugin',
+      afterDraw: function(chart) {
+        const ctx = chart.ctx;
+        const meta = chart.getDatasetMeta(0);
+
+        meta.data.forEach((bar, index) => {
+          const value = chart.data.datasets[0].data[index];
+          const suppression = 100 - value;
+          if (suppression > 0) {
+            ctx.save();
+            ctx.fillStyle = '#ef4444';
+            ctx.font = 'bold 12px system-ui';
+            ctx.textAlign = 'center';
+            ctx.fillText(`-${suppression}%`, bar.x, bar.y - 8);
+            ctx.restore();
+          }
+        });
+      }
+    }]
+  });
+})();
+</script>
