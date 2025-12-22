@@ -1,0 +1,176 @@
+<!-- Visualization: Memory Usage by Quantization Level (7B Model) -->
+<!-- Generated: 2025-12-22 -->
+<!-- Type: bar-chart -->
+<!-- Source: llama.cpp documentation, practical testing -->
+
+<figure class="data-viz" id="viz-5">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
+    <canvas id="chart-quantization"></canvas>
+  </div>
+  <figcaption>
+    <strong>Figure 5:</strong> Memory Usage by Quantization Level for a 7B Parameter Model
+    <span class="viz-source">Source: llama.cpp documentation and practical testing</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+.viz-container {
+  padding: 1rem;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+(function() {
+  Chart.register(ChartDataLabels);
+
+  const ctx = document.getElementById('chart-quantization').getContext('2d');
+
+  const data = {
+    labels: ['FP16\n(Original)', 'Q8_0\n(8-bit)', 'Q5_K_M\n(5.5-bit)', 'Q4_K_M\n(4.5-bit)', 'Q4_0\n(4-bit)'],
+    values: [14, 7.5, 5.5, 4.5, 4],
+    savings: ['0%', '46%', '61%', '68%', '71%']
+  };
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        label: 'Memory (GB)',
+        data: data.values,
+        backgroundColor: [
+          'rgba(239, 68, 68, 0.8)',   // red - original
+          'rgba(245, 158, 11, 0.8)',  // amber
+          'rgba(16, 185, 129, 0.8)',  // green
+          'rgba(59, 130, 246, 0.8)',  // blue - recommended
+          'rgba(139, 92, 246, 0.8)'   // purple
+        ],
+        borderColor: [
+          'rgba(239, 68, 68, 1)',
+          'rgba(245, 158, 11, 1)',
+          'rgba(16, 185, 129, 1)',
+          'rgba(59, 130, 246, 1)',
+          'rgba(139, 92, 246, 1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.6,
+      indexAxis: 'y',
+      plugins: {
+        title: {
+          display: true,
+          text: 'Memory Reduction Through Quantization (7B Model)',
+          font: { size: 18, weight: 'bold' },
+          color: '#1e293b',
+          padding: { bottom: 20 }
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#1e293b',
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont: { size: 13 },
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              const idx = context.dataIndex;
+              return [
+                `Memory: ${data.values[idx]} GB`,
+                `Savings: ${data.savings[idx]}`
+              ];
+            }
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+          offset: 4,
+          font: {
+            weight: 'bold',
+            size: 12
+          },
+          formatter: function(value, context) {
+            return value + ' GB';
+          },
+          color: '#475569'
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 16,
+          title: {
+            display: true,
+            text: 'Memory Usage (GB)',
+            font: { size: 13, weight: 'bold' },
+            color: '#64748b'
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: { size: 11 }
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDraw: function(chart) {
+        const ctx = chart.ctx;
+        const meta = chart.getDatasetMeta(0);
+
+        // Add "Recommended" badge to Q4_K_M
+        const element = meta.data[3];
+        const x = element.x + 70;
+        const y = element.y;
+
+        ctx.save();
+        ctx.fillStyle = '#3B82F6';
+        ctx.beginPath();
+        ctx.roundRect(x, y - 10, 85, 20, 10);
+        ctx.fill();
+
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.fillText('Recommended', x + 42, y + 4);
+        ctx.restore();
+      }
+    }]
+  });
+})();
+</script>

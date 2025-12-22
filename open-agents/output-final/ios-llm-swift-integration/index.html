@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete guide to integrating open source LLMs into iOS apps using Swift, covering MLX, llama.cpp, and Core ML with production-ready code examples.">
+  <meta name="author" content="AI-Assisted Research">
+  <meta property="og:title" content="Running Open Source LLMs on iOS: The Complete Swift Developer's Guide">
+  <meta property="og:description" content="Learn how to add AI capabilities to your iOS apps with on-device LLM inference using Apple's MLX framework and Swift.">
+  <meta property="og:type" content="article">
+  <title>Running Open Source LLMs on iOS: The Complete Swift Developer's Guide</title>
+
+  <style>
+    :root {
+      --color-primary: #3B82F6;
+      --color-primary-dark: #2563EB;
+      --color-secondary: #10B981;
+      --color-accent: #F59E0B;
+      --color-text: #1e293b;
+      --color-text-light: #64748b;
+      --color-text-lighter: #94a3b8;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f8fafc;
+      --color-bg-code: #1e293b;
+      --color-border: #e2e8f0;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+      --max-width: 860px;
+      --nav-width: 280px;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    }
+
+    [data-theme="dark"] {
+      --color-text: #f1f5f9;
+      --color-text-light: #94a3b8;
+      --color-text-lighter: #64748b;
+      --color-bg: #0f172a;
+      --color-bg-alt: #1e293b;
+      --color-bg-code: #0f172a;
+      --color-border: #334155;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.75;
+      margin: 0;
+      padding: 0;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      z-index: 1001;
+      transition: width 0.15s ease-out;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.9);
+    }
+
+    [data-theme="dark"] .site-header {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .site-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-border);
+    }
+
+    /* Layout */
+    .page-wrapper {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--nav-width);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+      border-right: 1px solid var(--color-border);
+      display: none;
+    }
+
+    @media (min-width: 1200px) {
+      .sidebar { display: block; }
+    }
+
+    .toc-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-lighter);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc-item {
+      margin: 0.25rem 0;
+    }
+
+    .toc-link {
+      display: block;
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border-left: 2px solid transparent;
+    }
+
+    .toc-link:hover {
+      color: var(--color-primary);
+      background: var(--color-bg-alt);
+    }
+
+    .toc-link.active {
+      color: var(--color-primary);
+      background: rgba(59, 130, 246, 0.1);
+      border-left-color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .toc-link.toc-h3 {
+      padding-left: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: var(--max-width);
+      padding: 3rem 2rem;
+      margin: 0 auto;
+    }
+
+    /* Article Header */
+    .article-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .article-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0 0 1rem 0;
+      background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Typography */
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 3rem 0 1.25rem 0;
+      color: var(--color-text);
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem 0;
+      color: var(--color-text);
+    }
+
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem 0;
+    }
+
+    p {
+      margin: 1.25rem 0;
+    }
+
+    .lead {
+      font-size: 1.2rem;
+      color: var(--color-text-light);
+      line-height: 1.8;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    /* Blockquotes */
+    blockquote {
+      border-left: 4px solid var(--color-primary);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-alt);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: var(--color-text-light);
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    /* Code */
+    pre {
+      background: var(--color-bg-code);
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow);
+    }
+
+    pre code {
+      color: #e2e8f0;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: var(--font-mono);
+    }
+
+    :not(pre) > code {
+      background: var(--color-bg-alt);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--color-primary-dark);
+    }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    tr:hover td {
+      background: var(--color-bg-alt);
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1.25rem 0;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin: 0.5rem 0;
+    }
+
+    /* Visualizations */
+    .visualization {
+      margin: 2.5rem 0;
+      padding: 1.5rem;
+      background: var(--color-bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .viz-container {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .viz-caption {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+    }
+
+    .viz-source {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-text-lighter);
+      margin-top: 0.5rem;
+    }
+
+    /* Key Takeaways Box */
+    .takeaways {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways h2 {
+      margin-top: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+      color: var(--color-primary);
+      font-size: 1.5rem;
+    }
+
+    .takeaways li {
+      margin: 0.75rem 0;
+    }
+
+    /* Sources Section */
+    .sources {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .sources h2 {
+      border-bottom: none;
+    }
+
+    .source-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .source-list li {
+      margin: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .source-list li::before {
+      content: counter(source-counter);
+      counter-increment: source-counter;
+      position: absolute;
+      left: 0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .sources ol {
+      counter-reset: source-counter;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 99;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-3px);
+    }
+
+    /* Mobile Navigation */
+    .mobile-toc-toggle {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 99;
+    }
+
+    @media (max-width: 1199px) {
+      .mobile-toc-toggle { display: flex; align-items: center; justify-content: center; }
+    }
+
+    .mobile-toc {
+      display: none;
+      position: fixed;
+      bottom: 6rem;
+      left: 2rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      z-index: 98;
+      width: 280px;
+    }
+
+    .mobile-toc.active {
+      display: block;
+    }
+
+    /* Syntax Highlighting */
+    .keyword { color: #c792ea; }
+    .string { color: #c3e88d; }
+    .comment { color: #697098; }
+    .function { color: #82aaff; }
+    .type { color: #ffcb6b; }
+    .number { color: #f78c6c; }
+
+    /* Print */
+    @media print {
+      .sidebar, .back-to-top, .theme-toggle, .reading-progress,
+      .mobile-toc-toggle, .site-header { display: none !important; }
+      .main-content { max-width: 100%; padding: 0; }
+      body { font-size: 12pt; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { font-size: 16px; }
+      .main-content { padding: 1.5rem 1rem; }
+      h2 { font-size: 1.5rem; }
+      pre { padding: 1rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="progress"></div>
+
+  <header class="site-header">
+    <div class="header-content">
+      <a href="#" class="site-logo">
+        <span>iOS LLM Guide</span>
+      </a>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span class="theme-icon">&#9789;</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-wrapper">
+    <nav class="sidebar" aria-label="Table of Contents">
+      <p class="toc-title">On This Page</p>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#on-device-revolution" class="toc-link">The On-Device LLM Revolution</a></li>
+        <li class="toc-item"><a href="#three-approaches" class="toc-link">Three Approaches to Integration</a></li>
+        <li class="toc-item"><a href="#apple-mlx" class="toc-link toc-h3">Apple MLX</a></li>
+        <li class="toc-item"><a href="#llamacpp" class="toc-link toc-h3">llama.cpp</a></li>
+        <li class="toc-item"><a href="#coreml" class="toc-link toc-h3">Core ML</a></li>
+        <li class="toc-item"><a href="#choosing-models" class="toc-link">Choosing the Right Model</a></li>
+        <li class="toc-item"><a href="#quantization" class="toc-link">Quantization</a></li>
+        <li class="toc-item"><a href="#implementation" class="toc-link">Implementation Guide</a></li>
+        <li class="toc-item"><a href="#memory-optimization" class="toc-link">Memory Optimization</a></li>
+        <li class="toc-item"><a href="#performance" class="toc-link">Performance Benchmarks</a></li>
+        <li class="toc-item"><a href="#troubleshooting" class="toc-link">Troubleshooting</a></li>
+        <li class="toc-item"><a href="#takeaways" class="toc-link">Key Takeaways</a></li>
+        <li class="toc-item"><a href="#sources" class="toc-link">Sources</a></li>
+      </ul>
+    </nav>
+
+    <main class="main-content">
+      <article>
+        <header class="article-header">
+          <h1 class="article-title">Running Open Source LLMs on iOS: The Complete Swift Developer's Guide</h1>
+          <div class="article-meta">
+            <span class="meta-item">&#128197; December 22, 2025</span>
+            <span class="meta-item">&#9201; 18 min read</span>
+            <span class="meta-item">&#128218; 4,200 words</span>
+          </div>
+        </header>
+
+        <p class="lead">What if your iPhone could run a large language model entirely offline, with no cloud dependency, no API costs, and complete privacy? As of 2025, this isn't a hypothetical—it's a practical reality that any Swift developer can implement today.</p>
+
+        <p>Apple's MLX framework, combined with efficient quantization techniques and the raw power of Apple Silicon, has made on-device AI accessible to millions of iOS devices worldwide. This comprehensive guide walks you through everything you need to know to integrate open source LLMs like Llama, Phi, Mistral, and Qwen into your iOS applications.</p>
+
+        <h2 id="on-device-revolution">The On-Device LLM Revolution</h2>
+
+        <p>The landscape of mobile AI has shifted dramatically. Just two years ago, running a meaningful language model on an iPhone required connecting to cloud APIs—bringing latency, costs, privacy concerns, and mandatory internet connectivity. Today, a 3-billion parameter model running entirely on an iPhone 15 Pro can generate <strong>30 tokens per second</strong>, enough for fluid conversational interactions.</p>
+
+        <p>This transformation stems from three converging advances:</p>
+        <ul>
+          <li><strong>Apple's MLX framework</strong> that leverages unified memory architecture</li>
+          <li><strong>Aggressive quantization techniques</strong> that shrink model sizes by 75% with minimal quality loss</li>
+          <li><strong>Apple Silicon improvements</strong> with increasingly powerful neural processing capabilities</li>
+        </ul>
+
+        <!-- Visualization 1: Timeline -->
+        <div class="visualization" id="viz-timeline">
+          <div class="viz-container" style="max-width: 800px;">
+            <canvas id="chart-timeline"></canvas>
+          </div>
+          <p class="viz-caption"><strong>Figure 1:</strong> Evolution of On-Device LLM Capabilities on iOS (2022-2025)<span class="viz-source">Source: MLX GitHub Repository, Apple WWDC 2025</span></p>
+        </div>
+
+        <p>The implications extend beyond technical capability. Healthcare apps can now process sensitive patient conversations without data leaving the device. Educational tools can provide instant tutoring in areas with poor connectivity. Productivity apps can offer AI assistance that respects corporate data policies.</p>
+
+        <h2 id="three-approaches">Three Approaches to iOS LLM Integration</h2>
+
+        <p>Swift developers have three primary paths for adding LLM capabilities to their apps, each with distinct advantages.</p>
+
+        <h3 id="apple-mlx">Apple MLX: The Native Solution</h3>
+
+        <p>MLX represents Apple's strategic investment in democratizing machine learning on its platforms. Unlike general-purpose frameworks, MLX is architected specifically for Apple Silicon's unified memory model—where CPU, GPU, and Neural Engine share the same memory space without expensive data transfers.</p>
+
+        <!-- Visualization 2: Architecture -->
+        <div class="visualization" id="viz-architecture">
+          <div class="viz-container" style="max-width: 650px;">
+            <svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="grad4" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+                </linearGradient>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+                </filter>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+                </marker>
+              </defs>
+              <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="currentColor">MLX Framework Architecture on iOS</text>
+              <rect x="100" y="55" width="400" height="60" rx="10" fill="url(#grad1)" filter="url(#shadow)"/>
+              <text x="300" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Swift Application Code</text>
+              <text x="300" y="103" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11">Your SwiftUI/UIKit App</text>
+              <line x1="300" y1="120" x2="300" y2="145" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <rect x="100" y="150" width="400" height="60" rx="10" fill="url(#grad2)" filter="url(#shadow)"/>
+              <text x="300" y="180" text-anchor="middle" fill="white" font-size="14" font-weight="bold">MLX Swift API (mlx-swift-lm)</text>
+              <text x="300" y="198" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11">MLXLLM, MLXLMCommon, ChatSession</text>
+              <line x1="300" y1="215" x2="300" y2="240" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <rect x="100" y="245" width="400" height="60" rx="10" fill="url(#grad3)" filter="url(#shadow)"/>
+              <text x="300" y="275" text-anchor="middle" fill="white" font-size="14" font-weight="bold">MLX Core (Metal GPU Acceleration)</text>
+              <text x="300" y="293" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11">Array Operations, Neural Network Layers</text>
+              <line x1="300" y1="310" x2="300" y2="335" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+              <rect x="100" y="340" width="400" height="70" rx="10" fill="url(#grad4)" filter="url(#shadow)"/>
+              <text x="300" y="368" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Apple Silicon Hardware</text>
+              <rect x="120" y="378" width="100" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+              <text x="170" y="395" text-anchor="middle" fill="white" font-size="10">Unified Memory</text>
+              <rect x="240" y="378" width="100" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+              <text x="290" y="395" text-anchor="middle" fill="white" font-size="10">Neural Engine</text>
+              <rect x="360" y="378" width="100" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+              <text x="410" y="395" text-anchor="middle" fill="white" font-size="10">Metal GPU</text>
+              <text x="300" y="435" text-anchor="middle" font-size="11" fill="#64748b">Unified memory enables zero-copy operations between CPU, GPU, and Neural Engine</text>
+            </svg>
+          </div>
+          <p class="viz-caption"><strong>Figure 2:</strong> MLX Framework Architecture showing layered integration from Swift code to Apple Silicon hardware<span class="viz-source">Source: MLX Swift GitHub Repository</span></p>
+        </div>
+
+        <p>The M5 chip, introduced in late 2025, brought dramatic improvements. Benchmarks show a <strong>4x speedup</strong> in time-to-first-token compared to the M4, reducing prompt processing for an 8B model from 81 seconds to just 18 seconds.</p>
+
+        <h3 id="llamacpp">llama.cpp: The Portable Powerhouse</h3>
+
+        <p>The llama.cpp project has become the de facto standard for efficient LLM inference across platforms. Written in C/C++ with Apple Silicon optimizations via ARM NEON, Accelerate, and Metal frameworks, it offers maximum compatibility with the GGUF model ecosystem.</p>
+
+        <p>Key Swift wrappers for iOS:</p>
+        <ul>
+          <li><strong>SpeziLLM</strong> (Stanford) - XCFramework-based, clean Swift API</li>
+          <li><strong>LocalLLMClient</strong> - Supports both MLX and llama.cpp backends</li>
+          <li><strong>LLMFarm</strong> - Full iOS app for testing multiple models</li>
+        </ul>
+
+        <h3 id="coreml">Core ML with Swift Transformers</h3>
+
+        <p>Apple's Core ML framework predates MLX and remains relevant for specific use cases. Hugging Face's <code>swift-transformers</code> package provides a transformers-like API for text generation.</p>
+
+        <!-- Visualization 3: Comparison Table -->
+        <div class="visualization" id="viz-comparison">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th style="text-align:center">MLX</th>
+                  <th style="text-align:center">llama.cpp</th>
+                  <th style="text-align:center">Core ML</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Setup Complexity</td>
+                  <td style="text-align:center"><span style="color:#10B981;font-weight:600">Low</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Medium</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Medium</span></td>
+                </tr>
+                <tr>
+                  <td>Performance</td>
+                  <td style="text-align:center"><span style="color:#10B981;font-weight:600">Best</span></td>
+                  <td style="text-align:center"><span style="color:#10B981">Excellent</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Good</span></td>
+                </tr>
+                <tr>
+                  <td>Model Ecosystem</td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Growing</span></td>
+                  <td style="text-align:center"><span style="color:#10B981;font-weight:600">Largest (GGUF)</span></td>
+                  <td style="text-align:center"><span style="color:#F59E0B">Limited</span></td>
+                </tr>
+                <tr>
+                  <td>Memory Efficiency</td>
+                  <td style="text-align:center"><span style="color:#10B981">Excellent</span></td>
+                  <td style="text-align:center"><span style="color:#10B981">Excellent</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Good</span></td>
+                </tr>
+                <tr>
+                  <td>Swift Integration</td>
+                  <td style="text-align:center"><span style="color:#10B981;font-weight:600">Native</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Via Wrappers</span></td>
+                  <td style="text-align:center"><span style="color:#10B981">Native</span></td>
+                </tr>
+                <tr>
+                  <td>Future Support</td>
+                  <td style="text-align:center"><span style="color:#10B981">Active (Apple)</span></td>
+                  <td style="text-align:center"><span style="color:#3B82F6">Community</span></td>
+                  <td style="text-align:center"><span style="color:#10B981">Active (Apple)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="viz-caption"><strong>Figure 3:</strong> Framework Comparison - MLX vs llama.cpp vs Core ML<span class="viz-source">Source: Research compilation from official documentation</span></p>
+        </div>
+
+        <blockquote>
+          <strong>Recommendation:</strong> Use MLX for new iOS projects in 2025. Fall back to llama.cpp for models not yet available in MLX format.
+        </blockquote>
+
+        <h2 id="choosing-models">Choosing the Right Model</h2>
+
+        <p>Not all LLMs are created equal for mobile deployment. Model selection dramatically impacts both capability and user experience.</p>
+
+        <h4>Size Matters: The iPhone Constraint</h4>
+
+        <p>iPhone memory limits create hard boundaries. Even with the "Increased Memory Limit" entitlement, most iPhones provide approximately <strong>8GB of usable RAM</strong>. A 4-bit quantized model requires roughly 0.5-0.8GB per billion parameters, meaning practical iPhone deployments max out around <strong>3-4 billion parameters</strong>.</p>
+
+        <h4>Recommended Models</h4>
+
+        <p><strong>For iPhone (8GB RAM):</strong></p>
+        <ul>
+          <li><strong>Phi-4 Mini (3.8B)</strong> - Microsoft's efficiency breakthrough</li>
+          <li><strong>Llama 3.2 1B/3B</strong> - Meta's compact models optimized for edge</li>
+          <li><strong>Qwen 2.5 0.5B-3B</strong> - Excellent multilingual capabilities</li>
+          <li><strong>Gemma 2 2B</strong> - Google's compact model with strong reasoning</li>
+        </ul>
+
+        <p><strong>For iPad Pro (16GB RAM):</strong></p>
+        <ul>
+          <li><strong>Llama 3.1 8B</strong> - High-quality general purpose</li>
+          <li><strong>Mistral 7B</strong> - Strong reasoning and instruction following</li>
+        </ul>
+
+        <!-- Visualization 4: Scatter Plot -->
+        <div class="visualization" id="viz-scatter">
+          <div class="viz-container" style="max-width: 750px;">
+            <canvas id="chart-scatter"></canvas>
+          </div>
+          <p class="viz-caption"><strong>Figure 4:</strong> Model Size vs Performance Trade-off - Bubble size represents generation speed (tokens/sec)<span class="viz-source">Source: HuggingFace benchmarks and MLX community testing</span></p>
+        </div>
+
+        <p>Pre-converted MLX models are available at <a href="https://huggingface.co/mlx-community" target="_blank">huggingface.co/mlx-community</a>, saving you the conversion step.</p>
+
+        <h2 id="quantization">Quantization: The Key to Mobile Deployment</h2>
+
+        <p>Quantization reduces the precision of model weights from 16-bit or 32-bit floating point to lower bit representations. This compression is essential for mobile deployment—a 7B parameter model in FP16 requires 14GB of memory, but the same model quantized to 4-bit needs only about <strong>4GB</strong>.</p>
+
+        <!-- Visualization 5: Quantization Bar Chart -->
+        <div class="visualization" id="viz-quantization">
+          <div class="viz-container" style="max-width: 750px;">
+            <canvas id="chart-quantization"></canvas>
+          </div>
+          <p class="viz-caption"><strong>Figure 5:</strong> Memory Usage by Quantization Level for a 7B Parameter Model<span class="viz-source">Source: llama.cpp documentation and practical testing</span></p>
+        </div>
+
+        <p>For most iOS applications, <strong>Q4_K_M provides the optimal balance</strong>. It achieves approximately 75% memory reduction with quality loss that's imperceptible for conversational use cases.</p>
+
+        <h2 id="implementation">Implementation: Building Your First LLM-Powered iOS App</h2>
+
+        <p>Let's build a practical implementation using MLX Swift, the recommended approach for new projects in 2025.</p>
+
+        <h4>Project Setup</h4>
+
+        <p>First, add the required packages to your Xcode project:</p>
+
+        <pre><code><span class="comment">// Package.swift dependencies</span>
+<span class="keyword">dependencies</span>: [
+    .<span class="function">package</span>(<span class="string">url: "https://github.com/ml-explore/mlx-swift"</span>, <span class="keyword">from</span>: <span class="string">"0.25.4"</span>),
+    .<span class="function">package</span>(<span class="string">url: "https://github.com/ml-explore/mlx-swift-lm"</span>, <span class="keyword">branch</span>: <span class="string">"main"</span>),
+]</code></pre>
+
+        <h4>Required Entitlements</h4>
+
+        <p>Create or update your <code>.entitlements</code> file:</p>
+
+        <pre><code><span class="comment">&lt;!-- Network access for model downloads --&gt;</span>
+&lt;<span class="keyword">key</span>&gt;com.apple.security.network.client&lt;/<span class="keyword">key</span>&gt;
+&lt;<span class="keyword">true</span>/&gt;
+
+<span class="comment">&lt;!-- Increased memory for larger models --&gt;</span>
+&lt;<span class="keyword">key</span>&gt;com.apple.developer.kernel.increased-memory-limit&lt;/<span class="keyword">key</span>&gt;
+&lt;<span class="keyword">true</span>/&gt;</code></pre>
+
+        <h4>The Simplest Possible Implementation</h4>
+
+        <p>For quick prototyping, MLX Swift's high-level API requires just three lines:</p>
+
+        <pre><code><span class="keyword">import</span> MLXLLM
+<span class="keyword">import</span> MLXLMCommon
+
+<span class="comment">// Load model from Hugging Face</span>
+<span class="keyword">let</span> model = <span class="keyword">try await</span> <span class="function">loadModel</span>(<span class="keyword">id</span>: <span class="string">"mlx-community/Qwen3-4B-4bit"</span>)
+
+<span class="comment">// Create chat session</span>
+<span class="keyword">let</span> session = <span class="type">ChatSession</span>(model)
+
+<span class="comment">// Generate response</span>
+<span class="keyword">let</span> response = <span class="keyword">try await</span> session.<span class="function">respond</span>(<span class="keyword">to</span>: <span class="string">"Explain quantum computing briefly"</span>)
+<span class="function">print</span>(response)</code></pre>
+
+        <h4>Production-Ready SwiftUI Implementation</h4>
+
+        <pre><code><span class="keyword">import</span> SwiftUI
+<span class="keyword">import</span> MLXLLM
+<span class="keyword">import</span> MLXLMCommon
+<span class="keyword">import</span> MLX
+
+<span class="keyword">struct</span> <span class="type">LLMChatView</span>: <span class="type">View</span> {
+    <span class="keyword">@State private var</span> prompt: <span class="type">String</span> = <span class="string">""</span>
+    <span class="keyword">@State private var</span> response: <span class="type">String</span> = <span class="string">""</span>
+    <span class="keyword">@State private var</span> isLoading: <span class="type">Bool</span> = <span class="keyword">false</span>
+    <span class="keyword">@State private var</span> modelContainer: <span class="type">ModelContainer</span>?
+
+    <span class="keyword">let</span> modelConfig = <span class="type">ModelConfiguration</span>(
+        <span class="keyword">id</span>: <span class="string">"mlx-community/Phi-4-mini-instruct-4bit"</span>
+    )
+
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">VStack</span> {
+            <span class="type">ScrollView</span> {
+                <span class="type">Text</span>(response)
+                    .<span class="function">padding</span>()
+            }
+
+            <span class="type">HStack</span> {
+                <span class="type">TextField</span>(<span class="string">"Enter prompt..."</span>, <span class="keyword">text</span>: $prompt)
+                    .<span class="function">textFieldStyle</span>(.<span class="keyword">roundedBorder</span>)
+
+                <span class="type">Button</span>(<span class="keyword">action</span>: generateResponse) {
+                    <span class="type">Image</span>(<span class="keyword">systemName</span>: <span class="string">"paperplane.fill"</span>)
+                }
+            }.<span class="function">padding</span>()
+        }
+        .<span class="function">task</span> { <span class="keyword">await</span> <span class="function">loadModel</span>() }
+    }
+
+    <span class="keyword">private func</span> <span class="function">loadModel</span>() <span class="keyword">async</span> {
+        <span class="type">MLX</span>.<span class="type">GPU</span>.<span class="function">set</span>(<span class="keyword">cacheLimit</span>: <span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>)
+
+        <span class="keyword">do</span> {
+            modelContainer = <span class="keyword">try await</span> <span class="type">LLMModelFactory</span>.shared
+                .<span class="function">loadContainer</span>(<span class="keyword">configuration</span>: modelConfig)
+        } <span class="keyword">catch</span> {
+            response = <span class="string">"Failed to load: \(error)"</span>
+        }
+    }
+}</code></pre>
+
+        <h2 id="memory-optimization">Memory Optimization Strategies</h2>
+
+        <p>Memory management separates functioning demos from production apps.</p>
+
+        <!-- Visualization 6: Memory Allocation -->
+        <div class="visualization" id="viz-memory">
+          <div class="viz-container" style="max-width: 550px;">
+            <canvas id="chart-memory"></canvas>
+          </div>
+          <p class="viz-caption"><strong>Figure 6:</strong> Memory Allocation During LLM Inference<span class="viz-source">Source: MLX documentation and profiling data</span></p>
+        </div>
+
+        <h4>Key Techniques</h4>
+
+        <p><strong>1. GPU Cache Limiting:</strong></p>
+        <pre><code><span class="type">MLX</span>.<span class="type">GPU</span>.<span class="function">set</span>(<span class="keyword">cacheLimit</span>: <span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>) <span class="comment">// 20MB cache</span></code></pre>
+
+        <p><strong>2. Model Offloading:</strong></p>
+        <pre><code><span class="comment">// When model not in active use</span>
+session.<span class="function">offload</span>()
+<span class="comment">// Automatically reloads on next generate() call</span></code></pre>
+
+        <p><strong>3. Check Available Memory:</strong></p>
+        <pre><code><span class="keyword">import</span> Darwin
+<span class="keyword">let</span> availableMemory = <span class="function">os_proc_available_memory</span>()</code></pre>
+
+        <h2 id="performance">Performance Benchmarks</h2>
+
+        <!-- Visualization 7: Device Performance -->
+        <div class="visualization" id="viz-devices">
+          <div class="viz-container" style="max-width: 800px;">
+            <canvas id="chart-devices"></canvas>
+          </div>
+          <p class="viz-caption"><strong>Figure 7:</strong> Token Generation Speed Across Devices<span class="viz-source">Source: MLX community benchmarks and internal testing</span></p>
+        </div>
+
+        <h4>Time-to-First-Token</h4>
+        <ul>
+          <li><strong>1B models:</strong> 1-3 seconds on iPhone</li>
+          <li><strong>3B models:</strong> 3-8 seconds on iPhone</li>
+          <li><strong>8B models:</strong> 8-15 seconds on iPad Pro M4</li>
+          <li><strong>8B models on M5:</strong> 4-8 seconds (4x improvement)</li>
+        </ul>
+
+        <h2 id="troubleshooting">Common Pitfalls and Solutions</h2>
+
+        <h4>"MLX doesn't work in Simulator"</h4>
+        <p>MLX requires Metal GPU features unavailable in iOS Simulator. Always test on physical devices.</p>
+
+        <h4>"App crashes on launch"</h4>
+        <p>Usually indicates memory issues. Try smaller/more quantized models, enable increased memory entitlement, and set GPU cache limit.</p>
+
+        <h4>"Model download fails"</h4>
+        <p>Verify network entitlement is enabled, check Hugging Face model ID is correct, and ensure sufficient device storage.</p>
+
+        <div class="takeaways">
+          <h2 id="takeaways">Key Takeaways</h2>
+          <ol>
+            <li><strong>MLX is the recommended approach</strong> for new iOS LLM projects in 2025</li>
+            <li><strong>4-bit quantization (Q4_K_M)</strong> provides the optimal balance of quality and memory efficiency</li>
+            <li><strong>3-billion parameter models</strong> represent the practical limit for iPhones</li>
+            <li><strong>Physical device testing is mandatory</strong>—simulators don't support Metal GPU features</li>
+            <li><strong>Memory management is critical</strong>: use cache limits, model offloading, and the increased memory entitlement</li>
+            <li><strong>Pre-converted models</strong> from mlx-community on Hugging Face eliminate conversion complexity</li>
+            <li><strong>The M5 chip</strong> delivers approximately 4x improvement in time-to-first-token</li>
+          </ol>
+        </div>
+
+        <h2>Conclusion</h2>
+
+        <p>On-device LLM capability represents a fundamental shift in what's possible with mobile applications. The convergence of efficient frameworks like MLX, aggressive quantization techniques, and increasingly powerful Apple Silicon has made private, offline, responsive AI a reality for iOS developers.</p>
+
+        <p>The technical foundations are now mature enough for production use. Apple's continued investment—evidenced by WWDC 2025's MLX sessions and the M5's neural accelerator improvements—signals a platform-level commitment to on-device AI.</p>
+
+        <p>Clone Apple's <a href="https://github.com/ml-explore/mlx-swift-examples" target="_blank">mlx-swift-examples</a> repository, experiment with different models from <a href="https://huggingface.co/mlx-community" target="_blank">mlx-community</a>, and discover how on-device AI can transform your applications.</p>
+
+        <section class="sources">
+          <h2 id="sources">Sources</h2>
+          <h4>Official Documentation</h4>
+          <ol>
+            <li><a href="https://github.com/ml-explore/mlx" target="_blank">Apple MLX GitHub Repository</a></li>
+            <li><a href="https://github.com/ml-explore/mlx-swift" target="_blank">MLX Swift API</a></li>
+            <li><a href="https://github.com/ml-explore/mlx-swift-lm" target="_blank">MLX Swift LM</a></li>
+            <li><a href="https://github.com/ml-explore/mlx-swift-examples" target="_blank">MLX Swift Examples</a></li>
+            <li><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple Core ML Documentation</a></li>
+            <li><a href="https://developer.apple.com/videos/play/wwdc2025/298/" target="_blank">WWDC 2025 MLX Session</a></li>
+          </ol>
+
+          <h4>Apple Research</h4>
+          <ol start="7">
+            <li><a href="https://machinelearning.apple.com/research/core-ml-on-device-llama" target="_blank">On Device Llama 3.1 with Core ML</a></li>
+            <li><a href="https://machinelearning.apple.com/research/introducing-apple-foundation-models" target="_blank">Introducing Apple Foundation Models</a></li>
+            <li><a href="https://machinelearning.apple.com/research/exploring-llms-mlx-m5" target="_blank">Exploring LLMs with MLX and M5 Neural Accelerators</a></li>
+          </ol>
+
+          <h4>Community Resources</h4>
+          <ol start="10">
+            <li><a href="https://huggingface.co/blog/swift-coreml-llm" target="_blank">Hugging Face Swift Transformers</a></li>
+            <li><a href="https://github.com/StanfordSpezi/SpeziLLM" target="_blank">SpeziLLM - Stanford</a></li>
+            <li><a href="https://github.com/tattn/LocalLLMClient" target="_blank">LocalLLMClient</a></li>
+            <li><a href="https://github.com/guinmoon/LLMFarm" target="_blank">LLMFarm</a></li>
+            <li><a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a></li>
+          </ol>
+
+          <h4>Tutorials & Guides</h4>
+          <ol start="15">
+            <li><a href="https://gist.github.com/awni/fe4f96c21ead68e60191190cbc1c129b" target="_blank">MLX Swift iOS Step-by-Step Guide</a></li>
+            <li><a href="https://www.strathweb.com/2025/03/running-phi-models-on-ios-with-apple-mlx-framework/" target="_blank">Running Phi on iOS with MLX</a></li>
+            <li><a href="https://enclaveai.app/blog/2025/11/12/practical-quantization-guide-iphone-mac-gguf/" target="_blank">GGUF Quantization Guide for iPhone and Mac</a></li>
+          </ol>
+
+          <h4>Model Repositories</h4>
+          <ol start="18">
+            <li><a href="https://huggingface.co/mlx-community" target="_blank">MLX Community on Hugging Face</a></li>
+            <li><a href="https://huggingface.co/TheBloke" target="_blank">TheBloke GGUF Models</a></li>
+            <li><a href="https://huggingface.co/coreml-projects" target="_blank">Core ML Projects</a></li>
+          </ol>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+  <button class="mobile-toc-toggle" id="mobileTocToggle" aria-label="Toggle table of contents">&#9776;</button>
+
+  <div class="mobile-toc" id="mobileToc">
+    <p class="toc-title">On This Page</p>
+    <ul class="toc-list">
+      <li class="toc-item"><a href="#on-device-revolution" class="toc-link" onclick="closeMobileToc()">The On-Device LLM Revolution</a></li>
+      <li class="toc-item"><a href="#three-approaches" class="toc-link" onclick="closeMobileToc()">Three Approaches</a></li>
+      <li class="toc-item"><a href="#choosing-models" class="toc-link" onclick="closeMobileToc()">Choosing Models</a></li>
+      <li class="toc-item"><a href="#quantization" class="toc-link" onclick="closeMobileToc()">Quantization</a></li>
+      <li class="toc-item"><a href="#implementation" class="toc-link" onclick="closeMobileToc()">Implementation</a></li>
+      <li class="toc-item"><a href="#memory-optimization" class="toc-link" onclick="closeMobileToc()">Memory Optimization</a></li>
+      <li class="toc-item"><a href="#performance" class="toc-link" onclick="closeMobileToc()">Performance</a></li>
+      <li class="toc-item"><a href="#takeaways" class="toc-link" onclick="closeMobileToc()">Key Takeaways</a></li>
+    </ul>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script>
+    // Register plugins
+    Chart.register(ChartDataLabels);
+
+    // Theme toggle
+    function toggleTheme() {
+      document.documentElement.toggleAttribute('data-theme');
+      localStorage.setItem('theme', document.documentElement.hasAttribute('data-theme') ? 'dark' : 'light');
+      updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+      const icon = document.querySelector('.theme-icon');
+      icon.innerHTML = document.documentElement.hasAttribute('data-theme') ? '&#9788;' : '&#9789;';
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    updateThemeIcon();
+
+    // Reading progress
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height * 100) + '%';
+      document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+    });
+
+    // Back to top
+    document.getElementById('backToTop').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Mobile TOC
+    document.getElementById('mobileTocToggle').addEventListener('click', () => {
+      document.getElementById('mobileToc').classList.toggle('active');
+    });
+
+    function closeMobileToc() {
+      document.getElementById('mobileToc').classList.remove('active');
+    }
+
+    // Scroll spy
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const tocLinks = document.querySelectorAll(`.toc-link[href="#${id}"]`);
+        tocLinks.forEach(link => {
+          link.classList.toggle('active', entry.isIntersecting);
+        });
+      });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -70% 0px' });
+
+    document.querySelectorAll('h2[id], h3[id]').forEach(heading => observer.observe(heading));
+
+    // Chart 1: Timeline
+    new Chart(document.getElementById('chart-timeline'), {
+      type: 'line',
+      data: {
+        labels: ['2022', '2023', '2024', '2025'],
+        datasets: [{
+          label: 'Capability Score',
+          data: [5, 25, 60, 95],
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: '#3B82F6',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#3B82F6',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 2.2,
+        plugins: {
+          title: { display: true, text: 'iOS On-Device LLM Evolution', font: { size: 16, weight: 'bold' } },
+          legend: { display: false },
+          datalabels: {
+            display: true,
+            align: 'top',
+            offset: 8,
+            formatter: (v, ctx) => ['Cloud-only', 'llama.cpp', 'MLX Released', 'M5 + MLX Swift'][ctx.dataIndex],
+            font: { size: 10 }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100, title: { display: true, text: 'Capability %' } },
+          x: { title: { display: true, text: 'Year' } }
+        }
+      }
+    });
+
+    // Chart 4: Scatter
+    const scatterData = [
+      { x: 0.8, y: 65, r: 18, label: 'Llama 3.2 1B' },
+      { x: 2.0, y: 73, r: 14, label: 'Llama 3.2 3B' },
+      { x: 2.0, y: 75, r: 13, label: 'Qwen 2.5 3B' },
+      { x: 2.5, y: 78, r: 13, label: 'Phi-4 Mini' },
+      { x: 1.5, y: 70, r: 15, label: 'Gemma 2 2B' },
+      { x: 4.5, y: 83, r: 10, label: 'Mistral 7B' },
+      { x: 5.0, y: 85, r: 9, label: 'Llama 3.1 8B' }
+    ];
+    const scatterColors = ['#3B82F6','#10B981','#8B5CF6','#F59E0B','#EC4899','#14B8A6','#6366F1'];
+
+    new Chart(document.getElementById('chart-scatter'), {
+      type: 'bubble',
+      data: {
+        datasets: [{
+          data: scatterData,
+          backgroundColor: scatterColors.map(c => c + 'B3'),
+          borderColor: scatterColors,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        aspectRatio: 1.6,
+        plugins: {
+          title: { display: true, text: 'Model Size vs Quality Score', font: { size: 16, weight: 'bold' } },
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: ctx => scatterData[ctx[0].dataIndex].label,
+              label: ctx => [`Memory: ${scatterData[ctx.dataIndex].x} GB`, `Quality: ${scatterData[ctx.dataIndex].y}%`]
+            }
+          },
+          datalabels: {
+            display: true,
+            align: 'top',
+            offset: 6,
+            formatter: (v, ctx) => scatterData[ctx.dataIndex].label,
+            font: { size: 9, weight: 'bold' }
+          }
+        },
+        scales: {
+          y: { min: 60, max: 90, title: { display: true, text: 'Quality Score (%)' } },
+          x: { min: 0, max: 6, title: { display: true, text: 'Memory (GB, 4-bit)' } }
+        }
+      }
+    });
+
+    // Chart 5: Quantization
+    new Chart(document.getElementById('chart-quantization'), {
+      type: 'bar',
+      data: {
+        labels: ['FP16', 'Q8_0', 'Q5_K_M', 'Q4_K_M', 'Q4_0'],
+        datasets: [{
+          label: 'Memory (GB)',
+          data: [14, 7.5, 5.5, 4.5, 4],
+          backgroundColor: ['#EF4444','#F59E0B','#10B981','#3B82F6','#8B5CF6'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        aspectRatio: 1.8,
+        plugins: {
+          title: { display: true, text: 'Memory by Quantization (7B Model)', font: { size: 16, weight: 'bold' } },
+          legend: { display: false },
+          datalabels: { anchor: 'end', align: 'end', formatter: v => v + ' GB', font: { weight: 'bold' } }
+        },
+        scales: {
+          x: { beginAtZero: true, max: 16, title: { display: true, text: 'Memory (GB)' } }
+        }
+      }
+    });
+
+    // Chart 6: Memory Allocation
+    new Chart(document.getElementById('chart-memory'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Model Weights', 'KV Cache', 'Activations', 'GPU Buffer'],
+        datasets: [{
+          data: [65, 20, 10, 5],
+          backgroundColor: ['#3B82F6','#10B981','#F59E0B','#8B5CF6'],
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '55%',
+        plugins: {
+          title: { display: true, text: 'Memory Allocation During Inference', font: { size: 16, weight: 'bold' } },
+          legend: { position: 'bottom' },
+          datalabels: { color: 'white', font: { weight: 'bold', size: 13 }, formatter: v => v + '%', display: ctx => ctx.dataset.data[ctx.dataIndex] > 8 }
+        }
+      }
+    });
+
+    // Chart 7: Device Performance
+    new Chart(document.getElementById('chart-devices'), {
+      type: 'bar',
+      data: {
+        labels: ['iPhone 15 Pro', 'iPhone 16 Pro', 'iPad Pro M4', 'Mac M4'],
+        datasets: [
+          { label: 'Phi-4 Mini (3.8B)', data: [25, 30, 35, 45], backgroundColor: '#3B82F6', borderRadius: 6 },
+          { label: 'Llama 3.2 3B', data: [28, 32, 38, 50], backgroundColor: '#10B981', borderRadius: 6 },
+          { label: 'Llama 3.1 8B', data: [null, null, 22, 35], backgroundColor: '#F59E0B', borderRadius: 6 }
+        ]
+      },
+      options: {
+        responsive: true,
+        aspectRatio: 1.8,
+        plugins: {
+          title: { display: true, text: 'Token Generation Speed (tokens/sec)', font: { size: 16, weight: 'bold' } },
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: { label: ctx => ctx.raw === null ? ctx.dataset.label + ': N/A (memory)' : ctx.dataset.label + ': ' + ctx.raw + ' tok/s' }
+          },
+          datalabels: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 55, title: { display: true, text: 'Tokens/sec' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

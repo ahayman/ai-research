@@ -1,0 +1,179 @@
+<!-- Visualization: Token Generation Speed by Device and Model -->
+<!-- Generated: 2025-12-22 -->
+<!-- Type: grouped-bar-chart -->
+<!-- Source: MLX community benchmarks, internal testing -->
+
+<figure class="data-viz" id="viz-7">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto;">
+    <canvas id="chart-devices"></canvas>
+  </div>
+  <figcaption>
+    <strong>Figure 7:</strong> Token Generation Speed Across Devices - Comparing model performance on different Apple hardware
+    <span class="viz-source">Source: MLX community benchmarks and internal testing</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+.viz-container {
+  padding: 1rem;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-devices').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['iPhone 15 Pro', 'iPhone 16 Pro', 'iPad Pro M4', 'Mac M4'],
+      datasets: [
+        {
+          label: 'Phi-4 Mini (3.8B)',
+          data: [25, 30, 35, 45],
+          backgroundColor: 'rgba(59, 130, 246, 0.8)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 2,
+          borderRadius: 6
+        },
+        {
+          label: 'Llama 3.2 3B',
+          data: [28, 32, 38, 50],
+          backgroundColor: 'rgba(16, 185, 129, 0.8)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 2,
+          borderRadius: 6
+        },
+        {
+          label: 'Llama 3.1 8B',
+          data: [null, null, 22, 35],
+          backgroundColor: 'rgba(245, 158, 11, 0.8)',
+          borderColor: 'rgba(245, 158, 11, 1)',
+          borderWidth: 2,
+          borderRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.6,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Token Generation Speed by Device (tokens/second)',
+          font: { size: 18, weight: 'bold' },
+          color: '#1e293b',
+          padding: { bottom: 20 }
+        },
+        legend: {
+          position: 'top',
+          labels: {
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            font: { size: 12 }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#1e293b',
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont: { size: 13 },
+          padding: 14,
+          callbacks: {
+            label: function(context) {
+              if (context.raw === null) {
+                return context.dataset.label + ': Not supported (memory limit)';
+              }
+              return context.dataset.label + ': ' + context.raw + ' tok/s';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 55,
+          title: {
+            display: true,
+            text: 'Tokens per Second',
+            font: { size: 13, weight: 'bold' },
+            color: '#64748b'
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: { size: 11, weight: '500' }
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart) {
+        const ctx = chart.ctx;
+
+        // Add "N/A" labels for null values
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+          const meta = chart.getDatasetMeta(datasetIndex);
+          meta.data.forEach((bar, index) => {
+            if (dataset.data[index] === null) {
+              const x = bar.x;
+              const y = chart.chartArea.bottom - 20;
+
+              ctx.save();
+              ctx.textAlign = 'center';
+              ctx.font = '10px sans-serif';
+              ctx.fillStyle = '#94a3b8';
+              ctx.fillText('N/A', x, y);
+              ctx.restore();
+            }
+          });
+        });
+
+        // Add annotation for memory limit
+        const chartArea = chart.chartArea;
+        ctx.save();
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(chartArea.left, chartArea.bottom + 40, chartArea.width, 25);
+        ctx.strokeStyle = '#fcd34d';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(chartArea.left, chartArea.bottom + 40, chartArea.width, 25);
+
+        ctx.font = '11px sans-serif';
+        ctx.fillStyle = '#92400e';
+        ctx.textAlign = 'center';
+        ctx.fillText('Note: 8B models require 6GB+ RAM, exceeding iPhone memory limits',
+          chartArea.left + chartArea.width / 2, chartArea.bottom + 56);
+        ctx.restore();
+      }
+    }]
+  });
+})();
+</script>

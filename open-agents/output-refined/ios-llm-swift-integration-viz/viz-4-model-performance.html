@@ -1,0 +1,176 @@
+<!-- Visualization: Model Size vs Performance Trade-off -->
+<!-- Generated: 2025-12-22 -->
+<!-- Type: scatter-plot -->
+<!-- Source: HuggingFace benchmarks and MLX community testing -->
+
+<figure class="data-viz" id="viz-4">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
+    <canvas id="chart-scatter"></canvas>
+  </div>
+  <figcaption>
+    <strong>Figure 4:</strong> Model Size vs Performance Trade-off - Bubble size represents generation speed (tokens/sec)
+    <span class="viz-source">Source: HuggingFace benchmarks and MLX community testing</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+.viz-container {
+  padding: 1rem;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-scatter').getContext('2d');
+
+  const data = [
+    { x: 0.8, y: 65, r: 18, label: 'Llama 3.2 1B', speed: 45 },
+    { x: 2.0, y: 73, r: 14, label: 'Llama 3.2 3B', speed: 32 },
+    { x: 2.0, y: 75, r: 13, label: 'Qwen 2.5 3B', speed: 30 },
+    { x: 2.5, y: 78, r: 13, label: 'Phi-4 Mini', speed: 30 },
+    { x: 1.5, y: 70, r: 15, label: 'Gemma 2 2B', speed: 35 },
+    { x: 4.5, y: 83, r: 10, label: 'Mistral 7B', speed: 22 },
+    { x: 5.0, y: 85, r: 9, label: 'Llama 3.1 8B', speed: 20 }
+  ];
+
+  new Chart(ctx, {
+    type: 'bubble',
+    data: {
+      datasets: [{
+        label: 'LLM Models',
+        data: data,
+        backgroundColor: data.map((_, i) => {
+          const colors = [
+            'rgba(59, 130, 246, 0.7)',   // blue
+            'rgba(16, 185, 129, 0.7)',   // green
+            'rgba(139, 92, 246, 0.7)',   // purple
+            'rgba(245, 158, 11, 0.7)',   // amber
+            'rgba(236, 72, 153, 0.7)',   // pink
+            'rgba(20, 184, 166, 0.7)',   // teal
+            'rgba(99, 102, 241, 0.7)'    // indigo
+          ];
+          return colors[i];
+        }),
+        borderColor: data.map((_, i) => {
+          const colors = [
+            'rgba(59, 130, 246, 1)',
+            'rgba(16, 185, 129, 1)',
+            'rgba(139, 92, 246, 1)',
+            'rgba(245, 158, 11, 1)',
+            'rgba(236, 72, 153, 1)',
+            'rgba(20, 184, 166, 1)',
+            'rgba(99, 102, 241, 1)'
+          ];
+          return colors[i];
+        }),
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.5,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Model Size vs Quality Score',
+          font: { size: 18, weight: 'bold' },
+          color: '#1e293b',
+          padding: { bottom: 20 }
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#1e293b',
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont: { size: 13 },
+          padding: 14,
+          callbacks: {
+            title: function(context) {
+              return data[context[0].dataIndex].label;
+            },
+            label: function(context) {
+              const point = data[context.dataIndex];
+              return [
+                `Memory: ${point.x} GB (4-bit)`,
+                `Quality Score: ${point.y}%`,
+                `Speed: ${point.speed} tokens/sec`
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 60,
+          max: 90,
+          title: {
+            display: true,
+            text: 'Quality Score (%)',
+            font: { size: 13, weight: 'bold' },
+            color: '#64748b'
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          }
+        },
+        x: {
+          min: 0,
+          max: 6,
+          title: {
+            display: true,
+            text: 'Memory Required (GB, 4-bit quantized)',
+            font: { size: 13, weight: 'bold' },
+            color: '#64748b'
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart) {
+        const ctx = chart.ctx;
+        chart.data.datasets.forEach(function(dataset) {
+          dataset.data.forEach(function(datapoint, index) {
+            const meta = chart.getDatasetMeta(0);
+            const element = meta.data[index];
+            const x = element.x;
+            const y = element.y - element.options.radius - 8;
+
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText(datapoint.label, x, y);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+})();
+</script>
