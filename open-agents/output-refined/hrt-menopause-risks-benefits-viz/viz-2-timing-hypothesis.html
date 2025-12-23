@@ -1,0 +1,186 @@
+<!-- Visualization: Timing Hypothesis - CHD Risk by Years Since Menopause -->
+<!-- Generated: 2025-12-23 -->
+<!-- Type: bar-chart -->
+<!-- Source: PMC9178928 -->
+
+<figure class="data-viz" id="viz-2">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
+    <canvas id="chart-timing"></canvas>
+  </div>
+  <figcaption>
+    <strong>Figure 2:</strong> The "timing hypothesis" illustrated: Coronary heart disease risk varies dramatically based on when hormone therapy is initiated. Women starting HRT within 10 years of menopause experience a 24% reduction in CHD risk, while those starting 20+ years later face a 28% increased risk.
+    <span class="viz-source">Source: Menopausal Hormone Replacement Therapy and Reduction of All-Cause Mortality and CVD. PMC9178928</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-timing').getContext('2d');
+
+  // Define colors based on risk level
+  const getBarColor = (value) => {
+    if (value < 1) return 'rgba(34, 197, 94, 0.85)'; // Green for protective
+    if (value <= 1.1) return 'rgba(251, 191, 36, 0.85)'; // Yellow for neutral
+    return 'rgba(239, 68, 68, 0.85)'; // Red for harmful
+  };
+
+  const getBorderColor = (value) => {
+    if (value < 1) return 'rgba(34, 197, 94, 1)';
+    if (value <= 1.1) return 'rgba(251, 191, 36, 1)';
+    return 'rgba(239, 68, 68, 1)';
+  };
+
+  const data = [0.76, 1.10, 1.28];
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['< 10 years\nafter menopause', '10-19 years\nafter menopause', '20+ years\nafter menopause'],
+      datasets: [{
+        label: 'Hazard Ratio for CHD',
+        data: data,
+        backgroundColor: data.map(getBarColor),
+        borderColor: data.map(getBorderColor),
+        borderWidth: 2,
+        borderRadius: 8,
+        barThickness: 80
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.6,
+      plugins: {
+        title: {
+          display: true,
+          text: 'The Timing Hypothesis: CHD Risk by HRT Initiation Timing',
+          font: {
+            size: 18,
+            weight: 'bold'
+          },
+          color: '#1e293b',
+          padding: { bottom: 30 }
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          titleFont: { size: 14 },
+          bodyFont: { size: 13 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              const hr = context.raw;
+              if (hr < 1) {
+                return [`HR: ${hr}`, `${Math.round((1-hr)*100)}% lower CHD risk`, 'PROTECTIVE'];
+              } else if (hr <= 1.1) {
+                return [`HR: ${hr}`, 'Neutral to slightly harmful', 'CAUTION'];
+              } else {
+                return [`HR: ${hr}`, `${Math.round((hr-1)*100)}% higher CHD risk`, 'HARMFUL'];
+              }
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              yMin: 1,
+              yMax: 1,
+              borderColor: 'rgba(100, 116, 139, 0.8)',
+              borderWidth: 2,
+              borderDash: [8, 4],
+              label: {
+                display: true,
+                content: 'No Effect (HR = 1.0)',
+                position: 'end',
+                backgroundColor: 'rgba(100, 116, 139, 0.8)',
+                font: { size: 11 }
+              }
+            },
+            protectiveZone: {
+              type: 'box',
+              yMin: 0,
+              yMax: 1,
+              backgroundColor: 'rgba(34, 197, 94, 0.05)',
+              borderWidth: 0
+            },
+            harmfulZone: {
+              type: 'box',
+              yMin: 1,
+              yMax: 1.5,
+              backgroundColor: 'rgba(239, 68, 68, 0.05)',
+              borderWidth: 0
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 1.5,
+          title: {
+            display: true,
+            text: 'Hazard Ratio for Coronary Heart Disease',
+            font: { size: 13, weight: '600' },
+            color: '#475569'
+          },
+          grid: {
+            color: 'rgba(148, 163, 184, 0.2)'
+          },
+          ticks: {
+            color: '#64748b'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Time Since Menopause at HRT Initiation',
+            font: { size: 13, weight: '600' },
+            color: '#475569',
+            padding: { top: 10 }
+          },
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: '#475569',
+            font: { size: 12 }
+          }
+        }
+      }
+    }
+  });
+})();
+</script>

@@ -1,0 +1,191 @@
+<!-- Visualization: Adverse Events by Age Group (CEE Alone) -->
+<!-- Generated: 2025-12-23 -->
+<!-- Type: diverging-bar-chart -->
+<!-- Source: PMC3963523 -->
+
+<figure class="data-viz" id="viz-3">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
+    <canvas id="chart-age-outcomes"></canvas>
+  </div>
+  <div class="interpretation-box">
+    <div class="interp-item benefit">
+      <span class="icon">&#x2705;</span>
+      <strong>Ages 50-59:</strong> Net benefit - 19 fewer adverse events per 10,000 women per year
+    </div>
+    <div class="interp-item neutral">
+      <span class="icon">&#x2796;</span>
+      <strong>Ages 60-69:</strong> Approximately neutral effect
+    </div>
+    <div class="interp-item risk">
+      <span class="icon">&#x26A0;</span>
+      <strong>Ages 70-79:</strong> Net harm - 51 more adverse events per 10,000 women per year
+    </div>
+  </div>
+  <figcaption>
+    <strong>Figure 3:</strong> Age-stratified outcomes from the WHI estrogen-only arm demonstrate that HRT effects depend critically on age. Younger women (50-59) experience net benefits, while older women (70-79) experience net harms—explaining why average results from the older WHI population should not be applied to younger women.
+    <span class="viz-source">Source: The Women's Health Initiative Hormone Therapy Trials. PMC3963523</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.interpretation-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem auto;
+  max-width: 600px;
+}
+.interp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.interp-item.benefit {
+  background: rgba(34, 197, 94, 0.1);
+  border-left: 4px solid #22c55e;
+}
+.interp-item.neutral {
+  background: rgba(148, 163, 184, 0.1);
+  border-left: 4px solid #94a3b8;
+}
+.interp-item.risk {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+}
+.interp-item .icon {
+  font-size: 1.2rem;
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-age-outcomes').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Ages 50-59', 'Ages 60-69', 'Ages 70-79'],
+      datasets: [{
+        label: 'Adverse Events per 10,000 Person-Years (vs Placebo)',
+        data: [-19, 4, 51],
+        backgroundColor: function(context) {
+          const value = context.raw;
+          if (value < 0) return 'rgba(34, 197, 94, 0.8)';
+          if (value < 10) return 'rgba(148, 163, 184, 0.8)';
+          return 'rgba(239, 68, 68, 0.8)';
+        },
+        borderColor: function(context) {
+          const value = context.raw;
+          if (value < 0) return 'rgba(34, 197, 94, 1)';
+          if (value < 10) return 'rgba(148, 163, 184, 1)';
+          return 'rgba(239, 68, 68, 1)';
+        },
+        borderWidth: 2,
+        borderRadius: 8,
+        barThickness: 70
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.8,
+      indexAxis: 'y',
+      plugins: {
+        title: {
+          display: true,
+          text: 'Net Benefit or Harm by Age Group (Estrogen-Only)',
+          font: { size: 18, weight: 'bold' },
+          color: '#1e293b',
+          padding: { bottom: 20 }
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          titleFont: { size: 14 },
+          bodyFont: { size: 13 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              const value = context.raw;
+              if (value < 0) {
+                return `${Math.abs(value)} FEWER adverse events per 10,000 women/year`;
+              } else if (value > 0) {
+                return `${value} MORE adverse events per 10,000 women/year`;
+              }
+              return 'No significant difference';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: -30,
+          max: 60,
+          title: {
+            display: true,
+            text: 'Excess Adverse Events per 10,000 Person-Years',
+            font: { size: 12, weight: '600' },
+            color: '#475569'
+          },
+          grid: {
+            color: function(context) {
+              if (context.tick.value === 0) return 'rgba(100, 116, 139, 0.8)';
+              return 'rgba(148, 163, 184, 0.2)';
+            },
+            lineWidth: function(context) {
+              if (context.tick.value === 0) return 2;
+              return 1;
+            }
+          },
+          ticks: {
+            color: '#64748b',
+            callback: function(value) {
+              if (value < 0) return value + ' (benefit)';
+              if (value > 0) return '+' + value + ' (harm)';
+              return '0';
+            }
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: {
+            color: '#475569',
+            font: { size: 14, weight: '500' }
+          }
+        }
+      }
+    }
+  });
+})();
+</script>

@@ -1,0 +1,190 @@
+<!-- Visualization: WHI Outcomes Comparison - Estrogen-Only vs Combined Therapy -->
+<!-- Generated: 2025-12-23 -->
+<!-- Type: grouped-bar-chart -->
+<!-- Source: Women's Health Initiative Trials (PMC3963523) -->
+
+<figure class="data-viz" id="viz-1">
+  <div class="viz-container" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto; padding: 20px;">
+    <canvas id="chart-whi-outcomes"></canvas>
+  </div>
+  <figcaption>
+    <strong>Figure 1:</strong> Comparison of health outcomes between estrogen-only therapy (ET) and combined estrogen-progestogen therapy (EPT) from the Women's Health Initiative trials. Hazard ratios below 1.0 indicate reduced risk (benefit), while values above 1.0 indicate increased risk (harm). The dashed line at 1.0 represents no effect.
+    <span class="viz-source">Source: The Women's Health Initiative Hormone Therapy Trials: Update and Overview of Health Outcomes. PMC3963523</span>
+  </figcaption>
+</figure>
+
+<style>
+.data-viz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.data-viz figcaption {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.viz-source {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+.viz-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.viz-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+.viz-legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<script>
+(function() {
+  const ctx = document.getElementById('chart-whi-outcomes').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Breast Cancer', 'Coronary Heart Disease', 'Stroke', 'VTE', 'Hip Fracture', 'All-Cause Mortality'],
+      datasets: [
+        {
+          label: 'Estrogen-Only (ET)',
+          data: [0.79, 0.94, 1.35, 1.35, 0.67, 0.99],
+          backgroundColor: 'rgba(59, 130, 246, 0.8)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 2,
+          borderRadius: 4
+        },
+        {
+          label: 'Combined (EPT)',
+          data: [1.24, 1.18, 1.37, 2.0, 0.67, 0.99],
+          backgroundColor: 'rgba(244, 63, 94, 0.8)',
+          borderColor: 'rgba(244, 63, 94, 1)',
+          borderWidth: 2,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.8,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: 'WHI Outcomes: Estrogen-Only vs Combined Therapy',
+          font: {
+            size: 18,
+            weight: 'bold'
+          },
+          color: '#1e293b',
+          padding: { bottom: 20 }
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            font: { size: 13 }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          titleFont: { size: 14 },
+          bodyFont: { size: 13 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              const hr = context.raw;
+              const interpretation = hr < 1 ? 'Reduced risk' : hr > 1 ? 'Increased risk' : 'No effect';
+              const percent = hr < 1 ? Math.round((1 - hr) * 100) + '% lower' : hr > 1 ? Math.round((hr - 1) * 100) + '% higher' : '';
+              return [
+                `${context.dataset.label}: HR ${hr}`,
+                `${interpretation} ${percent}`
+              ];
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              yMin: 1,
+              yMax: 1,
+              borderColor: 'rgba(100, 116, 139, 0.7)',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: 'No Effect (HR = 1.0)',
+                position: 'end',
+                backgroundColor: 'rgba(100, 116, 139, 0.8)',
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 2.2,
+          title: {
+            display: true,
+            text: 'Hazard Ratio',
+            font: { size: 13, weight: '600' },
+            color: '#475569'
+          },
+          grid: {
+            color: 'rgba(148, 163, 184, 0.2)'
+          },
+          ticks: {
+            callback: function(value) {
+              return value.toFixed(1);
+            },
+            color: '#64748b'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: '#475569',
+            font: { size: 11 }
+          }
+        }
+      }
+    }
+  });
+})();
+</script>
