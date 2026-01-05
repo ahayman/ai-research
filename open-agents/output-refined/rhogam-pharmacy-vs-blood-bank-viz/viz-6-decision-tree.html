@@ -1,0 +1,374 @@
+<!-- Visualization: Patient Eligibility Decision Tree for RhIG -->
+<!-- Generated: 2026-01-05 -->
+<!-- Type: decision-tree -->
+<!-- Source: ACOG Practice Bulletin, AABB Standards -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RhIG Patient Eligibility Decision Tree</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .viz-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 32px;
+    }
+
+    .viz-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .viz-header h1 {
+      font-size: 1.75rem;
+      color: #1e3a5f;
+      margin-bottom: 8px;
+    }
+
+    .viz-header p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .decision-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .node {
+      position: relative;
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    .question-node {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+      padding: 16px 24px;
+      border-radius: 12px;
+      max-width: 400px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .question-node:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+    }
+
+    .question-node h3 {
+      color: #92400e;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .question-node p {
+      color: #a16207;
+      font-size: 0.8rem;
+    }
+
+    .branches {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      position: relative;
+    }
+
+    .branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .branch-line {
+      width: 2px;
+      height: 30px;
+      background: #cbd5e1;
+    }
+
+    .branch-label {
+      padding: 4px 16px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .branch-label.yes {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .branch-label.no {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .outcome-node {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      max-width: 180px;
+    }
+
+    .outcome-node.stop {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #991b1b;
+      border: 2px solid #fca5a5;
+    }
+
+    .outcome-node.continue {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      color: #166534;
+      border: 2px solid #86efac;
+    }
+
+    .outcome-node.action {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      color: #1e40af;
+      border: 2px solid #93c5fd;
+    }
+
+    .connector {
+      width: 2px;
+      height: 24px;
+      background: #cbd5e1;
+    }
+
+    .horizontal-connector {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 2px;
+      width: 200px;
+      background: #cbd5e1;
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      padding-top: 24px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .legend-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+
+    .legend-box.question {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+    }
+
+    .legend-box.stop {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #fca5a5;
+    }
+
+    .legend-box.action {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border: 2px solid #93c5fd;
+    }
+
+    .source {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .tree-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .branches {
+        gap: 40px;
+      }
+
+      .question-node {
+        padding: 12px 16px;
+        max-width: 300px;
+      }
+
+      .outcome-node {
+        max-width: 140px;
+        font-size: 0.75rem;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <figure class="viz-container" id="viz-6">
+    <div class="viz-header">
+      <h1>RhIG Patient Eligibility Decision Tree</h1>
+      <p>Step-by-step determination of RhIG candidacy</p>
+    </div>
+
+    <div class="decision-tree">
+      <!-- Question 1: Is patient Rh-negative? -->
+      <div class="node">
+        <div class="question-node">
+          <h3>Is the patient Rh-negative?</h3>
+          <p>Based on Type and Screen results</p>
+        </div>
+      </div>
+
+      <div class="branches">
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label no">NO</div>
+          <div class="outcome-node stop">NOT ELIGIBLE<br><small>Rh-positive patients do not need RhIG</small></div>
+        </div>
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label yes">YES</div>
+          <div class="connector"></div>
+        </div>
+      </div>
+
+      <!-- Question 2: Does patient have existing anti-D? -->
+      <div class="node" style="margin-top: -8px;">
+        <div class="question-node">
+          <h3>Does patient have existing anti-D?</h3>
+          <p>Check antibody screen results</p>
+        </div>
+      </div>
+
+      <div class="branches">
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label yes">YES</div>
+          <div class="outcome-node stop">NOT ELIGIBLE<br><small>Already sensitized; RhIG cannot help</small></div>
+        </div>
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label no">NO</div>
+          <div class="connector"></div>
+        </div>
+      </div>
+
+      <!-- Question 3: Antepartum or postpartum? -->
+      <div class="node" style="margin-top: -8px;">
+        <div class="question-node">
+          <h3>Is this antepartum or postpartum?</h3>
+          <p>Timing determines testing requirements</p>
+        </div>
+      </div>
+
+      <div class="branches">
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label" style="background: #e0e7ff; color: #4338ca;">ANTEPARTUM</div>
+          <div class="outcome-node action">ADMINISTER at 28 weeks<br><small>Standard 300 mcg dose</small></div>
+        </div>
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label" style="background: #fce7f3; color: #9d174d;">POSTPARTUM</div>
+          <div class="connector"></div>
+        </div>
+      </div>
+
+      <!-- Question 4: Is infant Rh-positive? -->
+      <div class="node" style="margin-top: -8px;">
+        <div class="question-node">
+          <h3>Is the infant Rh-positive?</h3>
+          <p>Based on cord blood testing</p>
+        </div>
+      </div>
+
+      <div class="branches">
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label no">NO</div>
+          <div class="outcome-node stop">NOT NEEDED<br><small>Rh-negative infant poses no risk</small></div>
+        </div>
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label yes">YES</div>
+          <div class="connector"></div>
+        </div>
+      </div>
+
+      <!-- Question 5: Large FMH? -->
+      <div class="node" style="margin-top: -8px;">
+        <div class="question-node">
+          <h3>Is FMH greater than 30mL?</h3>
+          <p>Rosette test screening</p>
+        </div>
+      </div>
+
+      <div class="branches">
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label no">NO</div>
+          <div class="outcome-node action">STANDARD DOSE<br><small>One 300 mcg vial</small></div>
+        </div>
+        <div class="branch">
+          <div class="branch-line"></div>
+          <div class="branch-label yes">YES</div>
+          <div class="outcome-node action">CALCULATE DOSE<br><small>KB test → Formula:<br>(% HbF × 5000)/30 + 1</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box question"></div>
+        <span>Decision Point</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box stop"></div>
+        <span>Not Eligible / Not Needed</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box action"></div>
+        <span>Administer RhIG</span>
+      </div>
+    </div>
+
+    <figcaption class="source">
+      <strong>Figure 6:</strong> Decision tree for determining RhIG candidacy and dosing.<br>
+      Sources: ACOG Practice Bulletin, AABB Standards
+    </figcaption>
+  </figure>
+</body>
+</html>

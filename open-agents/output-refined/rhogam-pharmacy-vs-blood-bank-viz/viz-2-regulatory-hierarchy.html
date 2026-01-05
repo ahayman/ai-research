@@ -1,0 +1,410 @@
+<!-- Visualization: Regulatory Framework Hierarchy for RhIG -->
+<!-- Generated: 2026-01-05 -->
+<!-- Type: org-chart -->
+<!-- Source: FDA, AABB, CAP, Joint Commission -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RhIG Regulatory Framework</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .viz-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 32px;
+    }
+
+    .viz-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .viz-header h1 {
+      font-size: 1.75rem;
+      color: #1e3a5f;
+      margin-bottom: 8px;
+    }
+
+    .viz-header p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .hierarchy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .level {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .connector {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, #3b82f6, #64748b);
+    }
+
+    .connector-horizontal {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .node {
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      min-width: 200px;
+    }
+
+    .node:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .node.federal {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+    }
+
+    .node.professional {
+      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+      color: white;
+    }
+
+    .node.accreditation {
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+      color: white;
+    }
+
+    .node.state {
+      background: linear-gradient(135deg, #c2410c 0%, #f97316 100%);
+      color: white;
+    }
+
+    .node.institutional {
+      background: linear-gradient(135deg, #4b5563 0%, #9ca3af 100%);
+      color: white;
+    }
+
+    .node-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .node-subtitle {
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .node-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #fbbf24;
+      color: #1e293b;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .detail-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+      max-width: 500px;
+      z-index: 100;
+    }
+
+    .detail-panel.active {
+      display: block;
+    }
+
+    .detail-panel h3 {
+      color: #1e3a5f;
+      margin-bottom: 16px;
+    }
+
+    .detail-panel p {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .detail-panel .key-point {
+      background: #f0f9ff;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+      margin-top: 16px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 99;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .branch-lines {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: -12px;
+      margin-bottom: -12px;
+    }
+
+    .branch-line {
+      width: 2px;
+      height: 40px;
+      background: #cbd5e1;
+      margin: 0 80px;
+    }
+
+    .level-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .source {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+      .node {
+        min-width: 150px;
+        padding: 12px 16px;
+      }
+
+      .node-title {
+        font-size: 0.9rem;
+      }
+
+      .level {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" onclick="closePanel()"></div>
+
+  <figure class="viz-container" id="viz-2">
+    <div class="viz-header">
+      <h1>Regulatory Framework for RhIG Management</h1>
+      <p>Click on any box to learn more about its requirements</p>
+    </div>
+
+    <div class="hierarchy">
+      <!-- Level 1: Federal -->
+      <div class="level-label">Federal Oversight</div>
+      <div class="level">
+        <div class="node federal" onclick="showDetail('fda')">
+          <div class="node-title">FDA / CBER</div>
+          <div class="node-subtitle">21 CFR Part 640</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <!-- Level 2: Professional Standards -->
+      <div class="level-label">Professional Standards</div>
+      <div class="level">
+        <div class="node professional" onclick="showDetail('aabb')">
+          <div class="node-badge">Key</div>
+          <div class="node-title">AABB Standards</div>
+          <div class="node-subtitle">Standard 5.30</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <!-- Level 3: Accreditation Bodies -->
+      <div class="level-label">Accreditation</div>
+      <div class="level">
+        <div class="node accreditation" onclick="showDetail('cap')">
+          <div class="node-title">CAP</div>
+          <div class="node-subtitle">TRM Checklist</div>
+        </div>
+        <div class="node accreditation" onclick="showDetail('jc')">
+          <div class="node-badge">Flexible</div>
+          <div class="node-title">Joint Commission</div>
+          <div class="node-subtitle">Either Standard OK</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <!-- Level 4: State -->
+      <div class="level-label">State Level</div>
+      <div class="level">
+        <div class="node state" onclick="showDetail('state')">
+          <div class="node-title">State Regulations</div>
+          <div class="node-subtitle">Variable by Jurisdiction</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <!-- Level 5: Institutional -->
+      <div class="level-label">Institutional</div>
+      <div class="level">
+        <div class="node institutional" onclick="showDetail('hospital')">
+          <div class="node-title">Hospital Policies</div>
+          <div class="node-subtitle">Blood Bank or Pharmacy</div>
+        </div>
+      </div>
+    </div>
+
+    <figcaption class="source">
+      <strong>Figure 2:</strong> Regulatory hierarchy governing RhIG management in US hospitals.<br>
+      Sources: FDA, AABB, CAP, Joint Commission
+    </figcaption>
+  </figure>
+
+  <!-- Detail Panels -->
+  <div class="detail-panel" id="panel-fda">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>FDA / CBER Regulation</h3>
+    <p>RhIG is regulated by the Center for Biologics Evaluation and Research (CBER) under <strong>21 CFR Part 640 Subpart J</strong> - Immune Globulin (Human).</p>
+    <p>This classifies RhIG as a <strong>plasma derivative</strong>, NOT a blood component under Part 606.</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> Storage at 2-8°C required. Never expose above 45°C during processing.
+    </div>
+  </div>
+
+  <div class="detail-panel" id="panel-aabb">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>AABB Standards</h3>
+    <p><strong>Standard 5.30:</strong> "The transfusion service SHALL have a policy for Rh Immune Globulin prophylaxis."</p>
+    <p><strong>Standard 5.30.2:</strong> Requires D antigen testing before administration.</p>
+    <p><strong>Standard 5.30.3:</strong> Ensures appropriate dosing.</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> The word "SHALL" makes this a mandatory requirement for AABB-accredited facilities. The transfusion service, not pharmacy, is explicitly responsible.
+    </div>
+  </div>
+
+  <div class="detail-panel" id="panel-cap">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>College of American Pathologists</h3>
+    <p>CAP's Transfusion Medicine (TRM) Checklist includes requirements for RhIG testing and administration.</p>
+    <p>Surveys focus on laboratory procedures including weak D testing and FMH quantification.</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> CAP checklist TRM.40780 addresses weak D testing requirements for newborns.
+    </div>
+  </div>
+
+  <div class="detail-panel" id="panel-jc">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>Joint Commission</h3>
+    <p>JC classifies RhIG as a "blood derivative" which can be surveyed under:</p>
+    <p>• <strong>Immunohematology Standards</strong> (Blood Bank), OR<br>
+    • <strong>Medication Management Standards</strong> (Pharmacy)</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> Official JC position: "No, this is NOT a mandatory practice" - either approach is acceptable. Some surveyors have incorrectly stated pharmacy is required.
+    </div>
+  </div>
+
+  <div class="detail-panel" id="panel-state">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>State Regulations</h3>
+    <p>State requirements vary significantly by jurisdiction.</p>
+    <p>Some state pharmacy boards may require oversight of all medications including blood derivatives.</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> Check your specific state's pharmacy board and health department requirements for guidance.
+    </div>
+  </div>
+
+  <div class="detail-panel" id="panel-hospital">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h3>Hospital Policies</h3>
+    <p>Institutions have flexibility in determining whether blood bank or pharmacy manages RhIG inventory.</p>
+    <p><strong>Recommended:</strong> Blood bank management with Type & Screen verification before dispensing.</p>
+    <div class="key-point">
+      <strong>Key Point:</strong> Regardless of storage location, Type and Screen must be completed before release, and blood bank should verify patient eligibility.
+    </div>
+  </div>
+
+  <script>
+    function showDetail(type) {
+      document.querySelector('.overlay').classList.add('active');
+      document.getElementById('panel-' + type).classList.add('active');
+    }
+
+    function closePanel() {
+      document.querySelector('.overlay').classList.remove('active');
+      document.querySelectorAll('.detail-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePanel();
+    });
+  </script>
+</body>
+</html>
