@@ -8,6 +8,8 @@ This agent system transforms topics into comprehensive, interactive web experien
 
 ## Agent Catalog
 
+### Article Pipeline Agents
+
 | Agent | Purpose | Trigger Phrases |
 |-------|---------|-----------------|
 | [Research Agent](agents/research-agent.md) | Deep web research on any topic | "research", "investigate", "find information about" |
@@ -18,6 +20,16 @@ This agent system transforms topics into comprehensive, interactive web experien
 | [Webpage Generator Agent](agents/webpage-generator-agent.md) | Convert markdown to interactive HTML | "create webpage", "generate html", "make interactive" |
 | [Pipeline Orchestrator Agent](agents/pipeline-orchestrator-agent.md) | Run full research-to-webpage pipeline | "full pipeline", "complete workflow", "research and build" |
 | [Research-Dashboard Pipeline Agent](agents/research-dashboard-pipeline-agent.md) | Research topic and create data dashboard | "research dashboard", "data on [topic]", "research and display data" |
+
+### Explainer Pipeline Agents
+
+| Agent | Purpose | Trigger Phrases |
+|-------|---------|-----------------|
+| [Concept Research Agent](agents/concept-research-agent.md) | Research focused on structure, mechanisms, relationships | "explain how", "how does X work", "understand mechanism" |
+| [Diagram Generator Agent](agents/diagram-generator-agent.md) | Create UML, flowcharts, architecture diagrams | "create diagram", "generate flowchart", "make UML" |
+| [Explanation Writer Agent](agents/explanation-writer-agent.md) | Write objective, informative documentation | "write explanation", "document how", "create documentation" |
+| [Explainer Webpage Generator Agent](agents/explainer-webpage-generator-agent.md) | Create documentation-style HTML with diagrams | "create explainer page", "generate documentation site" |
+| [Explainer Pipeline Orchestrator Agent](agents/explainer-pipeline-orchestrator-agent.md) | Run full explanation pipeline | "explain", "how does", "why does", "describe architecture" |
 
 ## Workflow Pipelines
 
@@ -49,18 +61,54 @@ This agent system transforms topics into comprehensive, interactive web experien
 ```
 Use this pipeline when you want to display all research data interactively without writing a narrative article.
 
+### Explainer Pipeline (Documentation)
+```
+┌───────────────────────┐     ┌───────────────────────┐
+│ Concept Research      │────▶│ Diagram Generator     │
+│ (structure/mechanism) │     │ (UML/flowcharts)      │
+└───────────────────────┘     └───────────────────────┘
+                                        │
+         ┌──────────────────────────────┘
+         ▼
+┌───────────────────────┐     ┌───────────────────────┐
+│ Explanation Writer    │────▶│ Explainer Webpage     │
+│ (objective docs)      │     │ Generator (final)     │
+└───────────────────────┘     └───────────────────────┘
+```
+Use this pipeline when you want to explain how something works, describe architecture, or create educational documentation with diagrams. This pipeline is **objective and informative**—no opinions, just facts and clear explanations.
+
 ## Agent Routing Logic
 
 When a user request arrives, determine the appropriate agent using these rules:
 
-1. **Full Article Pipeline**: If user wants comprehensive research AND a narrative webpage, use **Pipeline Orchestrator Agent**
-2. **Data Dashboard Pipeline**: If user wants research data displayed interactively (not as an article), use **Research-Dashboard Pipeline Agent**
-3. **Research Only**: If user wants information gathering, use **Research Agent**
-4. **Content Writing**: If research exists and user wants article, use **Article Writer Agent**
-5. **Data Dashboard Only**: If research exists and user wants data display (not article), use **Data Dashboard Agent**
-6. **Image Issues**: If article exists with broken images, use **Image Validator Agent**
-7. **Data Visualization**: If article needs charts or data is provided, use **Data Visualization Agent**
-8. **HTML Generation**: If markdown article is complete, use **Webpage Generator Agent**
+### Explainer Pipeline (Check First)
+1. **Full Explainer Pipeline**: If user wants to **explain**, **describe how/why**, **understand**, **illuminate**, or **document how something works**, use **Explainer Pipeline Orchestrator Agent**
+   - Trigger phrases: "explain how", "how does X work", "why does X happen", "describe the architecture", "explain the mechanism", "help me understand", "document how", "clarify", "expound on"
+2. **Concept Research Only**: If user wants to understand structure/mechanisms without full pipeline, use **Concept Research Agent**
+3. **Diagrams Only**: If concept research exists and user wants diagrams, use **Diagram Generator Agent**
+4. **Documentation Writing**: If concept research exists and user wants written explanation, use **Explanation Writer Agent**
+5. **Explainer Page Only**: If explanation and diagrams exist, use **Explainer Webpage Generator Agent**
+
+### Article Pipeline
+6. **Full Article Pipeline**: If user wants comprehensive research AND a narrative webpage, use **Pipeline Orchestrator Agent**
+7. **Data Dashboard Pipeline**: If user wants research data displayed interactively (not as an article), use **Research-Dashboard Pipeline Agent**
+8. **Research Only**: If user wants information gathering (not explanation), use **Research Agent**
+9. **Content Writing**: If research exists and user wants article, use **Article Writer Agent**
+10. **Data Dashboard Only**: If research exists and user wants data display (not article), use **Data Dashboard Agent**
+11. **Image Issues**: If article exists with broken images, use **Image Validator Agent**
+12. **Data Visualization**: If article needs charts or data is provided, use **Data Visualization Agent**
+13. **HTML Generation**: If markdown article is complete, use **Webpage Generator Agent**
+
+### Key Distinction: Explainer vs Article
+
+| Signal | Route To |
+|--------|----------|
+| "explain how", "how does", "why does" | Explainer Pipeline |
+| "describe architecture", "mechanism of" | Explainer Pipeline |
+| "help me understand", "clarify" | Explainer Pipeline |
+| "research and create webpage" | Article Pipeline |
+| "write article about", "investigate" | Article Pipeline |
+| "find information about" | Research Agent |
 
 ## Folder Structure
 
@@ -68,6 +116,7 @@ When a user request arrives, determine the appropriate agent using these rules:
 open-agents/
 ├── INSTRUCTIONS.md          # This file - agent catalog and routing
 ├── agents/                  # Agent definition files
+│   ├── # Article Pipeline Agents
 │   ├── research-agent.md
 │   ├── article-writer-agent.md
 │   ├── image-validator-agent.md
@@ -75,7 +124,13 @@ open-agents/
 │   ├── data-dashboard-agent.md
 │   ├── webpage-generator-agent.md
 │   ├── pipeline-orchestrator-agent.md
-│   └── research-dashboard-pipeline-agent.md
+│   ├── research-dashboard-pipeline-agent.md
+│   ├── # Explainer Pipeline Agents
+│   ├── concept-research-agent.md
+│   ├── diagram-generator-agent.md
+│   ├── explanation-writer-agent.md
+│   ├── explainer-webpage-generator-agent.md
+│   └── explainer-pipeline-orchestrator-agent.md
 ├── tools/                   # Reusable scripts created by agents
 ├── source/                  # User inputs and topic requests
 ├── output-drafts/           # Initial research and drafts
@@ -85,6 +140,7 @@ open-agents/
 
 ## Output Conventions
 
+### Article Pipeline Outputs
 - **Research notes**: `output-drafts/{topic}-research.md`
 - **Article drafts**: `output-drafts/{topic}-article.md`
 - **Pipeline tracking**: `output-drafts/{topic}-pipeline.md` or `output-drafts/{topic}-dashboard-pipeline.md`
@@ -92,6 +148,14 @@ open-agents/
 - **Visualizations**: `output-refined/{topic}-viz/` (folder with assets)
 - **Final article webpage**: `output-final/{topic}/index.html`
 - **Final data dashboard**: `output-final/{topic}-dashboard/index.html`
+
+### Explainer Pipeline Outputs
+- **Concept research**: `output-drafts/{topic}-concept-research.md`
+- **Explanation drafts**: `output-drafts/{topic}-explanation.md`
+- **Pipeline tracking**: `output-drafts/{topic}-explainer-pipeline.md`
+- **Diagrams**: `output-refined/{topic}-diagrams/` (folder with Mermaid/SVG files)
+- **Diagram manifest**: `output-refined/{topic}-diagrams/manifest.md`
+- **Final explainer webpage**: `output-final/{topic}-explainer/index.html`
 
 ## Inter-Agent Communication
 

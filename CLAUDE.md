@@ -4,15 +4,28 @@ This project uses the Open Agent System to transform research topics into compre
 
 ## Quick Start
 
-To run the full pipeline:
+### Article Pipeline (narrative content)
 > "Research [topic] and create an interactive webpage"
 
-To use individual agents:
+### Explainer Pipeline (documentation/how-it-works)
+> "Explain how [concept] works"
+> "Describe the architecture of [system]"
+> "Help me understand [topic]"
+
+### Individual Agents
+
+**Article Pipeline:**
 > "Research [topic]" - Research only
 > "Write article from research" - Article creation
 > "Validate images" - Check/fix image URLs
 > "Create visualizations" - Generate charts
 > "Generate webpage" - Create final HTML
+
+**Explainer Pipeline:**
+> "Research concept [topic]" - Concept-focused research
+> "Generate diagrams" - Create UML/flowcharts
+> "Write explanation" - Documentation writing
+> "Create explainer page" - Final documentation site
 
 ## Available Agents
 
