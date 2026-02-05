@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Sleep Improvement Dashboard — ASD, ME/CFS & Chronic Fatigue</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+/* ===== CSS CUSTOM PROPERTIES ===== */
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --bg-card-hover: #273548;
+  --bg-sidebar: #0c1222;
+  --bg-input: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #334155;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --star-filled: #fbbf24;
+  --star-empty: #475569;
+  --risk-low: #22c55e;
+  --risk-medium: #f59e0b;
+  --risk-high: #ef4444;
+  --suit-high: #22c55e;
+  --suit-moderate: #f59e0b;
+  --suit-low: #ef4444;
+  --suit-very-high: #10b981;
+  --suit-essential: #06b6d4;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+  --radius: 12px;
+  --transition: 0.3s ease;
+  --sidebar-width: 260px;
+  --progress-color: #6366f1;
+  --hero-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e293b 100%);
+}
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-sidebar: #f1f5f9;
+  --bg-input: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --hero-gradient: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 50%, #e0e7ff 100%);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 10000;
+  background: var(--progress-color);
+  width: 0%; transition: width 0.1s linear;
+}
+
+/* ===== BACK TO TOP ===== */
+#back-to-top {
+  position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  font-size: 1.3rem; display: none; align-items: center; justify-content: center;
+  box-shadow: var(--shadow); transition: transform var(--transition), opacity var(--transition);
+}
+#back-to-top:hover { transform: scale(1.1); background: var(--accent-hover); }
+#back-to-top.visible { display: flex; }
+
+/* ===== SIDEBAR ===== */
+#sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar-width);
+  height: 100vh; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+  z-index: 1000; overflow-y: auto; padding: 20px 0;
+  transition: transform var(--transition);
+}
+#sidebar .sidebar-header {
+  padding: 10px 20px 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;
+}
+#sidebar .sidebar-header h2 { font-size: 1rem; color: var(--accent); }
+#sidebar nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; color: var(--text-secondary); text-decoration: none;
+  font-size: 0.85rem; transition: all var(--transition); border-left: 3px solid transparent;
+}
+#sidebar nav a:hover, #sidebar nav a.active {
+  background: var(--bg-card-hover); color: var(--text-primary); border-left-color: var(--accent);
+}
+#sidebar nav a .nav-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+.sidebar-toggle {
+  display: none; position: fixed; top: 10px; left: 10px; z-index: 1100;
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer;
+}
+
+/* ===== MAIN CONTENT ===== */
+#main-content {
+  margin-left: var(--sidebar-width); min-height: 100vh;
+  transition: margin-left var(--transition);
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: var(--hero-gradient);
+  padding: 60px 40px 50px; text-align: center;
+}
+.hero h1 { font-size: 2.4rem; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px; }
+.hero .subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.hero-stats {
+  display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--accent); }
+.hero-stat .stat-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle {
+  position: fixed; top: 15px; right: 20px; z-index: 1100;
+  background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px;
+  padding: 6px 14px; cursor: pointer; color: var(--text-primary); font-size: 0.85rem;
+  display: flex; align-items: center; gap: 6px; transition: all var(--transition);
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+/* ===== CONTAINER ===== */
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 30px; }
+
+/* ===== SECTION HEADERS ===== */
+.section-header {
+  margin: 40px 0 20px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--border-color);
+}
+.section-header h2 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  position: sticky; top: 3px; z-index: 500;
+  background: var(--bg-secondary); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 16px 20px;
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.filter-bar label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
+.filter-bar select, .filter-bar input[type="text"] {
+  background: var(--bg-input); color: var(--text-primary);
+  border: 1px solid var(--border-color); border-radius: 8px;
+  padding: 8px 12px; font-size: 0.85rem; min-width: 140px;
+  transition: border-color var(--transition);
+}
+.filter-bar select:focus, .filter-bar input:focus { outline: none; border-color: var(--accent); }
+.filter-group { display: flex; flex-direction: column; }
+.filter-bar .search-box { flex: 1; min-width: 200px; }
+.filter-count { font-size: 0.85rem; color: var(--text-secondary); margin-left: auto; white-space: nowrap; }
+
+/* ===== CHARTS GRID ===== */
+.charts-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px; margin-bottom: 30px;
+}
+.chart-card {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+}
+.chart-card h3 { font-size: 1rem; margin-bottom: 15px; color: var(--text-secondary); }
+.chart-card canvas { max-height: 350px; }
+
+/* ===== METHOD CARDS GRID ===== */
+.methods-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 16px; margin-bottom: 30px;
+}
+.method-card {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 20px; cursor: pointer;
+  transition: all var(--transition); box-shadow: var(--shadow); position: relative;
+}
+.method-card:hover { border-color: var(--accent); transform: translateY(-2px); background: var(--bg-card-hover); }
+.method-card.expanded { grid-column: 1 / -1; }
+.method-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.method-card .card-title { font-size: 1.05rem; font-weight: 700; flex: 1; padding-right: 10px; }
+.method-card .card-expand-icon { color: var(--text-muted); font-size: 1rem; transition: transform var(--transition); }
+.method-card.expanded .card-expand-icon { transform: rotate(180deg); }
+.method-card .card-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+
+/* ===== BADGES ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 0.7rem;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge-category { border: 1px solid; }
+.badge-risk-low { background: rgba(34,197,94,0.15); color: var(--risk-low); }
+.badge-risk-medium { background: rgba(245,158,11,0.15); color: var(--risk-medium); }
+.badge-risk-high { background: rgba(239,68,68,0.15); color: var(--risk-high); }
+.badge-risk-low-medium { background: rgba(245,158,11,0.15); color: var(--risk-medium); }
+.badge-mechanism { background: rgba(99,102,241,0.15); color: var(--accent); }
+
+/* ===== STARS ===== */
+.stars { display: inline-flex; gap: 2px; }
+.stars .star { color: var(--star-empty); font-size: 0.9rem; }
+.stars .star.filled { color: var(--star-filled); }
+.stars .star.half { position: relative; color: var(--star-empty); }
+.stars .star.half::before {
+  content: '\2605'; position: absolute; left: 0; overflow: hidden;
+  width: 50%; color: var(--star-filled);
+}
+
+/* ===== SUITABILITY ===== */
+.suitability-row { display: flex; gap: 16px; margin: 8px 0; font-size: 0.82rem; }
+.suitability-item { display: flex; align-items: center; gap: 4px; }
+.suit-indicator {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+}
+.suit-very-high, .suit-essential { background: var(--suit-very-high); }
+.suit-high { background: var(--suit-high); }
+.suit-moderate { background: var(--suit-moderate); }
+.suit-low { background: var(--suit-low); }
+
+/* ===== EXPANDED DETAILS ===== */
+.card-details {
+  display: none; margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  animation: fadeIn 0.3s ease;
+}
+.method-card.expanded .card-details { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.detail-section { margin-bottom: 14px; }
+.detail-section h4 { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.detail-section p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+.detail-notes {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.detail-note-box {
+  background: var(--bg-primary); border-radius: 8px; padding: 12px;
+  border-left: 3px solid;
+}
+.detail-note-box.asd-note { border-left-color: #14b8a6; }
+.detail-note-box.mecfs-note { border-left-color: #f43f5e; }
+.detail-note-box h5 { font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; }
+.detail-note-box p { font-size: 0.82rem; }
+
+/* ===== PROTOCOL BUILDER ===== */
+.protocol-section { margin: 30px 0; }
+.protocol-grid {
+  display: grid; grid-template-columns: 1fr 400px; gap: 20px;
+}
+.protocol-methods {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 20px; max-height: 500px; overflow-y: auto;
+}
+.protocol-method-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--border-color); font-size: 0.88rem;
+}
+.protocol-method-item:last-child { border-bottom: none; }
+.protocol-method-item input[type="checkbox"] {
+  accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer;
+}
+.protocol-method-item .pm-name { flex: 1; }
+.protocol-method-item .pm-timing {
+  font-size: 0.75rem; color: var(--text-muted); background: var(--bg-input);
+  padding: 2px 8px; border-radius: 10px;
+}
+.protocol-summary {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 20px; position: sticky; top: 60px;
+}
+.protocol-summary h3 { margin-bottom: 12px; font-size: 1.1rem; }
+.protocol-summary .summary-empty { color: var(--text-muted); font-size: 0.88rem; font-style: italic; }
+.protocol-list { list-style: none; }
+.protocol-list li {
+  padding: 6px 0; border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem; display: flex; justify-content: space-between;
+}
+.protocol-list li:last-child { border-bottom: none; }
+.protocol-actions { margin-top: 16px; display: flex; gap: 10px; }
+.btn {
+  padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600; transition: all var(--transition);
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-secondary:hover { border-color: var(--accent); }
+
+/* ===== TIMELINE ===== */
+.timeline-container {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 30px 20px; overflow-x: auto;
+}
+.timeline {
+  display: flex; align-items: flex-start; gap: 0; min-width: 900px; position: relative;
+}
+.timeline::before {
+  content: ''; position: absolute; top: 40px; left: 40px; right: 40px;
+  height: 4px; background: var(--border-color); border-radius: 2px;
+}
+.timeline-phase {
+  flex: 1; text-align: center; position: relative; padding: 0 8px;
+}
+.timeline-phase .phase-marker {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--accent);
+  margin: 31px auto 12px; position: relative; z-index: 1;
+}
+.timeline-phase .phase-label {
+  font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.timeline-phase .phase-items { font-size: 0.75rem; color: var(--text-secondary); }
+.timeline-phase .phase-items div {
+  background: var(--bg-primary); border-radius: 6px; padding: 4px 8px;
+  margin: 3px 0; border: 1px solid var(--border-color);
+}
+
+/* ===== CONDITION PROTOCOLS ===== */
+.condition-protocols {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;
+}
+.condition-card {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+}
+.condition-card h3 { font-size: 1.15rem; margin-bottom: 6px; }
+.condition-card .condition-subtitle { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px; }
+.condition-card .rec-list { list-style: none; }
+.condition-card .rec-list li {
+  padding: 8px 0; border-bottom: 1px solid var(--border-color);
+  display: flex; align-items: center; gap: 10px; font-size: 0.88rem;
+}
+.condition-card .rec-list li:last-child { border-bottom: none; }
+.rec-priority {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase; white-space: nowrap;
+}
+.rec-essential { background: rgba(6,182,212,0.2); color: #06b6d4; }
+.rec-first-line { background: rgba(34,197,94,0.2); color: #22c55e; }
+.rec-recommended { background: rgba(99,102,241,0.2); color: #818cf8; }
+.rec-consider { background: rgba(245,158,11,0.2); color: #f59e0b; }
+
+/* ===== SOURCES ===== */
+.sources-section {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); padding: 24px; margin: 30px 0;
+}
+.sources-section h3 { margin-bottom: 12px; }
+.sources-list { columns: 2; column-gap: 30px; font-size: 0.78rem; color: var(--text-secondary); }
+.sources-list p { break-inside: avoid; padding: 3px 0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .protocol-grid { grid-template-columns: 1fr; }
+  .condition-protocols { grid-template-columns: 1fr; }
+  .detail-notes { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: block; }
+  #main-content { margin-left: 0; }
+  .hero { padding: 40px 20px 30px; }
+  .hero h1 { font-size: 1.6rem; }
+  .container { padding: 15px; }
+  .methods-grid { grid-template-columns: 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .filter-bar { flex-direction: column; }
+  .filter-bar select, .filter-bar input[type="text"] { width: 100%; }
+  .hero-stats { gap: 20px; }
+  .sources-list { columns: 1; }
+  .timeline { min-width: 700px; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  #sidebar, .sidebar-toggle, .theme-toggle, #back-to-top, #progress-bar,
+  .filter-bar, .protocol-section, .charts-grid { display: none !important; }
+  #main-content { margin-left: 0 !important; }
+  .hero { background: #fff !important; color: #000 !important; padding: 20px !important; }
+  .hero h1, .hero .subtitle, .hero-stat .stat-number { color: #000 !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .method-card { break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; }
+  .method-card, .method-card * { color: #000 !important; }
+  .card-details { display: block !important; }
+  .condition-card { break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; }
+  .condition-card, .condition-card * { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar" role="progressbar" aria-label="Reading progress"></div>
+
+<!-- Back to Top -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">&#9650;</button>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">
+  <span id="theme-icon">&#9790;</span> <span id="theme-label">Light</span>
+</button>
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+<!-- Sidebar Navigation -->
+<aside id="sidebar" role="navigation" aria-label="Main navigation">
+  <div class="sidebar-header">
+    <h2>Deep Sleep Dashboard</h2>
+  </div>
+  <nav>
+    <a href="#hero"><span class="nav-icon">&#127968;</span> Overview</a>
+    <a href="#charts"><span class="nav-icon">&#128202;</span> Visualizations</a>
+    <a href="#methods"><span class="nav-icon">&#128218;</span> All Methods</a>
+    <a href="#cat-environment"><span class="nav-icon">&#127968;</span> Environment</a>
+    <a href="#cat-supplements"><span class="nav-icon">&#128138;</span> Supplements</a>
+    <a href="#cat-medications"><span class="nav-icon">&#128137;</span> Medications</a>
+    <a href="#cat-herbal"><span class="nav-icon">&#127807;</span> Herbal</a>
+    <a href="#cat-diet"><span class="nav-icon">&#129367;</span> Diet</a>
+    <a href="#cat-exercise"><span class="nav-icon">&#127939;</span> Exercise</a>
+    <a href="#cat-neurotech"><span class="nav-icon">&#9889;</span> Neurostimulation</a>
+    <a href="#cat-relaxation"><span class="nav-icon">&#129496;</span> Relaxation</a>
+    <a href="#cat-temperature"><span class="nav-icon">&#127777;</span> Temperature</a>
+    <a href="#cat-light"><span class="nav-icon">&#9728;</span> Light Therapy</a>
+    <a href="#cat-psychological"><span class="nav-icon">&#129504;</span> Psychological</a>
+    <a href="#cat-asd"><span class="nav-icon">&#9854;</span> ASD-Specific</a>
+    <a href="#cat-mecfs"><span class="nav-icon">&#9877;</span> ME/CFS-Specific</a>
+    <a href="#protocol"><span class="nav-icon">&#128203;</span> Protocol Builder</a>
+    <a href="#timeline"><span class="nav-icon">&#9200;</span> Timeline</a>
+    <a href="#condition-protocols"><span class="nav-icon">&#127919;</span> Condition Protocols</a>
+    <a href="#sources"><span class="nav-icon">&#128214;</span> Sources</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main id="main-content">
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <h1>Deep Sleep Improvement Dashboard</h1>
+    <p class="subtitle">Evidence-Based Methods for ASD, ME/CFS &amp; Chronic Fatigue</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-number" id="stat-methods">49</div>
+        <div class="stat-label">Methods Reviewed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-number">13</div>
+        <div class="stat-label">Categories</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-number" id="stat-strong">3</div>
+        <div class="stat-label">5-Star Evidence</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Mechanisms</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar" id="filter-bar" role="search" aria-label="Filter methods">
+      <div class="filter-group">
+        <label for="filter-category">Category</label>
+        <select id="filter-category"><option value="">All Categories</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-evidence">Min Evidence</label>
+        <select id="filter-evidence">
+          <option value="">Any</option>
+          <option value="2">2+ Stars</option>
+          <option value="3">3+ Stars</option>
+          <option value="4">4+ Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-risk">Risk Level</label>
+        <select id="filter-risk">
+          <option value="">Any</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-asd">ASD Suitability</label>
+        <select id="filter-asd">
+          <option value="">Any</option>
+          <option value="Very High">Very High</option>
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-mecfs">ME/CFS Suitability</label>
+        <select id="filter-mecfs">
+          <option value="">Any</option>
+          <option value="Essential">Essential</option>
+          <option value="Very High">Very High</option>
+          <option value="High">High</option>
+          <option value="Moderate">Moderate</option>
+        </select>
+      </div>
+      <div class="filter-group search-box">
+        <label for="filter-search">Search</label>
+        <input type="text" id="filter-search" placeholder="Search methods...">
+      </div>
+      <div class="filter-count" id="filter-count">Showing 49 of 49</div>
+    </div>
+
+    <!-- Visualizations -->
+    <section id="charts">
+      <div class="section-header"><h2>&#128202; Visualizations</h2></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Evidence Rating by Method</h3>
+          <canvas id="chart-evidence" aria-label="Bar chart showing evidence ratings for all methods"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Mechanism Distribution</h3>
+          <canvas id="chart-mechanism" aria-label="Doughnut chart showing mechanism distribution"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Evidence Quality Breakdown</h3>
+          <canvas id="chart-quality" aria-label="Doughnut chart showing evidence quality distribution"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Safety Profile by Category</h3>
+          <canvas id="chart-safety" aria-label="Radar chart showing safety profiles across categories"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- All Methods -->
+    <section id="methods">
+      <div class="section-header"><h2>&#128218; All Methods</h2></div>
+      <div class="methods-grid" id="methods-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Protocol Builder -->
+    <section id="protocol" class="protocol-section">
+      <div class="section-header"><h2>&#128203; Protocol Builder</h2></div>
+      <p style="color:var(--text-secondary);margin-bottom:16px;font-size:0.9rem;">Select methods below to build your personalized sleep improvement protocol.</p>
+      <div class="protocol-grid">
+        <div class="protocol-methods" id="protocol-methods">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="protocol-summary" id="protocol-summary">
+          <h3>My Protocol</h3>
+          <div class="summary-empty" id="protocol-empty">Select methods to build your protocol.</div>
+          <ul class="protocol-list" id="protocol-list"></ul>
+          <div class="protocol-actions" id="protocol-actions" style="display:none;">
+            <button class="btn btn-primary" onclick="exportProtocol()">Export Protocol</button>
+            <button class="btn btn-secondary" onclick="clearProtocol()">Clear All</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline">
+      <div class="section-header"><h2>&#9200; Daily Protocol Timeline</h2></div>
+      <div class="timeline-container">
+        <div class="timeline" id="timeline-viz">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Condition-Specific Protocols -->
+    <section id="condition-protocols">
+      <div class="section-header"><h2>&#127919; Condition-Specific Recommended Protocols</h2></div>
+      <div class="condition-protocols">
+        <div class="condition-card" style="border-top:3px solid #14b8a6;">
+          <h3 style="color:#14b8a6;">ASD Sleep Protocol</h3>
+          <p class="condition-subtitle">Recommended stack for autistic individuals with sleep difficulties</p>
+          <ul class="rec-list">
+            <li><span class="rec-priority rec-essential">Essential</span> Strict Circadian Routine</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Melatonin (extended-release)</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Morning Bright Light</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Sensory-Optimized Environment</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Weighted Blanket</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Blue Light Blocking</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Magnesium Glycinate</li>
+            <li><span class="rec-priority rec-recommended">Add</span> CBT-I (adapted)</li>
+            <li><span class="rec-priority rec-consider">Consider</span> L-Theanine for anxiety</li>
+            <li><span class="rec-priority rec-consider">Consider</span> 4-7-8 Breathing</li>
+          </ul>
+        </div>
+        <div class="condition-card" style="border-top:3px solid #f43f5e;">
+          <h3 style="color:#f43f5e;">ME/CFS Sleep Protocol</h3>
+          <p class="condition-subtitle">Recommended stack for ME/CFS non-restorative sleep</p>
+          <ul class="rec-list">
+            <li><span class="rec-priority rec-essential">Essential</span> Activity Pacing / Energy Envelope</li>
+            <li><span class="rec-priority rec-essential">Essential</span> Autonomic Nervous System Support</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> CoQ10 + NADH</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Yoga Nidra</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Vagus Nerve Stimulation</li>
+            <li><span class="rec-priority rec-first-line">1st Line</span> Anti-Inflammatory Protocol</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Low-Dose Naltrexone (LDN)</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Magnesium Glycinate/Threonate</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Mediterranean Diet</li>
+            <li><span class="rec-priority rec-recommended">Add</span> Pink Noise</li>
+            <li><span class="rec-priority rec-consider">Consider</span> Pregabalin (for pain+sleep)</li>
+            <li><span class="rec-priority rec-consider">Consider</span> Gentle Movement (Tai Chi)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="sources-section">
+      <h3>&#128214; Sources &amp; Citations</h3>
+      <div class="sources-list" id="sources-list">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+  </div><!-- container -->
+</main>
+
+<script>
+// =====================================================================
+// DATA
+// =====================================================================
+const categories = [
+  { id: "environment", name: "Sleep Hygiene & Environment", icon: "\u{1F3E0}", color: "#3B82F6" },
+  { id: "supplements", name: "Supplements & Nutraceuticals", icon: "\u{1F48A}", color: "#10B981" },
+  { id: "medications", name: "Prescription Medications", icon: "\u{1F489}", color: "#EF4444" },
+  { id: "herbal", name: "Herbal Teas & Botanicals", icon: "\u{1F33F}", color: "#84CC16" },
+  { id: "diet", name: "Diet & Nutrition", icon: "\u{1F957}", color: "#F59E0B" },
+  { id: "exercise", name: "Exercise & Movement", icon: "\u{1F3C3}", color: "#06B6D4" },
+  { id: "neurotech", name: "Neurostimulation & Technology", icon: "\u{26A1}", color: "#8B5CF6" },
+  { id: "relaxation", name: "Breathing & Relaxation", icon: "\u{1F9D8}", color: "#EC4899" },
+  { id: "temperature", name: "Temperature Manipulation", icon: "\u{1F321}", color: "#F97316" },
+  { id: "light", name: "Light Therapy & Circadian", icon: "\u{2600}", color: "#FBBF24" },
+  { id: "psychological", name: "Psychological & Behavioral", icon: "\u{1F9E0}", color: "#6366F1" },
+  { id: "asd", name: "ASD-Specific Approaches", icon: "\u{267E}", color: "#14B8A6" },
+  { id: "mecfs", name: "ME/CFS-Specific Approaches", icon: "\u{2695}", color: "#F43F5E" }
+];
+
+const methods = [
+  {id:"cool-bedroom",name:"Cool Bedroom Temperature",category:"Sleep Hygiene & Environment",categoryId:"environment",evidence:3.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"Thermoregulatory",howItWorks:"The body requires a cooler environment to enter slow-wave sleep (SWS). Higher core body temperature decreases restorative SWS. Cooling facilitates the natural core temperature drop needed for deep sleep initiation.",keyFindings:"Optimal temperature: 60-67\u00B0F (15-19\u00B0C). Studies found men get more deep sleep improvement with cooling, women more REM. Temperature-controlled mattress pads showed significant improvements in sleep and cardiovascular recovery.",dosage:"Set thermostat to 65\u00B0F (18\u00B0C). Consider cooling mattress pad.",citations:"PMC11048088; Sleep Foundation; Cleveland Clinic",asdNotes:"Good for sensory comfort if paired with preferred bedding textures.",mecfsNotes:"Well tolerated; no energy expenditure required.",timing:"bedtime"},
+  {id:"pink-noise",name:"Pink Noise / Acoustic Stimulation",category:"Sleep Hygiene & Environment",categoryId:"environment",evidence:4.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Neural Oscillation",howItWorks:"Phase-locked pink noise during NREM stage 3 amplifies slow oscillatory activity (0.5-1 Hz). It synchronizes larger populations of neurons with the ongoing slow oscillation rhythm, triggering near-synchronous depolarization followed by massive hyperpolarization, leading to larger-amplitude slow waves.",keyFindings:"2025 study: enhances total slow-wave activity in young cohort. Randomized crossover trial: works in older adults at home. Memory improvement: overnight word recall significantly greater with acoustic stim vs sham. Closed-loop acoustic stimulation effective for Alzheimer's patients.",dosage:"Use pink noise app or dedicated closed-loop device during sleep. Phase-locked delivery is most effective.",citations:"PMC12146431; Wiley JSR 14404; Nature s43856-022-00096-6; Frontiers fnhum.2017.00109",asdNotes:"Depends on auditory sensory preferences. Some may find any sound disruptive. Start at very low volume.",mecfsNotes:"Excellent choice \u2014 completely passive, no energy expenditure, can be automated.",timing:"during-sleep"},
+  {id:"magnesium-glycinate",name:"Magnesium Glycinate/Bisglycinate",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Magnesium is a natural NMDA receptor antagonist and GABA-A receptor modulator. Glycinate form is highly bioavailable (11-14% elemental Mg) and well-absorbed. Glycine component itself has sleep-promoting properties.",keyFindings:"RCT showed significantly greater reduction in Insomnia Severity Index scores vs placebo at Week 4. 28 days supplementation improved insomnia scores in healthy adults with poor sleep.",dosage:"200-400mg elemental magnesium, 30-60 minutes before bed.",citations:"PMC12412596",asdNotes:"Well tolerated. Capsule or powder form available for those with swallowing preferences.",mecfsNotes:"Magnesium deficiency common in ME/CFS. May also help with muscle pain and cramping.",timing:"pre-bed"},
+  {id:"magnesium-threonate",name:"Magnesium L-Threonate (Magtein)",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Unique ability to cross the blood-brain barrier via glucose transporters, directly increasing brain magnesium concentrations. This enhances synaptic plasticity and GABA signaling in the CNS.",keyFindings:"RCT: statistically significant improvements in sleep quality, daytime activity, and mood vs placebo. Only 7-8% elemental magnesium but superior brain penetration.",dosage:"1-2g magnesium L-threonate (144mg elemental Mg), 30-60 min before bed.",citations:"PMC11381753; Frontiers fnut.2025.1729164",asdNotes:"Brain-targeted; may help with cognitive function alongside sleep.",mecfsNotes:"May help with cognitive dysfunction ('brain fog') common in ME/CFS.",timing:"pre-bed"},
+  {id:"glycine",name:"Glycine",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:3.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Acts as an inhibitory neurotransmitter, modulating NMDA receptors. Lowers core body temperature by promoting peripheral vasodilation, facilitating SWS onset. Directly increases slow-wave sleep duration and quality.",keyFindings:"Polysomnography studies: increases duration and quality of SWS phases. Reduces sleep onset time while increasing SWS duration. Also improves subjective sleep quality and next-day alertness.",dosage:"3g at or shortly before bedtime.",citations:"Multiple PSG studies; wellbeingnutrition.com",asdNotes:"Powder form with mild sweet taste; easy to add to water.",mecfsNotes:"Also supports detoxification pathways, which may be impaired in ME/CFS.",timing:"bedtime"},
+  {id:"l-theanine",name:"L-Theanine",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Amino acid from green tea that enhances GABA levels, increases dopamine and serotonin expression, and promotes alpha brain wave activity. Combined with magnesium (Mg-L-Theanine complex), it boosts slow-brain waves and regulates brain electrical activity.",keyFindings:"2025 systematic review and meta-analysis: significantly improved subjective sleep onset latency, daytime dysfunction, and overall sleep quality. Mg-L-Theanine complex increases GABAergic, serotonergic, and glutamatergic receptor expression.",dosage:"200mg, 30-60 minutes before bed.",citations:"ScienceDirect S1087079225000292; PMC9017334",asdNotes:"Also reduces anxiety, which commonly co-occurs with ASD sleep issues.",mecfsNotes:"Non-sedating anxiolytic effect; supports cognitive function.",timing:"pre-bed"},
+  {id:"apigenin",name:"Apigenin",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Binds to the benzodiazepine subunit of GABA-A receptors, enhancing inhibitory GABA signaling without the dependency risk of benzodiazepines. Also inhibits CD38 enzyme and has anti-inflammatory properties.",keyFindings:"Large cohort study: dietary apigenin intake positively correlates with sleep quality. Animal studies: significantly increased sleep duration, particularly NREM sleep. Found naturally in chamomile, parsley, celery. Bioavailability limited: 5-10% absorbed.",dosage:"50mg as supplement, OR 1-2 cups chamomile tea.",citations:"PMC10929570; Frontiers fnut.2024.1359176",asdNotes:"Chamomile tea may be preferred route for those who enjoy warm drinks as part of routine.",mecfsNotes:"Anti-inflammatory properties offer additional benefit.",timing:"pre-bed"},
+  {id:"tart-cherry",name:"Tart Cherry Juice",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Serotonin/Melatonin",howItWorks:"Contains natural melatonin AND anthocyanins (anti-inflammatory compounds). The sleep effect likely comes from both the melatonin content and the anti-inflammatory action reducing sleep-disrupting cytokines.",keyFindings:"7 interventional studies reviewed: 3 reported significant improvements in sleep duration, efficiency, or onset. 3 studies showed increased melatonin levels; 2 showed decreased inflammatory markers.",dosage:"240ml (8oz) tart cherry juice concentrate, morning and evening.",citations:"PMC12438961; PMC5617749; pubmed 22038497",asdNotes:"Strong taste may not suit all preferences. Can be diluted.",mecfsNotes:"Anti-inflammatory properties particularly relevant for ME/CFS neuroinflammation.",timing:"morning"},
+  {id:"coq10-nadh",name:"CoQ10 + NADH",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:3.0,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Low",mecfsSuitability:"Very High",mechanism:"Mitochondrial",howItWorks:"Supports mitochondrial electron transport chain function. CoQ10 is an essential cofactor in complexes I-III; NADH is the primary electron donor for complex I. Addresses the mitochondrial dysfunction central to ME/CFS pathophysiology.",keyFindings:"RCT of 207 ME/CFS patients: 200mg CoQ10 + 20mg NADH daily for 3 months showed significant improvement in fatigue, quality of life, AND sleep quality. Sleep duration improved at 4 weeks; sleep efficiency at 8 weeks. EUROMENE consortium recommends CoQ10.",dosage:"CoQ10 200mg + NADH 20mg daily, with morning meal.",citations:"PMC8399248; PMC10779395; MDPI Nutrients 2021",asdNotes:"Not specifically studied for ASD sleep issues.",mecfsNotes:"CRITICAL for ME/CFS. Addresses root cause (mitochondrial dysfunction). First-line supplement recommendation.",timing:"morning"},
+  {id:"melatonin",name:"Melatonin",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low-Medium",asdSuitability:"Very High",mecfsSuitability:"Moderate",mechanism:"Circadian",howItWorks:"Exogenous melatonin reinforces the natural circadian signal for sleep onset. In ASD populations, endogenous melatonin production is frequently deficient due to genetic variations in synthesis enzymes (ASMT gene) and altered tryptophan metabolism.",keyFindings:"Most studied agent for ASD sleep. RCTs and meta-analyses support efficacy. Improves total sleep time, sleep latency, sleep efficiency. Optimal efficacy at 5.7mg but 1-2mg recommended for children. 76% durable effects in long-term follow-up. Beyond sleep: improves behavior, mood, communication.",dosage:"ASD: 1-5mg extended-release, 30-60 min before bed. General: 0.5-3mg. Start low.",citations:"pubmed 40138120; Springer s12035-025-04809-5; Frontiers fneur.2022.813692; ScienceDirect S0278584622001877",asdNotes:"FIRST-LINE for ASD sleep. Extended-release preferred for sleep maintenance. 7/9 trials confirm lower endogenous melatonin in ASD.",mecfsNotes:"May help circadian disruption but doesn't address core ME/CFS pathology.",timing:"pre-bed"},
+  {id:"ashwagandha",name:"Ashwagandha (Withania somnifera)",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:2.0,evidenceLevel:"Animal/Preliminary",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"Adaptogen that modulates the HPA axis, reducing cortisol levels. Contains withanolides that have GABAergic activity. Reduces stress and anxiety that interfere with sleep onset and maintenance.",keyFindings:"Listed as subsidiary sleep aid in 2025 Nutrition Reviews. Works in synergy with other sleep-promoting nutrients. Addresses HPA axis dysregulation.",dosage:"300-600mg standardized extract, evening.",citations:"Nutrition Reviews nuaf062",asdNotes:"May help with anxiety component of ASD sleep difficulties.",mecfsNotes:"Caution: can interact with thyroid medications. HPA axis support potentially beneficial.",timing:"evening"},
+  {id:"phosphatidylserine",name:"Phosphatidylserine",category:"Supplements & Nutraceuticals",categoryId:"supplements",evidence:2.0,evidenceLevel:"Animal/Preliminary",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"Phospholipid that modulates cortisol response. Blunts excessive cortisol production, particularly in the evening when elevated cortisol can prevent sleep onset and reduce SWS.",keyFindings:"Listed alongside ashwagandha as subsidiary sleep aid. May address evening cortisol elevation that disrupts deep sleep.",dosage:"100-300mg in the evening.",citations:"Nutrition Reviews nuaf062",asdNotes:"Limited specific data for ASD.",mecfsNotes:"May help with HPA axis dysregulation seen in ME/CFS.",timing:"evening"},
+  {id:"sodium-oxybate",name:"Sodium Oxybate (Xyrem/Xywav)",category:"Prescription Medications",categoryId:"medications",evidence:5.0,evidenceLevel:"Strong RCT",risk:"High",asdSuitability:"Low",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"GHB/GABAB receptor agonist that powerfully promotes slow-wave sleep by enhancing delta wave activity during stage 3 NREM. The most potent pharmacological SWS enhancer known.",keyFindings:"FDA approved 2002 for narcolepsy. 2025 RCT: promotes SWS in major depressive disorder. Reduces next-day sleepiness. Schedule III substance with REMS program due to abuse potential.",dosage:"Physician-determined. Typical: 4.5-9g nightly in 2 divided doses.",citations:"Nature s41386-025-02104-4; NCBI NBK562283",asdNotes:"Not typically indicated for ASD. Highly restricted access.",mecfsNotes:"Some ME/CFS specialists have used off-label with reported benefit, but access extremely limited.",timing:"bedtime"},
+  {id:"tiagabine",name:"Tiagabine",category:"Prescription Medications",categoryId:"medications",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Medium",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"GABA uptake inhibitor that prevents reuptake of GABA from the synaptic cleft, increasing available GABA. This directly enhances GABAergic inhibition and promotes slow-wave sleep generation.",keyFindings:"Mean increase of 29.1 minutes (+40.9%) in SWS vs only -6.4% with placebo. Dose-dependent SWS increase. Up to 8mg did not compromise next-morning alertness. Improved reaction times and fewer attention lapses during sleep restriction.",dosage:"4-8mg at bedtime (physician-prescribed).",citations:"JCSM 26433; SLEEP zsw047; pubmed 11182474; pubmed 16260179",asdNotes:"Originally an anticonvulsant; some ASD patients may already be on related medications.",mecfsNotes:"SWS enhancement could address non-restorative sleep. Discuss with specialist.",timing:"bedtime"},
+  {id:"pregabalin",name:"Pregabalin (Lyrica)",category:"Prescription Medications",categoryId:"medications",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Medium",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Binds to alpha-2-delta subunit of voltage-gated calcium channels, reducing excitatory neurotransmitter release. Increases percentage of slow-wave sleep while decreasing light (stage 1) sleep.",keyFindings:"Significant increase in percentage of SWS, decrease in stage 1 sleep. Improves sleep depth and daytime attention. Already indicated for fibromyalgia and neuropathic pain.",dosage:"75-300mg at bedtime (physician-prescribed).",citations:"ScienceDirect S1525505012000716; pubmed 22424859",asdNotes:"May help with anxiety component.",mecfsNotes:"Often prescribed for fibromyalgia (common ME/CFS comorbidity). Dual benefit for pain + sleep.",timing:"bedtime"},
+  {id:"trazodone",name:"Trazodone",category:"Prescription Medications",categoryId:"medications",evidence:3.0,evidenceLevel:"Small Studies",risk:"Medium",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"Serotonin/Melatonin",howItWorks:"Serotonin antagonist and reuptake inhibitor (SARI). At low doses, primarily acts as a 5-HT2A antagonist and histamine H1 antagonist, promoting sedation. May increase SWS duration.",keyFindings:"Some studies suggest increases SWS duration. Long-term use may protect cognition via SWS enhancement (Alzheimer's study). Widely prescribed off-label for insomnia.",dosage:"25-100mg at bedtime (physician-prescribed).",citations:"PMC6398835; IOS Press Journal of Alzheimer's Disease",asdNotes:"Low-dose is generally well tolerated.",mecfsNotes:"May help but watch for morning grogginess. Start very low (25mg).",timing:"bedtime"},
+  {id:"gabapentin",name:"Gabapentin",category:"Prescription Medications",categoryId:"medications",evidence:3.0,evidenceLevel:"Small Studies",risk:"Medium",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"Similar mechanism to pregabalin (alpha-2-delta calcium channel binding). Reduces neuronal excitability and promotes slow-wave sleep. Also has analgesic properties.",keyFindings:"Shows promise for improving sleep quality and potentially enhancing SWS. Can be combined with low-dose doxepin for deeper sleep. Available as generic (lower cost than pregabalin).",dosage:"100-600mg at bedtime (physician-prescribed).",citations:"neurolaunch.com; gokick.com",asdNotes:"Sometimes used for anxiety in ASD populations.",mecfsNotes:"May help with pain + sleep dual symptoms. Start low.",timing:"bedtime"},
+  {id:"suvorexant",name:"Suvorexant (Belsomra)",category:"Prescription Medications",categoryId:"medications",evidence:3.0,evidenceLevel:"Strong RCT",risk:"Medium",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"Other",howItWorks:"Dual orexin receptor antagonist (DORA). Blocks wake-promoting orexin/hypocretin signaling, allowing natural sleep processes to proceed. Different mechanism from GABAergic agents.",keyFindings:"FDA approved for insomnia. Evidence supports use for sleep maintenance insomnia. Less specific SWS enhancement data compared to tiagabine/pregabalin.",dosage:"10-20mg at bedtime (physician-prescribed).",citations:"PMC2824211",asdNotes:"May help with difficulty staying asleep.",mecfsNotes:"Novel mechanism; worth considering if GABAergic agents not tolerated.",timing:"bedtime"},
+  {id:"ldn",name:"Low-Dose Naltrexone (LDN)",category:"Prescription Medications",categoryId:"medications",evidence:3.0,evidenceLevel:"Moderate RCT",risk:"Medium",asdSuitability:"Low",mecfsSuitability:"Very High",mechanism:"Other",howItWorks:"At low doses (3-4.5mg), briefly blocks opioid receptors for a few hours, triggering upregulation of endorphin production and opioid receptor sensitivity. Also restores impaired TRPM3 ion channel function in NK cells. Anti-inflammatory and immunomodulatory.",keyFindings:"73.9% of ME/CFS patients reported positive treatment response. Improved vigilance, alertness, physical and cognitive performance. For fibromyalgia: ~30% pain reduction + fatigue + sleep improvements. Side effects: mild nausea, vivid dreams (usually temporary).",dosage:"3.0-4.5mg at bedtime. Requires prescription and compounding pharmacy.",citations:"Tandfonline 2019; PMC8313851; PMC10039621; Bateman Horne Center",asdNotes:"Not typically indicated for ASD.",mecfsNotes:"IMPORTANT for ME/CFS. High response rate. Discuss with ME/CFS-literate physician. Usually requires compounding pharmacy.",timing:"bedtime"},
+  {id:"chamomile",name:"Chamomile Tea",category:"Herbal Teas & Botanicals",categoryId:"herbal",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Contains apigenin, which binds to GABA-A benzodiazepine receptors. Also has anti-inflammatory and mild anxiolytic properties. The ritual of warm tea drinking may have additional relaxation benefits.",keyFindings:"Meta-analysis: efficacious and safe for improving sleep quality and generalized anxiety. RCT pilot study examined standardized extract for chronic primary insomnia.",dosage:"1-2 cups 30-60 minutes before bed, or standardized extract.",citations:"PMC7191368; PMC3198755",asdNotes:"Warm drink ritual may help with bedtime routine. Ensure no allergy (ragweed cross-reactivity).",mecfsNotes:"Gentle, no energy cost. Anti-inflammatory bonus.",timing:"pre-bed"},
+  {id:"passionflower",name:"Passionflower (Passiflora incarnata)",category:"Herbal Teas & Botanicals",categoryId:"herbal",evidence:2.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Contains flavonoids including chrysin that modulate GABA-A receptors. Increases overall GABA levels in the brain, producing calming effects.",keyFindings:"Double-blind, placebo-controlled study: passionflower herbal tea improved subjective sleep quality. Benefits for mild sleep disturbances.",dosage:"1-2 cups tea or 250-500mg extract before bed.",citations:"PMC7191368; Phytotherapy Research",asdNotes:"Mild flavor; can be blended with chamomile.",mecfsNotes:"Gentle option with no known energy cost.",timing:"pre-bed"},
+  {id:"valerian",name:"Valerian Root",category:"Herbal Teas & Botanicals",categoryId:"herbal",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Contains valerenic acid that inhibits GABA transaminase enzyme, increasing GABA availability. Also binds to GABA-A receptors. The combined effect enhances inhibitory signaling.",keyFindings:"Among most studied herbal sleep aids. Conflicting results: some studies show anxiolytic effects and sleep improvements, others show no significant difference from placebo. Generally safe and well tolerated.",dosage:"300-600mg standardized extract, 30-60 minutes before bed.",citations:"PMC7191368; VA Whole Health Library",asdNotes:"Strong smell may be off-putting; capsule form preferred.",mecfsNotes:"Low risk option to try. Results may take 2-4 weeks.",timing:"pre-bed"},
+  {id:"lemon-balm",name:"Lemon Balm (Melissa officinalis)",category:"Herbal Teas & Botanicals",categoryId:"herbal",evidence:2.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"GABAergic",howItWorks:"Inhibits GABA transaminase, increasing GABA availability. Also has rosmarinic acid with antioxidant and anti-inflammatory properties. Calming without excessive sedation.",keyFindings:"Clinical trial: significantly improved anxiety and sleep disturbances in mild-moderate anxiety. 2014 study: reduced insomnia, anxiety, psychosomatic tension within 15 days.",dosage:"300-600mg extract or tea before bed.",citations:"PMC7191368",asdNotes:"Pleasant lemony flavor; good as tea.",mecfsNotes:"Gentle, well-tolerated option.",timing:"pre-bed"},
+  {id:"magnolia-bark",name:"Magnolia Bark (Honokiol)",category:"Herbal Teas & Botanicals",categoryId:"herbal",evidence:1.5,evidenceLevel:"Animal/Preliminary",risk:"Low",asdSuitability:"Low",mecfsSuitability:"Moderate",mechanism:"GABAergic",howItWorks:"Contains honokiol and magnolol, which are positive allosteric modulators of GABA-A receptors. Honokiol can cross the blood-brain barrier and has anxiolytic and sedative properties.",keyFindings:"Mouse studies: honokiol increased non-REM sleep WITHOUT reducing REM \u2014 a balanced, restorative pattern. Limited human clinical data.",dosage:"200-400mg honokiol standardized extract before bed.",citations:"Mood Rise Labs research summary",asdNotes:"Insufficient data for ASD-specific recommendations.",mecfsNotes:"Interesting mechanism but needs human studies.",timing:"pre-bed"},
+  {id:"mediterranean-diet",name:"Mediterranean Diet",category:"Diet & Nutrition",categoryId:"diet",evidence:3.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Very High",mechanism:"Anti-inflammatory",howItWorks:"Reduces chronic inflammation (IL-6, TNF-\u03B1) that disrupts sleep architecture. Increases gut microbiome diversity (Bacteroides, Bifidobacterium, Prevotella). Healthy microbiota produces short-chain fatty acids (SCFAs) associated with improved sleep continuity.",keyFindings:"Correlated with better sleep quality and reduced insomnia symptoms. Anti-inflammatory diet linked to better sleep efficiency and reduced WASO. 'Gut Feelings' RCT: high-prebiotic diet improved sleep quality vs placebo.",dosage:"Emphasize fruits, vegetables, whole grains, olive oil, fish, nuts. Reduce processed foods.",citations:"Frontiers fnut.2021.805955; fnut.2025.1528677; PMC12678061",asdNotes:"Dietary changes may be challenging with ASD food selectivity. Introduce gradually.",mecfsNotes:"HIGHLY RECOMMENDED. Addresses neuroinflammation, a key ME/CFS mechanism.",timing:"morning"},
+  {id:"ketogenic-diet",name:"Ketogenic Diet",category:"Diet & Nutrition",categoryId:"diet",evidence:3.0,evidenceLevel:"Small Studies",risk:"Medium",asdSuitability:"Low",mecfsSuitability:"Moderate",mechanism:"Other",howItWorks:"Promotes adenosine activity in the body, helping relax the nervous system. Ketone bodies may also enhance mitochondrial function. Enhancement of SWS may be synergistic with ketogenic metabolism.",keyFindings:"Very low-carb diet significantly increased % of SWS compared to control in healthy sleepers. After 3 months, poor sleep and insomnia symptoms decreased. CAUTION: Initial insomnia common due to reduced tryptophan\u2192serotonin\u2192melatonin pathway.",dosage:"Standard ketogenic macros: <50g carbs/day. Requires careful planning.",citations:"journals.lww.com/co-endocrinology 2021; Wiley jsr.14073; pubmed 18681982",asdNotes:"Dietary rigidity may be challenging. Already studied in ASD for other benefits.",mecfsNotes:"May support mitochondrial function but initial adjustment phase could worsen fatigue.",timing:"morning"},
+  {id:"gut-microbiome",name:"Prebiotic/Probiotic Support",category:"Diet & Nutrition",categoryId:"diet",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Anti-inflammatory",howItWorks:"Healthy gut microbiota produces SCFAs (butyrate, propionate) that reduce systemic inflammation and modulate the gut-brain axis. Gut dysbiosis linked to insomnia and fragmented sleep via inflammatory cytokine disruption of sleep architecture.",keyFindings:"'Gut Feelings' RCT: high-prebiotic diet improved self-reported sleep quality. Lower Dietary Inflammatory Index benefits gut diversity and enhances sleep quality.",dosage:"High-fiber foods, fermented foods, or targeted prebiotic/probiotic supplements.",citations:"Frontiers fnut.2025.1528677; PMC12678061",asdNotes:"Gut issues common in ASD. Probiotics may have broader benefits.",mecfsNotes:"Gut dysbiosis common in ME/CFS. May improve overall symptom burden.",timing:"morning"},
+  {id:"meal-timing",name:"Meal Timing & Sleep Foods",category:"Diet & Nutrition",categoryId:"diet",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"Serotonin/Melatonin",howItWorks:"Tryptophan-rich foods provide substrate for serotonin and melatonin synthesis. Carbohydrates enhance tryptophan brain uptake via insulin-mediated amino acid competition. Timing affects core body temperature and digestive processes.",keyFindings:"Last meal 2-3 hours before bed optimal. Kiwifruit, tart cherries, fatty fish (omega-3), nuts, seeds all shown to improve sleep parameters.",dosage:"Light dinner with tryptophan sources 2-3h before bed. Kiwifruit at bedtime.",citations:"Nutrition Reviews nuaf062",asdNotes:"Consistent meal times support circadian routine.",mecfsNotes:"No energy cost. Easy to implement.",timing:"evening"},
+  {id:"moderate-exercise",name:"Moderate Aerobic Exercise",category:"Exercise & Movement",categoryId:"exercise",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"Low",mechanism:"Thermoregulatory",howItWorks:"Increases core body temperature, which then drops post-exercise, facilitating SWS onset. Also increases adenosine accumulation (sleep pressure), reduces anxiety and cortisol, and improves circadian rhythm alignment.",keyFindings:"Exercise improves quality of SWS by increasing slow-wave stability. 2024 systematic review and network meta-analysis of RCTs confirms benefit. Best timing: 4-6 hours before bed.",dosage:"30-60 minutes moderate intensity, 4-6 hours before bed. Most days.",citations:"Nature s41598-021-83817-6; Frontiers fpsyg.2024.1466277",asdNotes:"Exercise also helps with anxiety and sensory regulation.",mecfsNotes:"CAUTION: Standard exercise recommendations are HARMFUL for ME/CFS. Can trigger severe PEM. See gentle movement options instead.",timing:"midday"},
+  {id:"gentle-movement",name:"Gentle Movement (Tai Chi, Qigong, Yoga)",category:"Exercise & Movement",categoryId:"exercise",evidence:3.0,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Parasympathetic",howItWorks:"Activates parasympathetic nervous system, reduces cortisol, improves HRV. Gentle enough to avoid post-exertional malaise while still providing movement benefits. Combines physical movement with breath work and mindfulness.",keyFindings:"Systematic review with meta-analysis: qigong, tai chi, and yoga effective for reducing fatigue and improving anxiety, depression, and sleep quality in adults with CFS. Start with 3-5 minutes and slowly increase.",dosage:"3-5 minutes initially for ME/CFS, building gradually. 20-30 min for others.",citations:"pubmed 39451436; CDC ME/CFS management; cfsselfhelp.org",asdNotes:"Predictable, repetitive movements may suit ASD preferences.",mecfsNotes:"RECOMMENDED over conventional exercise. Stay within energy envelope. Watch for PEM 12-48 hours later.",timing:"morning"},
+  {id:"tdcs",name:"tDCS (Transcranial Direct Current Stimulation)",category:"Neurostimulation & Technology",categoryId:"neurotech",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Medium",asdSuitability:"Low",mecfsSuitability:"Moderate",mechanism:"Neural Oscillation",howItWorks:"Applies weak electrical current to the scalp to modulate neural activity. Slow oscillatory tDCS (so-tDCS) at 0.75 Hz during NREM N2 sleep entrains cortical slow oscillations, promoting transition to deeper N3 sleep.",keyFindings:"N3 duration increased, N1 decreased with so-tDCS. Sleep efficiency improved by 9\u00B17%. Probability of N2\u2192N3 transition increased by 20\u00B117.8%. PSQI scores improved vs sham. Can produce long-lasting effects.",dosage:"Clinical protocol; requires proper equipment and guidance.",citations:"Nature npp201665; pubmed 26014344; Nature s41598-025-09304-4",asdNotes:"May be challenging for those with sensory sensitivities to scalp electrodes.",mecfsNotes:"Passive intervention \u2014 no energy expenditure. Emerging at-home devices.",timing:"during-sleep"},
+  {id:"neurofeedback",name:"Neurofeedback / SMR Training",category:"Neurostimulation & Technology",categoryId:"neurotech",evidence:2.0,evidenceLevel:"Animal/Preliminary",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Moderate",mechanism:"Neural Oscillation",howItWorks:"Trains the brain to produce specific EEG patterns (sensorimotor rhythm, SMR) associated with calm alertness and normalized sleep architecture. Repeated training sessions can produce lasting changes in brain electrical activity.",keyFindings:"Combined NFT + tDCS studied: 20 sessions NFT + 10 sessions tDCS showed improvements in insomnia EEG patterns. Limited controlled data for sleep specifically.",dosage:"20+ sessions with trained practitioner.",citations:"ResearchGate publication 308518751",asdNotes:"Has been studied in ASD for other outcomes. May require tolerance for equipment.",mecfsNotes:"Sessions can be cognitively demanding. Pace accordingly.",timing:"midday"},
+  {id:"sleep-tracking",name:"Sleep Tracking Devices",category:"Neurostimulation & Technology",categoryId:"neurotech",evidence:2.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Other",howItWorks:"Wearable devices (Oura Ring, WHOOP, Apple Watch) use accelerometry and heart rate data to estimate sleep stages including deep sleep. Enables tracking of intervention effectiveness over time.",keyFindings:"Not research-grade but reasonable for self-experimentation and trend tracking. Useful for identifying which interventions improve deep sleep for the individual.",dosage:"Wear nightly. Review weekly trends rather than individual nights.",citations:"Various consumer studies",asdNotes:"Some may find wearables uncomfortable (sensory). Ring-type may be better tolerated.",mecfsNotes:"Valuable for pacing decisions and correlating sleep quality with PEM episodes.",timing:"during-sleep"},
+  {id:"yoga-nidra",name:"Yoga Nidra",category:"Breathing & Relaxation",categoryId:"relaxation",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Very High",mechanism:"Parasympathetic",howItWorks:"Induces 'local sleep' \u2014 increases delta waves in select brain regions while preserving frontal activity. Rebalances autonomic nervous system (reduces sympathetic, enhances parasympathetic). Morning practice increases nighttime delta activity. Regulates HPA axis and attenuates cortisol.",keyFindings:"Significantly improves sleep in chronic insomnia. Superior to PMR in RCT for sleep latency and efficiency. Improves sleep architecture, cognitive processing, and memory. Practice enhances parasympathetic regulation during subsequent nighttime sleep.",dosage:"20-45 minute guided session. Morning practice boosts nighttime deep sleep. Daily recommended.",citations:"PMC12571781; PMC9315270; PMC8932407; PMC9973252",asdNotes:"Audio-only format may work well. May need adaptation for sensory preferences. Body scan component beneficial.",mecfsNotes:"EXCELLENT choice. Zero physical exertion. Lying-down practice. Addresses autonomic hypervigilance directly.",timing:"morning"},
+  {id:"pmr",name:"Progressive Muscle Relaxation",category:"Breathing & Relaxation",categoryId:"relaxation",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Parasympathetic",howItWorks:"Systematically tensing and releasing muscle groups activates the vagus nerve, promoting parasympathetic (rest-and-digest) response. Reduces physical tension, lowers cortisol, and signals safety to the nervous system.",keyFindings:"Effective for reducing physical tension and promoting relaxation. Activates vagus nerve. RCT showed inferior to Yoga Nidra for sleep outcomes but still beneficial.",dosage:"15-20 minute session before bed. Progress through all major muscle groups.",citations:"PMC12571781",asdNotes:"Structured, predictable format suits ASD preferences. Can be learned systematically.",mecfsNotes:"Gentle enough for ME/CFS. Avoid excessive tensing \u2014 gentler version recommended.",timing:"pre-bed"},
+  {id:"breathing-478",name:"4-7-8 Breathing Technique",category:"Breathing & Relaxation",categoryId:"relaxation",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"Parasympathetic",howItWorks:"The extended exhale (8 counts) relative to inhale (4 counts) directly stimulates the vagus nerve and activates the parasympathetic nervous system. The breath hold (7 counts) allows CO2 to build, promoting vasodilation and relaxation.",keyFindings:"Highly effective for promoting sleep onset. Activates parasympathetic system, reduces heart rate, promotes relaxation. Simple to learn and practice.",dosage:"4-8 cycles before bed. Can repeat if awakening during night.",citations:"Multiple relaxation technique reviews",asdNotes:"Counting structure provides predictability. Can become part of bedtime routine.",mecfsNotes:"Zero energy cost. Can be done lying in bed.",timing:"bedtime"},
+  {id:"vagus-nerve",name:"Vagus Nerve Stimulation (Non-Invasive)",category:"Breathing & Relaxation",categoryId:"relaxation",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Parasympathetic",howItWorks:"Activating the vagus nerve reduces cortisol, improves heart rate variability (HRV), and shifts autonomic balance toward parasympathetic dominance. Methods: cold water on face/neck, deep slow breathing, humming, gargling, singing.",keyFindings:"Linked to deeper, more restorative sleep and enhanced REM. Reduces stress hormones. Improves HRV \u2014 consistently low in ME/CFS patients.",dosage:"Multiple times daily. Cold water splash on face, humming/gargling during the day, extended-exhale breathing at night.",citations:"Massachusetts General Hospital; Charlie Health",asdNotes:"Some methods (cold water, gargling) may trigger sensory aversion. Choose tolerated methods.",mecfsNotes:"IMPORTANT for ME/CFS. Directly addresses autonomic hypervigilance during sleep.",timing:"evening"},
+  {id:"hot-bath",name:"Hot Bath/Shower Before Bed",category:"Temperature Manipulation",categoryId:"temperature",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Thermoregulatory",howItWorks:"Warm water (104-109\u00B0F / 40-42.5\u00B0C) stimulates the thermoregulatory system, causing peripheral vasodilation. Blood flows from core to hands and feet, dropping core temperature. Sleep onset is triggered by the MAGNITUDE of core temperature decrease.",keyFindings:"Systematic review and meta-analysis: significantly improved self-rated sleep quality. 1-2 hours before bedtime for \u226510 minutes. Elderly insomnia study: increased SWS, reduced WASO, improved sleep maintenance.",dosage:"104-109\u00B0F water, 10-30 minutes, 1-2 hours before intended bedtime.",citations:"pubmed 31102877; ScienceDirect S1087079218301552; PMC10486043; PMC8314650",asdNotes:"Depends on individual sensory preferences for water/temperature. Some love baths, others find them aversive.",mecfsNotes:"Well tolerated if sitting. Hot baths may cause orthostatic issues in some ME/CFS patients \u2014 shower may be safer.",timing:"evening"},
+  {id:"sauna",name:"Sauna / Infrared Sauna",category:"Temperature Manipulation",categoryId:"temperature",evidence:2.0,evidenceLevel:"Small Studies",risk:"Medium",asdSuitability:"Low",mecfsSuitability:"Moderate",mechanism:"Thermoregulatory",howItWorks:"Raises core body temperature dramatically, triggering massive peripheral vasodilation and subsequent core temperature drop. Increases growth hormone (GH) secretion, which is SWS-dependent. Triggers melatonin production.",keyFindings:"Finnish study: 2x20min at 176\u00B0F with 30min rest \u2192 142% HGH increase. 7-day protocol: 16-fold GH increase, cortisol decrease. Subjective reports: deeper sleep, fewer awakenings.",dosage:"15-20 minutes, 2-4 hours before bed. 2-3x per week.",citations:"pubmed 3788622; PMC10989710; JCEM studies",asdNotes:"Intense sensory experience \u2014 not suitable for many with ASD sensory sensitivities.",mecfsNotes:"CAUTION: Significant energy expenditure. May trigger PEM. Infrared (lower temp) may be better tolerated. Start with short sessions.",timing:"evening"},
+  {id:"morning-light",name:"Morning Bright Light Exposure",category:"Light Therapy & Circadian",categoryId:"light",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"Very High",mecfsSuitability:"High",mechanism:"Circadian",howItWorks:"Light is the primary zeitgeber (time-giver) for the human circadian system. Bright light exposure after waking suppresses melatonin, advances the circadian clock, and strengthens the signal for melatonin release in the evening, which initiates sleep.",keyFindings:"2500+ lux for 20-30 min within 1 hour of waking is effective. Resets circadian rhythms. Reduces sleep latency, insomnia severity, pre-sleep anxiety. Increases total sleep time. Systematic review confirms efficacy.",dosage:"10,000 lux light therapy box for 20-30 min, OR 30+ min outdoor light within 1 hour of waking.",citations:"PMC4344919; JCSM 27445; Nature s41598-024-83789-3",asdNotes:"HIGHLY RECOMMENDED. Helps break the self-reinforcing circadian disruption loop common in ASD.",mecfsNotes:"Easy to implement \u2014 sit in front of light box during breakfast. No energy cost.",timing:"morning"},
+  {id:"blue-light-blocking",name:"Blue Light Blocking (Evening)",category:"Light Therapy & Circadian",categoryId:"light",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"Circadian",howItWorks:"Blue light (450-480nm) is the most potent suppressor of melatonin. Blocking it in the evening preserves natural melatonin onset (DLMO), allowing the circadian sleep signal to proceed normally.",keyFindings:"Blue light suppresses melatonin for 2x as long as green light and shifts the circadian rhythm 2x as much (3h vs 1.5h). Blue-light-blocking goggles maintain melatonin levels comparable to dim light.",dosage:"Amber/red lens glasses starting 2-3 hours before bed. Night mode on all screens. Warm dim lighting.",citations:"Harvard Health; CDC NIOSH; PMC6751071; PMC7065627",asdNotes:"Glasses may be a sensory issue for some. Screen filters are an alternative.",mecfsNotes:"Simple, no energy cost. Supports melatonin production.",timing:"evening"},
+  {id:"cbti",name:"CBT-I (Cognitive Behavioral Therapy for Insomnia)",category:"Psychological & Behavioral",categoryId:"psychological",evidence:5.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"Moderate",mechanism:"Cognitive/Behavioral",howItWorks:"Multi-component therapy combining sleep restriction (increases sleep pressure), stimulus control (strengthens bed-sleep association), cognitive restructuring (addresses sleep anxiety), sleep hygiene education, and relaxation training. Produces lasting changes in sleep architecture.",keyFindings:"GOLD STANDARD. Results equivalent to sleep medication with NO side effects. After CBT-I: more time in SWS, less time awake. SWA increased. Meta-analysis 20 RCTs: -19 min sleep latency, -26 min WASO. 6-month follow-up: lasting benefits vs zopiclone (no lasting benefits).",dosage:"6-8 sessions with trained therapist. Online programs (CBT-I Coach app, Insomnia Coach) available.",citations:"PMC6796223; Sleep Foundation; PMC10002474; pubmed 15560773",asdNotes:"Structured, protocol-based approach suits ASD cognitive style. Can be adapted for individual needs.",mecfsNotes:"CAUTION: Sleep restriction component may increase initial fatigue. Implement GRADUALLY. Stimulus control and cognitive components can be used without full sleep restriction.",timing:"evening"},
+  {id:"sleep-restriction",name:"Sleep Restriction Therapy",category:"Psychological & Behavioral",categoryId:"psychological",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"Low",mechanism:"Cognitive/Behavioral",howItWorks:"Temporarily restricts time in bed to match actual sleep time. This increases homeostatic sleep pressure (adenosine accumulation), driving more consolidated and deeper sleep. Gradually extends sleep window as efficiency improves.",keyFindings:"Increases SWS percentage by concentrating sleep drive. Core component of CBT-I. Initially increases daytime sleepiness but this resolves.",dosage:"Calculate average total sleep time. Set bed window to that amount. Expand by 15-30 min when efficiency >85%.",citations:"PMC6796223; PMC10002474",asdNotes:"Clear rules and structure may appeal. Consistency important.",mecfsNotes:"AVOID or use with extreme caution. Sleep restriction can worsen ME/CFS fatigue and trigger PEM.",timing:"bedtime"},
+  {id:"stimulus-control",name:"Stimulus Control Therapy",category:"Psychological & Behavioral",categoryId:"psychological",evidence:4.0,evidenceLevel:"Strong RCT",risk:"Low",asdSuitability:"High",mecfsSuitability:"High",mechanism:"Cognitive/Behavioral",howItWorks:"Breaks the conditioned association between the bed/bedroom and wakefulness/frustration. Re-establishes the bed as a cue for sleep only. Rules: bed only for sleep; get up if not asleep in 15-20 min; return only when sleepy.",keyFindings:"Core component of CBT-I. Eliminates conditioned arousal. Combined with sleep restriction, produces lasting sleep improvements.",dosage:"Follow rules consistently every night. Takes 2-4 weeks to re-establish associations.",citations:"PMC6796223",asdNotes:"Clear, rule-based approach is well-suited to ASD cognitive style.",mecfsNotes:"Safe for ME/CFS. Getting up may be difficult \u2014 modified version: sit up in bed and read in dim light.",timing:"bedtime"},
+  {id:"mindfulness",name:"Mindfulness Meditation",category:"Psychological & Behavioral",categoryId:"psychological",evidence:3.0,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"High",mechanism:"Parasympathetic",howItWorks:"Reduces pre-sleep cognitive arousal and rumination. Promotes parasympathetic activation, reduces cortisol. Activates default mode network in a restful way.",keyFindings:"Reduces pre-sleep arousal. Can be combined with CBT-I for enhanced effects. Particularly relevant for anxiety-driven insomnia.",dosage:"10-20 minutes before bed. Body scan, breath awareness, or loving-kindness practices.",citations:"Multiple meditation and sleep reviews",asdNotes:"Guided meditations with clear instructions preferred. Avoid open-ended 'empty mind' approaches.",mecfsNotes:"Zero energy cost. Can be practiced lying down.",timing:"pre-bed"},
+  {id:"weighted-blanket",name:"Weighted Blanket",category:"ASD-Specific Approaches",categoryId:"asd",evidence:2.5,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Very High",mecfsSuitability:"Moderate",mechanism:"Serotonin/Melatonin",howItWorks:"Deep pressure touch (DPT) stimulates mechanoreceptors that activate the parasympathetic system. This triggers serotonin release, which is converted to melatonin via the pineal gland. Uppsala University 2022: weighted blankets increased melatonin by ~32% within 1 hour.",keyFindings:"Enhanced morning mood and decreased time to fall asleep. 32% melatonin increase within 1 hour. Standard recommendation: ~10% body weight. May be less effective than other approaches for overall sleep quality metrics.",dosage:"Blanket weight approximately 10% of body weight. Use nightly.",citations:"PMC7823442; Uppsala University 2022",asdNotes:"HIGHLY RECOMMENDED for ASD. Addresses sensory needs and boosts melatonin production.",mecfsNotes:"May feel too heavy for some with ME/CFS fatigue. Lighter weight may be preferred.",timing:"bedtime"},
+  {id:"sensory-environment",name:"Sensory-Optimized Sleep Environment",category:"ASD-Specific Approaches",categoryId:"asd",evidence:3.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Very High",mecfsSuitability:"Moderate",mechanism:"Other",howItWorks:"Minimizes unpredictable sensory input that can prevent sleep onset or cause awakenings. Addresses hyper-responsivity common in ASD across all sensory modalities (visual, auditory, tactile, olfactory).",keyFindings:"Sleep problems closely linked to sensory processing differences in ASD. Reducing unpredictable stimuli helps nervous system downregulate. Consistent, predictable sensory environment signals safety.",dosage:"Blackout curtains, consistent white noise, soft preferred textures, temperature control, minimal visual clutter.",citations:"MDPI 2076-3425/15/9/983; Frontiers fpsyt.2019.00366",asdNotes:"ESSENTIAL. Individualize based on specific sensory profile. Some need complete silence; others need white noise.",mecfsNotes:"Noise and light control also beneficial for ME/CFS.",timing:"bedtime"},
+  {id:"circadian-routine",name:"Strict Circadian Routine",category:"ASD-Specific Approaches",categoryId:"asd",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Very High",mecfsSuitability:"High",mechanism:"Circadian",howItWorks:"A self-reinforcing loop exists between sleep disturbances and circadian desynchronization in ASD. Strict daily timing of wake, meals, light exposure, and sleep breaks this cycle by providing consistent zeitgeber input to the circadian system.",keyFindings:"Consistency in daily routine is particularly important for ASD populations. Same wake time every day (including weekends) is the single most important factor. Multi-modal: melatonin + light + schedule + environmental cues.",dosage:"Fixed wake time \u00B115 min. Fixed bedtime. Fixed meal times. Morning light at same time daily.",citations:"Frontiers fpsyt.2019.00366; psychiatryonline.org Focus 20230028",asdNotes:"Plays to ASD preference for routine and predictability. Most important single intervention for ASD sleep.",mecfsNotes:"Also beneficial for ME/CFS. Consistent timing helps regulate autonomic function.",timing:"morning"},
+  {id:"activity-pacing",name:"Activity Pacing / Energy Envelope",category:"ME/CFS-Specific Approaches",categoryId:"mecfs",evidence:3.5,evidenceLevel:"Moderate RCT",risk:"Low",asdSuitability:"Low",mecfsSuitability:"Essential",mechanism:"Other",howItWorks:"Post-exertional malaise (PEM) dramatically worsens sleep quality. Activity pacing keeps daily exertion within the 'energy envelope' to prevent PEM episodes. Without this, other sleep interventions may be undermined by PEM-triggered sleep disruption.",keyFindings:"PEM symptoms worsen 12-48 hours after overexertion, lasting days to weeks. CDC recommends activity pacing over graded exercise therapy. Staying within energy capacity prevents the crash cycle that destroys sleep quality.",dosage:"Identify daily energy capacity. Plan activities to stay within it. Rest proactively. Reduce activity at first sign of overexertion.",citations:"CDC ME/CFS management; Bateman Horne Center; cfsselfhelp.org",asdNotes:"Not typically relevant unless ASD + ME/CFS comorbidity.",mecfsNotes:"FOUNDATIONAL. Without pacing, other sleep interventions will fail. This is the prerequisite.",timing:"morning"},
+  {id:"autonomic-support",name:"Autonomic Nervous System Support",category:"ME/CFS-Specific Approaches",categoryId:"mecfs",evidence:3.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Very High",mechanism:"Parasympathetic",howItWorks:"ME/CFS is characterized by persistent autonomic hypervigilance during sleep \u2014 reduced parasympathetic activity and elevated sympathetic tone measurable via HRV. Supporting vagal tone and parasympathetic function directly addresses this sleep pathology.",keyFindings:"HRV during sleep consistently lower in ME/CFS. Reduced nocturnal parasympathetic activity. The non-restorative sleep may be due to disrupted autonomic regulation DURING sleep rather than insufficient SWS time.",dosage:"HRV biofeedback training, Yoga Nidra daily, extended-exhale breathing, cold face immersion, humming.",citations:"PMC10281648; PMC3501671",asdNotes:"HRV training may also help with emotional regulation in ASD.",mecfsNotes:"CRITICAL. May be the key to addressing non-restorative sleep in ME/CFS.",timing:"evening"},
+  {id:"anti-inflammatory-protocol",name:"Anti-Inflammatory Protocol",category:"ME/CFS-Specific Approaches",categoryId:"mecfs",evidence:3.0,evidenceLevel:"Small Studies",risk:"Low",asdSuitability:"Moderate",mecfsSuitability:"Very High",mechanism:"Anti-inflammatory",howItWorks:"Chronically activated immune responses in ME/CFS produce neuroinflammation via nitrosative and oxidative stress. Inflammatory cytokines (IL-6, TNF-\u03B1) directly disrupt sleep architecture. Reducing systemic inflammation may restore normal sleep signaling.",keyFindings:"Mediterranean diet reduces inflammatory markers. Omega-3 fatty acids, tart cherry, CoQ10 have anti-inflammatory properties. Addressing neuroinflammation may be key to restoring restorative sleep quality in ME/CFS.",dosage:"Mediterranean diet as base. Add: omega-3 (2-4g/day), tart cherry juice, CoQ10, curcumin.",citations:"PMC10281648; PMC10779395; Frontiers fnut.2025.1528677",asdNotes:"Anti-inflammatory diet may also benefit ASD-related inflammation.",mecfsNotes:"Addresses root pathology. Combine dietary changes with targeted anti-inflammatory supplements.",timing:"morning"}
+];
+
+// =====================================================================
+// UTILITY FUNCTIONS
+// =====================================================================
+const catMap = {};
+categories.forEach(c => catMap[c.id] = c);
+
+function getCatColor(catId) { return catMap[catId] ? catMap[catId].color : '#6366f1'; }
+function getCatIcon(catId) { return catMap[catId] ? catMap[catId].icon : ''; }
+
+function renderStars(rating) {
+  let html = '<span class="stars" aria-label="Evidence rating: ' + rating + ' out of 5">';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rating)) html += '<span class="star filled">&#9733;</span>';
+    else if (i - 0.5 <= rating) html += '<span class="star half">&#9733;</span>';
+    else html += '<span class="star">&#9733;</span>';
+  }
+  html += '</span>';
+  return html;
+}
+
+function riskBadge(risk) {
+  const r = risk.toLowerCase().replace('-','');
+  let cls = 'badge-risk-low';
+  if (r === 'high') cls = 'badge-risk-high';
+  else if (r === 'medium' || r === 'lowmedium') cls = 'badge-risk-medium';
+  return '<span class="badge ' + cls + '">' + risk + ' Risk</span>';
+}
+
+function suitIndicator(level) {
+  const l = level.toLowerCase().replace(/\s/g, '-');
+  return '<span class="suit-indicator suit-' + l + '"></span> ' + level;
+}
+
+function suitOrder(s) {
+  const m = {'essential':5,'very high':4,'high':3,'moderate':2,'low':1};
+  return m[s.toLowerCase()] || 0;
+}
+
+// =====================================================================
+// POPULATE CATEGORY FILTER
+// =====================================================================
+(function() {
+  const sel = document.getElementById('filter-category');
+  categories.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.id; o.textContent = c.icon + ' ' + c.name;
+    sel.appendChild(o);
+  });
+})();
+
+// =====================================================================
+// RENDER METHODS
+// =====================================================================
+let selectedProtocol = new Set();
+
+function renderMethods(filtered) {
+  const grid = document.getElementById('methods-grid');
+  if (!filtered) filtered = methods;
+
+  // Group by category
+  const grouped = {};
+  categories.forEach(c => grouped[c.id] = []);
+  filtered.forEach(m => {
+    if (grouped[m.categoryId]) grouped[m.categoryId].push(m);
+  });
+
+  let html = '';
+  categories.forEach(cat => {
+    const items = grouped[cat.id];
+    if (items.length === 0) return;
+    html += '<div class="section-header" id="cat-' + cat.id + '" style="grid-column:1/-1;"><h2>' + cat.icon + ' ' + cat.name + '</h2></div>';
+    items.forEach(m => {
+      html += renderMethodCard(m);
+    });
+  });
+  grid.innerHTML = html;
+
+  // Update count
+  document.getElementById('filter-count').textContent = 'Showing ' + filtered.length + ' of ' + methods.length;
+}
+
+function renderMethodCard(m) {
+  const catColor = getCatColor(m.categoryId);
+  return '<div class="method-card" id="card-' + m.id + '" onclick="toggleCard(\'' + m.id + '\')" tabindex="0" role="button" aria-expanded="false" aria-label="' + m.name + '">' +
+    '<div class="card-header">' +
+      '<span class="card-title">' + m.name + '</span>' +
+      '<span class="card-expand-icon">&#9660;</span>' +
+    '</div>' +
+    '<div class="card-badges">' +
+      '<span class="badge badge-category" style="border-color:' + catColor + ';color:' + catColor + ';">' + getCatIcon(m.categoryId) + ' ' + m.category + '</span>' +
+      '<span class="badge badge-mechanism">' + m.mechanism + '</span>' +
+      riskBadge(m.risk) +
+    '</div>' +
+    '<div style="margin-bottom:8px;">' + renderStars(m.evidence) + ' <span style="font-size:0.78rem;color:var(--text-muted);">(' + m.evidenceLevel + ')</span></div>' +
+    '<div class="suitability-row">' +
+      '<span class="suitability-item" title="ASD Suitability"><strong style="font-size:0.75rem;margin-right:2px;">ASD:</strong> ' + suitIndicator(m.asdSuitability) + '</span>' +
+      '<span class="suitability-item" title="ME/CFS Suitability"><strong style="font-size:0.75rem;margin-right:2px;">ME/CFS:</strong> ' + suitIndicator(m.mecfsSuitability) + '</span>' +
+    '</div>' +
+    '<div class="card-details">' +
+      '<div class="detail-section"><h4>How It Works</h4><p>' + m.howItWorks + '</p></div>' +
+      '<div class="detail-section"><h4>Key Findings</h4><p>' + m.keyFindings + '</p></div>' +
+      '<div class="detail-section"><h4>Dosage / Protocol</h4><p>' + m.dosage + '</p></div>' +
+      '<div class="detail-notes">' +
+        '<div class="detail-note-box asd-note"><h5>ASD Notes</h5><p>' + m.asdNotes + '</p></div>' +
+        '<div class="detail-note-box mecfs-note"><h5>ME/CFS Notes</h5><p>' + m.mecfsNotes + '</p></div>' +
+      '</div>' +
+      '<div class="detail-section" style="margin-top:12px;"><h4>Citations</h4><p style="font-size:0.8rem;">' + m.citations + '</p></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function toggleCard(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('expanded');
+  card.setAttribute('aria-expanded', card.classList.contains('expanded'));
+}
+
+// =====================================================================
+// FILTERING
+// =====================================================================
+function applyFilters() {
+  const cat = document.getElementById('filter-category').value;
+  const minEv = parseFloat(document.getElementById('filter-evidence').value) || 0;
+  const risk = document.getElementById('filter-risk').value;
+  const asd = document.getElementById('filter-asd').value;
+  const mecfs = document.getElementById('filter-mecfs').value;
+  const search = document.getElementById('filter-search').value.toLowerCase();
+
+  const filtered = methods.filter(m => {
+    if (cat && m.categoryId !== cat) return false;
+    if (minEv && m.evidence < minEv) return false;
+    if (risk && !m.risk.toLowerCase().includes(risk.toLowerCase())) return false;
+    if (asd && suitOrder(m.asdSuitability) < suitOrder(asd)) return false;
+    if (mecfs && suitOrder(m.mecfsSuitability) < suitOrder(mecfs)) return false;
+    if (search) {
+      const haystack = (m.name + ' ' + m.category + ' ' + m.mechanism + ' ' + m.howItWorks + ' ' + m.keyFindings).toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+  renderMethods(filtered);
+}
+
+['filter-category','filter-evidence','filter-risk','filter-asd','filter-mecfs'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilters);
+});
+document.getElementById('filter-search').addEventListener('input', applyFilters);
+
+// =====================================================================
+// PROTOCOL BUILDER
+// =====================================================================
+function renderProtocolMethods() {
+  const container = document.getElementById('protocol-methods');
+  const timingLabels = {morning:'Morning',midday:'Midday',evening:'Evening','pre-bed':'Pre-Bed',bedtime:'Bedtime','during-sleep':'During Sleep'};
+  let html = '';
+  methods.forEach(m => {
+    const checked = selectedProtocol.has(m.id) ? 'checked' : '';
+    html += '<div class="protocol-method-item">' +
+      '<input type="checkbox" id="proto-' + m.id + '" ' + checked + ' onchange="toggleProtocolItem(\'' + m.id + '\')" aria-label="Add ' + m.name + ' to protocol">' +
+      '<label for="proto-' + m.id + '" class="pm-name" style="cursor:pointer;">' + m.name + '</label>' +
+      '<span class="pm-timing">' + (timingLabels[m.timing] || m.timing) + '</span>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function toggleProtocolItem(id) {
+  if (selectedProtocol.has(id)) selectedProtocol.delete(id);
+  else selectedProtocol.add(id);
+  updateProtocolSummary();
+}
+
+function updateProtocolSummary() {
+  const list = document.getElementById('protocol-list');
+  const empty = document.getElementById('protocol-empty');
+  const actions = document.getElementById('protocol-actions');
+  const timingLabels = {morning:'Morning',midday:'Midday',evening:'Evening','pre-bed':'Pre-Bed',bedtime:'Bedtime','during-sleep':'During Sleep'};
+  const timingOrder = {morning:0,midday:1,evening:2,'pre-bed':3,bedtime:4,'during-sleep':5};
+
+  if (selectedProtocol.size === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    actions.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  actions.style.display = 'flex';
+
+  const selected = methods.filter(m => selectedProtocol.has(m.id))
+    .sort((a, b) => (timingOrder[a.timing]||0) - (timingOrder[b.timing]||0));
+
+  let html = '';
+  selected.forEach(m => {
+    html += '<li><span>' + m.name + '</span><span class="pm-timing">' + (timingLabels[m.timing] || '') + '</span></li>';
+  });
+  list.innerHTML = html;
+}
+
+function clearProtocol() {
+  selectedProtocol.clear();
+  renderProtocolMethods();
+  updateProtocolSummary();
+}
+
+function exportProtocol() {
+  const timingLabels = {morning:'Morning',midday:'Midday',evening:'Evening','pre-bed':'Pre-Bed',bedtime:'Bedtime','during-sleep':'During Sleep'};
+  const timingOrder = {morning:0,midday:1,evening:2,'pre-bed':3,bedtime:4,'during-sleep':5};
+  const selected = methods.filter(m => selectedProtocol.has(m.id))
+    .sort((a, b) => (timingOrder[a.timing]||0) - (timingOrder[b.timing]||0));
+  let text = 'MY DEEP SLEEP IMPROVEMENT PROTOCOL\n===================================\n\n';
+  let currentTiming = '';
+  selected.forEach(m => {
+    const t = timingLabels[m.timing] || m.timing;
+    if (t !== currentTiming) { text += '\n--- ' + t.toUpperCase() + ' ---\n'; currentTiming = t; }
+    text += '- ' + m.name + ' (' + m.dosage + ')\n';
+  });
+  text += '\n\nGenerated by Deep Sleep Improvement Dashboard';
+
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'my-sleep-protocol.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// =====================================================================
+// TIMELINE
+// =====================================================================
+function renderTimeline() {
+  const phases = [
+    {key:'morning', label:'Morning', time:'Within 1h of waking'},
+    {key:'midday', label:'Midday', time:'4-6h before bed'},
+    {key:'evening', label:'Evening', time:'2-3h before bed'},
+    {key:'pre-bed', label:'Pre-Bed', time:'30-60 min before bed'},
+    {key:'bedtime', label:'Bedtime', time:'At bedtime'},
+    {key:'during-sleep', label:'During Sleep', time:'Throughout night'}
+  ];
+
+  const container = document.getElementById('timeline-viz');
+  let html = '';
+  phases.forEach(phase => {
+    const items = methods.filter(m => m.timing === phase.key);
+    html += '<div class="timeline-phase">' +
+      '<div class="phase-label">' + phase.label + '</div>' +
+      '<div class="phase-marker"></div>' +
+      '<div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;">' + phase.time + '</div>' +
+      '<div class="phase-items">';
+    items.forEach(it => {
+      html += '<div title="' + it.name + '">' + it.name + '</div>';
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+// =====================================================================
+// CHARTS
+// =====================================================================
+function initCharts() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#94a3b8' : '#475569';
+  const gridColor = isDark ? 'rgba(148,163,184,0.1)' : 'rgba(71,85,105,0.1)';
+
+  Chart.defaults.color = textColor;
+  Chart.defaults.borderColor = gridColor;
+
+  // 1. Evidence Bar Chart
+  const sorted = [...methods].sort((a,b) => b.evidence - a.evidence);
+  new Chart(document.getElementById('chart-evidence'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(m => m.name.length > 25 ? m.name.substring(0,23) + '...' : m.name),
+      datasets: [{
+        label: 'Evidence Rating',
+        data: sorted.map(m => m.evidence),
+        backgroundColor: sorted.map(m => getCatColor(m.categoryId) + 'cc'),
+        borderRadius: 4,
+        barThickness: 12
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { max: 5, ticks: { stepSize: 1 }, grid: { color: gridColor } },
+        y: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+  document.getElementById('chart-evidence').parentElement.style.height = (sorted.length * 22 + 60) + 'px';
+
+  // 2. Mechanism Doughnut
+  const mechCounts = {};
+  methods.forEach(m => { mechCounts[m.mechanism] = (mechCounts[m.mechanism]||0)+1; });
+  const mechLabels = Object.keys(mechCounts);
+  const mechColors = ['#6366f1','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#84cc16','#f97316','#8b5cf6'];
+  new Chart(document.getElementById('chart-mechanism'), {
+    type: 'doughnut',
+    data: {
+      labels: mechLabels,
+      datasets: [{
+        data: mechLabels.map(l => mechCounts[l]),
+        backgroundColor: mechLabels.map((_, i) => mechColors[i % mechColors.length]),
+        borderWidth: 2,
+        borderColor: isDark ? '#1e293b' : '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right', labels: { padding: 12, font: { size: 11 } } }
+      }
+    }
+  });
+
+  // 3. Evidence Quality Doughnut
+  const qualCounts = {};
+  methods.forEach(m => { qualCounts[m.evidenceLevel] = (qualCounts[m.evidenceLevel]||0)+1; });
+  const qualLabels = Object.keys(qualCounts);
+  const qualColors = {'Strong RCT':'#22c55e','Moderate RCT':'#3b82f6','Small Studies':'#f59e0b','Animal/Preliminary':'#ef4444'};
+  new Chart(document.getElementById('chart-quality'), {
+    type: 'doughnut',
+    data: {
+      labels: qualLabels,
+      datasets: [{
+        data: qualLabels.map(l => qualCounts[l]),
+        backgroundColor: qualLabels.map(l => qualColors[l] || '#6366f1'),
+        borderWidth: 2,
+        borderColor: isDark ? '#1e293b' : '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right', labels: { padding: 12, font: { size: 11 } } }
+      }
+    }
+  });
+
+  // 4. Safety Radar
+  const catSafety = {};
+  categories.forEach(c => {
+    const items = methods.filter(m => m.categoryId === c.id);
+    if (items.length === 0) return;
+    const riskScore = items.map(m => {
+      if (m.risk === 'Low') return 5;
+      if (m.risk === 'Low-Medium') return 4;
+      if (m.risk === 'Medium') return 3;
+      return 1;
+    });
+    catSafety[c.name.length > 18 ? c.name.substring(0,16)+'...' : c.name] = riskScore.reduce((a,b)=>a+b,0)/riskScore.length;
+  });
+  new Chart(document.getElementById('chart-safety'), {
+    type: 'radar',
+    data: {
+      labels: Object.keys(catSafety),
+      datasets: [{
+        label: 'Safety Score (5=Safest)',
+        data: Object.values(catSafety),
+        backgroundColor: 'rgba(99,102,241,0.2)',
+        borderColor: '#6366f1',
+        pointBackgroundColor: '#6366f1',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          beginAtZero: true, max: 5,
+          grid: { color: gridColor },
+          pointLabels: { font: { size: 9 } },
+          ticks: { stepSize: 1, backdropColor: 'transparent' }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+// =====================================================================
+// SOURCES
+// =====================================================================
+function renderSources() {
+  const allCitations = new Set();
+  methods.forEach(m => {
+    m.citations.split(';').forEach(c => allCitations.add(c.trim()));
+  });
+  const container = document.getElementById('sources-list');
+  let html = '';
+  [...allCitations].sort().forEach(c => {
+    html += '<p>' + c + '</p>';
+  });
+  container.innerHTML = html;
+}
+
+// =====================================================================
+// THEME TOGGLE
+// =====================================================================
+document.getElementById('theme-toggle').addEventListener('click', function() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').innerHTML = isDark ? '&#9728;' : '&#9790;';
+  document.getElementById('theme-label').textContent = isDark ? 'Dark' : 'Light';
+  // Recreate charts for new theme
+  Chart.helpers.each(Chart.instances, function(instance) { instance.destroy(); });
+  initCharts();
+});
+
+// =====================================================================
+// PROGRESS BAR
+// =====================================================================
+window.addEventListener('scroll', function() {
+  const h = document.documentElement;
+  const progress = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+
+  // Back to top
+  const btn = document.getElementById('back-to-top');
+  if (h.scrollTop > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+
+document.getElementById('back-to-top').addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// =====================================================================
+// SIDEBAR TOGGLE (mobile)
+// =====================================================================
+document.getElementById('sidebar-toggle').addEventListener('click', function() {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Close sidebar when clicking a link on mobile
+document.querySelectorAll('#sidebar nav a').forEach(a => {
+  a.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+
+// Active nav tracking
+window.addEventListener('scroll', function() {
+  const links = document.querySelectorAll('#sidebar nav a');
+  let current = '';
+  links.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href.startsWith('#')) {
+      const section = document.querySelector(href);
+      if (section && section.getBoundingClientRect().top <= 120) {
+        current = href;
+      }
+    }
+  });
+  links.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === current);
+  });
+});
+
+// Keyboard nav for cards
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.classList.contains('method-card')) {
+    e.target.click();
+  }
+});
+
+// =====================================================================
+// INIT
+// =====================================================================
+renderMethods();
+renderProtocolMethods();
+renderTimeline();
+renderSources();
+initCharts();
+
+// Update hero stats
+document.getElementById('stat-methods').textContent = methods.length;
+document.getElementById('stat-strong').textContent = methods.filter(m => m.evidence >= 5).length;
+</script>
+
+</body>
+</html>
