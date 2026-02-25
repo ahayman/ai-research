@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electricity Supplier Comparison Dashboard - 201 Schempf Rd, Boalsburg PA</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  header { text-align: center; margin-bottom: 40px; padding: 40px 20px; background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); border-radius: 16px; border: 1px solid var(--border); }
+  header h1 { font-size: 2rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  header p { color: var(--text-muted); font-size: 1rem; }
+  header .address { color: var(--accent); font-weight: 600; }
+
+  .key-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-card .label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .stat-card .value { font-size: 1.8rem; font-weight: 700; }
+  .stat-card .sub { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card.highlight { border-color: var(--accent); background: linear-gradient(135deg, rgba(56,189,248,0.1), var(--surface)); }
+  .stat-card.warning { border-color: var(--yellow); }
+  .stat-card.good { border-color: var(--green); }
+
+  .section { margin-bottom: 40px; }
+  .section h2 { font-size: 1.5rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: inline-block; }
+  .section h3 { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 12px; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .chart-container h3 { color: var(--text); margin-bottom: 16px; }
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-wrap.tall { height: 500px; }
+  .chart-wrap.medium { height: 400px; }
+  .chart-wrap.short { height: 300px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .recommendation { background: linear-gradient(135deg, rgba(74,222,128,0.1), var(--surface)); border: 2px solid var(--green); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .recommendation h3 { color: var(--green); font-size: 1.2rem; margin-bottom: 8px; }
+  .recommendation .badge { display: inline-block; background: var(--green); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-right: 8px; }
+  .recommendation .badge.warn { background: var(--yellow); }
+  .recommendation .badge.info { background: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; position: sticky; top: 0; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+  .current-row { background: rgba(56,189,248,0.1) !important; border-left: 3px solid var(--accent); }
+  .best-row { background: rgba(74,222,128,0.08) !important; border-left: 3px solid var(--green); }
+  .default-row { background: rgba(251,191,36,0.08) !important; border-left: 3px solid var(--yellow); }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+  .tag.fixed { background: rgba(56,189,248,0.2); color: var(--accent); }
+  .tag.variable { background: rgba(248,113,113,0.2); color: var(--red); }
+  .tag.green { background: rgba(74,222,128,0.2); color: var(--green); }
+  .tag.partial-green { background: rgba(251,191,36,0.2); color: var(--yellow); }
+
+  .savings { font-weight: 700; }
+  .savings.positive { color: var(--green); }
+  .savings.negative { color: var(--red); }
+
+  a.signup-btn { display: inline-block; background: var(--accent); color: #000; text-decoration: none; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; transition: opacity 0.2s; }
+  a.signup-btn:hover { opacity: 0.8; }
+
+  .table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+
+  .filter-bar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  .insight-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .insight-box h4 { color: var(--accent); margin-bottom: 8px; }
+  .insight-box ul { padding-left: 20px; color: var(--text-muted); }
+  .insight-box li { margin-bottom: 6px; }
+
+  .solar-section { background: linear-gradient(135deg, rgba(251,191,36,0.1), var(--surface)); border: 1px solid var(--yellow); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .solar-section h3 { color: var(--yellow); }
+
+  footer { text-align: center; padding: 32px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 0; background: var(--surface); border-radius: 12px 12px 0 0; padding: 8px 8px 0; border: 1px solid var(--border); border-bottom: none; }
+  .tab { padding: 10px 20px; cursor: pointer; background: transparent; border: none; color: var(--text-muted); font-size: 0.9rem; border-radius: 8px 8px 0 0; transition: all 0.2s; }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active { color: var(--accent); background: var(--surface2); border-bottom: 2px solid var(--accent); }
+  .tab-content { display: none; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px; padding: 24px; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1>Electricity Supplier Comparison Dashboard</h1>
+  <p class="address">201 Schempf Rd, Boalsburg, PA 16827</p>
+  <p>West Penn Power (FirstEnergy) Service Territory &bull; Account #100-130-932-575</p>
+  <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.85rem;">Analysis based on 10 months of actual electric bills (Apr 2025 - Jan 2026) &bull; 55 supplier plans compared</p>
+</header>
+
+<!-- KEY METRICS -->
+<div class="key-stats">
+  <div class="stat-card highlight">
+    <div class="label">Current Rate (AEP Energy)</div>
+    <div class="value" style="color: var(--accent);">9.69&cent;</div>
+    <div class="sub">per kWh &bull; 100% Renewable</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Avg Monthly Usage</div>
+    <div class="value">3,979</div>
+    <div class="sub">kWh/month (very high)</div>
+  </div>
+  <div class="stat-card warning">
+    <div class="label">Avg Monthly Bill</div>
+    <div class="value" style="color: var(--yellow);">$648</div>
+    <div class="sub">total (supply + delivery)</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">10-Month Total</div>
+    <div class="value">$6,482</div>
+    <div class="sub">39,785 kWh consumed</div>
+  </div>
+  <div class="stat-card good">
+    <div class="label">Best Available Rate</div>
+    <div class="value" style="color: var(--green);">9.39&cent;</div>
+    <div class="sub">Direct Energy (fixed, 15 mo)</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Price to Compare</div>
+    <div class="value">10.95&cent;</div>
+    <div class="sub">West Penn default service</div>
+  </div>
+</div>
+
+<!-- TOP RECOMMENDATION -->
+<div class="recommendation">
+  <h3>Key Finding: Your Current Rate Is Already Excellent</h3>
+  <p style="margin-bottom: 12px;">Your AEP Energy rate of <strong>9.69&cent;/kWh</strong> is the <strong>3rd cheapest</strong> out of 55 available plans and the <strong>#1 cheapest 100% renewable plan</strong>. Only two plans beat it on price:</p>
+  <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+    <div class="insight-box">
+      <h4><span class="badge warn">CAUTION</span> American Power & Gas Variable - 8.99&cent;</h4>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Variable rate &mdash; can spike to 15&cent;+ without warning. At your usage, that would mean $597+/month. <strong>High risk.</strong></p>
+    </div>
+    <div class="insight-box">
+      <h4><span class="badge">BEST ALTERNATIVE</span> Direct Energy Flex 15 - 9.39&cent;</h4>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Saves ~$11.94/month ($143-179/year). Fixed rate, 15 months, $0 cancel fee. <strong>But 0% renewable.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: YOUR USAGE HISTORY -->
+<div class="section">
+  <h2>Your Usage &amp; Cost History</h2>
+  <div class="grid-2">
+    <div class="chart-container">
+      <h3>Monthly kWh Usage</h3>
+      <div class="chart-wrap medium"><canvas id="usageChart"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h3>Monthly Bill Breakdown</h3>
+      <div class="chart-wrap medium"><canvas id="billChart"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-container">
+    <h3>Cost Per kWh &mdash; Your Effective Rate Over Time</h3>
+    <div class="chart-wrap short"><canvas id="rateChart"></canvas></div>
+  </div>
+</div>
+
+<!-- SECTION: SUPPLIER COMPARISON -->
+<div class="section">
+  <h2>Supplier Rate Comparison</h2>
+  <div class="chart-container">
+    <h3>All Plans by Rate (cents/kWh) &mdash; Top 25 Shown</h3>
+    <div class="chart-wrap tall"><canvas id="supplierBarChart"></canvas></div>
+  </div>
+</div>
+
+<!-- SECTION: PROJECTED MONTHLY COSTS -->
+<div class="section">
+  <h2>Projected Monthly Costs by Plan</h2>
+  <p style="color: var(--text-muted); margin-bottom: 16px;">What your actual bills would have looked like under each plan (supply charges only &mdash; delivery stays the same).</p>
+  <div class="chart-container">
+    <h3>Monthly Supply Cost Comparison &mdash; Top 6 Plans vs Your Actual Costs</h3>
+    <div class="chart-wrap tall"><canvas id="projectionChart"></canvas></div>
+  </div>
+</div>
+
+<!-- SECTION: ANNUAL IMPACT -->
+<div class="section">
+  <h2>Annual Cost Impact Analysis</h2>
+  <div class="grid-2">
+    <div class="chart-container">
+      <h3>Projected Annual Supply Cost by Plan</h3>
+      <div class="chart-wrap medium"><canvas id="annualChart"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <h3>Annual Savings vs Your Current Plan</h3>
+      <div class="chart-wrap medium"><canvas id="savingsChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: DETAILED TABLE -->
+<div class="section">
+  <h2>Full Plan Comparison Table</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterTable('all')">All Plans</button>
+    <button class="filter-btn" onclick="filterTable('cheap')">Cheapest 15</button>
+    <button class="filter-btn" onclick="filterTable('green')">100% Renewable</button>
+    <button class="filter-btn" onclick="filterTable('fixed')">Fixed Rate Only</button>
+    <button class="filter-btn" onclick="filterTable('nofee')">No Cancel Fee</button>
+  </div>
+  <div class="table-scroll">
+    <table id="planTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Supplier</th>
+          <th>Plan</th>
+          <th>Rate</th>
+          <th>Type</th>
+          <th>Term</th>
+          <th>Cancel Fee</th>
+          <th>Renewable</th>
+          <th>Est. Monthly</th>
+          <th>vs Current</th>
+          <th>Annual Impact</th>
+          <th>Sign Up</th>
+        </tr>
+      </thead>
+      <tbody id="planTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION: RENEWABLE COMPARISON -->
+<div class="section">
+  <h2>Renewable Energy Options Deep Dive</h2>
+  <div class="chart-container">
+    <h3>100% Renewable Plans &mdash; Rate Comparison</h3>
+    <div class="chart-wrap medium"><canvas id="greenChart"></canvas></div>
+  </div>
+</div>
+
+<!-- SECTION: SOLAR ANALYSIS -->
+<div class="solar-section">
+  <h3>Residential Solar Analysis</h3>
+  <p style="color: var(--text-muted); margin: 12px 0;">Given your extremely high usage (~48,000 kWh/year), residential solar could dramatically reduce your bills. Here's a rough analysis:</p>
+  <div class="key-stats" style="margin-bottom: 16px;">
+    <div class="stat-card">
+      <div class="label">Estimated System Size</div>
+      <div class="value">30 kW</div>
+      <div class="sub">To offset ~80% of usage</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Est. System Cost</div>
+      <div class="value">$75K-$90K</div>
+      <div class="sub">Before incentives</div>
+    </div>
+    <div class="stat-card good">
+      <div class="label">After 30% ITC</div>
+      <div class="value">$52K-$63K</div>
+      <div class="sub">Federal tax credit</div>
+    </div>
+    <div class="stat-card good">
+      <div class="label">Est. Annual Savings</div>
+      <div class="value">$4,600+</div>
+      <div class="sub">~80% of supply costs</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Payback Period</div>
+      <div class="value">11-14 yr</div>
+      <div class="sub">With incentives + SRECs</div>
+    </div>
+  </div>
+  <div class="insight-box">
+    <h4>PA Solar Incentives Available</h4>
+    <ul>
+      <li><strong>Federal Solar ITC:</strong> 30% tax credit on full system cost</li>
+      <li><strong>PA Sunshine Program:</strong> Up to $5,000 rebate for systems up to 10 kW</li>
+      <li><strong>Net Metering:</strong> Earn credits for excess power sent to the grid</li>
+      <li><strong>SRECs:</strong> Earn Solar Renewable Energy Credits for every 1,000 kWh generated (~$30-50/SREC in PA)</li>
+      <li><strong>PA Solar for All:</strong> $156M federal grant program for qualifying households</li>
+    </ul>
+    <p style="margin-top: 12px;"><a href="https://www.energysage.com/local-data/solar-rebates-incentives/pa/" class="signup-btn" target="_blank">Check Solar Incentives</a> <a href="https://www.energysage.com/solar/" class="signup-btn" style="margin-left:8px; background: var(--yellow);" target="_blank">Get Solar Quotes</a></p>
+  </div>
+</div>
+
+<!-- SECTION: COMMUNITY SOLAR & PROGRAMS -->
+<div class="section">
+  <h2>Additional Programs &amp; Options</h2>
+  <div class="grid-2">
+    <div class="insight-box">
+      <h4>Community Solar</h4>
+      <p style="color: var(--text-muted);">Not yet available in PA. House Bill 1155 passed the PA House and awaits Senate action. A permanent community solar program is expected in 2026-2027.</p>
+      <p style="margin-top: 8px;"><a href="https://pa4communitysolar.com/" class="signup-btn" target="_blank" style="background: var(--text-muted);">Track Progress</a></p>
+    </div>
+    <div class="insight-box">
+      <h4>LIHEAP Assistance</h4>
+      <p style="color: var(--text-muted);">Applications open Dec 3, 2025 - April 10, 2026. Benefits $200-$1,000 for qualifying households at or below 150% of Federal Poverty Guidelines.</p>
+      <p style="margin-top: 8px;"><a href="https://www.compass.state.pa.us/compass.web/Public/CMPHome" class="signup-btn" target="_blank" style="background: var(--purple);">Apply via COMPASS</a></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Data sourced from PA Power Switch, ElectricityPlans.com, ElectricityRates.com, PAEnergyRatings.com, and individual supplier websites.</p>
+  <p>Rates as of February 25, 2026. Verify all rates before signing up &mdash; they change frequently.</p>
+  <p style="margin-top: 8px;">West Penn Power delivery charges remain the same regardless of supplier chosen.</p>
+</footer>
+
+</div>
+
+<script>
+// ============================================
+// DATA
+// ============================================
+
+const months = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26'];
+const usage = [3713, 3417, 3895, 3858, 4191, 3397, 3469, 3914, 4823, 5108];
+const totalBills = [589.73, 543.56, 625.83, 621.91, 685.81, 560.65, 572.32, 644.54, 792.01, 845.80];
+const wppCharges = [229.94, 212.45, 248.40, 248.07, 279.70, 231.48, 236.17, 265.27, 324.66, 350.83];
+const aepCharges = [359.79, 331.11, 377.43, 373.84, 406.11, 329.17, 336.15, 379.27, 467.35, 494.97];
+const days = [29, 29, 32, 30, 32, 30, 30, 32, 31, 31];
+
+const totalUsage = usage.reduce((a,b) => a+b, 0); // 39,785
+const avgUsage = totalUsage / usage.length; // 3,978.5
+const annualUsageEst = avgUsage * 12; // ~47,742
+
+const plans = [
+  {rank:1, supplier:'American Power & Gas', plan:'Clean Energy Variable', rate:8.99, type:'Variable', term:'M-t-M', cancelFee:'$0', renewable:0, renewLabel:'N/A', signup:'https://www.paenergyratings.com/companies/american-power-and-gas/plans-and-products', css:'best-row', tags:['variable']},
+  {rank:2, supplier:'Direct Energy', plan:'Live Brighter Flex 15', rate:9.39, type:'Fixed', term:'15 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.directenergy.com/en/residential/energy/pennsylvania', css:'best-row', tags:['fixed','nofee','cheap']},
+  {rank:3, supplier:'AEP Energy (CURRENT)', plan:'Current Contract', rate:9.69, type:'Fixed', term:'Expiring', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'https://www.aepenergy.com/residential/rates-plans/', css:'current-row', tags:['fixed','nofee','green','cheap']},
+  {rank:4, supplier:'Public Power', plan:'12 Mo Fixed + $14.95 MRC', rate:9.57, type:'Fixed', term:'12 mo', cancelFee:'$50', renewable:0, renewLabel:'0%', signup:'https://shopping.publicpowercompany.com', css:'', tags:['fixed','cheap'], note:'Effective rate incl. $14.95/mo fee'},
+  {rank:5, supplier:'XOOM Energy', plan:'SureLock 6', rate:10.39, type:'Fixed', term:'6 mo', cancelFee:'$55', renewable:0, renewLabel:'0%', signup:'https://xoomenergy.com/en/residential/pennsylvania/electricity/firstenergy-west-penn-power', css:'', tags:['fixed','cheap']},
+  {rank:6, supplier:'XOOM Energy', plan:'SureLock 12', rate:10.79, type:'Fixed', term:'12 mo', cancelFee:'$110', renewable:0, renewLabel:'0%', signup:'https://xoomenergy.com/en/residential/pennsylvania/electricity/firstenergy-west-penn-power', css:'', tags:['fixed','cheap']},
+  {rank:'--', supplier:'West Penn Power', plan:'Default Service (PTC)', rate:10.95, type:'Variable', term:'None', cancelFee:'$0', renewable:0, renewLabel:'PA Mix', signup:'https://www.firstenergycorp.com', css:'default-row', tags:['variable','nofee']},
+  {rank:7, supplier:'Inspire Clean Energy', plan:'Inspire Fixed 6', rate:10.99, type:'Fixed', term:'6 mo', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'https://www.inspirecleanenergy.com', css:'', tags:['fixed','nofee','green','cheap']},
+  {rank:8, supplier:'Public Power', plan:'12 Mo Fixed (no MRC)', rate:10.99, type:'Fixed', term:'12 mo', cancelFee:'$50', renewable:0, renewLabel:'0%', signup:'https://shopping.publicpowercompany.com', css:'', tags:['fixed','cheap']},
+  {rank:9, supplier:'Direct Energy', plan:'Live Brighter 10', rate:11.59, type:'Fixed', term:'10 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.directenergy.com/en/residential/energy/pennsylvania', css:'', tags:['fixed','nofee','cheap']},
+  {rank:10, supplier:'XOOM Energy', plan:'SimpleClean 12', rate:11.59, type:'Fixed', term:'12 mo', cancelFee:'$110', renewable:50, renewLabel:'50%', signup:'https://xoomenergy.com/en/residential/pennsylvania/electricity/firstenergy-west-penn-power', css:'', tags:['fixed','cheap']},
+  {rank:11, supplier:'Energy Harbor', plan:'Safe Harbor Value 9', rate:11.69, type:'Fixed', term:'9 mo', cancelFee:'$0', renewable:100, renewLabel:'100% CF', signup:'https://energyharbor.com/en/for-home/service-areas/pennsylvania-electric-rates', css:'', tags:['fixed','nofee','green','cheap']},
+  {rank:12, supplier:'APG&E', plan:'True Classic 11', rate:11.78, type:'Fixed', term:'11 mo', cancelFee:'?', renewable:0, renewLabel:'0%', signup:'https://www.apge.com/residential-electric-service', css:'', tags:['fixed','cheap']},
+  {rank:13, supplier:'Public Power', plan:'9 Mo Standard Fixed', rate:11.89, type:'Fixed', term:'9 mo', cancelFee:'$50', renewable:0, renewLabel:'0%', signup:'https://shopping.publicpowercompany.com', css:'', tags:['fixed','cheap']},
+  {rank:14, supplier:'Direct Energy', plan:'Live Brighter 12', rate:11.99, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.directenergy.com/en/residential/energy/pennsylvania', css:'', tags:['fixed','nofee','cheap']},
+  {rank:15, supplier:'XOOM Energy', plan:'SureLock 24', rate:11.99, type:'Fixed', term:'24 mo', cancelFee:'$200', renewable:0, renewLabel:'0%', signup:'https://xoomenergy.com/en/residential/pennsylvania/electricity/firstenergy-west-penn-power', css:'', tags:['fixed']},
+  {rank:16, supplier:'American Power & Gas', plan:'6 Month Fixed', rate:12.04, type:'Fixed', term:'6 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.paenergyratings.com/companies/american-power-and-gas/plans-and-products', css:'', tags:['fixed','nofee']},
+  {rank:17, supplier:'Green Mountain Energy', plan:'Pollution Free Reliable', rate:12.10, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100% Wind', signup:'https://www.greenmountainenergy.com/en/pennsylvania', css:'', tags:['fixed','nofee','green']},
+  {rank:18, supplier:'Green Mountain Energy', plan:'SolarSPARC 10% 12', rate:12.20, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100% (10% Solar)', signup:'https://www.greenmountainenergy.com/en/pennsylvania', css:'', tags:['fixed','nofee','green']},
+  {rank:19, supplier:'Inspire Clean Energy', plan:'Inspire Fixed 12', rate:12.19, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'https://www.inspirecleanenergy.com', css:'', tags:['fixed','nofee','green']},
+  {rank:20, supplier:'Energy Harbor', plan:'Safe Harbor Value 15', rate:12.29, type:'Fixed', term:'15 mo', cancelFee:'$0', renewable:100, renewLabel:'100% CF', signup:'https://energyharbor.com/en/for-home/service-areas/pennsylvania-electric-rates', css:'', tags:['fixed','nofee','green']},
+  {rank:21, supplier:'Direct Energy', plan:'Live Brighter 18', rate:12.39, type:'Fixed', term:'18 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.directenergy.com/en/residential/energy/pennsylvania', css:'', tags:['fixed','nofee']},
+  {rank:22, supplier:'Energy Harbor', plan:'Safe Harbor Value 20', rate:12.39, type:'Fixed', term:'20 mo', cancelFee:'$0', renewable:100, renewLabel:'100% CF', signup:'https://energyharbor.com/en/for-home/service-areas/pennsylvania-electric-rates', css:'', tags:['fixed','nofee','green']},
+  {rank:23, supplier:'Public Power', plan:'15 Mo Standard Fixed', rate:12.39, type:'Fixed', term:'15 mo', cancelFee:'$50', renewable:0, renewLabel:'0%', signup:'https://shopping.publicpowercompany.com', css:'', tags:['fixed']},
+  {rank:24, supplier:'Public Power', plan:'20 Mo Standard Fixed', rate:12.49, type:'Fixed', term:'20 mo', cancelFee:'$50', renewable:0, renewLabel:'0%', signup:'https://shopping.publicpowercompany.com', css:'', tags:['fixed']},
+  {rank:25, supplier:'NRG Home', plan:'12-Month Choice Plan', rate:12.50, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:0, renewLabel:'0%', signup:'https://www.picknrg.com/en/pennsylvania', css:'', tags:['fixed','nofee']},
+  {rank:26, supplier:'Clearview Energy', plan:'ClearGuarantee 24', rate:12.59, type:'Fixed', term:'24 mo', cancelFee:'$150', renewable:0, renewLabel:'0%', signup:'https://www.clearviewenergy.com/states/pa/', css:'', tags:['fixed']},
+  {rank:27, supplier:'Energy Harbor', plan:'Safe Harbor Value 12', rate:12.59, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100% CF', signup:'https://energyharbor.com/en/for-home/service-areas/pennsylvania-electric-rates', css:'', tags:['fixed','nofee','green']},
+  {rank:28, supplier:'Constellation', plan:'8 Mo Home Power', rate:12.79, type:'Fixed', term:'8 mo', cancelFee:'$150*', renewable:0, renewLabel:'0%', signup:'https://www.constellation.com/solutions/for-your-home/solutions-by-state/pennsylvania-energy.html', css:'', tags:['fixed'], note:'*Waived first 90 days'},
+  {rank:29, supplier:'Verde Energy', plan:'Clean Power 12', rate:12.79, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'https://www.verdeenergy.com/get-rates/', css:'', tags:['fixed','nofee','green']},
+  {rank:30, supplier:'Green Mountain Energy', plan:'Pollution Free 24', rate:12.70, type:'Fixed', term:'24 mo', cancelFee:'$0', renewable:100, renewLabel:'100% Wind', signup:'https://www.greenmountainenergy.com/en/pennsylvania', css:'', tags:['fixed','nofee','green']},
+  {rank:31, supplier:'CleanSky Energy', plan:'Embrace Green 12', rate:13.29, type:'Fixed', term:'12 mo', cancelFee:'?', renewable:100, renewLabel:'100%', signup:'https://cleanskyenergy.com/pennsylvania/', css:'', tags:['fixed','green']},
+  {rank:32, supplier:'CleanSky Energy', plan:'Embrace Green 24', rate:13.29, type:'Fixed', term:'24 mo', cancelFee:'?', renewable:100, renewLabel:'100%', signup:'https://cleanskyenergy.com/pennsylvania/', css:'', tags:['fixed','green']},
+  {rank:33, supplier:'Constellation', plan:'12 Mo Green Home Power', rate:14.09, type:'Fixed', term:'12 mo', cancelFee:'$150*', renewable:100, renewLabel:'100%', signup:'https://www.constellation.com/solutions/for-your-home/solutions-by-state/pennsylvania-energy.html', css:'', tags:['fixed','green']},
+  {rank:34, supplier:'Think Energy', plan:'Think Clean 12', rate:14.20, type:'Fixed', term:'12 mo', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'#', css:'', tags:['fixed','nofee','green']},
+  {rank:35, supplier:'Think Energy', plan:'Think Clean 36', rate:14.90, type:'Fixed', term:'36 mo', cancelFee:'$0', renewable:100, renewLabel:'100%', signup:'#', css:'', tags:['fixed','nofee','green']},
+];
+
+// Chart defaults
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = 'rgba(71,85,105,0.3)';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
+
+// ============================================
+// CHART 1: Monthly Usage
+// ============================================
+new Chart(document.getElementById('usageChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'kWh Used',
+      data: usage,
+      backgroundColor: usage.map(u => u > 4500 ? 'rgba(248,113,113,0.7)' : u > 4000 ? 'rgba(251,191,36,0.7)' : 'rgba(56,189,248,0.7)'),
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.parsed.y.toLocaleString()} kWh` } }
+    },
+    scales: {
+      y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } }
+    }
+  }
+});
+
+// ============================================
+// CHART 2: Bill Breakdown
+// ============================================
+new Chart(document.getElementById('billChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'West Penn (Delivery)', data: wppCharges, backgroundColor: 'rgba(167,139,250,0.7)', borderRadius: 6 },
+      { label: 'AEP Energy (Supply)', data: aepCharges, backgroundColor: 'rgba(56,189,248,0.7)', borderRadius: 6 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}` } }
+    },
+    scales: {
+      x: { stacked: true },
+      y: { stacked: true, ticks: { callback: v => '$' + v } }
+    }
+  }
+});
+
+// ============================================
+// CHART 3: Effective Rate Over Time
+// ============================================
+const effectiveRates = totalBills.map((bill, i) => (bill / usage[i] * 100).toFixed(2));
+const supplyRates = aepCharges.map((charge, i) => (charge / usage[i] * 100).toFixed(2));
+new Chart(document.getElementById('rateChart'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'Total Effective Rate (incl. delivery)', data: effectiveRates, borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.1)', fill: true, tension: 0.3 },
+      { label: 'Supply Rate (AEP @ 9.69c)', data: supplyRates, borderColor: '#38bdf8', borderDash: [5,5], tension: 0.3 },
+      { label: 'Price to Compare (10.95c)', data: Array(10).fill(10.95), borderColor: '#fbbf24', borderDash: [10,5], pointRadius: 0 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}¢/kWh` } }
+    },
+    scales: {
+      y: { ticks: { callback: v => v + '¢' } }
+    }
+  }
+});
+
+// ============================================
+// CHART 4: Supplier Bar Chart (Top 25)
+// ============================================
+const top25 = plans.slice(0, 25);
+new Chart(document.getElementById('supplierBarChart'), {
+  type: 'bar',
+  data: {
+    labels: top25.map(p => p.supplier.replace('(CURRENT)', '').trim() + ' - ' + p.plan.substring(0, 20)),
+    datasets: [{
+      label: 'Rate (¢/kWh)',
+      data: top25.map(p => p.rate),
+      backgroundColor: top25.map(p => {
+        if (p.css === 'current-row') return 'rgba(56,189,248,0.8)';
+        if (p.css === 'default-row') return 'rgba(251,191,36,0.6)';
+        if (p.renewable === 100) return 'rgba(74,222,128,0.6)';
+        if (p.type === 'Variable') return 'rgba(248,113,113,0.6)';
+        return 'rgba(148,163,184,0.5)';
+      }),
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: {
+        label: ctx => {
+          const p = top25[ctx.dataIndex];
+          return `${p.rate}¢/kWh | $${(p.rate/100*avgUsage).toFixed(0)}/mo | ${p.type} | ${p.renewLabel}`;
+        }
+      }}
+    },
+    scales: {
+      x: {
+        min: 8, max: 14,
+        ticks: { callback: v => v + '¢' },
+        grid: { color: 'rgba(71,85,105,0.2)' }
+      }
+    }
+  }
+});
+
+// ============================================
+// CHART 5: Monthly Projection - Top Plans
+// ============================================
+const topPlanRates = [
+  {name: 'APG Variable (8.99¢)', rate: 0.0899, color: '#f87171', dash: [5,5]},
+  {name: 'Direct Energy Flex 15 (9.39¢)', rate: 0.0939, color: '#4ade80', dash: []},
+  {name: 'AEP Current (9.69¢)', rate: 0.0969, color: '#38bdf8', dash: []},
+  {name: 'Public Power + MRC (eff. 9.57¢)', rate: 0.0957, color: '#fb923c', dash: [3,3]},
+  {name: 'WPP Default (10.95¢)', rate: 0.1095, color: '#fbbf24', dash: [10,5]},
+  {name: 'Green Mtn Renewable (12.10¢)', rate: 0.1210, color: '#a78bfa', dash: [5,5]},
+];
+const projDatasets = topPlanRates.map(p => ({
+  label: p.name,
+  data: usage.map(u => +(u * p.rate).toFixed(2)),
+  borderColor: p.color,
+  borderDash: p.dash,
+  tension: 0.3,
+  pointRadius: 3,
+  fill: false
+}));
+// Add actual AEP charges
+projDatasets.push({
+  label: 'Your Actual AEP Charges',
+  data: aepCharges,
+  borderColor: '#38bdf8',
+  backgroundColor: 'rgba(56,189,248,0.15)',
+  fill: true,
+  tension: 0.3,
+  pointRadius: 5,
+  borderWidth: 3
+});
+
+new Chart(document.getElementById('projectionChart'), {
+  type: 'line',
+  data: { labels: months, datasets: projDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}` } }
+    },
+    scales: {
+      y: { ticks: { callback: v => '$' + v } }
+    }
+  }
+});
+
+// ============================================
+// CHART 6: Annual Supply Cost
+// ============================================
+const annualPlans = plans.filter(p => p.rate <= 13).slice(0, 15);
+new Chart(document.getElementById('annualChart'), {
+  type: 'bar',
+  data: {
+    labels: annualPlans.map(p => p.supplier.replace('(CURRENT)','*').trim()),
+    datasets: [{
+      label: 'Estimated Annual Supply Cost',
+      data: annualPlans.map(p => Math.round(p.rate / 100 * annualUsageEst)),
+      backgroundColor: annualPlans.map(p => {
+        if (p.css === 'current-row') return 'rgba(56,189,248,0.8)';
+        if (p.css === 'default-row') return 'rgba(251,191,36,0.6)';
+        if (p.renewable === 100) return 'rgba(74,222,128,0.6)';
+        return 'rgba(148,163,184,0.5)';
+      }),
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `$${ctx.parsed.y.toLocaleString()}/year at ${annualPlans[ctx.dataIndex].rate}¢/kWh` } }
+    },
+    scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
+  }
+});
+
+// ============================================
+// CHART 7: Annual Savings vs Current
+// ============================================
+const currentAnnual = 9.69 / 100 * annualUsageEst;
+const savingsPlans = plans.filter(p => p.rate <= 13).slice(0, 15);
+new Chart(document.getElementById('savingsChart'), {
+  type: 'bar',
+  data: {
+    labels: savingsPlans.map(p => p.supplier.replace('(CURRENT)','*').trim()),
+    datasets: [{
+      label: 'Annual Savings vs Current (9.69¢)',
+      data: savingsPlans.map(p => Math.round(currentAnnual - (p.rate / 100 * annualUsageEst))),
+      backgroundColor: savingsPlans.map(p => {
+        const saving = currentAnnual - (p.rate / 100 * annualUsageEst);
+        return saving >= 0 ? 'rgba(74,222,128,0.7)' : 'rgba(248,113,113,0.7)';
+      }),
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: {
+        label: ctx => {
+          const v = ctx.parsed.y;
+          return v >= 0 ? `Save $${v.toLocaleString()}/year` : `Costs $${Math.abs(v).toLocaleString()}/year more`;
+        }
+      }}
+    },
+    scales: { y: { ticks: { callback: v => (v >= 0 ? '+$' : '-$') + Math.abs(v).toLocaleString() } } }
+  }
+});
+
+// ============================================
+// CHART 8: Renewable Plans
+// ============================================
+const greenPlans = plans.filter(p => p.renewable === 100);
+new Chart(document.getElementById('greenChart'), {
+  type: 'bar',
+  data: {
+    labels: greenPlans.map(p => p.supplier.replace('(CURRENT)','*').trim() + '\n' + p.plan.substring(0, 18)),
+    datasets: [{
+      label: 'Rate (¢/kWh)',
+      data: greenPlans.map(p => p.rate),
+      backgroundColor: greenPlans.map(p => p.css === 'current-row' ? 'rgba(56,189,248,0.8)' : 'rgba(74,222,128,0.6)'),
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => {
+        const p = greenPlans[ctx.dataIndex];
+        return `${p.rate}¢ | $${Math.round(p.rate/100*avgUsage)}/mo | ${p.term} | Fee: ${p.cancelFee}`;
+      }}}
+    },
+    scales: { y: { beginAtZero: false, min: 8, ticks: { callback: v => v + '¢' } } }
+  }
+});
+
+// ============================================
+// TABLE RENDERING
+// ============================================
+function renderTable(filter) {
+  const tbody = document.getElementById('planTableBody');
+  let filtered = plans;
+  if (filter === 'cheap') filtered = plans.slice(0, 15);
+  if (filter === 'green') filtered = plans.filter(p => p.renewable === 100);
+  if (filter === 'fixed') filtered = plans.filter(p => p.type === 'Fixed');
+  if (filter === 'nofee') filtered = plans.filter(p => p.cancelFee === '$0');
+
+  tbody.innerHTML = filtered.map(p => {
+    const monthlyCost = (p.rate / 100 * avgUsage).toFixed(2);
+    const diff = (monthlyCost - 385.57).toFixed(2);
+    const annDiff = (diff * 12).toFixed(0);
+    const diffClass = diff <= 0 ? 'positive' : 'negative';
+    const diffSign = diff <= 0 ? '' : '+';
+    const typeTag = p.type === 'Fixed' ? '<span class="tag fixed">FIXED</span>' : '<span class="tag variable">VARIABLE</span>';
+    const greenTag = p.renewable === 100 ? '<span class="tag green">100% GREEN</span>' : p.renewable === 50 ? '<span class="tag partial-green">50% GREEN</span>' : p.renewLabel;
+
+    return `<tr class="${p.css || ''}">
+      <td>${p.rank}</td>
+      <td><strong>${p.supplier}</strong></td>
+      <td>${p.plan}${p.note ? '<br><small style="color:var(--text-muted)">'+p.note+'</small>' : ''}</td>
+      <td><strong>${p.rate}&cent;</strong></td>
+      <td>${typeTag}</td>
+      <td>${p.term}</td>
+      <td>${p.cancelFee}</td>
+      <td>${greenTag}</td>
+      <td>$${monthlyCost}</td>
+      <td><span class="savings ${diffClass}">${diffSign}$${diff}/mo</span></td>
+      <td><span class="savings ${diffClass}">${diff <= 0 ? 'Save' : 'Costs'} $${Math.abs(annDiff)}/yr</span></td>
+      <td>${p.signup !== '#' ? '<a href="'+p.signup+'" class="signup-btn" target="_blank" rel="noopener">Sign Up</a>' : 'N/A'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTable(filter);
+}
+
+renderTable('all');
+
+</script>
+</body>
+</html>
