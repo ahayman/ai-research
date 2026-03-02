@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="APP2Speak: A comprehensive deep dive into the photo-based AAC app designed for adults who have lost their speech. Features, pricing, accessibility, and competitive analysis.">
+<meta name="author" content="AI-Assisted Research">
+<meta property="og:title" content="APP2Speak: The Photo-Based AAC App Giving Adults Their Voice Back">
+<meta property="og:description" content="Deep dive into APP2Speak - the photo-based AAC app built by an SLP with 40+ years of experience, designed specifically for adults with speech impairments.">
+<meta property="og:type" content="article">
+<title>APP2Speak Deep Dive - Photo-Based AAC for Adults</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-surface: #1a2332;
+  --bg-input: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99,102,241,0.15);
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.12);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.12);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.12);
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.12);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.12);
+  --pink: #ec4899;
+  --border: #334155;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+  --max-width: 900px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Reading Progress */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  z-index: 1000;
+  transition: width 0.15s linear;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.75rem 0;
+  transition: color var(--transition);
+}
+.back-link:hover { color: var(--cyan); }
+.back-link svg { width: 16px; height: 16px; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #1e3a5f 100%);
+  padding: 3rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: var(--accent-light);
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-dim);
+  max-width: 650px;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  min-width: 140px;
+}
+.hero-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Layout */
+.content-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Navigation TOC */
+.toc-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  margin-bottom: 3rem;
+}
+.toc-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.5rem;
+}
+.toc-link {
+  display: block;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  border-left: 2px solid transparent;
+}
+.toc-link:hover {
+  color: var(--accent-light);
+  background: var(--accent-glow);
+  border-left-color: var(--accent);
+}
+
+/* Section headings */
+.section-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 3.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+  color: var(--text);
+  scroll-margin-top: 2rem;
+}
+.section-heading .heading-icon {
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+p { margin: 1rem 0; color: var(--text-dim); line-height: 1.8; }
+
+strong { color: var(--text); }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 1.5rem 0;
+  transition: border-color var(--transition);
+}
+.card:hover { border-color: rgba(99,102,241,0.3); }
+
+/* Feature Cards */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all var(--transition);
+}
+.feature-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.feature-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.feature-card p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Mode Cards (How it works) */
+.mode-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 1.25rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.mode-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+.mode-card.mode-preset::before { background: var(--blue); }
+.mode-card.mode-custom::before { background: var(--green); }
+.mode-card.mode-tts::before { background: var(--purple); }
+.mode-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.mode-card.mode-preset .mode-number { color: var(--blue); }
+.mode-card.mode-custom .mode-number { color: var(--green); }
+.mode-card.mode-tts .mode-number { color: var(--purple); }
+.mode-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+.mode-card ul {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+}
+.mode-card li {
+  color: var(--text-dim);
+  margin: 0.35rem 0;
+  font-size: 0.95rem;
+}
+.mode-highlight {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin: 0.25rem 0.25rem 0.25rem 0;
+}
+
+/* Blockquote */
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-glow);
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+}
+blockquote p { color: var(--text-dim); margin: 0; }
+blockquote .attribution {
+  display: block;
+  margin-top: 0.75rem;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Comparison Visual */
+.comparison-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+@media (max-width: 640px) {
+  .comparison-visual { grid-template-columns: 1fr; }
+}
+.comparison-side {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.comparison-side h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.comparison-side.photo-side h4 { color: var(--green); }
+.comparison-side.symbol-side h4 { color: var(--yellow); }
+.comparison-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+.comparison-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+.comparison-side.photo-side .comparison-icon {
+  background: var(--green-bg);
+  color: var(--green);
+}
+.comparison-side.symbol-side .comparison-icon {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+/* Accessibility Grid */
+.accessibility-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.a11y-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  transition: all var(--transition);
+}
+.a11y-card:hover {
+  border-color: rgba(6,182,212,0.4);
+  transform: translateY(-2px);
+}
+.a11y-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+.a11y-card h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.a11y-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Disease progression */
+.progression-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.progression-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+}
+.progression-step h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.progression-step p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.progression-step.step-touch { border-color: rgba(16,185,129,0.4); }
+.progression-step.step-touch h4 { color: var(--green); }
+.progression-step.step-eye { border-color: rgba(59,130,246,0.4); }
+.progression-step.step-eye h4 { color: var(--blue); }
+.progression-step.step-neuro { border-color: rgba(168,85,247,0.4); }
+.progression-step.step-neuro h4 { color: var(--purple); }
+.progression-arrow {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  padding: 0 0.5rem;
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .progression-arrow { transform: rotate(90deg); padding: 0.5rem 0; }
+  .progression-timeline { flex-direction: column; }
+}
+
+/* Chart Container */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.chart-container h3 {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+.chart-wrapper {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Pros/Cons */
+.pros-cons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 640px) {
+  .pros-cons-grid { grid-template-columns: 1fr; }
+}
+.pros-section, .cons-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.pros-section { border-top: 3px solid var(--green); }
+.cons-section { border-top: 3px solid var(--red); }
+.pros-section h3, .cons-section h3 { margin-top: 0; font-size: 1.1rem; }
+.pros-section h3 { color: var(--green); }
+.cons-section h3 { color: var(--red); }
+.pros-section li, .cons-section li {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 0.6rem 0;
+  padding-left: 0.25rem;
+}
+
+/* Competitor Table */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+thead {
+  background: var(--bg-surface);
+}
+th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 0.75rem 1rem;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.highlight-row td { background: var(--accent-glow); }
+.highlight-row td:first-child { font-weight: 600; color: var(--accent-light); }
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--red); font-weight: 700; }
+.partial { color: var(--yellow); }
+
+/* Story Cards */
+.story-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin: 1.25rem 0;
+  position: relative;
+}
+.story-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  font-size: 3rem;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.story-card h4 {
+  color: var(--accent-light);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+.story-card p {
+  font-size: 0.95rem;
+  padding-left: 0.5rem;
+}
+
+/* Pricing Card */
+.pricing-highlight {
+  background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(6,182,212,0.1) 100%);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+.pricing-amount {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent-light);
+  margin-bottom: 0.25rem;
+}
+.pricing-detail {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.pricing-perks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.pricing-perk {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  color: var(--green);
+}
+
+/* Conditions tags */
+.conditions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+.condition-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+.condition-primary {
+  background: var(--blue-bg);
+  border-color: rgba(59,130,246,0.3);
+  color: var(--blue);
+}
+.condition-secondary {
+  background: var(--purple-bg);
+  border-color: rgba(168,85,247,0.3);
+  color: var(--purple);
+}
+.condition-tertiary {
+  background: var(--cyan-bg);
+  border-color: rgba(6,182,212,0.3);
+  color: var(--cyan);
+}
+
+/* Key Takeaways */
+.takeaways {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(59,130,246,0.08) 100%);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.takeaways h3 {
+  color: var(--green);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.takeaways li {
+  color: var(--text-dim);
+  margin: 0.6rem 0;
+  line-height: 1.7;
+}
+
+/* Sources */
+.sources-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-top: 3rem;
+}
+.sources-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.sources-list {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.sources-list li {
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.sources-list a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.sources-list a:hover { color: var(--cyan); text-decoration: underline; }
+
+/* Footer */
+.page-footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+.page-footer a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+.page-footer a:hover { text-decoration: underline; }
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition);
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  z-index: 100;
+}
+.back-to-top.visible { opacity: 1; }
+.back-to-top:hover { background: var(--accent-light); transform: translateY(-2px); }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Print */
+@media print {
+  .back-to-top, .reading-progress { display: none; }
+  .hero { background: #333 !important; }
+  body { background: white; color: black; }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress"></div>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-inner">
+    <a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M9.78 4.22a.75.75 0 010 1.06L7.06 8l2.72 2.72a.75.75 0 11-1.06 1.06L5.47 8.53a.75.75 0 010-1.06l3.25-3.25a.75.75 0 011.06 0z"/></svg>
+      Back to AAC Dashboard
+    </a>
+    <div class="hero-badge">AAC Product Deep Dive</div>
+    <h1>APP2Speak: The Photo-Based AAC App Giving Adults Their Voice Back</h1>
+    <p class="hero-subtitle">
+      Created by an SLP with 40+ years of clinical experience, APP2Speak uses real-life photographs instead of abstract symbols to help adults with stroke, ALS, Parkinson's, and other conditions communicate with dignity and independence.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">$199.99</div>
+        <div class="hero-stat-label">One-time price</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">80+</div>
+        <div class="hero-stat-label">Preset photos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">Unlimited</div>
+        <div class="hero-stat-label">Custom pages</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">40+ yrs</div>
+        <div class="hero-stat-label">SLP experience</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="content-wrapper">
+
+  <!-- Table of Contents -->
+  <nav class="toc-container" aria-label="Table of Contents">
+    <div class="toc-title">Contents</div>
+    <div class="toc-grid">
+      <a href="#story" class="toc-link">The Story Behind APP2Speak</a>
+      <a href="#how-it-works" class="toc-link">How APP2Speak Works</a>
+      <a href="#photo-vs-symbol" class="toc-link">Photo-Based vs Symbol-Based AAC</a>
+      <a href="#accessibility" class="toc-link">Accessibility Features</a>
+      <a href="#pricing" class="toc-link">Pricing & Market Position</a>
+      <a href="#target-users" class="toc-link">Target Users & Conditions</a>
+      <a href="#real-stories" class="toc-link">Real Stories</a>
+      <a href="#strengths-weaknesses" class="toc-link">Strengths & Weaknesses</a>
+      <a href="#competition" class="toc-link">Competitive Landscape</a>
+      <a href="#outlook" class="toc-link">Future Outlook</a>
+      <a href="#takeaways" class="toc-link">Key Takeaways</a>
+    </div>
+  </nav>
+
+  <!-- Introduction -->
+  <p>
+    Imagine waking up from surgery and being unable to speak. Your thoughts are clear, your needs are urgent, but the words simply will not come. For millions of adults living with conditions like stroke, ALS, Parkinson's disease, and traumatic brain injury, this is not a hypothetical scenario -- it is daily reality.
+  </p>
+  <p>
+    While the AAC (Augmentative and Alternative Communication) market has long been dominated by symbol-based systems designed with children in mind, one speech-language pathologist decided that adults deserved something better: a communication tool built around real photographs, personal memories, and the dignity of grown-up life. <strong>APP2Speak</strong> is that tool.
+  </p>
+
+  <!-- The Story -->
+  <h2 class="section-heading" id="story"><span class="heading-icon">&#9998;</span> The Story Behind APP2Speak</h2>
+
+  <p>
+    Gina Baldwin, M.S., CCC-SLP, did not set out to build an app. For over 40 years, she worked in the trenches of speech-language pathology -- hospitals, rehabilitation centers, long-term care facilities -- helping adults who had lost their ability to speak. She created countless speech boards, tried dozens of devices and apps, and watched her patients struggle with tools that were not designed for them.
+  </p>
+
+  <blockquote>
+    <p>"After decades of working with adults who had lost their speech, the pattern was impossible to ignore. The tools were often too childish, too complex, or too focused on therapy or school instead of daily life."</p>
+    <span class="attribution">-- Gina Baldwin, M.S., CCC-SLP, Creator of APP2Speak</span>
+  </blockquote>
+
+  <p>
+    The problems were consistent across the industry: AAC devices cost hundreds or thousands of dollars. Symbol-based systems used cartoon-like icons that felt infantilizing to adult users. Interfaces were cluttered with therapy-oriented features rather than tools for everyday conversation. And perhaps most critically, adult communication needs were treated as an afterthought in a market oriented primarily toward children.
+  </p>
+  <p>
+    Baldwin's solution was straightforward but revolutionary in its simplicity: <strong>build an AAC app around real photographs</strong>. After confirming that nothing like it existed on the market, she founded <strong>Cabson Consulting LLC</strong> and began developing APP2Speak. The app launched for iPhone and Android in 2020, bringing decades of clinical insight into a single, photo-driven communication platform.
+  </p>
+
+  <!-- How It Works -->
+  <h2 class="section-heading" id="how-it-works"><span class="heading-icon">&#9881;</span> How APP2Speak Works</h2>
+
+  <p>
+    APP2Speak provides three distinct communication modes, each designed for different situations and skill levels. Together, they form a comprehensive system that grows with the user.
+  </p>
+
+  <div class="mode-card mode-preset">
+    <div class="mode-number">Mode 1</div>
+    <h3>Preset Communication Pages</h3>
+    <p>Out of the box, APP2Speak comes preprogrammed with <strong>80 real-life photographs</strong> organized across <strong>4 themed pages</strong> covering essential daily needs -- food, hygiene, emotions, and common requests. Users simply touch a photo to hear the associated word or phrase spoken aloud.</p>
+    <div style="margin-top: 0.75rem;">
+      <span class="mode-highlight">80 preset photos</span>
+      <span class="mode-highlight">4 themed pages</span>
+      <span class="mode-highlight">Zero setup time</span>
+      <span class="mode-highlight">2 size options</span>
+    </div>
+  </div>
+
+  <div class="mode-card mode-custom">
+    <div class="mode-number">Mode 2</div>
+    <h3>Custom Communication Pages</h3>
+    <p>This is where APP2Speak truly distinguishes itself. Users can create an <strong>unlimited number of custom pages</strong> populated with their own photographs.</p>
+    <ul>
+      <li><strong>Personal photo library</strong> from the device</li>
+      <li><strong>Internet images</strong> saved to the device</li>
+      <li><strong>In-app camera</strong> for taking photos directly within APP2Speak</li>
+      <li>Each photo can have <strong>one or more custom phrases</strong> associated with it</li>
+      <li>Custom pages can be <strong>shared via Bluetooth or Wi-Fi</strong> with other APP2Speak users</li>
+    </ul>
+    <div style="margin-top: 0.75rem;">
+      <span class="mode-highlight">Unlimited pages</span>
+      <span class="mode-highlight">Personal photos</span>
+      <span class="mode-highlight">No training required</span>
+    </div>
+  </div>
+
+  <div class="mode-card mode-tts">
+    <div class="mode-number">Mode 3</div>
+    <h3>Text-to-Speech</h3>
+    <p>A freeform typing interface where users type any message and the app speaks it aloud. Frequently used phrases are saved to history for quick access. Features include:</p>
+    <ul>
+      <li><strong>Male or female</strong> text-to-speech voice options</li>
+      <li><strong>Adjustable speech rate</strong> for natural pacing</li>
+      <li><strong>Voice recording</strong> -- family members can record their own voice</li>
+      <li><strong>Phrase history</strong> for quick access to common messages</li>
+    </ul>
+    <div style="margin-top: 0.75rem;">
+      <span class="mode-highlight">Free typing</span>
+      <span class="mode-highlight">Family voice recording</span>
+      <span class="mode-highlight">Phrase history</span>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--green-bg); color: var(--green);">&#128247;</div>
+      <h4>Personal Photos</h4>
+      <p>Use your own photos of family, home, food, and daily life for deeply personal communication.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--blue-bg); color: var(--blue);">&#128264;</div>
+      <h4>Voice Personalization</h4>
+      <p>Family members can record their voice so the app speaks in a familiar, comforting tone.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--purple-bg); color: var(--purple);">&#128274;</div>
+      <h4>Page Lock</h4>
+      <p>Prevents accidental edits during active use -- critical for users with motor control challenges.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--cyan-bg); color: var(--cyan);">&#9992;</div>
+      <h4>Offline Operation</h4>
+      <p>Works without internet connection. Essential for hospitals, care facilities, and rural areas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--orange-bg); color: var(--orange);">&#128218;</div>
+      <h4>Built-in Help</h4>
+      <p>Written directions and video demonstrations included within the app for easy onboarding.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background: var(--yellow-bg); color: var(--yellow);">&#128257;</div>
+      <h4>Page Sharing</h4>
+      <p>SLPs can create curated page sets and share them with clients via Bluetooth or Wi-Fi.</p>
+    </div>
+  </div>
+
+  <!-- Photo vs Symbol -->
+  <h2 class="section-heading" id="photo-vs-symbol"><span class="heading-icon">&#128248;</span> Photo-Based vs Symbol-Based AAC</h2>
+
+  <p>
+    Traditional AAC systems overwhelmingly rely on symbol sets like <strong>PCS (Picture Communication Symbols)</strong> -- stylized line drawings that represent words and concepts. While these work well for many children, they present significant challenges for adults with acquired communication disorders.
+  </p>
+
+  <div class="comparison-visual">
+    <div class="comparison-side photo-side">
+      <h4>&#128247; Photo-Based (APP2Speak)</h4>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Immediate recognition</strong> -- no learning curve, no abstraction to decode</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Deep personalization</strong> -- your family, your home, your world</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Adult dignity</strong> -- nothing childish about real photographs</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Emotional connection</strong> -- personal photos create meaningful bonds</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Research-backed</strong> -- VSD studies show photos work better for aphasia (PMC6436972)</span>
+      </div>
+    </div>
+    <div class="comparison-side symbol-side">
+      <h4>&#9998; Symbol-Based (Traditional)</h4>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Abstract concepts</strong> -- can represent "maybe," "tomorrow," "because"</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Linguistic structure</strong> -- LAMP/Unity support sentence building</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">+</span>
+        <span><strong>Language development</strong> -- designed to build skills over time</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">-</span>
+        <span><strong>Cognitive load</strong> -- abstract symbols may confuse adults with brain injuries</span>
+      </div>
+      <div class="comparison-item">
+        <span class="comparison-icon">-</span>
+        <span><strong>Dignity concerns</strong> -- cartoon icons feel infantilizing for adults</span>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    The trade-off is clear: photo-based AAC excels at <strong>immediate, personal, dignified communication</strong> for adults, while symbol-based systems are stronger for <strong>linguistic development and abstract expression</strong>. APP2Speak addresses the abstract-concept gap partly through its text-to-speech mode, but users who cannot type may find their expressive range limited.
+  </p>
+
+  <!-- Accessibility -->
+  <h2 class="section-heading" id="accessibility"><span class="heading-icon">&#9855;</span> Accessibility: From Bluetooth Switches to Eye Tracking</h2>
+
+  <p>
+    Many conditions that cause speech loss also affect motor function. APP2Speak integrates deeply with iOS accessibility technologies to ensure users with severe physical limitations can still communicate.
+  </p>
+
+  <div class="accessibility-grid">
+    <div class="a11y-card">
+      <span class="a11y-icon">&#127911;</span>
+      <h4>Bluetooth Switches</h4>
+      <p>External switch access for users with severe motor limitations, including advanced ALS and quadriplegia.</p>
+    </div>
+    <div class="a11y-card">
+      <span class="a11y-icon">&#9995;</span>
+      <h4>Touch Accommodations</h4>
+      <p>iOS hold duration, ignore repeat, and tap assistance for users with tremors or limited motor control.</p>
+    </div>
+    <div class="a11y-card">
+      <span class="a11y-icon">&#128065;</span>
+      <h4>Low Vision</h4>
+      <p>Two photo display sizes and compatibility with iOS low-vision settings for visually impaired users.</p>
+    </div>
+    <div class="a11y-card">
+      <span class="a11y-icon">&#128064;</span>
+      <h4>Apple Eye Tracking</h4>
+      <p>iOS 18+ eye tracking for completely hands-free navigation and photo selection using only eye movements.</p>
+    </div>
+    <div class="a11y-card">
+      <span class="a11y-icon">&#128274;</span>
+      <h4>Page Lock</h4>
+      <p>Prevents accidental edits or navigation during active use -- essential for motor-impaired users.</p>
+    </div>
+  </div>
+
+  <h3>Control Bionics Partnership</h3>
+  <p>
+    For users with progressive diseases like ALS, APP2Speak has partnered with <strong>Control Bionics</strong>, whose <strong>Trilogy</strong> device adapts as the disease progresses:
+  </p>
+
+  <div class="progression-timeline">
+    <div class="progression-step step-touch">
+      <h4>Touch Control</h4>
+      <p>Early stages -- finger movement still possible</p>
+    </div>
+    <span class="progression-arrow">&#8594;</span>
+    <div class="progression-step step-eye">
+      <h4>Eye-Gaze Tracking</h4>
+      <p>Intermediate -- hand function declining</p>
+    </div>
+    <span class="progression-arrow">&#8594;</span>
+    <div class="progression-step step-neuro">
+      <h4>NeuroNode EMG</h4>
+      <p>Advanced -- faintest muscle signals detected</p>
+    </div>
+  </div>
+
+  <p>
+    This partnership means a user can continue using the same familiar app and vocabulary as their condition advances, without learning an entirely new system at each stage.
+  </p>
+
+  <!-- Pricing -->
+  <h2 class="section-heading" id="pricing"><span class="heading-icon">&#128176;</span> Pricing & Market Position</h2>
+
+  <div class="pricing-highlight">
+    <div class="pricing-amount">$199.99</div>
+    <div class="pricing-detail">One-time purchase. No subscriptions. All future updates included.</div>
+    <div class="pricing-perks">
+      <span class="pricing-perk">&#10003; Free 14-day trial</span>
+      <span class="pricing-perk">&#10003; Free Lite version</span>
+      <span class="pricing-perk">&#10003; Free virtual demo</span>
+      <span class="pricing-perk">&#10003; No recurring fees</span>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <h3>AAC App Pricing Comparison</h3>
+    <div class="chart-wrapper">
+      <canvas id="pricingChart" height="280"></canvas>
+    </div>
+  </div>
+
+  <p>
+    For context, dedicated AAC hardware devices can cost <strong>$5,000 to $15,000</strong> or more. Even among app-based solutions, APP2Speak undercuts Proloquo2Go ($249.99) by $50 and TouchChat HD ($299.99) by $100. The absence of recurring subscription fees -- increasingly common as platforms like TD Snap move to annual models -- makes the long-term cost even more attractive.
+  </p>
+
+  <!-- Target Users -->
+  <h2 class="section-heading" id="target-users"><span class="heading-icon">&#128101;</span> Target Users & Conditions</h2>
+
+  <p>
+    APP2Speak's primary audience is <strong>adults who have lost their speech</strong> due to acquired conditions. The app is specifically designed for:
+  </p>
+
+  <div class="conditions-grid">
+    <span class="condition-tag condition-primary">Stroke / Aphasia</span>
+    <span class="condition-tag condition-primary">ALS</span>
+    <span class="condition-tag condition-primary">Parkinson's Disease</span>
+    <span class="condition-tag condition-secondary">Traumatic Brain Injury</span>
+    <span class="condition-tag condition-secondary">Head & Neck Cancer</span>
+    <span class="condition-tag condition-secondary">Autism (nonverbal adults)</span>
+    <span class="condition-tag condition-tertiary">Down Syndrome</span>
+  </div>
+
+  <div class="chart-container">
+    <h3>Target User Conditions</h3>
+    <div class="chart-wrapper">
+      <canvas id="conditionsChart" height="280"></canvas>
+    </div>
+  </div>
+
+  <!-- Real Stories -->
+  <h2 class="section-heading" id="real-stories"><span class="heading-icon">&#128172;</span> Real Stories: APP2Speak in Action</h2>
+
+  <div class="story-card">
+    <h4>Bob's Surgery Story</h4>
+    <p>
+      Bob was facing surgery that would affect his ability to speak. Before the operation, he set up APP2Speak with personalized phrases he anticipated needing during recovery. When he woke from anesthesia, unable to speak, he immediately began communicating with medical staff through the app. The nurses were amazed -- they had never seen anything like it. His preparation meant the difference between helpless silence and immediate, effective communication.
+    </p>
+  </div>
+
+  <div class="story-card">
+    <h4>A Family Reconnected</h4>
+    <p>
+      A hearing-impaired family had struggled for years to communicate with their eight-year-old nonverbal daughter. After discovering APP2Speak, they used the photo-based interface to bridge the communication gap. The family described "significant excitement and joy" at finally being able to connect and converse with their child. Real photos of their home, routines, and world created a shared vocabulary that felt natural and meaningful.
+    </p>
+  </div>
+
+  <blockquote>
+    <p>"It is nice to finally find an app that is affordable for my patients and user-friendly. It has everything needed to improve communication such as customizable pages, ability to add pictures and text and great set pictures on the app that can be used to communicate basic needs. I highly recommend this App!"</p>
+    <span class="attribution">-- Lori Strickland, SLP, North Carolina</span>
+  </blockquote>
+
+  <p>
+    APP2Speak is recognized on the <strong>ASHA Solution Center</strong>, featured by <strong>Easter Seals Crossroads</strong>, and was ranked among the top communication tools for long-term care residents in a peer-reviewed study (PMC7177427).
+  </p>
+
+  <!-- Strengths & Weaknesses -->
+  <h2 class="section-heading" id="strengths-weaknesses"><span class="heading-icon">&#9878;</span> Strengths & Weaknesses</h2>
+
+  <div class="pros-cons-grid">
+    <div class="pros-section">
+      <h3>&#10003; Strengths</h3>
+      <ul>
+        <li><strong>Adult-first design</strong> -- built from the ground up for adults, no childish graphics</li>
+        <li><strong>Photo-based personalization</strong> -- unlimited custom pages with personal photos</li>
+        <li><strong>Affordable</strong> -- $199.99 one-time, no subscriptions</li>
+        <li><strong>Created by an SLP</strong> -- 40+ years of clinical experience</li>
+        <li><strong>ASHA recognized</strong> -- listed on ASHA Solution Center</li>
+        <li><strong>Offline capable</strong> -- works without internet</li>
+        <li><strong>Broad accessibility</strong> -- Bluetooth switches, touch accommodations, eye tracking</li>
+        <li><strong>Voice recording</strong> -- family members can become the user's voice</li>
+        <li><strong>Free trial</strong> -- 14-day evaluation plus free Lite version</li>
+        <li><strong>Easy setup</strong> -- pre-programmed content for immediate use</li>
+        <li><strong>Control Bionics partnership</strong> -- multi-modal progressive disease support</li>
+        <li><strong>Page sharing</strong> -- SLPs can distribute curated content</li>
+      </ul>
+    </div>
+    <div class="cons-section">
+      <h3>&#10007; Weaknesses</h3>
+      <ul>
+        <li><strong>Smaller ecosystem</strong> -- fewer users, tutorials, and community resources</li>
+        <li><strong>Limited clinical research</strong> -- no independent outcome studies</li>
+        <li><strong>No linguistic framework</strong> -- no LAMP/Unity for complex sentence building</li>
+        <li><strong>English only</strong> -- not available in other languages</li>
+        <li><strong>Single-developer risk</strong> -- Cabson Consulting LLC is a small operation</li>
+        <li><strong>No cloud backup</strong> -- custom content at risk if device is lost</li>
+        <li><strong>Abstract concept gap</strong> -- photos struggle with "maybe," "tomorrow," etc.</li>
+        <li><strong>Fewer person-centered features</strong> -- scored lower than some competitors in LTC study</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Competition -->
+  <h2 class="section-heading" id="competition"><span class="heading-icon">&#128202;</span> Competitive Landscape</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>APP2Speak</th>
+          <th>Proloquo2Go</th>
+          <th>TouchChat HD</th>
+          <th>TD Snap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td>Price</td>
+          <td>$199.99</td>
+          <td>$249.99</td>
+          <td>$299.99</td>
+          <td>Subscription</td>
+        </tr>
+        <tr>
+          <td>Approach</td>
+          <td><strong>Photo-based</strong></td>
+          <td>Symbol-based</td>
+          <td>Symbol-based</td>
+          <td>Symbol-based</td>
+        </tr>
+        <tr>
+          <td>Target Users</td>
+          <td><strong>Adults</strong></td>
+          <td>All ages</td>
+          <td>All ages</td>
+          <td>All ages</td>
+        </tr>
+        <tr>
+          <td>Custom Photos</td>
+          <td><span class="check">Unlimited</span></td>
+          <td><span class="partial">Limited</span></td>
+          <td><span class="partial">Limited</span></td>
+          <td><span class="partial">Limited</span></td>
+        </tr>
+        <tr>
+          <td>Offline Mode</td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="partial">Partial</span></td>
+        </tr>
+        <tr>
+          <td>Eye Tracking</td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Switch Access</td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Languages</td>
+          <td><span class="cross">English</span></td>
+          <td><span class="check">18+</span></td>
+          <td><span class="cross">English</span></td>
+          <td><span class="check">40+</span></td>
+        </tr>
+        <tr>
+          <td>Voice Recording</td>
+          <td><span class="check">Yes</span></td>
+          <td><span class="cross">No</span></td>
+          <td><span class="cross">No</span></td>
+          <td><span class="cross">No</span></td>
+        </tr>
+        <tr>
+          <td>Linguistic System</td>
+          <td><span class="cross">None</span></td>
+          <td>Crescendo</td>
+          <td>WordPower/LAMP</td>
+          <td>Snap Core</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    APP2Speak's competitive advantage is clear: it is the <strong>most personalized, most affordable, and most adult-focused</strong> option available. Its competitive disadvantage is equally clear: it is the <strong>smallest, least researched, and least linguistically sophisticated</strong>.
+  </p>
+
+  <!-- Outlook -->
+  <h2 class="section-heading" id="outlook"><span class="heading-icon">&#128301;</span> Recent Developments & Future Outlook</h2>
+
+  <p>
+    APP2Speak continues to evolve. The integration with <strong>Apple's iOS 18 Eye Tracking</strong> in 2024 was a significant milestone, opening the app to users who had previously been unable to use touchscreen-based AAC. The <strong>Control Bionics partnership</strong> extends accessibility further into the progressive disease community.
+  </p>
+  <p>
+    The app maintains an active presence at <strong>ATIA conferences</strong> and publishes regular blog content covering user stories, AAC best practices, and feature updates. Version 1.50, the most recent release, was published in June 2024.
+  </p>
+  <p>
+    Looking ahead, the AAC landscape is being reshaped by advances in AI-powered speech generation, personalized voice banking, and brain-computer interfaces. APP2Speak's photo-based approach positions it well to incorporate these technologies -- imagining a future where AI can automatically suggest photos, generate personalized visual scenes, or integrate with voice banking to produce speech that sounds like the user did before their condition.
+  </p>
+  <p>
+    For now, APP2Speak fills an important and underserved niche: <strong>affordable, dignified, deeply personal communication for adults who have lost their voice</strong>. In Gina Baldwin's words, the mission is simple -- "helping to provide a voice to those in need."
+  </p>
+
+  <!-- Key Takeaways -->
+  <div class="takeaways" id="takeaways">
+    <h3>Key Takeaways</h3>
+    <ul>
+      <li>APP2Speak is a <strong>photo-based AAC app</strong> designed specifically for adults who have lost speech due to stroke, ALS, Parkinson's, TBI, cancer, autism, and other conditions.</li>
+      <li>Unlike symbol-based competitors, it uses <strong>real-life photographs</strong> for more intuitive and dignified communication.</li>
+      <li>Priced at <strong>$199.99 one-time</strong> with no subscriptions, it is among the most affordable full-featured AAC apps.</li>
+      <li><strong>Three communication modes</strong> (preset photos, unlimited custom photos, text-to-speech) provide flexibility for different needs and abilities.</li>
+      <li>Deep <strong>iOS accessibility support</strong> (Bluetooth switches, touch accommodations, eye tracking) ensures access for users with severe motor limitations.</li>
+      <li>Created by an <strong>SLP with 40+ years of experience</strong> and recognized by ASHA.</li>
+      <li>Trade-offs include a <strong>smaller ecosystem, limited clinical research, no linguistic framework</strong>, and English-only support.</li>
+    </ul>
+  </div>
+
+  <!-- Sources -->
+  <div class="sources-section">
+    <h3>Sources & References</h3>
+    <ol class="sources-list">
+      <li><a href="https://app2speak.com/" target="_blank" rel="noopener">APP2Speak Official Website</a></li>
+      <li><a href="https://app2speak.com/how-it-works/" target="_blank" rel="noopener">APP2Speak - How It Works</a></li>
+      <li><a href="https://app2speak.com/faq/" target="_blank" rel="noopener">APP2Speak FAQ</a></li>
+      <li><a href="https://app2speak.com/my-story/" target="_blank" rel="noopener">Gina Baldwin's Story</a></li>
+      <li><a href="https://apps.apple.com/us/app/app2speak/id898699763" target="_blank" rel="noopener">APP2Speak on the App Store</a></li>
+      <li><a href="https://newzhook.com/story/app2speak-photo-based-aac-app-speech-impaired/" target="_blank" rel="noopener">Newz Hook - APP2Speak Review</a></li>
+      <li><a href="https://solutioncenter.asha.org/product/app2speak-aac-app/" target="_blank" rel="noopener">ASHA Solution Center - APP2Speak</a></li>
+      <li><a href="https://www.eastersealstech.com/2023/03/02/app2speak-aac-app/" target="_blank" rel="noopener">Easter Seals Crossroads - APP2Speak</a></li>
+      <li><a href="https://www.accessibility.com/org-spotlight/business/app2speak" target="_blank" rel="noopener">Accessibility.com - APP2Speak Spotlight</a></li>
+      <li><a href="https://app2speak.com/breaking-barriers-how-app2speak-and-apples-eye-tracking-technology-empower-nonverbal-adults-with-degenerative-diseases/" target="_blank" rel="noopener">APP2Speak and Apple Eye Tracking</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7177427/" target="_blank" rel="noopener">PMC7177427 - Mobile Apps for LTC Communication</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6436972/" target="_blank" rel="noopener">PMC6436972 - Visual Scene Displays for Aphasia</a></li>
+      <li><a href="https://app2speak.com/app2speak-brings-a-family-closer-through-the-gift-of-speech/" target="_blank" rel="noopener">APP2Speak Family Story</a></li>
+      <li><a href="https://app2speak.com/7-must-have-features-of-a-great-aac-app-for-speech-and-communication/" target="_blank" rel="noopener">APP2Speak - 7 Must-Have Features</a></li>
+      <li><a href="https://www.atia.org/exhibitor/app2speak/" target="_blank" rel="noopener">ATIA - APP2Speak Exhibitor</a></li>
+    </ol>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <p>
+    <a href="../aac-applications-competitive-analysis-dashboard/index.html">&#8592; Back to AAC Dashboard</a>
+  </p>
+  <p style="margin-top: 0.75rem;">
+    AI-Assisted Research &middot; March 2026 &middot; Data sourced from public information
+  </p>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+// Reading progress
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = Math.min((winScroll / height) * 100, 100);
+  document.getElementById('progress').style.width = progress + '%';
+  document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+});
+
+// Back to top
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Smooth scroll for TOC
+document.querySelectorAll('.toc-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Pricing Chart
+const pricingCtx = document.getElementById('pricingChart');
+if (pricingCtx) {
+  new Chart(pricingCtx, {
+    type: 'bar',
+    data: {
+      labels: ['GoTalk NOW', 'APP2Speak', 'Proloquo2Go', 'TouchChat HD', 'LAMP WFL'],
+      datasets: [{
+        label: 'Price (USD)',
+        data: [99.99, 199.99, 249.99, 299.99, 299.99],
+        backgroundColor: [
+          'rgba(100, 116, 139, 0.7)',
+          'rgba(99, 102, 241, 0.85)',
+          'rgba(100, 116, 139, 0.7)',
+          'rgba(100, 116, 139, 0.7)',
+          'rgba(100, 116, 139, 0.7)'
+        ],
+        borderColor: [
+          'rgba(100, 116, 139, 1)',
+          'rgba(99, 102, 241, 1)',
+          'rgba(100, 116, 139, 1)',
+          'rgba(100, 116, 139, 1)',
+          'rgba(100, 116, 139, 1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return '$' + ctx.parsed.x.toFixed(2);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 350,
+          ticks: {
+            color: '#94a3b8',
+            callback: function(val) { return '$' + val; }
+          },
+          grid: { color: 'rgba(51, 65, 85, 0.5)' }
+        },
+        y: {
+          ticks: {
+            color: '#f1f5f9',
+            font: { weight: function(ctx) { return ctx.tick.label === 'APP2Speak' ? 'bold' : 'normal'; } }
+          },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// Conditions Donut Chart
+const condCtx = document.getElementById('conditionsChart');
+if (condCtx) {
+  new Chart(condCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Stroke / Aphasia', 'ALS', "Parkinson's", 'TBI', 'Head & Neck Cancer', 'Autism', 'Down Syndrome'],
+      datasets: [{
+        data: [30, 20, 15, 12, 10, 8, 5],
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(99, 102, 241, 0.8)',
+          'rgba(168, 85, 247, 0.8)',
+          'rgba(6, 182, 212, 0.8)',
+          'rgba(249, 115, 22, 0.8)',
+          'rgba(16, 185, 129, 0.8)',
+          'rgba(245, 158, 11, 0.8)'
+        ],
+        borderColor: '#1e293b',
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#94a3b8',
+            padding: 12,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+            font: { size: 11 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = ((ctx.parsed / total) * 100).toFixed(0);
+              return ctx.label + ': ' + pct + '% of target audience';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// Fade-in animation on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .mode-card, .feature-card, .story-card, .chart-container, .a11y-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(15px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

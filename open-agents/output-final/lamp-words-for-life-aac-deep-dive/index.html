@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAMP Words for Life: A Deep Dive into Motor-Planning AAC</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-input: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.15);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.15);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.15);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.15);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.15);
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.15);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.15);
+  --border: #334155;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 2;
+}
+.back-link:hover {
+  background: rgba(255,255,255,0.12);
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1654 40%, #4c1d95 100%);
+  padding: 2rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 25% 60%, rgba(139,92,246,0.3), transparent 55%),
+              radial-gradient(circle at 75% 30%, rgba(236,72,153,0.15), transparent 50%),
+              radial-gradient(circle at 50% 90%, rgba(6,182,212,0.15), transparent 40%);
+}
+.header-nav { margin-bottom: 2rem; text-align: left; position: relative; z-index: 2; }
+.header h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  position: relative;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header .subtitle {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.65);
+  position: relative;
+  max-width: 750px;
+  margin: 0 auto 1.5rem;
+}
+.header-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.08);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.meta-item .label { color: rgba(255,255,255,0.5); }
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Section */
+.section {
+  margin-bottom: 3rem;
+}
+.section-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-title .icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: background 0.2s;
+}
+.card:hover { background: var(--bg-card-hover); }
+.card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.card p, .card li {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Grid layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
+.tag-blue { background: var(--blue-bg); color: var(--blue); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); }
+.tag-cyan { background: var(--cyan-bg); color: var(--cyan); }
+.tag-orange { background: var(--orange-bg); color: var(--orange); }
+
+/* Product Info Banner */
+.product-banner {
+  background: linear-gradient(135deg, var(--bg-card) 0%, #1a2744 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.product-icon {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  box-shadow: 0 8px 32px rgba(124,58,237,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.product-icon::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 50%);
+}
+.product-icon span { position: relative; z-index: 1; }
+.product-details h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.product-details .developer {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+.product-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.product-stat {
+  display: flex;
+  flex-direction: column;
+}
+.product-stat .value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+.product-stat .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.9rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--purple), var(--cyan));
+  border-radius: 1px;
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.75rem;
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.3);
+}
+.timeline-item .year {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.timeline-item .event {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+/* LAMP Component Diagram */
+.lamp-components {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+.lamp-component {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  padding: 1.2rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: relative;
+  transition: all 0.2s;
+}
+.lamp-component:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(4px);
+}
+.lamp-component .number {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.lamp-component .content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.lamp-component .content p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.lamp-connector {
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+  margin-left: 2.6rem;
+}
+
+/* Grid Visualization */
+.grid-demo {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.grid-demo-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.grid-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  cursor: default;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: var(--bg-input);
+  color: var(--text-dim);
+}
+.grid-cell.highlighted {
+  background: rgba(99,102,241,0.3);
+  border-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(99,102,241,0.2);
+}
+.grid-cell.active {
+  background: rgba(16,185,129,0.3);
+  border-color: var(--green);
+  color: var(--text);
+  font-weight: 600;
+  animation: pulse-cell 1.5s ease infinite;
+}
+@keyframes pulse-cell {
+  0%, 100% { box-shadow: 0 0 8px rgba(16,185,129,0.2); }
+  50% { box-shadow: 0 0 16px rgba(16,185,129,0.4); }
+}
+.grid-caption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Pros/Cons */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.pros-list, .cons-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.pros-list { border-top: 3px solid var(--green); }
+.cons-list { border-top: 3px solid var(--red); }
+.pros-list h3 { color: var(--green); margin-bottom: 1rem; font-size: 1.1rem; }
+.cons-list h3 { color: var(--red); margin-bottom: 1rem; font-size: 1.1rem; }
+.pros-list li, .cons-list li {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 0.6rem;
+  padding-left: 0.2rem;
+  list-style: none;
+  position: relative;
+  padding-left: 1.4rem;
+}
+.pros-list li::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.cons-list li::before {
+  content: '-';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Comparison Table */
+.comparison-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+th {
+  background: var(--bg-input);
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(51,65,85,0.5);
+  color: var(--text-dim);
+}
+tr:hover td { background: rgba(255,255,255,0.02); }
+td:first-child { font-weight: 600; color: var(--text); }
+th.lamp-col, td.lamp-col {
+  background: rgba(99,102,241,0.08);
+}
+
+/* Feature Cards */
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.3rem;
+  transition: all 0.2s;
+}
+.feature-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(99,102,241,0.3);
+}
+.feature-card .feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+.feature-card h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.feature-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Chart Container */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.chart-container h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.chart-wrap {
+  position: relative;
+  max-height: 350px;
+}
+
+/* Quote */
+.quote-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.5rem 1.5rem 1.5rem 1.8rem;
+  margin-bottom: 1rem;
+}
+.quote-card blockquote {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+.quote-card .attribution {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Pricing Card */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(99,102,241,0.15);
+}
+.pricing-card .price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent-light);
+  margin: 0.5rem 0;
+}
+.pricing-card .price-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pricing-card .price-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+}
+
+/* Methodology Visual */
+.methodology-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.method-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.8rem;
+  min-width: 120px;
+}
+.method-step .step-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid;
+}
+.method-step .step-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  max-width: 100px;
+}
+.method-arrow {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin: 0 -0.3rem;
+}
+
+/* Hardware Cards */
+.hardware-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.3rem;
+}
+.hardware-card .hw-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.hardware-card .hw-details {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Approach comparison visual */
+.approach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.approach-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.3rem;
+  border-top: 3px solid;
+}
+.approach-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.approach-card p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.approach-card .approach-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+}
+
+/* Narrative */
+.narrative {
+  max-width: 800px;
+}
+.narrative p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+.narrative strong { color: var(--text); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+.footer p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.8rem; }
+  .product-banner { grid-template-columns: 1fr; text-align: center; }
+  .product-stats { justify-content: center; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .icon-grid { grid-template-columns: repeat(7, 1fr); }
+  .methodology-flow { flex-direction: column; }
+  .method-arrow { transform: rotate(90deg); }
+  .container { padding: 1rem; }
+}
+
+/* Scroll animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-nav">
+    <a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+      &larr; Back to AAC Dashboard
+    </a>
+  </div>
+  <h1>LAMP Words for Life</h1>
+  <p class="subtitle">A deep dive into the motor-planning AAC system built on Minspeak, Unity vocabulary, and the LAMP methodology by PRC-Saltillo</p>
+  <div class="header-meta">
+    <span class="meta-item"><span class="label">Developer:</span> PRC-Saltillo</span>
+    <span class="meta-item"><span class="label">Price:</span> $299.99</span>
+    <span class="meta-item"><span class="label">Platform:</span> iOS</span>
+    <span class="meta-item"><span class="label">Grid:</span> 84 Locations</span>
+    <span class="meta-item"><span class="label">Updated:</span> March 2026</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Product Banner -->
+  <div class="product-banner fade-in">
+    <div class="product-icon">
+      <span>&#x1F4AC;</span>
+    </div>
+    <div class="product-details">
+      <h2>LAMP Words for Life</h2>
+      <div class="developer">by PRC-Saltillo &middot; Prentke Romich Company</div>
+      <div class="product-stats">
+        <div class="product-stat">
+          <span class="value">$299.99</span>
+          <span class="label">App Price</span>
+        </div>
+        <div class="product-stat">
+          <span class="value">84</span>
+          <span class="label">Grid Locations</span>
+        </div>
+        <div class="product-stat">
+          <span class="value">2012</span>
+          <span class="label">First Released</span>
+        </div>
+        <div class="product-stat">
+          <span class="value">4+</span>
+          <span class="label">Access Methods</span>
+        </div>
+        <div class="product-stat">
+          <span class="value">2026.1</span>
+          <span class="label">Latest Version</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--blue-bg); color: var(--blue);">&#x1F4D6;</span>
+      Overview
+    </h2>
+    <div class="narrative">
+      <p>When a child presses the same two icons on an AAC device a hundred times and the device says "want" every single time -- same icons, same location, same motor movement -- something remarkable happens in the brain. Neural pathways strengthen. Motor memory forms. The act of communication begins to feel less like solving a puzzle and more like speaking.</p>
+      <p>This is the foundational promise of <strong>LAMP Words for Life</strong>, one of the most influential and debated AAC applications available today. Developed by PRC-Saltillo and grounded in the Language Acquisition through Motor Planning (LAMP) methodology, the app represents a fundamentally different philosophy of augmentative communication: that the path to fluent AAC use lies not in making symbols easier to find, but in making them <strong>impossible to forget</strong>.</p>
+      <p>With its fixed 84-location grid, Minspeak-powered icon sequences, and unwavering commitment to motor consistency, LAMP Words for Life has earned passionate advocates and thoughtful critics in roughly equal measure.</p>
+    </div>
+  </section>
+
+  <!-- History / Origins -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--purple-bg); color: var(--purple);">&#x1F3DB;</span>
+      Origins: From Hieroglyphics to High-Tech Communication
+    </h2>
+
+    <div class="grid-2" style="margin-bottom: 1.5rem;">
+      <div class="card">
+        <h3>Bruce Baker & Minspeak (1980)</h3>
+        <p>Dr. Bruce Baker (1943-2020), inspired by ancient hieroglyphic writing systems, designed <strong>semantic compaction</strong> (patented as <strong>Minspeak</strong>). The system uses multi-meaning icons in a fixed grid -- short sequences of 2-3 icons produce specific vocabulary items. An apple icon might appear in sequences for "eat," "fruit," "red," or "hungry" depending on which icons precede or follow it.</p>
+        <p style="margin-top: 0.8rem;">Baker realized that 84 icons could generate thousands of words through combinatorial sequences, each accessible within 2-3 button presses. This was revolutionary -- traditional AAC required navigating pages of single-meaning symbols.</p>
+      </div>
+      <div class="card">
+        <h3>The LAMP Approach (2000s)</h3>
+        <p>Three clinicians -- <strong>John Halloran, MS, CCC-SLP</strong>, <strong>Cindy Halloran, OTR/L</strong>, and <strong>Mia Emerson, MS, CCC-SLP</strong> -- working with nonspeaking individuals with autism discovered that giving access to core words on a speech-generating device, taught through sensory-rich activities with consistent, unique motor patterns and auditory feedback, enabled independent communication.</p>
+        <p style="margin-top: 0.8rem;">They formalized this as <strong>Language Acquisition through Motor Planning (LAMP)</strong>, built on the neurological principle that the brain develops motor plans for repetitive movements to enable automaticity.</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card">
+      <h3 style="margin-bottom: 1.2rem;">Key Milestones</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="year">1966</div>
+          <div class="event"><strong>Prentke Romich Company (PRC) founded</strong> -- one of the earliest AAC device manufacturers</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">1980</div>
+          <div class="event"><strong>Minspeak invented</strong> by Dr. Bruce Baker, inspired by hieroglyphic writing systems</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">1981</div>
+          <div class="event"><strong>PRC begins developing Minspeak devices</strong> -- TouchTalker and LightTalker</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">1996</div>
+          <div class="event"><strong>Saltillo Corporation created</strong> -- focusing on smaller, portable AAC devices</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">~2000s</div>
+          <div class="event"><strong>Unity vocabulary system</strong> created -- Arlene Badman's team unifies all Minspeak Application Programs</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2009</div>
+          <div class="event"><strong>Center for AAC & Autism</strong> founded in partnership with PRC</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2012</div>
+          <div class="event"><strong>LAMP Words for Life app launched on iOS</strong> -- bringing the methodology to iPad</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2019</div>
+          <div class="event"><strong>PRC and Saltillo formally merge</strong> into PRC-Saltillo</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2023</div>
+          <div class="event"><strong>Head tracking and Canadian French</strong> added to LAMP WFL</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2025</div>
+          <div class="event"><strong>LAMP Words for Life Discover</strong> launched -- free 30-day full-feature trial</div>
+        </div>
+        <div class="timeline-item">
+          <div class="year">2026</div>
+          <div class="event"><strong>AI features introduced</strong> -- AI Message Edit, AI Translate, AI Image Generation (v2026.1)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The LAMP Methodology -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--green-bg); color: var(--green);">&#x1F9E0;</span>
+      The LAMP Methodology: Five Key Components
+    </h2>
+
+    <div class="narrative" style="margin-bottom: 1.5rem;">
+      <p>LAMP is built on the neurological principle that the brain develops motor plans for repetitive movements so they can occur automatically -- just as verbal speakers don't consciously think about the tongue and lip movements needed to say "hello." LAMP applies this same motor learning principle to AAC communication.</p>
+    </div>
+
+    <!-- Visual Flow -->
+    <div class="card" style="margin-bottom: 1.5rem; overflow-x: auto;">
+      <div class="methodology-flow">
+        <div class="method-step">
+          <div class="step-icon" style="background: rgba(99,102,241,0.15); border-color: var(--accent); color: var(--accent);">&#x1F9D8;</div>
+          <div class="step-label">Readiness to Learn</div>
+        </div>
+        <div class="method-arrow">&rarr;</div>
+        <div class="method-step">
+          <div class="step-icon" style="background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green);">&#x1F91D;</div>
+          <div class="step-label">Joint Engagement</div>
+        </div>
+        <div class="method-arrow">&rarr;</div>
+        <div class="method-step">
+          <div class="step-icon" style="background: rgba(245,158,11,0.15); border-color: var(--yellow); color: var(--yellow);">&#x270B;</div>
+          <div class="step-label">Consistent Motor Patterns</div>
+        </div>
+        <div class="method-arrow">&rarr;</div>
+        <div class="method-step">
+          <div class="step-icon" style="background: rgba(168,85,247,0.15); border-color: var(--purple); color: var(--purple);">&#x1F50A;</div>
+          <div class="step-label">Auditory Signals</div>
+        </div>
+        <div class="method-arrow">&rarr;</div>
+        <div class="method-step">
+          <div class="step-icon" style="background: rgba(6,182,212,0.15); border-color: var(--cyan); color: var(--cyan);">&#x2728;</div>
+          <div class="step-label">Natural Consequences</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Components -->
+    <div class="lamp-components">
+      <div class="lamp-component">
+        <div class="number" style="background: rgba(99,102,241,0.2); color: var(--accent-light);">1</div>
+        <div class="content">
+          <h4>Readiness to Learn</h4>
+          <p>Before communication teaching begins, LAMP practitioners assess whether the individual is in an optimal state for learning. This means addressing sensory regulation -- ensuring the learner's nervous system is "just right" rather than over- or under-stimulated. For individuals with autism, who frequently experience sensory processing differences, this foundational step can determine session success.</p>
+        </div>
+      </div>
+      <div class="lamp-connector"></div>
+      <div class="lamp-component">
+        <div class="number" style="background: rgba(16,185,129,0.2); color: var(--green);">2</div>
+        <div class="content">
+          <h4>Joint Engagement</h4>
+          <p>Creating genuine shared attention between the communication partner and the learner. Two individuals interact together while focused on the same object or activity. Research shows the amount of joint engagement is directly related to language and communication development -- this holds true for both verbal and AAC-based communication.</p>
+        </div>
+      </div>
+      <div class="lamp-connector"></div>
+      <div class="lamp-component" style="border-color: var(--yellow); box-shadow: 0 0 20px rgba(245,158,11,0.08);">
+        <div class="number" style="background: rgba(245,158,11,0.2); color: var(--yellow);">3</div>
+        <div class="content">
+          <h4>Consistent & Unique Motor Patterns <span class="tag tag-yellow">Core Principle</span></h4>
+          <p>The defining principle of LAMP. Every word is accessed through a motor sequence that is <strong>consistent</strong> (same plan produces same word every time, forever) and <strong>unique</strong> (each word has its own distinct motor pattern). On the 84-location grid, icons never move -- whether the user has access to 10 words or 10,000 words, the motor sequence for any given word remains identical. This enables automaticity, the same way a pianist's fingers find the right keys without looking.</p>
+        </div>
+      </div>
+      <div class="lamp-connector"></div>
+      <div class="lamp-component">
+        <div class="number" style="background: rgba(168,85,247,0.2); color: var(--purple);">4</div>
+        <div class="content">
+          <h4>Auditory Signals</h4>
+          <p>When a button sequence is completed, the device speaks the word aloud. This feedback serves the same function as hearing your own voice -- it connects the motor movement to the sound of language. Over time, the learner associates specific motor patterns with specific sounds, strengthening neural pathways for communication.</p>
+        </div>
+      </div>
+      <div class="lamp-connector"></div>
+      <div class="lamp-component">
+        <div class="number" style="background: rgba(6,182,212,0.2); color: var(--cyan);">5</div>
+        <div class="content">
+          <h4>Natural Consequences</h4>
+          <p>When the learner activates a word and their communication partner responds naturally -- handing a requested item, answering a question, laughing at a joke -- the learner experiences the real-world impact of their communication. This meaningful feedback loop teaches that words have power and purpose, motivating continued development.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The 84-Location Grid -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--yellow-bg); color: var(--yellow);">&#x1F4F1;</span>
+      The 84-Location Grid: Why Consistency Matters
+    </h2>
+
+    <div class="grid-2">
+      <div class="narrative">
+        <p>The standard LAMP interface presents <strong>84 icon locations</strong> in a fixed grid. Each icon carries multiple potential meanings; the specific meaning is determined by the sequence of icons pressed. A typical word requires just 2-3 presses.</p>
+        <p>The critical design decision: <strong>these 84 icons never move, never rearrange, and never change position.</strong> Many other AAC systems organize vocabulary into navigable categories or pages. LAMP rejects this entirely -- the trade-off is a steeper initial learning curve in exchange for long-term motor automaticity.</p>
+        <p>The <strong>Vocabulary Builder</strong> feature can temporarily hide most icons for teaching, showing only target words. Crucially, visible icons stay in their standard positions -- they don't reorganize. Even when working with just 5 visible words, the learner builds the exact same motor patterns they will use when all 84 icons are revealed.</p>
+      </div>
+      <div>
+        <div class="grid-demo">
+          <div class="grid-demo-title">Interactive 84-Location Grid Visualization</div>
+          <div class="icon-grid" id="iconGrid"></div>
+          <div class="grid-caption" id="gridCaption">Click a highlighted icon to see a sample sequence</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Motor Planning Comparison -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--cyan-bg); color: var(--cyan);">&#x1F504;</span>
+      How Motor Planning Differs from Other AAC Approaches
+    </h2>
+
+    <div class="approach-grid">
+      <div class="approach-card" style="border-top-color: var(--accent);">
+        <h4 style="color: var(--accent-light);">LAMP / Minspeak</h4>
+        <p>Words <strong>never move</strong>. Same motor sequence always produces same word, whether 10 or 10,000 words are accessible. Builds true motor automaticity over time. Requires learning abstract icon sequences.</p>
+        <div class="approach-rating">
+          <span class="tag tag-green">Motor Consistency: Excellent</span>
+        </div>
+      </div>
+      <div class="approach-card" style="border-top-color: var(--blue);">
+        <h4 style="color: var(--blue);">Traditional Grid-Based</h4>
+        <p>Words may move or change position as vocabulary grows. Page navigation required. More intuitive symbol-to-word mapping but breaks motor patterns when layout changes occur.</p>
+        <div class="approach-rating">
+          <span class="tag tag-yellow">Motor Consistency: Variable</span>
+        </div>
+      </div>
+      <div class="approach-card" style="border-top-color: var(--green);">
+        <h4 style="color: var(--green);">Visual Scene Displays</h4>
+        <p>Language embedded in contextual photographs. May be better for beginning communicators -- increased contextual support. But doesn't develop motor automaticity for long-term fluency.</p>
+        <div class="approach-rating">
+          <span class="tag tag-orange">Motor Consistency: Low</span>
+        </div>
+      </div>
+      <div class="approach-card" style="border-top-color: var(--orange);">
+        <h4 style="color: var(--orange);">PECS (Low-Tech)</h4>
+        <p>Physical picture card exchange. Simple to start, often used as stepping stone. Limited complexity -- doesn't develop complex language or motor patterns for high-tech communication.</p>
+        <div class="approach-rating">
+          <span class="tag tag-red">Motor Consistency: N/A</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--accent-light); background: rgba(99,102,241,0.15); color: var(--accent-light);">&#x2699;</span>
+      Complete Feature Set
+    </h2>
+
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--blue-bg); color: var(--blue);">&#x1F4DA;</div>
+        <h4>Unity Vocabulary</h4>
+        <p>Full Minspeak-based vocabulary system with thousands of words, verb forms, adjective forms, and word endings on the 84-location fixed grid.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--green-bg); color: var(--green);">&#x1F50D;</div>
+        <h4>Word Finder</h4>
+        <p>Type any English word to instantly see its icon sequence location. Essential tool for therapists and parents learning the system.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--yellow-bg); color: var(--yellow);">&#x1F527;</div>
+        <h4>Vocabulary Builder</h4>
+        <p>Selectively show/hide vocabulary for targeted teaching while preserving motor patterns. Simplify without sacrificing consistency.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--purple-bg); color: var(--purple);">&#x1F3AE;</div>
+        <h4>AeroSwitch Scanning</h4>
+        <p>PRC-Saltillo's wireless switch system for users who cannot reliably touch the screen. Full vocabulary access through switch input.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--cyan-bg); color: var(--cyan);">&#x1F5A5;</div>
+        <h4>Head Tracking</h4>
+        <p>Camera-based head movement tracking for hands-free access. Added in 2023, uses the device's front camera.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--orange-bg); color: var(--orange);">&#x1F916;</div>
+        <h4>AI Features (2026)</h4>
+        <p>AI Message Edit, AI Translate, and AI Image Generation. Create custom symbols, refine messages, and translate in real-time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--green-bg); color: var(--green);">&#x1F30D;</div>
+        <h4>Bilingual Support</h4>
+        <p>Code-switching in the speech display bar. Multiple English variants (US, UK, AU, CA) plus Canadian French.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--blue-bg); color: var(--blue);">&#x2601;</div>
+        <h4>iCloud Backup</h4>
+        <p>Automatic backup of custom vocabulary modifications to iCloud. Protects against data loss from app issues.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--purple-bg); color: var(--purple);">&#x1F4F8;</div>
+        <h4>Photo Integration</h4>
+        <p>Take photos directly within the app. Use personal photos for custom buttons and enhanced communication context.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Evidence -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--green-bg); color: var(--green);">&#x1F4CA;</span>
+      Research & Evidence
+    </h2>
+
+    <div class="grid-2">
+      <div class="chart-container">
+        <h3>LAMP Research Outcomes (% of Subjects Showing Improvement)</h3>
+        <div class="chart-wrap">
+          <canvas id="researchChart"></canvas>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.8rem; text-align: center;">
+          Study of 8 children with autism using the LAMP approach<br>
+          Source: The Center for AAC & Autism
+        </p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3>Promising but Limited</h3>
+          <p>Research evidence for LAMP is encouraging but limited in scale. Existing studies show strong outcomes -- including 100% of subjects developing social communication through commenting -- but come from small samples without control groups.</p>
+          <p style="margin-top: 0.8rem;">Academic reviewers have noted "very little rigorous evidence supporting the effectiveness of the LAMP program." However, this is a field-wide challenge -- the broader AAC space suffers from a shortage of large-scale randomized controlled trials.</p>
+        </div>
+        <div class="card">
+          <h3>Theoretical Foundations</h3>
+          <p>The individual pillars of LAMP -- motor learning theory, neuroplasticity, joint engagement -- are well-supported in broader research literature. The specific combination in LAMP's framework awaits larger-scale validation.</p>
+          <ul style="margin-top: 0.6rem; padding-left: 1rem;">
+            <li>Motor learning and automaticity</li>
+            <li>Neuroplasticity research</li>
+            <li>Joint engagement and language development</li>
+            <li>Auditory-motor feedback loops</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRC-Saltillo Hardware -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--orange-bg); color: var(--orange);">&#x1F4BB;</span>
+      PRC-Saltillo Hardware Ecosystem
+    </h2>
+
+    <div class="narrative" style="margin-bottom: 1.5rem;">
+      <p>LAMP Words for Life runs on consumer iPads and iPhones, but PRC-Saltillo also manufactures purpose-built communication devices. These dedicated devices are built to withstand drops and spills, include wheelchair mounting systems, and crucially qualify as <strong>"dedicated communication devices"</strong> for insurance funding purposes.</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 1rem;">
+      <div class="card">
+        <h3 style="color: var(--accent-light); margin-bottom: 1rem;">Accent Series (PRC)</h3>
+        <div class="hardware-card" style="margin-bottom: 0.8rem;">
+          <div class="hw-name">Accent 1400 <span class="tag tag-purple">Flagship</span></div>
+          <div class="hw-details">14" HD daylight-readable display, magnesium frame, chemically-hardened glass, moisture-resistant, all-day battery, integrated PRC Look Eye Tracking, NuPoint Head Tracking</div>
+        </div>
+        <div class="hardware-card" style="margin-bottom: 0.8rem;">
+          <div class="hw-name">Accent 1000</div>
+          <div class="hw-details">Faster CPU, increased memory, Look Eye Tracking, more compact form factor</div>
+        </div>
+        <div class="hardware-card">
+          <div class="hw-name">Accent 800</div>
+          <div class="hw-details">Smaller, lighter option for portability and younger users</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--cyan); margin-bottom: 1rem;">NovaChat Series (Saltillo)</h3>
+        <div class="hardware-card" style="margin-bottom: 0.8rem;">
+          <div class="hw-name">NovaChat 10</div>
+          <div class="hw-details">10" Android-based communication device with full LAMP WFL support</div>
+        </div>
+        <div class="hardware-card" style="margin-bottom: 0.8rem;">
+          <div class="hw-name">NovaChat 8</div>
+          <div class="hw-details">8" compact Android device for portable communication</div>
+        </div>
+        <div class="hardware-card">
+          <div class="hw-name">TouchChat Express</div>
+          <div class="hw-details">Entry-level dedicated device for basic communication needs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--green-bg); color: var(--green);">&#x1F4B0;</span>
+      Pricing & Funding
+    </h2>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="price-label">Free Trial</div>
+        <div class="price" style="color: var(--green);">$0</div>
+        <div style="font-weight: 600; margin-bottom: 0.3rem;">LAMP WFL Discover</div>
+        <div class="price-desc">Free 30-day full-feature trial. Reverts to lite-tech board after trial. No payment required to try.</div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="price-label">iOS App</div>
+        <div class="price">$299.99</div>
+        <div style="font-weight: 600; margin-bottom: 0.3rem;">LAMP Words for Life</div>
+        <div class="price-desc">Full app on Apple App Store. 50% bulk discount for 20+ via Apple School Manager. Generally not covered by insurance.</div>
+      </div>
+      <div class="pricing-card">
+        <div class="price-label">Dedicated Devices</div>
+        <div class="price" style="color: var(--yellow);">$$$</div>
+        <div style="font-weight: 600; margin-bottom: 0.3rem;">Accent / NovaChat</div>
+        <div class="price-desc">Purpose-built hardware costing thousands. May be covered by health insurance, Medicare, or Medicaid as durable medical equipment with SLP documentation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Strengths & Weaknesses -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--yellow-bg); color: var(--yellow);">&#x2696;</span>
+      Strengths & Limitations
+    </h2>
+
+    <div class="pros-cons">
+      <div class="pros-list">
+        <h3>Strengths</h3>
+        <ul>
+          <li><strong>Motor Memory Development</strong> -- Unwavering icon position consistency enables true automaticity over time</li>
+          <li><strong>No Prerequisites Required</strong> -- No language comprehension or picture discrimination needed to begin</li>
+          <li><strong>Grows with the User</strong> -- Same system from first words to complex sentences without switching</li>
+          <li><strong>Robust Vocabulary</strong> -- Thousands of words: core words, fringe vocabulary, verb forms, adjective forms, word endings</li>
+          <li><strong>Vocabulary Builder</strong> -- Elegantly simplifies the display for teaching without sacrificing motor consistency</li>
+          <li><strong>Word Finder</strong> -- Quickly locates any word in the system for therapists and parents</li>
+          <li><strong>Multiple Access Methods</strong> -- Direct touch, AeroSwitch scanning, head tracking, third-party switches</li>
+          <li><strong>Hardware Flexibility</strong> -- Works on consumer iPads/iPhones AND dedicated PRC-Saltillo devices</li>
+          <li><strong>Training Infrastructure</strong> -- Center for AAC & Autism, workshops, webinars, AAC Language Lab</li>
+          <li><strong>AI Features (2026)</strong> -- Message editing, translation, and custom symbol generation</li>
+          <li><strong>Free 30-Day Trial</strong> -- Discover app removes financial barrier to evaluation</li>
+          <li><strong>Bilingual Support</strong> -- Multiple languages and code-switching capabilities</li>
+        </ul>
+      </div>
+      <div class="cons-list">
+        <h3>Limitations</h3>
+        <ul>
+          <li><strong>Steep Learning Curve</strong> -- Abstract multi-meaning Minspeak icons require significant training for the entire communication team</li>
+          <li><strong>Technical Glitches</strong> -- Persistent reports of app slowdown, iPad performance issues, and configuration loss</li>
+          <li><strong>Data Loss Risk</strong> -- Custom vocabularies can be lost without proper iCloud backup configuration</li>
+          <li><strong>High Cost</strong> -- $299.99 for app alone; dedicated devices cost thousands more</li>
+          <li><strong>Limited Evidence Base</strong> -- Small-scale studies without control groups; field needs larger RCTs</li>
+          <li><strong>Not Universal</strong> -- Motor planning approach may not suit all learners; some benefit more from visual scenes or simpler grids</li>
+          <li><strong>iOS Only</strong> -- No Android version (though PRC hardware devices offer an alternative)</li>
+          <li><strong>Icon Abstraction</strong> -- Gap between icon appearance and sequence meaning confuses unfamiliar communication partners</li>
+          <li><strong>Volume Issues</strong> -- Some users report insufficient audio volume at maximum settings</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Reception -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--purple-bg); color: var(--purple);">&#x1F4AC;</span>
+      Community Reception
+    </h2>
+
+    <div class="grid-2">
+      <div>
+        <div class="quote-card">
+          <blockquote>"Giving individuals access to core words on a speech-generating device, teaching those words in sensory-rich activities, and accessing each word with a consistent, unique motor pattern with auditory feedback provided a means for developing independent communication."</blockquote>
+          <div class="attribution">-- The Center for AAC & Autism, describing the Hallorans' clinical findings</div>
+        </div>
+        <div class="quote-card">
+          <blockquote>"LAMP Words for Life presents vocabulary in the same manner so those language connections can be developed -- consistent motor pattern, the sound that motor pattern produces, and the reaction they get from the environment."</blockquote>
+          <div class="attribution">-- PRC-Saltillo</div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3>The SLP Divide</h3>
+          <p>The speech-language pathology community remains divided. Advocates praise the theoretical elegance and transformative results they have witnessed with motor-planning learners. Critics question whether LAMP truly follows developmental milestones, with some describing it as appearing "random and inconsistent."</p>
+        </div>
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3>Family Experiences</h3>
+          <p>Many families describe LAMP Words for Life as "life-changing" for their children with autism. However, experiences vary significantly based on the individual child's learning profile, quality of implementation support, and the family's willingness to invest in learning the system themselves.</p>
+        </div>
+        <div class="card">
+          <h3>The Consensus</h3>
+          <p>LAMP Words for Life is an excellent choice <strong>for the right learner</strong> -- particularly individuals who demonstrate strength in motor learning and who benefit from consistency and routine. It is not a universal solution, and matching the AAC system to the individual matters more than any system's features.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitor Comparison -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--blue-bg); color: var(--blue);">&#x1F4CA;</span>
+      Competitive Comparison
+    </h2>
+
+    <div class="grid-2" style="margin-bottom: 1.5rem;">
+      <div class="chart-container">
+        <h3>System Comparison Across Key Dimensions</h3>
+        <div class="chart-wrap">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h3>Price Comparison (USD)</h3>
+        <div class="chart-wrap">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="lamp-col">LAMP WFL</th>
+            <th>Proloquo2Go</th>
+            <th>TouchChat</th>
+            <th>TD Snap</th>
+            <th>PECS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Motor Consistency</td>
+            <td class="lamp-col"><span class="tag tag-green">Excellent</span></td>
+            <td><span class="tag tag-blue">Good</span></td>
+            <td><span class="tag tag-yellow">Moderate</span></td>
+            <td><span class="tag tag-yellow">Moderate</span></td>
+            <td><span class="tag tag-red">N/A</span></td>
+          </tr>
+          <tr>
+            <td>Learning Curve</td>
+            <td class="lamp-col"><span class="tag tag-red">Steep</span></td>
+            <td><span class="tag tag-yellow">Moderate</span></td>
+            <td><span class="tag tag-yellow">Moderate</span></td>
+            <td><span class="tag tag-yellow">Moderate</span></td>
+            <td><span class="tag tag-green">Low</span></td>
+          </tr>
+          <tr>
+            <td>Customization</td>
+            <td class="lamp-col">Limited (by design)</td>
+            <td>High</td>
+            <td>High</td>
+            <td>High</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>Price</td>
+            <td class="lamp-col">$299.99</td>
+            <td>$249.99</td>
+            <td>$299.99</td>
+            <td>Subscription</td>
+            <td>Low cost</td>
+          </tr>
+          <tr>
+            <td>Platform</td>
+            <td class="lamp-col">iOS</td>
+            <td>iOS</td>
+            <td>iOS</td>
+            <td>iOS / Windows</td>
+            <td>Physical</td>
+          </tr>
+          <tr>
+            <td>Vocabulary System</td>
+            <td class="lamp-col">Unity / Minspeak</td>
+            <td>Crescendo / Gateway</td>
+            <td>WordPower</td>
+            <td>Snap Core First</td>
+            <td>Picture cards</td>
+          </tr>
+          <tr>
+            <td>Access Methods</td>
+            <td class="lamp-col">Touch, Scan, Head, Switch</td>
+            <td>Touch, Switch</td>
+            <td>Touch, Scan, Switch</td>
+            <td>Touch, Eye Gaze, Switch</td>
+            <td>Physical exchange</td>
+          </tr>
+          <tr>
+            <td>AI Features</td>
+            <td class="lamp-col"><span class="tag tag-green">Yes (2026)</span></td>
+            <td>No</td>
+            <td>No</td>
+            <td>No</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Free Trial</td>
+            <td class="lamp-col"><span class="tag tag-green">30 days</span></td>
+            <td>No</td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Key Takeaways -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--green-bg); color: var(--green);">&#x1F4A1;</span>
+      Key Takeaways
+    </h2>
+
+    <div class="grid-2">
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <h3>The Philosophy</h3>
+        <p>LAMP Words for Life is built on a coherent, neurologically-grounded philosophy: consistent motor patterns lead to automatic communication, just as consistent vocal motor patterns lead to automatic speech. Its greatest strength -- the refusal to compromise on motor consistency -- is also the source of its greatest challenge.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--green);">
+        <h3>The Ideal User</h3>
+        <p>Excels for individuals who are strong motor learners and who benefit from consistency and routine. Not a universal solution. The best AAC system is the one that matches the individual's learning profile and communication needs.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--yellow);">
+        <h3>The Investment</h3>
+        <p>Communication partners must learn the system deeply enough to model it effectively. The Minspeak icon sequence system demands significant training investment from everyone on the communication team -- not just the AAC user.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--cyan);">
+        <h3>The Future</h3>
+        <p>PRC-Saltillo is actively modernizing with AI features, improved trial access, and expanded language support. AI Image Generation could address the abstract icon challenge. The 2025-2026 updates signal strong continued commitment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sources -->
+  <section class="section fade-in">
+    <h2 class="section-title">
+      <span class="icon" style="background: var(--blue-bg); color: var(--blue);">&#x1F4DA;</span>
+      Sources
+    </h2>
+    <div class="card">
+      <ol style="padding-left: 1.2rem;">
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://lampwflapp.com/" target="_blank">LAMP Words for Life Official Site</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://prc-saltillo.com/apps/lamp-wfl" target="_blank">PRC-Saltillo - LAMP WFL</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://www.aacandautism.com/lamp" target="_blank">The Center for AAC & Autism - What is LAMP?</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://apps.apple.com/us/app/lamp-words-for-life/id551215116" target="_blank">LAMP Words for Life - App Store</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://prc-saltillo.com/vocabularies/minspeak" target="_blank">PRC-Saltillo - Minspeak</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://en.wikipedia.org/wiki/Semantic_compaction" target="_blank">Semantic Compaction - Wikipedia</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://www.aacandautism.com/lamp/research" target="_blank">The Center for AAC & Autism - Research</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://prc-saltillo.com/our-history" target="_blank">PRC-Saltillo - Our History</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://www.prentrom.com/prc_advantage/lamp-words-for-life-language-system" target="_blank">Prentrom - LAMP Language System</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://lampwflapp.com/apps/lamp-app-discover" target="_blank">LAMP Words for Life Discover</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://www.speechandlanguagekids.com/aac-apps-review/" target="_blank">Speech and Language Kids - AAC Apps Review</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6436972/" target="_blank">PMC - Designing Effective AAC Displays</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://isaac-online.org/wp-content/uploads/In-Memory-of-Dr.-Bruce-Baker-final.pdf" target="_blank">ISAAC - Remembering Dr. Bruce Baker</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://minspeak.com/about/" target="_blank">Minspeak Academy</a></li>
+        <li style="margin-bottom: 0.4rem; color: var(--text-dim); font-size: 0.88rem;"><a href="https://liberator.net.au/meet-minspeak/" target="_blank">Liberator - Meet Minspeak</a></li>
+      </ol>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>LAMP Words for Life Deep Dive &middot; Research compiled March 2026 &middot; Data sourced from PRC-Saltillo, The Center for AAC & Autism, and independent reviews</p>
+  <p style="margin-top: 0.3rem;"><a href="../aac-applications-competitive-analysis-dashboard/index.html">&larr; Back to AAC Applications Dashboard</a></p>
+</footer>
+
+<script>
+// ====== 84-Location Grid Visualization ======
+const gridContainer = document.getElementById('iconGrid');
+const gridCaption = document.getElementById('gridCaption');
+
+const sampleIcons = [
+  '&#x1F34E;','&#x1F3E0;','&#x1F464;','&#x2B50;','&#x1F4A7;','&#x1F31E;','&#x1F3B5;','&#x26A1;','&#x1F49A;','&#x1F514;','&#x1F4D6;','&#x1F512;',
+  '&#x1F697;','&#x270B;','&#x1F60A;','&#x1F6B6;','&#x1F4AC;','&#x1F3C3;','&#x1F4A1;','&#x1F48E;','&#x1F333;','&#x2764;','&#x1F3AF;','&#x1F50D;',
+  '&#x1F37D;','&#x1F4AA;','&#x1F440;','&#x1F525;','&#x1F30A;','&#x1F308;','&#x1F3B2;','&#x1F4E6;','&#x1F6A9;','&#x1F3C6;','&#x2702;','&#x1F58C;',
+  '&#x1F4F1;','&#x1F3A8;','&#x1F680;','&#x1F41D;','&#x1F98B;','&#x1F431;','&#x1F436;','&#x1F40E;','&#x1F418;','&#x1F420;','&#x1F985;','&#x1F344;',
+  '&#x1F352;','&#x1F966;','&#x1F354;','&#x1F382;','&#x2615;','&#x1F379;','&#x1F3B6;','&#x1F3B8;','&#x1F941;','&#x1F3AD;','&#x26BD;','&#x1F3C0;',
+  '&#x1F6B2;','&#x1F3D6;','&#x1F3D4;','&#x1F3EB;','&#x1F3E5;','&#x1F6D2;','&#x2708;','&#x1F682;','&#x1F6A2;','&#x23F0;','&#x1F4C5;','&#x2602;',
+  '&#x1F321;','&#x1F319;','&#x26C5;','&#x1F327;','&#x2744;','&#x1F6BF;','&#x1F6CF;','&#x1FA91;','&#x1FA78;','&#x1F9E9;','&#x1F9F8;','&#x1F381;'
+];
+
+// Sequences demo
+const sequences = [
+  { start: 0, seq: [0, 15], word: '"eat"', desc: 'APPLE + WALKING = "eat"' },
+  { start: 2, seq: [2, 14], word: '"happy"', desc: 'PERSON + SMILE = "happy"' },
+  { start: 4, seq: [4, 13], word: '"drink"', desc: 'WATER + MOUTH = "drink"' },
+];
+
+let activeSequence = null;
+
+for (let i = 0; i < 84; i++) {
+  const cell = document.createElement('div');
+  cell.className = 'grid-cell';
+  cell.innerHTML = sampleIcons[i] || '';
+  cell.dataset.index = i;
+
+  // Highlight cells that are part of demo sequences
+  const isSeqStart = sequences.some(s => s.seq[0] === i);
+  if (isSeqStart) {
+    cell.classList.add('highlighted');
+  }
+
+  cell.addEventListener('click', () => {
+    const seq = sequences.find(s => s.seq[0] === i || s.seq[1] === i);
+    if (seq) {
+      // Clear previous
+      document.querySelectorAll('.grid-cell.active').forEach(c => c.classList.remove('active'));
+      // Activate sequence
+      seq.seq.forEach(idx => {
+        const target = gridContainer.children[idx];
+        if (target) target.classList.add('active');
+      });
+      gridCaption.innerHTML = `<strong>${seq.desc}</strong> &mdash; Same sequence every time, building motor memory`;
+    }
+  });
+
+  gridContainer.appendChild(cell);
+}
+
+// ====== Research Outcomes Chart ======
+const researchCtx = document.getElementById('researchChart').getContext('2d');
+new Chart(researchCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Vocabulary\nIncrease', 'Symbolic\nRequesting', 'Social\nComm.', 'Greetings', 'Gaining\nAttention', 'Expressing\nFeelings'],
+    datasets: [{
+      label: '% of Subjects Showing Improvement',
+      data: [100, 100, 100, 87, 75, 75],
+      backgroundColor: [
+        'rgba(99, 102, 241, 0.7)',
+        'rgba(139, 92, 246, 0.7)',
+        'rgba(16, 185, 129, 0.7)',
+        'rgba(6, 182, 212, 0.7)',
+        'rgba(245, 158, 11, 0.7)',
+        'rgba(249, 115, 22, 0.7)'
+      ],
+      borderColor: [
+        'rgba(99, 102, 241, 1)',
+        'rgba(139, 92, 246, 1)',
+        'rgba(16, 185, 129, 1)',
+        'rgba(6, 182, 212, 1)',
+        'rgba(245, 158, 11, 1)',
+        'rgba(249, 115, 22, 1)'
+      ],
+      borderWidth: 1,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ctx.parsed.y + '% of subjects'
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 110,
+        ticks: { color: '#94a3b8', callback: v => v + '%' },
+        grid: { color: 'rgba(51,65,85,0.5)' }
+      },
+      x: {
+        ticks: { color: '#94a3b8', font: { size: 11 } },
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// ====== Radar Chart ======
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Motor Consistency', 'Ease of Learning', 'Customization', 'Evidence Base', 'Access Methods', 'Vocabulary Depth'],
+    datasets: [
+      {
+        label: 'LAMP WFL',
+        data: [10, 4, 4, 5, 9, 9],
+        backgroundColor: 'rgba(99, 102, 241, 0.15)',
+        borderColor: 'rgba(99, 102, 241, 0.8)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+      },
+      {
+        label: 'Proloquo2Go',
+        data: [7, 7, 8, 6, 6, 8],
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: 'rgba(16, 185, 129, 0.7)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+      },
+      {
+        label: 'TouchChat',
+        data: [5, 7, 9, 5, 7, 7],
+        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+        borderColor: 'rgba(245, 158, 11, 0.7)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+      },
+      {
+        label: 'TD Snap',
+        data: [5, 7, 7, 6, 9, 7],
+        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+        borderColor: 'rgba(6, 182, 212, 0.7)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(6, 182, 212, 1)',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#94a3b8', font: { size: 11 }, usePointStyle: true, padding: 15 }
+      }
+    },
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 10,
+        ticks: { color: '#64748b', backdropColor: 'transparent', stepSize: 2 },
+        grid: { color: 'rgba(51,65,85,0.4)' },
+        angleLines: { color: 'rgba(51,65,85,0.4)' },
+        pointLabels: { color: '#94a3b8', font: { size: 10 } }
+      }
+    }
+  }
+});
+
+// ====== Price Comparison Chart ======
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+new Chart(priceCtx, {
+  type: 'bar',
+  data: {
+    labels: ['LAMP WFL', 'Proloquo2Go', 'TouchChat', 'TD Snap*', 'PECS Kit'],
+    datasets: [{
+      label: 'Price (USD)',
+      data: [299.99, 249.99, 299.99, 99.99, 45],
+      backgroundColor: [
+        'rgba(99, 102, 241, 0.7)',
+        'rgba(16, 185, 129, 0.7)',
+        'rgba(245, 158, 11, 0.7)',
+        'rgba(6, 182, 212, 0.7)',
+        'rgba(249, 115, 22, 0.7)'
+      ],
+      borderColor: [
+        'rgba(99, 102, 241, 1)',
+        'rgba(16, 185, 129, 1)',
+        'rgba(245, 158, 11, 1)',
+        'rgba(6, 182, 212, 1)',
+        'rgba(249, 115, 22, 1)'
+      ],
+      borderWidth: 1,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => '$' + ctx.parsed.x.toFixed(2) }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: { color: '#94a3b8', callback: v => '$' + v },
+        grid: { color: 'rgba(51,65,85,0.5)' }
+      },
+      y: {
+        ticks: { color: '#94a3b8' },
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// ====== Scroll Animation ======
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

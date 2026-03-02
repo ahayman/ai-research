@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Weave Chat AAC: A comprehensive deep dive into the free, cross-platform AAC communication app. Features, pricing, comparisons, and user reviews.">
+  <meta name="author" content="AI-Assisted Research">
+  <meta property="og:title" content="Weave Chat AAC: The Free Communication App Breaking Down Barriers">
+  <meta property="og:description" content="Deep dive into Weave Chat AAC - the completely free, cross-platform augmentative and alternative communication app.">
+  <meta property="og:type" content="article">
+  <title>Weave Chat AAC Deep Dive</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ========================================
+       CSS CUSTOM PROPERTIES
+       ======================================== */
+    :root {
+      --color-primary: #6C63FF;
+      --color-primary-light: #8B83FF;
+      --color-primary-dark: #5248CC;
+      --color-accent: #00D4AA;
+      --color-accent-warm: #FF6B6B;
+      --color-warning: #FFB347;
+      --color-success: #4ECB71;
+      --color-info: #54A0FF;
+
+      /* Dark theme defaults */
+      --color-text: #E8E8F0;
+      --color-text-secondary: #A0A0B8;
+      --color-text-muted: #6B6B80;
+      --color-bg: #0D0D1A;
+      --color-bg-card: #161625;
+      --color-bg-elevated: #1E1E30;
+      --color-bg-hover: #252540;
+      --color-border: #2A2A45;
+      --color-border-light: #353555;
+
+      /* Fitzgerald Key Colors */
+      --fk-verb: #4CAF50;
+      --fk-pronoun: #FFC107;
+      --fk-question: #9C27B0;
+      --fk-noun: #FF9800;
+      --fk-adjective: #2196F3;
+      --fk-conversational: #E91E63;
+
+      /* Typography */
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+      /* Spacing */
+      --max-width: 900px;
+      --section-gap: 4rem;
+      --card-radius: 16px;
+      --card-radius-sm: 10px;
+    }
+
+    [data-theme="light"] {
+      --color-text: #1A1A2E;
+      --color-text-secondary: #4A4A65;
+      --color-text-muted: #8888A0;
+      --color-bg: #F5F5FA;
+      --color-bg-card: #FFFFFF;
+      --color-bg-elevated: #F0F0F8;
+      --color-bg-hover: #E8E8F0;
+      --color-border: #D8D8E8;
+      --color-border-light: #E5E5F0;
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--color-primary-light); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--color-accent); }
+
+    img { max-width: 100%; height: auto; }
+
+    /* ========================================
+       READING PROGRESS
+       ======================================== */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* ========================================
+       TOP BAR
+       ======================================== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      background: rgba(13, 13, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    [data-theme="light"] .top-bar {
+      background: rgba(245, 245, 250, 0.85);
+    }
+
+    .top-bar .back-link {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar .back-link:hover { color: var(--color-primary-light); }
+
+    .top-bar-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .theme-toggle {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-bg-hover);
+      border-color: var(--color-primary);
+    }
+
+    /* ========================================
+       HERO SECTION
+       ======================================== */
+    .hero {
+      padding: 7rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(108, 99, 255, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(0, 212, 170, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--color-primary-light);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .hero-badge .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-success);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--color-text-secondary);
+      max-width: 650px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--color-primary-light);
+    }
+
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ========================================
+       MAIN CONTENT
+       ======================================== */
+    .main-content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ========================================
+       TABLE OF CONTENTS
+       ======================================== */
+    .toc-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: var(--section-gap);
+    }
+
+    .toc-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .toc-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .toc-link:hover {
+      background: var(--color-bg-hover);
+      color: var(--color-primary-light);
+    }
+
+    .toc-link .toc-num {
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-right: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* ========================================
+       SECTIONS
+       ======================================== */
+    .section {
+      margin-bottom: var(--section-gap);
+    }
+
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .section h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .section p {
+      margin-bottom: 1.25rem;
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+
+    .section p strong {
+      color: var(--color-text);
+    }
+
+    /* ========================================
+       CARDS
+       ======================================== */
+    .card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius);
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--color-border-light);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       FEATURE GRID
+       ======================================== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ========================================
+       FITZGERALD KEY DISPLAY
+       ======================================== */
+    .fk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .fk-item {
+      border-radius: var(--card-radius-sm);
+      padding: 1rem 1.25rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+      transition: transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fk-item:hover { transform: scale(1.03); }
+
+    .fk-item .fk-type {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+      margin-top: 0.3rem;
+      font-weight: 400;
+    }
+
+    .fk-verb { background: linear-gradient(135deg, #4CAF50, #2E7D32); }
+    .fk-pronoun { background: linear-gradient(135deg, #FFC107, #F57F17); color: #1A1A2E; }
+    .fk-question { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
+    .fk-noun { background: linear-gradient(135deg, #FF9800, #E65100); }
+    .fk-adjective { background: linear-gradient(135deg, #2196F3, #1565C0); }
+    .fk-conversational { background: linear-gradient(135deg, #E91E63, #AD1457); }
+
+    /* ========================================
+       PLATFORM TABLE
+       ======================================== */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .platform-item {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius-sm);
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .platform-item.supported {
+      border-color: rgba(78, 203, 113, 0.3);
+    }
+
+    .platform-item.unsupported {
+      opacity: 0.5;
+    }
+
+    .platform-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .platform-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .platform-status {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .platform-status.yes { color: var(--color-success); }
+    .platform-status.no { color: var(--color-accent-warm); }
+
+    /* ========================================
+       PROS & CONS
+       ======================================== */
+    .pros-cons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 700px) {
+      .pros-cons-grid { grid-template-columns: 1fr; }
+    }
+
+    .pros-card, .cons-card {
+      background: var(--color-bg-card);
+      border-radius: var(--card-radius);
+      padding: 1.75rem;
+      border: 1px solid var(--color-border);
+    }
+
+    .pros-card { border-top: 3px solid var(--color-success); }
+    .cons-card { border-top: 3px solid var(--color-accent-warm); }
+
+    .pros-card h3, .cons-card h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pros-card ul, .cons-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pros-card li, .cons-card li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .pros-card li:last-child, .cons-card li:last-child {
+      border-bottom: none;
+    }
+
+    .pros-card li::before {
+      content: '+';
+      color: var(--color-success);
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      width: 18px;
+    }
+
+    .cons-card li::before {
+      content: '-';
+      color: var(--color-accent-warm);
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      width: 18px;
+    }
+
+    /* ========================================
+       REVIEW QUOTES
+       ======================================== */
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .review-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .review-card.positive { border-left: 3px solid var(--color-success); }
+    .review-card.negative { border-left: 3px solid var(--color-accent-warm); }
+    .review-card.impact { border-left: 3px solid var(--color-primary); }
+
+    .review-quote {
+      font-style: italic;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-source {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ========================================
+       CHART CONTAINERS
+       ======================================== */
+    .chart-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius);
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .chart-subtitle {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      max-height: 350px;
+    }
+
+    /* ========================================
+       COMPARISON TABLE
+       ======================================== */
+    .comparison-table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .comparison-table th {
+      background: var(--color-bg-elevated);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .comparison-table tr:hover td {
+      background: var(--color-bg-hover);
+    }
+
+    .comparison-table .highlight-row td {
+      background: rgba(108, 99, 255, 0.06);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .check { color: var(--color-success); font-weight: 700; }
+    .cross { color: var(--color-accent-warm); font-weight: 700; }
+    .free-badge {
+      display: inline-block;
+      background: rgba(78, 203, 113, 0.15);
+      color: var(--color-success);
+      padding: 0.15rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       TIMELINE
+       ======================================== */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.25rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 2px solid var(--color-bg);
+      z-index: 1;
+    }
+
+    .timeline-date {
+      font-size: 0.75rem;
+      color: var(--color-primary-light);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-text {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       BLOCKQUOTE
+       ======================================== */
+    blockquote {
+      border-left: 3px solid var(--color-primary);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-elevated);
+      border-radius: 0 var(--card-radius-sm) var(--card-radius-sm) 0;
+      font-style: italic;
+      color: var(--color-text-secondary);
+    }
+
+    /* ========================================
+       INFO CALLOUT
+       ======================================== */
+    .callout {
+      border-radius: var(--card-radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .callout-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .callout-info {
+      background: rgba(84, 160, 255, 0.1);
+      border: 1px solid rgba(84, 160, 255, 0.2);
+    }
+
+    .callout-mission {
+      background: rgba(108, 99, 255, 0.1);
+      border: 1px solid rgba(108, 99, 255, 0.2);
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       DOWNLOAD LINKS
+       ======================================== */
+    .download-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--card-radius-sm);
+      color: var(--color-text);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .download-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .page-footer {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer-sources {
+      margin-top: 1.5rem;
+    }
+
+    .footer-sources summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-sources ol {
+      padding-left: 1.25rem;
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+
+    .footer-sources a {
+      color: var(--color-text-secondary);
+    }
+
+    .footer-meta {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    /* ========================================
+       BACK TO TOP
+       ======================================== */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px;
+      height: 44px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+      z-index: 800;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 640px) {
+      .hero { padding: 6rem 1rem 2rem; }
+      .hero-stats { gap: 1.25rem; }
+      .hero-stat-value { font-size: 1.4rem; }
+      .main-content { padding: 0 1rem 3rem; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .fk-grid { grid-template-columns: repeat(2, 1fr); }
+      .platform-grid { grid-template-columns: repeat(2, 1fr); }
+      .review-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 1.5rem; }
+    }
+
+    /* ========================================
+       PRINT
+       ======================================== */
+    @media print {
+      .top-bar, .reading-progress, .back-to-top, .theme-toggle { display: none !important; }
+      .hero { padding-top: 2rem; }
+      body { background: #fff; color: #000; }
+      .card, .feature-card, .review-card, .chart-container, .toc-container {
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress -->
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+      <span>&larr;</span> Back to AAC Dashboard
+    </a>
+    <div class="top-bar-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+        <span id="themeIcon">Light</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Actively Developed &middot; Free Forever
+    </div>
+    <h1>
+      <span class="highlight">Weave Chat AAC</span><br>
+      The Free Communication App<br>Breaking Down Barriers
+    </h1>
+    <p class="hero-subtitle">
+      A comprehensive deep dive into the completely free, cross-platform AAC app
+      built by an SLP and an engineer -- designed so everyone can communicate.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">$0</div>
+        <div class="hero-stat-label">Forever Free</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">4.37</div>
+        <div class="hero-stat-label">Google Play Rating</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">5</div>
+        <div class="hero-stat-label">Platforms</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">13</div>
+        <div class="hero-stat-label">Board Layouts</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Table of Contents -->
+    <nav class="toc-container" aria-label="Table of Contents">
+      <div class="toc-title">Contents</div>
+      <div class="toc-grid">
+        <a href="#overview" class="toc-link"><span class="toc-num">01</span> Overview & Mission</a>
+        <a href="#who-is-it-for" class="toc-link"><span class="toc-num">02</span> Who Is It For?</a>
+        <a href="#how-it-works" class="toc-link"><span class="toc-num">03</span> How It Works</a>
+        <a href="#fitzgerald-key" class="toc-link"><span class="toc-num">04</span> Fitzgerald Key Colors</a>
+        <a href="#features" class="toc-link"><span class="toc-num">05</span> Key Features</a>
+        <a href="#customization" class="toc-link"><span class="toc-num">06</span> Customization</a>
+        <a href="#platforms" class="toc-link"><span class="toc-num">07</span> Platform Support</a>
+        <a href="#comparison" class="toc-link"><span class="toc-num">08</span> Competitive Comparison</a>
+        <a href="#pros-cons" class="toc-link"><span class="toc-num">09</span> Strengths & Weaknesses</a>
+        <a href="#reviews" class="toc-link"><span class="toc-num">10</span> User Reviews</a>
+        <a href="#development" class="toc-link"><span class="toc-num">11</span> Development Status</a>
+        <a href="#verdict" class="toc-link"><span class="toc-num">12</span> The Verdict</a>
+      </div>
+    </nav>
+
+    <!-- Section 1: Overview -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <div class="section-label">Overview</div>
+        <h2>The Mission: Communication for Everyone</h2>
+      </div>
+
+      <div class="callout callout-mission">
+        <span class="callout-icon">&#9733;</span>
+        <p><strong>"Weave Chat AAC is free and always will be because we firmly believe that everyone should be able to communicate."</strong> -- Weave Chat, LLC</p>
+      </div>
+
+      <p>In a market where AAC apps routinely cost $100 to $300, Weave Chat AAC is completely free -- no ads, no in-app purchases, no subscriptions, no hidden costs. Its developers have pledged it will stay that way forever. For the millions of individuals living with autism, ALS, apraxia, Down syndrome, stroke-related aphasia, and other conditions that affect speech, the financial barrier to digital communication tools has long been a painful reality. Weave Chat is working to eliminate that barrier entirely.</p>
+
+      <p>Weave Chat AAC is developed by <strong>Weave Chat, LLC</strong>, a small team founded by a <strong>speech-language pathologist (SLP)</strong> and a <strong>software engineer</strong>. This pairing is central to the app's identity: every feature is shaped by clinical understanding of how AAC users actually communicate, and every update is built on a foundation of solid engineering.</p>
+
+      <p>The team maintains an active relationship with their user community, responding quickly to feedback and feature requests. Volunteer translators from around the world have contributed to bringing the app to new languages. New vocabulary is added on a weekly basis, reflecting a development pace that matches or exceeds many commercial AAC products.</p>
+    </section>
+
+    <!-- Section 2: Who Is It For -->
+    <section class="section" id="who-is-it-for">
+      <div class="section-header">
+        <div class="section-label">Target Users</div>
+        <h2>Who Is Weave Chat For?</h2>
+      </div>
+
+      <p>Weave Chat AAC is designed for anyone who has difficulty using their natural voice to communicate. The app serves a broad spectrum of users across all ages, from young children just beginning to learn language to adults who have lost speech later in life.</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(108, 99, 255, 0.15);">&#129504;</div>
+          <h4>Autism Spectrum Disorder</h4>
+          <p>Nonverbal or minimally verbal individuals on the autism spectrum who need picture-based communication support.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(0, 212, 170, 0.15);">&#129728;</div>
+          <h4>Down Syndrome</h4>
+          <p>Individuals with speech production difficulties who benefit from augmented communication tools.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255, 107, 107, 0.15);">&#129657;</div>
+          <h4>ALS & Progressive Conditions</h4>
+          <p>People experiencing progressive speech loss who need a reliable, adaptable communication system.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255, 179, 71, 0.15);">&#128483;</div>
+          <h4>Apraxia of Speech</h4>
+          <p>Individuals with motor planning difficulties affecting speech production and articulation.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(84, 160, 255, 0.15);">&#129729;</div>
+          <h4>Stroke Survivors</h4>
+          <p>People experiencing aphasia and speech difficulties following a stroke event.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(156, 39, 176, 0.15);">&#128101;</div>
+          <h4>Institutional Settings</h4>
+          <p>Schools (K-12), hospitals, clinics, and private practices -- with privacy agreement and deployment support.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: How It Works -->
+    <section class="section" id="how-it-works">
+      <div class="section-header">
+        <div class="section-label">Technology</div>
+        <h2>How Weave Chat Works</h2>
+      </div>
+
+      <p>At its core, Weave Chat AAC is a <strong>category-based AAC system</strong> with a dynamic display. Users communicate by tapping picture-symbol buttons organized into vocabulary categories. When a button is pressed, the app speaks the word or phrase aloud using a synthetic voice. Users can construct sentences by selecting multiple buttons in sequence, building up messages in a sentence bar before speaking them.</p>
+
+      <p>This category-based approach differs from some competitors that use motor-planning or core-word approaches (like LAMP or Proloquo). The category model groups related words together -- all animals in one place, all foods in another -- making it intuitive for users who think in concrete categories.</p>
+
+      <h3>Board Layouts</h3>
+      <p>Weave Chat offers exceptional flexibility in how vocabulary boards are displayed:</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Default Scrolling Board</h4>
+          <p>Buttons scroll within categories, allowing unlimited vocabulary without complex navigation. The simplest option for quick access.</p>
+        </div>
+        <div class="feature-card">
+          <h4>12 Grid Board Layouts</h4>
+          <p>Fixed-position grids ranging from simple 1x2 layouts (2 buttons) to dense 7x15 grids (up to 105 visible buttons).</p>
+        </div>
+        <div class="feature-card">
+          <h4>Board Builder</h4>
+          <p>Create boards completely from scratch for fully customized layouts tailored to individual needs.</p>
+        </div>
+      </div>
+
+      <h3>Voice & Audio Output</h3>
+      <p>The app leverages the device's built-in synthetic voices, meaning users benefit from whatever TTS (text-to-speech) engine their phone or tablet provides. Users can adjust <strong>vocal pitch</strong> and <strong>rate of speech</strong> to find a voice that feels right. Additionally, each button can hold up to <strong>30 seconds of recorded audio</strong> -- useful for personal phrases, names, or situations where a human voice is preferred over synthetic speech.</p>
+    </section>
+
+    <!-- Section 4: Fitzgerald Key -->
+    <section class="section" id="fitzgerald-key">
+      <div class="section-header">
+        <div class="section-label">Vocabulary Organization</div>
+        <h2>The Fitzgerald Key Color System</h2>
+      </div>
+
+      <p>One of Weave Chat's most clinically grounded design decisions is its use of the <strong>Fitzgerald Key</strong> color-coding system. Developed in the early 20th century and widely adopted in AAC practice, this system assigns colors to different parts of speech to help users visually distinguish word types at a glance and support language development by reinforcing grammatical categories.</p>
+
+      <div class="fk-grid">
+        <div class="fk-item fk-verb">
+          Verbs
+          <div class="fk-type">eat, go, play, want</div>
+        </div>
+        <div class="fk-item fk-pronoun">
+          Pronouns
+          <div class="fk-type">I, you, he, she, they</div>
+        </div>
+        <div class="fk-item fk-question">
+          Questions
+          <div class="fk-type">who, what, where, why</div>
+        </div>
+        <div class="fk-item fk-noun">
+          Nouns
+          <div class="fk-type">people, places, things</div>
+        </div>
+        <div class="fk-item fk-adjective">
+          Adjectives
+          <div class="fk-type">big, happy, cold, red</div>
+        </div>
+        <div class="fk-item fk-conversational">
+          Conversational
+          <div class="fk-type">hello, thanks, please</div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#9432;</span>
+        <p>The Fitzgerald Key serves a dual purpose: it helps users visually distinguish word types at a glance, and it supports language development. For users learning to construct sentences, the colors provide implicit scaffolding -- "pick a yellow word, then a green word, then an orange word" can guide someone toward building "I want pizza."</p>
+      </div>
+    </section>
+
+    <!-- Section 5: Key Features -->
+    <section class="section" id="features">
+      <div class="section-header">
+        <div class="section-label">Features</div>
+        <h2>What Sets Weave Chat Apart</h2>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(108, 99, 255, 0.15);">&#128172;</div>
+          <h4>In-App Picture Messaging</h4>
+          <p>Send text messages to friends and family using picture symbols -- the same symbols from the communication boards. No other AAC app offers this feature.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(0, 212, 170, 0.15);">&#9998;</div>
+          <h4>Built-In Whiteboard</h4>
+          <p>A drawing tool that lets users sketch, draw, or write to supplement symbol-based communication. Drawings persist until explicitly cleared.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255, 179, 71, 0.15);">&#128161;</div>
+          <h4>Next Word Prediction</h4>
+          <p>Smart recommendation system suggests the next likely word, with improved handling of prefixes and suffixes to reduce taps needed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(84, 160, 255, 0.15);">&#128260;</div>
+          <h4>Multi-Device Sync</h4>
+          <p>With a single login, sync profiles across all devices. Use a tablet at school, switch to a phone in the community -- everything follows seamlessly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(255, 107, 107, 0.15);">&#127908;</div>
+          <h4>Audio Recording</h4>
+          <p>Record up to 30 seconds of custom audio per button for personal phrases, names, or when a human voice is preferred over synthetic speech.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(156, 39, 176, 0.15);">&#128274;</div>
+          <h4>Privacy Focused</h4>
+          <p>Does not share personal data with third parties. Provides institutional privacy agreements for school districts and healthcare facilities.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Customization -->
+    <section class="section" id="customization">
+      <div class="section-header">
+        <div class="section-label">Personalization</div>
+        <h2>Customization Deep Dive</h2>
+      </div>
+
+      <p>Customization is where Weave Chat particularly shines for an app at the $0 price point. The level of configurability rivals apps costing hundreds of dollars.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background: rgba(108, 99, 255, 0.15);">&#127912;</div>
+          <div class="card-title">Board & Button Customization</div>
+        </div>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Choose from 12 grid layouts plus the default scrolling board</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Adjust button size, border size, and text size</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Set custom behavior for backspace and clear-all buttons</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Add custom words, categories, and phrases (up to 2,000 custom buttons)</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Upload custom images for any button</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Set background colors and toggle between light and dark mode</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Enable text-only buttons when images are not needed</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background: rgba(0, 212, 170, 0.15);">&#128266;</div>
+          <div class="card-title">Voice Customization</div>
+        </div>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Select from all synthetic voices available on the device</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Adjust vocal pitch to personalize the voice</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Control rate of speech (slower for clarity, faster for fluency)</li>
+          <li style="padding: 0.4rem 0; color: var(--color-text-secondary); font-size: 0.9rem;">&#8226; Record up to 30 seconds of custom audio per button</li>
+        </ul>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#9432;</span>
+        <p><strong>Limits to know:</strong> The app has a default limit of 2,000 custom buttons. While this sounds generous, users who need to fill gaps in the pre-made vocabulary may use up a significant portion on essential words rather than personalized content. The development team will increase this limit upon request.</p>
+      </div>
+    </section>
+
+    <!-- Section 7: Platform Support -->
+    <section class="section" id="platforms">
+      <div class="section-header">
+        <div class="section-label">Availability</div>
+        <h2>Cross-Platform Support</h2>
+      </div>
+
+      <p>One of Weave Chat's strongest competitive advantages is its cross-platform support. Most competing AAC apps are locked to iOS only. Weave Chat is the only app offering this breadth of platform support at no cost.</p>
+
+      <div class="platform-grid">
+        <div class="platform-item supported">
+          <div class="platform-icon">&#128241;</div>
+          <div class="platform-name">iOS</div>
+          <div class="platform-status yes">Supported</div>
+        </div>
+        <div class="platform-item supported">
+          <div class="platform-icon">&#128242;</div>
+          <div class="platform-name">Android</div>
+          <div class="platform-status yes">Supported</div>
+        </div>
+        <div class="platform-item supported">
+          <div class="platform-icon">&#128214;</div>
+          <div class="platform-name">Kindle</div>
+          <div class="platform-status yes">Supported</div>
+        </div>
+        <div class="platform-item supported">
+          <div class="platform-icon">&#128187;</div>
+          <div class="platform-name">Chromebook</div>
+          <div class="platform-status yes">Supported</div>
+        </div>
+        <div class="platform-item supported">
+          <div class="platform-icon">&#127822;</div>
+          <div class="platform-name">Mac (M1+)</div>
+          <div class="platform-status yes">Supported</div>
+        </div>
+        <div class="platform-item unsupported">
+          <div class="platform-icon">&#128421;</div>
+          <div class="platform-name">Windows</div>
+          <div class="platform-status no">Not Yet</div>
+        </div>
+        <div class="platform-item unsupported">
+          <div class="platform-icon">&#127760;</div>
+          <div class="platform-name">Web</div>
+          <div class="platform-status no">Not Yet</div>
+        </div>
+      </div>
+
+      <p>This matters enormously in practice. Many AAC users in school settings use Chromebooks or Kindle devices -- affordable hardware that schools can purchase in bulk. If their AAC app only runs on iPads, the school must also purchase expensive Apple hardware. Weave Chat eliminates that secondary cost entirely.</p>
+
+      <h3>Download Links</h3>
+      <div class="download-grid">
+        <a href="https://apps.apple.com/us/app/weave-chat-aac/id1579129212" class="download-btn" target="_blank" rel="noopener">&#127822; App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.weavechat.weavechat" class="download-btn" target="_blank" rel="noopener">&#9654; Google Play</a>
+        <a href="https://www.amazon.com/Weave-Chat-AAC-Dynamic-Customizable/dp/B0C9226JWP" class="download-btn" target="_blank" rel="noopener">&#128293; Amazon Appstore</a>
+        <a href="https://www.weavechat.com/download" class="download-btn" target="_blank" rel="noopener">&#128279; Official Site</a>
+      </div>
+    </section>
+
+    <!-- Section 8: Competitive Comparison -->
+    <section class="section" id="comparison">
+      <div class="section-header">
+        <div class="section-label">Market Position</div>
+        <h2>How It Compares</h2>
+      </div>
+
+      <h3>Price Comparison</h3>
+      <p>The cost difference between Weave Chat and its competitors is substantial. For a family already navigating disability-related expenses, and for school districts purchasing licenses for multiple students, the savings are significant.</p>
+
+      <div class="chart-container">
+        <div class="chart-title">AAC App Annual Cost Comparison</div>
+        <div class="chart-subtitle">One-time purchase costs shown as equivalent annual value</div>
+        <div class="chart-wrapper">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+      <h3>Vocabulary Coverage</h3>
+      <p>In academic vocabulary comparison testing (147 target words), Weave Chat's 71% coverage on the 7x15 grid outperformed TouchChat WordPower (68%), which costs $299.99. Proloquo achieved 100% but requires a $99/year subscription.</p>
+
+      <div class="chart-container">
+        <div class="chart-title">Academic Vocabulary Coverage</div>
+        <div class="chart-subtitle">Percentage of 147 tested academic vocabulary words found in each app</div>
+        <div class="chart-wrapper">
+          <canvas id="vocabChart"></canvas>
+        </div>
+      </div>
+
+      <h3>Platform Support Matrix</h3>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>App</th>
+              <th>Price</th>
+              <th>iOS</th>
+              <th>Android</th>
+              <th>Kindle</th>
+              <th>Chromebook</th>
+              <th>Mac</th>
+              <th>Windows</th>
+              <th>Web</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="highlight-row">
+              <td><strong>Weave Chat AAC</strong></td>
+              <td><span class="free-badge">FREE</span></td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+            </tr>
+            <tr>
+              <td>CoughDrop</td>
+              <td>$9/mo</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+            </tr>
+            <tr>
+              <td>TouchChat</td>
+              <td>$299.99</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+            </tr>
+            <tr>
+              <td>Proloquo</td>
+              <td>$99/yr</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+            </tr>
+            <tr>
+              <td>LAMP Words for Life</td>
+              <td>$299.99</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+            </tr>
+            <tr>
+              <td>Proloquo2Go</td>
+              <td>$249.99</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+              <td class="cross">&#10007;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 9: Pros & Cons -->
+    <section class="section" id="pros-cons">
+      <div class="section-header">
+        <div class="section-label">Assessment</div>
+        <h2>Strengths & Weaknesses</h2>
+      </div>
+
+      <div class="pros-cons-grid">
+        <div class="pros-card">
+          <h3><span style="color: var(--color-success);">&#9650;</span> Strengths</h3>
+          <ul>
+            <li>Completely free forever -- no ads, no IAPs, no subscriptions</li>
+            <li>Cross-platform: iOS, Android, Kindle, Chromebook, Mac</li>
+            <li>Designed by a speech-language pathologist (SLP)</li>
+            <li>Fitzgerald Key color coding follows clinical best practices</li>
+            <li>12+ board layouts with extensive customization options</li>
+            <li>Unique in-app picture messaging (no other AAC app has this)</li>
+            <li>Weekly vocabulary additions and regular updates</li>
+            <li>Multi-device sync with a single login</li>
+            <li>Institutional deployment support with privacy agreements</li>
+            <li>Does not share personal data with third parties</li>
+          </ul>
+        </div>
+        <div class="cons-card">
+          <h3><span style="color: var(--color-accent-warm);">&#9660;</span> Weaknesses</h3>
+          <ul>
+            <li>Vocabulary gaps: common words missing from pre-made categories</li>
+            <li>2,000 custom button limit can be constraining</li>
+            <li>Cannot delete pre-made buttons, only hide them</li>
+            <li>Navigation learning curve for new users</li>
+            <li>Android sync issues reported by some users</li>
+            <li>VoiceOver/screen reader accessibility issues in settings</li>
+            <li>English only (other languages translated but pending release)</li>
+            <li>No switch access or scanning support</li>
+            <li>No Windows or web browser support</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: User Reviews -->
+    <section class="section" id="reviews">
+      <div class="section-header">
+        <div class="section-label">Community Feedback</div>
+        <h2>What Users Are Saying</h2>
+      </div>
+
+      <p>The user reviews paint a picture of an app that delivers tremendous value with some rough edges. The app holds a <strong>4.37/5 rating on Google Play</strong> from 110 ratings.</p>
+
+      <div class="review-grid">
+        <div class="review-card positive">
+          <div class="review-quote">"I can honestly say that Weave Chat is the absolute best app of its kind available."</div>
+          <div class="review-source">-- App Store Review</div>
+        </div>
+        <div class="review-card positive">
+          <div class="review-quote">"The absolute best AAC app we've tried, it takes a bit to get used to navigating, but it IS organized really well, editing or adding new buttons and folders is easy, there's NO ads or anything you have to buy, there's tons of voice options, and it is just really smooth in general."</div>
+          <div class="review-source">-- App Store Review</div>
+        </div>
+        <div class="review-card impact">
+          <div class="review-quote">"My brother-in-law was communicating for himself for the first time in his life."</div>
+          <div class="review-source">-- App Store Review (Life-Changing Impact)</div>
+        </div>
+        <div class="review-card impact">
+          <div class="review-quote">A parent reported that their nonverbal son experienced noticeably decreased frustration after adopting the app.</div>
+          <div class="review-source">-- App Store Review, January 2025</div>
+        </div>
+        <div class="review-card negative">
+          <div class="review-quote">"It is so hard to navigate and create custom boards, not at all user-friendly."</div>
+          <div class="review-source">-- Google Play Review</div>
+        </div>
+        <div class="review-card negative">
+          <div class="review-quote">"It also doesn't work half the time, it always says unable to sync even when connected to a working network."</div>
+          <div class="review-source">-- Google Play Review (Android sync issues)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Development Status -->
+    <section class="section" id="development">
+      <div class="section-header">
+        <div class="section-label">Roadmap</div>
+        <h2>Current Development Status</h2>
+      </div>
+
+      <p>Weave Chat AAC is in active development with regular releases. The most recent version (001.015.0010) was released in September 2025.</p>
+
+      <h3>Recent Improvements</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">September 2025</div>
+          <div class="timeline-text">Version 001.015.0010 released with background color and text-only options in edit button feature</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Mid 2025</div>
+          <div class="timeline-text">Whiteboard persistence: drawings now saved until explicitly cleared; stylus size maintained between sessions</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Early 2025</div>
+          <div class="timeline-text">Improved next word recommendations for better prefix/suffix handling</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Early 2025</div>
+          <div class="timeline-text">Spanish language release planned, with Macedonian and Vietnamese to follow</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Late 2024</div>
+          <div class="timeline-text">Castilian Spanish, Macedonian, and Vietnamese translations fully completed by volunteer translators</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Ongoing</div>
+          <div class="timeline-text">Weekly vocabulary additions and streamlined button editing workflow</div>
+        </div>
+      </div>
+
+      <h3>Language Expansion</h3>
+      <p>The app is actively expanding beyond English. Volunteer translators have completed full translations for <strong>Castilian Spanish</strong>, <strong>Macedonian</strong>, and <strong>Vietnamese</strong>. Spanish was planned as the first non-English release, with the other languages to follow shortly after.</p>
+    </section>
+
+    <!-- Section 12: Verdict -->
+    <section class="section" id="verdict">
+      <div class="section-header">
+        <div class="section-label">Conclusion</div>
+        <h2>The Verdict</h2>
+      </div>
+
+      <p>Weave Chat AAC occupies a unique position in the AAC landscape. It is not the most polished app available -- vocabulary gaps, navigation challenges, and sync issues are real concerns. But it is the most <em>accessible</em> app in the most fundamental sense of that word: it costs nothing and runs on almost everything.</p>
+
+      <p>For families who cannot afford a $300 app, for schools that need to deploy AAC across dozens of Chromebooks, for adults who need a quick solution on their existing Android phone -- Weave Chat is not just a good option, it may be the only option. And for many users, it is not merely adequate but genuinely excellent: its Fitzgerald Key organization, in-app messaging, and extensive customization rival apps costing hundreds of dollars.</p>
+
+      <p>The app's weaknesses are real but not fundamental. Vocabulary gaps can be addressed through continued weekly updates. The custom button limit can be raised on request. Navigation can be learned. And the development team's responsiveness and commitment to keeping the app free suggest that Weave Chat will only improve from here.</p>
+
+      <blockquote>In a world where communication is a basic human right, Weave Chat AAC is making that right a little more attainable for everyone.</blockquote>
+
+      <div class="download-grid" style="margin-top: 2rem; justify-content: center;">
+        <a href="https://www.weavechat.com" class="download-btn" target="_blank" rel="noopener" style="background: var(--color-primary); color: #fff; border-color: var(--color-primary);">Visit Weave Chat AAC &rarr;</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <details class="footer-sources">
+      <summary>Sources (18 references)</summary>
+      <ol>
+        <li><a href="https://www.weavechat.com" target="_blank" rel="noopener">Weave Chat AAC Official Website</a></li>
+        <li><a href="https://apps.apple.com/us/app/weave-chat-aac/id1579129212" target="_blank" rel="noopener">Weave Chat AAC - Apple App Store</a></li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.weavechat.weavechat" target="_blank" rel="noopener">Weave Chat AAC - Google Play</a></li>
+        <li><a href="https://www.amazon.com/Weave-Chat-AAC-Dynamic-Customizable/dp/B0C9226JWP" target="_blank" rel="noopener">Weave Chat AAC - Amazon Appstore</a></li>
+        <li><a href="https://www.appbrain.com/app/weave-chat-aac/com.weavechat.weavechat" target="_blank" rel="noopener">Weave Chat AAC - AppBrain</a></li>
+        <li><a href="https://www.applevis.com/apps/ios/education/weave-chat-aac" target="_blank" rel="noopener">Weave Chat AAC - AppleVis</a></li>
+        <li><a href="https://k12atlas.eastersealstech.com/apps/weave-chat-aac/" target="_blank" rel="noopener">Weave Chat AAC - K-12 ATLAS</a></li>
+        <li><a href="https://omazingkidsllc.com/tag/comparing-aac-apps/" target="_blank" rel="noopener">OMazing Kids - Comparing AAC Apps</a></li>
+        <li><a href="https://omazingkidsllc.com/2023/08/15/weave-chat-aac-added-to-the-feature-matching-chart-for-robust-android-aac-apps/" target="_blank" rel="noopener">OMazing Kids - Feature Matching</a></li>
+        <li><a href="https://omazingkidsllc.com/2024/12/17/languages-in-weave-chat-aac-as-of-12-16-24/" target="_blank" rel="noopener">OMazing Kids - Languages in Weave Chat AAC</a></li>
+        <li><a href="https://www.openaac.org/2025/03/03/state-of-aac-2025.html" target="_blank" rel="noopener">OpenAAC - State of AAC 2025</a></li>
+        <li><a href="https://simplihere.com/2024-top-7-augmentative-alt-communication-aac-apps/" target="_blank" rel="noopener">SimpliHere - Top 7 AAC Apps</a></li>
+        <li><a href="https://weave-chat-aac.soft112.com/" target="_blank" rel="noopener">Weave Chat AAC - Version History</a></li>
+        <li><a href="https://nwacs.info/company-page-weave-chat-aac" target="_blank" rel="noopener">NWACS Company Page</a></li>
+        <li><a href="https://www.teacherspayteachers.com/store/weave-chat-aac" target="_blank" rel="noopener">Weave Chat AAC - Teachers Pay Teachers</a></li>
+        <li><a href="https://www.weavechat.com/research" target="_blank" rel="noopener">Weave Chat AAC - Research Articles</a></li>
+        <li><a href="https://www.speechandlanguagekids.com/aac-apps-review/" target="_blank" rel="noopener">Speech and Language Kids - AAC Apps Review</a></li>
+        <li><a href="https://appadvice.com/app/weave-chat-aac/1579129212" target="_blank" rel="noopener">AppAdvice - Weave Chat AAC</a></li>
+      </ol>
+    </details>
+    <div class="footer-meta">
+      Research compiled March 2, 2026 &middot; AI-Assisted Research &middot;
+      <a href="../aac-applications-competitive-analysis-dashboard/index.html">Back to AAC Dashboard</a>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <!-- Scripts -->
+  <script>
+    // ============================
+    // Reading Progress
+    // ============================
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = height > 0 ? (winScroll / height * 100) : 0;
+      document.getElementById('readingProgress').style.width = progress + '%';
+
+      // Back to top visibility
+      const btn = document.getElementById('backToTop');
+      if (winScroll > 500) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+
+    // ============================
+    // Back to Top
+    // ============================
+    document.getElementById('backToTop').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ============================
+    // Theme Toggle
+    // ============================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('weave-chat-theme', next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? 'Light' : 'Dark';
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('weave-chat-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+      } else {
+        updateThemeIcon('dark');
+      }
+    })();
+
+    // ============================
+    // Smooth Scroll for TOC
+    // ============================
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ============================
+    // Charts
+    // ============================
+    function initCharts() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const textColor = isDark ? '#A0A0B8' : '#4A4A65';
+      const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+      Chart.defaults.color = textColor;
+      Chart.defaults.borderColor = gridColor;
+
+      // Price Comparison Chart
+      const priceCtx = document.getElementById('priceChart');
+      if (priceCtx) {
+        new Chart(priceCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Weave Chat\nAAC', 'Proloquo\n(annual)', 'CoughDrop\n(monthly)', 'Proloquo2Go\n(one-time)', 'TouchChat\n(one-time)', 'LAMP\n(one-time)'],
+            datasets: [{
+              label: 'Cost (USD)',
+              data: [0, 99, 108, 249.99, 299.99, 299.99],
+              backgroundColor: [
+                'rgba(78, 203, 113, 0.8)',
+                'rgba(108, 99, 255, 0.6)',
+                'rgba(84, 160, 255, 0.6)',
+                'rgba(255, 179, 71, 0.6)',
+                'rgba(255, 107, 107, 0.6)',
+                'rgba(156, 39, 176, 0.6)'
+              ],
+              borderColor: [
+                'rgba(78, 203, 113, 1)',
+                'rgba(108, 99, 255, 1)',
+                'rgba(84, 160, 255, 1)',
+                'rgba(255, 179, 71, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(156, 39, 176, 1)'
+              ],
+              borderWidth: 1,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            indexAxis: 'y',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return ctx.parsed.x === 0 ? 'FREE' : '$' + ctx.parsed.x.toFixed(2);
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: { color: gridColor },
+                ticks: {
+                  callback: function(value) { return '$' + value; }
+                }
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  font: { size: 11 }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Vocabulary Coverage Chart
+      const vocabCtx = document.getElementById('vocabChart');
+      if (vocabCtx) {
+        new Chart(vocabCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Proloquo', 'Weave Chat AAC\n(7x15 grid)', 'TouchChat\nWordPower'],
+            datasets: [{
+              label: 'Coverage %',
+              data: [100, 71, 68],
+              backgroundColor: [
+                'rgba(108, 99, 255, 0.7)',
+                'rgba(78, 203, 113, 0.7)',
+                'rgba(255, 179, 71, 0.7)'
+              ],
+              borderColor: [
+                'rgba(108, 99, 255, 1)',
+                'rgba(78, 203, 113, 1)',
+                'rgba(255, 179, 71, 1)'
+              ],
+              borderWidth: 1,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    const scores = [147, 105, 100];
+                    return ctx.parsed.y + '% (' + scores[ctx.dataIndex] + '/147 words)';
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 110,
+                grid: { color: gridColor },
+                ticks: {
+                  callback: function(value) { return value + '%'; }
+                }
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { size: 11 }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Initialize charts when Chart.js is loaded
+    if (typeof Chart !== 'undefined') {
+      initCharts();
+    } else {
+      window.addEventListener('load', initCharts);
+    }
+
+    // Re-render charts on theme change
+    const origToggle = toggleTheme;
+    toggleTheme = function() {
+      origToggle();
+      // Destroy and recreate charts
+      Chart.helpers.each(Chart.instances, function(instance) {
+        instance.destroy();
+      });
+      setTimeout(initCharts, 50);
+    };
+  </script>
+
+</body>
+</html>

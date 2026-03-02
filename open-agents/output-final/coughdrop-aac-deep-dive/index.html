@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A comprehensive deep dive into CoughDrop AAC: from its open-source origins to its acquisition by Forbes AAC, covering features, technology, pricing, and the open source controversy.">
+  <meta name="author" content="AI-Assisted Research">
+  <meta property="og:title" content="CoughDrop AAC: From Open Source Pioneer to Proprietary Product">
+  <meta property="og:description" content="The full story of CoughDrop AAC -- a father's mission to build better communication technology, its revolutionary open-source approach, and the controversial acquisition by Forbes AAC.">
+  <meta property="og:type" content="article">
+  <title>CoughDrop AAC: From Open Source Pioneer to Proprietary Product</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    :root {
+      --color-primary: #6C63FF;
+      --color-primary-dim: rgba(108, 99, 255, 0.15);
+      --color-accent: #00D9A3;
+      --color-accent-dim: rgba(0, 217, 163, 0.15);
+      --color-warn: #FF6B6B;
+      --color-warn-dim: rgba(255, 107, 107, 0.15);
+      --color-gold: #FFD93D;
+      --color-gold-dim: rgba(255, 217, 61, 0.15);
+      --color-text: #E8E6F0;
+      --color-text-secondary: #9B97B0;
+      --color-text-muted: #6E6A82;
+      --color-bg: #0F0E17;
+      --color-bg-card: #1A1926;
+      --color-bg-card-hover: #222136;
+      --color-bg-elevated: #252438;
+      --color-border: #2D2B3E;
+      --color-border-light: #3A3852;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --max-width: 860px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.4);
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Reading Progress */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      z-index: 1000;
+      transition: width 0.15s ease;
+    }
+
+    /* Back Link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-primary-dim);
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      transition: all 0.2s ease;
+      margin-bottom: 2rem;
+    }
+    .back-link:hover {
+      background: rgba(108, 99, 255, 0.25);
+      border-color: var(--color-primary);
+      transform: translateX(-2px);
+    }
+    .back-link svg { width: 16px; height: 16px; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1A1432 0%, #0F0E17 50%, #0D1B2A 100%);
+      padding: 4rem 2rem 3rem;
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(108, 99, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0, 217, 163, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--color-primary-dim);
+      color: var(--color-primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #c4c0e0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+      max-width: 650px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    .hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Quick Stats Bar */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      max-width: var(--max-width);
+      margin: -1.5rem auto 0;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* Page Layout */
+    .page-wrapper {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* Sidebar / TOC */
+    .sidebar {
+      width: 280px;
+      position: sticky;
+      top: 1rem;
+      height: calc(100vh - 2rem);
+      padding: 2rem 1rem 2rem 2rem;
+      overflow-y: auto;
+      display: none;
+      flex-shrink: 0;
+    }
+    @media (min-width: 1100px) {
+      .sidebar { display: block; }
+    }
+    .sidebar::-webkit-scrollbar { width: 2px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+    .toc-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .toc-list { list-style: none; }
+    .toc-item { margin: 0.15rem 0; }
+    .toc-link {
+      display: block;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+    }
+    .toc-link:hover {
+      color: var(--color-text-secondary);
+      background: var(--color-bg-card);
+    }
+    .toc-link.active {
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+      background: var(--color-primary-dim);
+    }
+    .toc-link.sub {
+      padding-left: 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: var(--max-width);
+      padding: 3rem 2rem 4rem;
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    /* Typography */
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 3.5rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      position: relative;
+      scroll-margin-top: 2rem;
+    }
+    h2::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.25rem;
+      width: 4px;
+      height: 1.5rem;
+      background: var(--color-primary);
+      border-radius: 2px;
+    }
+    @media (max-width: 600px) {
+      h2::before { display: none; }
+    }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+      scroll-margin-top: 2rem;
+    }
+    p {
+      margin: 1rem 0;
+      color: var(--color-text-secondary);
+    }
+    strong { color: var(--color-text); font-weight: 600; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Blockquote */
+    blockquote {
+      border-left: 3px solid var(--color-primary);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-card);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-style: italic;
+    }
+    blockquote p { color: var(--color-text-secondary); margin: 0; }
+    blockquote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+    }
+    li {
+      margin: 0.5rem 0;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    li strong { color: var(--color-text); }
+
+    /* Feature Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .feature-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: all 0.2s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--color-border-light);
+      background: var(--color-bg-card-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.4rem;
+    }
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin: 2rem 0;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.75rem;
+      padding-left: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.5rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--color-primary);
+      background: var(--color-bg);
+      z-index: 1;
+    }
+    .timeline-item.highlight::before {
+      background: var(--color-primary);
+      box-shadow: 0 0 12px rgba(108, 99, 255, 0.4);
+    }
+    .timeline-item.warn::before {
+      border-color: var(--color-warn);
+      background: var(--color-warn);
+      box-shadow: 0 0 12px rgba(255, 107, 107, 0.3);
+    }
+    .timeline-item.success::before {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+      box-shadow: 0 0 12px rgba(0, 217, 163, 0.3);
+    }
+    .timeline-year {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-item.warn .timeline-year { color: var(--color-warn); }
+    .timeline-item.success .timeline-year { color: var(--color-accent); }
+    .timeline-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* Tech Stack */
+    .tech-stack {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    .tech-item {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .tech-item:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-dim);
+    }
+    .tech-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .tech-role {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* Pros/Cons */
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    @media (max-width: 640px) {
+      .pros-cons { grid-template-columns: 1fr; }
+    }
+    .pros-section, .cons-section {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--color-border);
+    }
+    .pros-section { border-top: 3px solid var(--color-accent); }
+    .cons-section { border-top: 3px solid var(--color-warn); }
+    .pros-section h3, .cons-section h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .pros-section h3 { color: var(--color-accent); }
+    .cons-section h3 { color: var(--color-warn); }
+    .pros-section li::marker { color: var(--color-accent); }
+    .cons-section li::marker { color: var(--color-warn); }
+    .pros-section li, .cons-section li {
+      font-size: 0.9rem;
+      margin: 0.6rem 0;
+    }
+
+    /* Comparison Table */
+    .comparison-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .comparison-table th {
+      background: var(--color-bg-elevated);
+      color: var(--color-text);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.85rem 1rem;
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:hover td { background: var(--color-bg-card); }
+    .comparison-table .feature-name {
+      font-weight: 500;
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+    .check { color: var(--color-accent); font-weight: 600; }
+    .warn-text { color: var(--color-warn); font-weight: 500; }
+    .free-badge {
+      background: var(--color-accent-dim);
+      color: var(--color-accent);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .chart-container h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .chart-container canvas {
+      max-height: 350px;
+    }
+
+    /* Pricing Cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .pricing-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .pricing-card.featured {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 30px rgba(108, 99, 255, 0.1);
+    }
+    .pricing-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .pricing-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .pricing-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+    .pricing-period {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    .pricing-note {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 0.75rem;
+      line-height: 1.4;
+    }
+
+    /* Info Callout */
+    .callout {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-left: 3px solid var(--color-primary);
+    }
+    .callout.warn { border-left-color: var(--color-warn); }
+    .callout.info { border-left-color: var(--color-accent); }
+    .callout-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.4rem;
+    }
+    .callout p {
+      font-size: 0.875rem;
+      margin: 0;
+      color: var(--color-text-secondary);
+    }
+
+    /* Platform Icons */
+    .platform-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    .platform-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+    .platform-tag .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-accent);
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.3s ease;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .back-to-top.visible { opacity: 1; }
+    .back-to-top:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+    /* Sources Section */
+    .sources-list {
+      list-style: decimal;
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+    .sources-list li {
+      font-size: 0.8rem;
+      margin: 0.4rem 0;
+      color: var(--color-text-muted);
+    }
+    .sources-list a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .sources-list a:hover { color: var(--color-primary); }
+
+    /* Footer */
+    .article-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    /* Mobile Nav */
+    .mobile-nav-toggle {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+      z-index: 100;
+      font-size: 1rem;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 1099px) {
+      .mobile-nav-toggle { display: flex; }
+    }
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      backdrop-filter: blur(4px);
+    }
+    .mobile-nav-overlay.active { display: block; }
+    .mobile-nav-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 280px;
+      background: var(--color-bg-card);
+      border-right: 1px solid var(--color-border);
+      z-index: 201;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    .mobile-nav-overlay.active .mobile-nav-panel {
+      transform: translateX(0);
+    }
+
+    /* Section divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+      margin: 3rem 0;
+    }
+
+    /* Keyframes */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    /* Print */
+    @media print {
+      .sidebar, .back-to-top, .mobile-nav-toggle, .mobile-nav-overlay, .reading-progress, .back-link { display: none !important; }
+      .main-content { max-width: 100%; padding: 1rem; }
+      body { background: white; color: #333; }
+      h2::before { display: none; }
+      .hero { background: none; border: none; padding: 2rem 0 1rem; }
+      .hero h1 { -webkit-text-fill-color: #111; background: none; }
+      .feature-card, .stat-card, .pricing-card, .tech-item, .callout, .chart-container, .comparison-wrapper, .pros-section, .cons-section {
+        border: 1px solid #ddd;
+        background: #f9f9f9;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="progress"></div>
+
+  <!-- Mobile Nav -->
+  <button class="mobile-nav-toggle" id="mobileNavBtn" aria-label="Table of contents">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <div class="mobile-nav-overlay" id="mobileNav">
+    <div class="mobile-nav-panel">
+      <div class="toc-title">Contents</div>
+      <ul class="toc-list" id="mobileToc"></ul>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-inner">
+      <a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to AAC Dashboard
+      </a>
+      <div class="hero-badge">AAC Application Deep Dive</div>
+      <h1>CoughDrop AAC: From Open Source Pioneer to Proprietary Product</h1>
+      <p class="hero-subtitle">The full story of a father's mission to build better communication technology, its revolutionary open-source approach, and the controversial acquisition that changed everything.</p>
+      <div class="hero-meta">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> March 2026</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 18 min read</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg> 20 sources</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <div class="stat-card animate-in" style="animation-delay: 0.1s">
+      <span class="stat-value">2014</span>
+      <div class="stat-label">Founded</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.2s">
+      <span class="stat-value">$9/mo</span>
+      <div class="stat-label">Current Price</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.3s">
+      <span class="stat-value">7+</span>
+      <div class="stat-label">Platforms</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.4s">
+      <span class="stat-value">12,000</span>
+      <div class="stat-label">Max Words</div>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    <!-- Sidebar TOC -->
+    <nav class="sidebar" aria-label="Table of Contents">
+      <div class="toc-title">Contents</div>
+      <ul class="toc-list" id="desktopToc">
+        <li class="toc-item"><a href="#origin" class="toc-link">The Origin Story</a></li>
+        <li class="toc-item"><a href="#tech" class="toc-link">Technical Revolution</a></li>
+        <li class="toc-item"><a href="#tech-stack" class="toc-link sub">Technology Stack</a></li>
+        <li class="toc-item"><a href="#open-source" class="toc-link sub">Open Source Commitment</a></li>
+        <li class="toc-item"><a href="#features" class="toc-link">Key Features</a></li>
+        <li class="toc-item"><a href="#vocabulary" class="toc-link sub">Quick Core Vocabulary</a></li>
+        <li class="toc-item"><a href="#cloud" class="toc-link sub">Cloud & Offline</a></li>
+        <li class="toc-item"><a href="#collaboration" class="toc-link sub">Team Collaboration</a></li>
+        <li class="toc-item"><a href="#accessibility" class="toc-link sub">Eye Gaze & Access</a></li>
+        <li class="toc-item"><a href="#timeline" class="toc-link">Timeline</a></li>
+        <li class="toc-item"><a href="#acquisition" class="toc-link">The Acquisition</a></li>
+        <li class="toc-item"><a href="#controversy" class="toc-link">Open Source Controversy</a></li>
+        <li class="toc-item"><a href="#pricing" class="toc-link">Pricing</a></li>
+        <li class="toc-item"><a href="#pros-cons" class="toc-link">Strengths & Weaknesses</a></li>
+        <li class="toc-item"><a href="#comparison" class="toc-link">vs. Cboard</a></li>
+        <li class="toc-item"><a href="#outlook" class="toc-link">Future Outlook</a></li>
+        <li class="toc-item"><a href="#sources" class="toc-link">Sources</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <article>
+
+        <!-- Introduction -->
+        <p>When Brian Whitmer co-founded Instructure in 2008, he helped build Canvas LMS into one of the most widely-used learning management systems in the world, eventually reaching over 15 million users. But the project that would become most personal to him started not in a boardroom, but at home -- watching his daughter Becca struggle to communicate.</p>
+
+        <p>Becca has Rett Syndrome, a rare neurological disorder that took away her ability to speak and severely limited her hand control. Whitmer's search for an AAC (Augmentative and Alternative Communication) solution for his daughter led him to a frustrating realization: the AAC industry was decades behind modern technology, filled with expensive proprietary solutions built on outdated software.</p>
+
+        <p>So he built something better. CoughDrop launched in 2014 as a cloud-based, cross-platform, open-source AAC application -- one of the first of its kind. For nearly a decade, it stood as proof that AAC technology could be modern, accessible, and open. Then, in February 2023, everything changed.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Origin Story -->
+        <h2 id="origin">The Origin Story: A Father's Mission</h2>
+
+        <p>Brian Whitmer's journey into AAC technology was deeply personal. Around 2012-2013, as his daughter Becca's communication needs grew, he evaluated the available AAC options and found them lacking. The apps were expensive, locked to single devices, and built with what he described as "poor design decisions and old technology." Worse, AAC providers seemed intent on locking customers into proprietary ecosystems -- a pattern Whitmer recognized from his earlier work disrupting the education technology market.</p>
+
+        <blockquote>
+          <p>"Augmentative Communication is a lot like the LMS space was, in need of a reminder of how things can be better."</p>
+          <cite>-- Brian Whitmer, CoughDrop founder</cite>
+        </blockquote>
+
+        <p>Drawing on his background in Human-Computer Interaction (HCI) and the lessons learned from building Canvas, Whitmer founded CoughDrop, Inc. in early 2014. He assembled a remarkable advisory network: <strong>over 30 assistive technology specialists, occupational therapists, and speech-language pathologists</strong> contributed to the app's design. The goal was clear -- build an AAC solution that was modern, affordable, cross-platform, and open.</p>
+
+        <p>The name "CoughDrop" itself carries meaning. Just as a cough drop soothes the throat and helps one speak more comfortably, the app was designed to ease the path to communication for those who struggle to produce speech.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Technical Revolution -->
+        <h2 id="tech">A Technical Revolution in AAC</h2>
+
+        <h3 id="tech-stack">The Web-First Architecture</h3>
+
+        <p>CoughDrop's technical architecture was revolutionary for the AAC space. While competitors like Proloquo2Go and TouchChat were locked to iOS, CoughDrop was built on a modern web stack that could run on <strong>essentially any device with a modern web browser</strong>.</p>
+
+        <div class="tech-stack">
+          <div class="tech-item">
+            <div class="tech-name">Ruby on Rails</div>
+            <div class="tech-role">Backend / API</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-name">Ember.js</div>
+            <div class="tech-role">Frontend SPA</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-name">PostgreSQL</div>
+            <div class="tech-role">Database</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-name">Redis</div>
+            <div class="tech-role">Cache / Queue</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-name">IndexedDB</div>
+            <div class="tech-role">Offline Storage</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-name">Web Speech API</div>
+            <div class="tech-role">Text-to-Speech</div>
+          </div>
+        </div>
+
+        <p>This architecture solved one of the most persistent pain points in AAC: <strong>device dependency</strong>. Traditional AAC apps stored everything locally on a single device. If that device broke, was lost, or simply ran out of battery, the user lost their voice. With CoughDrop, a communicator could log into any device and immediately access all their customized boards, vocabulary, and settings.</p>
+
+        <div class="callout info">
+          <div class="callout-title">Platform Support</div>
+          <p>CoughDrop runs on virtually any modern device -- a rarity in the AAC industry.</p>
+        </div>
+
+        <div class="platform-grid">
+          <span class="platform-tag"><span class="dot"></span> Web Browsers</span>
+          <span class="platform-tag"><span class="dot"></span> iOS (iPad/iPhone)</span>
+          <span class="platform-tag"><span class="dot"></span> Android</span>
+          <span class="platform-tag"><span class="dot"></span> Windows</span>
+          <span class="platform-tag"><span class="dot"></span> macOS</span>
+          <span class="platform-tag"><span class="dot"></span> Chromebook</span>
+          <span class="platform-tag"><span class="dot"></span> Kindle Fire</span>
+        </div>
+
+        <h3 id="open-source">The Open Source Commitment</h3>
+
+        <p>On January 19, 2016, CoughDrop took a step that was almost unheard of in the AAC industry: the entire application was published as <strong>open-source software under the AGPLv3 license</strong>. The source code was made available on GitHub, allowing anyone to inspect, modify, and contribute to the codebase.</p>
+
+        <p>This was not a marketing gimmick. It was a philosophical statement. Whitmer believed that communication is a fundamental human right, and the tools that enable it should not be locked behind proprietary walls. The open-source approach meant:</p>
+
+        <ul>
+          <li><strong>Transparency</strong> -- Anyone could audit the code to ensure data privacy and security</li>
+          <li><strong>Community Contribution</strong> -- Developers could submit improvements and bug fixes</li>
+          <li><strong>Forks and Derivatives</strong> -- Organizations could build custom versions for specific needs</li>
+          <li><strong>Interoperability</strong> -- The codebase served as a reference implementation for AAC standards</li>
+          <li><strong>Sustainability</strong> -- Even if the company disappeared, the code would live on</li>
+        </ul>
+
+        <p>CoughDrop also championed the <strong>Open Board Format</strong> (.obf), announced in January 2015. This vendor-neutral file format allows communication boards and vocabularies to be exported from one AAC app and imported into another -- a radical concept in an industry where switching costs have traditionally been enormous.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Features -->
+        <h2 id="features">Features That Set CoughDrop Apart</h2>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-primary-dim); color: var(--color-primary);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h4>Customizable Boards</h4>
+            <p>Configurable grid sizes from 4 to 112 buttons with multiple symbol sets, custom images, and recorded audio.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-accent-dim); color: var(--color-accent);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h4>Cloud Sync</h4>
+            <p>Automatic synchronization across unlimited devices. Changes on one device appear everywhere instantly.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-gold-dim); color: var(--color-gold);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h4>Team Collaboration</h4>
+            <p>Free supervisor accounts for parents, SLPs, and teachers. Remote modeling and secure messaging built in.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-warn-dim); color: var(--color-warn);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h4>Eye Gaze Access</h4>
+            <p>Compatible with hardware eye trackers and offers built-in camera-based head/eye tracking without extra hardware.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-primary-dim); color: var(--color-primary);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h4>Data Analytics</h4>
+            <p>Tracks every button press, generates usage reports, monitors progress over time for clinical documentation.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background: var(--color-accent-dim); color: var(--color-accent);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <h4>Offline Support</h4>
+            <p>Works fully offline via HTML5 technologies. Changes sync automatically when connectivity returns.</p>
+          </div>
+        </div>
+
+        <h3 id="vocabulary">Quick Core Vocabulary System</h3>
+
+        <p>CoughDrop's pre-built Quick Core vocabulary sets represent hundreds of hours of clinical input. Each set maintains <strong>consistent motor plans</strong> -- the physical location of core words stays the same across board levels, so muscle memory transfers as the user advances.</p>
+
+        <div class="chart-container">
+          <h4>Quick Core Vocabulary: Base vs. Expanded Word Counts</h4>
+          <canvas id="vocabChart"></canvas>
+        </div>
+
+        <ul>
+          <li><strong>Quick Core 24</strong> -- 24-button grid with ~600 base words, expandable to ~1,000. Ideal for beginning communicators.</li>
+          <li><strong>Quick Core 60</strong> -- 60-button grid with ~2,000 base words, expandable to ~3,500. For intermediate users.</li>
+          <li><strong>Quick Core 112</strong> -- 112-button grid with ~4,500 base words, expandable to ~12,000. For advanced communicators.</li>
+        </ul>
+
+        <h3 id="cloud">Cloud Sync and Offline Capability</h3>
+
+        <p>CoughDrop's cloud synchronization was a game-changer for the AAC community. Any change made to a board on one device is automatically synced to all connected devices:</p>
+
+        <ul>
+          <li>A therapist can modify vocabulary during a session and have changes appear on the student's home device</li>
+          <li>Parents can add new words in the evening and find them on the classroom device the next morning</li>
+          <li>If a device breaks or is lost, the communicator can log into a replacement and continue without interruption</li>
+        </ul>
+
+        <p>Using HTML5 technologies including Application Cache and IndexedDB, the app also stores boards and vocabulary locally. Changes made offline are synced when connectivity is restored.</p>
+
+        <h3 id="collaboration">Supervisor and Team Collaboration</h3>
+
+        <p>CoughDrop recognized that AAC is a team effort. The app provides <strong>free supervisor accounts</strong> for anyone supporting a communicator -- parents, teachers, SLPs, occupational therapists, and aides.</p>
+
+        <ul>
+          <li><strong>Remote board access</strong> -- View and edit boards from your own device</li>
+          <li><strong>Remote modeling</strong> -- Demonstrate button selections on the communicator's device in real-time</li>
+          <li><strong>Secure messaging</strong> -- Communicate within the platform</li>
+          <li><strong>Data sharing</strong> -- Usage logs and reports accessible to all authorized supervisors</li>
+          <li><strong>Board management</strong> -- Modify boards without taking the communicator's device</li>
+        </ul>
+
+        <h3 id="accessibility">Eye Gaze and Switch Access</h3>
+
+        <p>For users who cannot reliably touch a screen, CoughDrop supports multiple alternative access methods:</p>
+
+        <ul>
+          <li><strong>Hardware eye trackers</strong> -- Compatible with Tobii, Forbes Enable Eyes, and others</li>
+          <li><strong>Camera-based tracking</strong> -- Uses a device's built-in camera for head/eye tracking without additional hardware</li>
+          <li><strong>Switch scanning</strong> -- Support for external switches including the Blue2 for one- and two-button control</li>
+          <li><strong>Dwell activation</strong> -- Configurable dwell time for eye gaze or head tracking selection</li>
+        </ul>
+
+        <div class="callout">
+          <div class="callout-title">Camera-Based Eye Gaze: A Standout Innovation</div>
+          <p>CoughDrop's open-source camera-based eye/head tracking allows AAC usage on any mobile device without expensive dedicated hardware. This dramatically lowers the cost barrier for users who need alternative access methods.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Timeline -->
+        <h2 id="timeline">The CoughDrop Timeline: Open Source to Proprietary</h2>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">2008</div>
+            <div class="timeline-title">Instructure Founded</div>
+            <div class="timeline-desc">Brian Whitmer co-founds Instructure and builds Canvas LMS, which grows to serve over 15 million users. His expertise in accessible, user-centered technology becomes the foundation for future AAC work.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2012-2013</div>
+            <div class="timeline-title">The Personal Catalyst</div>
+            <div class="timeline-desc">Whitmer's daughter Becca, who has Rett Syndrome, needs an AAC solution. He discovers the AAC industry relies on expensive, outdated, device-locked proprietary software.</div>
+          </div>
+          <div class="timeline-item highlight">
+            <div class="timeline-year">Early 2014</div>
+            <div class="timeline-title">CoughDrop, Inc. Founded</div>
+            <div class="timeline-desc">Whitmer founds CoughDrop and assembles an advisory team of 30+ assistive technology specialists, OTs, and SLPs to design a modern AAC solution from the ground up.</div>
+          </div>
+          <div class="timeline-item highlight">
+            <div class="timeline-year">October 2014</div>
+            <div class="timeline-title">Public Beta Launch</div>
+            <div class="timeline-desc">CoughDrop opens free beta sign-ups for individuals with autism, ALS, cerebral palsy, Rett Syndrome, and other complex communication needs.</div>
+          </div>
+          <div class="timeline-item success">
+            <div class="timeline-year">January 2015</div>
+            <div class="timeline-title">Open Board Format Announced</div>
+            <div class="timeline-desc">CoughDrop introduces the Open Board Format (.obf), a vendor-neutral file format for AAC boards and vocabularies, aimed at breaking down proprietary silos.</div>
+          </div>
+          <div class="timeline-item success">
+            <div class="timeline-year">January 19, 2016</div>
+            <div class="timeline-title">Official 1.0 Release + Open Source</div>
+            <div class="timeline-desc">CoughDrop launches on the App Store, Google Play, and web. The entire application is published as open-source software under the AGPLv3 license on GitHub.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2016-2022</div>
+            <div class="timeline-title">The Open Source Growth Era</div>
+            <div class="timeline-desc">Steady growth with new features: remote modeling, eye gaze support, expanded Quick Core vocabularies, organization site licenses, and growing adoption by schools and clinics.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2019</div>
+            <div class="timeline-title">RSRT Board Appointment</div>
+            <div class="timeline-desc">Brian Whitmer joins the Rett Syndrome Research Trust board of trustees, continuing his personal commitment to the Rett community beyond CoughDrop.</div>
+          </div>
+          <div class="timeline-item warn">
+            <div class="timeline-year">February 28, 2023</div>
+            <div class="timeline-title">Forbes AAC Acquisition</div>
+            <div class="timeline-desc">Forbes AAC acquires CoughDrop through subsidiary MavWare, LLC. Future updates will no longer be released under an open-source license. The existing codebase is transitioned to OpenAAC on GitHub.</div>
+          </div>
+          <div class="timeline-item warn">
+            <div class="timeline-year">July 1, 2023</div>
+            <div class="timeline-title">First Price Increase in 9 Years</div>
+            <div class="timeline-desc">Monthly pricing rises from ~$6 to $9. Lifetime license set at $295 (previously ~$200). Framed as necessary to cover rising costs and fund growth.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2023-Present</div>
+            <div class="timeline-title">The Proprietary Era</div>
+            <div class="timeline-desc">CoughDrop continues under Forbes AAC with regular updates. The SweetSuite AAC community fork exists under OpenAAC but has limited development activity.</div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Acquisition -->
+        <h2 id="acquisition">The Acquisition: Forbes AAC and MavWare</h2>
+
+        <p>On February 28, 2023, CoughDrop announced that it had been acquired by <strong>Forbes AAC</strong>, through a newly created subsidiary called <strong>MavWare, LLC</strong>. Forbes AAC is a manufacturer of dedicated speech-generating devices (SGDs), including the ProSlate series (iOS-based) and WinSlate series (Windows-based).</p>
+
+        <p>The acquisition was framed as a marriage of hardware expertise and software innovation. Forbes' dedicated AAC hardware would gain CoughDrop's sophisticated software platform, while CoughDrop would benefit from Forbes' manufacturing capabilities, distribution network, and relationships with insurance providers.</p>
+
+        <h3>What Changed</h3>
+
+        <p>The most controversial aspect: <strong>Forbes decided to stop releasing future CoughDrop updates under an open-source license.</strong></p>
+
+        <blockquote>
+          <p>"Forbes decided to stop releasing updates with an open-source license... because they own the copyright, they are free to do this for ongoing updates, but the previously-open-sourced code can't be un-open-sourced, so it will still be available online as-is."</p>
+          <cite>-- CoughDrop blog announcement</cite>
+        </blockquote>
+
+        <h3>What Was Preserved</h3>
+
+        <ul>
+          <li>User-created content (boards, vocabularies, recordings) was unaffected</li>
+          <li>Community board sets like Quick Core retained their Creative Commons licenses</li>
+          <li>The free 2-month trial continued</li>
+          <li>Free supervisor accounts remained available</li>
+          <li>Existing lifetime licenses were honored</li>
+          <li>The Open Board Format remained an open standard</li>
+        </ul>
+
+        <div class="section-divider"></div>
+
+        <!-- Controversy -->
+        <h2 id="controversy">The Open Source Controversy</h2>
+
+        <p>The open-source license change struck many observers as deeply ironic. CoughDrop had been founded <strong>specifically in reaction to the AAC industry's proprietary, lock-in-oriented business model</strong>. Brian Whitmer had publicly criticized vendors for trying to trap customers in closed ecosystems. The open-source release in 2016 was one of the most celebrated moments in CoughDrop's history.</p>
+
+        <p>Now, under new ownership, CoughDrop was becoming the very thing its founder had set out to disrupt.</p>
+
+        <div class="callout warn">
+          <div class="callout-title">The Community Impact</div>
+          <p>No community code contributions. No transparency for security audits. No meaningful independent forks. Users are now fully dependent on Forbes AAC for all updates, bug fixes, and feature development -- the exact vendor lock-in CoughDrop was created to prevent.</p>
+        </div>
+
+        <h3>The SweetSuite Fork</h3>
+
+        <p>The OpenAAC organization took custody of the existing CoughDrop codebase and renamed it <strong>SweetSuite AAC</strong> (<a href="https://github.com/open-aac/sweet-suite-aac" target="_blank" rel="noopener">github.com/open-aac/sweet-suite-aac</a>). The fork represents the last open-source state of CoughDrop before the license change.</p>
+
+        <p>However, the fork has seen limited development activity. Maintaining a complex web application with a Rails backend and Ember frontend requires significant ongoing effort, and the AAC open-source community has limited developer resources. The fork exists more as an archival reference than a viable alternative product.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Pricing -->
+        <h2 id="pricing">Pricing</h2>
+
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <div class="pricing-label">Monthly</div>
+            <div class="pricing-amount">$9</div>
+            <div class="pricing-period">per month / per communicator</div>
+            <div class="pricing-note">Cancel anytime. 2-month free trial included.</div>
+          </div>
+          <div class="pricing-card featured">
+            <div class="pricing-label">Lifetime</div>
+            <div class="pricing-amount">$295</div>
+            <div class="pricing-period">one-time / per communicator</div>
+            <div class="pricing-note">Includes 5 years of Cloud Extras. Best value for long-term use.</div>
+          </div>
+          <div class="pricing-card">
+            <div class="pricing-label">Supervisors</div>
+            <div class="pricing-amount">Free</div>
+            <div class="pricing-period">parents / therapists / teachers</div>
+            <div class="pricing-note">Free accounts for anyone supporting a communicator.</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h4>Pricing History: CoughDrop's First Increase in 9 Years</h4>
+          <canvas id="pricingChart"></canvas>
+        </div>
+
+        <p>On July 1, 2023, CoughDrop implemented its first price increase since launch. While modest by AAC industry standards -- many competing apps cost significantly more -- the timing, coming just months after the acquisition and license change, drew attention from the community.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Pros and Cons -->
+        <h2 id="pros-cons">Strengths and Weaknesses</h2>
+
+        <div class="pros-cons">
+          <div class="pros-section">
+            <h3>Strengths</h3>
+            <ul>
+              <li><strong>True cross-platform</strong> -- Runs on 7+ platforms including web, iOS, Android, Windows, Mac, and Chromebook</li>
+              <li><strong>Cloud sync</strong> -- Seamless sync across unlimited devices with offline capability</li>
+              <li><strong>Team collaboration</strong> -- Best-in-class supervisor tools, remote modeling, and messaging</li>
+              <li><strong>Data analytics</strong> -- Comprehensive tracking and reporting for clinical documentation</li>
+              <li><strong>Affordable</strong> -- $9/mo or $295 lifetime is cheaper than most AAC alternatives</li>
+              <li><strong>Eye gaze innovation</strong> -- Camera-based tracking without expensive hardware</li>
+              <li><strong>Vocabulary depth</strong> -- Up to 12,000 words with consistent motor plans</li>
+              <li><strong>Open Board Format</strong> -- Interoperable board files reduce switching costs</li>
+            </ul>
+          </div>
+          <div class="cons-section">
+            <h3>Weaknesses</h3>
+            <ul>
+              <li><strong>Open source loss</strong> -- Proprietary transition undermines original mission and community trust</li>
+              <li><strong>Phone experience</strong> -- Poor formatting, small buttons, crashes reported on phones</li>
+              <li><strong>Android reliability</strong> -- Sync issues and internet connectivity requirements</li>
+              <li><strong>No free tier</strong> -- Requires subscription after trial (Cboard is free)</li>
+              <li><strong>Forbes dependency</strong> -- Product direction tied to hardware manufacturer</li>
+              <li><strong>Community fragmentation</strong> -- SweetSuite fork lacks resources</li>
+              <li><strong>Undocumented API</strong> -- The REST API is "completely undocumented"</li>
+              <li><strong>Premium access bugs</strong> -- Reports of subscription content access issues</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Comparison -->
+        <h2 id="comparison">CoughDrop vs. Cboard: Web-Based AAC Comparison</h2>
+
+        <p>For users specifically seeking a web-based AAC solution, CoughDrop's most direct comparison is <strong>Cboard</strong>, an open-source AAC app backed by UNICEF.</p>
+
+        <div class="comparison-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>CoughDrop</th>
+                <th>Cboard</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature-name">Cost</td>
+                <td>$9/mo or $295 lifetime</td>
+                <td><span class="free-badge">Free</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Open Source</td>
+                <td class="warn-text">Was open source, now proprietary</td>
+                <td class="check">Yes (MIT license)</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Platforms</td>
+                <td>Web, iOS, Android, Win, Mac, Chromebook</td>
+                <td>Web, Android, Windows</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Languages</td>
+                <td>Multiple</td>
+                <td class="check">44+ languages</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Vocabulary</td>
+                <td class="check">600 - 12,000 words</td>
+                <td>3,400+ symbols</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Supervisor Tools</td>
+                <td class="check">Extensive (modeling, reports, messaging)</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Eye Gaze</td>
+                <td class="check">Yes (hardware + camera-based)</td>
+                <td>Limited</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Data Tracking</td>
+                <td class="check">Detailed reports and logs</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Board Format</td>
+                <td>Open Board Format (.obf)</td>
+                <td>Open Board Format (.obf)</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Symbol Sets</td>
+                <td>SymbolStix, PCS, Open Symbols</td>
+                <td>Mulberry, Global Symbols</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Cloud Sync</td>
+                <td class="check">Full sync + offline</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Organization Licenses</td>
+                <td class="check">Site licenses, SSO</td>
+                <td>Basic</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>For a well-resourced school district or clinical practice in North America, CoughDrop's feature depth justifies its cost. For a family in a developing country or a resource-limited setting, Cboard's free availability is transformative. Both support the Open Board Format, making it possible to migrate vocabularies between them.</p>
+
+        <div class="section-divider"></div>
+
+        <!-- Future Outlook -->
+        <h2 id="outlook">Current Status and Future Outlook</h2>
+
+        <p>CoughDrop continues to receive regular updates under Forbes AAC ownership. The integration with Forbes' hardware products -- particularly the ProSlate and WinSlate speech-generating devices -- positions CoughDrop as the software backbone of an integrated AAC ecosystem. Forbes' relationships with insurance providers and Medicaid may also improve access for users who need funded devices.</p>
+
+        <p>However, the long-term trajectory raises questions:</p>
+
+        <ul>
+          <li>Will the product continue to serve the broader AAC community, or will it become primarily a vehicle for selling Forbes hardware?</li>
+          <li>Will pricing remain stable, or will the absence of open-source competition enable further increases?</li>
+          <li>Will the innovative spirit that created features like camera-based eye gaze tracking persist under corporate ownership?</li>
+        </ul>
+
+        <p>The AAC community is watching closely. CoughDrop remains one of the most capable and affordable AAC applications available. But the story of its transition from a father's open-source passion project to a proprietary product owned by a hardware manufacturer carries a lesson about the fragility of open-source commitments -- and the ongoing tension between commercial sustainability and community values in assistive technology.</p>
+
+        <div class="callout">
+          <div class="callout-title">Key Takeaways</div>
+          <p>CoughDrop was a pioneering open-source, web-based AAC app that genuinely disrupted the industry. Its cross-platform cloud architecture, team collaboration tools, and affordable pricing remain strong differentiators. However, the 2023 Forbes AAC acquisition and the end of open-source licensing mark a significant philosophical shift. Users gain the stability of a hardware-backed company but lose the transparency and community ownership that defined CoughDrop's identity.</p>
+        </div>
+
+        <!-- Sources -->
+        <footer class="article-footer">
+          <h2 id="sources">Sources</h2>
+          <ol class="sources-list">
+            <li><a href="https://blog.mycoughdrop.com/coughdrop-has-joined-forbes-aac/" target="_blank" rel="noopener">CoughDrop Blog - "CoughDrop has joined Forbes AAC"</a></li>
+            <li><a href="https://blogs.ubc.ca/etec522/2021/06/01/brian-whitmer-founder-of-coughdrop-aac-app/" target="_blank" rel="noopener">UBC ETEC522 - "Brian Whitmer - Founder of CoughDrop AAC App"</a></li>
+            <li><a href="https://github.com/bcarter/coughdrop" target="_blank" rel="noopener">GitHub - CoughDrop Open Source Repository</a></li>
+            <li><a href="https://github.com/open-aac/sweet-suite-aac" target="_blank" rel="noopener">GitHub - SweetSuite AAC (OpenAAC Fork)</a></li>
+            <li><a href="https://www.prweb.com/releases/coughdrop_releases_open_source_cross_platform_aac_app_for_struggling_communicators/prweb13170346.htm" target="_blank" rel="noopener">PRWeb - CoughDrop 1.0 Open Source Release (Jan 2016)</a></li>
+            <li><a href="http://www.prweb.com/releases/2014/10/prweb12236022.htm" target="_blank" rel="noopener">PRWeb - CoughDrop Public Beta Launch (Oct 2014)</a></li>
+            <li><a href="https://coughdrop.zendesk.com/hc/en-us/articles/201366609-How-much-does-CoughDrop-cost" target="_blank" rel="noopener">CoughDrop Zendesk - Pricing</a></li>
+            <li><a href="https://blog.mycoughdrop.com/price-changes-and-coming-program-updates/" target="_blank" rel="noopener">CoughDrop Blog - Price Changes Announcement</a></li>
+            <li><a href="https://www.forbesaac.com/coughdrop" target="_blank" rel="noopener">Forbes AAC - CoughDrop Product Page</a></li>
+            <li><a href="https://www.coughdrop.com/about" target="_blank" rel="noopener">CoughDrop - About Page</a></li>
+            <li><a href="https://www.deseret.com/2016/4/5/20586064/giving-a-voice-coughdrop-app-provides-assistance-to-those-with-communication-needs/" target="_blank" rel="noopener">Deseret News - "Giving a 'Voice': CoughDrop App"</a></li>
+            <li><a href="https://www.openboardformat.org/examples" target="_blank" rel="noopener">Open Board Format - Specification & Examples</a></li>
+            <li><a href="https://blog.mycoughdrop.com/head-and-eye-gaze-tracking-without-expensive-hardware/" target="_blank" rel="noopener">CoughDrop Blog - Eye Gaze Tracking Without Expensive Hardware</a></li>
+            <li><a href="https://apps.apple.com/us/app/coughdrop/id1021384570" target="_blank" rel="noopener">CoughDrop on Apple App Store</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.mycoughdrop.coughdrop" target="_blank" rel="noopener">CoughDrop on Google Play</a></li>
+            <li><a href="https://blog.mycoughdrop.com/robust-aac-vocabularies-already-ready-already/" target="_blank" rel="noopener">CoughDrop Blog - Quick Core Vocabularies</a></li>
+            <li><a href="https://intuitionlabs.ai/software/speech-language-pathology/aac-augmentativealternative-communication/coughdrop" target="_blank" rel="noopener">IntuitionLabs - CoughDrop Software Profile</a></li>
+            <li><a href="https://coughdrop.zendesk.com/hc/en-us/articles/360056790491" target="_blank" rel="noopener">CoughDrop Zendesk - Remote Modeling Feature</a></li>
+            <li><a href="https://coughdrop.zendesk.com/hc/en-us/articles/115001547971" target="_blank" rel="noopener">CoughDrop Zendesk - Cloud Extras</a></li>
+            <li><a href="https://www.cboard.io/en/" target="_blank" rel="noopener">Cboard - Official Website</a></li>
+          </ol>
+
+          <div class="footer-note">
+            <p>Research conducted March 2026. AI-assisted research and analysis.</p>
+            <p style="margin-top: 1rem;"><a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link" style="margin: 0; display: inline-flex;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back to AAC Dashboard
+            </a></p>
+          </div>
+        </footer>
+
+      </article>
+    </main>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script>
+    // Reading progress
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const pct = height > 0 ? (winScroll / height * 100) : 0;
+      document.getElementById('progress').style.width = pct + '%';
+      document.getElementById('backToTop').classList.toggle('visible', winScroll > 400);
+    });
+
+    // Back to top
+    document.getElementById('backToTop').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Smooth scroll for TOC
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        // Close mobile nav if open
+        document.getElementById('mobileNav').classList.remove('active');
+      });
+    });
+
+    // Scroll spy
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = [];
+    tocLinks.forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) sections.push({ el, link });
+    });
+
+    function updateScrollSpy() {
+      const scrollPos = window.scrollY + 100;
+      let current = sections[0];
+      for (const s of sections) {
+        if (s.el.offsetTop <= scrollPos) current = s;
+      }
+      tocLinks.forEach(l => l.classList.remove('active'));
+      if (current) {
+        current.link.classList.add('active');
+        // Also activate in mobile toc
+        const mobileLink = document.querySelector('#mobileToc .toc-link[href="' + current.link.getAttribute('href') + '"]');
+        if (mobileLink) mobileLink.classList.add('active');
+      }
+    }
+    window.addEventListener('scroll', updateScrollSpy);
+    updateScrollSpy();
+
+    // Duplicate TOC to mobile
+    document.getElementById('mobileToc').innerHTML = document.getElementById('desktopToc').innerHTML;
+    // Re-bind click events for mobile toc
+    document.querySelectorAll('#mobileToc .toc-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('mobileNav').classList.remove('active');
+      });
+    });
+
+    // Mobile nav toggle
+    document.getElementById('mobileNavBtn').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.add('active');
+    });
+    document.getElementById('mobileNav').addEventListener('click', e => {
+      if (e.target === document.getElementById('mobileNav')) {
+        document.getElementById('mobileNav').classList.remove('active');
+      }
+    });
+
+    // Charts
+    const chartTextColor = '#9B97B0';
+    const chartGridColor = 'rgba(45, 43, 62, 0.8)';
+
+    Chart.defaults.color = chartTextColor;
+    Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+
+    // Vocabulary Chart
+    new Chart(document.getElementById('vocabChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Quick Core 24', 'Quick Core 60', 'Quick Core 112'],
+        datasets: [
+          {
+            label: 'Base Words',
+            data: [600, 2000, 4500],
+            backgroundColor: 'rgba(108, 99, 255, 0.7)',
+            borderColor: 'rgba(108, 99, 255, 1)',
+            borderWidth: 1,
+            borderRadius: 6,
+            barPercentage: 0.6,
+          },
+          {
+            label: 'Expanded Words',
+            data: [1000, 3500, 12000],
+            backgroundColor: 'rgba(0, 217, 163, 0.7)',
+            borderColor: 'rgba(0, 217, 163, 1)',
+            borderWidth: 1,
+            borderRadius: 6,
+            barPercentage: 0.6,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 2,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { padding: 20, usePointStyle: true, pointStyleWidth: 12 }
+          },
+          tooltip: {
+            backgroundColor: '#252438',
+            borderColor: '#3A3852',
+            borderWidth: 1,
+            titleColor: '#E8E6F0',
+            bodyColor: '#9B97B0',
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + ' words'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: chartGridColor },
+            ticks: {
+              callback: v => v >= 1000 ? (v/1000) + 'k' : v
+            }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    // Pricing Chart
+    new Chart(document.getElementById('pricingChart'), {
+      type: 'line',
+      data: {
+        labels: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', 'Feb 2023\n(Acquired)', 'Jul 2023\n(Increase)', '2024', '2025', '2026'],
+        datasets: [
+          {
+            label: 'Monthly Price',
+            data: [6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9],
+            borderColor: 'rgba(108, 99, 255, 1)',
+            backgroundColor: 'rgba(108, 99, 255, 0.1)',
+            fill: true,
+            tension: 0,
+            pointRadius: [4, 0, 0, 0, 0, 0, 0, 6, 8, 0, 0, 4],
+            pointBackgroundColor: function(ctx) {
+              if (ctx.dataIndex === 7) return '#FF6B6B';
+              if (ctx.dataIndex === 8) return '#FF6B6B';
+              return '#6C63FF';
+            },
+            pointBorderColor: function(ctx) {
+              if (ctx.dataIndex === 7 || ctx.dataIndex === 8) return '#FF6B6B';
+              return '#6C63FF';
+            },
+            pointBorderWidth: 2,
+            borderWidth: 2,
+            segment: {
+              borderColor: function(ctx) {
+                return ctx.p0DataIndex >= 7 ? 'rgba(255, 107, 107, 0.8)' : 'rgba(108, 99, 255, 1)';
+              },
+              backgroundColor: function(ctx) {
+                return ctx.p0DataIndex >= 7 ? 'rgba(255, 107, 107, 0.05)' : 'rgba(108, 99, 255, 0.1)';
+              }
+            }
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 2.5,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#252438',
+            borderColor: '#3A3852',
+            borderWidth: 1,
+            titleColor: '#E8E6F0',
+            bodyColor: '#9B97B0',
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: ctx => '$' + ctx.parsed.y + '/month'
+            }
+          },
+          annotation: {
+            annotations: {}
+          }
+        },
+        scales: {
+          y: {
+            min: 0,
+            max: 12,
+            grid: { color: chartGridColor },
+            ticks: {
+              callback: v => '$' + v,
+              stepSize: 3
+            }
+          },
+          x: {
+            grid: { color: chartGridColor },
+            ticks: {
+              maxRotation: 45,
+              font: { size: 10 }
+            }
+          }
+        }
+      }
+    });
+
+    // Animate stats on load
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.animate-in').forEach(el => {
+      statsObserver.observe(el);
+    });
+  </script>
+</body>
+</html>

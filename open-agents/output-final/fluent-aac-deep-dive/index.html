@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Deep dive into Fluent AAC - the grammar-smart communication app with innovative word prediction, Hide Words feature, and motor consistency for iPad.">
+<meta name="author" content="AI-Assisted Research">
+<meta property="og:title" content="Fluent AAC Deep Dive: The Grammar-Smart Communication App">
+<meta property="og:description" content="Comprehensive analysis of Fluent AAC's grammar-aware prediction, Hide Words feature, motor consistency, and competitive positioning in the AAC market.">
+<meta property="og:type" content="article">
+<title>Fluent AAC Deep Dive | Grammar-Smart AAC Communication</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+/* ===== CSS CUSTOM PROPERTIES ===== */
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-input: #334155;
+  --bg-surface: #1a2332;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99,102,241,0.15);
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.12);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.12);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.12);
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.12);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.12);
+  --teal: #14b8a6;
+  --border: #334155;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a { color: var(--accent-light); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--cyan); }
+
+/* ===== READING PROGRESS ===== */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  z-index: 1000;
+  transition: width 0.15s;
+}
+
+/* ===== BACK NAV ===== */
+.back-nav {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  transition: all var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.back-nav:hover { background: var(--bg-card-hover); color: var(--accent-light); border-color: var(--accent); }
+
+/* ===== HERO SECTION ===== */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%);
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 70%, rgba(99,102,241,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(6,182,212,0.1) 0%, transparent 50%);
+  animation: heroShimmer 20s ease-in-out infinite;
+}
+@keyframes heroShimmer {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-5%, 5%); }
+}
+.hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(16,185,129,0.2);
+  border: 1px solid rgba(16,185,129,0.4);
+  color: var(--green);
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: #c7d2fe;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+}
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ===== SECTION STYLES ===== */
+.section {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; }
+.section-header {
+  margin-bottom: 2.5rem;
+}
+.section-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 700px;
+  line-height: 1.7;
+}
+
+/* ===== CARD GRID ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  transition: all var(--transition);
+}
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.card p {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ===== GRAMMAR DEMO ===== */
+.grammar-demo {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.sentence-bar {
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.sentence-word {
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 1.1rem;
+  color: var(--text);
+  animation: wordAppear 0.4s ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.sentence-word.verb { border-color: var(--green); background: var(--green-bg); }
+.sentence-word.noun { border-color: var(--yellow); background: var(--yellow-bg); }
+.sentence-word.prep { border-color: var(--cyan); background: var(--cyan-bg); }
+.sentence-word.adj { border-color: var(--purple); background: var(--purple-bg); }
+@keyframes wordAppear {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+.word-btn {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  user-select: none;
+}
+.word-btn:hover { border-color: var(--accent); background: var(--accent-glow); }
+.word-btn.active { border-color: var(--green); background: var(--green-bg); transform: scale(0.95); }
+.word-btn.predicted {
+  border-color: var(--accent-light);
+  background: var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.word-btn .word-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.word-btn.hidden-word {
+  opacity: 0.15;
+  pointer-events: none;
+  border-style: dashed;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+  50% { box-shadow: 0 0 20px rgba(99,102,241,0.3); }
+}
+.demo-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+.demo-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font);
+}
+.demo-btn:hover { background: var(--accent-light); }
+.demo-btn.secondary { background: var(--bg-input); color: var(--text-dim); }
+.demo-btn.secondary:hover { background: var(--bg-card-hover); color: var(--text); }
+.demo-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ===== HIDE WORDS DEMO ===== */
+.hide-words-demo {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.vocab-level-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.level-btn {
+  background: var(--bg-input);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font);
+}
+.level-btn:hover { border-color: var(--accent); color: var(--text); }
+.level-btn.active { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.vocab-counter {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.vocab-counter strong { color: var(--green); font-size: 1.1rem; }
+
+/* ===== FEATURE SHOWCASE ===== */
+.feature-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .feature-showcase { grid-template-columns: 1fr; }
+}
+.feature-text h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.feature-text p {
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.feature-visual {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+/* ===== COMPARISON TABLE ===== */
+.comparison-wrapper {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 700px;
+}
+.comparison-table thead {
+  background: var(--bg-card);
+}
+.comparison-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.comparison-table th.highlight {
+  color: var(--accent-light);
+  background: var(--accent-glow);
+}
+.comparison-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: top;
+}
+.comparison-table td.highlight {
+  background: rgba(99,102,241,0.05);
+  color: var(--text);
+  font-weight: 500;
+}
+.comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+.comparison-table tr:hover td.highlight { background: rgba(99,102,241,0.08); }
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--red); font-weight: 700; }
+.partial { color: var(--yellow); font-weight: 700; }
+
+/* ===== PROS / CONS ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+@media (max-width: 768px) {
+  .pros-cons { grid-template-columns: 1fr; }
+}
+.pros-list, .cons-list {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+}
+.pros-list { border-top: 3px solid var(--green); }
+.cons-list { border-top: 3px solid var(--red); }
+.pros-list h3, .cons-list h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pros-list h3 { color: var(--green); }
+.cons-list h3 { color: var(--red); }
+.pros-list li, .cons-list li {
+  list-style: none;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.pros-list li::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.cons-list li::before {
+  content: '-';
+  position: absolute;
+  left: 0.15rem;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ===== PRICING CARDS ===== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  text-align: center;
+  transition: all var(--transition);
+  position: relative;
+}
+.pricing-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+.pricing-card.featured::before {
+  content: 'Best Value';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.pricing-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.pricing-amount {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+.pricing-period {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.pricing-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== CHART CONTAINER ===== */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+.chart-container h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-dim);
+}
+.chart-wrapper {
+  position: relative;
+  height: 350px;
+}
+
+/* ===== ARTICLE CONTENT ===== */
+.article-section {
+  padding: 3rem 0;
+}
+.article-section h2 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.article-section p {
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+  font-size: 1.02rem;
+}
+.article-section strong { color: var(--text); }
+blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
+/* ===== INFO BOX ===== */
+.info-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.info-box h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--accent-light);
+}
+.info-box p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== TARGET USERS ===== */
+.target-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.target-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  text-align: center;
+  transition: all var(--transition);
+}
+.target-card:hover { border-color: var(--accent); }
+.target-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.target-card h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+.target-card p { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 2rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+}
+.timeline-item h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.timeline-item .timeline-date {
+  font-size: 0.8rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.timeline-item p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ===== TABLE OF CONTENTS / NAV ===== */
+.toc {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: none;
+}
+@media (min-width: 1280px) {
+  .toc { display: block; }
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+}
+.toc-item {
+  margin: 0.6rem 0;
+}
+.toc-link {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all var(--transition);
+  position: relative;
+}
+.toc-link.active { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); width: 10px; height: 10px; }
+.toc-link:hover { background: var(--accent-light); }
+.toc-tooltip {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.toc-link:hover .toc-tooltip { opacity: 1; }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.footer p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.footer a { color: var(--accent-light); }
+.footer .sources-list {
+  max-width: 700px;
+  margin: 1.5rem auto 0;
+  text-align: left;
+  columns: 2;
+  column-gap: 2rem;
+}
+@media (max-width: 600px) {
+  .footer .sources-list { columns: 1; }
+}
+.footer .sources-list li {
+  list-style: none;
+  padding: 0.3rem 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  break-inside: avoid;
+}
+
+/* ===== BACK TO TOP ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition);
+  font-size: 1.25rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+.back-to-top.visible { opacity: 1; }
+.back-to-top:hover { background: var(--accent-light); transform: translateY(-2px); }
+
+/* ===== SCROLL ANIMATIONS ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== MOTOR CONSISTENCY VISUAL ===== */
+.motor-visual {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.motor-cell {
+  aspect-ratio: 1;
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: all 0.5s ease;
+  gap: 0.15rem;
+}
+.motor-cell .mc-icon { font-size: 1.4rem; }
+.motor-cell.highlighted {
+  border-color: var(--green);
+  background: var(--green-bg);
+  color: var(--green);
+}
+.motor-cell.dim {
+  opacity: 0.15;
+  border-style: dashed;
+}
+
+/* ===== PRINT ===== */
+@media print {
+  .back-nav, .back-to-top, .reading-progress, .toc, .demo-controls { display: none !important; }
+  .hero { background: #333; -webkit-print-color-adjust: exact; }
+  body { background: white; color: #1a1a1a; }
+  .card, .grammar-demo, .hide-words-demo, .comparison-wrapper { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- Reading Progress -->
+<div class="reading-progress" id="progress"></div>
+
+<!-- Back Navigation -->
+<a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-nav" aria-label="Back to AAC Dashboard">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+  AAC Dashboard
+</a>
+
+<!-- Table of Contents Dots -->
+<nav class="toc" aria-label="Section navigation">
+  <ul class="toc-list">
+    <li class="toc-item"><a href="#hero" class="toc-link" data-section="hero"><span class="toc-tooltip">Overview</span></a></li>
+    <li class="toc-item"><a href="#grammar" class="toc-link" data-section="grammar"><span class="toc-tooltip">Grammar Prediction</span></a></li>
+    <li class="toc-item"><a href="#hidewords" class="toc-link" data-section="hidewords"><span class="toc-tooltip">Hide Words</span></a></li>
+    <li class="toc-item"><a href="#motor" class="toc-link" data-section="motor"><span class="toc-tooltip">Motor Consistency</span></a></li>
+    <li class="toc-item"><a href="#features" class="toc-link" data-section="features"><span class="toc-tooltip">Key Features</span></a></li>
+    <li class="toc-item"><a href="#comparison" class="toc-link" data-section="comparison"><span class="toc-tooltip">Comparison</span></a></li>
+    <li class="toc-item"><a href="#pricing" class="toc-link" data-section="pricing"><span class="toc-tooltip">Pricing</span></a></li>
+    <li class="toc-item"><a href="#proscons" class="toc-link" data-section="proscons"><span class="toc-tooltip">Pros & Cons</span></a></li>
+    <li class="toc-item"><a href="#verdict" class="toc-link" data-section="verdict"><span class="toc-tooltip">Verdict</span></a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">#1 Rated AAC App by Users</div>
+    <h1>Fluent AAC</h1>
+    <p class="hero-subtitle">The grammar-smart communication app that conjugates words automatically, grows vocabulary progressively, and keeps every icon exactly where you learned it.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">25,000+</div>
+        <div class="hero-stat-label">Illustrations</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">3,000+</div>
+        <div class="hero-stat-label">Fringe Words</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">v7.1</div>
+        <div class="hero-stat-label">Latest Version</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">iPad</div>
+        <div class="hero-stat-label">Platform</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ===== COMPANY OVERVIEW ===== -->
+  <section class="section article-section fade-in">
+    <div class="section-header">
+      <div class="section-label">Company Background</div>
+      <h2 class="section-title">Who Makes Fluent AAC?</h2>
+    </div>
+    <p>Fluent AAC Technology S.R.L. was registered in <strong>2020 in Timisoara, Romania</strong>, with a mission its founders describe as "combining clinical expertise and technological innovation to redefine communication." While younger than industry veterans like AssistiveWare (Proloquo2Go) or PRC-Saltillo (TouchChat, LAMP Words for Life), the company's approach has quickly attracted attention in the AAC community.</p>
+    <p>The company takes a <strong>holistic approach</strong>, designing for the whole person rather than just their communication limitation. Every feature is developed through extensive collaboration between the R&D team, <strong>clinical experts</strong>, patient insight groups, and customers. The apps are designed by speech therapists and built in partnership with speech-language pathologists (SLPs).</p>
+    <p>Fluent AAC also produces a companion app called <strong>"Type and Speak"</strong>, a text-based AAC solution for literate users with conditions including autism, apraxia, cerebral palsy, ALS, stroke, and traumatic brain injury. Together, the two apps address communication needs across the entire literacy spectrum.</p>
+  </section>
+
+  <!-- ===== GRAMMAR PREDICTION ===== -->
+  <section class="section fade-in" id="grammar">
+    <div class="section-header">
+      <div class="section-label">Core Innovation</div>
+      <h2 class="section-title">Grammar-Aware Word Prediction</h2>
+      <p class="section-desc">Unlike traditional AAC apps with static icon grids, Fluent AAC's prediction engine dynamically conjugates words based on grammatical context -- turning telegraphic speech into complete, natural sentences.</p>
+    </div>
+
+    <!-- Interactive Grammar Demo -->
+    <div class="grammar-demo">
+      <h3 style="font-size:1rem; color:var(--text-dim); margin-bottom:0.75rem;">Interactive Demo: Grammar Prediction in Action</h3>
+      <div class="sentence-bar" id="sentenceBar">
+        <span style="color:var(--text-muted); font-size:0.9rem; font-weight:400;" id="sentencePlaceholder">Tap words below to build a sentence...</span>
+      </div>
+      <div class="word-grid" id="grammarGrid">
+        <div class="word-btn" data-word="I" data-class="pronoun" onclick="addWord(this)">
+          <span class="word-icon">&#x1F464;</span>I
+        </div>
+        <div class="word-btn" data-word="She" data-class="pronoun" onclick="addWord(this)">
+          <span class="word-icon">&#x1F467;</span>She
+        </div>
+        <div class="word-btn" data-word="We" data-class="pronoun" onclick="addWord(this)">
+          <span class="word-icon">&#x1F46B;</span>We
+        </div>
+        <div class="word-btn predicted" data-word="walk" data-conjugates='{"I":"walked","She":"walks","We":"walked","default":"walk"}' data-class="verb" onclick="addWord(this)">
+          <span class="word-icon">&#x1F6B6;</span>walk
+        </div>
+        <div class="word-btn predicted" data-word="want" data-conjugates='{"I":"wanted","She":"wants","We":"wanted","default":"want"}' data-class="verb" onclick="addWord(this)">
+          <span class="word-icon">&#x2764;&#xFE0F;</span>want
+        </div>
+        <div class="word-btn predicted" data-word="eat" data-conjugates='{"I":"ate","She":"eats","We":"ate","default":"eat"}' data-class="verb" onclick="addWord(this)">
+          <span class="word-icon">&#x1F37D;&#xFE0F;</span>eat
+        </div>
+        <div class="word-btn" data-word="to" data-class="prep" onclick="addWord(this)">
+          <span class="word-icon">&#x27A1;&#xFE0F;</span>to
+        </div>
+        <div class="word-btn" data-word="the" data-class="article" onclick="addWord(this)">
+          <span class="word-icon">&#x1F4CC;</span>the
+        </div>
+        <div class="word-btn" data-word="store" data-class="noun" onclick="addWord(this)">
+          <span class="word-icon">&#x1F3EA;</span>store
+        </div>
+        <div class="word-btn" data-word="apple" data-conjugates='{"plural":"apples","default":"apple"}' data-class="noun" onclick="addWord(this)">
+          <span class="word-icon">&#x1F34E;</span>apple
+        </div>
+        <div class="word-btn" data-word="big" data-class="adj" onclick="addWord(this)">
+          <span class="word-icon">&#x1F4AA;</span>big
+        </div>
+        <div class="word-btn" data-word="yesterday" data-class="time" onclick="addWord(this)">
+          <span class="word-icon">&#x1F4C5;</span>yesterday
+        </div>
+      </div>
+      <div class="demo-controls">
+        <button class="demo-btn secondary" onclick="clearSentence()">Clear Sentence</button>
+        <button class="demo-btn" onclick="speakSentence()">&#x1F50A; Speak</button>
+      </div>
+      <p class="demo-label">Notice how verbs automatically conjugate based on the subject you select. "She" + "walk" becomes "walks." Select "yesterday" and verbs shift to past tense. This is Fluent AAC's grammar prediction in action.</p>
+    </div>
+
+    <div class="info-box">
+      <h4>How Traditional AAC Handles Grammar</h4>
+      <p>Most competing apps show static word forms. To say "I walked," users must find the base word "walk" and then navigate to a separate conjugation page or folder to find "walked." Fluent AAC eliminates these extra steps by making conjugation automatic and contextual.</p>
+    </div>
+
+    <p style="color:var(--text-dim); line-height:1.8; margin-top:1.5rem;">The <strong>ASHA Leader</strong> explored this trend in a March 2025 article, "Predictive Text: Who Controls the Conversation?" While some SLPs have expressed caution about predictive systems potentially guiding user choices, AAC users themselves have expressed excitement about capabilities that make their speech more natural and grammatically complete. The consensus is shifting toward viewing grammar prediction as an enhancement to communication, not a limitation of choice.</p>
+  </section>
+
+  <!-- ===== HIDE WORDS ===== -->
+  <section class="section fade-in" id="hidewords">
+    <div class="section-header">
+      <div class="section-label">Progressive Learning</div>
+      <h2 class="section-title">The "Hide Words" Feature</h2>
+      <p class="section-desc">Start with one word. Add more gradually. The key insight: hidden words hold their positions, so motor patterns are never disrupted.</p>
+    </div>
+
+    <div class="feature-showcase">
+      <div class="feature-text">
+        <h3>The Vocabulary Overwhelm Problem</h3>
+        <p>A communication board with thousands of words is intimidating for a new user. The traditional solution -- simplified boards with fewer words -- creates a worse problem: when you add vocabulary later, the layout changes and the user must relearn where everything is. Weeks or months of motor learning, disrupted.</p>
+        <h3>Fluent AAC's Solution</h3>
+        <p><strong>Hide Words</strong> lets therapists and caregivers hide untargeted vocabulary, showing only a manageable subset. The breakthrough: <strong>hiding words does not change the position of remaining words.</strong> Every word keeps its fixed location whether visible or not. When the user is ready, new words are simply revealed in place. No relearning. No disruption. Motor memory stays intact.</p>
+      </div>
+      <div class="feature-visual">
+        <!-- Hide Words Interactive Demo -->
+        <div class="hide-words-demo" style="padding:0; background:transparent; border:none;">
+          <div class="vocab-level-controls">
+            <button class="level-btn active" onclick="setVocabLevel(1)">Beginner (4 words)</button>
+            <button class="level-btn" onclick="setVocabLevel(2)">Growing (8 words)</button>
+            <button class="level-btn" onclick="setVocabLevel(3)">Full (16 words)</button>
+          </div>
+          <div class="vocab-counter">Showing <strong id="vocabCount">4</strong> of 16 words</div>
+          <div class="motor-visual" id="hideWordsGrid">
+            <div class="motor-cell highlighted" data-level="1"><span class="mc-icon">&#x1F464;</span>I</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F466;</span>he</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F467;</span>she</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F46B;</span>we</div>
+            <div class="motor-cell highlighted" data-level="1"><span class="mc-icon">&#x2764;&#xFE0F;</span>want</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x1F44D;</span>like</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F6B6;</span>go</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F37D;&#xFE0F;</span>eat</div>
+            <div class="motor-cell highlighted" data-level="1"><span class="mc-icon">&#x1F34E;</span>apple</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x1F35E;</span>bread</div>
+            <div class="motor-cell dim" data-level="2"><span class="mc-icon">&#x1F95B;</span>milk</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x1F36A;</span>cookie</div>
+            <div class="motor-cell highlighted" data-level="1"><span class="mc-icon">&#x1F44F;</span>more</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x1F6D1;</span>stop</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x2705;</span>yes</div>
+            <div class="motor-cell dim" data-level="3"><span class="mc-icon">&#x274C;</span>no</div>
+          </div>
+          <p class="demo-label" style="margin-top:0.75rem;">Toggle vocabulary levels above. Notice that when new words appear, existing words <strong>never change position</strong>. "apple" is always in row 3, column 1 -- whether 4 words or 16 are showing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MOTOR CONSISTENCY ===== -->
+  <section class="section fade-in" id="motor">
+    <div class="section-header">
+      <div class="section-label">Design Principle</div>
+      <h2 class="section-title">Motor Consistency: Words That Never Move</h2>
+      <p class="section-desc">Like a pianist who knows where every key is without looking, Fluent AAC users develop muscle memory for word locations. This is possible because every word has a permanent, fixed position.</p>
+    </div>
+
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:var(--blue-bg); color:var(--blue);">&#x1F9E0;</div>
+        <h3>Motor Automaticity</h3>
+        <p>Over time, motor plans for frequently used words become automatic. Users can "move their fingers the way their brain remembers," freeing cognitive energy to think about <em>what</em> to say rather than <em>where</em> to find words.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--green-bg); color:var(--green);">&#x1F3AF;</div>
+        <h3>LAMP-Aligned Principles</h3>
+        <p>This approach aligns with Language Acquisition through Motor Planning (LAMP), a well-researched therapeutic method. Consistent motor patterns leverage the same neural pathways that let touch typists type without looking.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--purple-bg); color:var(--purple);">&#x26A1;</div>
+        <h3>Speed Over Scanning</h3>
+        <p>Motor-based communication is dramatically faster than visual scanning. Instead of searching the board for each word, users navigate by feel -- reducing time per message and the cognitive effort required to communicate.</p>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:2rem;">
+      <h4>The Folder Navigation Problem</h4>
+      <p>In folder-based AAC apps, reaching a word often requires a different sequence of taps depending on your current page. While core words may be consistent on the home screen, fringe vocabulary paths can vary. Fluent AAC eliminates this variability entirely -- every word, core or fringe, is always in the same location.</p>
+    </div>
+  </section>
+
+  <!-- ===== KEY FEATURES ===== -->
+  <section class="section fade-in" id="features">
+    <div class="section-header">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">Key Features at a Glance</h2>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon" style="background:var(--accent-glow); color:var(--accent-light);">&#x1F3A8;</div>
+        <h3>25,000+ Illustrations</h3>
+        <p>Customizable male/female variants, personal avatar selection, and the ability to add your own photos. Reviewers praise the icons as "nicer than others and easy to understand."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--cyan-bg); color:var(--cyan);">&#x1F4DA;</div>
+        <h3>3,000+ Fringe Words</h3>
+        <p>Comprehensive fringe vocabulary beyond core words, with a search feature to find any word quickly. No limit on language development.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--yellow-bg); color:var(--yellow);">&#x1F50A;</div>
+        <h3>Text-to-Speech</h3>
+        <p>Words appear in a sentence bar at the top of the screen, then spoken aloud with multiple voice options available for personalized communication.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--orange-bg); color:var(--orange);">&#x1F393;</div>
+        <h3>Built-in Tutorials</h3>
+        <p>Step-by-step learning resources made by industry leaders. Lessons, FAQ pages, and modeling activities for AAC newcomers and experienced users alike.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--green-bg); color:var(--green);">&#x1F5A8;&#xFE0F;</div>
+        <h3>Printable Boards</h3>
+        <p>Free printable communication boards for creating low-tech backups. Users can make screenshots of app vocabulary for paper-based alternatives.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--red-bg); color:var(--red);">&#x1F527;</div>
+        <h3>Deep Customization</h3>
+        <p>Customizable vocabulary levels, icon border colors and styles, personal photos as icons, and adjustable interface settings for each individual user.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TARGET USERS ===== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-label">Audience</div>
+      <h2 class="section-title">Who Is Fluent AAC For?</h2>
+      <p class="section-desc">From beginning communicators learning their first words to advanced users constructing complex sentences, Fluent AAC adapts to the user's level through customizable vocabulary and the Hide Words progressive system.</p>
+    </div>
+
+    <div class="target-grid">
+      <div class="target-card">
+        <div class="target-icon">&#x1F9E9;</div>
+        <h4>Autism (ASD)</h4>
+        <p>Largest user group for symbol-based AAC</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1F496;</div>
+        <h4>Down Syndrome</h4>
+        <p>Visual supports alongside developing speech</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1F3CB;&#xFE0F;</div>
+        <h4>ALS</h4>
+        <p>Progressive speech loss in adults</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1F5E3;&#xFE0F;</div>
+        <h4>Apraxia</h4>
+        <p>Motor speech planning difficulties</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1F9E0;</div>
+        <h4>Stroke</h4>
+        <p>Speech recovery after cerebrovascular events</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1F9D1;&#x200D;&#x1F9BD;</div>
+        <h4>Cerebral Palsy</h4>
+        <p>Motor and cognitive challenges</p>
+      </div>
+      <div class="target-card">
+        <div class="target-icon">&#x1FA79;</div>
+        <h4>Brain Injury</h4>
+        <p>Speech loss due to TBI</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPETITIVE COMPARISON ===== -->
+  <section class="section fade-in" id="comparison">
+    <div class="section-header">
+      <div class="section-label">Market Position</div>
+      <h2 class="section-title">How Fluent AAC Compares</h2>
+      <p class="section-desc">Fluent AAC competes with established players but differentiates through grammar prediction, Hide Words, and motor consistency features that no competitor currently matches.</p>
+    </div>
+
+    <div class="comparison-wrapper">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight">Fluent AAC</th>
+            <th>Proloquo2Go</th>
+            <th>TouchChat HD</th>
+            <th>LAMP WFL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Grammar Prediction</strong></td>
+            <td class="highlight"><span class="check">Automatic</span></td>
+            <td>Manual forms</td>
+            <td>WordPower</td>
+            <td>Unity system</td>
+          </tr>
+          <tr>
+            <td><strong>Hide Words</strong></td>
+            <td class="highlight"><span class="check">Yes</span></td>
+            <td><span class="cross">No</span></td>
+            <td><span class="cross">No</span></td>
+            <td><span class="cross">No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Motor Consistency</strong></td>
+            <td class="highlight"><span class="check">Full</span></td>
+            <td><span class="partial">Partial</span></td>
+            <td><span class="partial">Partial</span></td>
+            <td><span class="check">Full (LAMP)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Illustrations</strong></td>
+            <td class="highlight">25,000+</td>
+            <td>SymbolStix</td>
+            <td>40,000+ SymbolStix</td>
+            <td>Unity symbols</td>
+          </tr>
+          <tr>
+            <td><strong>Free Trial</strong></td>
+            <td class="highlight"><span class="check">7 days</span></td>
+            <td><span class="cross">No</span></td>
+            <td><span class="cross">No</span></td>
+            <td><span class="cross">No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Bilingual</strong></td>
+            <td class="highlight"><span class="cross">No</span></td>
+            <td><span class="check">Code-switching</span></td>
+            <td><span class="check">4 languages</span></td>
+            <td><span class="cross">No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Platform</strong></td>
+            <td class="highlight">iPad</td>
+            <td>iOS (all devices)</td>
+            <td>iOS</td>
+            <td>iOS</td>
+          </tr>
+          <tr>
+            <td><strong>Price</strong></td>
+            <td class="highlight">$9.99/mo or $299.99</td>
+            <td>$249.99 one-time</td>
+            <td>$149.99-$299.99</td>
+            <td>$299.99 one-time</td>
+          </tr>
+          <tr>
+            <td><strong>Research Base</strong></td>
+            <td class="highlight"><span class="partial">Growing</span></td>
+            <td><span class="check">Established</span></td>
+            <td><span class="check">Established</span></td>
+            <td><span class="check">Extensive</span></td>
+          </tr>
+          <tr>
+            <td><strong>SLP Community</strong></td>
+            <td class="highlight"><span class="partial">Growing</span></td>
+            <td><span class="check">Large</span></td>
+            <td><span class="check">Large</span></td>
+            <td><span class="check">Large</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pricing Chart -->
+    <div class="chart-container">
+      <h3>Annual Cost Comparison: AAC Apps</h3>
+      <div class="chart-wrapper">
+        <canvas id="pricingChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section class="section fade-in" id="pricing">
+    <div class="section-header">
+      <div class="section-label">Investment</div>
+      <h2 class="section-title">Pricing</h2>
+      <p class="section-desc">Fluent AAC offers multiple pricing tiers, including a 7-day free trial that most competitors do not provide.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Free Trial</h3>
+        <div class="pricing-amount">$0</div>
+        <div class="pricing-period">7 days full access</div>
+        <div class="pricing-note">No credit card required to start. Evaluate all features risk-free.</div>
+      </div>
+      <div class="pricing-card">
+        <h3>Monthly</h3>
+        <div class="pricing-amount">$9.99</div>
+        <div class="pricing-period">per month</div>
+        <div class="pricing-note">Lowest entry cost. $119.88/year if maintained monthly.</div>
+      </div>
+      <div class="pricing-card featured">
+        <h3>Annual</h3>
+        <div class="pricing-amount">$89.99</div>
+        <div class="pricing-period">per year (~$7.50/mo)</div>
+        <div class="pricing-note">Save 25% vs. monthly. Best ongoing value.</div>
+      </div>
+      <div class="pricing-card">
+        <h3>Lifetime</h3>
+        <div class="pricing-amount">$299.99</div>
+        <div class="pricing-period">one-time purchase</div>
+        <div class="pricing-note">Comparable to Proloquo2Go ($249.99) and LAMP WFL ($299.99).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROS & CONS ===== -->
+  <section class="section fade-in" id="proscons">
+    <div class="section-header">
+      <div class="section-label">Assessment</div>
+      <h2 class="section-title">Strengths & Weaknesses</h2>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros-list">
+        <h3>Strengths</h3>
+        <ul>
+          <li><strong>Grammar-aware prediction</strong> -- automatic conjugation unmatched by any major competitor</li>
+          <li><strong>Hide Words</strong> -- progressive vocabulary without disrupting motor patterns</li>
+          <li><strong>Motor consistency</strong> -- words never change position, supporting LAMP-like automaticity</li>
+          <li><strong>Clinician-designed</strong> -- built in collaboration with SLPs and clinical experts</li>
+          <li><strong>7-day free trial</strong> -- rare among premium AAC apps, removes evaluation barrier</li>
+          <li><strong>25,000+ illustrations</strong> -- customizable with gender variants and personal photos</li>
+          <li><strong>Flexible pricing</strong> -- monthly option makes AAC accessible at lower entry cost</li>
+          <li><strong>Active development</strong> -- regular updates with new features and vocabulary (v7.1.0 Oct 2025)</li>
+          <li><strong>Companion text app</strong> -- Type and Speak extends ecosystem to literate users</li>
+          <li><strong>#1 user rating</strong> -- top-ranked by AAC users in community surveys</li>
+        </ul>
+      </div>
+      <div class="cons-list">
+        <h3>Weaknesses</h3>
+        <ul>
+          <li><strong>Stability issues</strong> -- users report crashes when editing, sometimes requiring device restart</li>
+          <li><strong>Customer support</strong> -- some users report weeks-long response times</li>
+          <li><strong>iPad/iOS only</strong> -- no Android version excludes many potential users</li>
+          <li><strong>Newer company</strong> -- registered 2020; less track record than established competitors</li>
+          <li><strong>Smaller SLP community</strong> -- fewer training resources and peer support than Proloquo2Go/LAMP</li>
+          <li><strong>Limited research base</strong> -- fewer independent clinical studies than LAMP or Proloquo2Go</li>
+          <li><strong>Subscription model</strong> -- ongoing cost concerns for essential communication tool</li>
+          <li><strong>No bilingual support</strong> -- unlike Proloquo2Go's true code-switching capability</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DEVELOPMENT TIMELINE ===== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-label">Development</div>
+      <h2 class="section-title">Timeline & Recent Updates</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2019-2020</div>
+        <h4>App Launch</h4>
+        <p>Fluent AAC: Communication App first published on the Apple App Store. Company registered in Timisoara, Romania.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2020-2023</div>
+        <h4>Feature Development</h4>
+        <p>Rapid iteration through major versions. Grammar prediction engine developed and refined. Hide Words feature introduced. Vocabulary expanded beyond 3,000 fringe words.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2023-2024</div>
+        <h4>Type and Speak Companion App</h4>
+        <p>Launch of text-based AAC companion app for literate users. Ecosystem expanded to cover full literacy spectrum.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025</div>
+        <h4>Version 7.x Updates</h4>
+        <p>Plurals via keyboard, button link opening, border style customization. Updated vocabulary with more relevant words. Performance and reliability improvements.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">October 2025</div>
+        <h4>Version 7.1.0 (Current)</h4>
+        <p>Latest release with updated vocabulary, smoother performance, and general reliability improvements. Active development continues.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h4>AAC Market Context</h4>
+      <p>The global AAC market is projected to grow from $3.5 billion (2024) to $8.2 billion by 2033, a CAGR of 10.2%. With 54% adoption of AI-powered AAC tools, Fluent AAC's grammar prediction approach positions it well in a market increasingly valuing linguistic sophistication.</p>
+    </div>
+  </section>
+
+  <!-- ===== VERDICT ===== -->
+  <section class="section fade-in" id="verdict">
+    <div class="section-header">
+      <div class="section-label">Conclusion</div>
+      <h2 class="section-title">The Verdict</h2>
+    </div>
+
+    <p style="color:var(--text-dim); line-height:1.8; font-size:1.05rem; margin-bottom:1.25rem;">Fluent AAC represents something genuinely new in the AAC landscape: <strong>an app that takes grammar seriously without making it complicated.</strong> By embedding grammatical intelligence into the prediction engine and pairing it with a progressive vocabulary system that respects motor learning, Fluent AAC has created a communication experience that feels more natural and linguistically complete than what most competing products offer.</p>
+
+    <p style="color:var(--text-dim); line-height:1.8; font-size:1.05rem; margin-bottom:1.25rem;">The app is not without its challenges. Stability issues need addressing, the community is still growing, and the subscription model remains controversial for an essential communication tool. But the core innovations -- <strong>grammar prediction, Hide Words, and absolute motor consistency</strong> -- address real, longstanding needs in the AAC community that other products have not fully solved.</p>
+
+    <p style="color:var(--text-dim); line-height:1.8; font-size:1.05rem; margin-bottom:1.25rem;">For families and SLPs evaluating AAC options, Fluent AAC deserves serious consideration -- particularly for users who will benefit from grammatical communication and structured vocabulary introduction. The 7-day free trial makes evaluation risk-free, and the monthly subscription option keeps the barrier to entry lower than most competitors.</p>
+
+    <blockquote style="margin-top:2rem; font-size:1.1rem;">
+      In a field where communication is literally the product, Fluent AAC is making a compelling case that <strong>how</strong> you say something matters just as much as being able to say it at all.
+    </blockquote>
+  </section>
+
+</div><!-- /container -->
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Fluent AAC Deep Dive | Research compiled March 2026</p>
+  <p><a href="../aac-applications-competitive-analysis-dashboard/index.html">Back to AAC Applications Dashboard</a></p>
+  <p style="margin-top:1rem; font-size:0.75rem;">Fluent AAC is a product of Fluent AAC Technology S.R.L. This analysis is independent and not affiliated with or endorsed by Fluent AAC Technology.</p>
+  <ul class="sources-list">
+    <li><a href="https://www.fluentaac.com/" target="_blank" rel="noopener">Fluent AAC Official Website</a></li>
+    <li><a href="https://www.fluentaac.com/about" target="_blank" rel="noopener">Fluent AAC About</a></li>
+    <li><a href="https://www.fluentaac.com/ios" target="_blank" rel="noopener">Fluent AAC iOS Features</a></li>
+    <li><a href="https://apps.apple.com/us/app/fluent-aac-communication-app/id1489807378" target="_blank" rel="noopener">Apple App Store Listing</a></li>
+    <li><a href="https://www.fluentaac.com/learn-aac" target="_blank" rel="noopener">Learn AAC Resources</a></li>
+    <li><a href="https://www.fluentaac.com/communication-boards" target="_blank" rel="noopener">Printable Communication Boards</a></li>
+    <li><a href="https://www.fluentaac.com/bestaacapps" target="_blank" rel="noopener">Best AAC Apps Survey</a></li>
+    <li><a href="https://leader.pubs.asha.org/do/10.1044/leader.FTR1.30032025.FAAC-predictive-text.36/full/" target="_blank" rel="noopener">ASHA Leader: Predictive Text</a></li>
+    <li><a href="https://www.speechandlanguagekids.com/aac-apps-review/" target="_blank" rel="noopener">Speech &amp; Language Kids Review</a></li>
+    <li><a href="https://spokenaac.com/best-aac-apps/" target="_blank" rel="noopener">Spoken AAC: Best Apps 2025</a></li>
+    <li><a href="https://praacticalaac.org/praactical/linguistically-robust-aac-systems/" target="_blank" rel="noopener">PrAACtical AAC Systems</a></li>
+    <li><a href="https://aaccommunity.net/ccc/motor-planning/" target="_blank" rel="noopener">AAC Community: Motor Planning</a></li>
+    <li><a href="https://simplihere.com/cheat-sheet-top-7-digital-aac-apps-2025/" target="_blank" rel="noopener">SimpliHere: Top 7 AAC Apps</a></li>
+    <li><a href="https://www.powermapper.com/resources/guides/apps-cognitive-disabilities-communication/" target="_blank" rel="noopener">PowerMapper AAC Guide</a></li>
+  </ul>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#x2191;</button>
+
+<script>
+// ===== READING PROGRESS =====
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const pct = height > 0 ? (winScroll / height * 100) : 0;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+});
+
+// ===== BACK TO TOP =====
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== SCROLL SPY FOR TOC =====
+const tocLinks = document.querySelectorAll('.toc-link');
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const id = entry.target.getAttribute('id');
+    const link = document.querySelector(`.toc-link[data-section="${id}"]`);
+    if (link) link.classList.toggle('active', entry.isIntersecting);
+  });
+}, { threshold: 0.2, rootMargin: '-10% 0px -70% 0px' });
+document.querySelectorAll('[id]').forEach(el => {
+  if (document.querySelector(`.toc-link[data-section="${el.id}"]`)) {
+    sectionObserver.observe(el);
+  }
+});
+tocLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.getElementById(link.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ===== SCROLL ANIMATIONS =====
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+// ===== GRAMMAR DEMO =====
+let sentenceWords = [];
+let currentSubject = null;
+let hasTense = false;
+
+function addWord(btn) {
+  const word = btn.dataset.word;
+  const wordClass = btn.dataset.class;
+  const conjugates = btn.dataset.conjugates ? JSON.parse(btn.dataset.conjugates) : null;
+
+  // Track subject for conjugation
+  if (wordClass === 'pronoun') {
+    currentSubject = word;
+    hasTense = false;
+  }
+
+  // Track tense markers
+  if (word === 'yesterday') {
+    hasTense = 'past';
+  }
+
+  // Determine displayed word
+  let displayWord = word;
+  if (conjugates && wordClass === 'verb') {
+    if (hasTense === 'past' && currentSubject) {
+      displayWord = conjugates[currentSubject] || conjugates['default'] || word;
+    } else if (currentSubject === 'She') {
+      displayWord = conjugates['She'] || conjugates['default'] || word;
+    } else {
+      displayWord = conjugates['default'] || word;
+    }
+  }
+  if (conjugates && wordClass === 'noun' && sentenceWords.length > 0) {
+    // Simple plural logic: if previous word suggests plural context
+    const prev = sentenceWords[sentenceWords.length - 1];
+    if (prev && (prev.toLowerCase() === 'some' || prev.toLowerCase() === 'many')) {
+      displayWord = conjugates['plural'] || word;
+    }
+  }
+
+  sentenceWords.push(displayWord);
+
+  // Update sentence bar
+  const bar = document.getElementById('sentenceBar');
+  const placeholder = document.getElementById('sentencePlaceholder');
+  if (placeholder) placeholder.remove();
+
+  const span = document.createElement('span');
+  span.className = 'sentence-word';
+  if (wordClass === 'verb') span.classList.add('verb');
+  if (wordClass === 'noun') span.classList.add('noun');
+  if (wordClass === 'prep' || wordClass === 'article') span.classList.add('prep');
+  if (wordClass === 'adj') span.classList.add('adj');
+  span.textContent = displayWord;
+  bar.appendChild(span);
+
+  // Animate button
+  btn.classList.add('active');
+  setTimeout(() => btn.classList.remove('active'), 300);
+
+  // Update predictions (highlight verbs after subject, nouns after prep/article)
+  updatePredictions(wordClass);
+}
+
+function updatePredictions(lastClass) {
+  const btns = document.querySelectorAll('#grammarGrid .word-btn');
+  btns.forEach(b => b.classList.remove('predicted'));
+
+  if (lastClass === 'pronoun') {
+    btns.forEach(b => { if (b.dataset.class === 'verb') b.classList.add('predicted'); });
+  } else if (lastClass === 'verb') {
+    btns.forEach(b => { if (b.dataset.class === 'prep' || b.dataset.class === 'article' || b.dataset.class === 'noun') b.classList.add('predicted'); });
+  } else if (lastClass === 'prep' || lastClass === 'article') {
+    btns.forEach(b => { if (b.dataset.class === 'noun' || b.dataset.class === 'adj') b.classList.add('predicted'); });
+  } else if (lastClass === 'adj') {
+    btns.forEach(b => { if (b.dataset.class === 'noun') b.classList.add('predicted'); });
+  }
+}
+
+function clearSentence() {
+  sentenceWords = [];
+  currentSubject = null;
+  hasTense = false;
+  const bar = document.getElementById('sentenceBar');
+  bar.innerHTML = '<span style="color:var(--text-muted); font-size:0.9rem; font-weight:400;" id="sentencePlaceholder">Tap words below to build a sentence...</span>';
+  document.querySelectorAll('#grammarGrid .word-btn').forEach(b => b.classList.remove('predicted'));
+  // Reset initial predictions on pronouns/verbs
+  document.querySelectorAll('#grammarGrid .word-btn[data-class="verb"]').forEach(b => b.classList.add('predicted'));
+}
+
+function speakSentence() {
+  if (sentenceWords.length === 0) return;
+  const text = sentenceWords.join(' ');
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.9;
+    utter.pitch = 1;
+    speechSynthesis.speak(utter);
+  }
+}
+
+// ===== HIDE WORDS DEMO =====
+function setVocabLevel(level) {
+  const cells = document.querySelectorAll('#hideWordsGrid .motor-cell');
+  let count = 0;
+  cells.forEach(cell => {
+    const cellLevel = parseInt(cell.dataset.level);
+    if (cellLevel <= level) {
+      cell.classList.remove('dim');
+      cell.classList.add('highlighted');
+      count++;
+    } else {
+      cell.classList.add('dim');
+      cell.classList.remove('highlighted');
+    }
+  });
+  document.getElementById('vocabCount').textContent = count;
+
+  // Update button states
+  document.querySelectorAll('.level-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === level - 1);
+  });
+}
+
+// ===== PRICING CHART =====
+const pricingCtx = document.getElementById('pricingChart');
+if (pricingCtx) {
+  new Chart(pricingCtx, {
+    type: 'bar',
+    data: {
+      labels: [
+        'Fluent AAC\n(Annual)',
+        'Fluent AAC\n(Monthly)',
+        'Speak for\nYourself',
+        'Proloquo2Go',
+        'TouchChat HD\n+ WordPower',
+        'LAMP Words\nfor Life',
+        'Fluent AAC\n(Lifetime)'
+      ],
+      datasets: [{
+        label: 'Cost (USD)',
+        data: [89.99, 119.88, 149.99, 249.99, 299.99, 299.99, 299.99],
+        backgroundColor: [
+          'rgba(99,102,241,0.8)',
+          'rgba(99,102,241,0.5)',
+          'rgba(100,116,139,0.6)',
+          'rgba(100,116,139,0.6)',
+          'rgba(100,116,139,0.6)',
+          'rgba(100,116,139,0.6)',
+          'rgba(99,102,241,0.35)'
+        ],
+        borderColor: [
+          '#6366f1',
+          '#6366f1',
+          '#64748b',
+          '#64748b',
+          '#64748b',
+          '#64748b',
+          '#6366f1'
+        ],
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleColor: '#f1f5f9',
+          bodyColor: '#94a3b8',
+          borderColor: '#334155',
+          borderWidth: 1,
+          padding: 12,
+          callbacks: {
+            label: function(ctx) {
+              const val = ctx.parsed.x;
+              if (ctx.dataIndex === 1) return `$${val.toFixed(2)}/yr ($9.99/mo x 12)`;
+              if (ctx.dataIndex === 0) return `$${val.toFixed(2)}/yr (subscription)`;
+              if (ctx.dataIndex === 6) return `$${val.toFixed(2)} (one-time lifetime)`;
+              return `$${val.toFixed(2)} (one-time purchase)`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 350,
+          grid: { color: 'rgba(51,65,85,0.5)' },
+          ticks: {
+            color: '#94a3b8',
+            callback: v => '$' + v,
+            font: { size: 11 }
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: {
+            color: '#f1f5f9',
+            font: { size: 11, weight: '600' }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ===== INITIAL STATE =====
+// Set initial verb predictions
+document.querySelectorAll('#grammarGrid .word-btn[data-class="verb"]').forEach(b => b.classList.add('predicted'));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Comprehensive deep dive into Proloquo, AssistiveWare's next-generation AAC app featuring Crescendo Evolution vocabulary, Thinking Space, Focus Mode, and Proloquo Coach.">
+<meta name="author" content="AI-Assisted Research">
+<meta property="og:title" content="Proloquo: Next-Generation AAC Deep Dive">
+<meta property="og:description" content="Inside AssistiveWare's award-winning AAC revolution - 16,000+ words, research-driven design, and the future of augmentative communication.">
+<meta property="og:type" content="article">
+<title>Proloquo: Next-Generation AAC Deep Dive</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-input: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.15);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.15);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.15);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.15);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.15);
+  --cyan: #06b6d4;
+  --orange: #f97316;
+  --border: #334155;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--accent-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+}
+.back-link:hover { color: var(--text); }
+.back-link svg { width: 16px; height: 16px; }
+
+/* Hero Header */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 70%, #6366f1 100%);
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 25% 40%, rgba(99,102,241,0.4), transparent 55%),
+              radial-gradient(circle at 75% 60%, rgba(168,85,247,0.25), transparent 50%),
+              radial-gradient(circle at 50% 90%, rgba(6,182,212,0.15), transparent 40%);
+}
+.hero-content { position: relative; max-width: 900px; margin: 0 auto; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50px;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fcd34d;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.hero h1 span { color: #c7d2fe; }
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.75);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat .val {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #c7d2fe;
+  display: block;
+}
+.hero-stat .label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Navigation */
+.nav {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  overflow-x: auto;
+  padding: 0 1rem;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Section */
+.section { margin-bottom: 3.5rem; }
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.kpi:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.kpi-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+.kpi-value {
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+.kpi-sub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+}
+
+/* Article Content */
+.article-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+.article-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  color: var(--text);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.article-content h2:first-child { margin-top: 0; }
+.article-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
+  color: var(--accent-light);
+}
+.article-content p {
+  margin: 1rem 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+.article-content blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: rgba(99,102,241,0.08);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  color: var(--text-dim);
+}
+.article-content ul, .article-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+.article-content li { margin: 0.4rem 0; }
+
+/* Feature Cards */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.feature-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.feature-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.feature-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.feature-card p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.feature-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-top: 0.75rem;
+}
+
+/* Comparison Table */
+.comparison-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 600px;
+}
+.comparison-table th {
+  background: rgba(99,102,241,0.15);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--accent);
+  white-space: nowrap;
+}
+.comparison-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.comparison-table tr:hover td {
+  background: var(--bg-card-hover);
+}
+.comparison-table .feature-label {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--red); font-weight: 700; }
+.partial { color: var(--yellow); font-weight: 700; }
+
+/* Pros/Cons */
+.pros-cons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .pros-cons-grid { grid-template-columns: 1fr; }
+}
+.pros-card, .cons-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+.pros-card { border-top: 3px solid var(--green); }
+.cons-card { border-top: 3px solid var(--red); }
+.pros-card h3, .cons-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pros-card li, .cons-card li {
+  margin: 0.6rem 0;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  list-style: none;
+  padding-left: 1.5rem;
+  position: relative;
+}
+.pros-card li::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.cons-card li::before {
+  content: '-';
+  position: absolute;
+  left: 0.15rem;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Review Cards */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.review-card .stars {
+  color: var(--yellow);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+.review-card .review-text {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+.review-card .review-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.review-sentiment {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+.sentiment-positive { background: var(--green-bg); color: var(--green); }
+.sentiment-negative { background: var(--red-bg); color: var(--red); }
+.sentiment-mixed { background: var(--yellow-bg); color: var(--yellow); }
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 1.5rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--purple), var(--cyan));
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.75rem;
+  padding-bottom: 0.25rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.85rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.3);
+}
+.timeline-item.highlight::before {
+  background: var(--yellow);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.3);
+}
+.timeline-year {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+.timeline-text {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.timeline-text strong { color: var(--text); }
+
+/* Chart Container */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Target Audience */
+.audience-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .audience-grid { grid-template-columns: 1fr; }
+}
+.audience-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.audience-card.ideal { border-top: 3px solid var(--accent); }
+.audience-card.consider { border-top: 3px solid var(--yellow); }
+.audience-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.audience-card li {
+  margin: 0.5rem 0;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+
+/* Source List */
+.source-list {
+  columns: 2;
+  column-gap: 2rem;
+  margin: 1rem 0;
+}
+@media (max-width: 768px) {
+  .source-list { columns: 1; }
+}
+.source-list li {
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+  break-inside: avoid;
+}
+.source-list a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+.source-list a:hover {
+  text-decoration: underline;
+  color: var(--text);
+}
+
+/* Reading Progress */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(to right, var(--accent), var(--purple), var(--cyan));
+  z-index: 1000;
+  transition: width 0.1s;
+}
+
+/* Back to Top */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.2s;
+  box-shadow: var(--shadow);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-to-top:hover { transform: scale(1.1); }
+.back-to-top.visible { opacity: 1; }
+
+/* Collapsible Sections */
+.collapsible {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.collapsible-header {
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  transition: background 0.2s;
+  user-select: none;
+}
+.collapsible-header:hover { background: var(--bg-card-hover); }
+.collapsible-arrow {
+  transition: transform 0.3s;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.collapsible.open .collapsible-arrow { transform: rotate(180deg); }
+.collapsible-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.collapsible.open .collapsible-body { max-height: 2000px; }
+.collapsible-content {
+  padding: 0 1.5rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.footer a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
+/* Print */
+@media print {
+  .nav, .back-to-top, .reading-progress, .back-link { display: none; }
+  .hero { background: #312e81; -webkit-print-color-adjust: exact; }
+  body { background: white; color: #1a1a1a; }
+  .container { max-width: 100%; }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .hero { padding: 2.5rem 1.25rem 2rem; }
+  .hero h1 { font-size: 1.75rem; }
+  .hero-stats { gap: 1.5rem; }
+  .container { padding: 1.25rem 1rem; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .article-content { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress"></div>
+
+<!-- Back to AAC Dashboard -->
+<a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  Back to AAC Dashboard
+</a>
+
+<!-- Hero Header -->
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span>&#127942;</span> 2023 App Store Cultural Impact Award
+    </div>
+    <h1>Proloquo: <span>Next-Generation AAC</span> Deep Dive</h1>
+    <p class="hero-subtitle">Inside AssistiveWare's bold, research-driven reimagining of augmentative and alternative communication -- built on data from 10,000+ AAC users and over 100 person-years of development.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="val">16,000+</span>
+        <span class="label">Pre-Planned Words</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val">4x</span>
+        <span class="label">More Than Competitors</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val">10,000+</span>
+        <span class="label">AAC Users Studied</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val">4.1/5</span>
+        <span class="label">App Store Rating</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Sticky Nav -->
+<nav class="nav" id="nav">
+  <a href="#overview">Overview</a>
+  <a href="#timeline">Timeline</a>
+  <a href="#features">Features</a>
+  <a href="#vocabulary">Vocabulary</a>
+  <a href="#comparison">vs Proloquo2Go</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#pros-cons">Pros &amp; Cons</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#audience">Who It's For</a>
+  <a href="#sources">Sources</a>
+</nav>
+
+<div class="container">
+
+  <!-- Overview Section -->
+  <section class="section" id="overview">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--blue-bg);color:var(--blue);">&#128270;</span>
+      Product Overview
+    </h2>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Developer</div>
+        <div class="kpi-value" style="font-size:1.2rem;">AssistiveWare</div>
+        <div class="kpi-sub">Amsterdam, NL &middot; Founded 2000</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Platform</div>
+        <div class="kpi-value" style="font-size:1.2rem;">iPad Only</div>
+        <div class="kpi-sub">Coach on iPad + iPhone</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Language</div>
+        <div class="kpi-value" style="font-size:1.2rem;">English</div>
+        <div class="kpi-sub">Multiple regional accents</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Price</div>
+        <div class="kpi-value" style="color:var(--green);">$99.99/yr</div>
+        <div class="kpi-sub">6-month free trial</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Vocabulary</div>
+        <div class="kpi-value" style="color:var(--accent-light);">16,000+</div>
+        <div class="kpi-sub">Crescendo Evolution</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Grid Layout</div>
+        <div class="kpi-value" style="font-size:1.2rem;">48+12</div>
+        <div class="kpi-sub">Symbol + text buttons</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">App Store Rating</div>
+        <div class="kpi-value" style="color:var(--yellow);">4.1 / 5</div>
+        <div class="kpi-sub">Cultural Impact Award</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Released</div>
+        <div class="kpi-value" style="font-size:1.2rem;">2022</div>
+        <div class="kpi-sub">100+ person-years of dev</div>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <p>What happens when you take over a decade of real-world usage data from more than 10,000 AAC users and pour 100 person-years of development into building something entirely new? You get <strong>Proloquo</strong> -- AssistiveWare's bold, research-driven reimagining of augmentative and alternative communication that earned the first-ever App Store Cultural Impact Award given to an AAC app.</p>
+
+      <p>Launched in 2022, Proloquo is <strong>not</strong> an update to Proloquo2Go. It is a fundamentally different product built on a fundamentally different philosophy: that <strong>consistency, motor planning, and an integrated coaching ecosystem</strong> matter more than unlimited customization. With over 16,000 pre-planned words -- four times more than any competing AAC system -- and innovative features like Thinking Space and Focus Mode, Proloquo represents a generational leap in how nonspeaking individuals communicate.</p>
+
+      <blockquote>"Over a hundred person-years of work went into creating Proloquo and Proloquo Coach." &mdash; AssistiveWare</blockquote>
+
+      <p>But the app is not without its trade-offs. English-only language support, iPad-only availability, a subscription pricing model, and limited customization compared to its predecessor make Proloquo the right choice for some users and the wrong one for others. Understanding what it does differently -- and why -- is essential for families, clinicians, and educators making one of the most consequential technology decisions in a person's life.</p>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="section" id="timeline">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--purple-bg);color:var(--purple);">&#128197;</span>
+      Product Timeline
+    </h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2000</div>
+        <div class="timeline-text"><strong>AssistiveWare founded</strong> by David Niemeijer in Amsterdam after his friend Giesbert became paralyzed in a car accident and needed accessible computer technology.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Early 2000s</div>
+        <div class="timeline-text">Developed Mac OS X accessibility software: <strong>KeyStrokes, SwitchXS, VisioVoice, GhostReader</strong>, and the original desktop Proloquo.</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-year">2009</div>
+        <div class="timeline-text"><strong>Proloquo2Go released</strong> -- the first full-featured AAC app for iOS. Catalyzed the shift from $8,000-$15,000 dedicated devices to consumer tablets.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2013</div>
+        <div class="timeline-text"><strong>Proloquo4Text released</strong> for text-based AAC users, generating crucial data that would inform the next generation.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2017-2022</div>
+        <div class="timeline-text"><strong>100+ person-years of development</strong> on the next-generation Proloquo and Proloquo Coach, studying anonymous data from 10,000+ AAC users.</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-year">2022</div>
+        <div class="timeline-text"><strong>Proloquo and Proloquo Coach officially launched</strong> as next-generation AAC products with Crescendo Evolution vocabulary.</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-year">November 2023</div>
+        <div class="timeline-text"><strong>Apple App Store Cultural Impact Award</strong> -- the first AAC app ever to receive this honor, bringing unprecedented mainstream visibility to AAC technology.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2024</div>
+        <div class="timeline-text"><strong>Proloquo 4.0 released</strong> with major enhancements: full Crescendo Evolution vocabulary, Thinking Space whiteboard, grows-with-user design.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2025</div>
+        <div class="timeline-text">Continued development with <strong>Focus Mode improvements</strong>, bug fixes, and voice refinements.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Section -->
+  <section class="section" id="features">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--green-bg);color:var(--green);">&#9889;</span>
+      Key Features
+    </h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--blue-bg);color:var(--blue);">&#128218;</div>
+        <h3>Crescendo Evolution Vocabulary</h3>
+        <p>16,000+ pre-planned words organized across 9 tabs, including 4,500+ graphic symbols and 5,000+ curriculum words. Built from anonymous data from 10,000+ real AAC users.</p>
+        <span class="feature-tag" style="background:var(--blue-bg);color:var(--blue);">Core System</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--green-bg);color:var(--green);">&#127919;</div>
+        <h3>Motor Planning Design</h3>
+        <p>Words never move from their positions. No "back button" -- every word is always reached through the same repeatable path of taps, building reliable muscle memory over time.</p>
+        <span class="feature-tag" style="background:var(--green-bg);color:var(--green);">Consistency</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--purple-bg);color:var(--purple);">&#128161;</div>
+        <h3>Thinking Space</h3>
+        <p>A flexible whiteboard canvas where users drag, cluster, and freely rearrange symbols. Enables non-linear communication: brainstorming, concept mapping, and exploratory expression.</p>
+        <span class="feature-tag" style="background:var(--purple-bg);color:var(--purple);">Innovative</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--yellow-bg);color:var(--yellow);">&#128293;</div>
+        <h3>Focus Mode</h3>
+        <p>Uses light and motion to gently highlight target words without restricting vocabulary access. Reduces prompt dependency and encourages independent communication.</p>
+        <span class="feature-tag" style="background:var(--yellow-bg);color:var(--yellow);">Education</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:rgba(6,182,212,0.15);color:var(--cyan);">&#127897;</div>
+        <h3>Acapela Neural Voices</h3>
+        <p>First AAC app to use DNN-powered speech synthesis. More natural, smoother-sounding voices with multiple regional English accents. Also supports Apple Personal Voice (iOS 17+).</p>
+        <span class="feature-tag" style="background:rgba(6,182,212,0.15);color:var(--cyan);">Voice Tech</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:rgba(249,115,22,0.15);color:var(--orange);">&#9729;&#65039;</div>
+        <h3>Cloud Team Sync</h3>
+        <p>Unlimited team sharing at no additional cost. Teachers, SLPs, and family members all sync instantly. Role-based permissions control who can use, edit, or manage.</p>
+        <span class="feature-tag" style="background:rgba(249,115,22,0.15);color:var(--orange);">Collaboration</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--red-bg);color:var(--red);">&#127891;</div>
+        <h3>Proloquo Coach</h3>
+        <p>Free companion app for parents and educators on iPhone and iPad. Guided training modules, usage tracking with weekly graphs, and direct AssistiveWare support channel.</p>
+        <span class="feature-tag" style="background:var(--red-bg);color:var(--red);">Companion App</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--accent-light);background:rgba(99,102,241,0.15);color:var(--accent-light);">&#127793;</div>
+        <h3>Grows With the User</h3>
+        <p>Designed for ages 2 through adulthood. Crescendo Evolution vocabulary supports language development from first words through complex academic expression.</p>
+        <span class="feature-tag" style="background:rgba(99,102,241,0.15);color:var(--accent-light);">Lifespan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vocabulary Deep Dive -->
+  <section class="section" id="vocabulary">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--blue-bg);color:var(--blue);">&#128202;</span>
+      Vocabulary Deep Dive
+    </h2>
+
+    <div class="chart-container">
+      <div class="chart-title">Vocabulary Size Comparison: Proloquo vs. Competing AAC Apps</div>
+      <div class="chart-wrapper" style="height:320px;">
+        <canvas id="vocabChart"></canvas>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <h2>Crescendo Evolution: The Research Foundation</h2>
+      <p>Crescendo Evolution was built by analyzing anonymous word usage data from over 10,000 AAC users across both Proloquo2Go (symbol-based) and Proloquo4Text (text-based). This real-world data was combined with extensive vocabulary research to identify the words needed for full participation in educational curriculum from early childhood through late elementary school and beyond.</p>
+      <p>The result: <strong>over 16,000 pre-planned words</strong>, including 4,500+ graphic symbols for general conversation and 5,000+ essential curriculum words. This is more than four times the vocabulary of any competing AAC system.</p>
+
+      <h3>How the Grid Works</h3>
+      <ul>
+        <li><strong>Home Screen:</strong> 48 symbol buttons + 12 text-only buttons</li>
+        <li><strong>9 Tabs:</strong> Organized by topic and function</li>
+        <li><strong>Static Top Rows:</strong> Two rows of the most frequently used words remain visible across all views</li>
+        <li><strong>No Back Button:</strong> Every word reached through the same consistent motor path</li>
+        <li><strong>90%+ Curriculum Words:</strong> Come preprogrammed out of the box</li>
+      </ul>
+
+      <h3>The Customization Philosophy</h3>
+      <p>Users <strong>can add</strong> new words, symbols, and photos that are unique to the individual AAC user. Users <strong>cannot move or remove</strong> preprogrammed vocabulary. This deliberate restriction preserves motor planning integrity -- ensuring that every word is always in the same place, reached through the same path.</p>
+      <p>This is the central philosophical tension between Proloquo and Proloquo2Go. AssistiveWare argues that consistency enables fluency. Critics argue that it limits personalization for users with unique communication needs.</p>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section class="section" id="comparison">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--purple-bg);color:var(--purple);">&#9878;&#65039;</span>
+      Proloquo vs. Proloquo2Go
+    </h2>
+
+    <div class="article-content" style="padding:1.5rem;">
+      <p style="margin-top:0;">These are <strong>not</strong> competing products -- they are complementary apps reflecting fundamentally different design philosophies from the same company. Understanding the differences is critical for choosing the right tool.</p>
+    </div>
+
+    <div class="comparison-wrapper">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Proloquo (New)</th>
+            <th>Proloquo2Go (Legacy)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature-label">Vocabulary System</td>
+            <td>Crescendo Evolution (16,000+ words)</td>
+            <td>Crescendo (customizable levels)</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Grid Size</td>
+            <td>Fixed: 48 symbol + 12 text</td>
+            <td>23 options (9 to 144 buttons)</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Motor Planning</td>
+            <td><span class="check">Strong</span> -- words never move</td>
+            <td><span class="partial">Flexible</span> -- fully rearrangeable</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Customization</td>
+            <td><span class="partial">Limited</span> -- add words only</td>
+            <td><span class="check">Extensive</span> -- move, delete, rearrange</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Languages</td>
+            <td><span class="cross">English only</span></td>
+            <td><span class="check">4 languages</span> (EN, ES, FR, NL)</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Platform</td>
+            <td>iPad only</td>
+            <td>iPad + iPhone</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Companion App</td>
+            <td><span class="check">Proloquo Coach (free)</span></td>
+            <td><span class="cross">None</span></td>
+          </tr>
+          <tr>
+            <td class="feature-label">Team Sharing</td>
+            <td><span class="check">Unlimited cloud sync</span></td>
+            <td><span class="partial">Manual backup/restore</span></td>
+          </tr>
+          <tr>
+            <td class="feature-label">Pricing</td>
+            <td>$99.99/year subscription</td>
+            <td>$249.99 one-time purchase</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Alt-Access</td>
+            <td>Basic (independent iPad use)</td>
+            <td><span class="check">Extensive</span> (switch, scanning)</td>
+          </tr>
+          <tr>
+            <td class="feature-label">Thinking Space</td>
+            <td><span class="check">Yes</span></td>
+            <td><span class="cross">No</span></td>
+          </tr>
+          <tr>
+            <td class="feature-label">Focus Mode</td>
+            <td><span class="check">Yes</span></td>
+            <td><span class="cross">No</span></td>
+          </tr>
+          <tr>
+            <td class="feature-label">Voice Technology</td>
+            <td>Acapela Neural + Apple + Personal Voice</td>
+            <td>Acapela Neural + Apple + Personal Voice</td>
+          </tr>
+          <tr>
+            <td class="feature-label">App Store Rating</td>
+            <td><span class="partial">4.1 / 5</span></td>
+            <td><span class="check">4.8 / 5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-container" style="margin-top:1.5rem;">
+      <div class="chart-title">Feature Comparison Radar: Proloquo vs. Proloquo2Go</div>
+      <div class="chart-wrapper" style="height:380px;">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--green-bg);color:var(--green);">&#128176;</span>
+      Pricing Comparison
+    </h2>
+
+    <div class="chart-container">
+      <div class="chart-title">Cumulative Cost Over 5 Years: Proloquo Subscription vs. Proloquo2Go One-Time</div>
+      <div class="chart-wrapper" style="height:320px;">
+        <canvas id="pricingChart"></canvas>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <h2>The Subscription Debate</h2>
+      <p>Proloquo2Go charges a <strong>one-time fee of $249.99</strong> -- pay once, own it forever. Proloquo uses a <strong>subscription model</strong>: free to download with a generous 6-month trial, then $99.99 per year.</p>
+      <p>The math is straightforward: Proloquo becomes more expensive than Proloquo2Go after approximately <strong>2.5 years of use</strong>. For a tool that many people need for life, the cumulative difference is significant.</p>
+      <p><strong>Subscription advocates</strong> point out that the initial cost is much lower, that ongoing revenue supports continuous development and the free Proloquo Coach app, and that cloud infrastructure for unlimited team sharing requires ongoing funding.</p>
+      <p><strong>Subscription critics</strong> argue that AAC is a lifelong need and that subscriptions create indefinite financial burden -- a particularly painful consideration for families already managing the considerable expenses associated with disability.</p>
+      <p>AssistiveWare periodically offers promotional pricing (such as 50% off the first year during AAC Awareness Month), and institutional/volume licensing is available for schools and organizations.</p>
+    </div>
+  </section>
+
+  <!-- Pros and Cons -->
+  <section class="section" id="pros-cons">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--yellow-bg);color:var(--yellow);">&#9878;&#65039;</span>
+      Strengths &amp; Weaknesses
+    </h2>
+
+    <div class="pros-cons-grid">
+      <div class="pros-card">
+        <h3><span style="color:var(--green);">&#10003;</span> Strengths</h3>
+        <ul>
+          <li><strong>Research-driven design</strong> from real-world data of 10,000+ AAC users</li>
+          <li><strong>16,000+ pre-planned words</strong> -- 4x more than any competitor</li>
+          <li><strong>Motor planning excellence</strong> -- words never move, building muscle memory</li>
+          <li><strong>Thinking Space</strong> -- innovative whiteboard for non-linear communication</li>
+          <li><strong>Focus Mode</strong> -- teaches without restricting vocabulary access</li>
+          <li><strong>Proloquo Coach</strong> -- free companion app empowering families and educators</li>
+          <li><strong>Unlimited team sync</strong> -- cloud-based sharing with role permissions</li>
+          <li><strong>Acapela Neural Voices</strong> -- natural-sounding DNN speech synthesis</li>
+          <li><strong>Personal Voice</strong> support -- speak in your own synthesized voice (iOS 17+)</li>
+          <li><strong>Grows with the user</strong> from age 2 through adulthood</li>
+          <li><strong>5,000+ curriculum words</strong> preprogrammed for school participation</li>
+          <li><strong>2023 Cultural Impact Award</strong> from Apple validates the approach</li>
+        </ul>
+      </div>
+
+      <div class="cons-card">
+        <h3><span style="color:var(--red);">&#10007;</span> Weaknesses</h3>
+        <ul>
+          <li><strong>English only</strong> -- no multilingual support, significant gap for diverse communities</li>
+          <li><strong>iPad only</strong> -- main app does not run on iPhone, limiting portability</li>
+          <li><strong>Limited customization</strong> -- cannot move or remove preprogrammed vocabulary</li>
+          <li><strong>Subscription model</strong> -- $99.99/yr adds up; exceeds Proloquo2Go after year 3</li>
+          <li><strong>Single grid size</strong> -- only one layout (48+12) vs. Proloquo2Go's 23 options</li>
+          <li><strong>Learning curve</strong> for users transitioning from other AAC systems</li>
+          <li><strong>Narrower accessibility</strong> -- not designed for significant motor/vision impairments</li>
+          <li><strong>Voice quality issues</strong> in some recent updates criticized by users</li>
+          <li><strong>Platform lock-in</strong> -- no Android, macOS, or Windows support</li>
+          <li><strong>Font/contrast limitations</strong> -- limited text size and visual contrast options</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Reviews Section -->
+  <section class="section" id="reviews">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:rgba(6,182,212,0.15);color:var(--cyan);">&#128172;</span>
+      User Reviews &amp; Community Reception
+    </h2>
+
+    <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+      <div class="kpi">
+        <div class="kpi-label">Proloquo Rating</div>
+        <div class="kpi-value" style="color:var(--yellow);">4.1/5</div>
+        <div class="kpi-sub">App Store</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Proloquo2Go Rating</div>
+        <div class="kpi-value" style="color:var(--green);">4.8/5</div>
+        <div class="kpi-sub">App Store (established)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Proloquo Coach</div>
+        <div class="kpi-value" style="color:var(--accent-light);">Free</div>
+        <div class="kpi-sub">Included with subscription</div>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">"Easy to use and less overwhelming than other apps. Designed with lots of research into how AAC users and other people actually use words."</div>
+        <div class="review-meta">Parent / AAC Team Member <span class="review-sentiment sentiment-positive">Positive</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">"Personal Voice compatibility makes it well worth the price, especially if you use AAC frequently or full-time. Being able to speak in a voice that sounds like my own is incredible."</div>
+        <div class="review-meta">Full-time AAC User <span class="review-sentiment sentiment-positive">Positive</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+        <div class="review-text">"Motor planning consistency is exactly what my students need. The fact that words are always in the same place makes a real difference for building fluency."</div>
+        <div class="review-meta">Speech-Language Pathologist <span class="review-sentiment sentiment-positive">Positive</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9734;&#9734;&#9734;</div>
+        <div class="review-text">"A big learning curve in navigation. Customization is very difficult and frustrating even for experienced AAC users transitioning from another system."</div>
+        <div class="review-meta">Experienced AAC User <span class="review-sentiment sentiment-negative">Critical</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+        <div class="review-text">"No way to change to larger font or make the icons smaller. Recent voice updates have a grating breathy quality. Subscription pricing for a lifelong need is concerning."</div>
+        <div class="review-meta">Parent / Caregiver <span class="review-sentiment sentiment-mixed">Mixed</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">"Proloquo Coach is a game-changer. For the first time, I feel like I actually know how to support my child's communication without needing to pay for a consultant every week."</div>
+        <div class="review-meta">Parent <span class="review-sentiment sentiment-positive">Positive</span></div>
+      </div>
+    </div>
+
+    <!-- Collapsible: Key Review Themes -->
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        Key Review Themes Analysis
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p><strong>Most praised:</strong> Research-based vocabulary design, motor planning consistency, Proloquo Coach companion app, ease of use for beginners, Personal Voice integration, and cloud team sharing.</p>
+          <p><strong>Most criticized:</strong> Transition difficulty from other AAC systems, limited customization (cannot rearrange or remove words), English-only limitation, subscription pricing model, single grid size, and limited accessibility options for users with significant motor or vision impairments.</p>
+          <p><strong>Most debated:</strong> The subscription pricing model generates the most passionate discussion. Some see it as a reasonable ongoing fee that funds continuous development and cloud infrastructure. Others view it as an ongoing burden that penalizes the very families least able to absorb indefinite costs. The 6-month free trial helps mitigate this but does not resolve the long-term concern.</p>
+          <p><strong>Rating context:</strong> Proloquo's 4.1/5 rating versus Proloquo2Go's 4.8/5 rating partly reflects the maturity gap -- Proloquo2Go has had over 15 years to refine its feature set and build user familiarity. Proloquo is still a relatively new product with a fundamentally different approach that requires adjustment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Target Audience Section -->
+  <section class="section" id="audience">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:rgba(249,115,22,0.15);color:var(--orange);">&#128101;</span>
+      Who Is Proloquo For?
+    </h2>
+
+    <div class="audience-grid">
+      <div class="audience-card ideal">
+        <h3 style="color:var(--accent-light);">&#10003; Ideal Candidates</h3>
+        <ul>
+          <li>Nonspeaking children (as young as 2) who can independently interact with an iPad</li>
+          <li>Adults needing symbol-based AAC communication</li>
+          <li>People with autism, stroke, physical trauma, or progressive conditions (ALS, Parkinson's)</li>
+          <li>Families wanting structured coaching support through Proloquo Coach</li>
+          <li>Educational teams wanting seamless, cloud-synced vocabulary collaboration</li>
+          <li>Users who benefit from strong motor planning and consistent word placement</li>
+          <li>AAC beginners who benefit from a massive pre-built vocabulary that works out of the box</li>
+          <li>English-speaking users in any region (multiple accent options available)</li>
+        </ul>
+      </div>
+
+      <div class="audience-card consider">
+        <h3 style="color:var(--yellow);">&#9888; Consider Alternatives If You Need</h3>
+        <ul>
+          <li>Multilingual or non-English communication support</li>
+          <li>iPhone-only AAC access (use Proloquo2Go instead)</li>
+          <li>Extensive grid size customization (9 to 144 buttons)</li>
+          <li>Advanced alternative access for significant motor or vision impairments</li>
+          <li>One-time purchase pricing without ongoing subscription commitment</li>
+          <li>Deep vocabulary customization (move, delete, and rearrange words)</li>
+          <li>Cross-platform support (Android, Windows, macOS)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collapsible Deep Dives -->
+  <section class="section">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--accent-light);background:rgba(99,102,241,0.15);color:var(--accent-light);">&#128214;</span>
+      Deep Dive Topics
+    </h2>
+
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        Thinking Space: Communication Beyond Sentences
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p>One of Proloquo's most innovative features is <strong>Thinking Space</strong> -- a flexible whiteboard area that breaks free from the linear sentence bar found in traditional AAC apps.</p>
+          <p>In Thinking Space, users can drag symbols from the vocabulary grid into an open canvas, then cluster, rearrange, and connect them freely. This enables forms of expression that go beyond constructing grammatical sentences: brainstorming, concept mapping, showing relationships between ideas, and exploratory communication.</p>
+          <p>For emergent communicators -- including very young children just beginning their AAC journey -- Thinking Space removes the pressure of building "correct" sentences. A child can place symbols for "dog," "park," and "happy" on the canvas to communicate a feeling or memory without needing to construct "I was happy at the park with the dog."</p>
+          <p>The contents of Thinking Space can be saved as photos, printed, or shared with communication partners, making it a powerful tool for both real-time interaction and reflective communication.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        Focus Mode: Teaching Without Restricting
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p><strong>Focus Mode</strong> addresses one of the thorniest challenges in AAC education: how to direct a learner's attention to target vocabulary without restricting their access to the full word set.</p>
+          <p>Traditional approaches to teaching AAC often involve shrinking the grid, hiding buttons, or removing words to reduce overwhelm. But these strategies limit communicative freedom and can create prompt dependency, where the user only communicates what they have been explicitly set up to say.</p>
+          <p>Proloquo's Focus Mode uses light and motion to gently highlight target words, creating visual pathways that invite exploration without building walls. The full vocabulary remains accessible at all times. If a student navigates away from the tab containing the focus words, the visual cues follow them, gently guiding attention back without forcing compliance.</p>
+          <p>This design reflects a broader philosophy in modern AAC practice: that access to robust vocabulary should never be sacrificed for instructional convenience.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        Voice Technology: Acapela Neural + Personal Voice
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p>Proloquo was the <strong>first AAC app to incorporate Acapela Neural Voices</strong> -- speech synthesis powered by deep neural network technology that produces significantly more natural, smoother-sounding output compared to traditional concatenative synthesis.</p>
+          <p>The voices include multiple regional English accents, allowing users to select a voice that reflects their identity and geographic context. The app also supports Apple's system voices.</p>
+          <p>Most notably, Proloquo supports <strong>Apple's Personal Voice</strong> feature (iOS 17+). Personal Voice allows users to create a synthesized voice that sounds like their own natural speech by reading 150 phrases to train the model. For people with progressive conditions like ALS or Parkinson's who may lose their natural voice over time, this feature represents a profound form of identity preservation -- continuing to communicate in your own voice even after the ability to produce natural speech has diminished.</p>
+          <p>Some users have reported quality issues with recent voice updates, describing a "grating breathy quality" in certain voice packs. AssistiveWare continues to refine voice quality with each update.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        Cloud Architecture &amp; Team Sharing
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p>Proloquo's cloud-based architecture enables the most seamless team collaboration experience in the AAC market. When a family purchases a Proloquo subscription, every member of the AAC user's team can download both Proloquo and Proloquo Coach for <strong>free</strong> and sync automatically.</p>
+          <p>All vocabulary data is stored in the cloud and syncs instantly across devices. When a teacher adds a new word at school, it appears on the home iPad within moments. Role-based permissions allow the team to control who can use the vocabulary, who can edit it, and who can manage team membership.</p>
+          <p>This stands in sharp contrast to Proloquo2Go, where sharing vocabulary between devices required manual backup and restore procedures through iTunes, Dropbox, or WiFi -- a process that was technically challenging and often resulted in teams working with inconsistent vocabulary setups across settings.</p>
+          <p>The cloud sync also ensures that the AAC user always has the <strong>same words in the same places</strong> regardless of location -- home, school, therapy, or community.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        The 2023 App Store Cultural Impact Award
+        <span class="collapsible-arrow">&#9660;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="collapsible-content">
+          <p>In November 2023, Apple selected Proloquo for its <strong>App Store Award for Cultural Impact</strong> -- an honor recognizing apps that have made "a lasting impact on people's lives and communities." Proloquo was the first AAC app ever to receive this distinction.</p>
+          <p>The award brought unprecedented mainstream visibility to AAC technology. For a field that often operates in the margins of the tech industry, Apple's recognition signaled that communication access is not a niche concern but a cultural imperative.</p>
+          <p>This recognition came alongside apps like Duolingo and Headspace in previous years, placing AAC technology on the same stage as some of the most widely used applications in the world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sources Section -->
+  <section class="section" id="sources">
+    <h2 class="section-title">
+      <span class="section-icon" style="background:var(--bg-input);color:var(--text-dim);">&#128279;</span>
+      Sources &amp; References
+    </h2>
+
+    <div class="article-content" style="padding:1.5rem 2rem;">
+      <ol class="source-list">
+        <li><a href="https://www.assistiveware.com/products/proloquo" target="_blank" rel="noopener">AssistiveWare - Proloquo Product Page</a></li>
+        <li><a href="https://www.assistiveware.com/blog/introducing-proloquo-proloquo-coach" target="_blank" rel="noopener">Introducing Proloquo and Proloquo Coach</a></li>
+        <li><a href="https://www.assistiveware.com/blog/proloquo-or-proloquo2go" target="_blank" rel="noopener">Comparing Proloquo and Proloquo2Go</a></li>
+        <li><a href="https://apps.apple.com/us/app/proloquo/id1521978238" target="_blank" rel="noopener">Proloquo on the App Store</a></li>
+        <li><a href="https://www.apple.com/newsroom/2023/11/apple-unveils-app-store-award-winners-the-best-apps-and-games-of-2023/" target="_blank" rel="noopener">Apple 2023 App Store Awards</a></li>
+        <li><a href="https://www.assistiveware.com/press-releases/proloquo-wins-2023-app-store-award" target="_blank" rel="noopener">AssistiveWare Cultural Impact Award Press Release</a></li>
+        <li><a href="https://www.assistiveware.com/blog/how-is-proloquo-efficient" target="_blank" rel="noopener">How Proloquo is Efficient</a></li>
+        <li><a href="https://www.assistiveware.com/blog/how-is-the-vocabulary-in-proloquo-organized" target="_blank" rel="noopener">Proloquo Vocabulary Organization</a></li>
+        <li><a href="https://www.assistiveware.com/support/proloquo/basics/proloquo-thinking-space" target="_blank" rel="noopener">Thinking Space Feature</a></li>
+        <li><a href="https://www.assistiveware.com/support/proloquo/basics/focus-mode" target="_blank" rel="noopener">Focus Mode Feature</a></li>
+        <li><a href="https://www.assistiveware.com/support/proloquo/basics/proloquo-coach" target="_blank" rel="noopener">Proloquo Coach</a></li>
+        <li><a href="https://www.assistiveware.com/blog/aac-app-more-personality-apple-personal-voice" target="_blank" rel="noopener">Personal Voice and AAC</a></li>
+        <li><a href="https://www.assistiveware.com/about" target="_blank" rel="noopener">About AssistiveWare</a></li>
+        <li><a href="https://www.assistiveware.com/blog/proloquo-4-grows-with-users" target="_blank" rel="noopener">Proloquo 4 Grows With Users</a></li>
+        <li><a href="https://www.assistiveware.com/blog/designing-a-comprehensive-and-inclusive-vocabulary-for-proloquo" target="_blank" rel="noopener">Designing Comprehensive Vocabulary</a></li>
+        <li><a href="https://www.assistiveware.com/products/proloquo-and-proloquo-coach-for-aac-professionals" target="_blank" rel="noopener">Proloquo for Clinicians</a></li>
+        <li><a href="https://nwacs.info/blog/2022/6/proloquo-a-review" target="_blank" rel="noopener">NWACS Proloquo Review</a></li>
+        <li><a href="https://www.assistiveware.com/crescendo" target="_blank" rel="noopener">Crescendo Vocabulary</a></li>
+        <li><a href="https://www.assistiveware.com/blog/base-vocabulary-of-proloquo" target="_blank" rel="noopener">Why Base Vocabulary Cannot Change</a></li>
+        <li><a href="https://www.assistiveware.com/blog/how-does-proloquo-make-modeling-easy" target="_blank" rel="noopener">Modeling With Proloquo</a></li>
+      </ol>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>Proloquo Next-Gen AAC Deep Dive &middot; AI-Assisted Research &middot; March 2026</p>
+  <p style="margin-top:0.5rem;"><a href="../aac-applications-competitive-analysis-dashboard/index.html">Back to AAC Dashboard</a></p>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+// === Reading Progress ===
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const pct = height > 0 ? (winScroll / height * 100) : 0;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+});
+
+// === Back to Top ===
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// === Scroll Spy for Nav ===
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+
+const scrollSpy = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.15, rootMargin: '-80px 0px -60% 0px' });
+
+sections.forEach(s => scrollSpy.observe(s));
+
+// === Smooth Scroll Nav ===
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// === Collapsible Sections ===
+function toggleCollapsible(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+// === Chart 1: Vocabulary Size Comparison ===
+const vocabCtx = document.getElementById('vocabChart').getContext('2d');
+new Chart(vocabCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Proloquo\n(Crescendo Evolution)', 'Proloquo2Go\n(Crescendo)', 'TouchChat HD', 'LAMP Words\nfor Life', 'TD Snap'],
+    datasets: [{
+      label: 'Approximate Vocabulary Size (words)',
+      data: [16000, 4000, 3500, 3200, 3000],
+      backgroundColor: [
+        'rgba(99,102,241,0.8)',
+        'rgba(168,85,247,0.7)',
+        'rgba(59,130,246,0.6)',
+        'rgba(6,182,212,0.6)',
+        'rgba(249,115,22,0.6)'
+      ],
+      borderColor: [
+        '#6366f1',
+        '#a855f7',
+        '#3b82f6',
+        '#06b6d4',
+        '#f97316'
+      ],
+      borderWidth: 2,
+      borderRadius: 6,
+      barPercentage: 0.7
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: '#f1f5f9',
+        bodyColor: '#94a3b8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        callbacks: {
+          label: ctx => ctx.parsed.x.toLocaleString() + ' words'
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(51,65,85,0.5)' },
+        ticks: {
+          color: '#94a3b8',
+          callback: v => v >= 1000 ? (v/1000) + 'k' : v
+        }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { color: '#f1f5f9', font: { size: 12 } }
+      }
+    }
+  }
+});
+
+// === Chart 2: Radar Comparison ===
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Vocabulary Size', 'Motor Planning', 'Customization', 'Language Support', 'Platform Support', 'Accessibility', 'Team Collaboration', 'Companion App'],
+    datasets: [
+      {
+        label: 'Proloquo',
+        data: [10, 10, 3, 2, 4, 5, 10, 10],
+        backgroundColor: 'rgba(99,102,241,0.2)',
+        borderColor: '#6366f1',
+        borderWidth: 2,
+        pointBackgroundColor: '#6366f1',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
+        pointRadius: 4
+      },
+      {
+        label: 'Proloquo2Go',
+        data: [5, 4, 10, 8, 7, 9, 4, 1],
+        backgroundColor: 'rgba(168,85,247,0.2)',
+        borderColor: '#a855f7',
+        borderWidth: 2,
+        pointBackgroundColor: '#a855f7',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
+        pointRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: { color: '#f1f5f9', usePointStyle: true, padding: 20 }
+      },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: '#f1f5f9',
+        bodyColor: '#94a3b8',
+        borderColor: '#334155',
+        borderWidth: 1
+      }
+    },
+    scales: {
+      r: {
+        angleLines: { color: 'rgba(51,65,85,0.5)' },
+        grid: { color: 'rgba(51,65,85,0.5)' },
+        pointLabels: { color: '#94a3b8', font: { size: 11 } },
+        ticks: { display: false },
+        suggestedMin: 0,
+        suggestedMax: 10
+      }
+    }
+  }
+});
+
+// === Chart 3: Pricing Over Time ===
+const pricingCtx = document.getElementById('pricingChart').getContext('2d');
+new Chart(pricingCtx, {
+  type: 'line',
+  data: {
+    labels: ['Trial (6 mo)', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+    datasets: [
+      {
+        label: 'Proloquo (Subscription)',
+        data: [0, 99.99, 199.98, 299.97, 399.96, 499.95],
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99,102,241,0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.3,
+        pointBackgroundColor: '#6366f1',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5
+      },
+      {
+        label: 'Proloquo2Go (One-Time)',
+        data: [249.99, 249.99, 249.99, 249.99, 249.99, 249.99],
+        borderColor: '#a855f7',
+        backgroundColor: 'rgba(168,85,247,0.1)',
+        borderWidth: 3,
+        borderDash: [8, 4],
+        fill: true,
+        tension: 0,
+        pointBackgroundColor: '#a855f7',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: { color: '#f1f5f9', usePointStyle: true, padding: 20 }
+      },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: '#f1f5f9',
+        bodyColor: '#94a3b8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        callbacks: {
+          label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(2)
+        }
+      },
+      annotation: {
+        annotations: {
+          crossover: {
+            type: 'line',
+            xMin: 2.5,
+            xMax: 2.5,
+            borderColor: 'rgba(239,68,68,0.5)',
+            borderWidth: 2,
+            borderDash: [6, 3],
+            label: {
+              display: true,
+              content: 'Break-even',
+              position: 'start'
+            }
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(51,65,85,0.5)' },
+        ticks: { color: '#94a3b8' }
+      },
+      y: {
+        grid: { color: 'rgba(51,65,85,0.5)' },
+        ticks: {
+          color: '#94a3b8',
+          callback: v => '$' + v
+        },
+        beginAtZero: true
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Deep dive into OpenAAC Sweet Suite - the open source AAC platform fighting for communication as a human right. Explore the ecosystem, technology, and community.">
+  <meta name="author" content="AI-Assisted Research">
+  <meta property="og:title" content="OpenAAC Sweet Suite Deep Dive">
+  <meta property="og:description" content="Comprehensive analysis of the open source AAC platform and the OpenAAC ecosystem">
+  <meta property="og:type" content="article">
+  <title>OpenAAC Sweet Suite Deep Dive | Open Source AAC Platform</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --color-primary: #10B981;
+      --color-primary-light: #34D399;
+      --color-primary-dark: #059669;
+      --color-primary-glow: rgba(16, 185, 129, 0.15);
+      --color-secondary: #6366F1;
+      --color-secondary-light: #818CF8;
+      --color-accent: #F59E0B;
+      --color-accent-light: #FCD34D;
+      --color-danger: #EF4444;
+      --color-danger-light: #FCA5A5;
+      --color-info: #3B82F6;
+      --color-info-light: #93C5FD;
+      --color-text: #F1F5F9;
+      --color-text-secondary: #94A3B8;
+      --color-text-muted: #64748B;
+      --color-bg: #0B1120;
+      --color-bg-card: #111827;
+      --color-bg-card-hover: #1E293B;
+      --color-bg-elevated: #1E293B;
+      --color-border: #1E293B;
+      --color-border-light: #334155;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+      --shadow-glow: 0 0 40px rgba(16, 185, 129, 0.08);
+      --radius: 16px;
+      --radius-sm: 8px;
+      --radius-xs: 4px;
+      --max-width: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      z-index: 1000;
+      transition: width 0.15s ease;
+    }
+
+    /* Back Navigation */
+    .back-nav {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+    }
+    .back-nav:hover {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+      background: var(--color-bg-elevated);
+    }
+    .back-nav svg { width: 16px; height: 16px; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      padding: 8rem 2rem 5rem;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.06) 0%, transparent 60%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: var(--color-primary-glow);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--color-text);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--color-text-secondary);
+      max-width: 650px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .hero-stat .label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+    .section-header {
+      margin-bottom: 2rem;
+    }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+    .section-desc {
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+      margin-top: 0.5rem;
+      max-width: 700px;
+    }
+
+    /* Table of Contents */
+    .toc {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 4rem;
+    }
+    .toc h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.5rem;
+    }
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+    .toc-link:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-primary);
+    }
+    .toc-link .num {
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-xs);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+
+    /* Content Cards */
+    .content-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.2s ease;
+    }
+    .content-card:hover {
+      border-color: var(--color-border-light);
+    }
+    .content-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+    .content-card p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+    .content-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary), var(--color-primary-dark));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 3px solid var(--color-bg);
+      z-index: 1;
+    }
+    .timeline-year {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+    .timeline-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* Architecture Diagram */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .arch-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .arch-card.backend::before { background: linear-gradient(90deg, #EF4444, #F97316); }
+    .arch-card.frontend::before { background: linear-gradient(90deg, #3B82F6, #6366F1); }
+    .arch-card.platform::before { background: linear-gradient(90deg, #10B981, #14B8A6); }
+    .arch-card.webapis::before { background: linear-gradient(90deg, #F59E0B, #EAB308); }
+
+    .arch-card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .arch-card.backend .arch-card-title { color: #F97316; }
+    .arch-card.frontend .arch-card-title { color: #818CF8; }
+    .arch-card.platform .arch-card-title { color: #34D399; }
+    .arch-card.webapis .arch-card-title { color: #FCD34D; }
+
+    .tech-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-xs);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      margin: 0.2rem;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all 0.2s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-glow);
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .feature-icon.green { background: rgba(16,185,129,0.15); }
+    .feature-icon.blue { background: rgba(59,130,246,0.15); }
+    .feature-icon.purple { background: rgba(99,102,241,0.15); }
+    .feature-icon.amber { background: rgba(245,158,11,0.15); }
+    .feature-icon.red { background: rgba(239,68,68,0.15); }
+    .feature-icon.teal { background: rgba(20,184,166,0.15); }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Chart Containers */
+    .chart-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--color-text);
+    }
+    .chart-subtitle {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .chart-wrapper {
+      position: relative;
+      max-height: 400px;
+    }
+
+    /* Ecosystem Network */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .eco-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: all 0.2s ease;
+    }
+    .eco-card:hover {
+      border-color: var(--color-border-light);
+      transform: translateY(-2px);
+    }
+    .eco-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .eco-card-icon {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .eco-card-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .eco-card-desc {
+      font-size: 0.82rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    .eco-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .eco-meta-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-xs);
+      background: var(--color-bg-elevated);
+      color: var(--color-text-muted);
+    }
+
+    /* GitHub Stats Bar */
+    .github-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .gh-stat {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .gh-stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .gh-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.25rem;
+    }
+
+    /* Repo Table */
+    .repo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .repo-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--color-border-light);
+      white-space: nowrap;
+    }
+    .repo-table td {
+      padding: 0.75rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .repo-table tr:hover td {
+      background: var(--color-bg-elevated);
+    }
+    .repo-name {
+      font-weight: 600;
+      color: var(--color-primary-light);
+    }
+    .star-count {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* Pros/Cons */
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .pros-cons { grid-template-columns: 1fr; }
+    }
+    .pros-section, .cons-section {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+    .pros-section { border-top: 3px solid var(--color-primary); }
+    .cons-section { border-top: 3px solid var(--color-danger); }
+
+    .pros-title, .cons-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pros-title { color: var(--color-primary); }
+    .cons-title { color: var(--color-danger); }
+
+    .pro-item, .con-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    .pro-item .icon { color: var(--color-primary); flex-shrink: 0; margin-top: 0.15rem; }
+    .con-item .icon { color: var(--color-danger); flex-shrink: 0; margin-top: 0.15rem; }
+
+    /* Comparison Table */
+    .comparison-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 700px;
+    }
+    .comparison-table th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      border-bottom: 2px solid var(--color-border-light);
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+    .comparison-table tr:hover td { background: var(--color-bg-elevated); }
+    .comparison-table .app-name {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .check { color: var(--color-primary); font-weight: 700; }
+    .cross { color: var(--color-text-muted); }
+    .partial { color: var(--color-accent); font-weight: 500; }
+
+    /* Symbol Libraries Table */
+    .symbol-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .symbol-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      border-bottom: 2px solid var(--color-border-light);
+    }
+    .symbol-table td {
+      padding: 0.75rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .symbol-table tr:hover td { background: var(--color-bg-elevated); }
+
+    /* Blockquote */
+    .callout {
+      background: var(--color-primary-glow);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .callout p {
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .callout strong {
+      color: var(--color-text);
+    }
+
+    /* Sources */
+    .sources-list {
+      columns: 2;
+      column-gap: 2rem;
+      list-style: none;
+      padding: 0;
+    }
+    @media (max-width: 768px) {
+      .sources-list { columns: 1; }
+    }
+    .sources-list li {
+      break-inside: avoid;
+      margin-bottom: 0.5rem;
+      font-size: 0.82rem;
+    }
+    .sources-list a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .sources-list a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Footer */
+    .page-footer {
+      margin-top: 4rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--color-border);
+    }
+    .footer-text {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+    }
+    .footer-text a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px; height: 44px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+      z-index: 100;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero { padding: 6rem 1.5rem 3rem; }
+      .container { padding: 0 1.25rem; }
+      .hero-stats { gap: 1.25rem; }
+      .hero-stat .number { font-size: 1.5rem; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .arch-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .ecosystem-grid { grid-template-columns: 1fr; }
+      .github-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Two-column layout for prose content */
+    .prose-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .prose-columns { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress"></div>
+
+<a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-nav">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+  Back to AAC Dashboard
+</a>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Open Source AAC
+  </div>
+  <h1>OpenAAC <span class="highlight">Sweet Suite</span></h1>
+  <p class="hero-subtitle">
+    The open-source, community-governed AAC platform fighting for communication as a human right. A decade of development, one mission: give everyone a voice.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="number">6,111</div>
+      <div class="label">Commits</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">AGPLv3</div>
+      <div class="label">License</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">10+</div>
+      <div class="label">Years Development</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">60K+</div>
+      <div class="label">Open Symbols</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">6</div>
+      <div class="label">Platforms</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc">
+    <h2>Contents</h2>
+    <div class="toc-grid">
+      <a href="#origin" class="toc-link"><span class="num">01</span> Origin Story & Timeline</a>
+      <a href="#architecture" class="toc-link"><span class="num">02</span> Technology & Architecture</a>
+      <a href="#features" class="toc-link"><span class="num">03</span> Core Features</a>
+      <a href="#ecosystem" class="toc-link"><span class="num">04</span> The OpenAAC Ecosystem</a>
+      <a href="#github" class="toc-link"><span class="num">05</span> GitHub Activity & Repos</a>
+      <a href="#gpa" class="toc-link"><span class="num">06</span> AAC Industry GPA</a>
+      <a href="#openness" class="toc-link"><span class="num">07</span> Openness Assessment</a>
+      <a href="#pros-cons" class="toc-link"><span class="num">08</span> Strengths & Weaknesses</a>
+      <a href="#comparison" class="toc-link"><span class="num">09</span> Open Source AAC Comparison</a>
+      <a href="#future" class="toc-link"><span class="num">10</span> The Road Ahead</a>
+      <a href="#sources" class="toc-link"><span class="num">11</span> Sources</a>
+    </div>
+  </nav>
+
+  <!-- SECTION 1: ORIGIN STORY -->
+  <section class="section" id="origin">
+    <div class="section-header">
+      <div class="section-label">Chapter 1</div>
+      <h2 class="section-title">From a Father's Frustration to Open Source</h2>
+      <p class="section-desc">The story of Sweet Suite begins not with a business plan but with a parent's desperation -- and grew into a movement that redefined openness in the AAC industry.</p>
+    </div>
+
+    <div class="content-card">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2014</div>
+          <div class="timeline-title">CoughDrop Founded</div>
+          <div class="timeline-desc">Brian Whitmer, a software developer searching for an AAC solution for his daughter with Rett Syndrome, collaborates with 30+ SLPs, OTs, and AT specialists to build CoughDrop -- a cloud-based, cross-platform AAC app that brought modern web technology to a field dominated by legacy software.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">January 2015</div>
+          <div class="timeline-title">Open Board Format Launched</div>
+          <div class="timeline-desc">Whitmer initiates the Open Board Format (OBF) project, creating the first vendor-neutral file format for AAC communication boards. This enables boards to be exported and imported across different AAC applications -- a groundbreaking step toward interoperability.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2016</div>
+          <div class="timeline-title">CoughDrop Goes Open Source</div>
+          <div class="timeline-desc">The entire CoughDrop codebase is released as open source under AGPLv3, making it one of the first full-featured AAC platforms to do so. The full production codebase -- the same code running the commercial service -- is published for anyone to inspect, modify, and deploy.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2018-2022</div>
+          <div class="timeline-title">OpenAAC Ecosystem Grows</div>
+          <div class="timeline-desc">OpenAAC is established as a 501(c)(3) non-profit. The ecosystem expands with OpenSymbols (60,000+ symbols), AAC Shim (web accessibility for AAC users), AAC in the Cloud conference, the knAAC Awards, and AAC Metrics (board set analysis tools).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Early 2023</div>
+          <div class="timeline-title">Forbes AAC Acquires CoughDrop</div>
+          <div class="timeline-desc">Forbes AAC (makers of ProSlate and WinSlate devices) acquires CoughDrop. Commercial assets transfer to MavWare, LLC. The open-source codebase continues under the OpenAAC umbrella.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2023-2024</div>
+          <div class="timeline-title">Rebranded as Sweet Suite AAC</div>
+          <div class="timeline-desc">The open-source repository is rebranded from CoughDrop to "Sweet Suite AAC" under the open-aac GitHub organization, maintaining the same Rails + Ember architecture while establishing a distinct identity from the proprietary CoughDrop commercial service.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2025-2026</div>
+          <div class="timeline-title">Active Development Continues</div>
+          <div class="timeline-desc">Sweet Suite repository updated April 2025 (6,111 commits). OBF gem and OpenAAC.org remain actively maintained. The 2026 AAC in the Cloud conference is scheduled for June 24-25 with theme "Choices Give us a Voice."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>The philosophy was clear:</strong> communication is a human right, and the tools that enable communication should not be locked behind proprietary walls. The commercial entity funds ongoing development, while the open-source fork ensures the technology remains available to the community regardless of corporate decisions.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: ARCHITECTURE -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <div class="section-label">Chapter 2</div>
+      <h2 class="section-title">Technology & Architecture</h2>
+      <p class="section-desc">A full-stack web application designed for the unique demands of AAC: reliability, offline access, multi-platform delivery, and diverse accessibility needs.</p>
+    </div>
+
+    <div class="arch-grid">
+      <div class="arch-card backend">
+        <div class="arch-card-title">Backend</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+          <span class="tech-tag">Ruby on Rails</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">Redis</span>
+          <span class="tech-tag">AWS S3</span>
+          <span class="tech-tag">AWS SES</span>
+          <span class="tech-tag">AWS SNS</span>
+          <span class="tech-tag">Elastic Transcoder</span>
+          <span class="tech-tag">Google TTS</span>
+          <span class="tech-tag">Google Translate</span>
+          <span class="tech-tag">ImageMagick</span>
+          <span class="tech-tag">Heroku</span>
+        </div>
+      </div>
+      <div class="arch-card frontend">
+        <div class="arch-card-title">Frontend</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+          <span class="tech-tag">Ember.js</span>
+          <span class="tech-tag">Handlebars</span>
+          <span class="tech-tag">Ember CLI</span>
+          <span class="tech-tag">npm</span>
+          <span class="tech-tag">Bower</span>
+          <span class="tech-tag">IndexedDB</span>
+          <span class="tech-tag">App Cache</span>
+          <span class="tech-tag">HTML5</span>
+        </div>
+      </div>
+      <div class="arch-card platform">
+        <div class="arch-card-title">Platforms</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+          <span class="tech-tag">Web Browsers</span>
+          <span class="tech-tag">iOS (Cordova)</span>
+          <span class="tech-tag">Android (Cordova)</span>
+          <span class="tech-tag">Windows (Electron)</span>
+          <span class="tech-tag">Mac (Electron)</span>
+          <span class="tech-tag">ChromeOS</span>
+        </div>
+      </div>
+      <div class="arch-card webapis">
+        <div class="arch-card-title">Web APIs & Standards</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+          <span class="tech-tag">Web Speech API</span>
+          <span class="tech-tag">IndexedDB</span>
+          <span class="tech-tag">Application Cache</span>
+          <span class="tech-tag">Open Board Format</span>
+          <span class="tech-tag">REST API</span>
+          <span class="tech-tag">i18n (required)</span>
+          <span class="tech-tag">Feature Flags</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Language Breakdown Chart -->
+    <div class="chart-container" style="margin-top: 1.5rem;">
+      <div class="chart-title">Codebase Language Breakdown</div>
+      <div class="chart-subtitle">Based on GitHub language statistics for open-aac/sweet-suite-aac</div>
+      <div class="chart-wrapper">
+        <canvas id="langChart" height="250"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: FEATURES -->
+  <section class="section" id="features">
+    <div class="section-header">
+      <div class="section-label">Chapter 3</div>
+      <h2 class="section-title">Core Features</h2>
+      <p class="section-desc">Sweet Suite provides a comprehensive AAC experience with communication boards, cloud sync, supervisor tools, and robust accessibility -- all from a single open-source codebase.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">&#x1F4AC;</div>
+        <h3>Communication Boards</h3>
+        <p>Customizable grid-based boards with symbol-based pictographic buttons, labels, and actions. Boards link hierarchically, supporting core vocabulary and topic-based organization. All boards use the Open Board Format for cross-app portability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">&#x1F50A;</div>
+        <h3>Speech Output</h3>
+        <p>Text-to-speech via the Web Speech API with support for multiple voices and languages. Works offline once cached, ensuring a communicator never loses their voice due to connectivity issues.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">&#x2601;&#xFE0F;</div>
+        <h3>Cloud Sync & Offline</h3>
+        <p>Cloud-based architecture syncs changes across all devices automatically. Board data is cached via IndexedDB, assets via Application Cache. Works fully offline and syncs when reconnected.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon amber">&#x1F465;</div>
+        <h3>Supervisor System</h3>
+        <p>Free supervisor accounts for therapists, parents, and teachers. Remote monitoring, language modeling, board modification, usage reports, and secure team messaging -- all from the supervisor's own device.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon teal">&#x1F4CA;</div>
+        <h3>Usage Tracking</h3>
+        <p>Optional tracking of all button presses in Speak Mode. Data backed up to cloud for remote review by communicators and linked supervisors. Helps track language development over time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon red">&#x267F;</div>
+        <h3>20+ Access Methods</h3>
+        <p>Direct touch, gaze tracking, head tracking (via cordova_face), switch scanning, pointer/mouse, and keyboard navigation. Designed for users with complex physical needs across all motor ability levels.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: ECOSYSTEM -->
+  <section class="section" id="ecosystem">
+    <div class="section-header">
+      <div class="section-label">Chapter 4</div>
+      <h2 class="section-title">The OpenAAC Ecosystem</h2>
+      <p class="section-desc">Sweet Suite is the flagship application of a broader constellation of standards, tools, libraries, and community initiatives -- all governed by a 501(c)(3) non-profit.</p>
+    </div>
+
+    <div class="ecosystem-grid">
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(16,185,129,0.15);">&#x1F4CB;</div>
+          <div class="eco-card-name">Open Board Format (OBF/OBZ)</div>
+        </div>
+        <div class="eco-card-desc">Vendor-neutral JSON/ZIP format for AAC communication boards. The de facto interoperability standard supported by Sweet Suite, Cboard, AsTeRICS Grid, PiCom, and others.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Standard</span>
+          <span class="eco-meta-tag">7 Stars</span>
+          <span class="eco-meta-tag">MIT</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(99,102,241,0.15);">&#x1F3A8;</div>
+          <div class="eco-card-name">OpenSymbols</div>
+        </div>
+        <div class="eco-card-desc">Aggregates 60,000+ symbols from ARASAAC, Sclera, Mulberry, OpenMoji, and Global Symbols into a single searchable API. All open-licensed.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Library</span>
+          <span class="eco-meta-tag">21 Stars</span>
+          <span class="eco-meta-tag">60K+ Symbols</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(245,158,11,0.15);">&#x1F310;</div>
+          <div class="eco-card-name">AAC Shim</div>
+        </div>
+        <div class="eco-card-desc">JavaScript utility enabling AAC systems to interact with regular websites. Removes barriers to internet access for AAC users who cannot type or speak.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Tool</span>
+          <span class="eco-meta-tag">JavaScript</span>
+          <span class="eco-meta-tag">Web A11y</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(59,130,246,0.15);">&#x1F4CF;</div>
+          <div class="eco-card-name">AAC Metrics</div>
+        </div>
+        <div class="eco-card-desc">Tool for objectively analyzing and comparing grid-based AAC board sets. Enables evidence-based evaluation of vocabulary coverage and navigation efficiency.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Analysis</span>
+          <span class="eco-meta-tag">3 Stars</span>
+          <span class="eco-meta-tag">MIT</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(239,68,68,0.15);">&#x1F3AC;</div>
+          <div class="eco-card-name">AAC in the Cloud</div>
+        </div>
+        <div class="eco-card-desc">Annual free, fully-online conference for the global AAC community. 2026 edition themed "Choices Give us a Voice" on June 24-25. Supports CEU credit tracking.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Conference</span>
+          <span class="eco-meta-tag">Free</span>
+          <span class="eco-meta-tag">Annual</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(236,72,153,0.15);">&#x1F3C6;</div>
+          <div class="eco-card-name">knAAC Awards</div>
+        </div>
+        <div class="eco-card-desc">Annual awards celebrating excellence in AAC across 18 categories. 2024 edition recognized 100+ nominees. Honors split between "Keepers" and "Noteworthies."</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Awards</span>
+          <span class="eco-meta-tag">18 Categories</span>
+          <span class="eco-meta-tag">100+ Nominees</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(20,184,166,0.15);">&#x1F48E;</div>
+          <div class="eco-card-name">OBF Ruby Gem</div>
+        </div>
+        <div class="eco-card-desc">Library for programmatically parsing and generating OBF/OBZ files. Essential developer tool for building OBF-compatible applications.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Dev Tool</span>
+          <span class="eco-meta-tag">4 Stars</span>
+          <span class="eco-meta-tag">Ruby</span>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-header">
+          <div class="eco-card-icon" style="background: rgba(139,92,246,0.15);">&#x1F4F1;</div>
+          <div class="eco-card-name">cordova_face</div>
+        </div>
+        <div class="eco-card-desc">Mobile face and head tracking with Cordova support. Enables head-based access methods for AAC users who cannot use touch or gaze tracking.</div>
+        <div class="eco-card-meta">
+          <span class="eco-meta-tag">Accessibility</span>
+          <span class="eco-meta-tag">3 Stars</span>
+          <span class="eco-meta-tag">Java</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Symbol Libraries -->
+    <div class="content-card" style="margin-top: 1.5rem;">
+      <h3>OpenSymbols Library Collections</h3>
+      <p style="margin-bottom: 1rem;">Centralized open-licensed symbol repository -- eliminating the need for proprietary symbol sets like PCS ($hundreds) or SymbolStix that cannot be transferred between apps.</p>
+      <div class="comparison-wrapper">
+        <table class="symbol-table">
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Symbols</th>
+              <th>License</th>
+              <th>Style</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="font-weight:600; color: var(--color-text);">ARASAAC</td><td>13,000</td><td>CC BY-NC-SA</td><td>Colorful, detailed pictographs</td></tr>
+            <tr><td style="font-weight:600; color: var(--color-text);">Sclera</td><td>11,000</td><td>CC BY-NC</td><td>High-contrast white-on-black</td></tr>
+            <tr><td style="font-weight:600; color: var(--color-text);">Mulberry</td><td>3,000</td><td>CC BY-SA</td><td>Clean line drawings</td></tr>
+            <tr><td style="font-weight:600; color: var(--color-text);">OpenMoji</td><td>3,000</td><td>CC BY-SA</td><td>Emoji-based</td></tr>
+            <tr><td style="font-weight:600; color: var(--color-text);">Global Symbols</td><td>Varies</td><td>CC BY-SA</td><td>Culturally-specific concepts</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: GITHUB -->
+  <section class="section" id="github">
+    <div class="section-header">
+      <div class="section-label">Chapter 5</div>
+      <h2 class="section-title">GitHub Activity & Repositories</h2>
+      <p class="section-desc">A look at Sweet Suite's repository metrics and the full OpenAAC organization on GitHub.</p>
+    </div>
+
+    <div class="github-stats">
+      <div class="gh-stat">
+        <div class="gh-stat-value">6,111</div>
+        <div class="gh-stat-label">Commits</div>
+      </div>
+      <div class="gh-stat">
+        <div class="gh-stat-value">5</div>
+        <div class="gh-stat-label">Stars</div>
+      </div>
+      <div class="gh-stat">
+        <div class="gh-stat-value">5</div>
+        <div class="gh-stat-label">Forks</div>
+      </div>
+      <div class="gh-stat">
+        <div class="gh-stat-value">14</div>
+        <div class="gh-stat-label">Total Repos</div>
+      </div>
+      <div class="gh-stat">
+        <div class="gh-stat-value">AGPLv3</div>
+        <div class="gh-stat-label">License</div>
+      </div>
+      <div class="gh-stat">
+        <div class="gh-stat-value">Apr 2025</div>
+        <div class="gh-stat-label">Last Updated</div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h3>All OpenAAC Repositories</h3>
+      <div class="comparison-wrapper" style="margin-top: 1rem;">
+        <table class="repo-table">
+          <thead>
+            <tr>
+              <th>Repository</th>
+              <th>Description</th>
+              <th>Language</th>
+              <th>Stars</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="repo-name">opensymbols</span></td>
+              <td>Open-licensed symbol library aggregator</td>
+              <td>JavaScript</td>
+              <td><span class="star-count">21</span></td>
+              <td>Jan 2023</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">covidspeak</span></td>
+              <td>Real-time video chat with non-verbal supports</td>
+              <td>JavaScript</td>
+              <td><span class="star-count">11</span></td>
+              <td>Jan 2023</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">openboardformat</span></td>
+              <td>Open Board Format documentation/site</td>
+              <td>JavaScript</td>
+              <td><span class="star-count">7</span></td>
+              <td>Jan 2025</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">openaac.org</span></td>
+              <td>OpenAAC website</td>
+              <td>HTML</td>
+              <td><span class="star-count">7</span></td>
+              <td>Jul 2025</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">sweet-suite-aac</span></td>
+              <td>Open source web-based AAC app and support suite</td>
+              <td>JavaScript</td>
+              <td><span class="star-count">5</span></td>
+              <td>Apr 2025</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">obf</span></td>
+              <td>OBF Ruby gem for parsing/generating boards</td>
+              <td>Ruby</td>
+              <td><span class="star-count">4</span></td>
+              <td>Jun 2025</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">aac-metrics</span></td>
+              <td>Board set analysis and comparison tool</td>
+              <td>HTML</td>
+              <td><span class="star-count">3</span></td>
+              <td>Feb 2025</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">cordova_face</span></td>
+              <td>Mobile face/head tracking with Cordova</td>
+              <td>Java</td>
+              <td><span class="star-count">3</span></td>
+              <td>Dec 2022</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">demo-tools</span></td>
+              <td>Demo/utility tools</td>
+              <td>JavaScript</td>
+              <td><span class="star-count">0</span></td>
+              <td>Sep 2024</td>
+            </tr>
+            <tr>
+              <td><span class="repo-name">accessible_books</span></td>
+              <td>Accessible book resources</td>
+              <td>Ruby</td>
+              <td><span class="star-count">0</span></td>
+              <td>Oct 2022</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: GPA -->
+  <section class="section" id="gpa">
+    <div class="section-header">
+      <div class="section-label">Chapter 6</div>
+      <h2 class="section-title">AAC Industry GPA (2024)</h2>
+      <p class="section-desc">OpenAAC's annual ecosystem assessment grades the entire AAC field across 10 dimensions. Six expert evaluators complete Likert-scale surveys, and the results are published publicly. The 2024 overall GPA: 1.9/4.0 (C-).</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">AAC Ecosystem GPA by Category</div>
+      <div class="chart-subtitle">Source: OpenAAC 2024 Ecosystem Assessment -- Six expert evaluators from diverse AAC backgrounds</div>
+      <div class="chart-wrapper">
+        <canvas id="gpaChart" height="350"></canvas>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Education earned an F (0.6/4.0)</strong> -- reflecting persistent problems with literacy instruction for AAC users, device restrictions in schools, and outdated educational practices. Meanwhile, <strong>Families earned a B (3.0)</strong>, the strongest area, showing improved resources and self-organizing support groups. The overall 1.9 GPA reveals an industry with significant systemic issues.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 7: OPENNESS -->
+  <section class="section" id="openness">
+    <div class="section-header">
+      <div class="section-label">Chapter 7</div>
+      <h2 class="section-title">OpenAAC Openness Self-Assessment</h2>
+      <p class="section-desc">OpenAAC also grades itself on nine openness dimensions -- a candid look at where open standards and resources have succeeded and where they have fallen short.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Openness Grades by Dimension</div>
+      <div class="chart-subtitle">A- in Open Systems reflects Sweet Suite and OBF success. F in Open Integrations is a candid admission of poor vendor cooperation.</div>
+      <div class="chart-wrapper">
+        <canvas id="opennessChart" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: PROS/CONS -->
+  <section class="section" id="pros-cons">
+    <div class="section-header">
+      <div class="section-label">Chapter 8</div>
+      <h2 class="section-title">Strengths & Weaknesses</h2>
+      <p class="section-desc">An honest assessment of where Sweet Suite excels and where it faces challenges.</p>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros-section">
+        <div class="pros-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Strengths
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Fully Open Source (AGPLv3)</strong> -- Complete codebase available for inspection, modification, self-hosting</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Battle-Tested Maturity</strong> -- 6,111 commits over a decade; same code powers CoughDrop commercially</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Standards Leader</strong> -- Created OBF, the de facto interoperability standard for AAC boards</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Comprehensive Features</strong> -- Supervisor system, usage tracking, cloud sync, offline support</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Non-Profit Governance</strong> -- 501(c)(3) ensures community benefit over profit</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Ecosystem Approach</strong> -- Not just an app: standards, symbols, analysis tools, conference, awards</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>20+ Access Methods</strong> -- Gaze, head tracking, scanning, touch, keyboard, pointer</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>Cross-Platform</strong> -- Web, iOS, Android, Windows, Mac, ChromeOS from one codebase</span>
+        </div>
+        <div class="pro-item">
+          <span class="icon">+</span>
+          <span><strong>i18n First</strong> -- Multi-locale support built in from the ground up</span>
+        </div>
+      </div>
+      <div class="cons-section">
+        <div class="cons-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Weaknesses
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Complex Self-Hosting</strong> -- Rails, PostgreSQL, Redis, Node.js, ImageMagick, AWS, Google APIs all required</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Small External Community</strong> -- Only 5 stars / 5 forks despite 6,111 commits</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Undocumented API</strong> -- REST API is "open and completely-undocumented"</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Aging Frontend Stack</strong> -- Ember.js + Bower (deprecated since 2017) hinders contributor onboarding</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Identity Confusion</strong> -- Sweet Suite vs. CoughDrop vs. OpenAAC vs. Forbes AAC relationships unclear</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Heavy Cloud Dependencies</strong> -- AWS + Google APIs required even for self-hosted instances</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Limited Documentation</strong> -- Setup and configuration guides are sparse</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Open Integrations: F</strong> -- Third-party integration remains practically nonexistent</span>
+        </div>
+        <div class="con-item">
+          <span class="icon">-</span>
+          <span><strong>Open Exports: D</strong> -- Vocabulary portability still a challenge despite OBF existing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9: COMPARISON -->
+  <section class="section" id="comparison">
+    <div class="section-header">
+      <div class="section-label">Chapter 9</div>
+      <h2 class="section-title">Open Source AAC Comparison</h2>
+      <p class="section-desc">Sweet Suite in context: how it compares to other open-source AAC platforms across key dimensions.</p>
+    </div>
+
+    <div class="content-card">
+      <div class="comparison-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Application</th>
+              <th>License</th>
+              <th>Stack</th>
+              <th>Platforms</th>
+              <th>OBF</th>
+              <th>Cloud Sync</th>
+              <th>Offline</th>
+              <th>Access Methods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="app-name">Sweet Suite</td>
+              <td>AGPLv3</td>
+              <td>Rails + Ember</td>
+              <td>Web, iOS, Android, Win, Mac, ChromeOS</td>
+              <td><span class="check">Creator</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="check">Yes</span></td>
+              <td>20+ (gaze, head, scan, touch, keyboard)</td>
+            </tr>
+            <tr>
+              <td class="app-name">Cboard</td>
+              <td>Apache 2.0</td>
+              <td>React + Node</td>
+              <td>Web, Android</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="partial">Limited</span></td>
+              <td><span class="check">Yes</span></td>
+              <td>Touch, scanning</td>
+            </tr>
+            <tr>
+              <td class="app-name">AsTeRICS Grid</td>
+              <td>AGPL</td>
+              <td>JavaScript</td>
+              <td>Web</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="check">Yes</span></td>
+              <td>Gaze, scanning, touch</td>
+            </tr>
+            <tr>
+              <td class="app-name">OptiKey</td>
+              <td>GPL-3.0</td>
+              <td>C# / .NET</td>
+              <td>Windows only</td>
+              <td><span class="cross">No</span></td>
+              <td><span class="cross">No</span></td>
+              <td>N/A</td>
+              <td>Eye tracking (specialized)</td>
+            </tr>
+            <tr>
+              <td class="app-name">PiCom</td>
+              <td>MIT</td>
+              <td>Python</td>
+              <td>Cross-platform</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="partial">Limited</span></td>
+              <td>Touch</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>The coexistence of these projects is itself a success story.</strong> A family that starts with Cboard's simplicity can graduate to Sweet Suite's power without losing their boards, thanks to OBF. A researcher can use AAC Metrics to compare vocabulary designs across all OBF-compatible platforms. The ecosystem is larger than any single application.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 10: FUTURE -->
+  <section class="section" id="future">
+    <div class="section-header">
+      <div class="section-label">Chapter 10</div>
+      <h2 class="section-title">The Road Ahead</h2>
+      <p class="section-desc">Challenges and opportunities for Sweet Suite and the OpenAAC ecosystem.</p>
+    </div>
+
+    <div class="prose-columns">
+      <div class="content-card">
+        <h3>Opportunities</h3>
+        <p><strong>AI Integration:</strong> Large language models and speech AI could bring predictive text, context-aware suggestions, and natural-sounding synthesis to AAC. Sweet Suite's open architecture is well-positioned to integrate these technologies.</p>
+        <p><strong>Growing OBF Adoption:</strong> Each new app supporting OBF makes portability more practical and vendor lock-in less defensible.</p>
+        <p><strong>Education Advocacy:</strong> With Education earning an F in the GPA, there is enormous room for policy advocacy around device access in schools and literacy instruction for AAC users.</p>
+      </div>
+      <div class="content-card">
+        <h3>Challenges</h3>
+        <p><strong>Community Growth:</strong> The project needs to expand its developer community beyond core maintainers. Better documentation, a documented API, and modernized tooling could help.</p>
+        <p><strong>Stack Modernization:</strong> The Ember.js + Bower frontend may need updating to attract contributors and ensure long-term sustainability.</p>
+        <p><strong>Identity Clarity:</strong> The Sweet Suite / CoughDrop / OpenAAC / Forbes AAC relationship needs clearer communication to avoid confusion among potential users and contributors.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 1.5rem;">
+      <p><strong>Sweet Suite AAC is not the easiest AAC app to set up. It is not the one with the most GitHub stars. But it may be the most important.</strong> In a field where families can spend thousands of dollars on devices and software that lock them into a single vendor's ecosystem, Sweet Suite and OpenAAC represent a fundamentally different vision: one where communication tools are open, interoperable, community-governed, and available to everyone. The code is open. The standards are free. The question is whether the community will rally around it.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 11: SOURCES -->
+  <section class="section" id="sources">
+    <div class="section-header">
+      <div class="section-label">References</div>
+      <h2 class="section-title">Sources</h2>
+    </div>
+
+    <div class="content-card">
+      <ol class="sources-list">
+        <li><a href="https://github.com/open-aac/sweet-suite-aac" target="_blank" rel="noopener">OpenAAC Sweet Suite AAC -- GitHub Repository</a></li>
+        <li><a href="https://github.com/open-aac" target="_blank" rel="noopener">OpenAAC Organization -- GitHub</a></li>
+        <li><a href="https://www.openaac.org/" target="_blank" rel="noopener">OpenAAC Official Website</a></li>
+        <li><a href="https://www.openaac.org/2025/03/17/aac-ecosystem-gpa.html" target="_blank" rel="noopener">AAC Ecosystem GPA 2024 -- OpenAAC</a></li>
+        <li><a href="https://www.openaac.org/developers.html" target="_blank" rel="noopener">OpenAAC Developer Resources</a></li>
+        <li><a href="https://www.openaac.org/symbols.html" target="_blank" rel="noopener">OpenAAC Symbol Libraries</a></li>
+        <li><a href="https://www.openaac.org/aac.html" target="_blank" rel="noopener">OpenAAC AAC Systems Directory</a></li>
+        <li><a href="https://www.openboardformat.org/" target="_blank" rel="noopener">Open Board Format</a></li>
+        <li><a href="https://blog.mycoughdrop.com/coughdrop-has-joined-forbes-aac/" target="_blank" rel="noopener">CoughDrop Joins Forbes AAC</a></li>
+        <li><a href="https://blogs.ubc.ca/etec522/2021/06/01/brian-whitmer-founder-of-coughdrop-aac-app/" target="_blank" rel="noopener">Brian Whitmer -- Founder of CoughDrop</a></li>
+        <li><a href="https://www.prweb.com/releases/coughdrop_releases_open_source_cross_platform_aac_app_for_struggling_communicators/prweb13170346.htm" target="_blank" rel="noopener">CoughDrop Open Source Release</a></li>
+        <li><a href="https://www.aacconference.com/" target="_blank" rel="noopener">AAC in the Cloud Conference</a></li>
+        <li><a href="https://www.openaac.org/knaac-awards/2024/" target="_blank" rel="noopener">2024 knAAC Awards -- OpenAAC</a></li>
+        <li><a href="https://github.com/readme/featured/open-source-aac" target="_blank" rel="noopener">Coding Accessibility: Open Source AAC -- GitHub</a></li>
+        <li><a href="https://slpnow.com/blog/coughdrop/" target="_blank" rel="noopener">CoughDrop Review -- SLP Now</a></li>
+        <li><a href="https://www.forbesaac.com/coughdrop" target="_blank" rel="noopener">CoughDrop -- Forbes AAC</a></li>
+        <li><a href="https://www.opensymbols.org/" target="_blank" rel="noopener">OpenSymbols</a></li>
+        <li><a href="https://github.com/open-aac/aac-metrics" target="_blank" rel="noopener">AAC Metrics -- GitHub</a></li>
+      </ol>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <p class="footer-text">
+    Research compiled March 2026 | <a href="../aac-applications-competitive-analysis-dashboard/index.html">Back to AAC Dashboard</a>
+  </p>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+// Reading progress
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progress').style.width = (winScroll / height * 100) + '%';
+  const btn = document.getElementById('backToTop');
+  if (winScroll > 500) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+});
+
+// Back to top
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Chart defaults for dark theme
+Chart.defaults.color = '#94A3B8';
+Chart.defaults.borderColor = '#1E293B';
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+
+// 1. Language Breakdown Chart
+const langCtx = document.getElementById('langChart').getContext('2d');
+new Chart(langCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['JavaScript (51.7%)', 'Ruby (24.8%)', 'Assembly (13.9%)', 'Handlebars (7.9%)'],
+    datasets: [{
+      data: [51.7, 24.8, 13.9, 7.9],
+      backgroundColor: ['#F59E0B', '#EF4444', '#6366F1', '#3B82F6'],
+      borderColor: '#111827',
+      borderWidth: 3,
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          padding: 16,
+          usePointStyle: true,
+          pointStyleWidth: 12,
+          font: { size: 13, weight: 500 }
+        }
+      },
+      tooltip: {
+        backgroundColor: '#1E293B',
+        titleColor: '#F1F5F9',
+        bodyColor: '#94A3B8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(ctx) {
+            return ctx.label + ' of codebase';
+          }
+        }
+      }
+    },
+    cutout: '55%'
+  }
+});
+
+// 2. AAC Ecosystem GPA Chart
+const gpaCtx = document.getElementById('gpaChart').getContext('2d');
+new Chart(gpaCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Families', 'Individualization', 'Community', 'Business', 'Practitioners', 'Advocacy', 'Research', 'Funding', 'Marketing', 'Education'],
+    datasets: [{
+      label: 'GPA Score (0-4)',
+      data: [3.0, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.6, 1.4, 0.6],
+      backgroundColor: function(ctx) {
+        const val = ctx.raw;
+        if (val >= 3.0) return 'rgba(16, 185, 129, 0.8)';
+        if (val >= 2.0) return 'rgba(245, 158, 11, 0.8)';
+        if (val >= 1.0) return 'rgba(249, 115, 22, 0.8)';
+        return 'rgba(239, 68, 68, 0.8)';
+      },
+      borderColor: function(ctx) {
+        const val = ctx.raw;
+        if (val >= 3.0) return '#10B981';
+        if (val >= 2.0) return '#F59E0B';
+        if (val >= 1.0) return '#F97316';
+        return '#EF4444';
+      },
+      borderWidth: 1,
+      borderRadius: 6,
+      barPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    scales: {
+      x: {
+        min: 0,
+        max: 4,
+        grid: { color: 'rgba(30,41,59,0.5)' },
+        ticks: {
+          stepSize: 1,
+          font: { size: 12 },
+          callback: function(val) {
+            const grades = { 0: 'F', 1: 'D', 2: 'C', 3: 'B', 4: 'A' };
+            return grades[val] || val;
+          }
+        }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { size: 12, weight: 500 } }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1E293B',
+        titleColor: '#F1F5F9',
+        bodyColor: '#94A3B8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(ctx) {
+            const val = ctx.raw;
+            let grade;
+            if (val >= 3.7) grade = 'A';
+            else if (val >= 3.3) grade = 'A-';
+            else if (val >= 3.0) grade = 'B';
+            else if (val >= 2.7) grade = 'B-';
+            else if (val >= 2.3) grade = 'C+';
+            else if (val >= 2.0) grade = 'C';
+            else if (val >= 1.7) grade = 'C-';
+            else if (val >= 1.3) grade = 'D+';
+            else if (val >= 1.0) grade = 'D';
+            else grade = 'F';
+            return grade + ' (' + val + '/4.0)';
+          }
+        }
+      }
+    }
+  }
+});
+
+// 3. Openness Assessment Chart
+const openCtx = document.getElementById('opennessChart').getContext('2d');
+new Chart(openCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Open Systems', 'Open Voices', 'Open Vocabularies', 'Open Symbols', 'Open Lessons', 'Open Assessments', 'Open Exports', 'Open Research', 'Open Integrations'],
+    datasets: [{
+      label: 'Grade Score (0-4)',
+      data: [3.7, 3.0, 2.7, 2.3, 2.3, 2.0, 1.0, 1.0, 0.0],
+      backgroundColor: function(ctx) {
+        const val = ctx.raw;
+        if (val >= 3.5) return 'rgba(16, 185, 129, 0.8)';
+        if (val >= 2.5) return 'rgba(59, 130, 246, 0.8)';
+        if (val >= 1.5) return 'rgba(245, 158, 11, 0.8)';
+        if (val >= 0.5) return 'rgba(249, 115, 22, 0.8)';
+        return 'rgba(239, 68, 68, 0.8)';
+      },
+      borderColor: function(ctx) {
+        const val = ctx.raw;
+        if (val >= 3.5) return '#10B981';
+        if (val >= 2.5) return '#3B82F6';
+        if (val >= 1.5) return '#F59E0B';
+        if (val >= 0.5) return '#F97316';
+        return '#EF4444';
+      },
+      borderWidth: 1,
+      borderRadius: 6,
+      barPercentage: 0.65
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    scales: {
+      x: {
+        min: 0,
+        max: 4,
+        grid: { color: 'rgba(30,41,59,0.5)' },
+        ticks: {
+          stepSize: 1,
+          font: { size: 12 },
+          callback: function(val) {
+            const grades = { 0: 'F', 1: 'D', 2: 'C', 3: 'B', 4: 'A' };
+            return grades[val] || val;
+          }
+        }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { size: 12, weight: 500 } }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1E293B',
+        titleColor: '#F1F5F9',
+        bodyColor: '#94A3B8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(ctx) {
+            const val = ctx.raw;
+            let grade;
+            if (val >= 3.7) grade = 'A-';
+            else if (val >= 3.0) grade = 'B';
+            else if (val >= 2.7) grade = 'B-';
+            else if (val >= 2.3) grade = 'C+';
+            else if (val >= 2.0) grade = 'C';
+            else if (val >= 1.0) grade = 'D';
+            else grade = 'F';
+            return grade + ' (' + val + '/4.0)';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Smooth scroll for TOC links
+document.querySelectorAll('.toc-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

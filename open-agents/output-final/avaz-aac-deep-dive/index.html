@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive deep dive into Avaz AAC - India's award-winning communication app for people with speech disabilities. Cross-platform, multilingual, affordable AAC.">
+  <meta name="author" content="AI-Assisted Research">
+  <meta property="og:title" content="Avaz AAC: India's Voice for the Voiceless">
+  <meta property="og:description" content="Deep dive into Avaz AAC - the only major AAC app on both iOS and Android, supporting 8+ Indian languages with 40,000+ symbols.">
+  <meta property="og:type" content="article">
+  <title>Avaz AAC: India's Voice for the Voiceless - Deep Dive</title>
+
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #818CF8;
+      --color-primary-dark: #4F46E5;
+      --color-accent: #F59E0B;
+      --color-accent-light: #FBBF24;
+      --color-success: #10B981;
+      --color-danger: #EF4444;
+      --color-warning: #F59E0B;
+      --color-info: #3B82F6;
+      --color-text: #F9FAFB;
+      --color-text-secondary: #9CA3AF;
+      --color-text-muted: #6B7280;
+      --color-bg: #0F172A;
+      --color-bg-card: #1E293B;
+      --color-bg-card-hover: #273548;
+      --color-bg-elevated: #334155;
+      --color-border: #334155;
+      --color-border-light: #475569;
+      --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
+      --max-width: 900px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      z-index: 1000;
+      transition: width 0.15s;
+    }
+
+    /* Back Navigation */
+    .back-nav {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 999;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all var(--transition);
+      backdrop-filter: blur(8px);
+    }
+
+    .back-link:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-primary-light);
+      border-color: var(--color-primary);
+    }
+
+    .back-link svg { width: 16px; height: 16px; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1145 0%, #0F172A 40%, #0c2340 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 70%, rgba(99,102,241,0.12) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 30%, rgba(245,158,11,0.08) 0%, transparent 50%);
+      animation: heroGlow 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroGlow {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-5%, 5%); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: var(--max-width); margin: 0 auto; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--color-primary-light);
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--color-text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-accent);
+    }
+
+    .hero-stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* Section Styles */
+    .section { margin-bottom: 4rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(99,102,241,0.15);
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
+      color: var(--color-primary-light);
+    }
+
+    p { margin: 1rem 0; color: var(--color-text-secondary); line-height: 1.8; }
+
+    strong { color: var(--color-text); }
+
+    /* Cards */
+    .card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      transition: all var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--color-border-light);
+      box-shadow: var(--shadow);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .card-grid .card { margin: 0; }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 1rem 0 1.5rem 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 1.25rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 2px solid var(--color-bg);
+      transform: translateX(-3px);
+    }
+
+    .timeline-year {
+      font-weight: 700;
+      color: var(--color-accent);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 0.25rem 0;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Feature Modes */
+    .mode-toggle {
+      display: flex;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 1rem;
+      background: var(--color-bg-card);
+      border: none;
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-sans);
+    }
+
+    .mode-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .mode-btn:not(.active):hover {
+      background: var(--color-bg-elevated);
+    }
+
+    .mode-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .mode-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Fitzgerald Key */
+    .fitz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .fitz-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+    }
+
+    .fitz-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .fitz-label {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+
+    .fitz-label strong {
+      display: block;
+      color: var(--color-text);
+      font-size: 0.9rem;
+    }
+
+    /* Language Grid */
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .lang-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .lang-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .lang-card .lang-script {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .lang-card .lang-name {
+      font-weight: 600;
+      color: var(--color-text);
+      font-size: 0.95rem;
+    }
+
+    .lang-card .lang-speakers {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .lang-card.international {
+      border-color: rgba(59,130,246,0.3);
+    }
+
+    .lang-card.indian {
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    .lang-section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .lang-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* Pricing Table */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+
+    .price-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .price-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .price-card.featured {
+      border-color: var(--color-accent);
+      background: linear-gradient(135deg, var(--color-bg-card), rgba(245,158,11,0.08));
+    }
+
+    .price-card.featured::before {
+      content: 'BEST VALUE';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-accent);
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+
+    .price-plan {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .price-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+
+    .price-amount .currency { font-size: 1.2rem; vertical-align: top; }
+    .price-amount .period { font-size: 0.85rem; color: var(--color-text-muted); font-weight: 400; }
+
+    .price-monthly {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Competitor Pricing */
+    .competitor-prices {
+      margin: 2rem 0;
+    }
+
+    .competitor-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .competitor-row:last-child { border-bottom: none; }
+
+    .competitor-name {
+      font-weight: 600;
+      color: var(--color-text);
+      font-size: 0.95rem;
+    }
+
+    .competitor-details {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .competitor-price {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .competitor-row.avaz { background: rgba(99,102,241,0.08); border-radius: var(--radius-sm); }
+    .competitor-row.avaz .competitor-price { color: var(--color-success); }
+
+    /* Pros/Cons */
+    .pros-cons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .pros-card, .cons-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--color-border);
+    }
+
+    .pros-card { border-top: 3px solid var(--color-success); }
+    .cons-card { border-top: 3px solid var(--color-danger); }
+
+    .pros-title, .cons-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pros-title { color: var(--color-success); }
+    .cons-title { color: var(--color-danger); }
+
+    .pros-list, .cons-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pros-list li, .cons-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .pros-list li:last-child, .cons-list li:last-child { border-bottom: none; }
+
+    .pros-list li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: 700;
+    }
+
+    .cons-list li::before {
+      content: '-';
+      position: absolute;
+      left: 0;
+      color: var(--color-danger);
+      font-weight: 700;
+    }
+
+    /* Blockquote */
+    blockquote {
+      border-left: 3px solid var(--color-primary);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: rgba(99,102,241,0.06);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-style: italic;
+      color: var(--color-text-secondary);
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 320px;
+      width: 100%;
+    }
+
+    /* Feature Comparison Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .comparison-table th {
+      background: var(--color-bg-elevated);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .comparison-table td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .comparison-table tr:hover td {
+      background: rgba(99,102,241,0.04);
+    }
+
+    .comparison-table .check { color: var(--color-success); font-weight: 700; }
+    .comparison-table .cross { color: var(--color-danger); font-weight: 700; }
+    .comparison-table .partial { color: var(--color-warning); font-weight: 700; }
+
+    .comparison-table .highlight-col {
+      background: rgba(99,102,241,0.06);
+      border-left: 2px solid var(--color-primary);
+    }
+
+    /* Media Features Visual */
+    .media-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .media-feature {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .media-feature:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .media-feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .media-feature h4 {
+      color: var(--color-text);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .media-feature p {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+
+    /* Award Banner */
+    .award-banner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(99,102,241,0.1));
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .award-icon { font-size: 3rem; flex-shrink: 0; }
+
+    .award-text h4 {
+      color: var(--color-accent);
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .award-text p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    /* Acquisition Banner */
+    .acquisition-card {
+      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.08));
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .acquisition-card h4 {
+      color: var(--color-info);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .acquisition-card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      max-width: 600px;
+      margin: 0.5rem auto;
+    }
+
+    .acquisition-card .acq-quote {
+      font-style: italic;
+      color: var(--color-text);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    /* User Reviews */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+
+    .review-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .review-stars {
+      color: var(--color-accent);
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .review-text {
+      font-style: italic;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-source {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .toc h3 {
+      color: var(--color-text);
+      font-size: 1rem;
+      margin: 0 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      columns: 2;
+      column-gap: 2rem;
+    }
+
+    .toc-list li {
+      padding: 0.3rem 0;
+      break-inside: avoid;
+    }
+
+    .toc-list a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .toc-list a:hover { color: var(--color-primary-light); }
+
+    /* Footer */
+    .page-footer {
+      background: var(--color-bg-card);
+      border-top: 1px solid var(--color-border);
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .footer-sources h3 {
+      color: var(--color-text);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-sources ol {
+      padding-left: 1.25rem;
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .footer-sources a {
+      color: var(--color-primary-light);
+      text-decoration: none;
+    }
+
+    .footer-sources a:hover { text-decoration: underline; }
+
+    .footer-meta {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      opacity: 0;
+      transition: all var(--transition);
+      font-size: 1.2rem;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .back-to-top.visible { opacity: 1; }
+    .back-to-top:hover { background: var(--color-primary-dark); transform: translateY(-2px); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero { padding: 5rem 1.25rem 3rem; }
+      .hero-stats { gap: 1.25rem; }
+      .hero-stat-value { font-size: 1.5rem; }
+      .main-content { padding: 2rem 1.25rem; }
+      .toc-list { columns: 1; }
+      .pros-cons { grid-template-columns: 1fr; }
+      .fitz-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .back-nav { position: relative; top: auto; left: auto; padding: 1rem 1.25rem 0; }
+      .comparison-table { font-size: 0.8rem; }
+      .comparison-table th, .comparison-table td { padding: 0.5rem 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .lang-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Print */
+    @media print {
+      .back-nav, .back-to-top, .reading-progress { display: none; }
+      .hero { background: #f0f0f0; color: #000; }
+      body { background: #fff; color: #000; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reading-progress" id="progress"></div>
+
+  <nav class="back-nav">
+    <a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to AAC Dashboard
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">AAC Product Deep Dive</span>
+      <h1>Avaz AAC: India's Voice for the Voiceless</h1>
+      <p class="hero-subtitle">The only major AAC app on both iOS and Android, supporting 8+ Indian languages with 40,000+ symbols -- from an MIT-recognized innovator, now backed by PRC-Saltillo.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value">40,000+</span>
+          <span class="hero-stat-label">SymbolStix Pictures</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">13+</span>
+          <span class="hero-stat-label">Languages</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">$9.99</span>
+          <span class="hero-stat-label">/Month Starting</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">4.2</span>
+          <span class="hero-stat-label">App Store Rating</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h3>Table of Contents</h3>
+      <ul class="toc-list">
+        <li><a href="#origin">Origin Story &amp; History</a></li>
+        <li><a href="#how-it-works">How Avaz Works</a></li>
+        <li><a href="#fitzgerald">Fitzgerald Key Color Coding</a></li>
+        <li><a href="#unique-features">What Makes Avaz Unique</a></li>
+        <li><a href="#languages">Language Support</a></li>
+        <li><a href="#media">Media-Rich Communication</a></li>
+        <li><a href="#dashboard">Avaz Dashboard Training</a></li>
+        <li><a href="#pricing">Pricing Comparison</a></li>
+        <li><a href="#platform">Platform Comparison</a></li>
+        <li><a href="#feature-matrix">Feature Comparison Matrix</a></li>
+        <li><a href="#acquisition">PRC-Saltillo Acquisition</a></li>
+        <li><a href="#pros-cons">Strengths &amp; Limitations</a></li>
+        <li><a href="#reviews">User Reviews</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+
+    <!-- ORIGIN STORY -->
+    <section class="section" id="origin">
+      <div class="section-header">
+        <div class="section-icon">&#x1F3DB;</div>
+        <h2>Origin Story: From Chennai to the World</h2>
+      </div>
+
+      <p>The story of Avaz begins in 2009 in the special education classrooms of Chennai, India. <strong>Ajit Narayanan</strong>, an electrical engineering graduate from the prestigious Indian Institute of Technology (IIT) Madras, had been working with schools serving children with autism, cerebral palsy, and other complex communication needs. What he found was a vast, unmet need.</p>
+
+      <p>In India, an estimated 2-3 million children have autism spectrum disorder, and millions more have conditions that affect speech. Yet the AAC devices available cost between <strong>$5,000 and $10,000</strong>, supported only English, and were designed entirely for Western users. For a country where the average annual household income was around $1,500, these devices existed in a parallel universe.</p>
+
+      <p>Narayanan's insight was both simple and radical: what if AAC technology could be built on affordable consumer hardware, using languages that Indian children actually spoke, with vocabulary that reflected Indian culture -- the foods, festivals, family structures, and daily routines of South Asian life? The result was <strong>Avaz</strong> -- meaning "Voice" in Hindi.</p>
+
+      <div class="award-banner">
+        <div class="award-icon">&#x1F3C6;</div>
+        <div class="award-text">
+          <h4>MIT Technology Review TR35 -- Innovator of the Year (2011)</h4>
+          <p>Ajit Narayanan was named Innovator of the Year by MIT Technology Review. Avaz was the <strong>first product in the disability category</strong> to ever receive this prestigious recognition.</p>
+        </div>
+      </div>
+
+      <h3>Key Milestones</h3>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2009</div>
+          <div class="timeline-title">Development Begins</div>
+          <div class="timeline-desc">Narayanan begins working with special needs schools across India to understand communication barriers.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2010</div>
+          <div class="timeline-title">India's First AAC Device Launches</div>
+          <div class="timeline-desc">Avaz hardware device launched at ~$800 (vs $5,000-$10,000 for US equivalents). Wins the National Award for Empowerment of People with Disabilities from the President of India.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2011</div>
+          <div class="timeline-title">MIT TR35 Recognition</div>
+          <div class="timeline-desc">Narayanan wins MIT Technology Review's "Innovator of the Year" -- first disability product to receive this honor.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2012</div>
+          <div class="timeline-title">Mobile App Launch</div>
+          <div class="timeline-desc">Android and iPad versions of Avaz launched, developed with extensive user feedback and collaboration with speech therapists worldwide.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2013</div>
+          <div class="timeline-title">TED Talk</div>
+          <div class="timeline-desc">Ajit Narayanan delivers a TED talk in Long Beach, California that accumulates over 1 million views, demonstrating Avaz and FreeSpeech.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2015</div>
+          <div class="timeline-title">FreeSpeech Launch</div>
+          <div class="timeline-desc">FreeSpeech app invented -- a visual communication method using spatial "maps" to relate words and concepts.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2022</div>
+          <div class="timeline-title">Major Redesign</div>
+          <div class="timeline-desc">App redesigned with new visual themes, AI-powered expressive tones, media-rich icons, and GIF/YouTube integration.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Oct 2025</div>
+          <div class="timeline-title">PRC-Saltillo Acquisition</div>
+          <div class="timeline-desc">Avaz becomes a wholly owned subsidiary of PRC-Saltillo, the global leader in AAC technology.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how-it-works">
+      <div class="section-header">
+        <div class="section-icon">&#x2699;</div>
+        <h2>How Avaz Works</h2>
+      </div>
+
+      <p>Avaz AAC operates through two complementary communication modes that allow users to grow with the app as their skills develop. A <strong>Quick Toggle</strong> feature enables seamless switching between both modes within the same session.</p>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="switchMode('picture')">Picture Mode</button>
+        <button class="mode-btn" onclick="switchMode('keyboard')">Keyboard Mode</button>
+        <button class="mode-btn" onclick="switchMode('core')">Core Words</button>
+      </div>
+
+      <div id="mode-picture" class="mode-content active">
+        <div class="card">
+          <h3>Picture Mode: Visual Communication</h3>
+          <p>Avaz's symbol-based communication system, designed for users who communicate primarily through images. The app comes pre-loaded with over <strong>15,000 SymbolStix pictures</strong> from a library of more than <strong>40,000</strong>, covering an enormous range of words, concepts, and ideas.</p>
+          <p>Symbols are organized in a grid layout using the <strong>Fitzgerald Key color coding system</strong>. Users build sentences by tapping symbols in sequence. A sentence strip at the top of the screen shows the constructed message, which can be spoken aloud using high-quality text-to-speech voices.</p>
+          <p>The system uses <strong>consistent motor planning</strong> -- core words appear in the same position across all vocabulary levels, allowing users to develop muscle memory that accelerates communication speed over time.</p>
+        </div>
+      </div>
+
+      <div id="mode-keyboard" class="mode-content">
+        <div class="card">
+          <h3>Keyboard Mode: Text-Based Communication</h3>
+          <p>For users who can read and type, Keyboard Mode provides a full <strong>QWERTY keyboard with predictive text</strong>. This mode is essential for older users, adults with acquired communication disorders (such as aphasia from stroke), and children who have progressed beyond symbol-based communication.</p>
+          <p>The app grows with the user -- a child might start with Picture Mode and gradually transition to Keyboard Mode as literacy skills develop, without needing to switch to a different app entirely.</p>
+        </div>
+      </div>
+
+      <div id="mode-core" class="mode-content">
+        <div class="card">
+          <h3>Core Word Philosophy</h3>
+          <p>Avaz's vocabulary is organized around a research-backed principle: <strong>core words</strong> -- the small set of words that make up approximately <strong>80% of everything we say</strong> -- should be the foundation of AAC communication. Words like "want," "go," "more," "help," and "like" are used constantly across every conversation context.</p>
+          <p>Avaz organizes these into <strong>3 graded vocabulary levels</strong> based on generative language development principles. The <strong>Frozen Row</strong> feature ensures the most critical core words remain visible at all times, regardless of which category folder the user is browsing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FITZGERALD KEY -->
+    <section class="section" id="fitzgerald">
+      <div class="section-header">
+        <div class="section-icon">&#x1F3A8;</div>
+        <h2>Fitzgerald Key Color Coding</h2>
+      </div>
+
+      <p>Avaz uses the <strong>Fitzgerald Key</strong>, a decades-old educational convention that color-codes words by their grammatical function. This system is consistent with materials used across special education classrooms worldwide, allowing children to transfer their understanding between the app and other learning environments.</p>
+
+      <div class="fitz-grid">
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #FBBF24;"></div>
+          <div class="fitz-label"><strong>Yellow</strong>People &amp; Pronouns</div>
+        </div>
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #34D399;"></div>
+          <div class="fitz-label"><strong>Green</strong>Verbs &amp; Actions</div>
+        </div>
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #FB923C;"></div>
+          <div class="fitz-label"><strong>Orange</strong>Adjectives &amp; Descriptors</div>
+        </div>
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #60A5FA;"></div>
+          <div class="fitz-label"><strong>Blue</strong>Nouns &amp; Objects</div>
+        </div>
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #F472B6;"></div>
+          <div class="fitz-label"><strong>Pink</strong>Social Phrases</div>
+        </div>
+        <div class="fitz-item">
+          <div class="fitz-dot" style="background: #9CA3AF;"></div>
+          <div class="fitz-label"><strong>White/Gray</strong>Function Words</div>
+        </div>
+      </div>
+
+      <p>This color coding allows quicker visual scanning and helps users rapidly identify parts of speech, building grammatical awareness naturally through repeated exposure.</p>
+    </section>
+
+    <!-- UNIQUE FEATURES -->
+    <section class="section" id="unique-features">
+      <div class="section-header">
+        <div class="section-icon">&#x2B50;</div>
+        <h2>What Makes Avaz Unique</h2>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>Cross-Platform (iOS + Android)</h3>
+          <p>The <strong>only major AAC app</strong> available on both iOS and Android. Competitors like Proloquo2Go, TouchChat, and LAMP Words for Life are iOS-only. In India, where Android commands 95%+ market share, this is critical.</p>
+        </div>
+        <div class="card">
+          <h3>AI-Powered Expressive Tones</h3>
+          <p>Uses AI to infuse <strong>emotional nuance</strong> into synthesized speech: excitement, frustration, sarcasm, sadness, curiosity. Traditional AAC produces flat, monotone output -- Avaz lets users convey feelings, not just words.</p>
+        </div>
+        <div class="card">
+          <h3>40,000+ SymbolStix Pictures</h3>
+          <p>Pre-loaded with <strong>15,000+ symbols</strong> from a library of 40,000+. High-quality, professionally designed symbols covering an enormous range of words, concepts, and ideas. Customizable with personal photos.</p>
+        </div>
+        <div class="card">
+          <h3>Built-in Caregiver Training</h3>
+          <p>The <strong>Avaz Dashboard</strong> provides hands-on AAC strategy guidance for 10+ real-world scenarios. No need for external training resources -- everything a caregiver needs is inside the app.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LANGUAGE SUPPORT -->
+    <section class="section" id="languages">
+      <div class="section-header">
+        <div class="section-icon">&#x1F30D;</div>
+        <h2>Language Support Showcase</h2>
+      </div>
+
+      <p>Avaz supports more languages -- and specifically more <strong>Indian languages</strong> -- than any other AAC app in the world. Each language includes culturally relevant vocabulary for regional foods, festivals, currencies, clothing, and family structures.</p>
+
+      <div class="lang-section-label">Indian Languages (8)</div>
+      <div class="lang-grid">
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0939;&#x093F;</span>
+          <div class="lang-name">Hindi</div>
+          <div class="lang-speakers">528M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0BA4;</span>
+          <div class="lang-name">Tamil</div>
+          <div class="lang-speakers">75M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0C95;</span>
+          <div class="lang-name">Kannada</div>
+          <div class="lang-speakers">44M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0D2E;</span>
+          <div class="lang-name">Malayalam</div>
+          <div class="lang-speakers">38M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0C24;</span>
+          <div class="lang-name">Telugu</div>
+          <div class="lang-speakers">83M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x092E;</span>
+          <div class="lang-name">Marathi</div>
+          <div class="lang-speakers">83M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x0A97;</span>
+          <div class="lang-name">Gujarati</div>
+          <div class="lang-speakers">56M+ speakers</div>
+        </div>
+        <div class="lang-card indian">
+          <span class="lang-script">&#x09AC;</span>
+          <div class="lang-name">Bengali</div>
+          <div class="lang-speakers">230M+ speakers</div>
+        </div>
+      </div>
+
+      <div class="lang-section-label">International Languages (5+)</div>
+      <div class="lang-grid">
+        <div class="lang-card international">
+          <span class="lang-script">En</span>
+          <div class="lang-name">English</div>
+          <div class="lang-speakers">Multiple variants</div>
+        </div>
+        <div class="lang-card international">
+          <span class="lang-script">Es</span>
+          <div class="lang-name">Spanish</div>
+          <div class="lang-speakers">548M+ speakers</div>
+        </div>
+        <div class="lang-card international">
+          <span class="lang-script">Fr</span>
+          <div class="lang-name">French</div>
+          <div class="lang-speakers">274M+ speakers</div>
+        </div>
+        <div class="lang-card international">
+          <span class="lang-script">Pt</span>
+          <div class="lang-name">Portuguese</div>
+          <div class="lang-speakers">257M+ speakers</div>
+        </div>
+        <div class="lang-card international">
+          <span class="lang-script">&#x0639;</span>
+          <div class="lang-name">Arabic</div>
+          <div class="lang-speakers">274M+ speakers</div>
+        </div>
+      </div>
+
+      <!-- Language Comparison Chart -->
+      <div class="chart-container">
+        <div class="chart-title">Language Support: Avaz vs Competitors</div>
+        <div class="chart-wrapper">
+          <canvas id="langChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA FEATURES -->
+    <section class="section" id="media">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4F9;</div>
+        <h2>Media-Rich Communication</h2>
+      </div>
+
+      <p>Avaz goes beyond traditional symbol-and-text AAC with modern media features that make communication feel natural and expressive.</p>
+
+      <div class="media-features">
+        <div class="media-feature">
+          <span class="media-feature-icon">&#x25B6;</span>
+          <h4>YouTube Integration</h4>
+          <p>Built-in search and player with custom start/stop times. No ads or autoplay clutter. Share videos as part of communication.</p>
+        </div>
+        <div class="media-feature">
+          <span class="media-feature-icon">&#x1F600;</span>
+          <h4>GIF Support</h4>
+          <p>Animated GIFs for humor, emotion, and social interaction. Adjustable loop count to manage sensory input.</p>
+        </div>
+        <div class="media-feature">
+          <span class="media-feature-icon">&#x2728;</span>
+          <h4>Word Animation</h4>
+          <p>Visual reinforcement through animation when words are selected -- a unique feature among AAC apps that adds satisfying feedback.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="section" id="dashboard">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4CA;</div>
+        <h2>Avaz Dashboard: Built-in Training</h2>
+      </div>
+
+      <p>One of the most common barriers to successful AAC use is not the technology itself but the <strong>lack of training</strong> for supporting adults. Avaz addresses this directly with its built-in Dashboard system.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>Caregiver Training Scenarios</h3>
+          <p>Hands-on guidance for <strong>10+ real-world AAC scenarios</strong>: mealtimes, circle time, reading activities, playground interactions, bedtime routines, and more. Each scenario includes step-by-step strategies.</p>
+        </div>
+        <div class="card">
+          <h3>Progress Tracking</h3>
+          <p>Comprehensive analytics with <strong>rich graphs and charts</strong> tracking communication development. Monitor word usage patterns, vocabulary growth, and session engagement. Email notifications keep stakeholders informed.</p>
+        </div>
+        <div class="card">
+          <h3>AAC Strategies</h3>
+          <p>Elaborate tips and strategies for comprehensive caregiver training. Learn about modeling, prompting hierarchies, core word instruction, and communication temptations -- all <strong>without leaving the app</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Avaz Live</h3>
+          <p><strong>Remote therapy sessions</strong> from within the app. Screen sharing with therapists or parents for real-time collaboration. Stable, secure connections for seamless teletherapy.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="pricing">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4B0;</div>
+        <h2>Pricing: Accessibility by Design</h2>
+      </div>
+
+      <p>Avaz's pricing philosophy reflects its mission of making communication accessible to everyone, regardless of economic circumstances.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-plan">Free Trial</div>
+          <div class="price-amount"><span class="currency">$</span>0</div>
+          <div class="price-monthly">14 days, no credit card</div>
+        </div>
+        <div class="price-card">
+          <div class="price-plan">Monthly</div>
+          <div class="price-amount"><span class="currency">$</span>9.99<span class="period">/mo</span></div>
+          <div class="price-monthly">Cancel anytime</div>
+        </div>
+        <div class="price-card">
+          <div class="price-plan">Annual</div>
+          <div class="price-amount"><span class="currency">$</span>99.99<span class="period">/yr</span></div>
+          <div class="price-monthly">~$8.33/month</div>
+        </div>
+        <div class="price-card featured">
+          <div class="price-plan">Lifetime</div>
+          <div class="price-amount"><span class="currency">$</span>199.99</div>
+          <div class="price-monthly">One-time purchase</div>
+        </div>
+      </div>
+
+      <h3>How Avaz Compares to Competitors</h3>
+
+      <div class="card">
+        <div class="competitor-prices">
+          <div class="competitor-row avaz">
+            <div>
+              <div class="competitor-name">Avaz AAC (Lifetime)</div>
+              <div class="competitor-details">iOS + Android | 13+ languages</div>
+            </div>
+            <div class="competitor-price">$199.99</div>
+          </div>
+          <div class="competitor-row">
+            <div>
+              <div class="competitor-name">Proloquo2Go</div>
+              <div class="competitor-details">iOS only | 4 languages</div>
+            </div>
+            <div class="competitor-price" style="color: var(--color-danger);">$249.99</div>
+          </div>
+          <div class="competitor-row">
+            <div>
+              <div class="competitor-name">TouchChat HD</div>
+              <div class="competitor-details">iOS only | 2 languages</div>
+            </div>
+            <div class="competitor-price" style="color: var(--color-danger);">$299.99</div>
+          </div>
+          <div class="competitor-row">
+            <div>
+              <div class="competitor-name">TD Snap</div>
+              <div class="competitor-details">iOS + Windows | 6 languages</div>
+            </div>
+            <div class="competitor-price" style="color: var(--color-danger);">$299.99</div>
+          </div>
+          <div class="competitor-row">
+            <div>
+              <div class="competitor-name">LAMP Words for Life</div>
+              <div class="competitor-details">iOS only | 1 language</div>
+            </div>
+            <div class="competitor-price" style="color: var(--color-danger);">$299.99</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Chart -->
+      <div class="chart-container">
+        <div class="chart-title">AAC App Pricing Comparison (One-Time/Lifetime Cost)</div>
+        <div class="chart-wrapper">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM COMPARISON -->
+    <section class="section" id="platform">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4F1;</div>
+        <h2>Platform Availability</h2>
+      </div>
+
+      <p>In the AAC market, platform availability determines who can access communication tools. <strong>Avaz is the only major AAC app that runs on both iOS and Android</strong> -- a critical advantage in developing countries where Android dominates.</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>AAC App</th>
+            <th>iOS</th>
+            <th>Android</th>
+            <th>Windows</th>
+            <th>Web</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Avaz AAC</strong></td>
+            <td class="check highlight-col">YES</td>
+            <td class="check highlight-col">YES</td>
+            <td class="cross highlight-col">--</td>
+            <td class="cross highlight-col">--</td>
+          </tr>
+          <tr>
+            <td>Proloquo2Go</td>
+            <td class="check">YES</td>
+            <td class="cross">NO</td>
+            <td class="cross">--</td>
+            <td class="cross">--</td>
+          </tr>
+          <tr>
+            <td>TouchChat HD</td>
+            <td class="check">YES</td>
+            <td class="cross">NO</td>
+            <td class="cross">--</td>
+            <td class="cross">--</td>
+          </tr>
+          <tr>
+            <td>TD Snap</td>
+            <td class="check">YES</td>
+            <td class="cross">NO</td>
+            <td class="check">YES</td>
+            <td class="cross">--</td>
+          </tr>
+          <tr>
+            <td>LAMP Words for Life</td>
+            <td class="check">YES</td>
+            <td class="cross">NO</td>
+            <td class="cross">--</td>
+            <td class="cross">--</td>
+          </tr>
+          <tr>
+            <td>CoughDrop</td>
+            <td class="check">YES</td>
+            <td class="check">YES</td>
+            <td class="cross">--</td>
+            <td class="check">YES</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FEATURE MATRIX -->
+    <section class="section" id="feature-matrix">
+      <div class="section-header">
+        <div class="section-icon">&#x1F50D;</div>
+        <h2>Feature Comparison Matrix</h2>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight-col">Avaz AAC</th>
+            <th>Proloquo2Go</th>
+            <th>TouchChat HD</th>
+            <th>TD Snap</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cross-Platform</td>
+            <td class="check highlight-col">iOS + Android</td>
+            <td class="cross">iOS only</td>
+            <td class="cross">iOS only</td>
+            <td class="partial">iOS + Win</td>
+          </tr>
+          <tr>
+            <td>Indian Languages</td>
+            <td class="check highlight-col">8+ languages</td>
+            <td class="cross">None</td>
+            <td class="cross">None</td>
+            <td class="cross">None</td>
+          </tr>
+          <tr>
+            <td>Total Languages</td>
+            <td class="highlight-col"><strong>13+</strong></td>
+            <td>4</td>
+            <td>2</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>Symbol Library</td>
+            <td class="highlight-col">40,000+ SymbolStix</td>
+            <td>25,000+ Crescendo</td>
+            <td>SymbolStix</td>
+            <td>PCS / SymbolStix</td>
+          </tr>
+          <tr>
+            <td>Fitzgerald Key</td>
+            <td class="check highlight-col">YES</td>
+            <td class="check">YES</td>
+            <td class="check">YES</td>
+            <td class="check">YES</td>
+          </tr>
+          <tr>
+            <td>Expressive Tones</td>
+            <td class="check highlight-col">AI-Powered</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+          </tr>
+          <tr>
+            <td>YouTube Integration</td>
+            <td class="check highlight-col">Built-in</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+          </tr>
+          <tr>
+            <td>GIF Support</td>
+            <td class="check highlight-col">YES</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+          </tr>
+          <tr>
+            <td>Built-in Training</td>
+            <td class="check highlight-col">Avaz Dashboard</td>
+            <td class="partial">Limited</td>
+            <td class="cross">No</td>
+            <td class="partial">Limited</td>
+          </tr>
+          <tr>
+            <td>Progress Tracking</td>
+            <td class="check highlight-col">Graphs + Email</td>
+            <td class="check">Usage stats</td>
+            <td class="partial">Basic</td>
+            <td class="check">Analytics</td>
+          </tr>
+          <tr>
+            <td>Remote Therapy</td>
+            <td class="check highlight-col">Avaz Live</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+          </tr>
+          <tr>
+            <td>Motor Planning</td>
+            <td class="check highlight-col">Consistent</td>
+            <td class="check">Crescendo</td>
+            <td class="check">WordPower</td>
+            <td class="check">PODD/Snap</td>
+          </tr>
+          <tr>
+            <td>Free Trial</td>
+            <td class="check highlight-col">14 days</td>
+            <td class="cross">No</td>
+            <td class="cross">No</td>
+            <td class="check">14 days</td>
+          </tr>
+          <tr>
+            <td>Lifetime Price</td>
+            <td class="highlight-col"><strong>$199.99</strong></td>
+            <td>$249.99</td>
+            <td>$299.99</td>
+            <td>$299.99</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ACQUISITION -->
+    <section class="section" id="acquisition">
+      <div class="section-header">
+        <div class="section-icon">&#x1F91D;</div>
+        <h2>PRC-Saltillo Acquisition (October 2025)</h2>
+      </div>
+
+      <p>In October 2025, Avaz became a wholly owned subsidiary of <strong>PRC-Saltillo</strong>, the global leader in AAC technology based in Wooster, Ohio. PRC-Saltillo's portfolio includes TouchChat, LAMP Words for Life, Dialogue AAC, Unity AAC, and dedicated hardware devices.</p>
+
+      <div class="acquisition-card">
+        <h4>A New Chapter for Global AAC Access</h4>
+        <p>All Avaz employees retained. No pricing changes planned. A newly incorporated entity in India strengthens PRC-Saltillo's ability to serve AAC users across India and Southeast Asia.</p>
+        <div class="acq-quote">"AAC is a right, not a privilege." -- Sarah Wilds, CEO of PRC-Saltillo</div>
+      </div>
+
+      <p>The acquisition positions Avaz to leverage PRC-Saltillo's research capabilities, clinical partnerships, and global distribution -- while continuing to serve the markets and languages that make it unique.</p>
+    </section>
+
+    <!-- PROS/CONS -->
+    <section class="section" id="pros-cons">
+      <div class="section-header">
+        <div class="section-icon">&#x2696;</div>
+        <h2>Strengths &amp; Limitations</h2>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros-card">
+          <div class="pros-title"><span style="font-size:1.2rem;">&#x2705;</span> Strengths</div>
+          <ul class="pros-list">
+            <li><strong>Cross-platform</strong> -- Only major AAC app on both iOS and Android</li>
+            <li><strong>8+ Indian languages</strong> -- Unmatched regional language coverage with culturally authentic vocabulary</li>
+            <li><strong>Most affordable</strong> -- $199.99 lifetime vs $249-$299 competitors; $9.99/mo subscription option</li>
+            <li><strong>Built-in training</strong> -- Avaz Dashboard provides caregiver guidance for 10+ scenarios</li>
+            <li><strong>Research-based vocabulary</strong> -- Core word system with consistent motor planning</li>
+            <li><strong>Media-rich</strong> -- YouTube, GIFs, and animation features unique among AAC apps</li>
+            <li><strong>AI Expressive Tones</strong> -- Emotional voice output (excitement, sarcasm, sadness, etc.)</li>
+            <li><strong>Progress tracking</strong> -- Graphs, charts, and email notifications for therapists/parents</li>
+            <li><strong>Free trial</strong> -- 14-day no-credit-card trial lowers barrier to entry</li>
+            <li><strong>PRC-Saltillo backing</strong> -- Resources of the world's leading AAC company</li>
+          </ul>
+        </div>
+        <div class="cons-card">
+          <div class="cons-title"><span style="font-size:1.2rem;">&#x26A0;</span> Limitations</div>
+          <ul class="cons-list">
+            <li><strong>Speech controls</strong> -- Voice speed and pitch adjustment range may not satisfy all users</li>
+            <li><strong>US market presence</strong> -- Smaller user community and fewer SLP resources than Proloquo2Go in North America</li>
+            <li><strong>Subscription concerns</strong> -- Some users frustrated that voice output requires paid subscription</li>
+            <li><strong>Prediction engine</strong> -- Sentence/grammar prediction less sophisticated than some competitors</li>
+            <li><strong>Navigation density</strong> -- Grid layout can overwhelm users with motor planning difficulties (apraxia)</li>
+            <li><strong>Ecosystem size</strong> -- Fewer third-party resources, training videos, and community materials</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section" id="reviews">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4AC;</div>
+        <h2>User Reviews &amp; Reception</h2>
+      </div>
+
+      <p>Avaz AAC holds a <strong>4.2-star rating</strong> on the Apple App Store, with users consistently praising its affordability, design clarity, and life-changing communication impact.</p>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="review-text">"This app is affordable, the voice options are numerous, and you can customize just about everything."</div>
+          <div class="review-source">-- Apple App Store Review</div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="review-text">"I lose speech quite often, and I genuinely prefer Avaz to other AAC apps, especially with the subscription option they offer. The layout and organization genuinely makes sense."</div>
+          <div class="review-source">-- Apple App Store Review</div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="review-text">"Avaz has been life-changing for users, opening the lines of communication which has relieved much frustration and resulted in significantly less self-injurious behavior."</div>
+          <div class="review-source">-- BridgingApps Review</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="section" id="conclusion">
+      <div class="section-header">
+        <div class="section-icon">&#x1F3AF;</div>
+        <h2>Conclusion</h2>
+      </div>
+
+      <p>Avaz AAC occupies a unique and important position in the AAC landscape. It is the <strong>only major communication app available on both iOS and Android</strong>, supports more languages than any competitor, and is priced to be accessible to families in developing countries where the need is greatest. Its combination of <strong>research-based vocabulary design</strong>, <strong>AI-powered expressive tones</strong>, <strong>media-rich communication</strong>, and <strong>built-in caregiver training</strong> makes it one of the most feature-complete AAC apps available at any price.</p>
+
+      <p>The 2025 acquisition by PRC-Saltillo brings global AAC leadership resources while preserving Avaz's identity and mission. For the millions of children and adults around the world who cannot speak, Avaz represents the fundamental promise that technology can be a great equalizer -- that a child in a village in Tamil Nadu deserves the same right to express themselves as a child in a suburb of Boston.</p>
+
+      <p>In Hindi, <strong>Avaz</strong> means "Voice." For its users, it is exactly that.</p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div class="footer-content">
+      <div class="footer-sources">
+        <h3>Sources</h3>
+        <ol>
+          <li><a href="https://info.avazapp.com/about-us/" target="_blank" rel="noopener">Avaz Inc. - About Us</a></li>
+          <li><a href="https://avazapp.com/products/avaz-aac-app/" target="_blank" rel="noopener">Avaz AAC Product Page</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Avaz_app" target="_blank" rel="noopener">Avaz app - Wikipedia</a></li>
+          <li><a href="https://www.axschat.com/ajit-narayanan-ceo-of-avaz-inc-and-inventor-of-avaz/" target="_blank" rel="noopener">AXSChat - Ajit Narayanan Interview</a></li>
+          <li><a href="https://apps.apple.com/us/app/avaz-aac/id909574843" target="_blank" rel="noopener">Avaz AAC on Apple App Store</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.avazapp.international.lite" target="_blank" rel="noopener">Avaz AAC on Google Play</a></li>
+          <li><a href="https://bridgingapps.org/bridgingapps-reviewed-app-avaz-help-kids-autism-speak-free-aac-app-autism/" target="_blank" rel="noopener">BridgingApps - Avaz Review</a></li>
+          <li><a href="https://www.commonsensemedia.org/app-reviews/avaz-pro" target="_blank" rel="noopener">Common Sense Media - Avaz Pro Review</a></li>
+          <li><a href="https://www.speechandlanguagekids.com/aac-apps-review/" target="_blank" rel="noopener">Speech and Language Kids - AAC Apps 2025</a></li>
+          <li><a href="https://www.ted.com/speakers/ajit_narayanan" target="_blank" rel="noopener">Ajit Narayanan - TED Speaker Profile</a></li>
+        </ol>
+      </div>
+      <div class="footer-meta">
+        <p>Research conducted March 2, 2026 | AI-Assisted Research Pipeline</p>
+        <p style="margin-top: 0.75rem;"><a href="../aac-applications-competitive-analysis-dashboard/index.html" style="color: var(--color-primary-light); text-decoration: none;">&#x2190; Back to AAC Applications Competitive Analysis Dashboard</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#x2191;</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    // Reading progress
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height * 100) + '%';
+      document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+    });
+
+    // Back to top
+    document.getElementById('backToTop').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Mode toggle
+    function switchMode(mode) {
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('mode-' + mode).classList.add('active');
+    }
+
+    // Smooth scroll for TOC
+    document.querySelectorAll('.toc-list a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Charts
+    const chartDefaults = {
+      color: '#9CA3AF',
+      borderColor: '#334155',
+      font: { family: "'Segoe UI', system-ui, sans-serif" }
+    };
+
+    Chart.defaults.color = chartDefaults.color;
+    Chart.defaults.borderColor = chartDefaults.borderColor;
+
+    // Pricing Chart
+    new Chart(document.getElementById('priceChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Avaz AAC\n(Lifetime)', 'Proloquo2Go', 'TouchChat HD', 'TD Snap', 'LAMP\nWords for Life'],
+        datasets: [{
+          label: 'Price (USD)',
+          data: [199.99, 249.99, 299.99, 299.99, 299.99],
+          backgroundColor: [
+            'rgba(99, 102, 241, 0.8)',
+            'rgba(239, 68, 68, 0.6)',
+            'rgba(239, 68, 68, 0.6)',
+            'rgba(239, 68, 68, 0.6)',
+            'rgba(239, 68, 68, 0.6)'
+          ],
+          borderColor: [
+            'rgba(99, 102, 241, 1)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(239, 68, 68, 0.8)'
+          ],
+          borderWidth: 1,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => '$' + ctx.raw.toFixed(2)
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 350,
+            grid: { color: 'rgba(51, 65, 85, 0.5)' },
+            ticks: { callback: v => '$' + v }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    // Language Support Chart
+    new Chart(document.getElementById('langChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Avaz AAC', 'TD Snap', 'Proloquo2Go', 'TouchChat HD', 'LAMP WFL'],
+        datasets: [
+          {
+            label: 'Indian Languages',
+            data: [8, 0, 0, 0, 0],
+            backgroundColor: 'rgba(245, 158, 11, 0.8)',
+            borderColor: 'rgba(245, 158, 11, 1)',
+            borderWidth: 1,
+            borderRadius: 6
+          },
+          {
+            label: 'International Languages',
+            data: [5, 6, 4, 2, 1],
+            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { padding: 16, usePointStyle: true, pointStyle: 'rectRounded' }
+          },
+          tooltip: {
+            callbacks: {
+              afterBody: function(tooltipItems) {
+                const idx = tooltipItems[0].dataIndex;
+                const total = [13, 6, 4, 2, 1];
+                return 'Total: ' + total[idx] + ' languages';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 16,
+            grid: { color: 'rgba(51, 65, 85, 0.5)' },
+            title: { display: true, text: 'Number of Languages', color: '#9CA3AF' }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

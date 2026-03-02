@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cboard Deep Dive: Comprehensive analysis of the free, open-source AAC app backed by UNICEF, featuring 40+ languages, 20,000+ symbols, AI-powered features, and global deployment across 5+ countries.">
+<meta name="author" content="AI-Assisted Research">
+<meta property="og:title" content="Cboard: Free Open-Source AAC Backed by UNICEF">
+<meta property="og:description" content="Deep dive into Cboard - UNICEF-backed free AAC app with 40+ languages, AI features, and global impact.">
+<meta property="og:type" content="article">
+<title>Cboard Deep Dive | AAC Communication Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-input: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #06b6d4;
+  --accent-light: #22d3ee;
+  --accent-dark: #0891b2;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.15);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.15);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.15);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.15);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.15);
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.15);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.15);
+  --border: #334155;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Reading Progress */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  z-index: 1001;
+  transition: width 0.1s;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent-light);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  transition: color 0.2s;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+}
+.back-link:hover { color: var(--text); }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #0c4a6e 0%, #075985 30%, #0369a1 60%, #0891b2 100%);
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(6,182,212,0.3), transparent 60%),
+              radial-gradient(circle at 70% 30%, rgba(59,130,246,0.2), transparent 50%);
+}
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.header .subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.8);
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+}
+.header-badges {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.badge-free { background: rgba(16,185,129,0.3); border-color: rgba(16,185,129,0.4); }
+.badge-unicef { background: rgba(59,130,246,0.3); border-color: rgba(59,130,246,0.4); }
+.badge-opensource { background: rgba(168,85,247,0.3); border-color: rgba(168,85,247,0.4); }
+.badge-ai { background: rgba(245,158,11,0.3); border-color: rgba(245,158,11,0.4); }
+
+/* Logo SVG */
+.cboard-logo {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(6,182,212,0.3);
+}
+.cboard-logo svg {
+  width: 48px;
+  height: 48px;
+  fill: white;
+}
+
+/* Quick Stats */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: -2rem auto 0;
+  position: relative;
+  z-index: 2;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+
+/* Content Container */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 3rem 0 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Prose Blocks */
+.prose {
+  color: var(--text-dim);
+  line-height: 1.8;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+.prose p { margin-bottom: 1rem; }
+.prose strong { color: var(--text); font-weight: 600; }
+.prose a { color: var(--accent-light); text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
+
+/* Blockquotes */
+.quote-block {
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.quote-text {
+  font-style: italic;
+  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+.quote-attr {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--accent); }
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Feature Grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.feature-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.feature-card .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+.feature-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.feature-card p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--purple), var(--green));
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 0.5rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--accent);
+  z-index: 1;
+}
+.timeline-item:nth-child(2)::before { border-color: var(--blue); }
+.timeline-item:nth-child(3)::before { border-color: var(--purple); }
+.timeline-item:nth-child(4)::before { border-color: var(--yellow); }
+.timeline-item:nth-child(5)::before { border-color: var(--green); }
+.timeline-item:nth-child(6)::before { border-color: var(--orange); }
+.timeline-item:nth-child(7)::before { border-color: var(--cyan); }
+.timeline-year {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.timeline-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+.timeline-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Tech Stack */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+.tech-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.tech-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.tech-item .tech-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.5rem;
+  font-size: 1.2rem;
+}
+.tech-item .tech-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.tech-item .tech-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Deployment Map */
+.deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.deploy-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: transform 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.deploy-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.deploy-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at 100% 0%, rgba(6,182,212,0.1), transparent 70%);
+}
+.deploy-card .country-flag {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+.deploy-card .country-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.deploy-card .country-year {
+  font-size: 0.75rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.deploy-card .country-stat {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Pros / Cons */
+.pros-cons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+.pros-list, .cons-list {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+.pros-list { border-top: 3px solid var(--green); }
+.cons-list { border-top: 3px solid var(--red); }
+.pros-list h3, .cons-list h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pros-list li, .cons-list li {
+  list-style: none;
+  padding: 0.5rem 0;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  line-height: 1.5;
+}
+.pros-list li::before {
+  content: '+';
+  color: var(--green);
+  font-weight: 800;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.cons-list li::before {
+  content: '-';
+  color: var(--red);
+  font-weight: 800;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+/* Comparison Table */
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.comparison-table thead th {
+  background: var(--bg-card);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.comparison-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+.comparison-table thead th:last-child { border-radius: 0 var(--radius) 0 0; }
+.comparison-table thead th.highlight {
+  background: rgba(6,182,212,0.15);
+  color: var(--accent-light);
+}
+.comparison-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.comparison-table td:first-child {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.comparison-table td.highlight {
+  background: rgba(6,182,212,0.05);
+  color: var(--accent-light);
+  font-weight: 600;
+}
+.comparison-table tbody tr:hover td {
+  background: var(--bg-card-hover);
+}
+.comparison-table tbody tr:hover td.highlight {
+  background: rgba(6,182,212,0.12);
+}
+.check { color: var(--green); }
+.cross { color: var(--red); }
+.partial { color: var(--yellow); }
+
+/* Chart Containers */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.chart-container h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.chart-wrapper {
+  position: relative;
+  max-height: 400px;
+}
+
+/* Reviews */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.review-stars {
+  color: var(--yellow);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.review-text {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+.review-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.tab {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+.tab:hover { color: var(--text-dim); }
+.tab.active {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.tab-content.active { display: block; }
+
+/* Accordion */
+.accordion-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.accordion-trigger:hover { background: var(--bg-card-hover); }
+.accordion-trigger .arrow {
+  transition: transform 0.3s;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.accordion-item.open .accordion-trigger .arrow {
+  transform: rotate(180deg);
+}
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.accordion-body-inner {
+  padding: 0 1.25rem 1rem;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* Sources Footer */
+.sources-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 3rem;
+}
+.sources-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.source-list {
+  list-style: none;
+  columns: 2;
+  column-gap: 2rem;
+}
+.source-list li {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 0.3rem 0;
+  break-inside: avoid;
+}
+.source-list a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+.source-list a:hover { text-decoration: underline; }
+
+/* Back to Top */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(6,182,212,0.3);
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.back-to-top:hover { background: var(--accent-light); }
+
+/* Scroll Animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.75rem; }
+  .header .subtitle { font-size: 0.95rem; }
+  .quick-stats { grid-template-columns: repeat(2, 1fr); padding: 1rem; }
+  .content { padding: 1rem; }
+  .section-header h2 { font-size: 1.3rem; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .source-list { columns: 1; }
+  .deploy-grid { grid-template-columns: repeat(2, 1fr); }
+  .tech-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .quick-stats { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .stat-value { font-size: 1.4rem; }
+  .deploy-grid { grid-template-columns: 1fr; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media print {
+  .reading-progress, .back-to-top, .back-link { display: none; }
+  body { background: white; color: #1a1a1a; }
+  .card, .feature-card, .stat-card, .deploy-card { border: 1px solid #ddd; }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress"></div>
+
+<a href="../aac-applications-competitive-analysis-dashboard/index.html" class="back-link">
+  <span>&larr;</span> Back to AAC Dashboard
+</a>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="cboard-logo">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="17" height="17" rx="3" fill="white" opacity="0.9"/>
+      <rect x="27" y="4" width="17" height="17" rx="3" fill="white" opacity="0.7"/>
+      <rect x="4" y="27" width="17" height="17" rx="3" fill="white" opacity="0.7"/>
+      <rect x="27" y="27" width="17" height="17" rx="3" fill="white" opacity="0.5"/>
+      <circle cx="12.5" cy="12.5" r="4" fill="#0891b2"/>
+      <circle cx="35.5" cy="12.5" r="4" fill="#3b82f6"/>
+      <circle cx="12.5" cy="35.5" r="4" fill="#10b981"/>
+      <circle cx="35.5" cy="35.5" r="4" fill="#f59e0b"/>
+    </svg>
+  </div>
+  <h1>Cboard</h1>
+  <p class="subtitle">Free, open-source AAC backed by UNICEF --- giving voice to thousands with 40+ languages, 20,000+ symbols, and AI-powered communication</p>
+  <div class="header-badges">
+    <span class="badge badge-free">&#10003; 100% Free</span>
+    <span class="badge badge-unicef">&#127758; UNICEF Backed</span>
+    <span class="badge badge-opensource">&#128736; Open Source (GPL-3.0)</span>
+    <span class="badge badge-ai">&#9889; AI-Powered</span>
+  </div>
+</header>
+
+<!-- QUICK STATS -->
+<div class="quick-stats">
+  <div class="stat-card fade-in">
+    <div class="stat-value">$0</div>
+    <div class="stat-label">Price (Forever Free)</div>
+  </div>
+  <div class="stat-card fade-in">
+    <div class="stat-value">40+</div>
+    <div class="stat-label">Languages Supported</div>
+  </div>
+  <div class="stat-card fade-in">
+    <div class="stat-value">20K+</div>
+    <div class="stat-label">Symbols Available</div>
+  </div>
+  <div class="stat-card fade-in">
+    <div class="stat-value">3K+</div>
+    <div class="stat-label">Users in SE Europe</div>
+  </div>
+  <div class="stat-card fade-in">
+    <div class="stat-value">152+</div>
+    <div class="stat-label">GitHub Contributors</div>
+  </div>
+  <div class="stat-card fade-in">
+    <div class="stat-value">4.3/5</div>
+    <div class="stat-label">App Store Rating</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ORIGIN STORY -->
+  <div class="section-header fade-in" id="origin">
+    <div class="section-icon" style="background:var(--blue-bg);color:var(--blue);">&#128218;</div>
+    <h2>Origin Story</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>The story of Cboard begins not in a corporate boardroom but in a rehabilitation center in <strong>Cordoba, Argentina</strong>. In 2017, <strong>Martin Bedouret</strong>, a software developer with more than 20 years of experience, was diagnosed with <strong>amyotrophic lateral sclerosis (ALS)</strong> at the age of 39. As he began working with a speech therapist, he discovered a troubling reality: the tools designed to help people with speech impairments communicate were prohibitively expensive, available in only a handful of languages, and locked behind proprietary platforms.</p>
+    <p>Rather than building yet another proprietary tool, Bedouret partnered with <strong>Shay Cojocaru</strong>, an Israeli developer serving as Head of Engineering at CIREHA, a rehabilitation center in Cordoba. Cojocaru had been searching online for programmers willing to contribute to an open-source AAC project. Together with early contributors <strong>Akshat Gupta</strong> and <strong>Amberley Romo</strong>, they formed the nucleus of what would become a global community.</p>
+  </div>
+
+  <div class="quote-block fade-in">
+    <div class="quote-text">"Open Source was the way it all came about."</div>
+    <div class="quote-attr">--- Martin Bedouret, Co-Founder of Cboard</div>
+  </div>
+
+  <div class="prose fade-in">
+    <p>The project attracted the attention of <strong>UNICEF's Innovation Fund</strong>, which provided early investment through CIREHA to develop Cboard into a scalable, affordable AAC solution. UNICEF estimated that approximately <strong>840,000 children</strong> in Europe and Central Asia alone could benefit from AAC solutions --- and the vast majority had no access to any communication tools at all.</p>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section-header fade-in" id="timeline">
+    <div class="section-icon" style="background:var(--purple-bg);color:var(--purple);">&#128197;</div>
+    <h2>Project Timeline</h2>
+  </div>
+
+  <div class="timeline fade-in">
+    <div class="timeline-item">
+      <div class="timeline-year">2017</div>
+      <div class="timeline-title">Founded in Argentina</div>
+      <div class="timeline-desc">Martin Bedouret and Shay Cojocaru create Cboard as an open-source AAC project. CIREHA receives investment from UNICEF Innovation Fund.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">November 2019</div>
+      <div class="timeline-title">First UNICEF Pilot</div>
+      <div class="timeline-desc">Pilot launched in Croatia, Montenegro, and Serbia with 125 children (ages 3-12) and 70+ trained professionals.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2021-2022</div>
+      <div class="timeline-title">Regional Expansion</div>
+      <div class="timeline-desc">Expanded to Bulgaria and North Macedonia. Custom Macedonian voice "Suze" developed. 1,000+ professionals trained across five countries.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">March 2023</div>
+      <div class="timeline-title">Microsoft AI for Accessibility Grant</div>
+      <div class="timeline-desc">Selected for Microsoft's prestigious grant to leverage Azure Neural TTS and translation services for expansion into Asia and Latin America.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">August 2023</div>
+      <div class="timeline-title">iOS Launch &amp; AI Features</div>
+      <div class="timeline-desc">Cboard launches on iOS App Store. CBuilder AI board generator and AI-powered sentence creation introduced using OpenAI.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2023-2024</div>
+      <div class="timeline-title">OTTAA Merger</div>
+      <div class="timeline-desc">Merged with OTTAA Project (also UNICEF-backed), combining complementary AI-powered AAC approaches and 18,000 additional pictograms.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">May 2025</div>
+      <div class="timeline-title">ElevenLabs Partnership</div>
+      <div class="timeline-desc">Partnership with ElevenLabs for personalized voice cloning, allowing users to preserve their identity through custom synthetic voices.</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-header fade-in" id="how-it-works">
+    <div class="section-icon" style="background:var(--cyan-bg);color:var(--cyan);">&#9881;</div>
+    <h2>How It Works</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>Unlike most AAC apps that require downloading a platform-specific application, Cboard runs in <strong>any modern web browser</strong>. A family in rural Montenegro does not need to buy an iPad or a dedicated speech device --- any tablet, phone, laptop, or desktop computer with a browser can become a communication device.</p>
+    <p>At its core, Cboard uses the browser's native <strong>Speech Synthesis API</strong> to convert symbol selections into spoken words. When a user taps a pictographic symbol on their communication board, the browser generates speech in the user's language.</p>
+  </div>
+
+  <!-- Tech Stack -->
+  <h3 style="font-size:1.05rem;margin:1.5rem 0 1rem;color:var(--text);" class="fade-in">Open Source Technology Stack</h3>
+  <div class="tech-grid fade-in">
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--blue-bg);color:var(--blue);">&#9883;</div>
+      <div class="tech-name">React + Redux</div>
+      <div class="tech-role">Frontend UI</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--green-bg);color:var(--green);">&#9634;</div>
+      <div class="tech-name">Node.js + Express</div>
+      <div class="tech-role">Backend API</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--green-bg);color:var(--green);">&#9736;</div>
+      <div class="tech-name">MongoDB</div>
+      <div class="tech-role">Database</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--yellow-bg);color:var(--yellow);">&#9889;</div>
+      <div class="tech-name">OpenAI API</div>
+      <div class="tech-role">AI Engine (CBuilder)</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--cyan-bg);color:var(--cyan);">&#128266;</div>
+      <div class="tech-name">Speech Synthesis</div>
+      <div class="tech-role">Browser TTS</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--purple-bg);color:var(--purple);">&#128241;</div>
+      <div class="tech-name">Cordova</div>
+      <div class="tech-role">Mobile Wrapper</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--orange-bg);color:var(--orange);">&#127760;</div>
+      <div class="tech-name">Crowdin</div>
+      <div class="tech-role">Translation (40+ langs)</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-icon" style="background:var(--blue-bg);color:var(--blue);">&#128172;</div>
+      <div class="tech-name">ElevenLabs</div>
+      <div class="tech-role">Voice Cloning</div>
+    </div>
+  </div>
+
+  <!-- Symbol Libraries -->
+  <h3 style="font-size:1.05rem;margin:1.5rem 0 1rem;color:var(--text);" class="fade-in">Symbol Libraries</h3>
+  <div class="feature-grid fade-in">
+    <div class="feature-card">
+      <div class="icon" style="background:var(--purple-bg);color:var(--purple);">&#127912;</div>
+      <h3>Mulberry Symbols</h3>
+      <p><strong>~3,400 symbols</strong> --- Scalable SVG graphics designed for adult AAC users. Licensed under CC BY-SA for unrestricted use, copying, and distribution.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:var(--blue-bg);color:var(--blue);">&#127752;</div>
+      <h3>ARASAAC</h3>
+      <p><strong>~13,000 symbols</strong> --- Colorful, widely-used pictogram library from Spain's Aragonese Centre. Licensed under CC BY-NC-SA with growing language support.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:var(--green-bg);color:var(--green);">&#127758;</div>
+      <h3>Global Symbols</h3>
+      <p><strong>Additional symbols</strong> --- Cross-cultural symbol sets designed for worldwide access with linguistically and culturally localized pictographic communication.</p>
+    </div>
+  </div>
+
+  <!-- LANGUAGE COVERAGE CHART -->
+  <div class="section-header fade-in" id="languages">
+    <div class="section-icon" style="background:var(--green-bg);color:var(--green);">&#127760;</div>
+    <h2>Language Coverage</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>Perhaps Cboard's most striking competitive advantage is its language coverage. While most commercial AAC apps support between 6 and 25 languages, Cboard is available in <strong>over 40 languages</strong> --- making it one of the most linguistically diverse AAC platforms in existence. Languages are community-translated via <strong>Crowdin</strong>, with recent additions including Persian (Farsi) and custom voices like the Macedonian "Suze."</p>
+  </div>
+
+  <div class="chart-container fade-in">
+    <h3>&#128202; Language Support: Cboard vs. Commercial AAC Apps</h3>
+    <div class="chart-wrapper">
+      <canvas id="languageChart"></canvas>
+    </div>
+  </div>
+
+  <!-- AI FEATURES -->
+  <div class="section-header fade-in" id="ai-features">
+    <div class="section-icon" style="background:var(--yellow-bg);color:var(--yellow);">&#9889;</div>
+    <h2>AI-Powered Features</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>Cboard has embraced AI to solve real problems in AAC. From automated board creation to predictive communication, these features represent some of the most innovative work in the free AAC space.</p>
+  </div>
+
+  <div class="feature-grid fade-in">
+    <div class="feature-card">
+      <div class="icon" style="background:var(--yellow-bg);color:var(--yellow);">&#129302;</div>
+      <h3>CBuilder (AI Board Creator)</h3>
+      <p>Type a prompt like "daily routine for a 5-year-old" and CBuilder generates a complete communication board using OpenAI's API. Published as the cboard-ai-engine npm package.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:var(--blue-bg);color:var(--blue);">&#128161;</div>
+      <h3>Predictive Text</h3>
+      <p>AI learns from user communication patterns, offering increasingly accurate word and phrase suggestions over time based on context and usage history.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:var(--purple-bg);color:var(--purple);">&#128172;</div>
+      <h3>AI Sentence Creation</h3>
+      <p>Launched October 2023 --- analyzes user inputs and message context to suggest complete phrases based on pictogram combinations, moving beyond simple word prediction.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon" style="background:var(--cyan-bg);color:var(--cyan);">&#127908;</div>
+      <h3>Voice Cloning (ElevenLabs)</h3>
+      <p>Personalized synthetic voices created from old recordings, preserving user identity for those with ALS, vocal cord paralysis, laryngeal cancer, and other conditions.</p>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="section-header fade-in" id="pricing">
+    <div class="section-icon" style="background:var(--green-bg);color:var(--green);">&#128176;</div>
+    <h2>The Price Revolution</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>In a market where AAC apps routinely cost $250-$300, Cboard's <strong>zero price point</strong> is not merely a competitive advantage --- it is a moral statement. For the estimated 840,000 children in Europe and Central Asia who could benefit from AAC, a $300 app is effectively inaccessible. Cboard's free model is sustained through UNICEF funding, the Microsoft AI for Accessibility grant, community donations via Open Collective, and 152+ volunteer contributors.</p>
+  </div>
+
+  <div class="chart-container fade-in">
+    <h3>&#128176; AAC App Pricing Comparison</h3>
+    <div class="chart-wrapper">
+      <canvas id="pricingChart"></canvas>
+    </div>
+  </div>
+
+  <!-- GLOBAL DEPLOYMENT -->
+  <div class="section-header fade-in" id="deployment">
+    <div class="section-icon" style="background:var(--orange-bg);color:var(--orange);">&#127758;</div>
+    <h2>Global Deployment</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>Cboard's journey from a small open-source project to a globally deployed AAC solution is largely a story of UNICEF's infrastructure and commitment. Over <strong>1,000 professionals</strong> have been trained across five southeastern European countries, and over <strong>3,000 young people</strong> are actively using Cboard in the region.</p>
+  </div>
+
+  <div class="deploy-grid fade-in">
+    <div class="deploy-card">
+      <div class="country-flag">&#127469;&#127479;</div>
+      <div class="country-name">Croatia</div>
+      <div class="country-year">Since 2019 (Pilot)</div>
+      <div class="country-stat">Part of the original 125-child pilot with speech therapists and special educators</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127474;&#127466;</div>
+      <div class="country-name">Montenegro</div>
+      <div class="country-year">Since 2019 (Pilot)</div>
+      <div class="country-stat">70+ professionals trained across preschool, therapy, and special education</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127479;&#127480;</div>
+      <div class="country-name">Serbia</div>
+      <div class="country-year">Since 2019 (Pilot)</div>
+      <div class="country-stat">Reports of improved confidence and vocalization in nonverbal children</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127463;&#127468;</div>
+      <div class="country-name">Bulgaria</div>
+      <div class="country-year">Since 2021</div>
+      <div class="country-stat"><strong>4,000+ users</strong> --- most preferred AAC solution by specialists. 300+ nonverbal children supported</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127474;&#127472;</div>
+      <div class="country-name">North Macedonia</div>
+      <div class="country-year">Since 2021</div>
+      <div class="country-stat">Localized in Macedonian &amp; Albanian. Custom voice "Suze" developed with FEIT Skopje</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127462;&#127479;</div>
+      <div class="country-name">Argentina</div>
+      <div class="country-year">Since 2017 (Origin)</div>
+      <div class="country-stat">Birthplace of Cboard. CIREHA rehabilitation center partnership. Won $10K pitch competition (2024)</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127482;&#127480;</div>
+      <div class="country-name">United States</div>
+      <div class="country-year">Active</div>
+      <div class="country-stat">Philadelphia School District officially adopted and recommends Cboard for students</div>
+    </div>
+    <div class="deploy-card">
+      <div class="country-flag">&#127758;</div>
+      <div class="country-name">Asia &amp; LATAM</div>
+      <div class="country-year">Expanding</div>
+      <div class="country-stat">Microsoft AI for Accessibility grant funding expansion into new regions</div>
+    </div>
+  </div>
+
+  <!-- OTTAA MERGER -->
+  <div class="section-header fade-in" id="ottaa">
+    <div class="section-icon" style="background:var(--purple-bg);color:var(--purple);">&#129309;</div>
+    <h2>The OTTAA Merger</h2>
+  </div>
+
+  <div class="prose fade-in">
+    <p>In a move that illustrates the unique advantages of open-source development, Cboard merged with <strong>OTTAA</strong>, another AAC project from UNICEF's Innovation Fund portfolio. OTTAA brings an AI-powered platform that uses contextual data --- time of day, user age, gender, and location --- to pre-select four pictograms from its database of <strong>18,000 symbols</strong>, helping users communicate quickly in real-time.</p>
+  </div>
+
+  <div class="quote-block fade-in">
+    <div class="quote-text">"We had the same end goal: to return the voice to those who have lost it."</div>
+    <div class="quote-attr">--- Cboard &amp; OTTAA Teams, on the merger</div>
+  </div>
+
+  <div class="prose fade-in">
+    <p>Because both projects were open source, the collaboration could happen <strong>without legal bureaucracy, non-disclosure agreements, or discussions over Intellectual Property</strong>. The two projects now share marketing resources, technology platforms, and development tools. This merger exemplifies what open-source advocates have long argued: that freely licensed software enables a kind of collaboration that is simply impossible in the proprietary world.</p>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="section-header fade-in" id="comparison">
+    <div class="section-icon" style="background:var(--blue-bg);color:var(--blue);">&#128200;</div>
+    <h2>Competitive Comparison</h2>
+  </div>
+
+  <div class="comparison-table-wrapper fade-in">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="highlight">Cboard</th>
+          <th>Proloquo2Go</th>
+          <th>TD Snap</th>
+          <th>LAMP WFL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Price</td>
+          <td class="highlight"><strong>Free</strong></td>
+          <td>$249.99</td>
+          <td>$299.99</td>
+          <td>$299.99</td>
+        </tr>
+        <tr>
+          <td>Languages</td>
+          <td class="highlight"><strong>40+</strong></td>
+          <td>18</td>
+          <td>15</td>
+          <td>1 (English)</td>
+        </tr>
+        <tr>
+          <td>Symbols</td>
+          <td class="highlight">20,000+</td>
+          <td>25,000+</td>
+          <td>15,000+</td>
+          <td>Varies</td>
+        </tr>
+        <tr>
+          <td>Platforms</td>
+          <td class="highlight">Web, Android, iOS</td>
+          <td>iOS only</td>
+          <td>iOS, Windows</td>
+          <td>iOS only</td>
+        </tr>
+        <tr>
+          <td>AI Features</td>
+          <td class="highlight"><span class="check">&#10003;</span> CBuilder, Predictive</td>
+          <td>Limited</td>
+          <td>Some</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>Open Source</td>
+          <td class="highlight"><span class="check">&#10003;</span> GPL-3.0</td>
+          <td><span class="cross">&#10007;</span> Proprietary</td>
+          <td><span class="cross">&#10007;</span> Proprietary</td>
+          <td><span class="cross">&#10007;</span> Proprietary</td>
+        </tr>
+        <tr>
+          <td>Offline Support</td>
+          <td class="highlight"><span class="partial">~</span> Chrome only</td>
+          <td><span class="check">&#10003;</span> Full</td>
+          <td><span class="check">&#10003;</span> Full</td>
+          <td><span class="check">&#10003;</span> Full</td>
+        </tr>
+        <tr>
+          <td>Voice Quality</td>
+          <td class="highlight">Browser-dependent</td>
+          <td>High (Acapela)</td>
+          <td>High (multiple)</td>
+          <td>High (Acapela)</td>
+        </tr>
+        <tr>
+          <td>Voice Cloning</td>
+          <td class="highlight"><span class="check">&#10003;</span> ElevenLabs</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td><span class="cross">&#10007;</span></td>
+          <td><span class="cross">&#10007;</span></td>
+        </tr>
+        <tr>
+          <td>UNICEF Backed</td>
+          <td class="highlight"><span class="check">&#10003;</span></td>
+          <td><span class="cross">&#10007;</span></td>
+          <td><span class="cross">&#10007;</span></td>
+          <td><span class="cross">&#10007;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PROS AND CONS -->
+  <div class="section-header fade-in" id="pros-cons">
+    <div class="section-icon" style="background:var(--cyan-bg);color:var(--cyan);">&#9878;</div>
+    <h2>Strengths &amp; Limitations</h2>
+  </div>
+
+  <div class="pros-cons fade-in">
+    <div class="pros-list">
+      <h3><span style="color:var(--green);">&#9650;</span> Strengths</h3>
+      <ul>
+        <li><strong>Completely free</strong> --- zero cost barrier, critical for families and developing countries</li>
+        <li><strong>40+ languages</strong> --- largest language coverage in the AAC space</li>
+        <li><strong>UNICEF backing</strong> --- institutional credibility and global deployment infrastructure</li>
+        <li><strong>Open source (GPL-3.0)</strong> --- transparent, forkable, community-driven development</li>
+        <li><strong>Cross-platform</strong> --- works on any device with a modern browser, plus Android and iOS apps</li>
+        <li><strong>AI-powered CBuilder</strong> --- dramatically reduces board setup time with OpenAI integration</li>
+        <li><strong>20,000+ symbols</strong> --- access to Mulberry, ARASAAC, and Global Symbols libraries</li>
+        <li><strong>ElevenLabs voice cloning</strong> --- preserves user identity through personalized voices</li>
+        <li><strong>Microsoft grant</strong> --- Azure Neural TTS for high-quality speech synthesis</li>
+        <li><strong>Active community</strong> --- 152+ GitHub contributors, Discord server, Open Collective funding</li>
+      </ul>
+    </div>
+    <div class="cons-list">
+      <h3><span style="color:var(--red);">&#9660;</span> Limitations</h3>
+      <ul>
+        <li><strong>Less polished UI</strong> --- interface functional but not as refined as commercial apps</li>
+        <li><strong>Browser-dependent TTS</strong> --- voice quality varies significantly across browsers/OS</li>
+        <li><strong>Limited offline support</strong> --- full offline only in Chrome; other browsers restricted</li>
+        <li><strong>Machine translations</strong> --- many language packs need proofreading by native speakers</li>
+        <li><strong>Online board editing</strong> --- board customization still requires internet connection</li>
+        <li><strong>No eye tracking</strong> --- lacks specialized access methods some commercial apps offer</li>
+        <li><strong>Cross-platform variance</strong> --- feature availability differs between web, Android, iOS</li>
+        <li><strong>Stability reports</strong> --- Nov 2025 review noted disappearing folders and layout issues</li>
+        <li><strong>Small core team</strong> --- active maintainer team smaller than commercial competitors</li>
+        <li><strong>Grant-dependent</strong> --- sustainability relies on UNICEF, Microsoft, and donations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- USER REVIEWS -->
+  <div class="section-header fade-in" id="reviews">
+    <div class="section-icon" style="background:var(--yellow-bg);color:var(--yellow);">&#11088;</div>
+    <h2>User Reviews &amp; Community</h2>
+  </div>
+
+  <div class="reviews-grid fade-in">
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">"Incredibly powerful application with very easy to navigate menu systems and features. The application has a clean look to the interface with user friendly graphics."</div>
+      <div class="review-source">--- EducationalAppStore</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">"Fun and very easy to use. It has every feature you would need for a robust AAC system with voicing, customization, and a wide selection of symbols."</div>
+      <div class="review-source">--- App Store User Review</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+      <div class="review-text">"After opening the app, some folders had disappeared and their layout was all messed up with things missing, with no apparent reason."</div>
+      <div class="review-source">--- App Store Review, November 2025</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">"Professionals reported that children responded particularly well to the text-to-speech functionality, with improved confidence and vocalization in nonverbal children."</div>
+      <div class="review-source">--- UNICEF Pilot Program Report</div>
+    </div>
+  </div>
+
+  <!-- FAQ / ACCORDION -->
+  <div class="section-header fade-in" id="faq">
+    <div class="section-icon" style="background:var(--purple-bg);color:var(--purple);">&#10067;</div>
+    <h2>Frequently Asked Questions</h2>
+  </div>
+
+  <div class="fade-in">
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        Is Cboard really completely free?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Yes. Cboard is 100% free to use and is licensed under GPL-3.0, which ensures it will remain free forever. There are no premium tiers, no in-app purchases, and no subscription fees. Development is funded through UNICEF's Innovation Fund, Microsoft's AI for Accessibility grant, and community donations via Open Collective.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        What devices does Cboard work on?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Cboard works on virtually any device with a modern web browser --- desktops, laptops, tablets, and smartphones. It is also available as a native app on Android (Google Play) and iOS (App Store). The web version is a Progressive Web App (PWA) that can be installed on your home screen.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        Does Cboard work offline?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Cboard has offline capabilities through Service Worker API, but this currently works fully only in Google Chrome (desktop and Android). Other browsers have more limited offline support. Board customization still requires an internet connection. The native Android and iOS apps offer better offline functionality.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        How does CBuilder AI work?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          CBuilder uses OpenAI's API to generate complete communication boards from simple text prompts. For example, a speech therapist can type "daily routine for a 5-year-old" and the AI will suggest appropriate symbols, categories, and board layouts. It can also create new pictograms when existing symbol libraries don't have what's needed. The engine is open source and available as an npm package (cboard-ai-engine).
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        How can I contribute to Cboard?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          There are several ways to contribute: (1) Code contributions via the GitHub repository (cboard-org/cboard), (2) Translation proofreading through the Crowdin platform, (3) Financial donations via Open Collective, (4) Bug reports and feature suggestions through GitHub Issues, and (5) Community support via the Discord server. All contributions are welcome, regardless of technical skill level.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        What happened with the OTTAA merger?
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          OTTAA was another UNICEF Innovation Fund-backed AAC project that used AI to predict pictogram selections based on context (time of day, user age, location). Both teams realized they shared the same goal, and because both projects were open source, they could merge without legal barriers. The combined project now shares marketing, technology platforms, development tools, and OTTAA's database of 18,000 pictograms.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY PARTNERSHIPS -->
+  <div class="section-header fade-in" id="partnerships">
+    <div class="section-icon" style="background:var(--blue-bg);color:var(--blue);">&#129309;</div>
+    <h2>Key Partnerships</h2>
+  </div>
+
+  <div class="feature-grid fade-in">
+    <div class="feature-card" style="border-top:3px solid var(--blue);">
+      <div class="icon" style="background:var(--blue-bg);color:var(--blue);">&#127758;</div>
+      <h3>UNICEF Innovation Fund</h3>
+      <p>Early investment through CIREHA. Global deployment infrastructure across 5+ countries. Part of the AAC Accessibility Cohort. Over 1,000 professionals trained.</p>
+    </div>
+    <div class="feature-card" style="border-top:3px solid var(--green);">
+      <div class="icon" style="background:var(--green-bg);color:var(--green);">&#9729;</div>
+      <h3>Microsoft AI for Accessibility</h3>
+      <p>Prestigious grant awarded March 2023. Azure Neural Text-to-Speech and translation services. Funding expansion into Asia and Latin America markets.</p>
+    </div>
+    <div class="feature-card" style="border-top:3px solid var(--purple);">
+      <div class="icon" style="background:var(--purple-bg);color:var(--purple);">&#127908;</div>
+      <h3>ElevenLabs</h3>
+      <p>Partnership announced May 2025 for personalized voice cloning. Free voice creation for users with documented speech impairments. Identity preservation through AI voices.</p>
+    </div>
+    <div class="feature-card" style="border-top:3px solid var(--orange);">
+      <div class="icon" style="background:var(--orange-bg);color:var(--orange);">&#129302;</div>
+      <h3>OTTAA Project</h3>
+      <p>Merged UNICEF-backed projects combining AI-powered contextual prediction, 18,000 additional pictograms, and shared development resources.</p>
+    </div>
+  </div>
+
+  <!-- KEY TAKEAWAYS -->
+  <div class="section-header fade-in" id="takeaways">
+    <div class="section-icon" style="background:var(--green-bg);color:var(--green);">&#128220;</div>
+    <h2>Key Takeaways</h2>
+  </div>
+
+  <div class="card fade-in" style="border-left:4px solid var(--accent);">
+    <div class="prose" style="margin-bottom:0;">
+      <p>Cboard occupies a unique position in the AAC market. It does not directly compete with premium commercial apps on features or polish, but it competes on <strong>access</strong>. For the estimated 840,000 children in Europe and Central Asia alone who could benefit from AAC, the choice is often not between Cboard and Proloquo2Go --- it is between <strong>Cboard and nothing</strong>.</p>
+      <p>What Cboard has demonstrated is that the open-source model can work for assistive technology. A project born from one developer's personal experience with ALS has grown into a tool used by thousands of children across multiple continents. It has attracted the support of UNICEF, Microsoft, and ElevenLabs. It has 152 contributors on GitHub, an active Discord community, and a clear mission that continues to attract talented people willing to donate their time.</p>
+      <p style="margin-bottom:0;"><strong>In a world where communication is a fundamental human right, Cboard is making a compelling case that the technology to exercise that right should not come with a price tag.</strong></p>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sources-section fade-in">
+    <h3>&#128214; Sources &amp; References</h3>
+    <ul class="source-list">
+      <li><a href="https://www.unicef.org/innovation/stories/giving-every-child-voice-aac-technology" target="_blank">UNICEF - Giving every child a voice with AAC technology</a></li>
+      <li><a href="https://www.unicef.org/innovation/stories/open-source-opens-doors-toward-impact" target="_blank">UNICEF - Open Source opens doors toward Impact</a></li>
+      <li><a href="https://github.com/cboard-org/cboard" target="_blank">GitHub - cboard-org/cboard</a></li>
+      <li><a href="https://www.cboard.io/en/blog/2023-03-14-cboard-selected-by-microsoft-ai4accesibility/" target="_blank">Cboard Blog - Microsoft AI for Accessibility</a></li>
+      <li><a href="https://www.cboard.io/en/blog/2023-10-30-artificial-intelligence-to-improve-phrases/" target="_blank">Cboard Blog - AI-Powered Sentence Creation</a></li>
+      <li><a href="https://www.cboard.io/en/blog/2025-10-22-cboard-elevenlabs-personalized-voices/" target="_blank">Cboard Blog - ElevenLabs Partnership</a></li>
+      <li><a href="https://www.unicef.org/eca/documents/case-study-1-open-source-aac-eca-region" target="_blank">UNICEF ECA - Open source AAC case study</a></li>
+      <li><a href="https://zeroproject.org/view/project/fc33da02-08a5-4689-b0e0-c81b98af26ca" target="_blank">Zero Project - Giving Voice to Every Child</a></li>
+      <li><a href="https://www.unicef.org/bulgaria/en/voice-every-child" target="_blank">UNICEF Bulgaria - A Voice for Every Child</a></li>
+      <li><a href="https://www.unicef.org/northmacedonia/press-releases/cboard-digital-application-giving-voice-every-child" target="_blank">UNICEF North Macedonia - Cboard</a></li>
+      <li><a href="https://technical.ly/startups/cboard-2gether-international-pitch-competition-2024/" target="_blank">Technical.ly - Cboard pitch competition</a></li>
+      <li><a href="https://github.com/cboard-org/cboard-ai-engine" target="_blank">GitHub - cboard-ai-engine</a></li>
+      <li><a href="https://opencollective.com/cboard" target="_blank">Cboard Open Collective</a></li>
+      <li><a href="https://praacticalaac.org/praactical/praactical-resources-free-web-based-aac-with-cboard/" target="_blank">PrAACtical AAC - Cboard resource</a></li>
+      <li><a href="https://www.philasd.org/technology/aac-cboard-app/" target="_blank">Philadelphia School District - Cboard</a></li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:var(--text-muted);font-size:0.78rem;margin-top:2rem;">Research conducted March 2026 | AI-Assisted Research</p>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+// Reading Progress
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progress').style.width = (winScroll / height * 100) + '%';
+  document.getElementById('backToTop').classList.toggle('visible', winScroll > 500);
+});
+
+// Back to Top
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Scroll Animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Accordion
+function toggleAccordion(trigger) {
+  const item = trigger.parentElement;
+  const body = item.querySelector('.accordion-body');
+  const isOpen = item.classList.contains('open');
+
+  document.querySelectorAll('.accordion-item.open').forEach(openItem => {
+    openItem.classList.remove('open');
+    openItem.querySelector('.accordion-body').style.maxHeight = '0';
+  });
+
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// Language Coverage Chart
+const langCtx = document.getElementById('languageChart').getContext('2d');
+new Chart(langCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Cboard', 'Grid (Smartbox)', 'CoughDrop', 'Proloquo2Go', 'TD Snap', 'Avaz', 'TouchChat', 'LAMP WFL'],
+    datasets: [{
+      label: 'Languages Supported',
+      data: [40, 25, 20, 18, 15, 10, 6, 1],
+      backgroundColor: [
+        'rgba(6,182,212,0.8)',
+        'rgba(99,102,241,0.6)',
+        'rgba(168,85,247,0.6)',
+        'rgba(59,130,246,0.6)',
+        'rgba(16,185,129,0.6)',
+        'rgba(245,158,11,0.6)',
+        'rgba(249,115,22,0.6)',
+        'rgba(239,68,68,0.6)'
+      ],
+      borderColor: [
+        'rgba(6,182,212,1)',
+        'rgba(99,102,241,1)',
+        'rgba(168,85,247,1)',
+        'rgba(59,130,246,1)',
+        'rgba(16,185,129,1)',
+        'rgba(245,158,11,1)',
+        'rgba(249,115,22,1)',
+        'rgba(239,68,68,1)'
+      ],
+      borderWidth: 2,
+      borderRadius: 6,
+      barPercentage: 0.7
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1.8,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: '#f1f5f9',
+        bodyColor: '#94a3b8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        padding: 12,
+        callbacks: {
+          label: function(ctx) {
+            return ctx.parsed.x + ' languages';
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(148,163,184,0.1)' },
+        ticks: { color: '#94a3b8', font: { size: 11 } },
+        title: { display: true, text: 'Number of Languages', color: '#94a3b8', font: { size: 12 } }
+      },
+      y: {
+        grid: { display: false },
+        ticks: {
+          color: function(ctx) {
+            return ctx.index === 0 ? '#22d3ee' : '#94a3b8';
+          },
+          font: function(ctx) {
+            return { size: 12, weight: ctx.index === 0 ? '700' : '400' };
+          }
+        }
+      }
+    }
+  }
+});
+
+// Pricing Chart
+const priceCtx = document.getElementById('pricingChart').getContext('2d');
+new Chart(priceCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Cboard', 'Avaz', 'CoughDrop', 'Proloquo2Go', 'TD Snap', 'LAMP WFL', 'TouchChat HD'],
+    datasets: [{
+      label: 'Price (USD)',
+      data: [0, 99.99, 200, 249.99, 299.99, 299.99, 299.99],
+      backgroundColor: [
+        'rgba(16,185,129,0.8)',
+        'rgba(59,130,246,0.6)',
+        'rgba(168,85,247,0.6)',
+        'rgba(245,158,11,0.6)',
+        'rgba(239,68,68,0.6)',
+        'rgba(239,68,68,0.6)',
+        'rgba(239,68,68,0.6)'
+      ],
+      borderColor: [
+        'rgba(16,185,129,1)',
+        'rgba(59,130,246,1)',
+        'rgba(168,85,247,1)',
+        'rgba(245,158,11,1)',
+        'rgba(239,68,68,1)',
+        'rgba(239,68,68,1)',
+        'rgba(239,68,68,1)'
+      ],
+      borderWidth: 2,
+      borderRadius: 6,
+      barPercentage: 0.65
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: '#f1f5f9',
+        bodyColor: '#94a3b8',
+        borderColor: '#334155',
+        borderWidth: 1,
+        padding: 12,
+        callbacks: {
+          label: function(ctx) {
+            return ctx.parsed.y === 0 ? 'FREE' : '$' + ctx.parsed.y.toFixed(2);
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        grid: { color: 'rgba(148,163,184,0.1)' },
+        ticks: {
+          color: '#94a3b8',
+          font: { size: 11 },
+          callback: function(v) { return v === 0 ? 'FREE' : '$' + v; }
+        },
+        title: { display: true, text: 'Price (USD)', color: '#94a3b8', font: { size: 12 } }
+      },
+      x: {
+        grid: { display: false },
+        ticks: {
+          color: function(ctx) {
+            return ctx.index === 0 ? '#10b981' : '#94a3b8';
+          },
+          font: function(ctx) {
+            return { size: 11, weight: ctx.index === 0 ? '700' : '400' };
+          }
+        }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
