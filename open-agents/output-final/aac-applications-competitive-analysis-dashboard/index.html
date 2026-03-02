@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAC Applications Competitive Analysis Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --bg-input: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.15);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.15);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.15);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.15);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.15);
+  --cyan: #06b6d4;
+  --orange: #f97316;
+  --border: #334155;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(99,102,241,0.3), transparent 60%),
+              radial-gradient(circle at 70% 30%, rgba(168,85,247,0.2), transparent 50%);
+}
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.header p {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.7);
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.header-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  position: relative;
+}
+.header-stat {
+  text-align: center;
+}
+.header-stat .val {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #c7d2fe;
+}
+.header-stat .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Navigation */
+.nav {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  overflow-x: auto;
+  padding: 0 1rem;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav a:hover, .nav a.active {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+
+/* Layout */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-title .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.kpi .kpi-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.kpi .kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.kpi .kpi-change {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+.kpi .kpi-change.up { color: var(--green); }
+.kpi .kpi-change.down { color: var(--red); }
+
+/* Product Cards */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: default;
+}
+.product-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.product-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.product-company {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.product-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-premium { background: var(--purple-bg); color: var(--purple); }
+.badge-mid { background: var(--blue-bg); color: var(--blue); }
+.badge-free { background: var(--green-bg); color: var(--green); }
+.badge-open { background: var(--yellow-bg); color: var(--yellow); }
+
+.product-price {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.product-platforms {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+.platform-tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-dim);
+}
+
+.product-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+.feature-chip {
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.product-pros, .product-cons {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.product-pros li { color: var(--green); list-style: none; }
+.product-pros li::before { content: '+ '; font-weight: 700; }
+.product-pros li span { color: var(--text-dim); }
+.product-cons li { color: var(--red); list-style: none; }
+.product-cons li::before { content: '- '; font-weight: 700; }
+.product-cons li span { color: var(--text-dim); }
+
+/* Comparison Table */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  min-width: 900px;
+}
+thead {
+  background: var(--bg-input);
+  position: sticky;
+  top: 0;
+}
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+tbody tr:last-child td {
+  border-bottom: none;
+}
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--text-muted); }
+.partial { color: var(--yellow); }
+td.app-name {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Charts */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.chart-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+.chart-container {
+  position: relative;
+  height: 300px;
+}
+
+/* Opportunity Cards */
+.opp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+.opp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.opp-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.opp-high::before { background: var(--green); }
+.opp-medium::before { background: var(--yellow); }
+.opp-emerging::before { background: var(--blue); }
+.opp-level {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+.opp-high .opp-level { background: var(--green-bg); color: var(--green); }
+.opp-medium .opp-level { background: var(--yellow-bg); color: var(--yellow); }
+.opp-emerging .opp-level { background: var(--blue-bg); color: var(--blue); }
+.opp-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.opp-card p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.opp-evidence {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+/* Ecosystem GPA */
+.gpa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.gpa-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+}
+.gpa-card .grade {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.gpa-card .cat-name {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.grade-a { color: var(--green); }
+.grade-b { color: #34d399; }
+.grade-c { color: var(--yellow); }
+.grade-d { color: var(--orange); }
+.grade-f { color: var(--red); }
+
+/* Sentiment */
+.sentiment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.25rem;
+}
+.sentiment-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.sentiment-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sentiment-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.sentiment-item:last-child { border-bottom: none; }
+.sentiment-item .quote {
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+.sentiment-item .source {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.filter-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font);
+}
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Funding */
+.funding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+.funding-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.funding-card h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.funding-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.75rem; }
+  .header-meta { flex-wrap: wrap; gap: 1rem; }
+  .product-grid { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .opp-grid { grid-template-columns: 1fr; }
+  .sentiment-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 1rem; }
+  .gpa-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Scroll to section animation */
+html { scroll-behavior: smooth; }
+.section { scroll-margin-top: 60px; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>AAC Competitive Analysis</h1>
+  <p>Augmentative & Alternative Communication market landscape for new market entrants. Products, pricing, gaps, and opportunities.</p>
+  <div class="header-meta">
+    <div class="header-stat"><div class="val">14+</div><div class="label">Products Analyzed</div></div>
+    <div class="header-stat"><div class="val">$3.5B</div><div class="label">Market Size (2024)</div></div>
+    <div class="header-stat"><div class="val">10.2%</div><div class="label">Annual Growth</div></div>
+    <div class="header-stat"><div class="val">11</div><div class="label">Opportunities Found</div></div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <a href="#market">Market Overview</a>
+  <a href="#products">Product Catalog</a>
+  <a href="#comparison">Feature Comparison</a>
+  <a href="#pricing">Pricing Analysis</a>
+  <a href="#sentiment">Customer Sentiment</a>
+  <a href="#ecosystem">Ecosystem Health</a>
+  <a href="#technology">Technology Landscape</a>
+  <a href="#opportunities">Opportunities</a>
+  <a href="#funding">Funding & Insurance</a>
+</nav>
+
+<div class="container">
+
+<!-- Market Overview -->
+<div class="section" id="market">
+  <h2 class="section-title"><span class="icon" style="background:var(--blue-bg);color:var(--blue)">$</span> Market Overview</h2>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Market Size (2024)</div>
+      <div class="kpi-value">$3.5B</div>
+      <div class="kpi-change up">Projected $8.2B by 2033</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">CAGR (2026-2033)</div>
+      <div class="kpi-value">10.2%</div>
+      <div class="kpi-change up">Strong sustained growth</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">AI-Powered Adoption</div>
+      <div class="kpi-value">54%</div>
+      <div class="kpi-change up">Of AAC tools now use AI</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Portable Demand</div>
+      <div class="kpi-value">58%</div>
+      <div class="kpi-change up">Demand for mobile devices</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Children Requiring AAC</div>
+      <div class="kpi-value">61%</div>
+      <div class="kpi-change">Of speech-impaired children</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Institutional Adoption</div>
+      <div class="kpi-value">68%</div>
+      <div class="kpi-change up">Adopting assistive tech</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Affordability Barrier</div>
+      <div class="kpi-value">29%</div>
+      <div class="kpi-change down">Patients face cost issues</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Training Gap</div>
+      <div class="kpi-value">33%</div>
+      <div class="kpi-change down">Caregivers lack training</div>
+    </div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Market Size Projection ($B)</h3>
+      <div class="chart-container"><canvas id="marketChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Key Market Drivers</h3>
+      <div class="chart-container"><canvas id="driversChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Catalog -->
+<div class="section" id="products">
+  <h2 class="section-title"><span class="icon" style="background:var(--purple-bg);color:var(--purple)">&#9881;</span> Product Catalog</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Products</button>
+    <button class="filter-btn" data-filter="premium">Premium</button>
+    <button class="filter-btn" data-filter="mid">Mid-Range</button>
+    <button class="filter-btn" data-filter="free">Free / Open Source</button>
+    <button class="filter-btn" data-filter="ios">iOS</button>
+    <button class="filter-btn" data-filter="android">Android</button>
+    <button class="filter-btn" data-filter="web">Web</button>
+  </div>
+  <div class="product-grid" id="productGrid">
+
+    <!-- Proloquo2Go -->
+    <div class="product-card" data-tier="premium" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">Proloquo2Go</div><div class="product-company">AssistiveWare (Netherlands)</div></div>
+        <span class="product-badge badge-premium">Premium</span>
+      </div>
+      <div class="product-price">$249.99 one-time | Mac: $124.99</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Mac</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol-based</span>
+        <span class="feature-chip">100+ voices</span>
+        <span class="feature-chip">Bilingual code-switch</span>
+        <span class="feature-chip">Switch scanning</span>
+        <span class="feature-chip">23 grid layouts</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Industry gold standard, massive SLP community</span></li>
+        <li><span>True bilingual code-switching (EN/ES mid-sentence)</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only - no Android</span></li>
+        <li><span>Complex setup for families without SLP guidance</span></li>
+      </ul>
+    </div>
+
+    <!-- Proloquo -->
+    <div class="product-card" data-tier="premium" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">Proloquo</div><div class="product-company">AssistiveWare (Netherlands)</div></div>
+        <span class="product-badge badge-premium">Premium</span>
+      </div>
+      <div class="product-price">$249.99 one-time</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Next-gen design</span>
+        <span class="feature-chip">Research-based</span>
+        <span class="feature-chip">Coach companion app</span>
+        <span class="feature-chip">2023 App Store Award</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Won 2023 App Store Cultural Impact Award</span></li>
+        <li><span>Modern design based on decade of research insights</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only</span></li>
+        <li><span>Competes with Proloquo2Go for same user base</span></li>
+      </ul>
+    </div>
+
+    <!-- TouchChat -->
+    <div class="product-card" data-tier="premium" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">TouchChat HD + WordPower</div><div class="product-company">PRC-Saltillo</div></div>
+        <span class="product-badge badge-premium">Premium</span>
+      </div>
+      <div class="product-price">$299.99 (with WordPower) | $149.99 (without)</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol-based</span>
+        <span class="feature-chip">40K+ symbols</span>
+        <span class="feature-chip">Head tracking</span>
+        <span class="feature-chip">Switch scanning</span>
+        <span class="feature-chip">4 languages</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Simpler interface than Proloquo2Go, lower price point</span></li>
+        <li><span>WordPower vocabulary by expert SLP Nancy Inman</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only, no true bilingual code-switching</span></li>
+        <li><span>Complex customization, steep learning curve</span></li>
+      </ul>
+    </div>
+
+    <!-- LAMP -->
+    <div class="product-card" data-tier="premium" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">LAMP Words for Life</div><div class="product-company">PRC-Saltillo</div></div>
+        <span class="product-badge badge-premium">Premium</span>
+      </div>
+      <div class="product-price">$299.99 one-time</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Motor planning</span>
+        <span class="feature-chip">LAMP approach</span>
+        <span class="feature-chip">Unity vocabulary</span>
+        <span class="feature-chip">84-location grid</span>
+        <span class="feature-chip">Head tracking</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Unique motor planning approach - consistent button locations</span></li>
+        <li><span>Strong evidence base for motor learners</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only, steep learning curve for new users</span></li>
+        <li><span>Reported glitches and iPad slowdown</span></li>
+      </ul>
+    </div>
+
+    <!-- TD Snap -->
+    <div class="product-card" data-tier="mid" data-platforms="ios web">
+      <div class="product-header">
+        <div><div class="product-name">TD Snap</div><div class="product-company">Tobii Dynavox (Sweden)</div></div>
+        <span class="product-badge badge-mid">Mid-Range</span>
+      </div>
+      <div class="product-price">Subscription (after 1-mo trial) | Enterprise: $149.99 one-time</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Windows</span><span class="platform-tag">Tobii Devices</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Core First</span>
+        <span class="feature-chip">PODD</span>
+        <span class="feature-chip">Aphasia set</span>
+        <span class="feature-chip">Eye gaze native</span>
+        <span class="feature-chip">Google Assistant</span>
+        <span class="feature-chip">Code-switching</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Most versatile page sets (Core First, PODD, Aphasia, etc.)</span></li>
+        <li><span>Native eye gaze support, Google Assistant integration</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Subscription model controversial in AAC community</span></li>
+        <li><span>Tied to Tobii Dynavox ecosystem</span></li>
+      </ul>
+    </div>
+
+    <!-- Grid -->
+    <div class="product-card" data-tier="premium" data-platforms="ios web">
+      <div class="product-header">
+        <div><div class="product-name">Grid</div><div class="product-company">Smartbox (UK)</div></div>
+        <span class="product-badge badge-premium">Premium</span>
+      </div>
+      <div class="product-price">~$12.50/mo or ~$375 lifetime (GBP pricing)</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Windows</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol + text</span>
+        <span class="feature-chip">Eye gaze native</span>
+        <span class="feature-chip">Environment control</span>
+        <span class="feature-chip">Computer access</span>
+        <span class="feature-chip">Switch scanning</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Environment control and computer access integration</span></li>
+        <li><span>Comprehensive access methods (eye gaze, switches, pointer)</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>British English defaults confuse US users</span></li>
+        <li><span>Audio bugs reported after updates, complex setup</span></li>
+      </ul>
+    </div>
+
+    <!-- Avaz -->
+    <div class="product-card" data-tier="mid" data-platforms="ios android">
+      <div class="product-header">
+        <div><div class="product-name">Avaz AAC</div><div class="product-company">Avaz Inc (India)</div></div>
+        <span class="product-badge badge-mid">Mid-Range</span>
+      </div>
+      <div class="product-price">Free trial | $9.99/mo | $99.99/yr | $199.99 lifetime</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Android</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol-based</span>
+        <span class="feature-chip">6+ Indian languages</span>
+        <span class="feature-chip">40K+ pictures</span>
+        <span class="feature-chip">Keyboard mode</span>
+        <span class="feature-chip">YouTube/GIF</span>
+        <span class="feature-chip">Built-in tutorials</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Cross-platform (iOS + Android), affordable pricing tiers</span></li>
+        <li><span>Best multilingual Indian language support (6+ languages)</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Speech speed/pitch controls limited</span></li>
+        <li><span>Less established in US/European markets</span></li>
+      </ul>
+    </div>
+
+    <!-- Spoken -->
+    <div class="product-card" data-tier="mid" data-platforms="ios android">
+      <div class="product-header">
+        <div><div class="product-name">Spoken</div><div class="product-company">Spoken Inc</div></div>
+        <span class="product-badge badge-mid">Mid-Range</span>
+      </div>
+      <div class="product-price">Free basic | $6.99-12.99/mo | $59.99-99.99/yr | $99.99-249.99 life</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Android</span><span class="platform-tag">Mac</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Text-based + AI</span>
+        <span class="feature-chip">Predictive learning</span>
+        <span class="feature-chip">Adapts to user</span>
+        <span class="feature-chip">Natural TTS</span>
+        <span class="feature-chip">No preset limits</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Most advanced AI - learns from user and predicts next words</span></li>
+        <li><span>Cross-platform, flexible pricing with free tier</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Text-based only - not suitable for pre-literate users</span></li>
+        <li><span>Smaller symbol vocabulary compared to competitors</span></li>
+      </ul>
+    </div>
+
+    <!-- Fluent AAC -->
+    <div class="product-card" data-tier="mid" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">Fluent AAC</div><div class="product-company">Fluent AAC</div></div>
+        <span class="product-badge badge-mid">Mid-Range</span>
+      </div>
+      <div class="product-price">Subscription (pricing not public)</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol + prediction</span>
+        <span class="feature-chip">Grammar conjugation</span>
+        <span class="feature-chip">Hide Words feature</span>
+        <span class="feature-chip">Motor consistency</span>
+        <span class="feature-chip">3000+ fringe words</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>#1 rated by AAC users in independent surveys</span></li>
+        <li><span>Innovative grammar-aware prediction with conjugation</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only, newer company with smaller market share</span></li>
+        <li><span>Pricing not transparent</span></li>
+      </ul>
+    </div>
+
+    <!-- APP2Speak -->
+    <div class="product-card" data-tier="mid" data-platforms="ios">
+      <div class="product-header">
+        <div><div class="product-name">APP2Speak</div><div class="product-company">APP2Speak</div></div>
+        <span class="product-badge badge-mid">Mid-Range</span>
+      </div>
+      <div class="product-price">$199.99 one-time</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Photo-based</span>
+        <span class="feature-chip">Text-to-speech</span>
+        <span class="feature-chip">Custom photos</span>
+        <span class="feature-chip">Bluetooth switch</span>
+        <span class="feature-chip">Adult-focused</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Highly personalized with user's own photos</span></li>
+        <li><span>Designed for adults, praised by SLPs as affordable</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>iOS only, less clinical research backing</span></li>
+        <li><span>Smaller user base, limited community resources</span></li>
+      </ul>
+    </div>
+
+    <!-- Cboard -->
+    <div class="product-card" data-tier="free" data-platforms="web android ios">
+      <div class="product-header">
+        <div><div class="product-name">Cboard</div><div class="product-company">UNICEF-backed / Open Source</div></div>
+        <span class="product-badge badge-free">Free</span>
+      </div>
+      <div class="product-price">Free (open source)</div>
+      <div class="product-platforms"><span class="platform-tag">Web</span><span class="platform-tag">Android</span><span class="platform-tag">iOS</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol-based</span>
+        <span class="feature-chip">40+ languages</span>
+        <span class="feature-chip">20K+ symbols</span>
+        <span class="feature-chip">Web Speech API</span>
+        <span class="feature-chip">UNICEF funded</span>
+        <span class="feature-chip">Microsoft AI grant</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Free, 40+ languages, cross-platform including web</span></li>
+        <li><span>UNICEF backing, Microsoft AI for Accessibility grant</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Less polished than commercial options</span></li>
+        <li><span>Limited offline capability, no AI prediction</span></li>
+      </ul>
+    </div>
+
+    <!-- CoughDrop -->
+    <div class="product-card" data-tier="mid" data-platforms="web ios android">
+      <div class="product-header">
+        <div><div class="product-name">CoughDrop</div><div class="product-company">Forbes AAC / MavWare</div></div>
+        <span class="product-badge badge-open">Was Open Source</span>
+      </div>
+      <div class="product-price">$9/mo or $295 lifetime</div>
+      <div class="product-platforms"><span class="platform-tag">Web</span><span class="platform-tag">iOS</span><span class="platform-tag">Android</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Web-based</span>
+        <span class="feature-chip">Cloud sync</span>
+        <span class="feature-chip">Customizable boards</span>
+        <span class="feature-chip">Cross-platform</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Web-based works on any device with browser</span></li>
+        <li><span>Cross-platform with cloud sync</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Open source status revoked after Forbes AAC acquisition</span></li>
+        <li><span>Community trust concerns about direction change</span></li>
+      </ul>
+    </div>
+
+    <!-- Weave Chat -->
+    <div class="product-card" data-tier="free" data-platforms="ios android">
+      <div class="product-header">
+        <div><div class="product-name">Weave Chat AAC</div><div class="product-company">Independent</div></div>
+        <span class="product-badge badge-free">Free</span>
+      </div>
+      <div class="product-price">Free</div>
+      <div class="product-platforms"><span class="platform-tag">iOS</span><span class="platform-tag">Android</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Symbol-based</span>
+        <span class="feature-chip">Customizable</span>
+        <span class="feature-chip">Accessible</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Completely free, cross-platform</span></li>
+        <li><span>Good accessibility and customization features</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Gaps in pre-made vocabulary</span></li>
+        <li><span>Limitations on custom button additions</span></li>
+      </ul>
+    </div>
+
+    <!-- OpenAAC Sweet Suite -->
+    <div class="product-card" data-tier="free" data-platforms="web">
+      <div class="product-header">
+        <div><div class="product-name">OpenAAC Sweet Suite</div><div class="product-company">OpenAAC Community</div></div>
+        <span class="product-badge badge-free">Open Source</span>
+      </div>
+      <div class="product-price">Free (open source)</div>
+      <div class="product-platforms"><span class="platform-tag">Web</span></div>
+      <div class="product-features">
+        <span class="feature-chip">Web-based</span>
+        <span class="feature-chip">Fully open source</span>
+        <span class="feature-chip">Community-driven</span>
+      </div>
+      <ul class="product-pros">
+        <li><span>Fully open source, community-driven development</span></li>
+        <li><span>Part of broader OpenAAC standards initiative</span></li>
+      </ul>
+      <ul class="product-cons">
+        <li><span>Less mature, smaller user base</span></li>
+        <li><span>Limited features compared to commercial apps</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- Feature Comparison -->
+<div class="section" id="comparison">
+  <h2 class="section-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">&#10003;</span> Feature Comparison Matrix</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>App</th>
+          <th>iOS</th>
+          <th>Android</th>
+          <th>Web</th>
+          <th>Symbol</th>
+          <th>Text</th>
+          <th>AI Predict</th>
+          <th>Eye Gaze</th>
+          <th>Switch</th>
+          <th>Head Track</th>
+          <th>Bilingual</th>
+          <th>Languages</th>
+          <th>Voices</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="app-name">Proloquo2Go</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="partial">iOS 18</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td>4</td><td>100+</td></tr>
+        <tr><td class="app-name">Proloquo</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="partial">iOS 18</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td>4</td><td>100+</td></tr>
+        <tr><td class="app-name">TouchChat+WP</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="partial">iOS 18</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td>4</td><td>Multi</td></tr>
+        <tr><td class="app-name">LAMP WFL</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="partial">iOS 18</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td>1</td><td>Multi</td></tr>
+        <tr><td class="app-name">TD Snap</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td>3+</td><td>Multi</td></tr>
+        <tr><td class="app-name">Grid</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="partial">Limited</td><td>2+</td><td>Multi</td></tr>
+        <tr><td class="app-name">Avaz</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="partial">Basic</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td>8+</td><td>Multi</td></tr>
+        <tr><td class="app-name">Spoken</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="partial">iOS 18</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td>1</td><td>Natural</td></tr>
+        <tr><td class="app-name">Fluent AAC</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="partial">iOS 18</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td>1</td><td>Multi</td></tr>
+        <tr><td class="app-name">APP2Speak</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td>1</td><td>TTS</td></tr>
+        <tr><td class="app-name">Cboard</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td>40+</td><td>Web API</td></tr>
+        <tr><td class="app-name">CoughDrop</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td>1+</td><td>TTS</td></tr>
+        <tr><td class="app-name">Weave Chat</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td>1</td><td>TTS</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pricing Analysis -->
+<div class="section" id="pricing">
+  <h2 class="section-title"><span class="icon" style="background:var(--yellow-bg);color:var(--yellow)">&#36;</span> Pricing Analysis</h2>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>One-Time / Lifetime Price Comparison</h3>
+      <div class="chart-container"><canvas id="pricingChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Pricing Model Distribution</h3>
+      <div class="chart-container"><canvas id="modelChart"></canvas></div>
+    </div>
+  </div>
+  <div class="table-wrapper" style="margin-top:1.5rem">
+    <table>
+      <thead>
+        <tr>
+          <th>App</th>
+          <th>Model</th>
+          <th>Monthly</th>
+          <th>Annual</th>
+          <th>One-Time / Lifetime</th>
+          <th>Free Tier</th>
+          <th>Trial</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="app-name">Proloquo2Go</td><td>One-time</td><td>-</td><td>-</td><td>$249.99</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+        <tr><td class="app-name">TouchChat+WP</td><td>One-time</td><td>-</td><td>-</td><td>$149.99 - $299.99</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+        <tr><td class="app-name">LAMP WFL</td><td>One-time</td><td>-</td><td>-</td><td>$299.99</td><td class="cross">&#10007;</td><td class="check">30 days</td></tr>
+        <tr><td class="app-name">TD Snap</td><td>Subscription + One-time</td><td>~$10</td><td>-</td><td>$149.99 (Enterprise)</td><td class="cross">&#10007;</td><td class="check">1 month</td></tr>
+        <tr><td class="app-name">Grid</td><td>Both</td><td>~$12.50</td><td>-</td><td>~$375</td><td class="cross">&#10007;</td><td class="check">30 days</td></tr>
+        <tr><td class="app-name">Avaz</td><td>Both</td><td>$9.99</td><td>$99.99</td><td>$199.99</td><td class="cross">&#10007;</td><td class="check">14 days</td></tr>
+        <tr><td class="app-name">Spoken</td><td>Freemium</td><td>$6.99-12.99</td><td>$59.99-99.99</td><td>$99.99-249.99</td><td class="check">&#10003;</td><td class="check">Free tier</td></tr>
+        <tr><td class="app-name">APP2Speak</td><td>One-time</td><td>-</td><td>-</td><td>$199.99</td><td class="cross">&#10007;</td><td class="check">14 days</td></tr>
+        <tr><td class="app-name">CoughDrop</td><td>Both</td><td>$9</td><td>-</td><td>$295</td><td class="partial">Basic</td><td class="cross">&#10007;</td></tr>
+        <tr><td class="app-name">Cboard</td><td>Free</td><td>-</td><td>-</td><td>Free</td><td class="check">&#10003;</td><td class="check">N/A</td></tr>
+        <tr><td class="app-name">Weave Chat</td><td>Free</td><td>-</td><td>-</td><td>Free</td><td class="check">&#10003;</td><td class="check">N/A</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Customer Sentiment -->
+<div class="section" id="sentiment">
+  <h2 class="section-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">&#9829;</span> Customer Sentiment</h2>
+  <div class="sentiment-grid">
+    <div class="sentiment-card">
+      <h3 style="color:var(--green)">&#9650; Common Praise</h3>
+      <div class="sentiment-item">
+        <div class="quote">"The greatest AAC app I have used so far and the fact that it's free is truly amazing"</div>
+        <div class="source">- Speech Pathologist on Grid Player</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"My 90-year-old grandmother took to it like a fish to water in effectively communicating with us after her strokes"</div>
+        <div class="source">- Family member on Grid Player</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"My kid is communicating through this, he is happy that he can be independent"</div>
+        <div class="source">- Parent of autistic child on Avaz</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"The layout and organization genuinely makes sense, and isn't too overwhelming or confusing"</div>
+        <div class="source">- User review on Avaz</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"It is nice to finally find an app that is affordable for my patients and user-friendly"</div>
+        <div class="source">- Speech therapist on APP2Speak</div>
+      </div>
+    </div>
+    <div class="sentiment-card">
+      <h3 style="color:var(--red)">&#9660; Common Complaints</h3>
+      <div class="sentiment-item">
+        <div class="quote">"The monotone voices, the timing of interjections and conveying my personality through this new way of communication was definitely frustrating"</div>
+        <div class="source">- AAC user community feedback</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"Children get confused with British English terms like 'crisps' for fries"</div>
+        <div class="source">- User review on Grid Player</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"After recent updates, the audio doesn't work anymore"</div>
+        <div class="source">- User review on Grid Player</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"The app can use a better way of controlling the speech speed and pitch"</div>
+        <div class="source">- User review on Avaz</div>
+      </div>
+      <div class="sentiment-item">
+        <div class="quote">"Insurance approval processes remain exceptionally cumbersome"</div>
+        <div class="source">- OpenAAC Ecosystem Report 2024</div>
+      </div>
+    </div>
+    <div class="sentiment-card" style="grid-column: 1 / -1;">
+      <h3>Recurring Themes Across All Products</h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap:1rem; margin-top:0.5rem;">
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;">
+          <div style="font-weight:600;color:var(--green);margin-bottom:0.5rem;">Positive Themes</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">
+            Life-changing communication ability<br>
+            User independence and agency<br>
+            Natural-sounding modern voices<br>
+            Customization flexibility<br>
+            Strong SLP training communities
+          </div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;">
+          <div style="font-weight:600;color:var(--red);margin-bottom:0.5rem;">Negative Themes</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">
+            High cost and affordability barrier<br>
+            iOS lock-in / no Android options<br>
+            Complex setup requiring professional help<br>
+            Steep learning curves for families<br>
+            Limited personality/humor expression
+          </div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;">
+          <div style="font-weight:600;color:var(--yellow);margin-bottom:0.5rem;">Unmet Needs</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">
+            Better AI-powered prediction<br>
+            Easier onboarding without SLP<br>
+            Cross-platform availability<br>
+            Affordable options for developing nations<br>
+            Communication partner training tools
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ecosystem Health -->
+<div class="section" id="ecosystem">
+  <h2 class="section-title"><span class="icon" style="background:var(--yellow-bg);color:var(--yellow)">&#9733;</span> AAC Ecosystem Health (OpenAAC GPA 2024)</h2>
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <div style="font-size:3.5rem;font-weight:800;color:var(--orange);">1.9</div>
+    <div style="color:var(--text-muted);font-size:0.85rem;">Overall Ecosystem GPA (out of 4.0) - Significant room for improvement</div>
+  </div>
+  <div class="gpa-grid">
+    <div class="gpa-card"><div class="grade grade-b">B</div><div class="cat-name">Families</div><div style="font-size:0.65rem;color:var(--text-muted)">3.0</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C+</div><div class="cat-name">Individualization</div><div style="font-size:0.65rem;color:var(--text-muted)">2.6</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C+</div><div class="cat-name">Community</div><div style="font-size:0.65rem;color:var(--text-muted)">2.4</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C</div><div class="cat-name">Business</div><div style="font-size:0.65rem;color:var(--text-muted)">2.2</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C</div><div class="cat-name">Practitioners</div><div style="font-size:0.65rem;color:var(--text-muted)">2.2</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C</div><div class="cat-name">Advocacy</div><div style="font-size:0.65rem;color:var(--text-muted)">2.0</div></div>
+    <div class="gpa-card"><div class="grade grade-c">C-</div><div class="cat-name">Research</div><div style="font-size:0.65rem;color:var(--text-muted)">1.8</div></div>
+    <div class="gpa-card"><div class="grade grade-d">D+</div><div class="cat-name">Funding</div><div style="font-size:0.65rem;color:var(--text-muted)">1.6</div></div>
+    <div class="gpa-card"><div class="grade grade-d">D+</div><div class="cat-name">Marketing</div><div style="font-size:0.65rem;color:var(--text-muted)">1.4</div></div>
+    <div class="gpa-card"><div class="grade grade-f">F</div><div class="cat-name">Education</div><div style="font-size:0.65rem;color:var(--text-muted)">0.6</div></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Ecosystem Category Scores</h3>
+      <div class="chart-container"><canvas id="gpaChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Key Ecosystem Challenges</h3>
+      <div style="padding:1rem 0;">
+        <div style="margin-bottom:1rem;padding:0.75rem;background:var(--red-bg);border-radius:8px;border-left:3px solid var(--red);">
+          <div style="font-weight:600;font-size:0.85rem;color:var(--red);margin-bottom:0.25rem;">Education (F - 0.6)</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Lack of literacy instruction, insufficient grade-level teaching, devices used as behavioral punishment in schools</div>
+        </div>
+        <div style="margin-bottom:1rem;padding:0.75rem;background:var(--yellow-bg);border-radius:8px;border-left:3px solid var(--orange);">
+          <div style="font-weight:600;font-size:0.85rem;color:var(--orange);margin-bottom:0.25rem;">Marketing/Outreach (D+ - 1.4)</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">General population awareness of AAC remains minimal; many potential users don't know solutions exist</div>
+        </div>
+        <div style="margin-bottom:1rem;padding:0.75rem;background:var(--yellow-bg);border-radius:8px;border-left:3px solid var(--orange);">
+          <div style="font-weight:600;font-size:0.85rem;color:var(--orange);margin-bottom:0.25rem;">Funding (D+ - 1.6)</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Insurance approval is cumbersome, costs remain a major barrier despite lower technology costs</div>
+        </div>
+        <div style="padding:0.75rem;background:var(--blue-bg);border-radius:8px;border-left:3px solid var(--blue);">
+          <div style="font-weight:600;font-size:0.85rem;color:var(--blue);margin-bottom:0.25rem;">Interoperability (Not graded)</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">No industry standards for data portability; users locked into ecosystems; OpenAAC advocating for change</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Technology Landscape -->
+<div class="section" id="technology">
+  <h2 class="section-title"><span class="icon" style="background:var(--cyan);color:white">&#9889;</span> Technology Landscape</h2>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Platform Availability</h3>
+      <div class="chart-container"><canvas id="platformChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Access Method Support</h3>
+      <div class="chart-container"><canvas id="accessChart"></canvas></div>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;">
+    <div class="chart-card">
+      <h3>Technology Trends & Emerging Capabilities</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:1rem;">
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">iOS 18 Built-in Eye Tracking</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Apple's selfie camera eye tracking (Sept 2024) democratizes gaze control for ANY AAC app. Works on iPhone 12+ and iPad 10+. Major disruption to dedicated eye-tracking hardware market.</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">LLM-Powered Prediction</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Research shows fine-tuning specific LLM layers yields best results for AAC prediction. ChatGPT integration tested for context retention and semantic understanding. Still early-stage in commercial apps.</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--purple);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">AI Symbolic Text Prediction</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Emerging research on AI-driven symbolic prediction for pre-literate users. Could bridge the gap between symbol-based and text-based AAC. Microsoft AI for Accessibility grant funding Cboard's development.</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--yellow);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">Wearable & Multimodal AI</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">No AAC solutions on wearables yet. Smartwatch quick-access communication, AI wearable companions, and ambient intelligence present untapped frontier. Market projected $265B by 2026.</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--orange);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">Cloud-Based Platforms</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">47% of companies integrated cloud platforms for therapy and remote monitoring. Enables telepractice service delivery, which is critical for underserved geographic areas.</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--cyan);">
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.5rem;">Voice Cloning & Personalization</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Users frustrated with monotone/robotic voices. AI voice cloning could preserve a person's voice before speech loss. Opportunity for personality expression through custom voice profiles.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Opportunities -->
+<div class="section" id="opportunities">
+  <h2 class="section-title"><span class="icon" style="background:var(--green-bg);color:var(--green)">&#9889;</span> Market Opportunities for New Entrant</h2>
+  <div class="opp-grid">
+    <div class="opp-card opp-high">
+      <span class="opp-level">High Opportunity</span>
+      <h3>Android-First / Cross-Platform</h3>
+      <p>Most major AAC apps are iOS-only. Android holds ~72% global smartphone market share. Only Avaz and Spoken serve Android well among premium apps.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "Developing AAC for Android is tricky because unlike iOS, Android spans thousands of different devices" - yet this is where the users are, especially in developing markets.</div>
+    </div>
+    <div class="opp-card opp-high">
+      <span class="opp-level">High Opportunity</span>
+      <h3>AI-Native Communication</h3>
+      <p>Current AI integration is minimal. LLM-powered prediction, context-aware suggestions, conversational AI, and personality modeling are all frontier opportunities. Only Spoken has meaningful AI.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> Research shows "the less I type, the better" - AI language models can dramatically enhance communication speed. Fine-tuned LLM layers outperform full model fine-tuning for AAC.</div>
+    </div>
+    <div class="opp-card opp-high">
+      <span class="opp-level">High Opportunity</span>
+      <h3>Adult & Aging Population</h3>
+      <p>Most apps designed for children. Growing population with acquired conditions (stroke, ALS, Parkinson's, dementia). Aphasia alone affects ~2M Americans. Aging demographic is fastest-growing AAC need.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> Rising prevalence of neurological disorders and global aging population are top market drivers per multiple analyst reports.</div>
+    </div>
+    <div class="opp-card opp-high">
+      <span class="opp-level">High Opportunity</span>
+      <h3>Multilingual / Global Markets</h3>
+      <p>Only Avaz serves Indian languages. Most apps limited to English + few European languages. Asia-Pacific and Latin America are fastest-growing regions with minimal AAC penetration.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> Cboard supports 40+ languages but lacks polish. Market reports cite "lack of awareness in underserved regions" as major barrier that is also an opportunity.</div>
+    </div>
+    <div class="opp-card opp-high">
+      <span class="opp-level">High Opportunity</span>
+      <h3>Education Integration</h3>
+      <p>Education received the only F grade (0.6) in the OpenAAC ecosystem GPA. Classroom tools, IEP integration, progress tracking for educators, and literacy support are all underserved.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "Systemic barriers in education work against progress" - lack of literacy instruction, grade-level teaching, and AAC-trained educators.</div>
+    </div>
+    <div class="opp-card opp-medium">
+      <span class="opp-level">Medium-High Opportunity</span>
+      <h3>Affordable Pricing Innovation</h3>
+      <p>29% of patients face affordability issues. Premium apps cost $200-$300. Freemium models with progressive features could capture underserved market. Web-first approach reduces distribution costs.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "If none of these options work, then watch out for AAC Awareness Month" - users actively seeking cheaper alternatives. Schools and state facilities need one-time purchase options.</div>
+    </div>
+    <div class="opp-card opp-medium">
+      <span class="opp-level">Medium-High Opportunity</span>
+      <h3>Web-First Architecture</h3>
+      <p>Web apps work across all platforms with lower development cost and no app store fees. Cboard proves the model works but lacks polish. Progressive web apps could match native experience.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> CoughDrop's web-based approach was popular before acquisition. Browser Speech Synthesis API and modern web capabilities make this increasingly viable.</div>
+    </div>
+    <div class="opp-card opp-medium">
+      <span class="opp-level">Medium Opportunity</span>
+      <h3>Simplified Onboarding</h3>
+      <p>Complex setup is a universal complaint. AI-powered onboarding, progressive disclosure, and guided setup wizards could differentiate. Most apps require SLP guidance to configure.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "33% of caregivers cite lack of training limiting AAC device usage" - a streamlined self-serve setup could unlock this segment.</div>
+    </div>
+    <div class="opp-card opp-medium">
+      <span class="opp-level">Medium Opportunity</span>
+      <h3>Interoperability & Data Portability</h3>
+      <p>No standards exist for moving user data between AAC apps. Users are locked into ecosystems. Open data formats and import tools could attract frustrated switchers.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> OpenAAC advocates for industry interoperability standards. "Healthy ecosystems exhibit openness through industry standards."</div>
+    </div>
+    <div class="opp-card opp-medium">
+      <span class="opp-level">Medium Opportunity</span>
+      <h3>Communication Partner Training</h3>
+      <p>33% of caregivers lack training. Digital training platforms, AI coaching for communication partners, and guided interaction strategies could fill a critical gap.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "Most communication partners have limited prior experience or training in effective strategies to support language development."</div>
+    </div>
+    <div class="opp-card opp-emerging">
+      <span class="opp-level">Emerging Opportunity</span>
+      <h3>Wearable / Smartwatch AAC</h3>
+      <p>No current AAC solutions for wearables. Quick-access communication on smartwatch could complement phone/tablet. AI wearable market projected at $265B by 2026.</p>
+      <div class="opp-evidence"><strong>Evidence:</strong> "Wearables stopped reacting and started anticipating" - ambient intelligence and on-device AI make wearable AAC technically feasible for the first time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Funding & Insurance -->
+<div class="section" id="funding">
+  <h2 class="section-title"><span class="icon" style="background:var(--blue-bg);color:var(--blue)">&#127974;</span> Funding & Insurance Landscape</h2>
+  <div class="funding-grid">
+    <div class="funding-card">
+      <h4 style="color:var(--blue)">Medicare Part B</h4>
+      <p>Covers SGD assessment, purchase, software, accessories, training, and repair. SGDs classified as durable medical equipment.</p>
+    </div>
+    <div class="funding-card">
+      <h4 style="color:var(--green)">Medicaid</h4>
+      <p>Every state Medicaid program covers AAC devices. Coverage guidelines vary by state. Medicaid is always payer of last resort.</p>
+    </div>
+    <div class="funding-card">
+      <h4 style="color:var(--purple)">Private Insurance</h4>
+      <p>Must apply through private insurance first and be denied before Medicaid. Requires "medical necessity" justification. Process is cumbersome.</p>
+    </div>
+    <div class="funding-card">
+      <h4 style="color:var(--yellow)">Key Barrier</h4>
+      <p>Insurance approval processes remain "exceptionally cumbersome." 29% of patients face affordability issues. Lower technology costs haven't translated to better access.</p>
+    </div>
+    <div class="funding-card">
+      <h4 style="color:var(--orange)">Discounts & Programs</h4>
+      <p>AAC Awareness Month (October): up to 50% discounts. Schools, workplaces, and disability charities may provide devices. AssistiveWare gives free copies to evaluating SLPs.</p>
+    </div>
+    <div class="funding-card">
+      <h4 style="color:var(--cyan)">New Entrant Strategy</h4>
+      <p>Supporting insurance/Medicaid billing could be a key differentiator. Pre-built documentation templates, funding navigation tools, and direct-to-school pricing models reduce friction.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  AAC Competitive Analysis Dashboard | Research compiled March 2026 | Data from OpenAAC, App Stores, industry reports, and user communities
+</div>
+
+<script>
+// Chart.js defaults for dark theme
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#334155';
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+
+// Market Growth Chart
+new Chart(document.getElementById('marketChart'), {
+  type: 'line',
+  data: {
+    labels: ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033'],
+    datasets: [{
+      label: 'Market Size ($B)',
+      data: [3.1, 3.5, 3.9, 4.3, 4.7, 5.2, 5.7, 6.3, 7.0, 7.6, 8.2],
+      borderColor: '#6366f1',
+      backgroundColor: 'rgba(99,102,241,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 4,
+      pointBackgroundColor: '#6366f1'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: false, grid: { color: '#1e293b' }, ticks: { callback: v => '$' + v + 'B' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Drivers Chart
+new Chart(document.getElementById('driversChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Institutional\nAdoption', 'Speech-Impaired\nChildren', 'Portable\nDemand', 'AI-Powered\nAdoption', 'Voice-Enabled\nDevices', 'Cloud\nPlatforms'],
+    datasets: [{
+      label: 'Adoption %',
+      data: [68, 61, 58, 54, 52, 47],
+      backgroundColor: ['#6366f1', '#8b5cf6', '#a855f7', '#06b6d4', '#10b981', '#f59e0b'],
+      borderRadius: 6,
+      barThickness: 40
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, max: 80, grid: { color: '#1e293b' }, ticks: { callback: v => v + '%' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// Pricing Chart
+new Chart(document.getElementById('pricingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['LAMP WFL', 'TouchChat+WP', 'Proloquo2Go', 'Proloquo', 'CoughDrop', 'Grid', 'Spoken (iOS)', 'Avaz', 'APP2Speak', 'TD Snap Ent.', 'Spoken (And)', 'Cboard', 'Weave Chat'],
+    datasets: [{
+      label: 'One-Time / Lifetime ($)',
+      data: [299.99, 299.99, 249.99, 249.99, 295, 375, 249.99, 199.99, 199.99, 149.99, 99.99, 0, 0],
+      backgroundColor: function(ctx) {
+        const v = ctx.parsed.x || ctx.parsed.y;
+        if (v === 0) return '#10b981';
+        if (v < 150) return '#06b6d4';
+        if (v < 250) return '#f59e0b';
+        return '#ef4444';
+      },
+      borderRadius: 4,
+      barThickness: 24
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, grid: { color: '#1e293b' }, ticks: { callback: v => v === 0 ? 'Free' : '$' + v } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// Pricing Model Distribution
+new Chart(document.getElementById('modelChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['One-time Only', 'Subscription + Lifetime', 'Freemium', 'Free / Open Source'],
+    datasets: [{
+      data: [4, 4, 2, 3],
+      backgroundColor: ['#6366f1', '#f59e0b', '#06b6d4', '#10b981'],
+      borderWidth: 0,
+      spacing: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' } }
+    }
+  }
+});
+
+// GPA Chart
+new Chart(document.getElementById('gpaChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Families', 'Individualization', 'Community', 'Business', 'Practitioners', 'Advocacy', 'Research', 'Funding', 'Marketing', 'Education'],
+    datasets: [{
+      label: 'Score (out of 4.0)',
+      data: [3.0, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.6, 1.4, 0.6],
+      borderColor: '#f59e0b',
+      backgroundColor: 'rgba(245,158,11,0.15)',
+      pointBackgroundColor: '#f59e0b',
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 4,
+        ticks: { stepSize: 1, backdropColor: 'transparent' },
+        grid: { color: '#334155' },
+        angleLines: { color: '#334155' },
+        pointLabels: { font: { size: 10 } }
+      }
+    }
+  }
+});
+
+// Platform Chart
+new Chart(document.getElementById('platformChart'), {
+  type: 'bar',
+  data: {
+    labels: ['iOS', 'Android', 'Web', 'Windows', 'Mac'],
+    datasets: [{
+      label: 'Number of Apps',
+      data: [13, 6, 4, 2, 2],
+      backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4', '#a855f7'],
+      borderRadius: 6,
+      barThickness: 50
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#1e293b' }, ticks: { stepSize: 2 } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Access Method Chart
+new Chart(document.getElementById('accessChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Touch', 'Switch Scanning', 'Eye Gaze (native)', 'Eye Gaze (iOS 18)', 'Head Tracking'],
+    datasets: [{
+      label: 'Apps Supporting',
+      data: [13, 8, 2, 6, 4],
+      backgroundColor: ['#10b981', '#6366f1', '#f59e0b', '#06b6d4', '#a855f7'],
+      borderRadius: 6,
+      barThickness: 40
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, max: 15, grid: { color: '#1e293b' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// Product Filtering
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.product-card').forEach(card => {
+      if (filter === 'all') {
+        card.style.display = '';
+      } else if (['premium', 'mid', 'free'].includes(filter)) {
+        card.style.display = card.dataset.tier === filter ? '' : 'none';
+      } else {
+        card.style.display = card.dataset.platforms.includes(filter) ? '' : 'none';
+      }
+    });
+  });
+});
+
+// Navigation active state
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-100px 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
