@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive comparison of multi-agent coding system architectures for software development teams, with Swift/iOS focus">
+  <title>Agentic Coding System Architectures | Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    :root {
+      --primary: #6366F1;
+      --primary-light: #818CF8;
+      --primary-dark: #4F46E5;
+      --accent: #F97316;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --text: #1E293B;
+      --text-light: #64748B;
+      --text-lighter: #94A3B8;
+      --bg: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-alt: #F1F5F9;
+      --border: #E2E8F0;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'SF Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+    }
+    [data-theme="dark"] {
+      --text: #F1F5F9;
+      --text-light: #94A3B8;
+      --text-lighter: #64748B;
+      --bg: #0F172A;
+      --bg-card: #1E293B;
+      --bg-alt: #334155;
+      --border: #334155;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      z-index: 1000; transition: width 0.15s;
+    }
+
+    /* Header */
+    .hero {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #4338CA 100%);
+      color: white;
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(99,102,241,0.3) 0%, transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(249,115,22,0.15) 0%, transparent 50%);
+    }
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      max-width: 700px;
+      line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      flex-wrap: wrap;
+    }
+
+    /* Controls bar */
+    .controls {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      backdrop-filter: blur(8px);
+    }
+    .controls-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .nav-pills {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .nav-pill {
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font);
+      white-space: nowrap;
+    }
+    .nav-pill:hover { border-color: var(--primary-light); color: var(--primary); }
+    .nav-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .theme-btn {
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-alt);
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    /* Main layout */
+    .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    /* Section */
+    .section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 4rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .section-desc {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      max-width: 800px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* Pattern cards (main architecture patterns) */
+    .pattern-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .pattern-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    .pattern-card.expanded .pattern-details { display: block; }
+    .pattern-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .pattern-num {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .pattern-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .pattern-tagline {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .pattern-expand-icon {
+      margin-left: auto;
+      color: var(--text-lighter);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .pattern-card.expanded .pattern-expand-icon { transform: rotate(180deg); }
+    .pattern-body {
+      padding: 0 1.5rem 1.25rem;
+    }
+    .pattern-diagram {
+      background: var(--bg-alt);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      overflow-x: auto;
+      white-space: pre;
+      text-align: center;
+    }
+    .pattern-scores {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .score-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-alt);
+      color: var(--text-light);
+    }
+    .score-dots {
+      display: flex;
+      gap: 2px;
+    }
+    .score-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .score-dot.filled { background: var(--primary); }
+    .score-dot.filled.high { background: var(--success); }
+    .score-dot.filled.mid { background: var(--warning); }
+    .score-dot.filled.low { background: var(--danger); }
+
+    .pattern-details {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .pattern-details h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-lighter);
+      margin: 1rem 0 0.5rem;
+    }
+    .pattern-details h4:first-child { margin-top: 1rem; }
+    .detail-list {
+      list-style: none;
+      padding: 0;
+    }
+    .detail-list li {
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .detail-list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.55rem;
+    }
+    .detail-list.pros li::before { background: var(--success); }
+    .detail-list.cons li::before { background: var(--danger); }
+    .detail-list.swift li::before { background: var(--info); }
+    .detail-list.neutral li::before { background: var(--text-lighter); }
+
+    .swift-fit {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    .swift-fit.excellent { background: #D1FAE5; color: #065F46; }
+    .swift-fit.good { background: #DBEAFE; color: #1E40AF; }
+    .swift-fit.moderate { background: #FEF3C7; color: #92400E; }
+    .swift-fit.limited { background: #FEE2E2; color: #991B1B; }
+    [data-theme="dark"] .swift-fit.excellent { background: #064E3B; color: #6EE7B7; }
+    [data-theme="dark"] .swift-fit.good { background: #1E3A5F; color: #93C5FD; }
+    [data-theme="dark"] .swift-fit.moderate { background: #78350F; color: #FCD34D; }
+    [data-theme="dark"] .swift-fit.limited { background: #7F1D1D; color: #FCA5A5; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    /* Decision tree */
+    .decision-tree {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      overflow-x: auto;
+    }
+    .dt-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .dt-question {
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      max-width: 280px;
+    }
+    .dt-branches {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .dt-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .dt-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-lighter);
+      text-transform: uppercase;
+    }
+    .dt-answer {
+      background: var(--bg-alt);
+      border: 2px solid var(--border);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      min-width: 140px;
+    }
+    .dt-answer.recommend {
+      border-color: var(--success);
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    [data-theme="dark"] .dt-answer.recommend {
+      background: #064E3B;
+      color: #6EE7B7;
+    }
+    .dt-connector {
+      width: 2px;
+      height: 20px;
+      background: var(--border);
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--bg-alt);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      position: sticky;
+      top: 0;
+    }
+    td { color: var(--text-light); }
+    tr:hover td { background: var(--bg-alt); }
+    .cell-score {
+      display: inline-flex;
+      gap: 2px;
+    }
+
+    /* Chart containers */
+    .chart-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .chart-wrap {
+      position: relative;
+      height: 300px;
+    }
+
+    /* Insight callouts */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-body { flex: 1; }
+    .callout-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .callout-text { font-size: 0.85rem; color: var(--text-light); }
+    .callout.tip { background: #ECFDF5; border: 1px solid #A7F3D0; }
+    .callout.warning { background: #FFFBEB; border: 1px solid #FDE68A; }
+    .callout.danger { background: #FEF2F2; border: 1px solid #FECACA; }
+    .callout.info { background: #EFF6FF; border: 1px solid #BFDBFE; }
+    [data-theme="dark"] .callout.tip { background: #064E3B; border-color: #065F46; }
+    [data-theme="dark"] .callout.warning { background: #78350F; border-color: #92400E; }
+    [data-theme="dark"] .callout.danger { background: #7F1D1D; border-color: #991B1B; }
+    [data-theme="dark"] .callout.info { background: #1E3A5F; border-color: #1E40AF; }
+
+    /* Quote */
+    .quote-card {
+      background: var(--bg-card);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+    }
+    .quote-text {
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .quote-attr {
+      font-size: 0.8rem;
+      color: var(--text-lighter);
+    }
+
+    /* Maturity stages */
+    .maturity-track {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    .maturity-stage {
+      flex: 1;
+      min-width: 180px;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      position: relative;
+      text-align: center;
+    }
+    .maturity-stage:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .maturity-stage:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .maturity-stage::after {
+      content: '\2192';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: var(--text-lighter);
+      z-index: 1;
+    }
+    .maturity-stage:last-child::after { display: none; }
+    .maturity-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .maturity-label {
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin: 0.25rem 0;
+    }
+    .maturity-desc {
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+    .maturity-stage.recommended {
+      background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+      border-color: var(--primary-light);
+    }
+    [data-theme="dark"] .maturity-stage.recommended {
+      background: linear-gradient(135deg, #312E81, #3730A3);
+    }
+
+    /* Pitfall cards */
+    .pitfall-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      border-left: 4px solid var(--danger);
+    }
+    .pitfall-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pitfall-text {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    .pitfall-fix {
+      font-size: 0.8rem;
+      color: var(--success);
+      font-weight: 600;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.35rem;
+    }
+
+    /* Tools grid */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .tool-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .tool-desc {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      flex: 1;
+      margin-bottom: 0.75rem;
+    }
+    .tool-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .tool-tag {
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--bg-alt);
+      color: var(--text-light);
+    }
+    .tool-tag.yes { background: #D1FAE5; color: #065F46; }
+    .tool-tag.no { background: #FEE2E2; color: #991B1B; }
+    .tool-tag.partial { background: #FEF3C7; color: #92400E; }
+    [data-theme="dark"] .tool-tag.yes { background: #064E3B; color: #6EE7B7; }
+    [data-theme="dark"] .tool-tag.no { background: #7F1D1D; color: #FCA5A5; }
+    [data-theme="dark"] .tool-tag.partial { background: #78350F; color: #FCD34D; }
+
+    /* Sources */
+    .sources-list {
+      list-style: none;
+      padding: 0;
+    }
+    .sources-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .sources-list a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero { padding: 2rem 1rem 1.5rem; }
+      .main { padding: 1rem; }
+      .controls { padding: 0.5rem 1rem; }
+      .card-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .maturity-track { flex-direction: column; }
+      .maturity-stage { border-radius: var(--radius) !important; }
+      .maturity-stage::after { display: none; }
+    }
+
+    /* Print */
+    @media print {
+      .controls, .theme-btn, .progress-bar { display: none; }
+      .pattern-details { display: block !important; }
+      .hero { background: #1E1B4B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* Animations */
+    .section { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Agentic Coding System Architectures</h1>
+      <p class="hero-subtitle">
+        A comprehensive comparison of multi-agent patterns for software development teams &mdash; with specific analysis for Swift/SwiftUI iOS and Mac applications.
+      </p>
+      <div class="hero-meta">
+        <span>38 Sources</span>
+        <span>7 Architecture Patterns</span>
+        <span>6 Frameworks Compared</span>
+        <span>March 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="controls-inner">
+      <nav class="nav-pills">
+        <button class="nav-pill active" onclick="scrollToSection('overview')">Overview</button>
+        <button class="nav-pill" onclick="scrollToSection('patterns')">Patterns</button>
+        <button class="nav-pill" onclick="scrollToSection('comparison')">Comparison</button>
+        <button class="nav-pill" onclick="scrollToSection('decision')">Decision Guide</button>
+        <button class="nav-pill" onclick="scrollToSection('context')">Context Mgmt</button>
+        <button class="nav-pill" onclick="scrollToSection('swift')">Swift/iOS</button>
+        <button class="nav-pill" onclick="scrollToSection('tools')">Tools</button>
+        <button class="nav-pill" onclick="scrollToSection('pitfalls')">Pitfalls</button>
+        <button class="nav-pill" onclick="scrollToSection('evidence')">Evidence</button>
+        <button class="nav-pill" onclick="scrollToSection('sources')">Sources</button>
+      </nav>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">Light/Dark</button>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- ==================== OVERVIEW ==================== -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <div class="section-icon" style="background:#EEF2FF;color:var(--primary)">1</div>
+        <h2 class="section-title">The Landscape at a Glance</h2>
+      </div>
+      <p class="section-desc">
+        Multi-agent coding systems have matured dramatically in 2025-2026. Single all-purpose agents are being replaced by orchestrated teams of specialized agents. But the research is clear: <strong>most teams don't need multi-agent systems</strong>, and starting simple is almost always the right move.
+      </p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">1,445%</div>
+          <div class="stat-label">Surge in multi-agent system inquiries (Gartner Q1 2024 &rarr; Q2 2025)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">90.2%</div>
+          <div class="stat-label">Multi-agent improvement over single-agent on research tasks (Anthropic)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">15&times;</div>
+          <div class="stat-label">Token cost of multi-agent vs. single chat interaction</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">57%</div>
+          <div class="stat-label">Companies running AI agents in production (Jan 2026)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">+9%</div>
+          <div class="stat-label">Bug rate increase with 90% AI adoption (Google DORA 2025)</div>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Anthropic's Core Guidance</div>
+          <div class="callout-text">"Most teams don't need multi-agent systems. Improved prompting on a single agent has repeatedly matched results from elaborate multi-agent architectures that took months to build." Start simple, add complexity only when evidence supports it.</div>
+        </div>
+      </div>
+
+      <div class="quote-card">
+        <div class="quote-text">"Context engineering is the skill that separates developers who get 10x value from AI coding agents from those who get 2x."</div>
+        <div class="quote-attr">&mdash; Birgitta Bockeler, Distinguished Engineer at Thoughtworks (via martinfowler.com)</div>
+      </div>
+    </section>
+
+    <!-- ==================== ARCHITECTURE PATTERNS ==================== -->
+    <section class="section" id="patterns">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FEF3C7;color:#92400E">2</div>
+        <h2 class="section-title">Architecture Patterns</h2>
+      </div>
+      <p class="section-desc">
+        Seven distinct patterns have emerged for structuring agentic coding systems. Click each pattern to see full details including benefits, drawbacks, and Swift/iOS relevance.
+      </p>
+
+      <!-- Pattern 1: Conductor -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#10B981">1</div>
+          <div>
+            <div class="pattern-title">Conductor (Interactive Pair Programming)</div>
+            <div class="pattern-tagline">Single agent + developer in real-time. The human is the orchestrator.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">Developer &harr; AI Agent (single session)
+  &bull; Synchronous interaction
+  &bull; Human guides each step
+  &bull; No inter-agent coordination</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+          </div>
+          <div class="swift-fit excellent">Swift/iOS Fit: Excellent &mdash; default starting point</div>
+        </div>
+        <div class="pattern-details">
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Simplest architecture &mdash; zero coordination overhead</li>
+            <li>Developer maintains full context and control at all times</li>
+            <li>Fastest for small/medium tasks</li>
+            <li>No context loss between agents</li>
+            <li>Anthropic's recommended starting point</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Developer is the bottleneck &mdash; one task at a time</li>
+            <li>Context window fills up during long sessions</li>
+            <li>Developer attention required throughout &mdash; not parallelizable</li>
+            <li>Doesn't scale to large features requiring simultaneous work</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Default for most Swift teams &mdash; focused tasks like implementing a view, writing a test, debugging</li>
+            <li>Works perfectly with Cursor, Claude Code single-session, Xcode 26.3 agents</li>
+            <li>Escalate to multi-agent only when tasks require simultaneous work across many files</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 2: Verification Subagent -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#3B82F6">2</div>
+          <div>
+            <div class="pattern-title">Verification Subagent</div>
+            <div class="pattern-tagline">Primary agent implements, dedicated verifier validates. Anthropic's recommended pattern for coding.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">Agent (implements) &rarr; Verifier (tests/builds/lints)
+      &uarr;                        &darr;
+      &larr;&larr;&larr;&larr; fix if failed &larr;&larr;&larr;&larr;</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit excellent">Swift/iOS Fit: Excellent &mdash; natural build/test/lint loop</div>
+        </div>
+        <div class="pattern-details">
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Minimal context transfer needed (just code + success criteria)</li>
+            <li>Catches correctness issues without expensive full-context review</li>
+            <li>Can use cheaper models (Haiku) for verification</li>
+            <li>Scales well &mdash; add verifiers for different dimensions</li>
+            <li>Sidesteps the "telephone game" problem</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Only catches issues visible from outside the code</li>
+            <li>Won't catch design flaws or architectural problems</li>
+            <li>Requires well-defined, automatable success criteria</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Verifier runs <code>swift build</code>, <code>swift test</code>, SwiftLint, Xcode Previews</li>
+            <li>Natural fit for Xcode's build/test/preview cycle</li>
+            <li>Use separate verifiers: compilation, unit tests, linting, accessibility</li>
+            <li>Recommended first step beyond single-agent for Swift teams</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 3: Peer Review / Writer-Reviewer -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#8B5CF6">3</div>
+          <div>
+            <div class="pattern-title">Peer Review / Writer-Reviewer</div>
+            <div class="pattern-tagline">One agent writes, a separate agent reviews with cleared context. Can fan out to multiple specialized reviewers.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">Writer Agent &rarr; Code &rarr; Reviewer Agent (fresh context)
+                              &darr;
+              &lfloor; Architecture Reviewer &rfloor;
+              &lfloor; Security Reviewer     &rfloor;
+              &lfloor; Performance Reviewer   &rfloor;
+              &lfloor; Accessibility Reviewer &rfloor;</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit good">Swift/iOS Fit: Good &mdash; strong alignment with PR-based workflows</div>
+        </div>
+        <div class="pattern-details">
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Catches bugs that implementation agent's biases would miss</li>
+            <li>Separate context prevents "implementation blindness"</li>
+            <li>Multiple reviewers can run simultaneously (parallelizable)</li>
+            <li>Maps naturally to human code review practices</li>
+            <li>Baz's agentic review caught 7/8 production bugs vs 3.5-4.5/8 for competitors</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Doubles (or more) the token cost per change</li>
+            <li>Reviewer may raise false positives without implementation context</li>
+            <li>Iterative loops can cycle without clear exit criteria</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Create specialized Swift reviewers: retain cycle checker, @MainActor usage, Sendable compliance</li>
+            <li>Accessibility reviewer for VoiceOver labels, Dynamic Type, color contrast</li>
+            <li>Architecture compliance reviewer for MVVM/TCA pattern adherence</li>
+            <li>API availability reviewer for deployment target compatibility</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 4: Orchestrator-Worker -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#F97316">4</div>
+          <div>
+            <div class="pattern-title">Orchestrator-Worker</div>
+            <div class="pattern-tagline">Central orchestrator decomposes goals, dispatches to parallel workers, synthesizes results.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">        &lfloor; Worker A (UI)    &rfloor;
+Goal &rarr; Orchestrator &rarr; &lfloor; Worker B (Logic) &rfloor; &rarr; Synthesis
+        &lfloor; Worker C (Tests) &rfloor;</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit good">Swift/iOS Fit: Good &mdash; when features decompose along file boundaries</div>
+        </div>
+        <div class="pattern-details">
+          <h4>How It Works</h4>
+          <ul class="detail-list neutral">
+            <li>Cursor's browser project: Planners explore codebases, Workers execute tasks independently, Judges evaluate results</li>
+            <li>Orchestrator uses powerful model (Opus), workers use efficient models (Sonnet/Haiku)</li>
+            <li>Git worktrees provide isolation for parallel workers</li>
+          </ul>
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Natural parallelization &mdash; workers run simultaneously</li>
+            <li>Each worker gets its own context window &mdash; no pollution</li>
+            <li>Easy to add/remove workers without restructuring</li>
+            <li>Model-per-agent cost optimization</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Orchestrator is single point of failure and bottleneck</li>
+            <li>Workers cannot share insights discovered mid-task</li>
+            <li>Task decomposition quality depends entirely on orchestrator</li>
+            <li>Merge conflicts when workers modify shared files</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Works best when features decompose cleanly: one worker per SwiftUI view file, another for ViewModel</li>
+            <li>Challenge: SwiftUI blurs view/logic boundaries (@State, @Binding in views)</li>
+            <li>Use git worktrees so each worker operates on its own checkout</li>
+            <li>Best for large features spanning many independent files</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 5: Domain-Specialized Implementation -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#EC4899">5</div>
+          <div>
+            <div class="pattern-title">Domain-Specialized Implementation Agents</div>
+            <div class="pattern-tagline">Dedicated agents for each domain: UI, business logic, data, testing. Each with focused instructions and examples.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">.claude/agents/
+  &lfloor; swiftui-view.md    &rarr; UI Agent      &rfloor;
+  &lfloor; viewmodel.md       &rarr; Logic Agent   &rfloor;
+  &lfloor; data-layer.md      &rarr; Data Agent    &rfloor;
+  &lfloor; testing.md         &rarr; Test Agent    &rfloor;
+  &lfloor; arch-reviewer.md   &rarr; Review Agent  &rfloor;</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit moderate">Swift/iOS Fit: Moderate &mdash; SwiftUI blurs layer boundaries</div>
+        </div>
+        <div class="pattern-details">
+          <h4>This Is Your Team's Proposed Approach</h4>
+          <ul class="detail-list neutral">
+            <li>UI Agent for SwiftUI views, Logic Agent for ViewModels, Test Agent for XCTest suites</li>
+            <li>Each agent has deeply focused instructions with domain-specific patterns</li>
+            <li>Adding new conventions to one domain doesn't bloat other agents' contexts</li>
+          </ul>
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Each agent can have deeply focused instructions with domain-specific examples</li>
+            <li>Easy to parallelize &mdash; UI and tests developed simultaneously</li>
+            <li>Teams can iterate on individual agent definitions independently</li>
+            <li>Model-per-agent optimization (complex logic on Opus, tests on Haiku)</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Requires clear domain boundaries &mdash; messy in SwiftUI where @State/@Binding live in views</li>
+            <li>Cross-cutting concerns (error handling, logging, analytics) don't fit one agent</li>
+            <li>Agent A's output may not integrate cleanly with Agent B's output</li>
+            <li>Significant upfront investment in agent definitions and contracts</li>
+            <li>Anthropic warns: dividing by problem type creates "constant coordination overhead"</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Works better with strict architectures (TCA, Clean Architecture) than vanilla SwiftUI</li>
+            <li>TCA's Reducer/View split gives clearer agent boundaries, but TCA itself is harder for AI</li>
+            <li>Consider feature-centric decomposition instead: one agent owns view + viewmodel + tests for one feature</li>
+            <li>ccswarm framework provides ready-made agent pools with worktree isolation</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 6: Pipeline/Chain -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#0EA5E9">6</div>
+          <div>
+            <div class="pattern-title">Pipeline / Chain (Sequential Phases)</div>
+            <div class="pattern-tagline">Fixed sequence of agents, each handling one phase. Quality gates validate between steps.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">Spec &rarr; Analysis &rarr; Architecture &rarr; Impl Plan &rarr; Tests &rarr; Code &rarr; Review
+  &uarr;     gate     gate      HUMAN       gate    gate   gate     gate</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot filled mid"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit moderate">Swift/iOS Fit: Moderate &mdash; good for formal processes, slow for small tasks</div>
+        </div>
+        <div class="pattern-details">
+          <h4>How It Works</h4>
+          <ul class="detail-list neutral">
+            <li>gbFinch/agentic-orchestration: Feature chain = spec &rarr; analysis &rarr; architecture &rarr; impl-plan &rarr; test-spec &rarr; tests &rarr; code &rarr; review &rarr; summary</li>
+            <li>Critic-based validator after every step (pass/fail with auto-retry up to 3 times)</li>
+            <li>Human gates at critical checkpoints (architecture, tech-stack decisions)</li>
+            <li>Numbered artifact files (01-spec.md, 02-analysis.md) for auditability</li>
+          </ul>
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Highly predictable and auditable &mdash; every step has clear input/output contract</li>
+            <li>Quality gates prevent bad work from cascading downstream</li>
+            <li>Human checkpoints at critical decision points</li>
+            <li>Can restart from any previous step</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Strictly sequential &mdash; no parallelization</li>
+            <li>Slow for simple tasks (every task traverses all phases)</li>
+            <li>The "telephone game" &mdash; information degrades at each handoff</li>
+            <li>Rigid &mdash; doesn't adapt to tasks that don't fit the chain</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Mirrors professional iOS workflows: architecture review &rarr; impl plan &rarr; test spec &rarr; implementation &rarr; code review</li>
+            <li>Good for teams with established formal processes</li>
+            <li>Overkill for typical feature work; better for large architectural changes</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pattern 7: Swarm -->
+      <div class="pattern-card" onclick="togglePattern(this)" style="margin-bottom:1rem">
+        <div class="pattern-header">
+          <div class="pattern-num" style="background:#6B7280">7</div>
+          <div>
+            <div class="pattern-title">Swarm / Collaborative Agent Network</div>
+            <div class="pattern-tagline">Agents communicate peer-to-peer without central orchestrator. Emergent coordination.</div>
+          </div>
+          <div class="pattern-expand-icon">&#x25BC;</div>
+        </div>
+        <div class="pattern-body">
+          <div class="pattern-diagram">Agent A &harr; Agent B
+  &updownarrow;           &updownarrow;
+Agent C &harr; Agent D
+  (peer-to-peer via A2A/MCP)</div>
+          <div class="pattern-scores">
+            <div class="score-badge">Parallelization <div class="score-dots"><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span><span class="score-dot filled high"></span></div></div>
+            <div class="score-badge">Quality <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Simplicity <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+            <div class="score-badge">Cost <div class="score-dots"><span class="score-dot filled low"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div></div>
+          </div>
+          <div class="swift-fit limited">Swift/iOS Fit: Limited &mdash; premature for most iOS teams</div>
+        </div>
+        <div class="pattern-details">
+          <h4>Current Status</h4>
+          <ul class="detail-list neutral">
+            <li>Mostly experimental in coding contexts</li>
+            <li>Claude Code's "Agent Teams" (experimental, shipped with Opus 4.6) moves toward this</li>
+            <li>Google's Agent-to-Agent (A2A) protocol provides infrastructure</li>
+          </ul>
+          <h4>Benefits</h4>
+          <ul class="detail-list pros">
+            <li>Highly scalable &mdash; add agents without changing architecture</li>
+            <li>No single point of failure</li>
+            <li>Agents form ad-hoc teams for specific problems</li>
+          </ul>
+          <h4>Drawbacks</h4>
+          <ul class="detail-list cons">
+            <li>Hardest to debug and predict</li>
+            <li>Agents may conflict or duplicate work</li>
+            <li>Coordination overhead grows combinatorially</li>
+            <li>Very high token costs</li>
+            <li>No clear accountability when things go wrong</li>
+          </ul>
+          <h4>Swift/iOS Application</h4>
+          <ul class="detail-list swift">
+            <li>Not recommended for current iOS team sizes</li>
+            <li>May become relevant for very large cross-platform teams (iOS + macOS + watchOS + visionOS)</li>
+            <li>Monitor Claude Code Agent Teams feature as it matures</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== COMPARISON ==================== -->
+    <section class="section" id="comparison">
+      <div class="section-header">
+        <div class="section-icon" style="background:#DBEAFE;color:#1E40AF">3</div>
+        <h2 class="section-title">Head-to-Head Comparison</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:1.25rem;margin-bottom:2rem">
+        <div class="chart-container">
+          <div class="chart-title">Pattern Scores (Radar)</div>
+          <div class="chart-wrap"><canvas id="radarChart"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Token Cost Multipliers</div>
+          <div class="chart-wrap"><canvas id="costChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>Parallelization</th>
+              <th>Quality Assurance</th>
+              <th>Setup Complexity</th>
+              <th>Token Cost</th>
+              <th>Swift/iOS Fit</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Conductor</strong></td>
+              <td><span class="cell-score"><span class="score-dot filled low" style="width:10px;height:10px"></span></span> Low</td>
+              <td>Moderate</td>
+              <td>None</td>
+              <td>1&times;</td>
+              <td><span class="swift-fit excellent" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Excellent</span></td>
+              <td>Individual tasks, debugging, learning</td>
+            </tr>
+            <tr>
+              <td><strong>2. Verification Subagent</strong></td>
+              <td>Moderate</td>
+              <td>High</td>
+              <td>Low</td>
+              <td>2-3&times;</td>
+              <td><span class="swift-fit excellent" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Excellent</span></td>
+              <td>Quality-critical code, test-driven workflows</td>
+            </tr>
+            <tr>
+              <td><strong>3. Peer Review</strong></td>
+              <td>High</td>
+              <td>Very High</td>
+              <td>Moderate</td>
+              <td>3-5&times;</td>
+              <td><span class="swift-fit good" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Good</span></td>
+              <td>Code review automation, security-critical</td>
+            </tr>
+            <tr>
+              <td><strong>4. Orchestrator-Worker</strong></td>
+              <td>Very High</td>
+              <td>Moderate</td>
+              <td>Moderate</td>
+              <td>5-10&times;</td>
+              <td><span class="swift-fit good" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Good</span></td>
+              <td>Large features, batch operations, migrations</td>
+            </tr>
+            <tr>
+              <td><strong>5. Domain-Specialized</strong></td>
+              <td>Very High</td>
+              <td>Moderate</td>
+              <td>High</td>
+              <td>5-15&times;</td>
+              <td><span class="swift-fit moderate" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Moderate</span></td>
+              <td>Teams wanting deep specialization per layer</td>
+            </tr>
+            <tr>
+              <td><strong>6. Pipeline/Chain</strong></td>
+              <td>None</td>
+              <td>Very High</td>
+              <td>High</td>
+              <td>5-10&times;</td>
+              <td><span class="swift-fit moderate" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Moderate</span></td>
+              <td>Formal processes, auditable workflows</td>
+            </tr>
+            <tr>
+              <td><strong>7. Swarm</strong></td>
+              <td>Maximum</td>
+              <td>Low</td>
+              <td>Very High</td>
+              <td>15-30&times;</td>
+              <td><span class="swift-fit limited" style="margin:0;font-size:0.7rem;padding:0.2rem 0.5rem">Limited</span></td>
+              <td>Experimental, very large teams</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================== DECISION GUIDE ==================== -->
+    <section class="section" id="decision">
+      <div class="section-header">
+        <div class="section-icon" style="background:#ECFDF5;color:#065F46">4</div>
+        <h2 class="section-title">Decision Guide: When to Use Multi-Agent</h2>
+      </div>
+      <p class="section-desc">
+        Anthropic identifies three specific scenarios where multi-agent approaches pay off. If none apply, stick with a single agent.
+      </p>
+
+      <div class="card-grid" style="margin-bottom:2rem">
+        <div class="card" style="border-left:4px solid var(--primary)">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Signal 1: Context Pollution</h3>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            When an agent accumulates irrelevant information from one subtask that degrades performance on subsequent tasks. Separate agents with isolated contexts perform better.
+          </p>
+          <p style="font-size:0.8rem;color:var(--text-lighter);margin-top:0.5rem">
+            <strong>Example:</strong> Agent researching networking code then trying to build UI &mdash; networking context pollutes UI decisions.
+          </p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Signal 2: Parallelization Need</h3>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            Multiple independent directions need to be pursued simultaneously. The benefit isn't speed but thoroughness &mdash; parallel agents cover more ground than a single agent working within context limits.
+          </p>
+          <p style="font-size:0.8rem;color:var(--text-lighter);margin-top:0.5rem">
+            <strong>Example:</strong> Implementing 5 independent SwiftUI views for different screens simultaneously.
+          </p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--success)">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Signal 3: Tool Overload</h3>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            When agents manage 20+ tools, selection accuracy suffers. Breaking work across specialized agents with focused toolsets resolves this.
+          </p>
+          <p style="font-size:0.8rem;color:var(--text-lighter);margin-top:0.5rem">
+            <strong>Example:</strong> Agent needs Xcode build tools, network mocking tools, UI testing tools, accessibility tools, and linting tools all at once.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.15rem;margin-bottom:1rem">Recommended Maturity Progression for Swift Teams</h3>
+      <div class="maturity-track">
+        <div class="maturity-stage recommended">
+          <div class="maturity-num">1</div>
+          <div class="maturity-label">Conductor</div>
+          <div class="maturity-desc">Single agent + developer. Start here.</div>
+        </div>
+        <div class="maturity-stage recommended">
+          <div class="maturity-num">2</div>
+          <div class="maturity-label">+ Verification</div>
+          <div class="maturity-desc">Add build/test/lint verification subagent</div>
+        </div>
+        <div class="maturity-stage">
+          <div class="maturity-num">3</div>
+          <div class="maturity-label">+ Review Agents</div>
+          <div class="maturity-desc">Architecture, security, accessibility reviewers</div>
+        </div>
+        <div class="maturity-stage">
+          <div class="maturity-num">4</div>
+          <div class="maturity-label">+ Domain Workers</div>
+          <div class="maturity-desc">Orchestrated workers with worktree isolation</div>
+        </div>
+        <div class="maturity-stage">
+          <div class="maturity-num">5</div>
+          <div class="maturity-label">Agent Teams</div>
+          <div class="maturity-desc">Full multi-agent coordination (experimental)</div>
+        </div>
+      </div>
+
+      <div class="callout tip" style="margin-top:1.5rem">
+        <div class="callout-icon">&#10004;</div>
+        <div class="callout-body">
+          <div class="callout-title">Key Insight: Context-Centric vs. Problem-Centric Decomposition</div>
+          <div class="callout-text">
+            Anthropic strongly recommends dividing work by <strong>context boundaries, not problem type</strong>.<br><br>
+            <strong>Problematic (Problem-Centric):</strong> UI Agent, Logic Agent, Test Agent &mdash; creates constant coordination overhead because each needs to understand the others' work.<br><br>
+            <strong>Better (Context-Centric):</strong> Feature A Agent (owns view + viewmodel + tests for Feature A), Feature B Agent &mdash; groups work requiring shared understanding together.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CONTEXT MANAGEMENT ==================== -->
+    <section class="section" id="context">
+      <div class="section-header">
+        <div class="section-icon" style="background:#F3E8FF;color:#7C3AED">5</div>
+        <h2 class="section-title">Context Management Strategies</h2>
+      </div>
+      <p class="section-desc">
+        How you manage what each agent sees is arguably more important than which architecture you choose. "Curating what the model sees so that you get a better result" is the defining skill.
+      </p>
+
+      <div class="card-grid" style="margin-bottom:1.5rem">
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Progressive Disclosure</h3>
+          <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem">
+            Keep CLAUDE.md lean with only universal instructions. Reference detailed files that agents load on-demand. Agent-specific files in <code>.claude/agents/</code> with YAML frontmatter.
+          </p>
+          <div style="background:var(--bg-alt);padding:0.75rem;border-radius:6px;font-family:var(--mono);font-size:0.75rem;color:var(--text-light)">
+            CLAUDE.md (lean) &rarr; refs &rarr; .claude/agents/swiftui.md<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; .claude/agents/testing.md<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; docs/architecture.md
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">File-Based Handoffs</h3>
+          <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem">
+            Each agent saves output to distinct files. Subsequent agents read only the artifacts they need. Creates an audit trail for debugging.
+          </p>
+          <div style="background:var(--bg-alt);padding:0.75rem;border-radius:6px;font-family:var(--mono);font-size:0.75rem;color:var(--text-light)">
+            Agent A &rarr; writes 01-spec.md<br>
+            Agent B &rarr; reads 01-spec.md, writes 02-impl.md<br>
+            Agent C &rarr; reads 02-impl.md, writes 03-review.md
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Model Routing</h3>
+          <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem">
+            Use powerful models for planning, efficient models for execution. Set via <code>CLAUDE_CODE_SUBAGENT_MODEL</code> environment variable.
+          </p>
+          <div style="background:var(--bg-alt);padding:0.75rem;border-radius:6px;font-family:var(--mono);font-size:0.75rem;color:var(--text-light)">
+            Opus &rarr; Planning, architecture decisions<br>
+            Sonnet &rarr; Implementation, code generation<br>
+            Haiku &rarr; Verification, linting, simple checks
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:0.5rem">Swift Project Structure</h3>
+          <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem">
+            Recommended file organization for Swift iOS/Mac projects using agents.
+          </p>
+          <div style="background:var(--bg-alt);padding:0.75rem;border-radius:6px;font-family:var(--mono);font-size:0.75rem;color:var(--text-light)">
+            CLAUDE.md &mdash; architecture, naming, standards<br>
+            .claude/agents/swiftui-view.md &mdash; view patterns<br>
+            .claude/agents/viewmodel.md &mdash; logic patterns<br>
+            .claude/agents/testing.md &mdash; XCTest conventions<br>
+            .claude/agents/reviewer.md &mdash; review criteria<br>
+            docs/architecture-decisions.md &mdash; ADRs
+          </div>
+        </div>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Anti-Pattern: Context Explosion</div>
+          <div class="callout-text">
+            When parent agents pass their full history to sub-agents, and sub-agents do the same, context grows exponentially. Pass only artifacts and clear contracts &mdash; never full conversation histories.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SWIFT/iOS SPECIFIC ==================== -->
+    <section class="section" id="swift">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FEF3C7;color:#92400E">6</div>
+        <h2 class="section-title">Swift/iOS-Specific Considerations</h2>
+      </div>
+
+      <h3 style="font-size:1.1rem;margin-bottom:1rem">Architecture Pattern Impact on AI Effectiveness</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.25rem;margin-bottom:2rem">
+        <div class="chart-container">
+          <div class="chart-title">AI Implementation Time by Swift Architecture</div>
+          <div class="chart-wrap"><canvas id="swiftArchChart"></canvas></div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+          <h4 style="font-size:0.95rem;margin-bottom:0.75rem">Key Findings</h4>
+          <ul class="detail-list neutral">
+            <li><strong>Model-View (MV):</strong> ~40 min, 1 error. Simplest for AI.</li>
+            <li><strong>MVVM:</strong> Good balance. Clear separation without excessive complexity.</li>
+            <li><strong>TCA:</strong> ~80 min, 3 errors. Multiple syntax versions confuse AI. But strict separation helps agent decomposition.</li>
+            <li><strong>Clean Architecture:</strong> Clear boundaries help domain splitting but more files for AI to navigate.</li>
+          </ul>
+          <div class="quote-card" style="margin-top:1rem">
+            <div class="quote-text">"Your choice of architecture should primarily be driven by what you believe is the right architecture for maintaining the software you are building, and not by the AI tool you're using."</div>
+            <div class="quote-attr">&mdash; Double Dot Development</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.1rem;margin-bottom:1rem">SwiftUI-Specific Multi-Agent Challenges</h3>
+      <div class="card-grid" style="margin-bottom:2rem">
+        <div class="card" style="border-left:4px solid var(--warning)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem">Blurry Layer Boundaries</h4>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            SwiftUI tightly couples view code with state management. <code>@State</code>, <code>@Binding</code>, <code>@Observable</code> live in view files, making it hard to cleanly split "UI Agent" from "Logic Agent". UIKit had clearer MVC boundaries.
+          </p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--info)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem">Xcode 26.3 Integration</h4>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            Apple now supports agentic coding with Claude and Codex directly in Xcode. Agents can search docs, update project settings, and capture Previews to visually verify their work. This changes the tooling landscape significantly.
+          </p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--danger)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem">TCA Complexity</h4>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            TCA's strict Reducer/View split theoretically enables cleaner agent decomposition, but AI struggles with TCA's complex patterns and multiple published syntax versions (old <code>WithViewStore</code> vs new <code>@Bindable</code>).
+          </p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--success)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem">Verification Advantage</h4>
+          <p style="font-size:0.85rem;color:var(--text-light)">
+            Swift's strong type system + compiler provides excellent automated verification. <code>swift build</code>, <code>swift test</code>, SwiftLint, and Xcode Previews create tight feedback loops ideal for verification subagents.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.1rem;margin-bottom:1rem">Recommended Agent Setup for Your Swift Team</h3>
+      <div class="callout info">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Pragmatic Recommendation for a Small Swift Team</div>
+          <div class="callout-text">
+            Based on the research, consider a <strong>hybrid approach</strong> rather than pure domain-specialized agents:<br><br>
+            <strong>1. Feature-centric implementation agents</strong> (not layer-centric): Each agent owns a complete feature (view + viewmodel + tests). This avoids coordination overhead while still enabling parallelization.<br><br>
+            <strong>2. Specialized review agents</strong> (this is where domain-specialization shines): Architecture reviewer, memory/concurrency reviewer, accessibility reviewer. These run in parallel with fresh context after implementation.<br><br>
+            <strong>3. Verification subagent</strong>: Build + test + lint runner as a tight feedback loop during implementation.<br><br>
+            This gives you the benefits of your domain-specialized idea (focused agent instructions, customizable per concern) while avoiding the key drawback (coordination overhead between UI/Logic/Test agents that need shared context).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TOOLS ==================== -->
+    <section class="section" id="tools">
+      <div class="section-header">
+        <div class="section-icon" style="background:#E0E7FF;color:#4338CA">7</div>
+        <h2 class="section-title">Frameworks &amp; Tools Compared</h2>
+      </div>
+
+      <div class="card-grid">
+        <div class="tool-card">
+          <div class="tool-name">Claude Code</div>
+          <div class="tool-desc">Anthropic's CLI with native subagent support, git worktree isolation, CLAUDE.md-based context, and model routing. The most flexible option for Swift teams using Claude.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Custom Agents</span>
+            <span class="tool-tag yes">Worktrees</span>
+            <span class="tool-tag yes">Model Routing</span>
+            <span class="tool-tag yes">Swift Support</span>
+            <span class="tool-tag partial">Agent Teams (Experimental)</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Xcode 26.3</div>
+          <div class="tool-desc">Apple's IDE with built-in agentic coding via Claude Agent and OpenAI Codex. Captures Previews for visual verification. Native Swift toolchain integration.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Native Swift</span>
+            <span class="tool-tag yes">Preview Capture</span>
+            <span class="tool-tag yes">Xcode Integration</span>
+            <span class="tool-tag partial">Multi-Agent</span>
+            <span class="tool-tag no">Custom Agents</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Cursor</div>
+          <div class="tool-desc">AI-native IDE with .cursorrules for SwiftUI-specific agent configuration. Composer for multi-file operations. Multi-agent dashboard in Cursor 2.0.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Custom Rules</span>
+            <span class="tool-tag yes">Multi-File</span>
+            <span class="tool-tag partial">Swift Support</span>
+            <span class="tool-tag yes">Multi-Agent</span>
+            <span class="tool-tag no">Worktrees</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">OpenAI Codex</div>
+          <div class="tool-desc">Cloud-based sandboxed agent. Each agent works on isolated copy of code. Parallel task execution. macOS desktop app for managing multiple agents.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Sandbox Isolation</span>
+            <span class="tool-tag yes">Parallel Agents</span>
+            <span class="tool-tag partial">Swift Support</span>
+            <span class="tool-tag partial">Multi-Agent (Experimental)</span>
+            <span class="tool-tag no">Custom Agents</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">CrewAI</div>
+          <div class="tool-desc">Role-and-task framework for multi-agent orchestration. Define agents with roles, assign tasks, framework coordinates. ~70% of AI workflow teams by Jan 2026.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Role-Based Agents</span>
+            <span class="tool-tag yes">Task Orchestration</span>
+            <span class="tool-tag no">IDE Integration</span>
+            <span class="tool-tag no">Swift-Specific</span>
+            <span class="tool-tag yes">Custom Agents</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">AutoGen (Microsoft)</div>
+          <div class="tool-desc">Conversation-based agent coordination. Agents propose, critique, and revise through iterative dialogue. Good for code writer/reviewer loops.</div>
+          <div class="tool-features">
+            <span class="tool-tag yes">Conversational</span>
+            <span class="tool-tag yes">Iterative Loops</span>
+            <span class="tool-tag no">IDE Integration</span>
+            <span class="tool-tag no">Swift-Specific</span>
+            <span class="tool-tag yes">Custom Agents</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PITFALLS ==================== -->
+    <section class="section" id="pitfalls">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FEE2E2;color:#991B1B">8</div>
+        <h2 class="section-title">Common Pitfalls &amp; Anti-Patterns</h2>
+      </div>
+
+      <div class="card-grid">
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">1.</span> Over-Fragmentation</div>
+          <div class="pitfall-text">Splitting agents too finely creates coordination overhead exceeding specialization benefits. Layer-based splitting (UI/Logic/Data) when features cross all layers creates constant handoff problems.</div>
+          <div class="pitfall-fix">Fix: Divide by context boundaries, not problem type.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">2.</span> Context Explosion</div>
+          <div class="pitfall-text">Passing full conversation history from parent to child agents triggers exponential growth. Context windows flooded with irrelevant data cause the model to fixate on past patterns.</div>
+          <div class="pitfall-fix">Fix: Pass only artifacts and clear contracts, never full histories.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">3.</span> The Telephone Game</div>
+          <div class="pitfall-text">Information degrades at each agent handoff. By the 4th agent in a chain, critical nuances from the original requirement are lost completely.</div>
+          <div class="pitfall-fix">Fix: Keep chains short. Include original requirements at each stage.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">4.</span> Conflicting Instructions</div>
+          <div class="pitfall-text">Multiple agents with overlapping responsibilities make incompatible decisions. Two "code quality" agents with different standards create contradictory feedback loops.</div>
+          <div class="pitfall-fix">Fix: Clear scope boundaries and single-responsibility per agent.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">5.</span> Premature Multi-Agent</div>
+          <div class="pitfall-text">Teams spend months building elaborate systems when improved prompting on a single agent would achieve equivalent results. The most common and costly mistake.</div>
+          <div class="pitfall-fix">Fix: Start simple. Add agents only when specific evidence supports it.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">6.</span> No Human Gates</div>
+          <div class="pitfall-text">Fully autonomous agent swarms that write, review, and merge without human checkpoints. Quality degrades as agents optimize for passing each other's checks, not actual correctness.</div>
+          <div class="pitfall-fix">Fix: Always include human gates at critical decision points.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">7.</span> Stale Memory</div>
+          <div class="pitfall-text">Persistent memory accumulates outdated patterns, deprecated APIs, or superseded decisions. Agents follow stale instructions confidently and generate outdated code.</div>
+          <div class="pitfall-fix">Fix: Regular memory hygiene. Version-stamp persistent instructions.</div>
+        </div>
+        <div class="pitfall-card">
+          <div class="pitfall-title"><span style="color:var(--danger)">8.</span> Tests as Afterthought</div>
+          <div class="pitfall-text">Agents write code first and tests second (or skip tests). Without the tight feedback loop of test &rarr; implement &rarr; verify, quality drops dramatically.</div>
+          <div class="pitfall-fix">Fix: Test-first or test-alongside workflows. Strict coverage gates on PRs.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EVIDENCE ==================== -->
+    <section class="section" id="evidence">
+      <div class="section-header">
+        <div class="section-icon" style="background:#ECFDF5;color:#065F46">9</div>
+        <h2 class="section-title">Measured Evidence &amp; Outcomes</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:1.25rem;margin-bottom:2rem">
+        <div class="chart-container">
+          <div class="chart-title">Multi-Agent Quality Outcomes</div>
+          <div class="chart-wrap"><canvas id="outcomeChart"></canvas></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="quote-card">
+            <div class="quote-text">"Professional developers control, they don't vibe."</div>
+            <div class="quote-attr">&mdash; Mike Mason, citing UC San Diego/Cornell study</div>
+          </div>
+          <div class="quote-card">
+            <div class="quote-text">"Agent code is cheap; verification becomes the dominant cost."</div>
+            <div class="quote-attr">&mdash; Luca Palmieri</div>
+          </div>
+          <div class="quote-card">
+            <div class="quote-text">"If you have any doubt whatsoever, then you can't use it."</div>
+            <div class="quote-attr">&mdash; Steve Yegge, on fully autonomous agent deployment</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.1rem;margin-bottom:1rem">The Evidence Is Mixed</h3>
+      <div class="card-grid" style="margin-bottom:1.5rem">
+        <div class="card" style="border-left:4px solid var(--success)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem;color:var(--success)">Positive Evidence</h4>
+          <ul class="detail-list neutral" style="font-size:0.85rem">
+            <li>2-3&times; speedup with quality-focused agentic patterns (CodeScene)</li>
+            <li>Baz agentic review: 87.5% bug detection vs. 43-56% competitors</li>
+            <li>Multi-agent Opus+Sonnet: 90.2% improvement on research tasks</li>
+            <li>Rakuten: 12.5M-line implementation in 7 hours, 99.9% accuracy</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid var(--danger)">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem;color:var(--danger)">Cautionary Evidence</h4>
+          <ul class="detail-list neutral" style="font-size:0.85rem">
+            <li>Google DORA: +9% bugs, +91% review time, +154% PR size with AI</li>
+            <li>Agent-generated PRs: faster merge &ne; better post-merge quality</li>
+            <li>SWE-bench: 74.4% on bug fixes but only 11% on complex features</li>
+            <li>Code Smells and Security Hotspots increase with agent PR volume</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128273;</div>
+        <div class="callout-body">
+          <div class="callout-title">Quality Depends On Infrastructure, Not Architecture</div>
+          <div class="callout-text">
+            Quality outcomes depend heavily on: (1) pre-existing test infrastructure and automated feedback loops, (2) code health of the existing codebase (agents perform best in healthy code), (3) human oversight and review quality, and (4) specificity of agent instructions. AI performs best in healthy code &mdash; Code Health score of 9.5-10.0 is recommended before agent deployment.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SOURCES ==================== -->
+    <section class="section" id="sources">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--bg-alt);color:var(--text-light)">&#128218;</div>
+        <h2 class="section-title">Sources &amp; Further Reading</h2>
+      </div>
+      <div class="card" style="max-height:500px;overflow-y:auto">
+        <ul class="sources-list">
+          <li><a href="https://mikemason.ca/writing/ai-coding-agents-jan-2026/" target="_blank">AI Coding Agents in 2026: Coherence Through Orchestration, Not Autonomy</a> &mdash; Mike Mason</li>
+          <li><a href="https://claude.com/blog/building-multi-agent-systems-when-and-how-to-use-them" target="_blank">When to use multi-agent systems (and when not to)</a> &mdash; Anthropic</li>
+          <li><a href="https://baz.co/resources/engineering-intuition-at-scale-the-architecture-of-agentic-code-review" target="_blank">The Architecture of Agentic Code Review</a> &mdash; Baz</li>
+          <li><a href="https://codescene.com/blog/agentic-ai-coding-best-practice-patterns-for-speed-with-quality" target="_blank">Agentic AI Coding: Best Practice Patterns for Speed with Quality</a> &mdash; CodeScene</li>
+          <li><a href="https://claude.com/blog/eight-trends-defining-how-software-gets-built-in-2026" target="_blank">Eight trends defining how software gets built in 2026</a> &mdash; Claude Blog</li>
+          <li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> &mdash; Anthropic</li>
+          <li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Create custom subagents</a> &mdash; Claude Code Docs</li>
+          <li><a href="https://www.oreilly.com/radar/conductors-to-orchestrators-the-future-of-agentic-coding/" target="_blank">Conductors to Orchestrators: The Future of Agentic Coding</a> &mdash; O'Reilly</li>
+          <li><a href="https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html" target="_blank">Context Engineering for Coding Agents</a> &mdash; Martin Fowler / Thoughtworks</li>
+          <li><a href="https://www.doubledotdevelopment.co.uk/posts/swiftui_architectures_compared_for_ai_development/" target="_blank">Architectures Compared for AI-Assisted Coding</a> &mdash; Double Dot Development</li>
+          <li><a href="https://zachwills.net/how-to-use-claude-code-subagents-to-parallelize-development/" target="_blank">How to Use Claude Code Subagents to Parallelize Development</a> &mdash; Zach Wills</li>
+          <li><a href="https://lpalmieri.com/posts/agentic-coding-raises-quality/" target="_blank">Can agentic coding raise the quality bar?</a> &mdash; Luca Palmieri</li>
+          <li><a href="https://zackproser.com/blog/orchestrator-pattern" target="_blank">The Orchestrator Pattern</a> &mdash; Zack Proser</li>
+          <li><a href="https://github.com/gbFinch/agentic-orchestration" target="_blank">agentic-orchestration framework</a> &mdash; GitHub</li>
+          <li><a href="https://github.com/nwiizo/ccswarm" target="_blank">ccswarm: Multi-agent orchestration for Claude Code</a> &mdash; GitHub</li>
+          <li><a href="https://github.com/twostraws/SwiftAgents" target="_blank">SwiftAgents AGENTS.md</a> &mdash; Paul Hudson</li>
+          <li><a href="https://www.apple.com/newsroom/2026/02/xcode-26-point-3-unlocks-the-power-of-agentic-coding/" target="_blank">Xcode 26.3 unlocks the power of agentic coding</a> &mdash; Apple</li>
+          <li><a href="https://arxiv.org/pdf/2503.13657" target="_blank">Why Do Multi-Agent LLM Systems Fail?</a> &mdash; Cemri et al.</li>
+          <li><a href="https://arxiv.org/html/2601.20109" target="_blank">Beyond Bug Fixes: Post-Merge Code Quality in Agent-Generated PRs</a> &mdash; arXiv</li>
+          <li><a href="https://openreview.net/forum?id=41xrZ3uGuI" target="_blank">FeatureBench: Benchmarking Agentic Coding</a> &mdash; OpenReview</li>
+          <li><a href="https://resources.anthropic.com/hubfs/2026%20Agentic%20Coding%20Trends%20Report.pdf" target="_blank">2026 Agentic Coding Trends Report</a> &mdash; Anthropic</li>
+          <li><a href="https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/" target="_blank">Developer's guide to multi-agent patterns in ADK</a> &mdash; Google</li>
+          <li><a href="https://crewai.com/" target="_blank">CrewAI: The Leading Multi-Agent Platform</a></li>
+          <li><a href="https://microsoft.github.io/autogen/stable//user-guide/core-user-guide/design-patterns/mixture-of-agents.html" target="_blank">Mixture of Agents</a> &mdash; Microsoft AutoGen</li>
+          <li><a href="https://cursor.com/docs/configuration/languages/ios-macos-swift" target="_blank">iOS &amp; macOS (Swift) Configuration</a> &mdash; Cursor Docs</li>
+          <li><a href="https://github.com/VoltAgent/awesome-claude-code-subagents" target="_blank">awesome-claude-code-subagents (100+ subagent templates)</a> &mdash; VoltAgent</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer style="text-align:center;padding:2rem;color:var(--text-lighter);font-size:0.8rem;border-top:1px solid var(--border);margin-top:2rem">
+      Research compiled March 2026 from 38 sources. Dashboard generated by Open Agents research pipeline.
+    </footer>
+
+  </main>
+
+  <script>
+    // === Theme Toggle ===
+    function toggleTheme() {
+      const isDark = document.documentElement.toggleAttribute('data-theme');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateChartColors();
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    // === Progress Bar ===
+    window.addEventListener('scroll', () => {
+      const s = document.documentElement.scrollTop;
+      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (s / h * 100) + '%';
+    });
+
+    // === Nav Pills ===
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.nav-pill').forEach(p => {
+            p.classList.toggle('active', p.getAttribute('onclick')?.includes(id));
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+    // === Pattern Card Toggle ===
+    function togglePattern(card) {
+      card.classList.toggle('expanded');
+    }
+
+    // === Charts ===
+    function getChartColors() {
+      const isDark = document.documentElement.hasAttribute('data-theme');
+      return {
+        text: isDark ? '#F1F5F9' : '#1E293B',
+        textLight: isDark ? '#94A3B8' : '#64748B',
+        grid: isDark ? '#334155' : '#E2E8F0',
+        bg: isDark ? '#1E293B' : '#FFFFFF',
+      };
+    }
+
+    let radarChart, costChart, swiftArchChart, outcomeChart;
+
+    function initCharts() {
+      const colors = getChartColors();
+
+      // Radar Chart
+      const radarCtx = document.getElementById('radarChart').getContext('2d');
+      radarChart = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Parallelization', 'Quality Assurance', 'Context Efficiency', 'Setup Simplicity', 'Cost Efficiency', 'Swift/iOS Fit'],
+          datasets: [
+            {
+              label: 'Conductor',
+              data: [1, 3, 5, 5, 5, 5],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16,185,129,0.1)',
+              borderWidth: 2,
+            },
+            {
+              label: 'Verification Subagent',
+              data: [3, 4, 5, 4, 4, 5],
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59,130,246,0.1)',
+              borderWidth: 2,
+            },
+            {
+              label: 'Peer Review',
+              data: [4, 5, 4, 3, 3, 4],
+              borderColor: '#8B5CF6',
+              backgroundColor: 'rgba(139,92,246,0.1)',
+              borderWidth: 2,
+            },
+            {
+              label: 'Orchestrator-Worker',
+              data: [5, 3, 4, 2, 2, 4],
+              borderColor: '#F97316',
+              backgroundColor: 'rgba(249,115,22,0.1)',
+              borderWidth: 2,
+            },
+            {
+              label: 'Domain-Specialized',
+              data: [5, 3, 5, 2, 2, 3],
+              borderColor: '#EC4899',
+              backgroundColor: 'rgba(236,72,153,0.1)',
+              borderWidth: 2,
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 5,
+              ticks: { display: false },
+              grid: { color: colors.grid },
+              pointLabels: { color: colors.textLight, font: { size: 10 } },
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: colors.textLight, font: { size: 10 }, boxWidth: 12, padding: 8 }
+            }
+          }
+        }
+      });
+
+      // Cost Chart
+      const costCtx = document.getElementById('costChart').getContext('2d');
+      costChart = new Chart(costCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Single Chat', 'Conductor', 'Verification', 'Peer Review', 'Orchestrator', 'Domain Agents', 'Pipeline', 'Swarm'],
+          datasets: [{
+            label: 'Token Cost Multiplier',
+            data: [1, 1, 2.5, 4, 7.5, 10, 7.5, 22.5],
+            backgroundColor: [
+              '#94A3B8', '#10B981', '#3B82F6', '#8B5CF6', '#F97316', '#EC4899', '#0EA5E9', '#6B7280'
+            ],
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              grid: { color: colors.grid },
+              ticks: { color: colors.textLight, callback: v => v + '\u00d7' },
+              title: { display: true, text: 'Token Cost Multiplier', color: colors.textLight }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { color: colors.textLight, font: { size: 11 } }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ctx.raw + '\u00d7 tokens vs. single chat' } }
+          }
+        }
+      });
+
+      // Swift Architecture Chart
+      const swiftCtx = document.getElementById('swiftArchChart').getContext('2d');
+      swiftArchChart = new Chart(swiftCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Model-View (MV)', 'MVVM', 'Clean Architecture', 'TCA'],
+          datasets: [
+            {
+              label: 'Implementation Time (min)',
+              data: [40, 50, 60, 80],
+              backgroundColor: '#6366F1',
+              borderRadius: 6,
+            },
+            {
+              label: 'Build Errors',
+              data: [1, 1.5, 2, 3],
+              backgroundColor: '#F97316',
+              borderRadius: 6,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: colors.textLight }
+            },
+            y: {
+              grid: { color: colors.grid },
+              ticks: { color: colors.textLight }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: colors.textLight, font: { size: 10 }, boxWidth: 12 }
+            }
+          }
+        }
+      });
+
+      // Outcome Chart
+      const outcomeCtx = document.getElementById('outcomeChart').getContext('2d');
+      outcomeChart = new Chart(outcomeCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Bug Detection\n(Baz Agentic)', 'Bug Detection\n(Competitors)', 'Speed\nImprovement', 'Multi-Agent\nvs Single', 'Bug Rate\nIncrease (DORA)', 'Review Time\nIncrease (DORA)'],
+          datasets: [{
+            label: 'Percentage',
+            data: [87.5, 50, 200, 90.2, 9, 91],
+            backgroundColor: [
+              '#10B981', '#94A3B8', '#10B981', '#10B981', '#EF4444', '#EF4444'
+            ],
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: colors.textLight, font: { size: 9 }, maxRotation: 0 }
+            },
+            y: {
+              grid: { color: colors.grid },
+              ticks: { color: colors.textLight, callback: v => v + '%' }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ctx.raw + '%' } }
+          }
+        }
+      });
+    }
+
+    function updateChartColors() {
+      const colors = getChartColors();
+      [radarChart, costChart, swiftArchChart, outcomeChart].forEach(chart => {
+        if (!chart) return;
+        if (chart.options.scales.r) {
+          chart.options.scales.r.grid.color = colors.grid;
+          chart.options.scales.r.pointLabels.color = colors.textLight;
+        }
+        if (chart.options.scales.x) {
+          chart.options.scales.x.grid && (chart.options.scales.x.grid.color = colors.grid);
+          chart.options.scales.x.ticks.color = colors.textLight;
+          if (chart.options.scales.x.title) chart.options.scales.x.title.color = colors.textLight;
+        }
+        if (chart.options.scales.y) {
+          chart.options.scales.y.grid && (chart.options.scales.y.grid.color = colors.grid);
+          chart.options.scales.y.ticks.color = colors.textLight;
+        }
+        if (chart.options.plugins.legend?.labels) {
+          chart.options.plugins.legend.labels.color = colors.textLight;
+        }
+        chart.update();
+      });
+    }
+
+    initCharts();
+  </script>
+</body>
+</html>
