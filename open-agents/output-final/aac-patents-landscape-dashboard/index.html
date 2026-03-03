@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAC Patent Landscape Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242836;
+    --border: #2d3148;
+    --text: #e4e6f0;
+    --text-muted: #8b8fa8;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,.12);
+    --orange: #f59e0b;
+    --orange-bg: rgba(245,158,11,.12);
+    --yellow: #eab308;
+    --yellow-bg: rgba(234,179,8,.12);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,.12);
+    --blue: #3b82f6;
+    --blue-bg: rgba(59,130,246,.12);
+    --purple: #a855f7;
+    --purple-bg: rgba(168,85,247,.12);
+    --cyan: #06b6d4;
+    --cyan-bg: rgba(6,182,212,.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+  a { color:var(--accent-light); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  .header { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%); padding:2rem; border-bottom:1px solid var(--border); }
+  .header h1 { font-size:1.8rem; margin-bottom:.3rem; }
+  .header p { color:var(--text-muted); font-size:.95rem; }
+  .header .meta { display:flex; gap:1.5rem; margin-top:.75rem; flex-wrap:wrap; }
+  .header .meta span { background:var(--surface2); padding:.25rem .75rem; border-radius:6px; font-size:.82rem; color:var(--text-muted); }
+
+  .container { max-width:1440px; margin:0 auto; padding:1.5rem; }
+
+  /* Navigation */
+  .nav-tabs { display:flex; gap:.5rem; margin-bottom:1.5rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.75rem; }
+  .nav-tab { padding:.5rem 1rem; border-radius:8px 8px 0 0; cursor:pointer; font-size:.88rem; background:transparent; color:var(--text-muted); border:1px solid transparent; transition:all .2s; }
+  .nav-tab:hover { background:var(--surface); color:var(--text); }
+  .nav-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* Stats bar */
+  .stats-bar { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .stat-card .label { font-size:.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; }
+  .stat-card .value { font-size:2rem; font-weight:700; margin:.25rem 0; }
+  .stat-card .sub { font-size:.82rem; color:var(--text-muted); }
+  .stat-card.high .value { color:var(--red); }
+  .stat-card.medium .value { color:var(--orange); }
+  .stat-card.low .value { color:var(--green); }
+
+  /* Filter bar */
+  .filter-bar { display:flex; gap:.75rem; margin-bottom:1.25rem; flex-wrap:wrap; align-items:center; }
+  .filter-bar input[type="text"] { flex:1; min-width:250px; padding:.6rem 1rem; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.9rem; }
+  .filter-bar input::placeholder { color:var(--text-muted); }
+  .filter-bar select { padding:.6rem .75rem; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.88rem; }
+  .filter-count { font-size:.82rem; color:var(--text-muted); }
+
+  /* Patent table */
+  .patent-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:10px; }
+  table { width:100%; border-collapse:collapse; font-size:.85rem; }
+  thead th { background:var(--surface2); padding:.75rem .6rem; text-align:left; font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.3px; color:var(--text-muted); position:sticky; top:0; cursor:pointer; white-space:nowrap; }
+  thead th:hover { color:var(--text); }
+  tbody tr { border-top:1px solid var(--border); }
+  tbody tr:hover { background:var(--surface); }
+  tbody td { padding:.6rem; vertical-align:top; }
+  .risk-high { color:var(--red); font-weight:600; }
+  .risk-medium { color:var(--orange); font-weight:600; }
+  .risk-low { color:var(--green); font-weight:600; }
+  .status-active { background:var(--green-bg); color:var(--green); padding:.15rem .5rem; border-radius:4px; font-size:.78rem; font-weight:500; }
+  .status-expired { background:var(--red-bg); color:var(--red); padding:.15rem .5rem; border-radius:4px; font-size:.78rem; font-weight:500; }
+  .status-pending { background:var(--yellow-bg); color:var(--yellow); padding:.15rem .5rem; border-radius:4px; font-size:.78rem; font-weight:500; }
+  .status-abandoned { background:rgba(107,114,128,.15); color:#9ca3af; padding:.15rem .5rem; border-radius:4px; font-size:.78rem; }
+  .cat-badge { display:inline-block; padding:.15rem .5rem; border-radius:4px; font-size:.73rem; font-weight:500; white-space:nowrap; }
+  .cat-eye { background:var(--cyan-bg); color:var(--cyan); }
+  .cat-lang { background:var(--purple-bg); color:var(--purple); }
+  .cat-soft { background:var(--blue-bg); color:var(--blue); }
+  .cat-sym { background:var(--orange-bg); color:var(--orange); }
+  .cat-ai { background:rgba(168,85,247,.12); color:#c084fc; }
+  .cat-input { background:rgba(34,197,94,.12); color:#4ade80; }
+  .cat-bci { background:rgba(244,63,94,.12); color:#fb7185; }
+  .cat-speech { background:rgba(251,191,36,.12); color:#fbbf24; }
+  .cat-device { background:rgba(96,165,250,.12); color:#60a5fa; }
+  .desc-text { max-width:320px; }
+
+  /* Company cards */
+  .company-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1rem; }
+  .company-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .company-card h3 { font-size:1.05rem; margin-bottom:.5rem; display:flex; align-items:center; gap:.5rem; }
+  .company-card .patents-count { font-size:.78rem; background:var(--accent); color:#fff; padding:.1rem .5rem; border-radius:12px; }
+  .company-card .detail { font-size:.85rem; color:var(--text-muted); margin-bottom:.4rem; }
+  .company-card .detail strong { color:var(--text); }
+  .company-card .links { margin-top:.75rem; display:flex; gap:.5rem; flex-wrap:wrap; }
+  .company-card .links a { font-size:.8rem; background:var(--surface2); padding:.3rem .6rem; border-radius:6px; }
+  .threat-level { display:inline-block; padding:.15rem .5rem; border-radius:4px; font-size:.78rem; font-weight:600; }
+  .threat-critical { background:rgba(239,68,68,.2); color:var(--red); }
+  .threat-high { background:rgba(245,158,11,.2); color:var(--orange); }
+  .threat-medium { background:rgba(234,179,8,.15); color:var(--yellow); }
+  .threat-low { background:var(--green-bg); color:var(--green); }
+
+  /* Litigation section */
+  .litigation-timeline { position:relative; }
+  .litigation-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; margin-bottom:1rem; border-left:4px solid var(--accent); }
+  .litigation-item h4 { font-size:.95rem; margin-bottom:.3rem; }
+  .litigation-item .lit-meta { font-size:.82rem; color:var(--text-muted); margin-bottom:.5rem; }
+  .litigation-item .lit-detail { font-size:.88rem; }
+  .litigation-item .lit-outcome { margin-top:.5rem; padding:.4rem .75rem; background:var(--surface2); border-radius:6px; font-size:.85rem; }
+
+  /* IP protections */
+  .ip-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1rem; }
+  .ip-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .ip-card h4 { font-size:.95rem; margin-bottom:.5rem; }
+  .ip-card .ip-type { font-size:.78rem; background:var(--purple-bg); color:var(--purple); padding:.15rem .5rem; border-radius:4px; display:inline-block; margin-bottom:.5rem; }
+  .ip-card .ip-detail { font-size:.85rem; color:var(--text-muted); margin-bottom:.3rem; }
+
+  /* Strategy cards */
+  .strategy-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:1rem; }
+  .strategy-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .strategy-card h4 { font-size:1rem; margin-bottom:.75rem; }
+  .strategy-card ul { padding-left:1.25rem; }
+  .strategy-card li { font-size:.88rem; margin-bottom:.4rem; color:var(--text-muted); }
+  .strategy-card li strong { color:var(--text); }
+  .whitespace { border-left:4px solid var(--green); }
+  .danger { border-left:4px solid var(--red); }
+  .caution { border-left:4px solid var(--orange); }
+
+  /* Charts */
+  .chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); gap:1.5rem; margin-bottom:1.5rem; }
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .chart-card h3 { font-size:1rem; margin-bottom:1rem; text-align:center; }
+  .chart-container { position:relative; width:100%; height:300px; }
+
+  .section-title { font-size:1.2rem; font-weight:700; margin:2rem 0 1rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
+
+  @media (max-width:768px) {
+    .stats-bar { grid-template-columns:repeat(2,1fr); }
+    .company-grid, .ip-grid, .strategy-grid { grid-template-columns:1fr; }
+    .chart-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AAC Patent Landscape Dashboard</h1>
+  <p>Comprehensive patent intelligence for Augmentative and Alternative Communication (AAC) market entry</p>
+  <div class="meta">
+    <span>Research Date: March 3, 2026</span>
+    <span>Patents Cataloged: 120+</span>
+    <span>Companies Analyzed: 25+</span>
+    <span>7 Parallel Research Agents</span>
+    <span>200+ Web Searches Conducted</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Navigation -->
+<div class="nav-tabs">
+  <div class="nav-tab active" data-tab="overview">Overview</div>
+  <div class="nav-tab" data-tab="patents">All Patents</div>
+  <div class="nav-tab" data-tab="companies">Companies</div>
+  <div class="nav-tab" data-tab="litigation">Litigation</div>
+  <div class="nav-tab" data-tab="ip-protections">IP Protections</div>
+  <div class="nav-tab" data-tab="strategy">Strategy</div>
+</div>
+
+<!-- ============ OVERVIEW TAB ============ -->
+<div class="tab-content active" id="tab-overview">
+
+<div class="stats-bar">
+  <div class="stat-card high"><div class="label">Critical Risk Patents</div><div class="value">28</div><div class="sub">Actively enforced, high relevance</div></div>
+  <div class="stat-card medium"><div class="label">Medium Risk Patents</div><div class="value">45</div><div class="sub">Growing coverage, some gaps</div></div>
+  <div class="stat-card low"><div class="label">Low Risk / Expired</div><div class="value">50+</div><div class="sub">Expired or limited AAC relevance</div></div>
+  <div class="stat-card"><div class="label">Key Patent Holders</div><div class="value" style="color:var(--accent)">8</div><div class="sub">Tobii, PRC-Saltillo, Microsoft, Apple...</div></div>
+  <div class="stat-card"><div class="label">Patent Litigations</div><div class="value" style="color:var(--orange)">5</div><div class="sub">Including Speak for Yourself landmark case</div></div>
+  <div class="stat-card"><div class="label">White Space Areas</div><div class="value" style="color:var(--green)">7</div><div class="sub">Innovation opportunities identified</div></div>
+</div>
+
+<div class="chart-grid">
+  <div class="chart-card">
+    <h3>Patents by Category</h3>
+    <div class="chart-container"><canvas id="chartCategory"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>Patents by Owner</h3>
+    <div class="chart-container"><canvas id="chartOwner"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>Risk Distribution</h3>
+    <div class="chart-container"><canvas id="chartRisk"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>Patent Status</h3>
+    <div class="chart-container"><canvas id="chartStatus"></canvas></div>
+  </div>
+</div>
+
+<h2 class="section-title">Executive Summary</h2>
+<div class="strategy-grid">
+  <div class="strategy-card danger">
+    <h4>Highest Risk Areas</h4>
+    <ul>
+      <li><strong>Eye-gaze AAC:</strong> Tobii holds 1,000+ patents. Any eye-tracking AAC product must navigate their portfolio or license.</li>
+      <li><strong>PRC-Saltillo enforces aggressively:</strong> The Speak for Yourself lawsuit led to app removal from Apple/Google stores WITHOUT a court injunction.</li>
+      <li><strong>Microsoft holds 2 key AAC patents:</strong> SGD proxies (US9,679,497) and conversation throughput (US10,262,555) directly target AAC interaction patterns.</li>
+      <li><strong>Apple's Personal Voice:</strong> Patent-protected voice synthesis built into every iOS device threatens voice-banking solutions.</li>
+    </ul>
+  </div>
+  <div class="strategy-card whitespace">
+    <h4>Biggest Opportunities</h4>
+    <ul>
+      <li><strong>LLM/GenAI-powered AAC:</strong> Nearly wide open patent territory for AAC-specific generative AI applications.</li>
+      <li><strong>Foundational AAC patents EXPIRED:</strong> Minspeak (US4,661,916), dynamic keyboards (US5,748,177, US5,920,303) are all expired.</li>
+      <li><strong>Symbol systems use copyright, not patents:</strong> You can create your own symbol set freely. Open alternatives (Mulberry, ARASAAC) exist.</li>
+      <li><strong>LAMP is a methodology, not patented:</strong> Motor planning principles are freely usable; only the specific LAMP Words for Life product is copyrighted.</li>
+      <li><strong>Multilingual/underserved language AAC:</strong> Virtually no patent protection exists.</li>
+      <li><strong>Teletherapy-integrated AAC:</strong> Unpatented intersection of AAC and remote therapy.</li>
+      <li><strong>Social media integration for AAC:</strong> No patent coverage for AAC designed for modern communication platforms.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section-title">Key Takeaways for New Market Entrant</h2>
+<div class="strategy-grid">
+  <div class="strategy-card caution">
+    <h4>Immediate Actions Required</h4>
+    <ul>
+      <li><strong>Formal Freedom-to-Operate analysis:</strong> Hire patent counsel to review Tobii eye-tracking patents and Microsoft AAC patents before developing any eye-gaze or SGD features.</li>
+      <li><strong>Review PRC-Saltillo patent portfolio:</strong> Understand which improvement patents are still active vs. expired (foundational ones are expired, newer ones active through 2027-2034).</li>
+      <li><strong>File provisional patents:</strong> In identified white spaces (LLM-powered AAC, multimodal adaptive systems, multilingual AAC) to establish priority dates.</li>
+      <li><strong>Monitor quarterly:</strong> Neuralink, Meta, Apple, and university patent filings for BCI and emerging tech developments.</li>
+    </ul>
+  </div>
+  <div class="strategy-card whitespace">
+    <h4>Safe Design Approaches</h4>
+    <ul>
+      <li><strong>Single-meaning symbols</strong> (not polysemous/Minspeak) with standard folder/category navigation</li>
+      <li><strong>Standard NLP-based word prediction</strong> (not PRC's specific "word chunk" approach)</li>
+      <li><strong>Apple's built-in eye tracking</strong> (iOS 18+) or licensed Tobii SDK rather than custom eye-tracking hardware</li>
+      <li><strong>Own original symbol artwork</strong> or use Mulberry (CC BY-SA, commercially usable)</li>
+      <li><strong>LLM-powered contextual suggestions</strong> (no existing AAC-specific patents)</li>
+      <li><strong>Open Board Format (.obf)</strong> for interoperability</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ============ ALL PATENTS TAB ============ -->
+<div class="tab-content" id="tab-patents">
+<h2 class="section-title">Complete Patent Registry</h2>
+
+<div class="filter-bar">
+  <input type="text" id="searchInput" placeholder="Search patents by number, title, owner, or description...">
+  <select id="filterCategory">
+    <option value="">All Categories</option>
+    <option value="eye">Eye Tracking</option>
+    <option value="lang">Language System</option>
+    <option value="device">AAC Device</option>
+    <option value="soft">Software/App</option>
+    <option value="ai">AI/NLP/Prediction</option>
+    <option value="input">Switch/Input</option>
+    <option value="bci">Brain-Computer Interface</option>
+    <option value="speech">Speech Synthesis</option>
+    <option value="sym">Symbol/Visual</option>
+  </select>
+  <select id="filterRisk">
+    <option value="">All Risk Levels</option>
+    <option value="HIGH">HIGH</option>
+    <option value="MEDIUM">MEDIUM</option>
+    <option value="LOW">LOW</option>
+  </select>
+  <select id="filterStatus">
+    <option value="">All Statuses</option>
+    <option value="Active">Active</option>
+    <option value="Expired">Expired</option>
+    <option value="Pending">Pending</option>
+    <option value="Abandoned">Abandoned</option>
+  </select>
+  <select id="filterOwner">
+    <option value="">All Owners</option>
+    <option value="Tobii">Tobii AB</option>
+    <option value="PRC">PRC-Saltillo / SCS</option>
+    <option value="Microsoft">Microsoft</option>
+    <option value="Apple">Apple</option>
+    <option value="Neuralink">Neuralink</option>
+    <option value="Neurable">Neurable</option>
+    <option value="Meta">Meta / Facebook</option>
+    <option value="Google">Google</option>
+    <option value="Control Bionics">Control Bionics</option>
+    <option value="DynaVox">DynaVox Systems</option>
+    <option value="other">Other</option>
+  </select>
+  <span class="filter-count" id="filterCount"></span>
+</div>
+
+<div class="patent-table-wrap">
+<table id="patentTable">
+<thead>
+<tr>
+  <th onclick="sortTable(0)">Patent #</th>
+  <th onclick="sortTable(1)">Title</th>
+  <th onclick="sortTable(2)">Owner</th>
+  <th onclick="sortTable(3)">Category</th>
+  <th onclick="sortTable(4)">Status</th>
+  <th onclick="sortTable(5)">Risk</th>
+  <th onclick="sortTable(6)">Filed</th>
+  <th>Description</th>
+  <th>Products</th>
+</tr>
+</thead>
+<tbody id="patentBody">
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ============ COMPANIES TAB ============ -->
+<div class="tab-content" id="tab-companies">
+<h2 class="section-title">Major Patent Holders</h2>
+<div class="company-grid">
+
+<div class="company-card">
+  <h3>Tobii AB / Tobii Dynavox <span class="threat-level threat-critical">CRITICAL</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 1,000+ patents & applications worldwide, 200+ granted US patents</div>
+  <div class="detail"><strong>Headquarters:</strong> Danderyd, Sweden (Tobii AB) / Pittsburgh, PA (Tobii Dynavox)</div>
+  <div class="detail"><strong>Focus:</strong> Eye tracking hardware, illumination, algorithms, gaze interaction UI, calibration, AR/VR integration</div>
+  <div class="detail"><strong>AAC Products:</strong> TD I-Series, TD Pilot, PCEye 5, TD Snap, Boardmaker, Communicator 5</div>
+  <div class="detail"><strong>Key Risk:</strong> Virtually impossible to build IR-based eye tracking AAC without touching their patents. Active litigator (won against Pupil Labs in 2025).</div>
+  <div class="detail"><strong>Also owns:</strong> PCS (Picture Communication Symbols) - 79,000+ symbols via copyright/trademark</div>
+  <div class="detail"><strong>IP Licensing:</strong> Dedicated licensing program at iplicensing@tobii.com</div>
+  <div class="links">
+    <a href="https://www.tobii.com/products/integration/ip-licensing" target="_blank">IP Licensing</a>
+    <a href="https://us.tobiidynavox.com/" target="_blank">Tobii Dynavox</a>
+    <a href="https://patents.justia.com/assignee/tobii-ab" target="_blank">Patents (Justia)</a>
+    <a href="https://insights.greyb.com/tobii-patents/" target="_blank">Patent Analysis</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>PRC-Saltillo / SCS <span class="threat-level threat-critical">CRITICAL</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 15+ active patents covering devices, language systems, word prediction</div>
+  <div class="detail"><strong>Headquarters:</strong> Wooster, OH, USA</div>
+  <div class="detail"><strong>Focus:</strong> Minspeak/semantic compaction, Unity language, LAMP methodology, dedicated AAC devices</div>
+  <div class="detail"><strong>AAC Products:</strong> Accent 1400/1000, PRiO, Via Pro, NovaChat, LAMP Words for Life</div>
+  <div class="detail"><strong>Key Risk:</strong> Aggressively enforces patents. Got Speak for Yourself removed from app stores without injunction. Acquired ALL Minspeak/Unity/SCS IP in 2020.</div>
+  <div class="detail"><strong>Also owns:</strong> SymbolStix (100,000+ symbols via n2y subsidiary), LAMP & Unity trademarks</div>
+  <div class="detail"><strong>Patent Counsel:</strong> Harness IP (retained specifically to "fend off others")</div>
+  <div class="links">
+    <a href="https://www.prentrom.com/patents" target="_blank">Patents Page</a>
+    <a href="https://prc-saltillo.com/" target="_blank">PRC-Saltillo</a>
+    <a href="https://patents.justia.com/assignee/semantic-compaction-systems-inc" target="_blank">SCS Patents</a>
+    <a href="https://minspeak.com/" target="_blank">Minspeak</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Microsoft <span class="threat-level threat-high">HIGH</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 2 direct AAC patents + 1,707 Nuance speech patents (acquired 2022)</div>
+  <div class="detail"><strong>Focus:</strong> SGD proxies, conversation throughput, AI suggestions, speech recognition</div>
+  <div class="detail"><strong>Key Patents:</strong> US9,679,497 (SGD proxies with emotional expression), US10,262,555 (AAC conversation throughput with real-time suggestions)</div>
+  <div class="detail"><strong>Key Risk:</strong> Only company with patents directly targeting core AAC interaction patterns including emotional proxies and partner-assisted communication.</div>
+  <div class="links">
+    <a href="https://patents.google.com/patent/US9679497B2" target="_blank">US9,679,497</a>
+    <a href="https://patents.google.com/patent/US10262555B2" target="_blank">US10,262,555</a>
+    <a href="https://www.microsoft.com/en-us/research/project/augmentative-and-alternative-communication/" target="_blank">MS AAC Research</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Apple Inc. <span class="threat-level threat-high">HIGH</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> Personal Voice synthesis patent + eye tracking patents for Vision Pro</div>
+  <div class="detail"><strong>Focus:</strong> On-device voice cloning, eye tracking (PCCR-based), accessibility features</div>
+  <div class="detail"><strong>Key Products:</strong> Personal Voice (iOS 17+), Live Speech, Eye Tracking (iOS 18+), Vision Pro</div>
+  <div class="detail"><strong>Key Risk:</strong> Built-in eye tracking on iOS 18+ disrupts dedicated eye-tracking hardware market. Personal Voice threatens voice-banking AAC solutions.</div>
+  <div class="links">
+    <a href="https://www.apple.com/accessibility/" target="_blank">Apple Accessibility</a>
+    <a href="https://machinelearning.apple.com/research/personal-voice" target="_blank">Personal Voice Research</a>
+    <a href="https://patents.google.com/patent/US20240004190A1" target="_blank">Eye Imaging Patent</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Neuralink Corp. <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 87 patent documents, 31 families, 49 active patents across 6 jurisdictions</div>
+  <div class="detail"><strong>Focus:</strong> Invasive BCI, electrode arrays, surgical robotics, neural processing, wireless power</div>
+  <div class="detail"><strong>Key Risk:</strong> Long-term threat. First human implant Jan 2024. Aggressive patent filing could constrain future BCI-based AAC.</div>
+  <div class="detail"><strong>Trademarks:</strong> Telepathy, Blindsight, Telekinesis (filed March 2025)</div>
+  <div class="links">
+    <a href="https://neuralink.com/" target="_blank">Neuralink</a>
+    <a href="https://insights.greyb.com/neuralink-patents/" target="_blank">Patent Analysis</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Meta / CTRL-Labs <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> Multiple EMG/neural interface patents from CTRL-Labs acquisition (~$500M-1B, 2019)</div>
+  <div class="detail"><strong>Focus:</strong> Surface EMG, neuromuscular sensing, wearable neural wristband</div>
+  <div class="detail"><strong>Key Patents:</strong> US10,592,001, US10,921,764 (neuromuscular signal processing), US10,795,440 (BCI text prediction)</div>
+  <div class="detail"><strong>Key Risk:</strong> Neural wristband shipped Sept 2025. Growing patent portfolio in wearable EMG input relevant to AAC.</div>
+  <div class="links">
+    <a href="https://patents.google.com/patent/US10795440" target="_blank">BCI Text Patent</a>
+    <a href="https://www.meta.com/blog/reality-labs-surface-emg-research-nature-publication-ar-glasses-orion/" target="_blank">sEMG Research</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Google / Alphabet <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> Project Euphonia atypical speech patent + multiple speech/TTS/keyboard patents</div>
+  <div class="detail"><strong>Focus:</strong> Atypical speech recognition, neural keyboard input, on-device speech synthesis</div>
+  <div class="detail"><strong>Key Patent:</strong> Multi-recognizer approach for atypical speech (published June 2023)</div>
+  <div class="detail"><strong>Key Risk:</strong> Primarily for speech recognition/synthesis aspects. Google's AI leadership means more AAC-relevant patents likely coming.</div>
+  <div class="links">
+    <a href="https://sites.research.google/euphonia/about/" target="_blank">Project Euphonia</a>
+    <a href="https://patents.google.com/patent/US10671281B2" target="_blank">Neural Keyboard</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Control Bionics <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> Multiple patents on EMG-based assistive technology</div>
+  <div class="detail"><strong>Focus:</strong> EMG switch access, adaptive thresholding, context-sensitive AAC interfaces</div>
+  <div class="detail"><strong>Key Patent:</strong> US11,284,844 (adaptive threshold EMG switch), WO2019/099831 (EMG AAC with context UI)</div>
+  <div class="detail"><strong>AAC Products:</strong> NeuroNode (wearable EMG sensor), NeuroStrip, Cosmos Connect software</div>
+  <div class="links">
+    <a href="https://www.controlbionics.com/" target="_blank">Control Bionics</a>
+    <a href="https://patents.google.com/patent/WO2019099831A1" target="_blank">EMG AAC Patent</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Neurable Inc. <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 2+ granted US patents on non-invasive BCI + eye tracking hybrid</div>
+  <div class="detail"><strong>Focus:</strong> Hardware-agnostic BCI with real-time eye-movement tracking integration</div>
+  <div class="detail"><strong>Key Patents:</strong> US11,972,049 and US11,269,414 (BCI with eye tracking)</div>
+  <div class="links">
+    <a href="https://patents.google.com/patent/US11972049" target="_blank">US11,972,049</a>
+    <a href="https://patents.google.com/patent/US11269414B2" target="_blank">US11,269,414</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Spoken Inc. <span class="threat-level threat-high">HIGH</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> 1 key patent on context-aware predictive AAC</div>
+  <div class="detail"><strong>Key Patent:</strong> US11,145,313 B2 - Context-aware predictive speech specifically for AAC users</div>
+  <div class="detail"><strong>Key Risk:</strong> Most directly competitive patent for any AAC app with smart prediction features. Covers location-aware, time-aware, and context-sensitive word/phrase prediction in AAC.</div>
+  <div class="links">
+    <a href="https://patents.google.com/patent/US11145313B2" target="_blank">US11,145,313</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Forbes AAC / MavWare <span class="threat-level threat-low">LOW</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> FlexABLE Handle/Stand patent, Enable Eyes software</div>
+  <div class="detail"><strong>Focus:</strong> iOS-based AAC devices, eye-tracking software, hardware accessories</div>
+  <div class="detail"><strong>AAC Products:</strong> ProSlate, WinSlate, SoundPOD, Enable Eyes</div>
+  <div class="detail"><strong>Note:</strong> Acquired CoughDrop (formerly open-source). Open-source license discontinued for future updates.</div>
+  <div class="links">
+    <a href="https://www.forbesaac.com/" target="_blank">Forbes AAC</a>
+  </div>
+</div>
+
+<div class="company-card">
+  <h3>Cognixion <span class="threat-level threat-medium">MEDIUM</span></h3>
+  <div class="detail"><strong>Portfolio:</strong> BCI + AR headset patents for AAC</div>
+  <div class="detail"><strong>Key Patent:</strong> US10,990,175 - BCI with augmented reality for AAC communication</div>
+  <div class="detail"><strong>Note:</strong> FDA Breakthrough Device designation. Combines non-invasive BCI with AR display for hands-free AAC.</div>
+  <div class="links">
+    <a href="https://patents.google.com/patent/US10990175" target="_blank">US10,990,175</a>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- ============ LITIGATION TAB ============ -->
+<div class="tab-content" id="tab-litigation">
+<h2 class="section-title">Patent Litigation History in AAC</h2>
+
+<div class="litigation-timeline">
+
+<div class="litigation-item" style="border-left-color:var(--red)">
+  <h4>PRC / Semantic Compaction Systems v. Speak for Yourself (2012-2013)</h4>
+  <div class="lit-meta">Landmark Case | Federal Court, USA | Patents: US5,748,177 & US5,920,303</div>
+  <div class="lit-detail">
+    <p>The most important AAC patent litigation case in history. PRC and SCS sued Speak for Yourself LLC, a small AAC app developer, for infringement of two dynamic keyboard patents. Despite <strong>no court injunction being issued</strong>, Apple removed SfY from the App Store and Google removed it from Play Store, silencing actual AAC users who relied on the app.</p>
+    <p style="margin-top:.5rem"><strong>Key lesson:</strong> Platform gatekeepers (Apple/Google) can amplify patent enforcement far beyond what courts order. A patent complaint alone may be enough to get a competing app removed.</p>
+  </div>
+  <div class="lit-outcome"><strong>Outcome:</strong> Settlement - SCS granted Speak for Yourself a non-exclusive license. Both asserted patents have since EXPIRED (2015 and 2017). <a href="https://www.techdirt.com/articles/20120326/08230818246/patents-threaten-to-silence-little-girl-literally.shtml" target="_blank">Coverage</a></div>
+</div>
+
+<div class="litigation-item" style="border-left-color:var(--orange)">
+  <h4>Tobii AB v. Pupil Labs GmbH (Germany, 2025)</h4>
+  <div class="lit-meta">Munich Regional Court I | Case 7 O 15033/24 | Patent: EP 3,332,285 B1 | Ruled Oct 9, 2025</div>
+  <div class="lit-detail">
+    <p>Tobii sued Pupil Labs, maker of "Neon" and "Pupil Invisible" eye-tracking systems, for patent infringement in Germany. The court ruled partially in Tobii's favor, prohibiting Pupil Labs from offering/delivering certain products without Tobii's permission and ordering damages.</p>
+  </div>
+  <div class="lit-outcome"><strong>Outcome:</strong> Partial win for Tobii. Demonstrates Tobii's willingness and ability to enforce patents internationally. Subject to appeal. <a href="https://pupil-labs.com/blog/tobii-ab-vs-pupil-labs-gmbh-patent-lawsuit" target="_blank">Pupil Labs Response</a></div>
+</div>
+
+<div class="litigation-item" style="border-left-color:var(--yellow)">
+  <h4>University of Virginia Patent Foundation v. DynaVox Systems (2015)</h4>
+  <div class="lit-meta">U.S. District Court, Western District of Virginia | Case 3:2015cv00015 | Filed March 27, 2015</div>
+  <div class="lit-detail">
+    <p>UVA sued DynaVox for breach of contract - failure to pay royalties for the "ERICA" eye gaze system patents. DynaVox held an exclusive license to UVA-developed eye-gaze computer apparatus patents and paid royalties from 2005-2009 before stopping.</p>
+  </div>
+  <div class="lit-outcome"><strong>Outcome:</strong> Shows Tobii Dynavox's eye tracking AAC technology has roots in university-licensed IP. <a href="https://legalnewsline.com/stories/510628654-university-of-virginia-s-patent-foundation-sues-pittsburgh-company-over-eye-tracking-products" target="_blank">Coverage</a></div>
+</div>
+
+<div class="litigation-item">
+  <h4>Tobii Technology, Inc. v. Weinblatt (USA, 2020)</h4>
+  <div class="lit-meta">Declaratory Judgment Action | 2020</div>
+  <div class="lit-detail">
+    <p>In April 2020, Weinblatt sent a letter to Tobii claiming infringement of his patents by Tobii products (Pro Lab, Pro Spectrum, Pro Fusion). Tobii responded by filing a declaratory judgment action seeking a noninfringement ruling.</p>
+  </div>
+  <div class="lit-outcome"><strong>Outcome:</strong> Demonstrates Tobii proactively litigates to protect freedom to operate. <a href="https://www.finnegan.com/en/insights/articles/augmented-realityvirtual-reality-litigation-update-tobii-technology-inc-v-weinblatt.html" target="_blank">Analysis</a></div>
+</div>
+
+<div class="litigation-item">
+  <h4>Harness IP / SCS Patent Enforcement Program (Ongoing)</h4>
+  <div class="lit-meta">PRC-Saltillo's retained patent counsel</div>
+  <div class="lit-detail">
+    <p>PRC-Saltillo retains Harness IP specifically to "fend off others" from their Minspeak/semantic compaction intellectual property. This is a standing enforcement program, not a single case. Harness IP publicly describes their work as a case study in protecting assistive technology patents.</p>
+  </div>
+  <div class="lit-outcome"><strong>Implication:</strong> Any new AAC product that appears to infringe PRC-Saltillo patents will face legal scrutiny. Budget for IP legal review. <a href="https://www.harnessip.com/global-ip-services/case-studies/harness-dickey-helps-semantic-compaction-systems-to-assist-disabled-individuals-to-speak-out/" target="_blank">Case Study</a></div>
+</div>
+
+</div>
+</div>
+
+<!-- ============ IP PROTECTIONS TAB ============ -->
+<div class="tab-content" id="tab-ip-protections">
+<h2 class="section-title">Non-Patent IP Protections (Copyrights, Trademarks, Trade Secrets)</h2>
+<p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem;">Symbol sets in AAC are primarily protected by <strong>copyright and trademark</strong>, not patents. These protections are often MORE important barriers than patents for entering the AAC space.</p>
+
+<div class="ip-grid">
+
+<div class="ip-card">
+  <h4>PCS (Picture Communication Symbols)</h4>
+  <span class="ip-type">Trademark + Copyright</span>
+  <div class="ip-detail"><strong>Owner:</strong> Tobii Dynavox (via Mayer-Johnson LLC)</div>
+  <div class="ip-detail"><strong>Size:</strong> 79,000+ symbols in multiple languages</div>
+  <div class="ip-detail"><strong>Copyright since:</strong> 1981</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-critical">VERY HIGH</span> - The dominant AAC symbol set globally. Clinicians trained on PCS, users familiar with them.</div>
+  <div class="ip-detail"><strong>Licensing:</strong> Available from Tobii Dynavox. <a href="https://www.tobiidynavox.com/pages/pcs-licensing" target="_blank">PCS Licensing</a></div>
+</div>
+
+<div class="ip-card">
+  <h4>SymbolStix / SymbolStix PRIME</h4>
+  <span class="ip-type">Copyright</span>
+  <div class="ip-detail"><strong>Owner:</strong> n2y, LLC / PRC-Saltillo</div>
+  <div class="ip-detail"><strong>Size:</strong> 100,000+ symbols</div>
+  <div class="ip-detail"><strong>Licensing:</strong> Per-person license. Limited to 100 symbols per material. Must include copyright statement.</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-high">HIGH</span></div>
+</div>
+
+<div class="ip-card">
+  <h4>Widgit Symbols</h4>
+  <span class="ip-type">Copyright</span>
+  <div class="ip-detail"><strong>Owner:</strong> Widgit Software (UK)</div>
+  <div class="ip-detail"><strong>Market:</strong> Strong in UK/European markets</div>
+  <div class="ip-detail"><strong>Licensing:</strong> Copyright permission required. Contact: copyright@widgit.com</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-high">MEDIUM-HIGH</span></div>
+</div>
+
+<div class="ip-card">
+  <h4>PECS Method</h4>
+  <span class="ip-type">Registered Trademark</span>
+  <div class="ip-detail"><strong>Owner:</strong> Pyramid Educational Consultants, Inc.</div>
+  <div class="ip-detail"><strong>Reg. No.:</strong> US 4200959 (filed July 2011)</div>
+  <div class="ip-detail"><strong>Note:</strong> PECS is a method/protocol. You CAN create a picture exchange system; you CANNOT call it "PECS".</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-medium">MEDIUM</span> - Trademark on name, not concept</div>
+</div>
+
+<div class="ip-card">
+  <h4>Makaton</h4>
+  <span class="ip-type">Trademark + Copyright</span>
+  <div class="ip-detail"><strong>Owner:</strong> The Makaton Charity (UK)</div>
+  <div class="ip-detail"><strong>Trademark:</strong> UK No. 1119745 (since 1979)</div>
+  <div class="ip-detail"><strong>Covers:</strong> Word lists, vocabulary, symbol graphics, sign graphics, name</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-medium">MEDIUM</span> - Primarily UK market</div>
+</div>
+
+<div class="ip-card">
+  <h4>Minspeak / Unity / LAMP</h4>
+  <span class="ip-type">Patents + Trademarks + Copyrights</span>
+  <div class="ip-detail"><strong>Owner:</strong> PRC-Saltillo</div>
+  <div class="ip-detail"><strong>Trademarks:</strong> Minspeak&reg;, Unity&reg;, LAMP</div>
+  <div class="ip-detail"><strong>Note:</strong> LAMP is a therapeutic methodology (not patented as a method). Specific implementations copyrighted. Motor planning concepts freely usable.</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-critical">VERY HIGH</span> - Triple protection enforced aggressively</div>
+</div>
+
+<div class="ip-card">
+  <h4>Blissymbolics</h4>
+  <span class="ip-type">Perpetual Copyright (Open License Available)</span>
+  <div class="ip-detail"><strong>Owner:</strong> Blissymbolics Communication International (BCI)</div>
+  <div class="ip-detail"><strong>Size:</strong> 5,000+ authorized symbols</div>
+  <div class="ip-detail"><strong>Licensing:</strong> Free copyleft license OR proprietary license agreement</div>
+  <div class="ip-detail"><strong>Note:</strong> Basis for W3C AAC Symbol Registry standard</div>
+  <div class="ip-detail"><strong>Barrier Level:</strong> <span class="threat-level threat-low">LOW</span> - Generous licensing</div>
+</div>
+
+</div>
+
+<h2 class="section-title">Open-Licensed Symbol Alternatives</h2>
+<div class="ip-grid">
+
+<div class="ip-card" style="border-left:3px solid var(--green)">
+  <h4>Mulberry Symbols</h4>
+  <div class="ip-detail"><strong>License:</strong> CC BY-SA 2.0 UK - <strong>Commercially usable</strong></div>
+  <div class="ip-detail"><strong>Size:</strong> 3,000+ symbols (SVG format)</div>
+  <div class="ip-detail"><strong>Best for:</strong> Adult AAC users</div>
+  <div class="ip-detail"><a href="https://mulberrysymbols.org/" target="_blank">mulberrysymbols.org</a> | <a href="https://github.com/mulberrysymbols/mulberry-symbols" target="_blank">GitHub</a></div>
+</div>
+
+<div class="ip-card" style="border-left:3px solid var(--green)">
+  <h4>ARASAAC</h4>
+  <div class="ip-detail"><strong>License:</strong> CC BY-NC-SA (non-commercial clause - review carefully)</div>
+  <div class="ip-detail"><strong>Size:</strong> 13,000+ symbols</div>
+  <div class="ip-detail"><a href="https://arasaac.org/" target="_blank">arasaac.org</a></div>
+</div>
+
+<div class="ip-card" style="border-left:3px solid var(--green)">
+  <h4>Open Symbols (Aggregator)</h4>
+  <div class="ip-detail"><strong>Size:</strong> 57,000-60,000+ from multiple libraries</div>
+  <div class="ip-detail"><strong>License:</strong> Various (depends on source library)</div>
+  <div class="ip-detail"><a href="https://www.opensymbols.org/" target="_blank">opensymbols.org</a></div>
+</div>
+
+<div class="ip-card" style="border-left:3px solid var(--green)">
+  <h4>Open Board Format (.obf)</h4>
+  <div class="ip-detail"><strong>Type:</strong> Open standard for communication board interoperability</div>
+  <div class="ip-detail"><strong>Format:</strong> JSON-based, vendor-neutral</div>
+  <div class="ip-detail"><strong>Adoption:</strong> CoughDrop, Cboard, and others</div>
+  <div class="ip-detail"><a href="https://www.openboardformat.org/" target="_blank">openboardformat.org</a></div>
+</div>
+
+</div>
+</div>
+
+<!-- ============ STRATEGY TAB ============ -->
+<div class="tab-content" id="tab-strategy">
+<h2 class="section-title">Patent Risk Assessment Matrix</h2>
+
+<div class="patent-table-wrap" style="margin-bottom:2rem">
+<table>
+<thead>
+<tr>
+  <th>Technology Area</th>
+  <th>Risk Level</th>
+  <th>Key Patent Holder(s)</th>
+  <th>Key Patents</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Eye-gaze AAC devices</td><td><span class="risk-high">CRITICAL</span></td><td>Tobii AB</td><td>1,000+ patent portfolio</td><td>Licensing likely required. No practical workaround for IR-based eye tracking.</td></tr>
+<tr><td>SGD proxies & conversation enhancement</td><td><span class="risk-high">HIGH</span></td><td>Microsoft</td><td>US9,679,497; US10,262,555</td><td>Covers emotional expression proxies, real-time suggestions, partner-assisted communication.</td></tr>
+<tr><td>Context-aware predictive AAC</td><td><span class="risk-high">HIGH</span></td><td>Spoken Inc.</td><td>US11,145,313</td><td>Most directly competitive for AAC apps with smart prediction.</td></tr>
+<tr><td>Minspeak / polysemous icon encoding</td><td><span class="risk-high">HIGH</span></td><td>PRC-Saltillo</td><td>Active improvement patents</td><td>Foundational patents expired but newer improvement patents active through 2027-2034.</td></tr>
+<tr><td>Word prediction via word chunks</td><td><span class="risk-medium">MEDIUM</span></td><td>PRC-Saltillo/SCS</td><td>US7,177,797; US7,194,404; US7,318,019</td><td>Specific "word chunk" method patented. Standard NLP prediction may be safe.</td></tr>
+<tr><td>Personal voice synthesis (iOS)</td><td><span class="risk-medium">MEDIUM</span></td><td>Apple</td><td>App. 17/973,395</td><td>Could constrain voice-banking on Apple platforms.</td></tr>
+<tr><td>Atypical speech recognition</td><td><span class="risk-medium">MEDIUM</span></td><td>Google</td><td>Published June 2023</td><td>Multi-recognizer approach for atypical speech. Growing area.</td></tr>
+<tr><td>EMG/silent speech wearables</td><td><span class="risk-medium">MEDIUM</span></td><td>Meta, Cornell, Control Bionics</td><td>Multiple</td><td>Growing filings. Direct AAC EMG patent from Control Bionics.</td></tr>
+<tr><td>Brain-computer interfaces</td><td><span class="risk-medium">MEDIUM</span></td><td>Neuralink, Neurable, Stanford</td><td>87+ documents (Neuralink)</td><td>Early-stage but aggressive filing. Future constraint.</td></tr>
+<tr><td>Dynamic keyboard redefinition</td><td><span class="risk-low">LOW</span></td><td>PRC-Saltillo (expired)</td><td>US5,748,177; US5,920,303</td><td>Both EXPIRED. Previously used in litigation. Now safe.</td></tr>
+<tr><td>Semantic compaction (basic)</td><td><span class="risk-low">LOW</span></td><td>PRC-Saltillo (expired)</td><td>US4,661,916; US5,097,425</td><td>Foundational Baker patents EXPIRED. Basic concept freely usable.</td></tr>
+<tr><td>LLM/GenAI-powered AAC</td><td><span class="risk-low">LOW</span></td><td>None (white space)</td><td>N/A</td><td>Biggest opportunity. AAC-specific LLM patents essentially don't exist yet.</td></tr>
+<tr><td>Consistent motor planning (concept)</td><td><span class="risk-low">LOW</span></td><td>N/A</td><td>N/A</td><td>LAMP is a methodology, not patented. Specific implementations copyrighted.</td></tr>
+<tr><td>Own original symbol creation</td><td><span class="risk-low">LOW</span></td><td>N/A</td><td>N/A</td><td>No patent barriers. You own your own artwork.</td></tr>
+<tr><td>Multilingual/underserved language AAC</td><td><span class="risk-low">LOW</span></td><td>None</td><td>N/A</td><td>Virtually no patent protection in this space.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 class="section-title">White Space Innovation Opportunities</h2>
+<div class="strategy-grid">
+
+<div class="strategy-card whitespace">
+  <h4>1. LLM/GenAI-Powered AAC (Top Priority)</h4>
+  <ul>
+    <li>Context-aware message generation using large language models</li>
+    <li>Personalized vocabulary prediction with transformer models</li>
+    <li>Automated conversation scaffolding for AAC users</li>
+    <li>Smart phrase generation from minimal input (1-2 symbols to full sentences)</li>
+    <li><strong>Patent landscape: Nearly wide open</strong> for AAC-specific applications</li>
+    <li>Research shows 57% more motor action savings than traditional predictive keyboards</li>
+    <li>Eye-gaze AAC users show 29-60% text-entry rate improvements with LLM assistance</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>2. Multimodal Unified AAC Platform</h4>
+  <ul>
+    <li>Combine touch, eye-gaze, voice, gesture, and BCI in single adaptive system</li>
+    <li>Real-time automatic switching between modalities based on user state and fatigue</li>
+    <li>IRISBOND is pursuing this but patent coverage appears limited</li>
+    <li>Could file first-mover patents on adaptive modality switching</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>3. AAC for Underserved Languages & Cultures</h4>
+  <ul>
+    <li>Multilingual AAC with culturally appropriate symbols</li>
+    <li>Tonal language support (Mandarin, Vietnamese, Thai, etc.)</li>
+    <li>Non-Latin script AAC (Arabic, Devanagari, CJK)</li>
+    <li>Virtually no patent protection in this space - huge market opportunity</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>4. Teletherapy-Integrated AAC</h4>
+  <ul>
+    <li>AAC platforms with built-in SLP consultation and remote monitoring</li>
+    <li>Data analytics for therapy outcome tracking</li>
+    <li>Remote assessment and device configuration tools</li>
+    <li>Patent white space at AAC-telehealth intersection</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>5. AI-Powered Symbol Generation</h4>
+  <ul>
+    <li>Generate personalized symbols from photos using generative AI</li>
+    <li>Create culturally relevant symbols on demand</li>
+    <li>Adaptive symbol complexity based on user cognitive level</li>
+    <li>No existing patents on AI-generated AAC symbols</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>6. Social Media & Modern Communication</h4>
+  <ul>
+    <li>AAC interfaces designed for TikTok, Instagram, Discord, etc.</li>
+    <li>Emoji and meme generation for AAC users</li>
+    <li>Real-time group chat participation tools</li>
+    <li>Essentially no patent coverage in this space</li>
+  </ul>
+</div>
+
+<div class="strategy-card whitespace">
+  <h4>7. Edge AI / On-Device Intelligence</h4>
+  <ul>
+    <li>Running personalized language models entirely on-device for privacy and speed</li>
+    <li>Federated learning across AAC users for improved predictions</li>
+    <li>Limited patent coverage for AAC-specific edge AI</li>
+  </ul>
+</div>
+
+</div>
+
+<h2 class="section-title">Recommended Patent Filing Strategy</h2>
+<div class="strategy-grid">
+<div class="strategy-card caution">
+  <h4>Defensive Patent Filings (File Provisionals Immediately)</h4>
+  <ul>
+    <li>LLM-powered contextual AAC message generation</li>
+    <li>Adaptive modality switching in multimodal AAC systems</li>
+    <li>AI-generated personalized AAC symbol creation</li>
+    <li>Federated learning for on-device AAC prediction models</li>
+    <li>Real-time group conversation participation via AAC</li>
+    <li>Teletherapy-integrated AAC with outcome analytics</li>
+    <li>Culturally adaptive multilingual AAC vocabulary systems</li>
+  </ul>
+</div>
+<div class="strategy-card">
+  <h4>Licensing Negotiations to Pursue</h4>
+  <ul>
+    <li><strong>Tobii AB:</strong> If building eye-gaze features, contact iplicensing@tobii.com for SDK/patent licensing</li>
+    <li><strong>Apple Built-in Eye Tracking:</strong> Leverage iOS 18+ camera-based eye tracking (no Tobii license needed)</li>
+    <li><strong>Tobii Dynavox:</strong> PCS symbol licensing if clinical adoption is critical</li>
+    <li><strong>Mulberry Symbols:</strong> CC BY-SA - commercially usable with attribution, no licensing fee</li>
+    <li><strong>Open Board Format:</strong> Support .obf for interoperability (freely available)</li>
+  </ul>
+</div>
+</div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// Patent data
+const patents = [
+  // === EYE TRACKING (Tobii) ===
+  {num:"US8,025,405 B2",title:"Eye Tracking Illumination (Adaptive)",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2006",desc:"Adaptive illumination system for eye tracking. Variable light beams directed based on eye position estimate. Foundational for all Tobii eye trackers.",products:"PCEye, Eye Tracker 5, I-Series",link:"https://patents.google.com/patent/US8025405B2/en"},
+  {num:"US7,572,008 B2",title:"Eye/Gaze Direction Detection Method",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"~2004",desc:"Fundamental PCCR eye tracking method using photo sensor and light sources around display. Core technology underlying all Tobii screen-based eye trackers.",products:"All Tobii screen-based trackers",link:"https://patents.google.com/patent/US7572008B2/en"},
+  {num:"US10,394,019 B2",title:"Determining Eye Openness",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"~2017",desc:"Blink detection using eye tracking device. Critical selection mechanism for AAC users who cannot use dwell time.",products:"Eye Tracker 5, TD I-Series, PCEye",link:"https://patents.google.com/patent/US10394019B2"},
+  {num:"US11,144,755",title:"Support Glint for Remote Eye Tracking",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2019",desc:"Main and support illuminators for enhanced contrast and glint position. Uses bright pupil and dark pupil imaging.",products:"PCEye 5, TD I-Series",link:"https://patents.google.com/patent/US11144755"},
+  {num:"US9,147,248 B2",title:"Hardware Calibration of Eye Tracker",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2012",desc:"Method for calibrating gaze tracking device to display using graphical guide objects. Essential for all eye-gaze AAC.",products:"All Tobii eye trackers",link:"https://patents.google.com/patent/US9147248B2"},
+  {num:"US9,507,418 B2",title:"Eye Tracker Based Contextual Action",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2011",desc:"Triggering contextual actions based on what user is looking at. Core patent for gaze-based interaction paradigms.",products:"TD Control, Tobii Gaze Interaction",link:"https://patents.google.com/patent/US9507418B2/en"},
+  {num:"US9,864,498 B2",title:"Automatic Scrolling Based on Gaze Detection",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"~2013",desc:"Automatic content scrolling based on gaze zone detection. Essential for text communication and symbol board navigation.",products:"TD Control, Windows Eye Control",link:"https://patents.google.com/patent/US9864498B2/en"},
+  {num:"US9,619,020 B2",title:"Delay Warp Gaze Interaction",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"~2014",desc:"Visual cursor moves to gaze target after ~200ms delay, allowing abort. Prevents accidental selections critical for reliable AAC.",products:"TD Control, Tobii Experience",link:"https://patents.google.com/patent/US9619020B2"},
+  {num:"US12,254,414",title:"Deep Generative Model for Gaze Prediction",owner:"Tobii AB",ownerKey:"Tobii",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"MEDIUM",filed:"2024",desc:"AEGAN synthetic data generation for boosting gaze prediction neural networks.",products:"Next-gen Tobii algorithms",link:"https://patents.google.com/patent/US12254414"},
+  {num:"US12,373,026",title:"Eye Tracking System (Corneal Topography)",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"~2022",desc:"3D corneal reflection topography for precise eye tracking. Improves accuracy for atypical eye conditions.",products:"Next-gen Tobii trackers",link:"https://patents.google.com/patent/US12373026"},
+  {num:"US11,256,327",title:"Eye Tracking Device Manufacturing",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"2018",desc:"Manufacturing method with over-molded illuminators and imaging modules. Relevant if building competing hardware.",products:"PCEye 5, TD I-Series",link:"https://patents.google.com/patent/US11256327"},
+  {num:"US10,739,851 B2",title:"Eye-Tracking Enabled Wearable Devices",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"~2016",desc:"Wearable device with optical element, light source, and sensor for eye tracking. Relevant for mobile AAC.",products:"Tobii Pro Glasses, HMD integrations",link:"https://patents.google.com/patent/US10739851"},
+  {num:"US12,293,017",title:"Calibration Guidance for Eye Tracking",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"2024",desc:"Self-guided calibration using color-changing markers (green approaching, red departing). Important for independent AAC users.",products:"Tobii Pro Glasses 3",link:"https://patents.google.com/patent/US12293017"},
+  {num:"US11,966,047 B2",title:"HMD Eye Tracking (Reduced Reflections)",owner:"Tobii AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"LOW",filed:"~2021",desc:"P-polarized illumination at Brewster's angle reduces reflections from glasses in HMD eye tracking.",products:"Tobii XR integrations",link:"https://patents.google.com/patent/US11966047B2"},
+  {num:"US10,031,576",title:"Speech Generation Device (Head-Mounted)",owner:"DynaVox Systems LLC",ownerKey:"DynaVox",cat:"device",catLabel:"AAC Device",status:"Active",risk:"HIGH",filed:"2011",desc:"SGD with head-mounted display, projector, optical input, speaker, and TTS. Covers wearable AAC concept.",products:"DynaVox historical; future wearable AAC",link:"https://patents.google.com/patent/US10031576"},
+  {num:"EP2,801,009 B1",title:"System for Gaze Interaction (Gaze+Gesture)",owner:"Tobii Technology AB",ownerKey:"Tobii",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2012",desc:"Combining gaze-based input with gesture commands for touchscreen-like interaction without touchscreen.",products:"TD Control",link:"https://patents.google.com/patent/EP2801009B1/en"},
+
+  // === PRC-SALTILLO / SCS ===
+  {num:"US4,661,916",title:"Communication System (Minspeak - Foundational)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Expired",risk:"LOW",filed:"~1985",desc:"Foundational patent for Minspeak - polysemic icon encoding system for AAC. The original semantic compaction patent.",products:"All Minspeak/Unity PRC devices",link:"https://patents.google.com/patent/US4661916"},
+  {num:"US5,097,425",title:"Communication System (Semantic Compaction Improvements)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Expired",risk:"LOW",filed:"~1989",desc:"Improvements to Minspeak semantic compaction encoding methodology.",products:"PRC AAC devices",link:"https://patents.google.com/patent/US5097425"},
+  {num:"US5,210,689",title:"Communication System (Further Semantic Compaction)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Expired",risk:"LOW",filed:"~1990",desc:"Further refinements to polysemic iconic encoding in AAC systems.",products:"PRC AAC devices",link:"https://patents.google.com/patent/US5210689"},
+  {num:"US5,748,177",title:"Dynamic Keyboard (AAC Key Redefinition)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Expired",risk:"LOW",filed:"1995",desc:"Dynamic keyboard with keys that are dynamically redefinable to access higher level keyboards. Used in SfY lawsuit. NOW EXPIRED.",products:"All dynamic-display AAC devices",link:"https://patents.google.com/patent/US5748177A/en"},
+  {num:"US5,920,303",title:"Dynamic Keyboard (Continuation)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Expired",risk:"LOW",filed:"1997",desc:"Continuation of US5,748,177. Second patent used in Speak for Yourself lawsuit. NOW EXPIRED.",products:"All dynamic-display AAC devices",link:"https://patents.google.com/patent/US5920303A/en"},
+  {num:"US7,177,797 B1",title:"Linguistic Retrieval System (Word Chunks)",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"HIGH",filed:"2000",desc:"Word prediction using 'word chunks' - displays selectable words and word portions to reduce input activations needed.",products:"Accent devices",link:"https://patents.google.com/patent/US7177797"},
+  {num:"US7,194,404 B1",title:"Linguistic Retrieval System and Method",owner:"PRC / SCS",ownerKey:"PRC",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"HIGH",filed:"~2001",desc:"Linguistic retrieval system for AAC device word prediction.",products:"Accent devices",link:"https://patents.google.com/patent/US7194404"},
+  {num:"US7,318,019 B1",title:"Linguistic Retrieval System and Method",owner:"PRC / SCS",ownerKey:"PRC",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"HIGH",filed:"~2002",desc:"Further improvements to linguistic retrieval for AAC word prediction.",products:"Accent devices",link:"https://patents.google.com/patent/US7318019"},
+  {num:"US8,577,279 B2",title:"AAC Device (Visual Scene Display)",owner:"PRC / SCS",ownerKey:"PRC",cat:"device",catLabel:"AAC Device",status:"Active",risk:"MEDIUM",filed:"~2009",desc:"Visual scene display improvements for AAC devices.",products:"Accent, PRiO devices",link:"https://patents.google.com/patent/US8577279"},
+  {num:"US9,202,298 B2",title:"AAC Device Improvements",owner:"PRC / SCS",ownerKey:"PRC",cat:"device",catLabel:"AAC Device",status:"Active",risk:"MEDIUM",filed:"~2012",desc:"Device-specific AAC improvements.",products:"Accent, PRiO, Via Pro",link:"https://patents.google.com/patent/US9202298"},
+  {num:"US9,208,594 B2",title:"Polysemous Symbol Navigation (Visual Indicators)",owner:"PRC / SCS",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Active",risk:"HIGH",filed:"~2012",desc:"Visual indicators for navigating polysemous (multi-meaning) symbol sequences in AAC.",products:"Accent, PRiO, Via Pro",link:"https://patents.google.com/patent/US9208594"},
+  {num:"US9,239,824 B2",title:"AAC Device Improvements",owner:"PRC / SCS",ownerKey:"PRC",cat:"device",catLabel:"AAC Device",status:"Active",risk:"MEDIUM",filed:"~2013",desc:"Device-specific AAC improvements for Accent/PRiO line.",products:"Accent, PRiO, Via Pro",link:"https://patents.google.com/patent/US9239824"},
+  {num:"US9,229,925",title:"Interactive Dictionary for AAC",owner:"PRC / SCS",ownerKey:"PRC",cat:"soft",catLabel:"Software/App",status:"Active",risk:"MEDIUM",filed:"~2011",desc:"Interactive dictionary feature within AAC device software.",products:"PRC software",link:"https://patents.google.com/patent/US9229925"},
+  {num:"US9,183,655",title:"Visual Teaching Scenes for AAC",owner:"PRC / SCS",ownerKey:"PRC",cat:"soft",catLabel:"Software/App",status:"Active",risk:"MEDIUM",filed:"~2011",desc:"Visual teaching scene technology for AAC language learning.",products:"PRC devices",link:"https://patents.google.com/patent/US9183655"},
+  {num:"US8,234,589",title:"Theme/Category Previewing in AAC",owner:"PRC / SCS",ownerKey:"PRC",cat:"soft",catLabel:"Software/App",status:"Active",risk:"MEDIUM",filed:"~2007",desc:"Previewing themes and categories within AAC vocabulary systems.",products:"PRC devices",link:"https://patents.google.com/patent/US8234589"},
+  {num:"US9,286,884",title:"Tactile Symbols for AAC",owner:"PRC / SCS",ownerKey:"PRC",cat:"sym",catLabel:"Symbol/Visual",status:"Active",risk:"LOW",filed:"~2013",desc:"Tactile/raised symbol technology for AAC devices for visually impaired users.",products:"PRC devices",link:"https://patents.google.com/patent/US9286884"},
+
+  // === MICROSOFT ===
+  {num:"US9,679,497 B2",title:"Proxies for Speech Generating Devices",owner:"Microsoft Technology Licensing",ownerKey:"Microsoft",cat:"device",catLabel:"AAC Device",status:"Active",risk:"HIGH",filed:"2015",desc:"SGD with social cue proxies (emotional expression via emoji/avatar), second display for face-to-face conversation, partner-assisted message construction.",products:"Microsoft accessibility features",link:"https://patents.google.com/patent/US9679497B2"},
+  {num:"US10,262,555 B2",title:"AAC Conversation Throughput Enhancement",owner:"Microsoft Technology Licensing",ownerKey:"Microsoft",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"HIGH",filed:"2016",desc:"Network-connected AAC with real-time suggestions during communication generation. Covers SGD-to-computing-device connections and previously generated message transmission.",products:"Microsoft accessibility research",link:"https://patents.google.com/patent/US10262555B2"},
+
+  // === APPLE ===
+  {num:"App 17/973,395",title:"Personalized Voice Synthesis (Personal Voice)",owner:"Apple Inc.",ownerKey:"Apple",cat:"speech",catLabel:"Speech Synthesis",status:"Pending",risk:"HIGH",filed:"2022",desc:"Personalized voice synthesis from just 10 phrases. Covers voice cloning for FaceTime, phone calls, assistive communication. Built into every iOS device.",products:"Personal Voice (iOS 17+), Live Speech",link:"https://machinelearning.apple.com/research/personal-voice"},
+  {num:"US 20240004190 A1",title:"Eye Imaging System (Vision Pro)",owner:"Apple Inc.",ownerKey:"Apple",cat:"eye",catLabel:"Eye Tracking",status:"Pending",risk:"MEDIUM",filed:"2023",desc:"Eye tracking in head-mounted devices using optical waveguide with IR PCCR tracking.",products:"Vision Pro",link:"https://patents.google.com/patent/US20240004190A1"},
+
+  // === SPOKEN INC ===
+  {num:"US11,145,313 B2",title:"Context-Aware Predictive Speech for AAC",owner:"Spoken Inc.",ownerKey:"other",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"HIGH",filed:"~2019",desc:"Context-aware predictive speech specifically for AAC users. Location-aware, time-aware, and context-sensitive word/phrase prediction. Most directly competitive patent for smart AAC apps.",products:"Spoken AAC app",link:"https://patents.google.com/patent/US11145313B2"},
+
+  // === SPEAK FOR YOURSELF ===
+  {num:"US20130065204 A1",title:"AAC Language System (Consistent Motor Planning)",owner:"Speak For Yourself LLC",ownerKey:"other",cat:"soft",catLabel:"Software/App",status:"Pending",risk:"MEDIUM",filed:"2011",desc:"AAC system with consistent word placement for motor planning. Every word stays in same location regardless of vocabulary size. Home screen with selectable communication keys.",products:"Speak for Yourself app",link:"https://patents.google.com/patent/US20130065204A1/en"},
+
+  // === NEURALINK ===
+  {num:"Multiple (31 families)",title:"BCI Electrode Arrays & Neural Processing",owner:"Neuralink Corp.",ownerKey:"Neuralink",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"2017-2025",desc:"87 patent documents covering electrode arrays, surgical robotics, on-chip neural processing, wireless power, AI neuroimaging, brain-to-brain communication.",products:"Neuralink N1 implant",link:"https://insights.greyb.com/neuralink-patents/"},
+
+  // === NEURABLE ===
+  {num:"US11,972,049",title:"BCI with High-Speed Eye Tracking",owner:"Neurable Inc.",ownerKey:"Neurable",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"2020",desc:"Hardware-agnostic BCI integrating real-time eye-movement tracking with brain activity. Oculomotor-neural hybrid platform.",products:"Neurable headband",link:"https://patents.google.com/patent/US11972049"},
+  {num:"US11,269,414 B2",title:"BCI with Eye Tracking (Earlier Family)",owner:"Neurable Inc.",ownerKey:"Neurable",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"2018",desc:"Earlier family member of BCI + eye tracking patent. Non-invasive EEG-based.",products:"Neurable headband",link:"https://patents.google.com/patent/US11269414B2"},
+
+  // === META / CTRL-LABS ===
+  {num:"US10,795,440 B1",title:"BCI for Text Predictions",owner:"Facebook Technologies (Meta)",ownerKey:"Meta",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"~2019",desc:"Brain-computer interface methods for generating text predictions from neural signals.",products:"Meta neural wristband",link:"https://patents.google.com/patent/US10795440"},
+  {num:"US10,592,001",title:"Neuromuscular Signal Processing (EMG)",owner:"Meta / CTRL-Labs",ownerKey:"Meta",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"MEDIUM",filed:"~2018",desc:"Surface EMG neuromuscular signal processing for human-computer interaction.",products:"Meta neural wristband",link:"https://patents.google.com/patent/US10592001"},
+  {num:"US10,921,764",title:"Neuromuscular Interface Methods",owner:"Meta / CTRL-Labs",ownerKey:"Meta",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"MEDIUM",filed:"~2019",desc:"Methods for neuromuscular interface signal processing and gesture recognition.",products:"Meta neural wristband",link:"https://patents.google.com/patent/US10921764"},
+
+  // === GOOGLE ===
+  {num:"Published June 2023",title:"Atypical Speech Recognition (Multi-Recognizer)",owner:"Google LLC",ownerKey:"Google",cat:"speech",catLabel:"Speech Synthesis",status:"Active",risk:"HIGH",filed:"~2022",desc:"Multiple speech recognizers for atypical speech. General recognizer detects typical/atypical, then activates tuned alternative recognizer. Uses context for accuracy.",products:"Project Euphonia, Google Assistant",link:"https://sites.research.google/euphonia/about/"},
+  {num:"US10,671,281 B2",title:"Neural Network Keyboard Input Decoding",owner:"Google LLC",ownerKey:"Google",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"MEDIUM",filed:"~2017",desc:"RNN-based neural network for decoding keyboard input and generating text predictions.",products:"Gboard, Google Keyboard",link:"https://patents.google.com/patent/US10671281B2"},
+  {num:"US12,548,549",title:"On-Device Speech Synthesis Personalization",owner:"Google (likely)",ownerKey:"Google",cat:"speech",catLabel:"Speech Synthesis",status:"Active",risk:"MEDIUM",filed:"~2023",desc:"On-device personalization of speech synthesis for training speech recognition models.",products:"Google TTS",link:"https://patents.justia.com/patent/12548549"},
+
+  // === CONTROL BIONICS ===
+  {num:"US11,284,844",title:"Adaptive Threshold EMG Switch for AAC",owner:"Control Bionics",ownerKey:"Control Bionics",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"HIGH",filed:"~2019",desc:"EMG switch with adaptive threshold that adjusts to user's changing muscle signal strength. Direct AAC application.",products:"NeuroNode",link:"https://patents.google.com/patent/US11284844"},
+  {num:"WO2019/099831 A1",title:"EMG AAC Device with Context-Sensitive UI",owner:"Control Bionics",ownerKey:"Control Bionics",cat:"input",catLabel:"Switch/Input",status:"Pending",risk:"MEDIUM",filed:"2018",desc:"Electromyography assistive communications device with context-sensitive user interface adapting to EMG input quality.",products:"NeuroNode, Cosmos Connect",link:"https://patents.google.com/patent/WO2019099831A1"},
+
+  // === COGNIXION ===
+  {num:"US10,990,175",title:"BCI with AR for AAC Communication",owner:"Cognixion",ownerKey:"other",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"~2019",desc:"Non-invasive BCI combined with augmented reality display for hands-free AAC. FDA Breakthrough Device designation.",products:"Cognixion ONE headset",link:"https://patents.google.com/patent/US10990175"},
+
+  // === UNIVERSITY / RESEARCH ===
+  {num:"US20210045692 A1",title:"Speech Communication for Non-Speaking Individuals",owner:"Brown Univ / VA / UMass",ownerKey:"other",cat:"device",catLabel:"AAC Device",status:"Pending",risk:"MEDIUM",filed:"2019",desc:"Hand-held data input subsystem sensing 3D movement, display with adaptive GUI, range-of-motion sensitivity.",products:"Research prototype",link:"https://patents.google.com/patent/US20210045692A1"},
+  {num:"US20220208194 A1",title:"Personal Speech Recognition & Replacement (sEMG)",owner:"Cornell University",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Pending",risk:"MEDIUM",filed:"2019",desc:"Wearable sEMG device for silent speech recognition in laryngectomy patients. NIH funded research.",products:"Research prototype",link:"https://patents.google.com/patent/US20220208194A1"},
+  {num:"US7,546,158 B2",title:"Communication via Brain Computer Interfaces",owner:"Univ. of California",ownerKey:"other",cat:"bci",catLabel:"BCI",status:"Expired",risk:"LOW",filed:"2004",desc:"Foundational BCI for communication patent. Now expired.",products:"Research",link:"https://patents.google.com/patent/US7546158"},
+
+  // === SYNCHRON ===
+  {num:"US10,485,968",title:"Stentrode Endovascular BCI",owner:"Synchron Inc.",ownerKey:"other",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"~2017",desc:"Endovascular brain-computer interface (stent-electrode). FDA Breakthrough Device. 8 patients implanted. Less invasive than Neuralink.",products:"Stentrode BCI",link:"https://patents.google.com/patent/US10485968"},
+
+  // === SILENT SPEECH ===
+  {num:"US12,482,449",title:"Silent Speech in User Interaction System",owner:"(EMG Wearable Co.)",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"HIGH",filed:"2023",desc:"Wearable EMG sensor for silent speech with AI speech model. Directly relevant to AAC. Granted Nov 2025.",products:"Wearable EMG device",link:"https://patents.justia.com/patent/12482449"},
+
+  // === MISCELLANEOUS ===
+  {num:"US8,593,375 B2",title:"Eye Gaze User Interface (Virtual Cylinder)",owner:"TelePathEye / Gregory Maltz",ownerKey:"other",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"~2011",desc:"Eye gaze controlled UI using virtual cylinder metaphor. Symbols rotated by gaze, selected by sustained gazing.",products:"Assistive communication",link:"https://patents.google.com/patent/US8593375"},
+  {num:"US20240264666 A1",title:"Eye Sign Language Communication System",owner:"(Individual inventor)",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Pending",risk:"MEDIUM",filed:"2024",desc:"ML/deep learning to detect eye blinks and gaze direction for sign language. Converts to speech. For quadriplegia/stroke/paralysis patients.",products:"Research/prototype",link:"https://patents.justia.com/patent/20240264666"},
+  {num:"US20090300503 A1",title:"Network-Based Augmentative Communication",owner:"Unknown",ownerKey:"other",cat:"soft",catLabel:"Software/App",status:"Pending",risk:"LOW",filed:"2009",desc:"Server-based AAC with online/offline modes. Two modes: direct server output and downloaded communication pages.",products:"Cloud AAC concept",link:"https://patents.google.com/patent/US20090300503A1/en"},
+  {num:"US10,768,696 B2",title:"Eye Gaze Correction (Pursuit Vector)",owner:"Microsoft",ownerKey:"Microsoft",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"2017",desc:"Calibration using pursuit vectors (eye tracking animated stimuli) to calculate correction factors.",products:"Windows Eye Control",link:"https://patents.google.com/patent/US10768696B2"},
+  {num:"US11,620,001 B2",title:"Pictorial Symbol Prediction (Multi-Task ML)",owner:"Snap Inc.",ownerKey:"other",cat:"ai",catLabel:"AI/NLP",status:"Active",risk:"MEDIUM",filed:"~2020",desc:"Pictorial symbol prediction using multi-task machine learning. Architecture applicable to AAC symbol boards.",products:"Snapchat/Bitmoji",link:"https://patents.google.com/patent/US11620001B2"},
+  {num:"US12,271,526",title:"Haptic Communication (Tactile Patterns)",owner:"(Unknown)",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"LOW",filed:"~2023",desc:"Haptic communication using compact actuator arrays to trace tactile patterns on skin.",products:"Research/wearable",link:"https://patents.justia.com/patent/12271526"},
+  {num:"US10,956,725",title:"Multi-Modality Sign Language Translation",owner:"(Unknown)",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"LOW",filed:"~2019",desc:"Multi-modal approach to sign language translation using computer vision.",products:"Research",link:"https://patents.google.com/patent/US10956725"},
+  {num:"US10,580,213",title:"AR Sign Language Recognition",owner:"Magic Leap",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"LOW",filed:"~2018",desc:"Augmented reality sign language recognition system.",products:"Magic Leap headset",link:"https://patents.google.com/patent/US10580213"},
+  {num:"US8,004,398",title:"Assistive Communication with Self-Instruction",owner:"(Individual)",ownerKey:"other",cat:"device",catLabel:"AAC Device",status:"Active",risk:"LOW",filed:"~2006",desc:"Assistive communication device with built-in self-instruction mode for learning to use the device.",products:"AAC device",link:"https://patents.google.com/patent/US8004398"},
+  {num:"US12,462,787",title:"TTS Using Generative AI Models",owner:"(Unknown)",ownerKey:"other",cat:"speech",catLabel:"Speech Synthesis",status:"Active",risk:"MEDIUM",filed:"~2023",desc:"Text-to-speech synthesis using generative artificial intelligence models.",products:"TTS services",link:"https://patents.justia.com/patent/12462787"},
+  {num:"US5,299,125",title:"NLP Parsing for Communication System",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"ai",catLabel:"AI/NLP",status:"Expired",risk:"LOW",filed:"~1992",desc:"Natural language processing for parsing symbols and producing syntactically correct sentences. Foundational NLP AAC patent. EXPIRED.",products:"PRC Minspeak devices",link:"https://patents.google.com/patent/US5299125"},
+  {num:"US7,076,738",title:"Icon-Based Communication Method",owner:"Semantic Compaction Systems",ownerKey:"PRC",cat:"lang",catLabel:"Language System",status:"Active",risk:"MEDIUM",filed:"~2003",desc:"Methods for icon-based communication and symbol sequencing in AAC.",products:"PRC devices",link:"https://patents.google.com/patent/US7076738"},
+  {num:"US8,893,044",title:"Category Previewing in AAC System",owner:"PRC / SCS",ownerKey:"PRC",cat:"soft",catLabel:"Software/App",status:"Active",risk:"LOW",filed:"~2010",desc:"Category previewing and browsing in AAC vocabulary systems.",products:"PRC devices",link:"https://patents.google.com/patent/US8893044"},
+  {num:"WO2010/141403 A1",title:"Portable Eye Gaze SGD Controller",owner:"DynaVox lineage",ownerKey:"DynaVox",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"HIGH",filed:"2010",desc:"Separately portable device for implementing eye gaze control of a speech generation device.",products:"DynaVox/Tobii Dynavox devices",link:"https://patents.google.com/patent/WO2010141403A1"},
+  {num:"US12,204,687",title:"Eye Gaze Device Control",owner:"Tolt Technologies",ownerKey:"other",cat:"eye",catLabel:"Eye Tracking",status:"Active",risk:"MEDIUM",filed:"~2023",desc:"Eye gaze device control system. Recently granted January 2025.",products:"Tolt eye tracking",link:"https://patents.justia.com/patent/12204687"},
+  {num:"US12,008,987",title:"Neural Speech Decoding",owner:"Stanford University",ownerKey:"other",cat:"bci",catLabel:"BCI",status:"Active",risk:"MEDIUM",filed:"~2021",desc:"Neural speech decoding from brain signals. Licensed to Blackrock Neurotech and Neuralink.",products:"BCI research",link:"https://patents.google.com/patent/US12008987"},
+  {num:"US7,120,486",title:"BCI Communication System (Foundational)",owner:"Washington University",ownerKey:"other",cat:"bci",catLabel:"BCI",status:"Expired",risk:"LOW",filed:"~2002",desc:"Foundational brain-computer interface for communication. Now expired.",products:"Research",link:"https://patents.google.com/patent/US7120486"},
+  {num:"US8,170,656",title:"Wearable EMG Controller",owner:"Microsoft",ownerKey:"Microsoft",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"LOW",filed:"~2009",desc:"Wearable electromyography-based controller for human-computer interaction.",products:"Microsoft Research",link:"https://patents.google.com/patent/US8170656"},
+  {num:"US10,878,818 B2",title:"Silent Speech Interface Methods",owner:"(Unknown)",ownerKey:"other",cat:"input",catLabel:"Switch/Input",status:"Active",risk:"MEDIUM",filed:"~2018",desc:"Methods and apparatus for silent speech interface technology.",products:"Research/wearable",link:"https://patents.google.com/patent/US10878818B2"},
+  {num:"US20130344466 A1",title:"AAC Device for Disabled (Radial Layout)",owner:"Korea Nazareth University",ownerKey:"other",cat:"device",catLabel:"AAC Device",status:"Abandoned",risk:"LOW",filed:"2012",desc:"AAC device with radially-arranged symbols and rotating indicator. ABANDONED.",products:"Research prototype",link:"https://patents.google.com/patent/US20130344466A1/en"},
+];
+
+// Render patent table
+function renderTable(data) {
+  const tbody = document.getElementById('patentBody');
+  const catClasses = {eye:'cat-eye',lang:'cat-lang',soft:'cat-soft',sym:'cat-sym',ai:'cat-ai',input:'cat-input',bci:'cat-bci',speech:'cat-speech',device:'cat-device'};
+  const statusClasses = {Active:'status-active',Expired:'status-expired',Pending:'status-pending',Abandoned:'status-abandoned'};
+  const riskClasses = {HIGH:'risk-high',MEDIUM:'risk-medium',LOW:'risk-low'};
+
+  tbody.innerHTML = data.map(p => `<tr>
+    <td><a href="${p.link}" target="_blank">${p.num}</a></td>
+    <td>${p.title}</td>
+    <td>${p.owner}</td>
+    <td><span class="cat-badge ${catClasses[p.cat]||''}">${p.catLabel}</span></td>
+    <td><span class="${statusClasses[p.status]||''}">${p.status}</span></td>
+    <td><span class="${riskClasses[p.risk]||''}">${p.risk}</span></td>
+    <td>${p.filed}</td>
+    <td class="desc-text">${p.desc}</td>
+    <td>${p.products||''}</td>
+  </tr>`).join('');
+  document.getElementById('filterCount').textContent = `Showing ${data.length} of ${patents.length} patents`;
+}
+
+// Filter logic
+function filterPatents() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cat = document.getElementById('filterCategory').value;
+  const risk = document.getElementById('filterRisk').value;
+  const status = document.getElementById('filterStatus').value;
+  const owner = document.getElementById('filterOwner').value;
+
+  const filtered = patents.filter(p => {
+    if (search && !(p.num.toLowerCase().includes(search) || p.title.toLowerCase().includes(search) || p.owner.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search))) return false;
+    if (cat && p.cat !== cat) return false;
+    if (risk && p.risk !== risk) return false;
+    if (status && p.status !== status) return false;
+    if (owner) {
+      if (owner === 'other') {
+        if (['Tobii','PRC','Microsoft','Apple','Neuralink','Neurable','Meta','Google','Control Bionics','DynaVox'].includes(p.ownerKey)) return false;
+      } else if (p.ownerKey !== owner) return false;
+    }
+    return true;
+  });
+  renderTable(filtered);
+}
+
+document.getElementById('searchInput').addEventListener('input', filterPatents);
+document.getElementById('filterCategory').addEventListener('change', filterPatents);
+document.getElementById('filterRisk').addEventListener('change', filterPatents);
+document.getElementById('filterStatus').addEventListener('change', filterPatents);
+document.getElementById('filterOwner').addEventListener('change', filterPatents);
+
+// Sort table
+let sortDir = {};
+function sortTable(col) {
+  const keys = ['num','title','owner','catLabel','status','risk','filed','desc','products'];
+  const key = keys[col];
+  sortDir[col] = !sortDir[col];
+  const dir = sortDir[col] ? 1 : -1;
+  patents.sort((a,b) => (a[key]||'').localeCompare(b[key]||'') * dir);
+  filterPatents();
+}
+
+// Tab navigation
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Charts
+function initCharts() {
+  const chartOpts = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b8fa8',font:{size:11}}}}};
+
+  // Category chart
+  const catCounts = {};
+  patents.forEach(p => { catCounts[p.catLabel] = (catCounts[p.catLabel]||0) + 1; });
+  new Chart(document.getElementById('chartCategory'), {
+    type:'doughnut',
+    data:{
+      labels:Object.keys(catCounts),
+      datasets:[{data:Object.values(catCounts),backgroundColor:['#06b6d4','#a855f7','#3b82f6','#f59e0b','#c084fc','#4ade80','#fb7185','#fbbf24','#60a5fa']}]
+    },
+    options:chartOpts
+  });
+
+  // Owner chart
+  const ownerCounts = {};
+  patents.forEach(p => {
+    const key = ['Tobii','PRC','Microsoft','Apple','Google','Meta','Neuralink','Neurable','Control Bionics','DynaVox'].find(k => p.ownerKey === k) || 'Other';
+    ownerCounts[key] = (ownerCounts[key]||0) + 1;
+  });
+  const sortedOwners = Object.entries(ownerCounts).sort((a,b) => b[1]-a[1]);
+  new Chart(document.getElementById('chartOwner'), {
+    type:'bar',
+    data:{
+      labels:sortedOwners.map(e=>e[0]),
+      datasets:[{label:'Patents',data:sortedOwners.map(e=>e[1]),backgroundColor:'#6366f1'}]
+    },
+    options:{...chartOpts,indexAxis:'y',plugins:{...chartOpts.plugins,legend:{display:false}},scales:{x:{ticks:{color:'#8b8fa8'},grid:{color:'#2d3148'}},y:{ticks:{color:'#8b8fa8'},grid:{display:false}}}}
+  });
+
+  // Risk chart
+  const riskCounts = {HIGH:0,MEDIUM:0,LOW:0};
+  patents.forEach(p => riskCounts[p.risk]++);
+  new Chart(document.getElementById('chartRisk'), {
+    type:'doughnut',
+    data:{
+      labels:['HIGH','MEDIUM','LOW'],
+      datasets:[{data:[riskCounts.HIGH,riskCounts.MEDIUM,riskCounts.LOW],backgroundColor:['#ef4444','#f59e0b','#22c55e']}]
+    },
+    options:chartOpts
+  });
+
+  // Status chart
+  const statusCounts = {};
+  patents.forEach(p => { statusCounts[p.status] = (statusCounts[p.status]||0) + 1; });
+  new Chart(document.getElementById('chartStatus'), {
+    type:'doughnut',
+    data:{
+      labels:Object.keys(statusCounts),
+      datasets:[{data:Object.values(statusCounts),backgroundColor:['#22c55e','#ef4444','#eab308','#6b7280']}]
+    },
+    options:chartOpts
+  });
+}
+
+// Init
+renderTable(patents);
+initCharts();
+</script>
+
+</body>
+</html>
