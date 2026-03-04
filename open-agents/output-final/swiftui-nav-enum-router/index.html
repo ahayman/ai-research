@@ -328,6 +328,7 @@ li code { font-size: 0.85em; }
     <li><a href="#environment-injection">Environment Injection</a></li>
     <li class="section-label">Advanced Topics</li>
     <li><a href="#modal-presentations">Modal Presentations</a></li>
+    <li><a href="#nested-modals">Nested &amp; Push-in-Modal</a></li>
     <li><a href="#deep-linking">Deep Linking</a></li>
     <li><a href="#navigation-flow">Navigation Flow</a></li>
     <li><a href="#testing">Testing Navigation</a></li>
@@ -855,6 +856,359 @@ flowchart TB
   </div>
   <p class="diagram-caption">Figure 2: Navigation flow from user action through router to view resolution for push, sheet, and full-screen cover presentations.</p>
 </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- NESTED MODALS & PUSH-IN-MODAL -->
+<!-- ============================================================ -->
+<section id="nested-modals">
+<h2>Nested Modal Sheets &amp; Push Navigation Within Modals</h2>
+
+<p>Real apps frequently need to present a sheet from <em>within</em> another sheet, or push screens inside a modal flow. The basic single-<code>presentedSheet</code> property on the router won't handle these cases. Here we cover three robust patterns for managing nested and push-within-modal navigation.</p>
+
+<div class="callout callout-warning">
+  <h4>The Core Challenge</h4>
+  <p>SwiftUI attaches <code>.sheet</code> modifiers to specific views in the hierarchy. A sheet presented by the root view creates a <em>new</em> presentation context. That inner sheet's view can present its own <code>.sheet</code>, creating a stack of modals. The router needs to model this — a single <code>Optional&lt;Route&gt;</code> property can only represent one active sheet.</p>
+</div>
+
+<h3>Pattern 1: Sheet-Scoped Routers</h3>
+
+<p>The cleanest approach: give each modal its own router instance. The inner router manages its own <code>NavigationPath</code> and sheet state, completely independent of the parent.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift — Sheet-Scoped Router (Recommended)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="cm">// The main router manages the app's primary navigation.</span>
+<span class="cm">// When a sheet is presented, it gets its OWN router.</span>
+
+<span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">Router</span> {
+    <span class="kw">var</span> path = <span class="tp">NavigationPath</span>()
+    <span class="kw">var</span> presentedSheet: <span class="tp">Route</span>?
+    <span class="kw">var</span> presentedCover: <span class="tp">Route</span>?
+}
+
+<span class="cm">// A dedicated router for content inside a sheet.</span>
+<span class="cm">// It has its own NavigationPath for push navigation,</span>
+<span class="cm">// and its own sheet state for nested modals.</span>
+
+<span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">SheetRouter</span> {
+    <span class="kw">var</span> path = <span class="tp">NavigationPath</span>()
+    <span class="kw">var</span> nestedSheet: <span class="tp">Route</span>?
+
+    <span class="kw">func</span> <span class="fn">push</span>(_ route: <span class="tp">Route</span>) { path.append(route) }
+    <span class="kw">func</span> <span class="fn">pop</span>() { <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }; path.removeLast() }
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() { path = <span class="tp">NavigationPath</span>() }
+    <span class="kw">func</span> <span class="fn">presentNestedSheet</span>(_ route: <span class="tp">Route</span>) { nestedSheet = route }
+    <span class="kw">func</span> <span class="fn">dismissNestedSheet</span>() { nestedSheet = <span class="kw">nil</span> }
+}
+
+<span class="cm">// Root view: when a sheet opens, create a SheetRouter for it</span>
+<span class="kw">struct</span> <span class="tp">RootView</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">NavigationStack</span>(path: $router.path) {
+            <span class="tp">HomeView</span>()
+                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                    ViewFactory.view(<span class="fn">for</span>: route)
+                }
+        }
+        .sheet(item: $router.presentedSheet) { route <span class="kw">in</span>
+            <span class="cm">// Each sheet gets its own SheetRouter</span>
+            <span class="tp">SheetContainer</span>(initialRoute: route)
+        }
+        .environment(router)
+    }
+}
+
+<span class="cm">// The sheet container: owns a SheetRouter, provides a</span>
+<span class="cm">// full NavigationStack for push navigation within the sheet,</span>
+<span class="cm">// and can present nested sheets.</span>
+<span class="kw">struct</span> <span class="tp">SheetContainer</span>: <span class="tp">View</span> {
+    <span class="kw">let</span> initialRoute: <span class="tp">Route</span>
+    <span class="kw">@State private var</span> sheetRouter = <span class="tp">SheetRouter</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">NavigationStack</span>(path: $sheetRouter.path) {
+            ViewFactory.view(<span class="fn">for</span>: initialRoute)
+                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                    ViewFactory.view(<span class="fn">for</span>: route)
+                }
+        }
+        <span class="cm">// Nested sheet — presented from WITHIN this sheet</span>
+        .sheet(item: $sheetRouter.nestedSheet) { nestedRoute <span class="kw">in</span>
+            <span class="cm">// Recursion: nested sheet also gets its own router</span>
+            <span class="tp">SheetContainer</span>(initialRoute: nestedRoute)
+        }
+        .environment(sheetRouter)
+    }
+}</code></pre>
+</div>
+
+<div class="callout">
+  <h4>Why This Works</h4>
+  <ul>
+    <li>Each sheet has its own <code>NavigationPath</code>, so push navigation within a sheet is independent of the parent's stack.</li>
+    <li>Each sheet has its own <code>nestedSheet</code> state, so nested modals don't conflict with the parent's sheet state.</li>
+    <li><code>SheetContainer</code> is recursive — a nested sheet creates another <code>SheetContainer</code>, enabling unlimited nesting.</li>
+    <li>The parent router stays clean. Dismissing the outer sheet tears down everything inside it.</li>
+  </ul>
+</div>
+
+<h3>Pattern 2: Using the Sheet as a Navigation Entry Point</h3>
+
+<p>For cases where a sheet starts a multi-step flow (e.g., "Add Item" with several steps), you want push navigation <em>inside</em> the sheet but don't need nested sheets:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift — Push Navigation Inside a Sheet (Multi-Step Flow)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="cm">// Route enum includes the flow's steps</span>
+<span class="kw">enum</span> <span class="tp">Route</span>: <span class="tp">Hashable</span> {
+    <span class="cm">// Main app routes</span>
+    <span class="kw">case</span> home
+    <span class="kw">case</span> itemDetail(id: <span class="tp">String</span>)
+
+    <span class="cm">// "Add Item" flow routes (used inside a sheet)</span>
+    <span class="kw">case</span> addItemStart
+    <span class="kw">case</span> addItemCategory
+    <span class="kw">case</span> addItemDetails(category: <span class="tp">String</span>)
+    <span class="kw">case</span> addItemReview(item: <span class="tp">NewItem</span>)
+}
+
+<span class="cm">// The "Add Item" sheet owns its own NavigationStack</span>
+<span class="kw">struct</span> <span class="tp">AddItemSheet</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> path = <span class="tp">NavigationPath</span>()
+    <span class="kw">@Environment</span>(\.dismiss) <span class="kw">private var</span> dismiss
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">NavigationStack</span>(path: $path) {
+            <span class="cm">// Step 1: Choose category</span>
+            <span class="tp">CategoryPickerView</span>(onSelect: { category <span class="kw">in</span>
+                path.append(<span class="tp">Route</span>.addItemDetails(category: category))
+            })
+            .navigationTitle(<span class="st">"New Item"</span>)
+            .toolbar {
+                <span class="tp">ToolbarItem</span>(placement: .cancellationAction) {
+                    <span class="tp">Button</span>(<span class="st">"Cancel"</span>) { dismiss() }
+                }
+            }
+            .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                <span class="kw">switch</span> route {
+                <span class="kw">case</span> .addItemDetails(<span class="kw">let</span> category):
+                    <span class="cm">// Step 2: Enter details</span>
+                    <span class="tp">ItemDetailsForm</span>(category: category, onNext: { item <span class="kw">in</span>
+                        path.append(<span class="tp">Route</span>.addItemReview(item: item))
+                    })
+                <span class="kw">case</span> .addItemReview(<span class="kw">let</span> item):
+                    <span class="cm">// Step 3: Review &amp; submit</span>
+                    <span class="tp">ReviewView</span>(item: item, onSubmit: {
+                        dismiss() <span class="cm">// Dismisses the entire sheet</span>
+                    })
+                <span class="kw">default</span>:
+                    <span class="tp">EmptyView</span>()
+                }
+            }
+        }
+    }
+}
+
+<span class="cm">// Presenting the flow from the main app</span>
+<span class="kw">struct</span> <span class="tp">HomeView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">List</span> { <span class="cm">/* ... */</span> }
+        .toolbar {
+            <span class="tp">Button</span>(<span class="st">"Add"</span>, systemImage: <span class="st">"plus"</span>) {
+                router.presentSheet(.addItemStart)
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<h3>Pattern 3: Nested Sheet Stack via Array</h3>
+
+<p>For apps that need programmatic control over a <em>stack</em> of nested sheets (e.g., drill-down modals for data exploration), you can model sheets as an array:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift — Sheet Stack for Nested Modals</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">Router</span> {
+    <span class="kw">var</span> path = <span class="tp">NavigationPath</span>()
+
+    <span class="cm">// A stack of sheets. The last element is the topmost sheet.</span>
+    <span class="kw">var</span> sheetStack: [<span class="tp">Route</span>] = []
+
+    <span class="cm">// Computed binding for the currently active sheet</span>
+    <span class="kw">var</span> activeSheet: <span class="tp">Route</span>? {
+        <span class="kw">get</span> { sheetStack.last }
+        <span class="kw">set</span> {
+            <span class="kw">if let</span> route = newValue {
+                sheetStack.append(route)
+            } <span class="kw">else</span> {
+                <span class="cm">// Sheet was dismissed (user swiped down)</span>
+                <span class="kw">if</span> !sheetStack.isEmpty { sheetStack.removeLast() }
+            }
+        }
+    }
+
+    <span class="kw">func</span> <span class="fn">presentSheet</span>(_ route: <span class="tp">Route</span>) {
+        sheetStack.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">dismissSheet</span>() {
+        <span class="kw">guard</span> !sheetStack.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        sheetStack.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">dismissAllSheets</span>() {
+        sheetStack.removeAll()
+    }
+
+    <span class="kw">var</span> sheetDepth: <span class="tp">Int</span> { sheetStack.count }
+}
+
+<span class="cm">// Usage: a recursive sheet presenter that unwinds the stack</span>
+<span class="kw">struct</span> <span class="tp">SheetStackPresenter</span>&lt;<span class="tp">Content</span>: <span class="tp">View</span>&gt;: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+    <span class="kw">let</span> depth: <span class="tp">Int</span>
+    <span class="kw">@ViewBuilder let</span> content: () -> <span class="tp">Content</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        content()
+            .sheet(isPresented: <span class="tp">Binding</span>(
+                get: { router.sheetStack.count > depth },
+                set: { <span class="kw">if</span> !$0 { router.sheetStack = <span class="tp">Array</span>(router.sheetStack.prefix(depth)) } }
+            )) {
+                <span class="kw">if</span> depth < router.sheetStack.count {
+                    <span class="kw">let</span> route = router.sheetStack[depth]
+                    <span class="cm">// Recursive: this sheet can present the NEXT sheet in the stack</span>
+                    <span class="tp">SheetStackPresenter</span>(depth: depth + 1) {
+                        <span class="tp">NavigationStack</span> {
+                            ViewFactory.view(<span class="fn">for</span>: route)
+                                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { r <span class="kw">in</span>
+                                    ViewFactory.view(<span class="fn">for</span>: r)
+                                }
+                        }
+                    }
+                    .environment(router)
+                }
+            }
+    }
+}
+
+<span class="cm">// In RootView</span>
+<span class="kw">struct</span> <span class="tp">RootView</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">SheetStackPresenter</span>(depth: 0) {
+            <span class="tp">NavigationStack</span>(path: $router.path) {
+                <span class="tp">HomeView</span>()
+                    .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { r <span class="kw">in</span>
+                        ViewFactory.view(<span class="fn">for</span>: r)
+                    }
+            }
+        }
+        .environment(router)
+    }
+}</code></pre>
+</div>
+
+<h3>How It All Fits Together</h3>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TB
+    RV["RootView<br/>(NavigationStack + Router)"]
+    RV -->|"router.push(.detail)"| P1["Push: DetailView"]
+    RV -->|"router.presentSheet(.addItem)"| S1["Sheet: AddItemSheet<br/>(has own NavigationStack)"]
+
+    S1 -->|"sheetRouter.push(.step2)"| S1P1["Push inside sheet:<br/>ItemDetailsForm"]
+    S1P1 -->|"sheetRouter.push(.step3)"| S1P2["Push inside sheet:<br/>ReviewView"]
+
+    S1 -->|"sheetRouter.presentNestedSheet(.picker)"| S2["Nested Sheet:<br/>ColorPickerSheet<br/>(has own NavigationStack)"]
+
+    S2 -->|"innerRouter.push(.custom)"| S2P1["Push inside nested sheet:<br/>CustomColorView"]
+
+    S1P2 -->|"dismiss()"| DISMISS["Dismisses entire sheet<br/>(all pushed views gone)"]
+
+    classDef root fill:#0071e3,color:#fff,stroke:none
+    classDef push fill:#f5f5f7,color:#1d1d1f,stroke:#d2d2d7
+    classDef sheet fill:#af52de,color:#fff,stroke:none
+    classDef nested fill:#ff9500,color:#fff,stroke:none
+
+    class RV root
+    class P1,S1P1,S1P2,S2P1 push
+    class S1 sheet
+    class S2 nested
+    class DISMISS push
+  </div>
+  <p class="diagram-caption">Figure: Navigation tree showing push navigation and nested sheets — each sheet context has its own NavigationStack and can present further sheets.</p>
+</div>
+
+<h3>Key Rules &amp; Gotchas</h3>
+
+<table>
+  <thead><tr><th>Rule</th><th>Explanation</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Each sheet needs its own <code>NavigationStack</code></strong></td><td>A sheet creates a new presentation context. The parent's <code>NavigationStack</code> does not extend into it. You must wrap the sheet content in its own <code>NavigationStack</code> to enable push navigation.</td></tr>
+    <tr><td><strong>Don't share <code>NavigationPath</code> across sheets</strong></td><td>If you push to a shared path from inside a sheet, the push happens in the <em>parent's</em> stack (behind the sheet), not inside the sheet. Each modal needs its own path.</td></tr>
+    <tr><td><strong><code>dismiss()</code> only closes the current sheet</strong></td><td><code>@Environment(\.dismiss)</code> pops or dismisses the <em>innermost</em> presentation. To dismiss a parent sheet from a nested sheet, pass a callback or use a shared binding.</td></tr>
+    <tr><td><strong>Dismissing a sheet kills its entire stack</strong></td><td>When a sheet is dismissed, all pushed views <em>and</em> nested sheets inside it are torn down. You don't need to manually pop them.</td></tr>
+    <tr><td><strong>Multiple <code>.sheet</code> modifiers on one view</strong></td><td>SwiftUI only evaluates the <em>first</em> active <code>.sheet</code> modifier. Use <code>sheet(item:)</code> with an enum rather than multiple <code>sheet(isPresented:)</code> calls. See the Modal System page for details.</td></tr>
+    <tr><td><strong>Nested sheets inherit environment</strong></td><td>A nested sheet <em>does not</em> automatically inherit <code>@Environment</code> objects from the parent sheet. You must pass <code>.environment(router)</code> explicitly on the inner sheet content.</td></tr>
+  </tbody>
+</table>
+
+<h3>Testing Nested Modal Navigation</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift — Unit Tests for Sheet Stack</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">func</span> <span class="fn">testPresentNestedSheets</span>() {
+    <span class="kw">let</span> router = <span class="tp">Router</span>()
+
+    <span class="cm">// Present first sheet</span>
+    router.presentSheet(.addItemStart)
+    <span class="tp">XCTAssertEqual</span>(router.sheetStack.count, 1)
+
+    <span class="cm">// Present nested sheet from within the first</span>
+    router.presentSheet(.colorPicker)
+    <span class="tp">XCTAssertEqual</span>(router.sheetStack.count, 2)
+    <span class="tp">XCTAssertEqual</span>(router.activeSheet, .colorPicker)
+
+    <span class="cm">// Dismiss inner sheet</span>
+    router.dismissSheet()
+    <span class="tp">XCTAssertEqual</span>(router.sheetStack.count, 1)
+    <span class="tp">XCTAssertEqual</span>(router.activeSheet, .addItemStart)
+
+    <span class="cm">// Dismiss all</span>
+    router.dismissAllSheets()
+    <span class="tp">XCTAssertTrue</span>(router.sheetStack.isEmpty)
+    <span class="tp">XCTAssertNil</span>(router.activeSheet)
+}
+
+<span class="kw">func</span> <span class="fn">testSheetRouterPushNavigation</span>() {
+    <span class="kw">let</span> sheetRouter = <span class="tp">SheetRouter</span>()
+
+    <span class="cm">// Push within the sheet's NavigationStack</span>
+    sheetRouter.push(.addItemDetails(category: <span class="st">"Electronics"</span>))
+    <span class="tp">XCTAssertEqual</span>(sheetRouter.path.count, 1)
+
+    sheetRouter.push(.addItemReview(item: mockItem))
+    <span class="tp">XCTAssertEqual</span>(sheetRouter.path.count, 2)
+
+    <span class="cm">// Pop back one step</span>
+    sheetRouter.pop()
+    <span class="tp">XCTAssertEqual</span>(sheetRouter.path.count, 1)
+
+    <span class="cm">// Pop to root of sheet</span>
+    sheetRouter.popToRoot()
+    <span class="tp">XCTAssertTrue</span>(sheetRouter.path.isEmpty)
+}</code></pre>
+</div>
+
 </section>
 
 <!-- ============================================================ -->
