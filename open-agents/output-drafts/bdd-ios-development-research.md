@@ -73,6 +73,7 @@ AI-facilitated BDD represents the most promising frontier. LLMs (GPT-4, Claude, 
 |-----------|---------|-------------|---------|-----|-------|
 | Quick | v7.6.2 | July 2024 | Unconfirmed | Yes | De facto BDD standard for Swift |
 | Nimble | v13.3.0 | 2024 | Unconfirmed | Yes | Matcher framework, works standalone or with Quick |
+| CucumberSwift | v5.0.5 | Sept 2025 | Unconfirmed | Yes | Lightweight pure-Swift Cucumber; 201 releases, 841 commits; Gherkin feature files, XCTest integration, Scenario Outlines, Tags, Hooks, Docstrings, stub generation, report generation. 80 GitHub stars. Supports iOS, tvOS, macOS. Born out of frustration with Cucumberish limitations. The most actively maintained Gherkin/Cucumber implementation for Swift. [Source: https://github.com/Tyler-Keith-Thompson/CucumberSwift] |
 
 #### Tier 2: Usable but Aging
 | Framework | Version | Last Updated | Notes |
