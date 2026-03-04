@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NavigationStack &amp; NavigationPath in SwiftUI - Complete Reference Guide</title>
+<meta name="description" content="A comprehensive guide to SwiftUI's NavigationStack and NavigationPath: programmatic navigation, typed arrays vs type-erased paths, pop-to-root, state persistence, and complete working code examples.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #0071e3;
+  --color-primary-light: #2997ff;
+  --color-primary-dark: #0058b0;
+  --color-primary-bg: #e8f4fd;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #515154;
+  --color-text-muted: #86868b;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f7;
+  --color-bg-sidebar: #fbfbfd;
+  --color-border: #d2d2d7;
+  --color-border-light: #e8e8ed;
+  --color-heading: #1d1d1f;
+  --color-link: #0071e3;
+  --color-link-hover: #0058b0;
+  --color-code-bg: #f5f5f7;
+  --color-code-text: #1d1d1f;
+  --color-code-keyword: #ad3da4;
+  --color-code-string: #d12f1b;
+  --color-code-type: #0b4f79;
+  --color-code-comment: #707f8c;
+  --color-code-func: #326d74;
+  --color-code-property: #4b21b0;
+  --color-table-stripe: #f5f5f7;
+  --color-table-header: #e8e8ed;
+  --color-callout-border: #0071e3;
+  --color-callout-bg: #e8f4fd;
+  --color-warning-border: #ff9f0a;
+  --color-warning-bg: #fff8e6;
+  --color-success-border: #30d158;
+  --color-success-bg: #e8fce8;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #d2d2d7;
+  --color-scrollbar: #c7c7cc;
+  --color-scrollbar-hover: #86868b;
+  --color-copy-btn: #515154;
+  --color-copy-btn-hover: #0071e3;
+  --color-badge-bg: #e8e8ed;
+  --color-badge-text: #515154;
+  --sidebar-width: 280px;
+  --content-max-width: 860px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+  --font-heading: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+[data-theme="dark"] {
+  --color-primary: #2997ff;
+  --color-primary-light: #64b5ff;
+  --color-primary-dark: #0071e3;
+  --color-primary-bg: #0d2137;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #a1a1a6;
+  --color-text-muted: #6e6e73;
+  --color-bg: #1d1d1f;
+  --color-bg-alt: #2c2c2e;
+  --color-bg-sidebar: #242426;
+  --color-border: #424245;
+  --color-border-light: #38383a;
+  --color-heading: #f5f5f7;
+  --color-link: #2997ff;
+  --color-link-hover: #64b5ff;
+  --color-code-bg: #2c2c2e;
+  --color-code-text: #f5f5f7;
+  --color-code-keyword: #ff7ab2;
+  --color-code-string: #ff8170;
+  --color-code-type: #6bdfff;
+  --color-code-comment: #7f8c8d;
+  --color-code-func: #78c2b3;
+  --color-code-property: #b281eb;
+  --color-table-stripe: #2c2c2e;
+  --color-table-header: #38383a;
+  --color-callout-border: #2997ff;
+  --color-callout-bg: #0d2137;
+  --color-warning-border: #ff9f0a;
+  --color-warning-bg: #332b00;
+  --color-success-border: #30d158;
+  --color-success-bg: #0a3315;
+  --color-diagram-bg: #2c2c2e;
+  --color-diagram-border: #424245;
+  --color-scrollbar: #48484a;
+  --color-scrollbar-hover: #636366;
+  --color-copy-btn: #a1a1a6;
+  --color-copy-btn-hover: #2997ff;
+  --color-badge-bg: #38383a;
+  --color-badge-text: #a1a1a6;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 0;
+  z-index: 100;
+  transition: transform 0.3s ease, background var(--transition);
+}
+
+.sidebar-header {
+  padding: 0 1.25rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.sidebar-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-link);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-header .back-link:hover {
+  color: var(--color-link-hover);
+}
+
+.sidebar-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+.sidebar-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0 0.75rem;
+}
+
+.sidebar nav li {
+  margin-bottom: 1px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar nav a:hover {
+  background: var(--color-border-light);
+  color: var(--color-heading);
+}
+
+.sidebar nav a.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar nav .toc-h3 {
+  padding-left: 1.25rem;
+  font-size: 0.78rem;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 2.5rem 3rem 4rem;
+  max-width: calc(var(--sidebar-width) + var(--content-max-width) + 6rem);
+}
+
+.content-inner {
+  max-width: var(--content-max-width);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.65rem;
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 90;
+}
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 200;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--color-text);
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+h1 .version-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--color-badge-bg);
+  color: var(--color-badge-text);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  letter-spacing: 0;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+h2 {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-light);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 650;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p { margin-bottom: 1rem; }
+a { color: var(--color-link); text-decoration: none; }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+strong { font-weight: 600; }
+
+ul, ol {
+  margin: 0 0 1rem 1.5rem;
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Inline Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  color: var(--color-code-keyword);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* ===== Code Blocks ===== */
+.code-block {
+  position: relative;
+  margin: 1.25rem 0 1.5rem;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-table-header);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.code-block-header .lang-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--color-copy-btn);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.copy-btn:hover {
+  color: var(--color-copy-btn-hover);
+  background: var(--color-primary-bg);
+}
+
+.copy-btn.copied {
+  color: var(--color-success-border);
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  background: var(--color-code-bg);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--color-code-text);
+}
+
+.code-block pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Syntax highlighting classes */
+.kw { color: var(--color-code-keyword); font-weight: 600; }
+.ty { color: var(--color-code-type); }
+.str { color: var(--color-code-string); }
+.cm { color: var(--color-code-comment); font-style: italic; }
+.fn { color: var(--color-code-func); }
+.pr { color: var(--color-code-property); }
+.at { color: var(--color-code-keyword); }
+.num { color: var(--color-code-string); }
+
+/* ===== Callout Boxes ===== */
+.callout {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  margin: 1.25rem 0;
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+}
+
+.callout.warning {
+  border-left-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.callout.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  color: var(--color-heading);
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.25rem 0 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead th {
+  background: var(--color-table-header);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 650;
+  font-size: 0.82rem;
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 0.65rem 1rem;
+  border-top: 1px solid var(--color-border-light);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-table-stripe);
+}
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+/* ===== Summary / Details (expandable) ===== */
+details {
+  margin: 1rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+details summary {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--color-bg-alt);
+  transition: background var(--transition);
+  font-size: 0.92rem;
+}
+
+details summary:hover {
+  background: var(--color-border-light);
+}
+
+details[open] summary {
+  border-bottom: 1px solid var(--color-border);
+}
+
+details .details-content {
+  padding: 1rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 3.5rem 1.5rem 4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .main-content { padding: 3.5rem 1rem 3rem; }
+  .code-block pre { font-size: 0.8rem; padding: 0.75rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .menu-toggle, .theme-toggle, .back-to-top, .copy-btn { display: none !important; }
+  .main-content { margin-left: 0; padding: 0; max-width: 100%; }
+  .code-block { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <span class="theme-icon">&#9789;</span>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-wrapper">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&#8592; Back to Dashboard</a>
+    <h2>NavigationStack &amp; NavigationPath</h2>
+    <div class="subtitle">SwiftUI Navigation Guide</div>
+  </div>
+  <nav>
+    <ul id="tocList">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#replacing-navigationview">Replacing NavigationView</a></li>
+      <li><a href="#declarative-model">The Declarative Model</a></li>
+      <li><a href="#basic-usage">Basic Usage</a></li>
+      <li class="toc-h3"><a href="#simple-stack">Simple NavigationStack</a></li>
+      <li class="toc-h3"><a href="#value-based-links">Value-Based Links</a></li>
+      <li><a href="#navigation-path">NavigationPath</a></li>
+      <li class="toc-h3"><a href="#path-internals">Path Internals</a></li>
+      <li class="toc-h3"><a href="#programmatic-nav">Programmatic Navigation</a></li>
+      <li class="toc-h3"><a href="#pop-to-root">Pop to Root</a></li>
+      <li><a href="#typed-vs-erased">Typed Arrays vs NavigationPath</a></li>
+      <li><a href="#multiple-destinations">Multiple Destinations</a></li>
+      <li><a href="#passing-data">Passing Data Between Screens</a></li>
+      <li><a href="#state-persistence">State Persistence</a></li>
+      <li><a href="#coordinator-pattern">Router / Coordinator Pattern</a></li>
+      <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+      <li><a href="#when-to-use">When to Use</a></li>
+      <li><a href="#compatibility">Compatibility Notes</a></li>
+      <li><a href="#common-pitfalls">Common Pitfalls</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main-content">
+<div class="content-inner">
+
+<!-- ===== Hero ===== -->
+<h1>NavigationStack &amp; NavigationPath <span class="version-badge">iOS 16+</span></h1>
+<p class="hero-subtitle">
+  A comprehensive reference guide to SwiftUI's modern stack-based navigation system. Covers the declarative navigation model, programmatic control, type-erased paths, state persistence, and complete Xcode-ready code examples.
+</p>
+
+<!-- ===== Section 1: Overview ===== -->
+<h2 id="overview">Overview</h2>
+<p>
+  Starting with iOS 16 (WWDC 2022), Apple introduced <code>NavigationStack</code> as the successor to <code>NavigationView</code>. It provides a <strong>data-driven, stack-based</strong> navigation model where the navigation state is represented by a collection of values, and the framework resolves those values to views using <code>.navigationDestination(for:)</code> modifiers.
+</p>
+<p>
+  The key innovation is separating <em>what</em> you want to navigate to (a value) from <em>how</em> it should be displayed (a destination view). This separation enables programmatic navigation, deep linking, state restoration, and testable navigation logic -- all of which were cumbersome or impossible with the old <code>NavigationView</code> / <code>NavigationLink(destination:)</code> API.
+</p>
+
+<div class="callout">
+  <div class="callout-title">Key Components</div>
+  <ul>
+    <li><code>NavigationStack</code> -- the container that manages a stack of views</li>
+    <li><code>NavigationLink(value:)</code> -- pushes a <strong>Hashable value</strong> onto the stack</li>
+    <li><code>.navigationDestination(for:)</code> -- resolves a value type to a destination view</li>
+    <li><code>NavigationPath</code> -- a type-erased collection for heterogeneous navigation state</li>
+  </ul>
+</div>
+
+<!-- ===== Section 2: Replacing NavigationView ===== -->
+<h2 id="replacing-navigationview">How NavigationStack Replaced NavigationView</h2>
+<p>
+  Prior to iOS 16, SwiftUI developers used <code>NavigationView</code> with view-based <code>NavigationLink(destination:)</code> modifiers. While functional for simple use cases, this approach had significant limitations:
+</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>NavigationView (deprecated)</th>
+      <th>NavigationStack (iOS 16+)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Navigation model</strong></td>
+      <td>View-based (destination is a view)</td>
+      <td>Value-based (destination resolved from data)</td>
+    </tr>
+    <tr>
+      <td><strong>Programmatic push</strong></td>
+      <td>Hacky (isActive bindings, tag/selection)</td>
+      <td>First-class (append to path)</td>
+    </tr>
+    <tr>
+      <td><strong>Pop to root</strong></td>
+      <td>Not directly supported</td>
+      <td>path.removeAll() or path = []</td>
+    </tr>
+    <tr>
+      <td><strong>Pop to specific level</strong></td>
+      <td>Not supported</td>
+      <td>path.removeLast(n)</td>
+    </tr>
+    <tr>
+      <td><strong>Deep linking</strong></td>
+      <td>Complex, fragile</td>
+      <td>Set path to desired sequence</td>
+    </tr>
+    <tr>
+      <td><strong>State serialization</strong></td>
+      <td>Not supported</td>
+      <td>Built-in Codable support</td>
+    </tr>
+    <tr>
+      <td><strong>Lazy loading</strong></td>
+      <td>Destination views eagerly initialized</td>
+      <td>Destinations initialized only when pushed</td>
+    </tr>
+    <tr>
+      <td><strong>Column navigation</strong></td>
+      <td>NavigationView with columns</td>
+      <td>Use NavigationSplitView instead</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warning">
+  <div class="callout-title">Deprecation Notice</div>
+  <p>
+    <code>NavigationView</code> is officially deprecated as of iOS 16. Apple's migration guide recommends replacing single-column <code>NavigationView</code> with <code>NavigationStack</code>, and multi-column <code>NavigationView</code> with <code>NavigationSplitView</code>. Existing apps using <code>NavigationView</code> will continue to compile but won't receive new navigation features.
+  </p>
+</div>
+
+<!-- ===== Section 3: Declarative Model ===== -->
+<h2 id="declarative-model">The Declarative Navigation Model</h2>
+<p>
+  SwiftUI's navigation model follows the same principle as the rest of the framework: <strong>state drives UI</strong>. Your navigation stack is a function of data. When you push a value onto the path, SwiftUI finds the matching <code>.navigationDestination(for:)</code> modifier and renders the corresponding view. When you remove a value, that view is popped.
+</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TD
+    A["@State path = NavigationPath()"] -->|"path.append(Item.detail(42))"| B["NavigationStack evaluates path"]
+    B --> C{".navigationDestination(for:)\nmatches the type?"}
+    C -->|"Yes"| D["Destination closure called\nwith the value"]
+    D --> E["New view pushed\nonto visual stack"]
+    C -->|"No match found"| F["Runtime warning:\nno matching destination"]
+    E -->|"User taps Back"| G["path.removeLast()"]
+    G --> H["View popped from stack"]
+    H -->|"path.count == 0"| I["Root view displayed"]
+
+    style A fill:#0071e3,color:#fff,stroke:#0058b0
+    style E fill:#30d158,color:#fff,stroke:#248a3d
+    style I fill:#30d158,color:#fff,stroke:#248a3d
+    style F fill:#ff453a,color:#fff,stroke:#d70015
+  </div>
+  <div class="diagram-caption">Figure 1: NavigationStack push/pop lifecycle -- state changes drive view transitions</div>
+</div>
+
+<p>This model means:</p>
+<ul>
+  <li>The <strong>path array</strong> is the single source of truth for what's on the stack</li>
+  <li>Navigation is <strong>testable</strong> -- you can assert against the path contents without rendering views</li>
+  <li>Navigation is <strong>serializable</strong> -- save the path to disk, restore it on next launch</li>
+  <li>Navigation is <strong>decoupled</strong> -- the link doesn't need to know what view it opens</li>
+</ul>
+
+<!-- ===== Section 4: Basic Usage ===== -->
+<h2 id="basic-usage">Basic Usage</h2>
+
+<h3 id="simple-stack">Simple NavigationStack with NavigationLink</h3>
+<p>
+  The simplest form of <code>NavigationStack</code> doesn't even require a path binding. It works just like the old <code>NavigationView</code> but with lazy destination loading and the modern API:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">SimpleNavigationExample</span>: <span class="ty">View</span> {
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span> {
+            <span class="ty">List</span> {
+                <span class="ty">NavigationLink</span>(<span class="str">"Go to Settings"</span>) {
+                    <span class="ty">SettingsView</span>()
+                }
+                <span class="ty">NavigationLink</span>(<span class="str">"Go to Profile"</span>) {
+                    <span class="ty">ProfileView</span>()
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Home"</span>)
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">SettingsView</span>: <span class="ty">View</span> {
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">Text</span>(<span class="str">"Settings Screen"</span>)
+            .<span class="fn">navigationTitle</span>(<span class="str">"Settings"</span>)
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">ProfileView</span>: <span class="ty">View</span> {
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">Text</span>(<span class="str">"Profile Screen"</span>)
+            .<span class="fn">navigationTitle</span>(<span class="str">"Profile"</span>)
+    }
+}</code></pre>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Note</div>
+  <p>This "view-destination" style still works but doesn't give you programmatic control. For real-world apps, prefer the <strong>value-based</strong> pattern shown below.</p>
+</div>
+
+<h3 id="value-based-links">Value-Based NavigationLink</h3>
+<p>
+  The modern approach uses <code>NavigationLink(value:)</code> to push a <strong>Hashable value</strong> instead of a view. A separate <code>.navigationDestination(for:)</code> modifier maps that value to the destination view:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="cm">// 1. Define a Hashable model for navigation</span>
+<span class="kw">struct</span> <span class="ty">Recipe</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> prepTime: <span class="ty">Int</span> <span class="cm">// minutes</span>
+}
+
+<span class="kw">struct</span> <span class="ty">RecipeListView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> recipes = [
+        <span class="ty">Recipe</span>(name: <span class="str">"Pasta Carbonara"</span>, prepTime: <span class="num">25</span>),
+        <span class="ty">Recipe</span>(name: <span class="str">"Caesar Salad"</span>, prepTime: <span class="num">15</span>),
+        <span class="ty">Recipe</span>(name: <span class="str">"Chocolate Cake"</span>, prepTime: <span class="num">60</span>),
+    ]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span> {
+            <span class="ty">List</span>(recipes) { recipe <span class="kw">in</span>
+                <span class="cm">// 2. Push a value, not a view</span>
+                <span class="ty">NavigationLink</span>(value: recipe) {
+                    <span class="ty">Text</span>(recipe.name)
+                }
+            }
+            <span class="cm">// 3. Map the value type to a destination view</span>
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Recipe</span>.<span class="kw">self</span>) { recipe <span class="kw">in</span>
+                <span class="ty">RecipeDetailView</span>(recipe: recipe)
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Recipes"</span>)
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">RecipeDetailView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> recipe: <span class="ty">Recipe</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">VStack</span>(alignment: .leading, spacing: <span class="num">16</span>) {
+            <span class="ty">Text</span>(recipe.name)
+                .<span class="fn">font</span>(.largeTitle)
+            <span class="ty">Text</span>(<span class="str">"Prep time: </span>\(recipe.prepTime)<span class="str"> minutes"</span>)
+                .<span class="fn">foregroundStyle</span>(.secondary)
+            <span class="ty">Spacer</span>()
+        }
+        .<span class="fn">padding</span>()
+        .<span class="fn">navigationTitle</span>(recipe.name)
+    }
+}</code></pre>
+</div>
+
+<p>The separation of concerns here is significant:</p>
+<ul>
+  <li>The <code>NavigationLink</code> only knows <em>what data</em> to push -- not what screen to show</li>
+  <li>The <code>.navigationDestination</code> only knows how to render a given data type -- not where the link is</li>
+  <li>The same <code>.navigationDestination</code> handles <strong>all</strong> links for that type, no matter where they appear in the view hierarchy</li>
+</ul>
+
+<!-- ===== Section 5: NavigationPath ===== -->
+<h2 id="navigation-path">NavigationPath Deep Dive</h2>
+
+<h3 id="path-internals">How NavigationPath Works Internally</h3>
+<p>
+  <code>NavigationPath</code> is a <strong>type-erased, heterogeneous collection</strong> that can hold values of any <code>Hashable</code> type. It behaves like an ordered stack where you can append values, remove from the end, and query the count -- but you <strong>cannot</strong> iterate over or index into its elements (they're type-erased).
+</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart LR
+    subgraph NavigationPath["NavigationPath (type-erased)"]
+        direction LR
+        V1["String\n'home'"] --> V2["Recipe\n{id: 1}"] --> V3["Int\n42"]
+    end
+
+    subgraph API["Public API"]
+        A1[".append(_ value)"]
+        A2[".removeLast()"]
+        A3[".removeLast(_ k)"]
+        A4[".count: Int"]
+        A5[".isEmpty: Bool"]
+        A6[".codable: CodableRepresentation?"]
+    end
+
+    subgraph Storage["Internal Storage"]
+        S1["[any Hashable]"]
+        S2["Type metadata retained\nfor encoding/decoding"]
+    end
+
+    API -.-> NavigationPath
+    NavigationPath -.-> Storage
+
+    style NavigationPath fill:#0071e3,color:#fff,stroke:#0058b0
+    style API fill:#e8f4fd,color:#1d1d1f,stroke:#0071e3
+    style Storage fill:#f5f5f7,color:#1d1d1f,stroke:#d2d2d7
+  </div>
+  <div class="diagram-caption">Figure 2: NavigationPath state management -- a type-erased heterogeneous stack with limited public API</div>
+</div>
+
+<p>Key characteristics of <code>NavigationPath</code>:</p>
+<ul>
+  <li><strong>Type erasure</strong>: Values are stored as <code>any Hashable</code>. You lose the ability to read them back with their original type.</li>
+  <li><strong>Append-only access</strong>: You can append and remove, but you can't subscript (<code>path[0]</code> is not available).</li>
+  <li><strong>Codable support</strong>: If <em>all</em> pushed values conform to <code>Codable</code>, the <code>.codable</code> property returns a <code>CodableRepresentation</code> for serialization. If any non-Codable value is in the path, it returns <code>nil</code>.</li>
+  <li><strong>Swift 5.7 existentials</strong>: Under the hood, NavigationPath uses Swift's improved existential type handling to achieve ergonomic type erasure while retaining encoding capabilities.</li>
+</ul>
+
+<h3 id="programmatic-nav">Programmatic Navigation with NavigationPath</h3>
+<p>
+  To control navigation programmatically, declare a <code>@State</code> property of type <code>NavigationPath</code> (or a typed array) and pass it as a binding to <code>NavigationStack(path:)</code>:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Product</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> price: <span class="ty">Double</span>
+}
+
+<span class="kw">struct</span> <span class="ty">ShopView</span>: <span class="ty">View</span> {
+    <span class="cm">// The single source of truth for navigation state</span>
+    <span class="at">@State</span> <span class="kw">private var</span> path = <span class="ty">NavigationPath</span>()
+
+    <span class="kw">let</span> featuredProduct = <span class="ty">Product</span>(
+        name: <span class="str">"AirPods Pro"</span>,
+        price: <span class="num">249.0</span>
+    )
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="cm">// Bind the path to NavigationStack</span>
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$path</span>) {
+            <span class="ty">VStack</span>(spacing: <span class="num">20</span>) {
+                <span class="cm">// Standard NavigationLink (also appends to path)</span>
+                <span class="ty">NavigationLink</span>(value: featuredProduct) {
+                    <span class="ty">Text</span>(<span class="str">"View Featured Product"</span>)
+                }
+
+                <span class="cm">// Programmatic push via button</span>
+                <span class="ty">Button</span>(<span class="str">"Jump to Checkout"</span>) {
+                    <span class="cm">// Push multiple values at once</span>
+                    path.append(featuredProduct)
+                    path.append(<span class="str">"checkout"</span>)
+                }
+
+                <span class="ty">Text</span>(<span class="str">"Stack depth: </span>\(path.count)<span class="str">"</span>)
+                    .<span class="fn">foregroundStyle</span>(.secondary)
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Shop"</span>)
+            <span class="cm">// Destination for Product values</span>
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Product</span>.<span class="kw">self</span>) { product <span class="kw">in</span>
+                <span class="ty">ProductDetailView</span>(product: product, path: <span class="pr">$path</span>)
+            }
+            <span class="cm">// Destination for String values</span>
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">String</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                <span class="kw">if</span> route == <span class="str">"checkout"</span> {
+                    <span class="ty">CheckoutView</span>(path: <span class="pr">$path</span>)
+                }
+            }
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">ProductDetailView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> product: <span class="ty">Product</span>
+    <span class="at">@Binding</span> <span class="kw">var</span> path: <span class="ty">NavigationPath</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">VStack</span>(spacing: <span class="num">16</span>) {
+            <span class="ty">Text</span>(product.name).<span class="fn">font</span>(.title)
+            <span class="ty">Text</span>(<span class="str">"$</span>\(product.price, specifier: <span class="str">"%.2f"</span>)<span class="str">"</span>)
+                .<span class="fn">font</span>(.title2)
+            <span class="ty">Button</span>(<span class="str">"Proceed to Checkout"</span>) {
+                path.append(<span class="str">"checkout"</span>)
+            }
+        }
+        .<span class="fn">navigationTitle</span>(product.name)
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">CheckoutView</span>: <span class="ty">View</span> {
+    <span class="at">@Binding</span> <span class="kw">var</span> path: <span class="ty">NavigationPath</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">VStack</span>(spacing: <span class="num">16</span>) {
+            <span class="ty">Text</span>(<span class="str">"Checkout"</span>).<span class="fn">font</span>(.title)
+            <span class="ty">Button</span>(<span class="str">"Complete Purchase &amp; Go Home"</span>) {
+                <span class="cm">// Pop everything -- return to root</span>
+                path.removeLast(path.count)
+            }
+        }
+        .<span class="fn">navigationTitle</span>(<span class="str">"Checkout"</span>)
+    }
+}</code></pre>
+</div>
+
+<h3 id="pop-to-root">Pop to Root and Multi-Level Pop</h3>
+<p>
+  Popping views is straightforward -- you just manipulate the path:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="cm">// Pop one level (same as pressing the back button)</span>
+path.removeLast()
+
+<span class="cm">// Pop two levels</span>
+path.removeLast(<span class="num">2</span>)
+
+<span class="cm">// Pop to root -- Option A: remove all items</span>
+path.removeLast(path.count)
+
+<span class="cm">// Pop to root -- Option B: replace with empty path</span>
+path = <span class="ty">NavigationPath</span>()
+
+<span class="cm">// Pop to root -- Option C (if using typed array [MyRoute])</span>
+<span class="cm">// path.removeAll()</span>
+<span class="cm">// path = []</span></code></pre>
+</div>
+
+<div class="callout success">
+  <div class="callout-title">UIKit Comparison</div>
+  <p>
+    If you're coming from UIKit, think of <code>path.removeLast(path.count)</code> as the SwiftUI equivalent of <code>navigationController?.popToRootViewController(animated: true)</code>. The key difference is that in SwiftUI you're modifying <strong>state</strong> rather than calling an imperative method -- SwiftUI handles the animation automatically.
+  </p>
+</div>
+
+<!-- ===== Section 6: Typed vs Type-Erased ===== -->
+<h2 id="typed-vs-erased">Typed Arrays vs NavigationPath</h2>
+<p>
+  You have two choices for the path binding: a <strong>typed array</strong> (homogeneous) or <strong>NavigationPath</strong> (heterogeneous). Each has distinct advantages.
+</p>
+
+<h3>Using a Typed Array</h3>
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">enum</span> <span class="ty">AppRoute</span>: <span class="ty">Hashable</span> {
+    <span class="kw">case</span> productList
+    <span class="kw">case</span> productDetail(id: <span class="ty">UUID</span>)
+    <span class="kw">case</span> cart
+    <span class="kw">case</span> checkout
+    <span class="kw">case</span> confirmation(orderID: <span class="ty">String</span>)
+}
+
+<span class="kw">struct</span> <span class="ty">TypedArrayExample</span>: <span class="ty">View</span> {
+    <span class="cm">// Typed array -- all elements must be AppRoute</span>
+    <span class="at">@State</span> <span class="kw">private var</span> path: [<span class="ty">AppRoute</span>] = []
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$path</span>) {
+            <span class="ty">VStack</span>(spacing: <span class="num">16</span>) {
+                <span class="ty">Button</span>(<span class="str">"Browse Products"</span>) {
+                    path.append(.productList)
+                }
+                <span class="ty">Button</span>(<span class="str">"Go to Cart"</span>) {
+                    path.append(.cart)
+                }
+                <span class="ty">Button</span>(<span class="str">"Deep link: Product &rarr; Cart &rarr; Checkout"</span>) {
+                    path = [
+                        .productList,
+                        .productDetail(id: <span class="ty">UUID</span>()),
+                        .cart,
+                        .checkout
+                    ]
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Home"</span>)
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">AppRoute</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                <span class="kw">switch</span> route {
+                <span class="kw">case</span> .productList:
+                    <span class="ty">Text</span>(<span class="str">"Product List"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Products"</span>)
+                <span class="kw">case</span> .productDetail(<span class="kw">let</span> id):
+                    <span class="ty">Text</span>(<span class="str">"Product </span>\(id)<span class="str">"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Detail"</span>)
+                <span class="kw">case</span> .cart:
+                    <span class="ty">Text</span>(<span class="str">"Shopping Cart"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Cart"</span>)
+                <span class="kw">case</span> .checkout:
+                    <span class="ty">Text</span>(<span class="str">"Checkout"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Checkout"</span>)
+                <span class="kw">case</span> .confirmation(<span class="kw">let</span> orderID):
+                    <span class="ty">Text</span>(<span class="str">"Order </span>\(orderID)<span class="str"> confirmed!"</span>)
+                        .<span class="fn">navigationTitle</span>(<span class="str">"Confirmation"</span>)
+                }
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<h3>Using NavigationPath (Heterogeneous)</h3>
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Category</span>: <span class="ty">Hashable</span> {
+    <span class="kw">let</span> name: <span class="ty">String</span>
+}
+
+<span class="kw">struct</span> <span class="ty">Article</span>: <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id: <span class="ty">Int</span>
+    <span class="kw">let</span> title: <span class="ty">String</span>
+}
+
+<span class="kw">struct</span> <span class="ty">NavigationPathExample</span>: <span class="ty">View</span> {
+    <span class="cm">// NavigationPath can hold ANY Hashable type</span>
+    <span class="at">@State</span> <span class="kw">private var</span> path = <span class="ty">NavigationPath</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$path</span>) {
+            <span class="ty">VStack</span>(spacing: <span class="num">16</span>) {
+                <span class="cm">// Push a Category</span>
+                <span class="ty">Button</span>(<span class="str">"Browse Tech"</span>) {
+                    path.append(<span class="ty">Category</span>(name: <span class="str">"Technology"</span>))
+                }
+                <span class="cm">// Push an Article directly</span>
+                <span class="ty">Button</span>(<span class="str">"Read Article #1"</span>) {
+                    path.append(<span class="ty">Article</span>(id: <span class="num">1</span>, title: <span class="str">"SwiftUI Tips"</span>))
+                }
+                <span class="cm">// Push mixed types in sequence</span>
+                <span class="ty">Button</span>(<span class="str">"Category &rarr; Article"</span>) {
+                    path.append(<span class="ty">Category</span>(name: <span class="str">"Science"</span>))
+                    path.append(<span class="ty">Article</span>(id: <span class="num">2</span>, title: <span class="str">"Quantum Computing"</span>))
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Home"</span>)
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Category</span>.<span class="kw">self</span>) { category <span class="kw">in</span>
+                <span class="ty">Text</span>(<span class="str">"Category: </span>\(category.name)<span class="str">"</span>)
+                    .<span class="fn">navigationTitle</span>(category.name)
+            }
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Article</span>.<span class="kw">self</span>) { article <span class="kw">in</span>
+                <span class="ty">Text</span>(<span class="str">"Article: </span>\(article.title)<span class="str">"</span>)
+                    .<span class="fn">navigationTitle</span>(article.title)
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<h3>Comparison Table</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Typed Array <code>[Route]</code></th>
+      <th>NavigationPath</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Heterogeneous types</strong></td>
+      <td>No -- single type only</td>
+      <td>Yes -- any Hashable</td>
+    </tr>
+    <tr>
+      <td><strong>Type safety</strong></td>
+      <td>Full compile-time safety</td>
+      <td>Type-erased at runtime</td>
+    </tr>
+    <tr>
+      <td><strong>Inspection</strong></td>
+      <td>Full array access (subscript, iterate, filter)</td>
+      <td>Only count and isEmpty</td>
+    </tr>
+    <tr>
+      <td><strong>Codable support</strong></td>
+      <td>Standard Codable (if Route: Codable)</td>
+      <td>Via .codable property (returns nil if any value isn't Codable)</td>
+    </tr>
+    <tr>
+      <td><strong>Enum routing</strong></td>
+      <td>Natural fit -- one enum covers all routes</td>
+      <td>Not needed, but can still be used</td>
+    </tr>
+    <tr>
+      <td><strong>Deep linking</strong></td>
+      <td>Set path = [.screen1, .screen2, ...]</td>
+      <td>Append each value sequentially</td>
+    </tr>
+    <tr>
+      <td><strong>Best for</strong></td>
+      <td>Apps with a single, well-defined route enum</td>
+      <td>Apps with multiple independent model types pushed onto the stack</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Recommendation</div>
+  <p>
+    <strong>Prefer typed arrays with a route enum</strong> for most apps. You get full type safety, inspectability, and natural Codable conformance. Use <code>NavigationPath</code> when you genuinely need to push values of different, unrelated types -- for example, in a generic content browser where categories, articles, and users are all first-class navigation targets.
+  </p>
+</div>
+
+<!-- ===== Section 7: Multiple Destinations ===== -->
+<h2 id="multiple-destinations">Combining Multiple .navigationDestination Modifiers</h2>
+<p>
+  You can attach multiple <code>.navigationDestination(for:)</code> modifiers to handle different value types. SwiftUI matches the <strong>type</strong> of the pushed value to the appropriate destination closure:
+</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant Link as NavigationLink
+    participant Stack as NavigationStack
+    participant Dest1 as .navigationDestination(for: Product.self)
+    participant Dest2 as .navigationDestination(for: Category.self)
+    participant Dest3 as .navigationDestination(for: String.self)
+
+    User->>Link: Taps link (value: Product)
+    Link->>Stack: path.append(Product)
+    Stack->>Stack: Inspect type of appended value
+    Stack->>Dest1: Type == Product? Yes
+    Dest1->>Stack: Returns ProductDetailView
+    Stack->>User: Push ProductDetailView
+
+    Note over Stack: Later...
+
+    User->>Link: Taps link (value: "settings")
+    Link->>Stack: path.append("settings")
+    Stack->>Stack: Inspect type of appended value
+    Stack-->>Dest1: Type == Product? No
+    Stack-->>Dest2: Type == Category? No
+    Stack->>Dest3: Type == String? Yes
+    Dest3->>Stack: Returns SettingsView
+    Stack->>User: Push SettingsView
+  </div>
+  <div class="diagram-caption">Figure 3: How .navigationDestination(for:) resolves views by matching the pushed value's type</div>
+</div>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">User</span>: <span class="ty">Hashable</span> {
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> handle: <span class="ty">String</span>
+}
+
+<span class="kw">struct</span> <span class="ty">Post</span>: <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id: <span class="ty">Int</span>
+    <span class="kw">let</span> content: <span class="ty">String</span>
+}
+
+<span class="kw">struct</span> <span class="ty">MultiDestinationExample</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> path = <span class="ty">NavigationPath</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$path</span>) {
+            <span class="ty">List</span> {
+                <span class="ty">Section</span>(<span class="str">"Users"</span>) {
+                    <span class="ty">NavigationLink</span>(
+                        value: <span class="ty">User</span>(name: <span class="str">"Alice"</span>, handle: <span class="str">"@alice"</span>)
+                    ) {
+                        <span class="ty">Text</span>(<span class="str">"Alice"</span>)
+                    }
+                }
+                <span class="ty">Section</span>(<span class="str">"Posts"</span>) {
+                    <span class="ty">NavigationLink</span>(
+                        value: <span class="ty">Post</span>(id: <span class="num">1</span>, content: <span class="str">"Hello, world!"</span>)
+                    ) {
+                        <span class="ty">Text</span>(<span class="str">"Post #1"</span>)
+                    }
+                }
+                <span class="ty">Section</span>(<span class="str">"Settings"</span>) {
+                    <span class="ty">NavigationLink</span>(value: <span class="str">"settings"</span>) {
+                        <span class="ty">Text</span>(<span class="str">"App Settings"</span>)
+                    }
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Feed"</span>)
+            <span class="cm">// Each type gets its own destination handler</span>
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">User</span>.<span class="kw">self</span>) { user <span class="kw">in</span>
+                <span class="ty">VStack</span> {
+                    <span class="ty">Text</span>(user.name).<span class="fn">font</span>(.title)
+                    <span class="ty">Text</span>(user.handle).<span class="fn">foregroundStyle</span>(.secondary)
+                }
+                .<span class="fn">navigationTitle</span>(<span class="str">"Profile"</span>)
+            }
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Post</span>.<span class="kw">self</span>) { post <span class="kw">in</span>
+                <span class="ty">VStack</span>(alignment: .leading) {
+                    <span class="ty">Text</span>(<span class="str">"Post #</span>\(post.id)<span class="str">"</span>).<span class="fn">font</span>(.headline)
+                    <span class="ty">Text</span>(post.content)
+                }
+                .<span class="fn">padding</span>()
+                .<span class="fn">navigationTitle</span>(<span class="str">"Post"</span>)
+            }
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">String</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                <span class="kw">switch</span> route {
+                <span class="kw">case</span> <span class="str">"settings"</span>:
+                    <span class="ty">Text</span>(<span class="str">"Settings Page"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Settings"</span>)
+                <span class="kw">default</span>:
+                    <span class="ty">Text</span>(<span class="str">"Unknown route: </span>\(route)<span class="str">"</span>)
+                }
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<div class="callout warning">
+  <div class="callout-title">Important Rules</div>
+  <ul>
+    <li>Only <strong>one</strong> <code>.navigationDestination(for:)</code> per type is allowed in the <strong>same view hierarchy level</strong>. If you register two handlers for the same type, the one <strong>closest to the NavigationStack</strong> (highest in the view tree) wins.</li>
+    <li>If no matching destination is found for a pushed value type, SwiftUI will print a runtime warning: <em>"A NavigationLink is presenting a value of type X but there is no matching navigationDestination declaration visible from the location of the link."</em></li>
+    <li>The <code>.navigationDestination</code> modifiers can be placed on any view inside the <code>NavigationStack</code> -- they don't have to be on the root view. However, placing them on the root is the most common and predictable pattern.</li>
+  </ul>
+</div>
+
+<!-- ===== Section 8: Passing Data ===== -->
+<h2 id="passing-data">Passing Data Between Screens</h2>
+<p>
+  Since navigation is value-driven, passing data is as simple as putting data in the value you push. The destination closure receives that value and can use it however it needs:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="cm">// Rich data model -- contains everything the detail screen needs</span>
+<span class="kw">struct</span> <span class="ty">Movie</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> title: <span class="ty">String</span>
+    <span class="kw">let</span> year: <span class="ty">Int</span>
+    <span class="kw">let</span> director: <span class="ty">String</span>
+    <span class="kw">let</span> rating: <span class="ty">Double</span>
+}
+
+<span class="kw">struct</span> <span class="ty">MovieBrowserView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> path = <span class="ty">NavigationPath</span>()
+
+    <span class="kw">let</span> movies = [
+        <span class="ty">Movie</span>(title: <span class="str">"Inception"</span>, year: <span class="num">2010</span>,
+              director: <span class="str">"Christopher Nolan"</span>, rating: <span class="num">8.8</span>),
+        <span class="ty">Movie</span>(title: <span class="str">"The Matrix"</span>, year: <span class="num">1999</span>,
+              director: <span class="str">"The Wachowskis"</span>, rating: <span class="num">8.7</span>),
+    ]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$path</span>) {
+            <span class="ty">List</span>(movies) { movie <span class="kw">in</span>
+                <span class="cm">// The entire Movie struct is the navigation value</span>
+                <span class="ty">NavigationLink</span>(value: movie) {
+                    <span class="ty">VStack</span>(alignment: .leading) {
+                        <span class="ty">Text</span>(movie.title).<span class="fn">font</span>(.headline)
+                        <span class="ty">Text</span>(<span class="str">"</span>\(movie.year)<span class="str"> &bull; </span>\(movie.director)<span class="str">"</span>)
+                            .<span class="fn">font</span>(.caption)
+                            .<span class="fn">foregroundStyle</span>(.secondary)
+                    }
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"Movies"</span>)
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">Movie</span>.<span class="kw">self</span>) { movie <span class="kw">in</span>
+                <span class="ty">MovieDetailScreen</span>(movie: movie, path: <span class="pr">$path</span>)
+            }
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">MovieDetailScreen</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> movie: <span class="ty">Movie</span>
+    <span class="at">@Binding</span> <span class="kw">var</span> path: <span class="ty">NavigationPath</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">VStack</span>(alignment: .leading, spacing: <span class="num">12</span>) {
+            <span class="ty">Text</span>(movie.title)
+                .<span class="fn">font</span>(.largeTitle)
+                .<span class="fn">fontWeight</span>(.bold)
+            <span class="ty">HStack</span> {
+                <span class="ty">Text</span>(<span class="str">"Directed by </span>\(movie.director)<span class="str">"</span>)
+                <span class="ty">Spacer</span>()
+                <span class="ty">Text</span>(<span class="str">"</span>\(movie.year)<span class="str">"</span>)
+            }
+            .<span class="fn">foregroundStyle</span>(.secondary)
+            <span class="ty">Text</span>(<span class="str">"Rating: </span>\(movie.rating, specifier: <span class="str">"%.1f"</span>)<span class="str">/10"</span>)
+                .<span class="fn">font</span>(.title2)
+            <span class="ty">Spacer</span>()
+            <span class="ty">Button</span>(<span class="str">"Back to All Movies"</span>) {
+                path.removeLast(path.count)
+            }
+            .<span class="fn">buttonStyle</span>(.borderedProminent)
+        }
+        .<span class="fn">padding</span>()
+        .<span class="fn">navigationTitle</span>(movie.title)
+        .<span class="fn">navigationBarTitleDisplayMode</span>(.inline)
+    }
+}</code></pre>
+</div>
+
+<p>
+  <strong>Pattern:</strong> For simple cases, pass the whole model as the navigation value. For cases where the detail screen needs to fetch additional data, pass just an identifier (like a UUID or Int) and let the detail screen load the data from a store or network.
+</p>
+
+<!-- ===== Section 9: State Persistence ===== -->
+<h2 id="state-persistence">Persisting Navigation State</h2>
+<p>
+  <code>NavigationPath</code> supports Codable serialization when <em>all</em> values in the path conform to <code>Codable</code>. This enables saving and restoring navigation state across app launches:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="at">@Observable</span>
+<span class="kw">class</span> <span class="ty">NavigationStore</span> {
+    <span class="kw">var</span> path = <span class="ty">NavigationPath</span>() {
+        <span class="kw">didSet</span> { save() }
+    }
+
+    <span class="kw">private let</span> savePath = <span class="ty">URL</span>.documentsDirectory
+        .appending(path: <span class="str">"navigation.json"</span>)
+
+    <span class="kw">init</span>() {
+        <span class="cm">// Attempt to restore saved navigation state</span>
+        <span class="kw">if let</span> data = <span class="kw">try</span>? <span class="ty">Data</span>(contentsOf: savePath),
+           <span class="kw">let</span> representation = <span class="kw">try</span>? <span class="ty">JSONDecoder</span>().decode(
+               <span class="ty">NavigationPath</span>.<span class="ty">CodableRepresentation</span>.<span class="kw">self</span>,
+               from: data
+           ) {
+            path = <span class="ty">NavigationPath</span>(representation)
+        }
+    }
+
+    <span class="kw">private func</span> <span class="fn">save</span>() {
+        <span class="kw">guard let</span> representation = path.codable <span class="kw">else</span> {
+            <span class="cm">// Some values in path don't conform to Codable</span>
+            <span class="kw">return</span>
+        }
+        <span class="kw">do</span> {
+            <span class="kw">let</span> data = <span class="kw">try</span> <span class="ty">JSONEncoder</span>().encode(representation)
+            <span class="kw">try</span> data.write(to: savePath)
+        } <span class="kw">catch</span> {
+            <span class="fn">print</span>(<span class="str">"Failed to save navigation: </span>\(error)<span class="str">"</span>)
+        }
+    }
+}
+
+<span class="cm">// Usage in your App</span>
+<span class="at">@main</span>
+<span class="kw">struct</span> <span class="ty">MyApp</span>: <span class="ty">App</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> store = <span class="ty">NavigationStore</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">Scene</span> {
+        <span class="ty">WindowGroup</span> {
+            <span class="ty">NavigationStack</span>(path: <span class="pr">$store</span>.path) {
+                <span class="ty">HomeView</span>()
+                    .<span class="fn">navigationDestination</span>(for: <span class="ty">String</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                        <span class="ty">Text</span>(<span class="str">"Route: </span>\(route)<span class="str">"</span>)
+                    }
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<div class="callout warning">
+  <div class="callout-title">Caveat: Codable Stability</div>
+  <p>
+    If your route types change between app versions (e.g., you rename an enum case or change associated values), previously saved navigation data may fail to decode. Always handle decoding failures gracefully by falling back to the root state. Consider versioning your route types if persistence is critical.
+  </p>
+</div>
+
+<!-- ===== Section 10: Router Pattern ===== -->
+<h2 id="coordinator-pattern">Router / Coordinator Pattern</h2>
+<p>
+  For larger apps, centralizing navigation logic in a dedicated <strong>Router</strong> (sometimes called a Coordinator) keeps your views clean and your navigation testable:
+</p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <span class="lang-label">Swift</span>
+    <button class="copy-btn" onclick="copyCode(this)"><span>&#9776;</span> Copy</button>
+  </div>
+  <pre><code><span class="kw">import</span> SwiftUI
+
+<span class="cm">// MARK: - Route Definition</span>
+<span class="kw">enum</span> <span class="ty">AppRoute</span>: <span class="ty">Hashable</span>, <span class="ty">Codable</span> {
+    <span class="kw">case</span> home
+    <span class="kw">case</span> profile(userID: <span class="ty">String</span>)
+    <span class="kw">case</span> settings
+    <span class="kw">case</span> settingsDetail(<span class="ty">SettingsSection</span>)
+
+    <span class="kw">enum</span> <span class="ty">SettingsSection</span>: <span class="ty">String</span>, <span class="ty">Hashable</span>, <span class="ty">Codable</span> {
+        <span class="kw">case</span> account, notifications, privacy
+    }
+}
+
+<span class="cm">// MARK: - Router</span>
+<span class="at">@Observable</span>
+<span class="kw">class</span> <span class="ty">AppRouter</span> {
+    <span class="kw">var</span> path: [<span class="ty">AppRoute</span>] = []
+
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="ty">AppRoute</span>) {
+        path.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeAll()
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>(to route: <span class="ty">AppRoute</span>) {
+        <span class="kw">guard let</span> index = path.lastIndex(of: route) <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast(path.count - index - <span class="num">1</span>)
+    }
+
+    <span class="cm">// Deep link handler</span>
+    <span class="kw">func</span> <span class="fn">handleDeepLink</span>(url: <span class="ty">URL</span>) {
+        <span class="kw">guard let</span> components = <span class="ty">URLComponents</span>(url: url,
+            resolvingAgainstBaseURL: <span class="kw">false</span>) <span class="kw">else</span> { <span class="kw">return</span> }
+
+        path.removeAll()
+
+        <span class="kw">switch</span> components.path {
+        <span class="kw">case</span> <span class="kw">let</span> p <span class="kw">where</span> p.hasPrefix(<span class="str">"/profile/"</span>):
+            <span class="kw">let</span> userID = <span class="ty">String</span>(p.dropFirst(<span class="num">9</span>))
+            path = [.profile(userID: userID)]
+        <span class="kw">case</span> <span class="str">"/settings/notifications"</span>:
+            path = [.settings, .settingsDetail(.notifications)]
+        <span class="kw">default</span>:
+            <span class="kw">break</span>
+        }
+    }
+}
+
+<span class="cm">// MARK: - Destination Builder</span>
+<span class="kw">struct</span> <span class="ty">RouteDestination</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> route: <span class="ty">AppRoute</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="kw">switch</span> route {
+        <span class="kw">case</span> .home:
+            <span class="ty">Text</span>(<span class="str">"Home"</span>)
+        <span class="kw">case</span> .profile(<span class="kw">let</span> userID):
+            <span class="ty">Text</span>(<span class="str">"Profile: </span>\(userID)<span class="str">"</span>).<span class="fn">navigationTitle</span>(<span class="str">"Profile"</span>)
+        <span class="kw">case</span> .settings:
+            <span class="ty">SettingsListView</span>()
+        <span class="kw">case</span> .settingsDetail(<span class="kw">let</span> section):
+            <span class="ty">Text</span>(<span class="str">"</span>\(section.rawValue.capitalized)<span class="str"> Settings"</span>)
+                .<span class="fn">navigationTitle</span>(section.rawValue.capitalized)
+        }
+    }
+}
+
+<span class="cm">// MARK: - Root View</span>
+<span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> router = <span class="ty">AppRouter</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span>(path: <span class="pr">$router</span>.path) {
+            <span class="ty">List</span> {
+                <span class="ty">NavigationLink</span>(value: <span class="ty">AppRoute</span>.profile(userID: <span class="str">"alice"</span>)) {
+                    <span class="ty">Text</span>(<span class="str">"Alice's Profile"</span>)
+                }
+                <span class="ty">NavigationLink</span>(value: <span class="ty">AppRoute</span>.settings) {
+                    <span class="ty">Text</span>(<span class="str">"Settings"</span>)
+                }
+            }
+            .<span class="fn">navigationTitle</span>(<span class="str">"App"</span>)
+            .<span class="fn">navigationDestination</span>(for: <span class="ty">AppRoute</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                <span class="ty">RouteDestination</span>(route: route)
+            }
+        }
+        .<span class="fn">environment</span>(router)
+        .<span class="fn">onOpenURL</span> { url <span class="kw">in</span>
+            router.handleDeepLink(url: url)
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">SettingsListView</span>: <span class="ty">View</span> {
+    <span class="at">@Environment</span>(<span class="ty">AppRouter</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span> {
+            <span class="ty">NavigationLink</span>(value: <span class="ty">AppRoute</span>.settingsDetail(.account)) {
+                <span class="ty">Text</span>(<span class="str">"Account"</span>)
+            }
+            <span class="ty">NavigationLink</span>(value: <span class="ty">AppRoute</span>.settingsDetail(.notifications)) {
+                <span class="ty">Text</span>(<span class="str">"Notifications"</span>)
+            }
+            <span class="ty">NavigationLink</span>(value: <span class="ty">AppRoute</span>.settingsDetail(.privacy)) {
+                <span class="ty">Text</span>(<span class="str">"Privacy"</span>)
+            }
+        }
+        .<span class="fn">navigationTitle</span>(<span class="str">"Settings"</span>)
+    }
+}</code></pre>
+</div>
+
+<!-- ===== Section 11: Tradeoffs ===== -->
+<h2 id="tradeoffs">Tradeoff Analysis</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Consideration</th>
+      <th>Value-Based (NavigationStack)</th>
+      <th>View-Based (old NavigationView)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Testability</strong></td>
+      <td>Excellent -- test path contents without views</td>
+      <td>Poor -- requires UI tests</td>
+    </tr>
+    <tr>
+      <td><strong>Deep linking</strong></td>
+      <td>Set path directly from URL handler</td>
+      <td>Chain of isActive bindings</td>
+    </tr>
+    <tr>
+      <td><strong>State restoration</strong></td>
+      <td>Built-in Codable support</td>
+      <td>Must build custom solution</td>
+    </tr>
+    <tr>
+      <td><strong>Learning curve</strong></td>
+      <td>Moderate -- new mental model</td>
+      <td>Low -- familiar push/pop</td>
+    </tr>
+    <tr>
+      <td><strong>Minimum target</strong></td>
+      <td>iOS 16 / macOS 13</td>
+      <td>iOS 13 / macOS 10.15</td>
+    </tr>
+    <tr>
+      <td><strong>Destination laziness</strong></td>
+      <td>Lazy -- created only when pushed</td>
+      <td>Eager -- created at init time</td>
+    </tr>
+    <tr>
+      <td><strong>Programmatic control</strong></td>
+      <td>Full -- push, pop, pop to root, pop to level</td>
+      <td>Limited -- isActive or tag/selection</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-column / iPad</strong></td>
+      <td>Use NavigationSplitView separately</td>
+      <td>NavigationView with .columns style</td>
+    </tr>
+    <tr>
+      <td><strong>Complexity at scale</strong></td>
+      <td>Scales well with router pattern</td>
+      <td>Becomes unwieldy with many screens</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>NavigationStack + Path vs Sheet/FullScreenCover</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Best For</th>
+      <th>Navigation Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>NavigationStack</strong></td>
+      <td>Drill-down flows (list &rarr; detail &rarr; sub-detail)</td>
+      <td>Stack-based, linear</td>
+    </tr>
+    <tr>
+      <td><strong>.sheet / .fullScreenCover</strong></td>
+      <td>Modal flows (creation forms, settings, alerts)</td>
+      <td>Modal overlay</td>
+    </tr>
+    <tr>
+      <td><strong>NavigationSplitView</strong></td>
+      <td>Multi-column layouts (sidebar &rarr; content &rarr; detail)</td>
+      <td>Column-based, adaptive</td>
+    </tr>
+    <tr>
+      <td><strong>TabView</strong></td>
+      <td>Top-level app sections</td>
+      <td>Tab-based, parallel</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== Section 12: When to Use ===== -->
+<h2 id="when-to-use">When to Use This Approach</h2>
+
+<div class="callout success">
+  <div class="callout-title">Use NavigationStack + Path When</div>
+  <ul>
+    <li>You need <strong>programmatic navigation</strong> (push/pop from code, not just links)</li>
+    <li>Your app has <strong>deep linking</strong> requirements</li>
+    <li>You want to <strong>save and restore</strong> navigation state across sessions</li>
+    <li>You're building a <strong>drill-down flow</strong> (master &rarr; detail &rarr; sub-detail)</li>
+    <li>You want <strong>testable</strong> navigation logic</li>
+    <li>You're targeting <strong>iOS 16+</strong> (which you should be for new projects in 2024+)</li>
+    <li>You need <strong>pop-to-root</strong> or <strong>pop-to-specific-screen</strong> functionality</li>
+  </ul>
+</div>
+
+<div class="callout warning">
+  <div class="callout-title">Consider Alternatives When</div>
+  <ul>
+    <li><strong>Multi-column layout</strong>: Use <code>NavigationSplitView</code> for sidebar + content + detail on iPad</li>
+    <li><strong>Modal flows</strong>: Use <code>.sheet</code> or <code>.fullScreenCover</code> for forms, settings, or creation flows</li>
+    <li><strong>Tab-based navigation</strong>: Use <code>TabView</code> for top-level section switching</li>
+    <li><strong>Simple two-screen app</strong>: Plain NavigationStack without a path binding may be sufficient</li>
+    <li><strong>Supporting iOS 15 and below</strong>: You'll need NavigationView (consider a compatibility shim)</li>
+  </ul>
+</div>
+
+<!-- ===== Section 13: Compatibility ===== -->
+<h2 id="compatibility">iOS Version Compatibility Notes</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>API</th>
+      <th>Minimum Version</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>NavigationStack</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Replaces single-column NavigationView</td>
+    </tr>
+    <tr>
+      <td><code>NavigationStack(path:)</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Programmatic path binding</td>
+    </tr>
+    <tr>
+      <td><code>NavigationPath</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Type-erased heterogeneous path</td>
+    </tr>
+    <tr>
+      <td><code>NavigationLink(value:)</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Value-based navigation</td>
+    </tr>
+    <tr>
+      <td><code>.navigationDestination(for:)</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Type-matched destination resolution</td>
+    </tr>
+    <tr>
+      <td><code>.navigationDestination(item:)</code></td>
+      <td>iOS 17.0 / macOS 14.0</td>
+      <td>Optional binding variant (like .sheet(item:))</td>
+    </tr>
+    <tr>
+      <td><code>NavigationSplitView</code></td>
+      <td>iOS 16.0 / macOS 13.0</td>
+      <td>Replaces multi-column NavigationView</td>
+    </tr>
+    <tr>
+      <td><code>NavigationView</code></td>
+      <td>iOS 13.0 (deprecated iOS 16)</td>
+      <td>Still compiles but receives no new features</td>
+    </tr>
+    <tr>
+      <td><code>@Observable</code> macro</td>
+      <td>iOS 17.0 / macOS 14.0</td>
+      <td>Used in router examples; use ObservableObject + @Published for iOS 16</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <div class="callout-title">iOS 16 Compatibility Tip</div>
+  <p>
+    The router pattern examples in this guide use <code>@Observable</code> (iOS 17+). For iOS 16 targets, replace <code>@Observable class</code> with <code>class MyRouter: ObservableObject</code> and mark properties with <code>@Published</code>. Use <code>@StateObject</code> / <code>@EnvironmentObject</code> instead of <code>@State</code> / <code>@Environment</code>.
+  </p>
+</div>
+
+<!-- ===== Section 14: Common Pitfalls ===== -->
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+
+<details>
+  <summary>1. Duplicate .navigationDestination for the same type</summary>
+  <div class="details-content">
+    <p>If you register two <code>.navigationDestination(for: String.self)</code> modifiers at the same level, the one closer to the NavigationStack root wins. The other is silently ignored. This can lead to confusing behavior where the "wrong" destination appears.</p>
+    <p><strong>Fix:</strong> Use a single destination per type. If you need to route to different views based on String values, use a <code>switch</code> statement inside a single destination closure.</p>
+  </div>
+</details>
+
+<details>
+  <summary>2. Forgetting Hashable conformance</summary>
+  <div class="details-content">
+    <p>All values pushed via <code>NavigationLink(value:)</code> or <code>path.append()</code> must conform to <code>Hashable</code>. If your model doesn't conform, you'll get a compile error. For structs with only basic stored properties, adding <code>: Hashable</code> is usually enough (the compiler synthesizes the conformance).</p>
+    <p><strong>Fix:</strong> Add <code>Hashable</code> conformance. For classes or complex types, implement <code>hash(into:)</code> and <code>==</code> manually.</p>
+  </div>
+</details>
+
+<details>
+  <summary>3. NavigationPath.codable returns nil</summary>
+  <div class="details-content">
+    <p>The <code>.codable</code> property returns <code>nil</code> if any value in the path doesn't conform to <code>Codable</code>. This is a runtime check -- you won't get a compiler warning.</p>
+    <p><strong>Fix:</strong> Ensure all types pushed onto NavigationPath also conform to <code>Codable</code> if you need persistence. Consider using a typed array with a Codable enum instead.</p>
+  </div>
+</details>
+
+<details>
+  <summary>4. Placing .navigationDestination outside NavigationStack</summary>
+  <div class="details-content">
+    <p>The <code>.navigationDestination</code> modifier must be placed on a view <em>inside</em> the <code>NavigationStack</code>, not on the NavigationStack itself or outside it. Placing it incorrectly means pushed values won't find a matching destination.</p>
+    <p><strong>Fix:</strong> Always apply <code>.navigationDestination</code> to a view within the NavigationStack's content closure.</p>
+  </div>
+</details>
+
+<details>
+  <summary>5. Nesting NavigationStacks</summary>
+  <div class="details-content">
+    <p>Placing a <code>NavigationStack</code> inside another <code>NavigationStack</code> creates two independent navigation hierarchies. You'll see double navigation bars and confusing behavior.</p>
+    <p><strong>Fix:</strong> Use only <strong>one</strong> NavigationStack at the top of your view hierarchy. Child views should use <code>NavigationLink</code> and <code>.navigationDestination</code> without wrapping themselves in another stack.</p>
+  </div>
+</details>
+
+<details>
+  <summary>6. Using NavigationLink with both "value" and "destination" styles in the same stack</summary>
+  <div class="details-content">
+    <p>Mixing <code>NavigationLink("Title") { DestView() }</code> (view-based) with <code>NavigationLink(value: myValue) { Label() }</code> (value-based) in the same NavigationStack is technically allowed but can cause confusion. View-based links don't participate in the path binding, so they won't update your <code>@State path</code>.</p>
+    <p><strong>Fix:</strong> Pick one style per NavigationStack. For programmatic control, use value-based links exclusively.</p>
+  </div>
+</details>
+
+<details>
+  <summary>7. Mutating path too rapidly</summary>
+  <div class="details-content">
+    <p>Appending multiple items to the path in rapid succession (e.g., in a loop without animation grouping) can sometimes cause visual glitches or unexpected behavior.</p>
+    <p><strong>Fix:</strong> When setting multiple levels at once, prefer assigning the entire array: <code>path = [.screen1, .screen2, .screen3]</code> (for typed arrays) or use <code>withAnimation</code> to group changes.</p>
+  </div>
+</details>
+
+<!-- ===== Section 15: References ===== -->
+<h2 id="references">References &amp; Further Reading</h2>
+<ul>
+  <li><a href="https://developer.apple.com/documentation/swiftui/navigationstack" target="_blank" rel="noopener">Apple Documentation: NavigationStack</a></li>
+  <li><a href="https://developer.apple.com/documentation/swiftui/navigationpath" target="_blank" rel="noopener">Apple Documentation: NavigationPath</a></li>
+  <li><a href="https://developer.apple.com/documentation/swiftui/migrating-to-new-navigation-types" target="_blank" rel="noopener">Apple: Migrating to New Navigation Types</a></li>
+  <li><a href="https://developer.apple.com/videos/play/wwdc2022/10054/" target="_blank" rel="noopener">WWDC22: The SwiftUI Cookbook for Navigation</a></li>
+  <li><a href="https://swiftwithmajid.com/2022/10/05/mastering-navigationstack-in-swiftui-navigationpath/" target="_blank" rel="noopener">Swift with Majid: Mastering NavigationStack -- NavigationPath</a></li>
+  <li><a href="https://www.hackingwithswift.com/books/ios-swiftui/programmatic-navigation-with-navigationstack" target="_blank" rel="noopener">Hacking with Swift: Programmatic Navigation with NavigationStack</a></li>
+  <li><a href="https://www.pointfree.co/blog/posts/78-reverse-engineering-swiftui-s-navigationpath-codability" target="_blank" rel="noopener">Point-Free: Reverse Engineering NavigationPath Codability</a></li>
+  <li><a href="https://www.donnywals.com/programmatic-navigation-in-swiftui-with-navigationpath-and-navigationdestination/" target="_blank" rel="noopener">Donny Wals: Programmatic Navigation with NavigationPath</a></li>
+</ul>
+
+</div><!-- /.content-inner -->
+</main>
+</div><!-- /.page-wrapper -->
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+
+<script>
+// ===== Mermaid Init =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+  flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+  sequence: { useMaxWidth: true, mirrorActors: false, wrap: true }
+});
+
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+
+function setTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeIcon.innerHTML = dark ? '&#9788;' : '&#9789;';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  // Re-render mermaid diagrams with correct theme
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    sequence: { useMaxWidth: true, mirrorActors: false, wrap: true }
+  });
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const graphDef = el.getAttribute('data-graph');
+    if (graphDef) {
+      el.removeAttribute('data-processed');
+      el.innerHTML = graphDef;
+      mermaid.run({ nodes: [el] });
+    }
+  });
+}
+
+// Store original mermaid source for re-rendering
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.mermaid').forEach(el => {
+    if (!el.getAttribute('data-graph')) {
+      el.setAttribute('data-graph', el.textContent.trim());
+    }
+  });
+});
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  setTheme(true);
+}
+
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  setTheme(!isDark);
+});
+
+// ===== Copy Button =====
+function copyCode(btn) {
+  const codeBlock = btn.closest('.code-block');
+  const code = codeBlock.querySelector('pre code') || codeBlock.querySelector('pre');
+  const text = code.textContent;
+
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>&#10003;</span> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span>&#9776;</span> Copy';
+    }, 2000);
+  });
+}
+
+// ===== Back to Top =====
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('visible', window.scrollY > 400);
+});
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== Mobile Menu =====
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+});
+
+// Close sidebar when clicking a TOC link on mobile
+sidebar.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 960) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+  });
+});
+
+// ===== Active TOC Tracking =====
+const tocLinks = document.querySelectorAll('#tocList a');
+const sections = [];
+
+tocLinks.forEach(link => {
+  const id = link.getAttribute('href').substring(1);
+  const el = document.getElementById(id);
+  if (el) sections.push({ id, el, link });
+});
+
+function updateActiveToc() {
+  let current = sections[0];
+  const scrollY = window.scrollY + 100;
+
+  for (const section of sections) {
+    if (section.el.offsetTop <= scrollY) {
+      current = section;
+    }
+  }
+
+  tocLinks.forEach(l => l.classList.remove('active'));
+  if (current) current.link.classList.add('active');
+}
+
+window.addEventListener('scroll', updateActiveToc);
+updateActiveToc();
+</script>
+</body>
+</html>

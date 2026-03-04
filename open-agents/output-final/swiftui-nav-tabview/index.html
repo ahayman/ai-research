@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TabView with Independent NavigationStacks — SwiftUI Navigation</title>
+<meta name="description" content="Comprehensive guide to building tabbed navigation in SwiftUI with independent NavigationStacks per tab, including pop-to-root, deep linking, iOS 18 Tab API, and a complete mini-app.">
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #0071e3;
+  --color-primary-light: #2997ff;
+  --color-primary-dark: #0058b0;
+  --color-primary-bg: #e8f4fd;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #515154;
+  --color-text-muted: #86868b;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f7;
+  --color-bg-sidebar: #f5f5f7;
+  --color-border: #d2d2d7;
+  --color-border-light: #e8e8ed;
+  --color-heading: #1d1d1f;
+  --color-link: #0071e3;
+  --color-link-hover: #0058b0;
+  --color-code-bg: #f5f5f7;
+  --color-code-text: #1d1d1f;
+  --color-table-stripe: #f5f5f7;
+  --color-table-header: #e8e8ed;
+  --color-callout-border: #0071e3;
+  --color-callout-bg: #e8f4fd;
+  --color-warning-border: #ff9500;
+  --color-warning-bg: #fff8ee;
+  --color-success-border: #34c759;
+  --color-success-bg: #edfbf0;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #d2d2d7;
+  --color-scrollbar: #c7c7cc;
+  --color-scrollbar-hover: #8e8e93;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #2997ff;
+  --color-primary-light: #64b5f6;
+  --color-primary-dark: #0071e3;
+  --color-primary-bg: #0d2137;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #a1a1a6;
+  --color-text-muted: #6e6e73;
+  --color-bg: #000000;
+  --color-bg-alt: #1c1c1e;
+  --color-bg-sidebar: #1c1c1e;
+  --color-border: #38383a;
+  --color-border-light: #2c2c2e;
+  --color-heading: #f5f5f7;
+  --color-link: #2997ff;
+  --color-link-hover: #64b5f6;
+  --color-code-bg: #1c1c1e;
+  --color-code-text: #f5f5f7;
+  --color-table-stripe: #1c1c1e;
+  --color-table-header: #2c2c2e;
+  --color-callout-border: #2997ff;
+  --color-callout-bg: #0d2137;
+  --color-warning-border: #ff9f0a;
+  --color-warning-bg: #2a1d00;
+  --color-success-border: #30d158;
+  --color-success-bg: #0a2011;
+  --color-diagram-bg: #1c1c1e;
+  --color-diagram-border: #38383a;
+  --color-scrollbar: #48484a;
+  --color-scrollbar-hover: #636366;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 0;
+  z-index: 100;
+  transition: transform var(--transition);
+}
+
+.sidebar-header {
+  padding: 0 1.25rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.sidebar-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-link);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-header .back-link:hover {
+  color: var(--color-link-hover);
+}
+
+.sidebar-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0 0.75rem;
+}
+
+.sidebar-nav li {
+  margin-bottom: 1px;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-nav a:hover {
+  background: var(--color-border-light);
+  color: var(--color-text);
+}
+
+.sidebar-nav a.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar-nav .nav-group {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.sidebar-nav .nav-group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  padding: 0 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+/* ===== Mobile sidebar toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.sidebar-toggle svg { display: block; }
+
+/* ===== Main content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Top bar ===== */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.theme-toggle {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  background: var(--color-border-light);
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--color-link); text-decoration: none; }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+strong { font-weight: 600; }
+
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.35rem; }
+
+/* ===== Code blocks ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-code-text);
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-table-header);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.code-header + pre {
+  border-radius: 0 0 10px 10px;
+  margin-top: 0;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.copy-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.copy-btn.copied {
+  color: var(--color-success-border);
+  border-color: var(--color-success-border);
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+}
+
+.callout.warning {
+  border-left-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.callout.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.35rem;
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+
+/* ===== Tradeoff cards ===== */
+.tradeoff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tradeoff-card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  background: var(--color-bg-alt);
+}
+
+.tradeoff-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.tradeoff-card ul {
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+}
+
+.tradeoff-card.pro { border-top: 3px solid var(--color-success-border); }
+.tradeoff-card.con { border-top: 3px solid var(--color-warning-border); }
+
+/* ===== Back to top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 50;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+/* ===== Responsive ===== */
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  }
+
+  .sidebar-toggle { display: block; }
+
+  .main { margin-left: 0; }
+
+  .content { padding: 2rem 1.25rem 3rem; }
+
+  .tradeoff-grid { grid-template-columns: 1fr; }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+}
+
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 3rem; }
+  pre { padding: 1rem; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar toggle (mobile) -->
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">
+  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+</button>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&#8592; Back to Dashboard</a>
+    <h2>TabView + NavigationStack</h2>
+  </div>
+  <nav class="sidebar-nav">
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <div class="nav-group">
+        <div class="nav-group-label">Core Patterns</div>
+        <li><a href="#basic-tabview">Basic TabView Setup</a></li>
+        <li><a href="#selection-binding">Selection Binding</a></li>
+        <li><a href="#appstate">AppState Nav Paths</a></li>
+        <li><a href="#pop-to-root">Pop-to-Root on Reselect</a></li>
+        <li><a href="#state-preservation">State Preservation</a></li>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Advanced Topics</div>
+        <li><a href="#custom-tab-bar">Custom Tab Bar</a></li>
+        <li><a href="#deep-linking">Deep Linking</a></li>
+        <li><a href="#badges">Badge Support</a></li>
+        <li><a href="#hiding-tabbar">Hiding the Tab Bar</a></li>
+        <li><a href="#ipad-splitview">iPad &amp; NavigationSplitView</a></li>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">iOS 18+</div>
+        <li><a href="#ios18-tab-api">New Tab API</a></li>
+        <li><a href="#ios18-issues">Known Issues</a></li>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Reference</div>
+        <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+        <li><a href="#when-to-use">When to Use</a></li>
+        <li><a href="#mini-app">Complete Mini-App</a></li>
+      </div>
+    </ul>
+  </nav>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main">
+<div class="content">
+
+<div class="top-bar">
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+    <span class="theme-icon">&#9790;</span> Theme
+  </button>
+</div>
+
+<h1 id="overview">TabView with Independent NavigationStacks</h1>
+<p class="subtitle">The most common production pattern for tabbed iOS apps. Each tab owns its own NavigationStack, preserving independent back-stacks, enabling deep linking, and supporting pop-to-root on tab reselection.</p>
+
+<div class="callout">
+  <div class="callout-title">Key Principle</div>
+  <p>Never wrap a <code>TabView</code> inside a <code>NavigationStack</code>. Instead, place one <code>NavigationStack</code> inside <strong>each tab</strong>. This gives every tab its own independent navigation history that survives tab switches.</p>
+</div>
+
+<!-- ===== ARCHITECTURE ===== -->
+<h2 id="architecture">Architecture</h2>
+
+<p>The fundamental architecture places <code>TabView</code> at the root of the view hierarchy with each tab containing its own <code>NavigationStack</code>. This mirrors how UIKit's <code>UITabBarController</code> works -- each tab embeds a <code>UINavigationController</code>.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph TD
+    A["App / WindowGroup"] --> B["TabView (selection binding)"]
+    B --> C["Tab 1: Home"]
+    B --> D["Tab 2: Search"]
+    B --> E["Tab 3: Profile"]
+    C --> F["NavigationStack(path: homePath)"]
+    D --> G["NavigationStack(path: searchPath)"]
+    E --> H["NavigationStack(path: profilePath)"]
+    F --> I["HomeRootView"]
+    F --> J["HomeDetailView"]
+    F --> K["HomeSubDetailView"]
+    G --> L["SearchRootView"]
+    G --> M["SearchResultView"]
+    H --> N["ProfileRootView"]
+    H --> O["SettingsView"]
+    style A fill:#0071e3,color:#fff,stroke:none
+    style B fill:#e8f4fd,color:#1d1d1f,stroke:#0071e3,stroke-width:2px
+    style C fill:#34c759,color:#fff,stroke:none
+    style D fill:#ff9500,color:#fff,stroke:none
+    style E fill:#af52de,color:#fff,stroke:none
+    style F fill:#d4edda,color:#1d1d1f,stroke:#34c759
+    style G fill:#fff3cd,color:#1d1d1f,stroke:#ff9500
+    style H fill:#e8d5f5,color:#1d1d1f,stroke:#af52de
+  </div>
+  <div class="diagram-caption">Figure 1: TabView at the root, each tab wrapping its own NavigationStack with an independent path.</div>
+</div>
+
+<h3>Why Each Tab Needs Its Own NavigationStack</h3>
+<ul>
+  <li><strong>Independent back-stacks</strong> -- Navigating 3 screens deep in the Home tab, switching to Search, then coming back finds Home exactly where you left it.</li>
+  <li><strong>No cross-tab interference</strong> -- A <code>.navigationDestination</code> in one tab cannot accidentally fire in another.</li>
+  <li><strong>UIKit parity</strong> -- This is how UITabBarController + UINavigationController has worked since iOS 2. Users expect this behavior.</li>
+  <li><strong>Clean state management</strong> -- Each <code>NavigationPath</code> can be independently cleared (pop-to-root), inspected, or deep-linked into.</li>
+  <li><strong>Tab bar visibility</strong> -- The system tab bar naturally stays visible when <code>NavigationStack</code> is <em>inside</em> each tab. Wrapping <code>TabView</code> inside a <code>NavigationStack</code> leads to the tab bar disappearing on push.</li>
+</ul>
+
+<!-- ===== STATE DIAGRAM ===== -->
+<div class="diagram-container">
+  <div class="mermaid">
+stateDiagram-v2
+    state "Home Tab" as home {
+        [*] --> HomeRoot
+        HomeRoot --> ItemDetail: Tap item
+        ItemDetail --> ItemSubDetail: Tap sub-item
+        ItemSubDetail --> ItemDetail: Back
+        ItemDetail --> HomeRoot: Back
+    }
+    state "Search Tab" as search {
+        [*] --> SearchRoot
+        SearchRoot --> SearchResults: Submit query
+        SearchResults --> ResultDetail: Tap result
+        ResultDetail --> SearchResults: Back
+        SearchResults --> SearchRoot: Back
+    }
+    state "Profile Tab" as profile {
+        [*] --> ProfileRoot
+        ProfileRoot --> Settings: Tap settings
+        ProfileRoot --> EditProfile: Tap edit
+        Settings --> ProfileRoot: Back
+        EditProfile --> ProfileRoot: Back
+    }
+  </div>
+  <div class="diagram-caption">Figure 2: Each tab maintains its own navigation state machine. Switching tabs does not affect other tabs' states.</div>
+</div>
+
+<!-- ===== BASIC TABVIEW ===== -->
+<h2 id="basic-tabview">Basic TabView with NavigationStack per Tab</h2>
+
+<p>The simplest version: a <code>TabView</code> where each tab item wraps its content in its own <code>NavigationStack</code>. This works for apps that do not need programmatic navigation or deep linking.</p>
+
+<div class="code-header">
+  <span>BasicTabView.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct BasicTabView: View {
+    var body: some View {
+        TabView {
+            // MARK: - Home Tab
+            NavigationStack {
+                HomeView()
+                    .navigationTitle("Home")
+                    .navigationDestination(for: Item.self) { item in
+                        ItemDetailView(item: item)
+                    }
+            }
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
+
+            // MARK: - Search Tab
+            NavigationStack {
+                SearchView()
+                    .navigationTitle("Search")
+                    .navigationDestination(for: SearchResult.self) { result in
+                        SearchResultDetailView(result: result)
+                    }
+            }
+            .tabItem {
+                Label("Search", systemImage: "magnifyingglass")
+            }
+
+            // MARK: - Profile Tab
+            NavigationStack {
+                ProfileView()
+                    .navigationTitle("Profile")
+                    .navigationDestination(for: ProfileDestination.self) { dest in
+                        switch dest {
+                        case .settings:
+                            SettingsView()
+                        case .editProfile:
+                            EditProfileView()
+                        }
+                    }
+            }
+            .tabItem {
+                Label("Profile", systemImage: "person.fill")
+            }
+        }
+    }
+}
+
+// MARK: - Supporting Types
+struct Item: Identifiable, Hashable {
+    let id: UUID
+    let title: String
+}
+
+struct SearchResult: Identifiable, Hashable {
+    let id: UUID
+    let title: String
+    let snippet: String
+}
+
+enum ProfileDestination: Hashable {
+    case settings
+    case editProfile
+}</code></pre>
+
+<div class="callout warning">
+  <div class="callout-title">Common Mistake</div>
+  <p>Do <strong>not</strong> do this: <code>NavigationStack { TabView { ... } }</code>. Placing <code>TabView</code> inside a <code>NavigationStack</code> causes the tab bar to disappear on navigation pushes, and creates a single shared navigation stack for all tabs.</p>
+</div>
+
+<!-- ===== SELECTION BINDING ===== -->
+<h2 id="selection-binding">Programmatic Tab Switching with Selection Binding</h2>
+
+<p>To control which tab is active programmatically (for deep linking, notifications, or onboarding), bind the <code>TabView</code> to a <code>selection</code> state property. Each tab must have a matching <code>.tag()</code>.</p>
+
+<div class="code-header">
+  <span>TabSelectionBinding.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+enum AppTab: Int, CaseIterable, Hashable {
+    case home
+    case search
+    case profile
+
+    var title: String {
+        switch self {
+        case .home:    return "Home"
+        case .search:  return "Search"
+        case .profile: return "Profile"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .home:    return "house.fill"
+        case .search:  return "magnifyingglass"
+        case .profile: return "person.fill"
+        }
+    }
+}
+
+struct TabSelectionExample: View {
+    @State private var selectedTab: AppTab = .home
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            NavigationStack {
+                HomeView()
+                    .navigationTitle("Home")
+            }
+            .tabItem {
+                Label(AppTab.home.title, systemImage: AppTab.home.icon)
+            }
+            .tag(AppTab.home)
+
+            NavigationStack {
+                SearchView()
+                    .navigationTitle("Search")
+            }
+            .tabItem {
+                Label(AppTab.search.title, systemImage: AppTab.search.icon)
+            }
+            .tag(AppTab.search)
+
+            NavigationStack {
+                ProfileView()
+                    .navigationTitle("Profile")
+            }
+            .tabItem {
+                Label(AppTab.profile.title, systemImage: AppTab.profile.icon)
+            }
+            .tag(AppTab.profile)
+        }
+    }
+
+    /// Call from anywhere (e.g., a deep link handler)
+    func switchToProfile() {
+        selectedTab = .profile
+    }
+}</code></pre>
+
+<div class="callout">
+  <div class="callout-title">Tip</div>
+  <p>Using an enum for tab identity (rather than raw <code>Int</code> tags) makes the code type-safe and easier to extend. The enum also serves as documentation for which tabs exist.</p>
+</div>
+
+<!-- ===== APPSTATE ===== -->
+<h2 id="appstate">Per-Tab NavigationPath Management via AppState</h2>
+
+<p>For real applications, you need a centralized <code>AppState</code> object that holds both the selected tab and each tab's <code>NavigationPath</code>. This enables pop-to-root, deep linking, and navigation from anywhere in the app (notifications, widgets, Shortcuts).</p>
+
+<div class="code-header">
+  <span>AppState.swift — Observable navigation state</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+/// Centralized navigation state for the entire app.
+/// Use @Observable (iOS 17+) or ObservableObject (iOS 16).
+@Observable
+final class AppState {
+    var selectedTab: AppTab = .home
+
+    // Each tab gets its own NavigationPath
+    var homePath = NavigationPath()
+    var searchPath = NavigationPath()
+    var profilePath = NavigationPath()
+
+    /// Returns a binding to the path for the given tab.
+    func path(for tab: AppTab) -> NavigationPath {
+        switch tab {
+        case .home:    return homePath
+        case .search:  return searchPath
+        case .profile: return profilePath
+        }
+    }
+
+    /// Pop the given tab to its root view.
+    func popToRoot(tab: AppTab) {
+        switch tab {
+        case .home:    homePath = NavigationPath()
+        case .search:  searchPath = NavigationPath()
+        case .profile: profilePath = NavigationPath()
+        }
+    }
+
+    /// Pop ALL tabs to root (e.g., on logout).
+    func resetAllNavigation() {
+        homePath = NavigationPath()
+        searchPath = NavigationPath()
+        profilePath = NavigationPath()
+        selectedTab = .home
+    }
+
+    /// Deep link: switch to a tab and push a destination.
+    func navigate(to tab: AppTab, pushing value: (any Hashable)? = nil) {
+        selectedTab = tab
+        if let value {
+            switch tab {
+            case .home:    homePath.append(value)
+            case .search:  searchPath.append(value)
+            case .profile: profilePath.append(value)
+            }
+        }
+    }
+}
+
+// MARK: - Root View using AppState
+struct RootView: View {
+    @State private var appState = AppState()
+
+    var body: some View {
+        TabView(selection: $appState.selectedTab) {
+            NavigationStack(path: $appState.homePath) {
+                HomeView()
+                    .navigationTitle("Home")
+                    .navigationDestination(for: Item.self) { item in
+                        ItemDetailView(item: item)
+                    }
+            }
+            .tabItem { Label("Home", systemImage: "house.fill") }
+            .tag(AppTab.home)
+
+            NavigationStack(path: $appState.searchPath) {
+                SearchView()
+                    .navigationTitle("Search")
+                    .navigationDestination(for: SearchResult.self) { result in
+                        SearchResultDetailView(result: result)
+                    }
+            }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(AppTab.search)
+
+            NavigationStack(path: $appState.profilePath) {
+                ProfileView()
+                    .navigationTitle("Profile")
+                    .navigationDestination(for: ProfileDestination.self) { dest in
+                        switch dest {
+                        case .settings:  SettingsView()
+                        case .editProfile: EditProfileView()
+                        }
+                    }
+            }
+            .tabItem { Label("Profile", systemImage: "person.fill") }
+            .tag(AppTab.profile)
+        }
+        .environment(appState)
+    }
+}</code></pre>
+
+<div class="callout success">
+  <div class="callout-title">iOS 16 Compatibility</div>
+  <p>If you need to support iOS 16, replace <code>@Observable</code> with <code>ObservableObject</code>, mark properties with <code>@Published</code>, and use <code>@StateObject</code> / <code>@EnvironmentObject</code> instead of <code>@State</code> / <code>@Environment</code>.</p>
+</div>
+
+<!-- ===== POP TO ROOT ===== -->
+<h2 id="pop-to-root">Pop-to-Root on Tab Reselection</h2>
+
+<p>Users expect that tapping the currently active tab scrolls to top or, if they are deep in a navigation stack, pops back to the root view. This is standard iOS behavior (see Safari, App Store, Music). SwiftUI's <code>TabView</code> does <strong>not</strong> do this automatically -- you must implement it.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TD
+    A["User taps tab bar icon"] --> B{"Is this tab\nalready selected?"}
+    B -- No --> C["Switch to new tab\n(state preserved)"]
+    B -- Yes --> D{"Is NavigationPath\nnon-empty?"}
+    D -- Yes --> E["Set path = NavigationPath()\n(pop to root)"]
+    D -- No --> F["Scroll to top\n(optional)"]
+    E --> G["Tab shows root view"]
+    F --> G
+    C --> H["Tab shows its\ncurrent state"]
+    style A fill:#0071e3,color:#fff,stroke:none
+    style E fill:#34c759,color:#fff,stroke:none
+    style C fill:#ff9500,color:#fff,stroke:none
+  </div>
+  <div class="diagram-caption">Figure 3: Tab-switching behavior and the pop-to-root-on-reselection flow.</div>
+</div>
+
+<h3>Implementation Pattern</h3>
+
+<p>The key technique is to use <code>.onChange(of: selectedTab)</code> and compare the new value with the <em>old</em> value. When they are the same, the user re-tapped the active tab.</p>
+
+<div class="code-header">
+  <span>PopToRootTabView.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct PopToRootTabView: View {
+    @State private var appState = AppState()
+    @State private var tappedTab: AppTab?
+
+    var body: some View {
+        TabView(selection: tabSelection) {
+            NavigationStack(path: $appState.homePath) {
+                HomeView()
+                    .navigationTitle("Home")
+                    .navigationDestination(for: Item.self) { item in
+                        ItemDetailView(item: item)
+                    }
+            }
+            .tabItem { Label("Home", systemImage: "house.fill") }
+            .tag(AppTab.home)
+
+            NavigationStack(path: $appState.searchPath) {
+                SearchView()
+                    .navigationTitle("Search")
+                    .navigationDestination(for: SearchResult.self) { result in
+                        SearchResultDetailView(result: result)
+                    }
+            }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(AppTab.search)
+
+            NavigationStack(path: $appState.profilePath) {
+                ProfileView()
+                    .navigationTitle("Profile")
+                    .navigationDestination(for: ProfileDestination.self) { dest in
+                        switch dest {
+                        case .settings:  SettingsView()
+                        case .editProfile: EditProfileView()
+                        }
+                    }
+            }
+            .tabItem { Label("Profile", systemImage: "person.fill") }
+            .tag(AppTab.profile)
+        }
+        .environment(appState)
+    }
+
+    /// A computed binding that intercepts tab selection to detect re-taps.
+    private var tabSelection: Binding&lt;AppTab&gt; {
+        Binding {
+            appState.selectedTab
+        } set: { newTab in
+            if newTab == appState.selectedTab {
+                // Same tab tapped again → pop to root
+                appState.popToRoot(tab: newTab)
+            }
+            appState.selectedTab = newTab
+        }
+    }
+}</code></pre>
+
+<div class="callout">
+  <div class="callout-title">How It Works</div>
+  <p>The custom <code>Binding</code> intercepts the setter. When SwiftUI's <code>TabView</code> fires the binding with the same value as the current tab, we know the user re-tapped. We then clear that tab's <code>NavigationPath</code>, which pops all views back to the root.</p>
+</div>
+
+<!-- ===== STATE PRESERVATION ===== -->
+<h2 id="state-preservation">State Preservation Across Tab Switches</h2>
+
+<p>Because each tab's content is an independent view hierarchy and each <code>NavigationStack</code> has its own path, SwiftUI preserves the full state when switching tabs:</p>
+
+<ul>
+  <li>Navigation depth is preserved (if you are 3 screens deep in Home, switching to Search and back finds Home still 3 deep).</li>
+  <li>Scroll positions within each tab are preserved (by default in <code>List</code> and <code>ScrollView</code>).</li>
+  <li>Form input, text field content, and toggle states are preserved as long as the views use <code>@State</code> or bindings.</li>
+  <li><code>@StateObject</code> and <code>@State</code> properties survive tab switches because SwiftUI keeps the view identity stable.</li>
+</ul>
+
+<div class="callout warning">
+  <div class="callout-title">Caveat: View Identity</div>
+  <p>State preservation depends on SwiftUI maintaining <strong>view identity</strong>. If you use conditional logic that removes and re-adds a tab (e.g., wrapping a tab in an <code>if</code> statement), SwiftUI will destroy and recreate it, losing all state. Keep all tabs in the view tree at all times; use opacity or <code>.disabled()</code> if you must hide a tab's content.</p>
+</div>
+
+<!-- ===== CUSTOM TAB BAR ===== -->
+<h2 id="custom-tab-bar">Custom Tab Bar Implementation</h2>
+
+<p>When the system <code>TabView</code> tab bar is not sufficient (custom shapes, animations, floating action button, non-standard icons), you can build a fully custom tab bar. The key is using <code>ZStack</code> with <code>.safeAreaInset(edge: .bottom)</code> to properly handle safe areas.</p>
+
+<div class="code-header">
+  <span>CustomTabBarView.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct CustomTabBarView: View {
+    @State private var selectedTab: AppTab = .home
+    @State private var appState = AppState()
+
+    var body: some View {
+        ZStack {
+            // Tab content — all tabs always in the hierarchy
+            Group {
+                switch selectedTab {
+                case .home:
+                    NavigationStack(path: $appState.homePath) {
+                        HomeView()
+                            .navigationTitle("Home")
+                            .navigationDestination(for: Item.self) { item in
+                                ItemDetailView(item: item)
+                            }
+                    }
+                case .search:
+                    NavigationStack(path: $appState.searchPath) {
+                        SearchView()
+                            .navigationTitle("Search")
+                    }
+                case .profile:
+                    NavigationStack(path: $appState.profilePath) {
+                        ProfileView()
+                            .navigationTitle("Profile")
+                    }
+                }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            CustomTabBar(selectedTab: $selectedTab)
+        }
+        .environment(appState)
+    }
+}
+
+struct CustomTabBar: View {
+    @Binding var selectedTab: AppTab
+
+    var body: some View {
+        HStack {
+            ForEach(AppTab.allCases, id: \.self) { tab in
+                Button {
+                    if selectedTab == tab {
+                        // Pop to root on reselection
+                        NotificationCenter.default.post(
+                            name: .popToRoot,
+                            object: nil,
+                            userInfo: ["tab": tab]
+                        )
+                    }
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedTab = tab
+                    }
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: tab.icon)
+                            .font(.system(size: 20, weight: selectedTab == tab ? .bold : .regular))
+                            .symbolEffect(.bounce, value: selectedTab == tab)
+                        Text(tab.title)
+                            .font(.caption2)
+                            .fontWeight(selectedTab == tab ? .semibold : .regular)
+                    }
+                    .foregroundStyle(selectedTab == tab ? Color.accentColor : .secondary)
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .padding(.top, 10)
+        .padding(.bottom, 2)
+        .background(.ultraThinMaterial)
+        .overlay(alignment: .top) {
+            Divider()
+        }
+    }
+}
+
+extension Notification.Name {
+    static let popToRoot = Notification.Name("popToRoot")
+}</code></pre>
+
+<div class="callout warning">
+  <div class="callout-title">State Preservation Warning</div>
+  <p>The <code>switch</code> approach shown above will <strong>destroy and recreate</strong> tab content on each switch because it changes view identity. For true state preservation with a custom tab bar, keep all tabs rendered (e.g., in a <code>ZStack</code> with <code>.opacity(selectedTab == .home ? 1 : 0)</code>) or use <code>TabView</code> with <code>.tabViewStyle(.page)</code> and overlay your custom bar.</p>
+</div>
+
+<!-- ===== DEEP LINKING ===== -->
+<h2 id="deep-linking">Deep Linking to a Specific Tab and Screen</h2>
+
+<p>Deep linking combines tab selection with path manipulation. When a URL, notification, or widget action arrives, the app selects the right tab and pushes the right screens onto that tab's <code>NavigationPath</code>.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart LR
+    A["Incoming URL\nmyapp://search/item/42"] --> B["URL Parser"]
+    B --> C["Extract: tab=search\npath=[item(42)]"]
+    C --> D["Set selectedTab = .search"]
+    D --> E["Clear searchPath"]
+    E --> F["Append Item(id:42)\nto searchPath"]
+    F --> G["SearchResultDetailView\nappears"]
+    style A fill:#af52de,color:#fff,stroke:none
+    style B fill:#0071e3,color:#fff,stroke:none
+    style G fill:#34c759,color:#fff,stroke:none
+  </div>
+  <div class="diagram-caption">Figure 4: Deep link flow — URL is parsed, tab is selected, then destinations are pushed onto that tab's NavigationPath.</div>
+</div>
+
+<div class="code-header">
+  <span>DeepLinkHandler.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+// MARK: - Deep Link Types
+enum DeepLink {
+    case home
+    case homeItem(UUID)
+    case search(query: String)
+    case searchResult(UUID)
+    case profile
+    case settings
+
+    /// Parse a URL like myapp://home/item/&lt;uuid&gt;
+    init?(url: URL) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let host = components.host else { return nil }
+
+        let pathParts = components.path
+            .split(separator: "/")
+            .map(String.init)
+
+        switch host {
+        case "home":
+            if pathParts.count >= 2, pathParts[0] == "item",
+               let id = UUID(uuidString: pathParts[1]) {
+                self = .homeItem(id)
+            } else {
+                self = .home
+            }
+        case "search":
+            if let query = components.queryItems?
+                .first(where: { $0.name == "q" })?.value {
+                self = .search(query: query)
+            } else if pathParts.count >= 2, pathParts[0] == "result",
+                      let id = UUID(uuidString: pathParts[1]) {
+                self = .searchResult(id)
+            } else {
+                self = .home
+            }
+        case "profile":
+            self = .profile
+        case "settings":
+            self = .settings
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: - Deep Link Handler (extend AppState)
+extension AppState {
+    func handle(deepLink: DeepLink) {
+        switch deepLink {
+        case .home:
+            selectedTab = .home
+            homePath = NavigationPath()
+
+        case .homeItem(let id):
+            selectedTab = .home
+            homePath = NavigationPath()
+            // Small delay lets TabView settle before pushing
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(100))
+                homePath.append(Item(id: id, title: "Deep Linked Item"))
+            }
+
+        case .search(let query):
+            selectedTab = .search
+            searchPath = NavigationPath()
+            // Could also set a @Published searchQuery property
+
+        case .searchResult(let id):
+            selectedTab = .search
+            searchPath = NavigationPath()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(100))
+                searchPath.append(SearchResult(id: id, title: "Result", snippet: "..."))
+            }
+
+        case .profile:
+            selectedTab = .profile
+            profilePath = NavigationPath()
+
+        case .settings:
+            selectedTab = .profile
+            profilePath = NavigationPath()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(100))
+                profilePath.append(ProfileDestination.settings)
+            }
+        }
+    }
+}
+
+// MARK: - App Entry Point with Deep Link Handling
+@main
+struct MyApp: App {
+    @State private var appState = AppState()
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environment(appState)
+                .onOpenURL { url in
+                    if let deepLink = DeepLink(url: url) {
+                        appState.handle(deepLink: deepLink)
+                    }
+                }
+        }
+    }
+}</code></pre>
+
+<div class="callout">
+  <div class="callout-title">Why the Task.sleep?</div>
+  <p>When switching tabs and pushing a view in the same run loop, SwiftUI sometimes drops the push. Adding a small delay (<code>100ms</code>) after the tab switch lets the <code>TabView</code> settle its layout before you modify the <code>NavigationPath</code>. This is a known workaround for a SwiftUI timing issue.</p>
+</div>
+
+<!-- ===== BADGES ===== -->
+<h2 id="badges">Badge Support on Tabs</h2>
+
+<p>Badges display a count or short text on a tab bar item. Use the <code>.badge()</code> modifier (iOS 15+). Badges automatically hide when the value is <code>0</code> or <code>nil</code>.</p>
+
+<div class="code-header">
+  <span>BadgeExample.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct BadgeTabView: View {
+    @State private var selectedTab: AppTab = .home
+    @State private var unreadMessages = 3
+    @State private var notificationCount = 12
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            NavigationStack {
+                HomeView()
+                    .navigationTitle("Home")
+            }
+            .tabItem { Label("Home", systemImage: "house.fill") }
+            .tag(AppTab.home)
+            .badge(notificationCount)  // Shows "12" on the tab
+
+            NavigationStack {
+                SearchView()
+                    .navigationTitle("Search")
+            }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(AppTab.search)
+            // No badge — count is 0, so nothing shows
+            .badge(0)
+
+            NavigationStack {
+                ProfileView()
+                    .navigationTitle("Profile")
+            }
+            .tabItem { Label("Profile", systemImage: "person.fill") }
+            .tag(AppTab.profile)
+            .badge("New")  // String badge — shows "New"
+        }
+    }
+}
+
+// With iOS 18 Tab API:
+struct BadgeTabViewiOS18: View {
+    var body: some View {
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
+                NavigationStack {
+                    HomeView()
+                }
+            }
+            .badge(5)
+
+            Tab("Messages", systemImage: "message.fill") {
+                NavigationStack {
+                    MessagesView()
+                }
+            }
+            .badge(99)  // Large counts are abbreviated by the system
+        }
+    }
+}</code></pre>
+
+<!-- ===== HIDING TAB BAR ===== -->
+<h2 id="hiding-tabbar">Hiding the Tab Bar in Sub-Views</h2>
+
+<p>Sometimes you want to hide the tab bar when navigating to a detail screen (e.g., a fullscreen photo viewer, a video player, or an immersive content view). Use <code>.toolbar(.hidden, for: .tabBar)</code> on the <strong>destination view</strong>.</p>
+
+<div class="code-header">
+  <span>HideTabBar.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct HomeView: View {
+    let items = (1...20).map { Item(id: UUID(), title: "Item \($0)") }
+
+    var body: some View {
+        List(items) { item in
+            NavigationLink(value: item) {
+                Text(item.title)
+            }
+        }
+    }
+}
+
+struct ItemDetailView: View {
+    let item: Item
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                Text(item.title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+
+                Text("This is a detail view for \(item.title).")
+                    .foregroundStyle(.secondary)
+
+                NavigationLink("View Fullscreen", value: item)
+            }
+            .padding()
+        }
+        .navigationTitle(item.title)
+        .navigationBarTitleDisplayMode(.inline)
+        // Tab bar is visible on this screen
+    }
+}
+
+struct FullscreenView: View {
+    let item: Item
+
+    var body: some View {
+        ZStack {
+            Color.black
+                .ignoresSafeArea()
+            Text("Fullscreen: \(item.title)")
+                .foregroundStyle(.white)
+                .font(.title)
+        }
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        // HIDE the tab bar on this screen
+        .toolbar(.hidden, for: .tabBar)
+    }
+}</code></pre>
+
+<div class="callout warning">
+  <div class="callout-title">Known Issue: iOS 17.4+</div>
+  <p>Some developers have reported <code>.toolbar(.hidden, for: .tabBar)</code> not working reliably on iOS 17.4+. If you hit this, common workarounds include:
+  (1) using a <code>.fullScreenCover()</code> or <code>.sheet()</code> instead of a push,
+  (2) building a custom tab bar that you hide via a shared <code>@Observable</code> flag,
+  or (3) applying the modifier to a parent container view rather than the leaf view.</p>
+</div>
+
+<!-- ===== IPAD SPLITVIEW ===== -->
+<h2 id="ipad-splitview">Combining Tabs with NavigationSplitView (iPad)</h2>
+
+<p>On iPad and Mac, a <code>TabView</code> with the <code>.sidebarAdaptable</code> style (iOS 18+) automatically converts to a sidebar. For earlier versions, or for more control, you can manually combine <code>TabView</code> with <code>NavigationSplitView</code>.</p>
+
+<h3>Pattern 1: NavigationSplitView Inside a Tab (iPad detail/sidebar per tab)</h3>
+
+<div class="code-header">
+  <span>iPadTabWithSplitView.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct iPadTabView: View {
+    @State private var selectedTab: AppTab = .home
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            // The Home tab uses a split view on iPad
+            NavigationSplitView {
+                List {
+                    ForEach(Category.samples) { category in
+                        NavigationLink(value: category) {
+                            Label(category.name, systemImage: category.icon)
+                        }
+                    }
+                }
+                .navigationTitle("Categories")
+            } detail: {
+                Text("Select a category")
+                    .foregroundStyle(.secondary)
+            }
+            .tabItem { Label("Home", systemImage: "house.fill") }
+            .tag(AppTab.home)
+
+            // The Search tab uses a regular NavigationStack
+            NavigationStack {
+                SearchView()
+                    .navigationTitle("Search")
+            }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(AppTab.search)
+
+            NavigationStack {
+                ProfileView()
+                    .navigationTitle("Profile")
+            }
+            .tabItem { Label("Profile", systemImage: "person.fill") }
+            .tag(AppTab.profile)
+        }
+    }
+}
+
+struct Category: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let icon: String
+
+    static let samples = [
+        Category(name: "Electronics", icon: "bolt.fill"),
+        Category(name: "Clothing", icon: "tshirt.fill"),
+        Category(name: "Books", icon: "book.fill"),
+    ]
+}</code></pre>
+
+<h3>Pattern 2: Adaptive Layout (iPhone tabs, iPad sidebar)</h3>
+
+<div class="code-header">
+  <span>AdaptiveNavigation.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+struct AdaptiveRootView: View {
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @State private var selectedTab: AppTab = .home
+
+    var body: some View {
+        if sizeClass == .compact {
+            // iPhone: standard tab bar
+            TabView(selection: $selectedTab) {
+                ForEach(AppTab.allCases, id: \.self) { tab in
+                    NavigationStack {
+                        tabContent(for: tab)
+                    }
+                    .tabItem { Label(tab.title, systemImage: tab.icon) }
+                    .tag(tab)
+                }
+            }
+        } else {
+            // iPad: sidebar navigation
+            NavigationSplitView {
+                List(AppTab.allCases, id: \.self, selection: $selectedTab) { tab in
+                    Label(tab.title, systemImage: tab.icon)
+                }
+                .navigationTitle("My App")
+            } detail: {
+                NavigationStack {
+                    tabContent(for: selectedTab)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func tabContent(for tab: AppTab) -> some View {
+        switch tab {
+        case .home:    HomeView().navigationTitle("Home")
+        case .search:  SearchView().navigationTitle("Search")
+        case .profile: ProfileView().navigationTitle("Profile")
+        }
+    }
+}</code></pre>
+
+<!-- ===== iOS 18 TAB API ===== -->
+<h2 id="ios18-tab-api">iOS 18: New Tab / TabSection API</h2>
+
+<p>iOS 18 introduced a new declarative <code>Tab</code> struct that replaces the <code>.tabItem { }</code> + <code>.tag()</code> pattern. This catches more errors at compile time and supports the new <code>.sidebarAdaptable</code> style with <code>TabSection</code> grouping.</p>
+
+<h3>Before vs. After</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Pre-iOS 18</th><th>iOS 18+</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>.tabItem { Label("Home", ...) }<br>.tag(AppTab.home)</code></td>
+      <td><code>Tab("Home", systemImage: "house", value: .home) { ... }</code></td>
+    </tr>
+    <tr>
+      <td>No grouping support</td>
+      <td><code>TabSection("Group Name") { ... }</code></td>
+    </tr>
+    <tr>
+      <td>No sidebar adaptability</td>
+      <td><code>.tabViewStyle(.sidebarAdaptable)</code></td>
+    </tr>
+    <tr>
+      <td>Tag type-safety via convention</td>
+      <td>Tag type-safety via <code>value:</code> parameter</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="code-header">
+  <span>iOS18TabAPI.swift — New Tab struct syntax</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+// Available iOS 18+
+struct iOS18TabView: View {
+    @State private var selectedTab: AppTab = .home
+    @State private var appState = AppState()
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            // Each Tab uses the new struct-based API
+            Tab("Home", systemImage: "house.fill", value: .home) {
+                NavigationStack(path: $appState.homePath) {
+                    HomeView()
+                        .navigationTitle("Home")
+                        .navigationDestination(for: Item.self) { item in
+                            ItemDetailView(item: item)
+                        }
+                }
+            }
+
+            Tab("Search", systemImage: "magnifyingglass", value: .search) {
+                NavigationStack(path: $appState.searchPath) {
+                    SearchView()
+                        .navigationTitle("Search")
+                }
+            }
+
+            Tab("Profile", systemImage: "person.fill", value: .profile) {
+                NavigationStack(path: $appState.profilePath) {
+                    ProfileView()
+                        .navigationTitle("Profile")
+                }
+            }
+        }
+        .environment(appState)
+    }
+}
+
+// MARK: - With TabSection and Sidebar (iPadOS 18+)
+struct iOS18SidebarTabView: View {
+    @State private var selectedTab: SidebarTab = .home
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "house.fill", value: .home) {
+                NavigationStack {
+                    HomeView().navigationTitle("Home")
+                }
+            }
+
+            Tab("Search", systemImage: "magnifyingglass", value: .search) {
+                NavigationStack {
+                    SearchView().navigationTitle("Search")
+                }
+            }
+
+            // Group related tabs into a section
+            TabSection("Messages") {
+                Tab("Inbox", systemImage: "tray.fill", value: .inbox) {
+                    NavigationStack {
+                        InboxView().navigationTitle("Inbox")
+                    }
+                }
+
+                Tab("Sent", systemImage: "paperplane.fill", value: .sent) {
+                    NavigationStack {
+                        SentView().navigationTitle("Sent")
+                    }
+                }
+
+                Tab("Archive", systemImage: "archivebox.fill", value: .archive) {
+                    NavigationStack {
+                        ArchiveView().navigationTitle("Archive")
+                    }
+                }
+            }
+
+            Tab("Profile", systemImage: "person.fill", value: .profile) {
+                NavigationStack {
+                    ProfileView().navigationTitle("Profile")
+                }
+            }
+        }
+        .tabViewStyle(.sidebarAdaptable)
+        // On iPad: shows as a sidebar
+        // On iPhone: shows as a standard tab bar (section tabs appear individually)
+    }
+}
+
+enum SidebarTab: Hashable {
+    case home, search, inbox, sent, archive, profile
+}</code></pre>
+
+<div class="callout">
+  <div class="callout-title">Sidebar Behavior</div>
+  <p>With <code>.tabViewStyle(.sidebarAdaptable)</code>, on <strong>iPadOS</strong> the tab bar transforms into a sidebar that the user can toggle. On <strong>iPhone</strong>, it remains a standard bottom tab bar. <code>TabSection</code> groups appear as collapsible headers in the sidebar but as flat items in the tab bar.</p>
+</div>
+
+<!-- ===== iOS 18 KNOWN ISSUES ===== -->
+<h2 id="ios18-issues">iOS 18 Known Issues</h2>
+
+<div class="callout warning">
+  <div class="callout-title">Double-Push Bug (iOS 18.0 - 18.1)</div>
+  <p>A widely-reported bug in iOS 18.0 through 18.1 causes <code>NavigationStack</code> inside the new <code>Tab</code> API to push destination views <strong>twice</strong> when using the <code>path:</code> parameter. The view appears to push, pop, and push again. This occurs specifically when:</p>
+  <ul>
+    <li>Using the new <code>Tab</code> struct (not the old <code>.tabItem</code> API)</li>
+    <li>The <code>NavigationStack</code> has a bound <code>path</code> parameter</li>
+    <li>Navigation is triggered via <code>NavigationLink(value:)</code> or path manipulation</li>
+  </ul>
+</div>
+
+<h3>Workarounds for the Double-Push Bug</h3>
+
+<div class="code-header">
+  <span>DoublePushWorkarounds.swift</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>// WORKAROUND 1: Use the old .tabItem/.tag API on iOS 18 if you need path binding
+// This avoids the bug entirely.
+struct SafeTabView: View {
+    @State private var selectedTab: AppTab = .home
+    @State private var appState = AppState()
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            NavigationStack(path: $appState.homePath) {
+                HomeView()
+                    .navigationDestination(for: Item.self) { item in
+                        ItemDetailView(item: item)
+                    }
+            }
+            .tabItem { Label("Home", systemImage: "house.fill") }
+            .tag(AppTab.home)
+            // ... other tabs
+        }
+    }
+}
+
+// WORKAROUND 2: Use NavigationLink with destination closure instead of value
+struct SafeNavigationLink: View {
+    let item: Item
+
+    var body: some View {
+        NavigationLink {
+            ItemDetailView(item: item) // destination closure
+        } label: {
+            Text(item.title)
+        }
+        // This uses the old-style NavigationLink which is
+        // NOT affected by the double-push bug.
+    }
+}
+
+// WORKAROUND 3: Place .navigationDestination inside the NavigationStack
+// rather than on child views
+struct FixedNavigationStack: View {
+    @Binding var path: NavigationPath
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            HomeView()
+        }
+        // Place destination HERE, directly inside the NavigationStack scope
+        .navigationDestination(for: Item.self) { item in
+            ItemDetailView(item: item)
+        }
+    }
+}</code></pre>
+
+<h3>Other Common Issues</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Issue</th><th>Versions</th><th>Workaround</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Double-push with <code>Tab</code> + <code>NavigationPath</code></td>
+      <td>iOS 18.0-18.1</td>
+      <td>Use <code>.tabItem/.tag</code> API instead</td>
+    </tr>
+    <tr>
+      <td><code>.toolbar(.hidden, for: .tabBar)</code> unreliable</td>
+      <td>iOS 17.4+</td>
+      <td>Use <code>.fullScreenCover</code> or custom tab bar</td>
+    </tr>
+    <tr>
+      <td>Toolbar items duplicating across tabs</td>
+      <td>iOS 16-17</td>
+      <td>Ensure <code>.toolbar</code> is inside <code>NavigationStack</code>, not on <code>TabView</code></td>
+    </tr>
+    <tr>
+      <td>Navigation title not updating on tab switch</td>
+      <td>iOS 16+</td>
+      <td>Apply <code>.navigationTitle</code> to the root view of each tab's <code>NavigationStack</code></td>
+    </tr>
+    <tr>
+      <td>Tab bar appearance resetting</td>
+      <td>iOS 15-16</td>
+      <td>Set <code>UITabBar.appearance()</code> in <code>init()</code> or use <code>.toolbarBackground</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== TRADEOFF ANALYSIS ===== -->
+<h2 id="tradeoffs">Tradeoff Analysis</h2>
+
+<div class="tradeoff-grid">
+  <div class="tradeoff-card pro">
+    <h4>Advantages</h4>
+    <ul>
+      <li>Matches user expectations from every major iOS app (Safari, Music, App Store)</li>
+      <li>Independent back-stacks per tab -- no cross-tab interference</li>
+      <li>State preservation on tab switch is automatic</li>
+      <li>Pop-to-root on reselect is straightforward with <code>NavigationPath</code></li>
+      <li>Deep linking is clean -- select tab, push path</li>
+      <li>Works with <code>NavigationSplitView</code> per tab for iPad</li>
+      <li>System tab bar handles safe areas, accessibility, VoiceOver automatically</li>
+      <li>iOS 18 <code>.sidebarAdaptable</code> gives you iPad sidebar for free</li>
+      <li>Badge support is built-in with <code>.badge()</code></li>
+    </ul>
+  </div>
+  <div class="tradeoff-card con">
+    <h4>Disadvantages</h4>
+    <ul>
+      <li>All tab content stays in memory (can be heavy for data-intensive tabs)</li>
+      <li>Coordinating navigation across tabs requires shared state (<code>AppState</code>)</li>
+      <li>Deep link pushes need a small delay after tab switch (timing workaround)</li>
+      <li>iOS 18 introduced bugs (double-push) that require version-specific workarounds</li>
+      <li>Custom tab bars lose system safe-area handling and accessibility features</li>
+      <li>Tab bar customization is limited without going fully custom</li>
+      <li>No built-in support for more-than-5 tabs overflow (unlike UIKit's "More" tab)</li>
+      <li><code>.toolbar(.hidden, for: .tabBar)</code> can be unreliable</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== WHEN TO USE ===== -->
+<h2 id="when-to-use">When to Use This Approach</h2>
+
+<h3>Use TabView + NavigationStack When:</h3>
+<ul>
+  <li>Your app has <strong>2-5 top-level sections</strong> (home, search, favorites, profile, etc.)</li>
+  <li>Each section has its own <strong>drill-down navigation</strong> (list -> detail -> sub-detail)</li>
+  <li>You need <strong>state preservation</strong> across section switches</li>
+  <li>Your app supports <strong>deep linking</strong> (URLs, notifications, widgets, Shortcuts)</li>
+  <li>You want the <strong>standard iOS tab bar experience</strong> users are familiar with</li>
+  <li>You are building a <strong>universal app</strong> and want iPad sidebar support (iOS 18+)</li>
+</ul>
+
+<h3>Consider Alternatives When:</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Scenario</th><th>Better Pattern</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Onboarding / wizard flow (linear steps)</td>
+      <td>Single <code>NavigationStack</code></td>
+    </tr>
+    <tr>
+      <td>Settings-only app (flat hierarchy)</td>
+      <td><code>NavigationStack</code> with <code>List</code></td>
+    </tr>
+    <tr>
+      <td>Document-based app (Mail, Notes)</td>
+      <td><code>NavigationSplitView</code></td>
+    </tr>
+    <tr>
+      <td>More than 5 top-level sections</td>
+      <td><code>NavigationSplitView</code> with sidebar list</td>
+    </tr>
+    <tr>
+      <td>Modal-heavy app (camera, AR)</td>
+      <td>Single root + <code>.fullScreenCover</code></td>
+    </tr>
+    <tr>
+      <td>SwiftUI + UIKit hybrid</td>
+      <td><code>UITabBarController</code> with SwiftUI <code>UIHostingController</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== COMPLETE MINI APP ===== -->
+<h2 id="mini-app">Complete Mini-App: Tabbed Navigation</h2>
+
+<p>Below is a <strong>complete, runnable</strong> SwiftUI app that demonstrates all the patterns covered in this guide. Copy and paste this into a new Xcode project (iOS 17+) to run it.</p>
+
+<div class="code-header">
+  <span>TabbedNavApp.swift — Complete runnable mini-app (single file)</span>
+  <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+</div>
+<pre><code>import SwiftUI
+
+// MARK: - App Entry Point
+
+@main
+struct TabbedNavApp: App {
+    @State private var appState = AppState()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(appState)
+                .onOpenURL { url in
+                    if let deepLink = DeepLink(url: url) {
+                        appState.handle(deepLink: deepLink)
+                    }
+                }
+        }
+    }
+}
+
+// MARK: - Tab Enum
+
+enum AppTab: Int, CaseIterable, Hashable {
+    case home, search, profile
+
+    var title: String {
+        switch self {
+        case .home:    "Home"
+        case .search:  "Search"
+        case .profile: "Profile"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .home:    "house.fill"
+        case .search:  "magnifyingglass"
+        case .profile: "person.fill"
+        }
+    }
+}
+
+// MARK: - App State (Centralized Navigation)
+
+@Observable
+final class AppState {
+    var selectedTab: AppTab = .home
+    var homePath = NavigationPath()
+    var searchPath = NavigationPath()
+    var profilePath = NavigationPath()
+
+    var unreadCount = 3
+
+    func popToRoot(tab: AppTab) {
+        switch tab {
+        case .home:    homePath = NavigationPath()
+        case .search:  searchPath = NavigationPath()
+        case .profile: profilePath = NavigationPath()
+        }
+    }
+
+    func handle(deepLink: DeepLink) {
+        switch deepLink {
+        case .home:
+            selectedTab = .home
+            homePath = NavigationPath()
+        case .homeItem(let id):
+            selectedTab = .home
+            homePath = NavigationPath()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(150))
+                homePath.append(
+                    Product(id: id, name: "Deep Linked", price: 0, category: "Link")
+                )
+            }
+        case .search(let query):
+            selectedTab = .search
+            searchPath = NavigationPath()
+            // A real app would trigger a search here
+            _ = query
+        case .searchResult(let id):
+            selectedTab = .search
+            searchPath = NavigationPath()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(150))
+                searchPath.append(
+                    Product(id: id, name: "Linked Result", price: 0, category: "Link")
+                )
+            }
+        case .profile:
+            selectedTab = .profile
+            profilePath = NavigationPath()
+        case .settings:
+            selectedTab = .profile
+            profilePath = NavigationPath()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(150))
+                profilePath.append(ProfileDest.settings)
+            }
+        }
+    }
+}
+
+// MARK: - Deep Link
+
+enum DeepLink {
+    case home, homeItem(UUID), search(query: String)
+    case searchResult(UUID), profile, settings
+
+    init?(url: URL) {
+        guard let host = url.host() else { return nil }
+        let parts = url.pathComponents.filter { $0 != "/" }
+        switch host {
+        case "home":
+            if parts.count >= 2, parts[0] == "item",
+               let id = UUID(uuidString: parts[1]) {
+                self = .homeItem(id)
+            } else { self = .home }
+        case "search":
+            if let q = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "q" })?.value {
+                self = .search(query: q)
+            } else { self = .home }
+        case "settings": self = .settings
+        case "profile": self = .profile
+        default: return nil
+        }
+    }
+}
+
+// MARK: - Data Models
+
+struct Product: Identifiable, Hashable {
+    let id: UUID
+    let name: String
+    let price: Double
+    let category: String
+
+    static let samples: [Product] = [
+        Product(id: UUID(), name: "MacBook Pro", price: 1999, category: "Computers"),
+        Product(id: UUID(), name: "iPhone 16 Pro", price: 1199, category: "Phones"),
+        Product(id: UUID(), name: "AirPods Pro", price: 249, category: "Audio"),
+        Product(id: UUID(), name: "iPad Air", price: 599, category: "Tablets"),
+        Product(id: UUID(), name: "Apple Watch Ultra", price: 799, category: "Wearables"),
+        Product(id: UUID(), name: "HomePod mini", price: 99, category: "Audio"),
+        Product(id: UUID(), name: "Mac Studio", price: 1999, category: "Computers"),
+        Product(id: UUID(), name: "Pro Display XDR", price: 4999, category: "Displays"),
+    ]
+}
+
+struct Review: Identifiable, Hashable {
+    let id: UUID
+    let author: String
+    let text: String
+    let rating: Int
+}
+
+enum ProfileDest: Hashable {
+    case settings
+    case editProfile
+    case orderHistory
+}
+
+// MARK: - Root Content View
+
+struct ContentView: View {
+    @Environment(AppState.self) private var appState
+
+    var body: some View {
+        @Bindable var appState = appState
+
+        TabView(selection: tabSelection) {
+            // Home Tab
+            NavigationStack(path: $appState.homePath) {
+                HomeTab()
+                    .navigationDestination(for: Product.self) { product in
+                        ProductDetailView(product: product)
+                    }
+                    .navigationDestination(for: Review.self) { review in
+                        ReviewDetailView(review: review)
+                    }
+            }
+            .tabItem { Label(AppTab.home.title, systemImage: AppTab.home.icon) }
+            .tag(AppTab.home)
+            .badge(appState.unreadCount)
+
+            // Search Tab
+            NavigationStack(path: $appState.searchPath) {
+                SearchTab()
+                    .navigationDestination(for: Product.self) { product in
+                        ProductDetailView(product: product)
+                    }
+            }
+            .tabItem { Label(AppTab.search.title, systemImage: AppTab.search.icon) }
+            .tag(AppTab.search)
+
+            // Profile Tab
+            NavigationStack(path: $appState.profilePath) {
+                ProfileTab()
+                    .navigationDestination(for: ProfileDest.self) { dest in
+                        switch dest {
+                        case .settings:     SettingsView()
+                        case .editProfile:  EditProfileView()
+                        case .orderHistory: OrderHistoryView()
+                        }
+                    }
+            }
+            .tabItem { Label(AppTab.profile.title, systemImage: AppTab.profile.icon) }
+            .tag(AppTab.profile)
+        }
+    }
+
+    /// Intercepts tab selection to detect re-taps for pop-to-root.
+    private var tabSelection: Binding&lt;AppTab&gt; {
+        Binding {
+            appState.selectedTab
+        } set: { newTab in
+            if newTab == appState.selectedTab {
+                appState.popToRoot(tab: newTab)
+            }
+            appState.selectedTab = newTab
+        }
+    }
+}
+
+// MARK: - Home Tab
+
+struct HomeTab: View {
+    @Environment(AppState.self) private var appState
+
+    var body: some View {
+        List {
+            Section("Featured Products") {
+                ForEach(Product.samples) { product in
+                    NavigationLink(value: product) {
+                        HStack {
+                            Image(systemName: "shippingbox.fill")
+                                .foregroundStyle(.blue)
+                                .frame(width: 36, height: 36)
+                                .background(.blue.opacity(0.1))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            VStack(alignment: .leading) {
+                                Text(product.name).fontWeight(.medium)
+                                Text("$\(product.price, specifier: "%.0f")")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+            }
+
+            Section("Quick Actions") {
+                Button("Go to Search Tab") {
+                    appState.selectedTab = .search
+                }
+                Button("Go to Settings") {
+                    appState.selectedTab = .profile
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(150))
+                        appState.profilePath.append(ProfileDest.settings)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Home")
+    }
+}
+
+// MARK: - Product Detail View
+
+struct ProductDetailView: View {
+    let product: Product
+
+    private let sampleReviews = [
+        Review(id: UUID(), author: "Alice", text: "Amazing product!", rating: 5),
+        Review(id: UUID(), author: "Bob", text: "Good value.", rating: 4),
+        Review(id: UUID(), author: "Charlie", text: "Works as expected.", rating: 3),
+    ]
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(product.name)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    Text("$\(product.price, specifier: "%.0f")")
+                        .font(.title3)
+                        .foregroundStyle(.green)
+                    Text("Category: \(product.category)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section("Reviews") {
+                ForEach(sampleReviews) { review in
+                    NavigationLink(value: review) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(review.author).fontWeight(.medium)
+                                Spacer()
+                                HStack(spacing: 2) {
+                                    ForEach(0..&lt;review.rating, id: \.self) { _ in
+                                        Image(systemName: "star.fill")
+                                            .font(.caption)
+                                            .foregroundStyle(.yellow)
+                                    }
+                                }
+                            }
+                            Text(review.text)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
+            Section {
+                NavigationLink("View Fullscreen (hides tab bar)",
+                               value: product)
+            }
+        }
+        .navigationTitle(product.name)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Review Detail
+
+struct ReviewDetailView: View {
+    let review: Review
+
+    var body: some View {
+        VStack(spacing: 16) {
+            HStack(spacing: 2) {
+                ForEach(0..&lt;review.rating, id: \.self) { _ in
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                }
+            }
+            .font(.title)
+
+            Text(review.author)
+                .font(.headline)
+            Text(review.text)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Review")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Search Tab
+
+struct SearchTab: View {
+    @State private var searchText = ""
+
+    private var filteredProducts: [Product] {
+        if searchText.isEmpty { return Product.samples }
+        return Product.samples.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
+    var body: some View {
+        List(filteredProducts) { product in
+            NavigationLink(value: product) {
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(.orange)
+                    VStack(alignment: .leading) {
+                        Text(product.name)
+                        Text(product.category)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+        }
+        .searchable(text: $searchText, prompt: "Search products")
+        .navigationTitle("Search")
+    }
+}
+
+// MARK: - Profile Tab
+
+struct ProfileTab: View {
+    var body: some View {
+        List {
+            Section {
+                HStack(spacing: 12) {
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.purple)
+                    VStack(alignment: .leading) {
+                        Text("Jane Appleseed").fontWeight(.semibold)
+                        Text("jane@example.com")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section("Account") {
+                NavigationLink(value: ProfileDest.editProfile) {
+                    Label("Edit Profile", systemImage: "pencil")
+                }
+                NavigationLink(value: ProfileDest.orderHistory) {
+                    Label("Order History", systemImage: "bag")
+                }
+                NavigationLink(value: ProfileDest.settings) {
+                    Label("Settings", systemImage: "gear")
+                }
+            }
+        }
+        .navigationTitle("Profile")
+    }
+}
+
+// MARK: - Settings View
+
+struct SettingsView: View {
+    @State private var notificationsEnabled = true
+    @State private var darkModeEnabled = false
+
+    var body: some View {
+        Form {
+            Section("Preferences") {
+                Toggle("Notifications", isOn: $notificationsEnabled)
+                Toggle("Dark Mode", isOn: $darkModeEnabled)
+            }
+            Section("About") {
+                LabeledContent("Version", value: "1.0.0")
+                LabeledContent("Build", value: "42")
+            }
+        }
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Edit Profile View
+
+struct EditProfileView: View {
+    @State private var name = "Jane Appleseed"
+    @State private var bio = "SwiftUI enthusiast"
+
+    var body: some View {
+        Form {
+            Section("Personal Info") {
+                TextField("Name", text: $name)
+                TextField("Bio", text: $bio)
+            }
+        }
+        .navigationTitle("Edit Profile")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Order History View
+
+struct OrderHistoryView: View {
+    var body: some View {
+        List {
+            ForEach(1...5, id: \.self) { i in
+                VStack(alignment: .leading) {
+                    Text("Order #\(1000 + i)")
+                        .fontWeight(.medium)
+                    Text("Placed \(i) day\(i == 1 ? "" : "s") ago")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .navigationTitle("Orders")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Placeholder views for compilation
+// (Remove these if you already have real implementations)
+
+struct HomeView: View {
+    var body: some View { Text("Home") }
+}
+struct SearchView: View {
+    var body: some View { Text("Search") }
+}
+struct ProfileView: View {
+    var body: some View { Text("Profile") }
+}
+struct MessagesView: View {
+    var body: some View { Text("Messages") }
+}
+struct InboxView: View {
+    var body: some View { Text("Inbox") }
+}
+struct SentView: View {
+    var body: some View { Text("Sent") }
+}
+struct ArchiveView: View {
+    var body: some View { Text("Archive") }
+}</code></pre>
+
+<div class="callout success">
+  <div class="callout-title">Try It Out</div>
+  <p>This mini-app demonstrates: independent NavigationStacks per tab, pop-to-root on tab reselection, cross-tab navigation (Home "Go to Settings" button), badge on the Home tab, deep link handling, and <code>.searchable</code> in the Search tab. To test deep links, run the app and open a URL like <code>tabbednav://settings</code> in Safari.</p>
+</div>
+
+<hr style="margin: 3rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+<p style="text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">
+  Built with SwiftUI knowledge current through iOS 18.2 / Xcode 16.2.<br>
+  <a href="../swiftui-navigation-approaches/index.html">Back to Navigation Approaches Dashboard</a>
+</p>
+
+</div>
+</main>
+</div>
+
+<!-- Back to top button -->
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<!-- Mermaid.js -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+// Theme handling
+function getPreferredTheme() {
+  const stored = localStorage.getItem('theme');
+  if (stored) return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  const icon = document.querySelector('.theme-icon');
+  if (icon) icon.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+  // Re-render mermaid
+  initMermaid(theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+function initMermaid(theme) {
+  const mermaidTheme = theme === 'dark' ? 'dark' : 'default';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: mermaidTheme,
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    securityLevel: 'loose'
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', el.textContent);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Initialize
+applyTheme(getPreferredTheme());
+
+// Back to top
+const backToTopBtn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Sidebar active state tracking
+const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+const sections = Array.from(sidebarLinks).map(link => {
+  const id = link.getAttribute('href')?.substring(1);
+  return id ? document.getElementById(id) : null;
+}).filter(Boolean);
+
+function updateActiveLink() {
+  let current = '';
+  for (const section of sections) {
+    if (section.getBoundingClientRect().top <= 120) {
+      current = section.id;
+    }
+  }
+  sidebarLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+updateActiveLink();
+
+// Close sidebar on link click (mobile)
+sidebarLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Copy code
+function copyCode(btn) {
+  const pre = btn.closest('.code-header').nextElementSibling;
+  const code = pre?.querySelector('code')?.textContent || pre?.textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

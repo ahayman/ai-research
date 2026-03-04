@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive technical guide to SwiftUI NavigationSplitView: two-column, three-column layouts, adaptive behavior, selection bindings, and platform differences.">
+  <title>NavigationSplitView in SwiftUI | Technical Explainer</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --color-primary: #0071e3;
+      --color-primary-light: #42a1ec;
+      --color-primary-dark: #0058b0;
+      --color-accent: #30d158;
+      --color-warning: #ff9f0a;
+      --color-danger: #ff3b30;
+      --color-purple: #bf5af2;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #86868b;
+      --bg: #fbfbfd;
+      --bg-card: #ffffff;
+      --bg-code: #f5f5f7;
+      --bg-code-header: #e8e8ed;
+      --border: #d2d2d7;
+      --border-light: #e8e8ed;
+      --sidebar-bg: #f5f5f7;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', ui-monospace, 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+      --content-max: 860px;
+      --sidebar-width: 260px;
+    }
+
+    [data-theme="dark"] {
+      --text: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --text-tertiary: #6e6e73;
+      --bg: #000000;
+      --bg-card: #1c1c1e;
+      --bg-code: #1c1c1e;
+      --bg-code-header: #2c2c2e;
+      --border: #38383a;
+      --border-light: #2c2c2e;
+      --sidebar-bg: #1c1c1e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Top Bar ---- */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(251,251,253,0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border-light);
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+    }
+    [data-theme="dark"] .topbar {
+      background: rgba(0,0,0,0.8);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-left a {
+      font-size: 13px; color: var(--color-primary); text-decoration: none;
+      font-weight: 500;
+    }
+    .topbar-left a:hover { text-decoration: underline; }
+    .topbar-title {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      font-family: var(--font-display);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 20px;
+      padding: 5px 12px; cursor: pointer; font-size: 13px;
+      color: var(--text-secondary); transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+    /* ---- Layout ---- */
+    .page-layout {
+      display: flex; margin-top: 52px; min-height: calc(100vh - 52px);
+    }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: var(--sidebar-width); position: fixed; top: 52px; left: 0;
+      height: calc(100vh - 52px); overflow-y: auto;
+      background: var(--sidebar-bg); border-right: 1px solid var(--border-light);
+      padding: 20px 0; z-index: 50;
+      scrollbar-width: thin;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .sidebar-section { margin-bottom: 8px; }
+    .sidebar-section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-tertiary);
+      padding: 8px 20px 4px; user-select: none;
+    }
+    .sidebar a {
+      display: block; padding: 5px 20px; font-size: 13px;
+      color: var(--text-secondary); text-decoration: none;
+      border-left: 3px solid transparent; transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .sidebar a:hover { color: var(--color-primary); background: rgba(0,113,227,0.05); }
+    .sidebar a.active {
+      color: var(--color-primary); border-left-color: var(--color-primary);
+      background: rgba(0,113,227,0.08); font-weight: 500;
+    }
+    .sidebar-toggle {
+      display: none; position: fixed; bottom: 24px; left: 24px; z-index: 200;
+      width: 44px; height: 44px; border-radius: 22px;
+      background: var(--color-primary); color: white; border: none;
+      font-size: 20px; cursor: pointer; box-shadow: var(--shadow-lg);
+      align-items: center; justify-content: center;
+    }
+
+    /* ---- Main Content ---- */
+    .main-content {
+      flex: 1; margin-left: var(--sidebar-width);
+      padding: 48px 48px 120px;
+      max-width: calc(var(--content-max) + var(--sidebar-width) + 96px);
+    }
+    .content-inner { max-width: var(--content-max); }
+
+    /* ---- Hero ---- */
+    .hero-section {
+      margin-bottom: 48px; padding-bottom: 32px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,113,227,0.1); color: var(--color-primary);
+      font-size: 12px; font-weight: 600; padding: 4px 12px;
+      border-radius: 20px; margin-bottom: 16px; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hero-section h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700; line-height: 1.15; margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+      font-size: 18px; color: var(--text-secondary); line-height: 1.6;
+      max-width: 640px;
+    }
+    .hero-meta {
+      display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      font-size: 13px; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ---- Section Styles ---- */
+    section { margin-bottom: 56px; }
+    section h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 700; margin-bottom: 20px;
+      letter-spacing: -0.01em; line-height: 1.2;
+      padding-top: 8px;
+    }
+    section h3 {
+      font-size: 1.2rem; font-weight: 600; margin: 28px 0 12px;
+      color: var(--text);
+    }
+    section h4 {
+      font-size: 1rem; font-weight: 600; margin: 20px 0 8px;
+      color: var(--text-secondary);
+    }
+    p { margin-bottom: 16px; }
+    ul, ol { margin: 0 0 16px 24px; }
+    li { margin-bottom: 6px; }
+    strong { font-weight: 600; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---- Code Blocks ---- */
+    .code-block {
+      background: var(--bg-code); border: 1px solid var(--border-light);
+      border-radius: var(--radius); margin: 20px 0 24px; overflow: hidden;
+    }
+    .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 16px; background: var(--bg-code-header);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .code-lang {
+      font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .copy-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 6px; padding: 3px 10px; font-size: 12px;
+      color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .copy-btn.copied { border-color: var(--color-accent); color: var(--color-accent); }
+    pre {
+      padding: 16px; overflow-x: auto; font-family: var(--mono);
+      font-size: 13.5px; line-height: 1.6; tab-size: 4;
+    }
+    code {
+      font-family: var(--mono); font-size: 0.9em;
+    }
+    p code, li code {
+      background: var(--bg-code); padding: 2px 6px;
+      border-radius: 4px; border: 1px solid var(--border-light);
+      font-size: 0.85em;
+    }
+
+    /* ---- Inline syntax highlighting (basic) ---- */
+    .kw { color: #ad3da4; font-weight: 600; }
+    .ty { color: #0b4f79; }
+    .fn { color: #326d74; }
+    .str { color: #c41a16; }
+    .cm { color: #6e6e73; font-style: italic; }
+    .num { color: #1c00cf; }
+    .at { color: #9b2393; }
+    .pp { color: #643820; }
+    [data-theme="dark"] .kw { color: #ff7ab2; }
+    [data-theme="dark"] .ty { color: #6bdfff; }
+    [data-theme="dark"] .fn { color: #67b7a4; }
+    [data-theme="dark"] .str { color: #fc6a5d; }
+    [data-theme="dark"] .cm { color: #7f8c8d; }
+    [data-theme="dark"] .num { color: #d0bf69; }
+    [data-theme="dark"] .at { color: #cc9ef5; }
+    [data-theme="dark"] .pp { color: #ffa14f; }
+
+    /* ---- Diagram Container ---- */
+    .diagram-container {
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      border-radius: var(--radius); margin: 24px 0; padding: 24px;
+      text-align: center; overflow-x: auto;
+    }
+    .diagram-container .mermaid { display: inline-block; }
+    .diagram-caption {
+      font-size: 13px; color: var(--text-tertiary); margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* ---- Callout Boxes ---- */
+    .callout {
+      border-radius: var(--radius); padding: 16px 20px;
+      margin: 20px 0; border-left: 4px solid;
+    }
+    .callout-title {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .callout p { margin-bottom: 8px; font-size: 14px; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-info {
+      background: rgba(0,113,227,0.06); border-color: var(--color-primary);
+    }
+    .callout-info .callout-title { color: var(--color-primary); }
+    .callout-warning {
+      background: rgba(255,159,10,0.08); border-color: var(--color-warning);
+    }
+    .callout-warning .callout-title { color: var(--color-warning); }
+    .callout-tip {
+      background: rgba(48,209,88,0.08); border-color: var(--color-accent);
+    }
+    .callout-tip .callout-title { color: var(--color-accent); }
+
+    /* ---- Comparison Table ---- */
+    .comparison-table {
+      width: 100%; border-collapse: collapse; margin: 20px 0;
+      font-size: 14px;
+    }
+    .comparison-table th {
+      background: var(--bg-code-header); text-align: left;
+      padding: 10px 14px; font-weight: 600; font-size: 13px;
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+    }
+    .comparison-table tr:hover td { background: rgba(0,113,227,0.03); }
+
+    /* ---- Tradeoff Cards ---- */
+    .tradeoff-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin: 20px 0;
+    }
+    .tradeoff-card {
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      border-radius: var(--radius); padding: 20px;
+    }
+    .tradeoff-card h4 {
+      margin: 0 0 12px; font-size: 15px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tradeoff-card ul { margin-left: 18px; font-size: 14px; }
+    .tradeoff-card.pros { border-top: 3px solid var(--color-accent); }
+    .tradeoff-card.cons { border-top: 3px solid var(--color-danger); }
+
+    /* ---- Back to Top ---- */
+    .back-to-top {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      width: 40px; height: 40px; border-radius: 20px;
+      background: var(--color-primary); color: white; border: none;
+      font-size: 18px; cursor: pointer; opacity: 0; transition: opacity 0.3s;
+      box-shadow: var(--shadow-md); display: flex; align-items: center;
+      justify-content: center;
+    }
+    .back-to-top.visible { opacity: 1; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .sidebar.open { display: block; z-index: 150; width: 280px; }
+      .sidebar-toggle { display: flex; }
+      .main-content { margin-left: 0; padding: 32px 24px 120px; }
+    }
+    @media (max-width: 600px) {
+      .main-content { padding: 24px 16px 100px; }
+      .tradeoff-grid { grid-template-columns: 1fr; }
+      pre { font-size: 12px; }
+      .hero-section h1 { font-size: 1.6rem; }
+    }
+
+    /* ---- Overlay for mobile sidebar ---- */
+    .sidebar-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); z-index: 140;
+    }
+    .sidebar-overlay.open { display: block; }
+
+    /* ---- Platform Badge ---- */
+    .platform-badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+    .platform-badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .platform-badge.ios { background: rgba(0,113,227,0.1); color: var(--color-primary); }
+    .platform-badge.ipados { background: rgba(191,90,242,0.1); color: var(--color-purple); }
+    .platform-badge.macos { background: rgba(48,209,88,0.1); color: #28a745; }
+
+    /* ---- Version badge ---- */
+    .version-badge {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      background: rgba(0,113,227,0.08); color: var(--color-primary);
+      padding: 2px 8px; border-radius: 4px; margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="../swiftui-navigation-approaches/index.html">&larr; Back to Dashboard</a>
+    <span class="topbar-title">NavigationSplitView</span>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9789;</span> <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Overview</div>
+    <a href="#overview">What is NavigationSplitView</a>
+    <a href="#split-vs-stack">Split View vs Stack</a>
+    <a href="#two-vs-three">Two-Column vs Three-Column</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Code Examples</div>
+    <a href="#basic-two-column">Basic Two-Column</a>
+    <a href="#three-column">Three-Column Layout</a>
+    <a href="#selection-bindings">Selection Bindings</a>
+    <a href="#split-with-stack">Split View + Stack</a>
+    <a href="#column-width">Column Width</a>
+    <a href="#programmatic-nav">Programmatic Navigation</a>
+    <a href="#adaptive-sizing">Adaptive Sizing</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Deep Dives</div>
+    <a href="#column-visibility">Column Visibility</a>
+    <a href="#split-view-style">Split View Styles</a>
+    <a href="#compact-behavior">Compact Behavior</a>
+    <a href="#platform-differences">Platform Differences</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Guidance</div>
+    <a href="#tradeoffs">Tradeoffs</a>
+    <a href="#when-to-use">When to Use</a>
+    <a href="#best-practices">Best Practices</a>
+    <a href="#compatibility">Compatibility</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="page-layout">
+  <main class="main-content">
+    <div class="content-inner">
+
+      <!-- Hero -->
+      <div class="hero-section" id="top">
+        <div class="hero-badge">SwiftUI Navigation</div>
+        <h1>NavigationSplitView</h1>
+        <p class="hero-subtitle">
+          A container view that presents two or three columns of content side by side, where selections in
+          leading columns drive what appears in trailing columns. The multi-column navigation pattern
+          for iPadOS, macOS, and adaptive iOS layouts.
+        </p>
+        <div class="hero-meta">
+          <span class="hero-meta-item">iOS 16+ / macOS 13+ / tvOS 16+</span>
+          <span class="hero-meta-item">|</span>
+          <span class="hero-meta-item">Multi-column navigation</span>
+          <span class="hero-meta-item">|</span>
+          <span class="hero-meta-item">Replaces UISplitViewController</span>
+        </div>
+      </div>
+
+      <!-- ===================== OVERVIEW ===================== -->
+      <section id="overview">
+        <h2>What is NavigationSplitView?</h2>
+        <p>
+          <code>NavigationSplitView</code> is SwiftUI's multi-column navigation container, introduced in
+          iOS 16 (WWDC 2022). It replaces the older pattern of wrapping a <code>NavigationView</code>
+          with <code>.navigationViewStyle(.columns)</code> and provides a first-class API for building
+          sidebar-driven layouts that are native to iPadOS and macOS.
+        </p>
+        <p>
+          At its core, NavigationSplitView presents either <strong>two columns</strong> (sidebar + detail)
+          or <strong>three columns</strong> (sidebar + content + detail). Selections made in the leading
+          columns determine what appears in the trailing columns. On compact-width devices like iPhones,
+          the split view automatically collapses into a stack-based navigation flow.
+        </p>
+        <p>
+          This is the SwiftUI equivalent of <code>UISplitViewController</code> from UIKit, but with a
+          declarative, state-driven API that integrates naturally with SwiftUI's data flow.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Key Mental Model</div>
+          <p>
+            Think of NavigationSplitView as <strong>2D panel-based navigation</strong>: columns sit
+            side by side, and selecting an item in one column updates the adjacent column. This is
+            fundamentally different from NavigationStack's <strong>3D depth-based navigation</strong>,
+            where views push on top of each other.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== SPLIT VS STACK ===================== -->
+      <section id="split-vs-stack">
+        <h2>NavigationSplitView vs NavigationStack</h2>
+        <p>
+          Understanding when to use each navigation container is critical. They solve different problems
+          and serve different form factors.
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>NavigationStack</th>
+              <th>NavigationSplitView</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Layout Model</strong></td>
+              <td>3D stack: views push/pop on a depth axis</td>
+              <td>2D panels: columns sit side by side</td>
+            </tr>
+            <tr>
+              <td><strong>Columns</strong></td>
+              <td>Single column always</td>
+              <td>Two or three columns</td>
+            </tr>
+            <tr>
+              <td><strong>Best For</strong></td>
+              <td>iPhone, linear flows, drill-down hierarchies</td>
+              <td>iPad, Mac, sidebar-driven master/detail</td>
+            </tr>
+            <tr>
+              <td><strong>Navigation Model</strong></td>
+              <td>Path-based (NavigationPath or typed array)</td>
+              <td>Selection-based (optional bindings between columns)</td>
+            </tr>
+            <tr>
+              <td><strong>Compact Behavior</strong></td>
+              <td>Always a stack</td>
+              <td>Collapses to stack automatically</td>
+            </tr>
+            <tr>
+              <td><strong>Deep Linking</strong></td>
+              <td>Full path restoration via NavigationPath</td>
+              <td>Selection state restoration via bindings</td>
+            </tr>
+            <tr>
+              <td><strong>UIKit Equivalent</strong></td>
+              <td>UINavigationController</td>
+              <td>UISplitViewController</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph LR
+    subgraph NavigationStack ["NavigationStack (3D Depth)"]
+        direction LR
+        A1["Root View"] -->|push| A2["Detail A"]
+        A2 -->|push| A3["Detail B"]
+        A3 -->|push| A4["Detail C"]
+    end
+
+    subgraph NavigationSplitView ["NavigationSplitView (2D Panels)"]
+        direction LR
+        B1["Sidebar"] --- B2["Content"]
+        B2 --- B3["Detail"]
+    end
+
+    style A1 fill:#e8f4fd,stroke:#0071e3
+    style A2 fill:#d1ecf9,stroke:#0071e3
+    style A3 fill:#b8e2f6,stroke:#0071e3
+    style A4 fill:#9fd8f2,stroke:#0071e3
+    style B1 fill:#f0e6fa,stroke:#bf5af2
+    style B2 fill:#e6f7ed,stroke:#30d158
+    style B3 fill:#e8f4fd,stroke:#0071e3
+          </div>
+          <div class="diagram-caption">Figure 1: NavigationStack pushes views in depth; NavigationSplitView arranges columns side by side.</div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-title">Tip</div>
+          <p>
+            You can combine both: embed a <code>NavigationStack</code> inside a NavigationSplitView's
+            detail column to get multi-column layout <em>and</em> deep drill-down within the detail area.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== TWO VS THREE ===================== -->
+      <section id="two-vs-three">
+        <h2>Two-Column vs Three-Column Layout</h2>
+        <p>
+          NavigationSplitView supports two initializers, one for each column configuration:
+        </p>
+
+        <h3>Two-Column: Sidebar + Detail</h3>
+        <p>
+          The simpler form. A sidebar on the leading edge and a detail view on the trailing edge.
+          Best for apps where selecting an item in the sidebar immediately shows full detail.
+          Think: Settings app, simple mail client, or a notes app.
+        </p>
+
+        <h3>Three-Column: Sidebar + Content + Detail</h3>
+        <p>
+          Adds a middle "content" column between sidebar and detail. This is ideal when you have
+          a two-level hierarchy: the sidebar selects a category, the content column lists items in
+          that category, and the detail column shows the selected item. Think: Mail.app (mailboxes
+          &rarr; message list &rarr; message detail) or Files.app.
+        </p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph TwoCol ["Two-Column Layout"]
+        direction LR
+        S1["Sidebar<br/><small>List of items</small>"] --> D1["Detail<br/><small>Selected item</small>"]
+    end
+
+    subgraph ThreeCol ["Three-Column Layout"]
+        direction LR
+        S2["Sidebar<br/><small>Categories</small>"] --> C2["Content<br/><small>Items in category</small>"]
+        C2 --> D2["Detail<br/><small>Selected item</small>"]
+    end
+
+    style S1 fill:#f0e6fa,stroke:#bf5af2
+    style D1 fill:#e8f4fd,stroke:#0071e3
+    style S2 fill:#f0e6fa,stroke:#bf5af2
+    style C2 fill:#e6f7ed,stroke:#30d158
+    style D2 fill:#e8f4fd,stroke:#0071e3
+          </div>
+          <div class="diagram-caption">Figure 2: Two-column layout has sidebar and detail; three-column adds a content list in between.</div>
+        </div>
+      </section>
+
+      <!-- ===================== BASIC TWO-COLUMN ===================== -->
+      <section id="basic-two-column">
+        <h2>Basic Two-Column NavigationSplitView</h2>
+        <div class="platform-badges">
+          <span class="platform-badge ios">iOS 16+</span>
+          <span class="platform-badge ipados">iPadOS 16+</span>
+          <span class="platform-badge macos">macOS 13+</span>
+        </div>
+        <p>
+          The simplest NavigationSplitView takes a <code>sidebar</code> closure and a <code>detail</code>
+          closure. This creates a two-column layout where you typically place a <code>List</code> in the
+          sidebar and show the selected item's detail in the trailing column.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Fruit</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> emoji: <span class="ty">String</span>
+    <span class="kw">let</span> color: <span class="ty">Color</span>
+}
+
+<span class="kw">struct</span> <span class="ty">BasicTwoColumnView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> fruits = [
+        <span class="ty">Fruit</span>(name: <span class="str">"Apple"</span>, emoji: <span class="str">"🍎"</span>, color: .red),
+        <span class="ty">Fruit</span>(name: <span class="str">"Banana"</span>, emoji: <span class="str">"🍌"</span>, color: .yellow),
+        <span class="ty">Fruit</span>(name: <span class="str">"Blueberry"</span>, emoji: <span class="str">"🫐"</span>, color: .blue),
+        <span class="ty">Fruit</span>(name: <span class="str">"Mango"</span>, emoji: <span class="str">"🥭"</span>, color: .orange),
+    ]
+
+    <span class="at">@State</span> <span class="kw">private var</span> selectedFruit: <span class="ty">Fruit</span>?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>(fruits, selection: $selectedFruit) { fruit <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: fruit) {
+                    <span class="ty">Label</span>(fruit.name, systemImage: <span class="str">"leaf"</span>)
+                }
+            }
+            .navigationTitle(<span class="str">"Fruits"</span>)
+        } detail: {
+            <span class="kw">if let</span> fruit = selectedFruit {
+                <span class="ty">VStack</span>(spacing: <span class="num">20</span>) {
+                    <span class="ty">Text</span>(fruit.emoji)
+                        .font(.system(size: <span class="num">80</span>))
+                    <span class="ty">Text</span>(fruit.name)
+                        .font(.largeTitle.bold())
+                    <span class="ty">RoundedRectangle</span>(cornerRadius: <span class="num">12</span>)
+                        .fill(fruit.color.gradient)
+                        .frame(width: <span class="num">200</span>, height: <span class="num">200</span>)
+                }
+                .navigationTitle(fruit.name)
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Select a Fruit"</span>,
+                    systemImage: <span class="str">"leaf.circle"</span>,
+                    description: <span class="ty">Text</span>(<span class="str">"Pick a fruit from the sidebar."</span>)
+                )
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">How it works</div>
+          <p>
+            The <code>selection</code> parameter on <code>List</code> binds to <code>$selectedFruit</code>.
+            When the user taps a row, SwiftUI updates <code>selectedFruit</code>, and the detail closure
+            re-evaluates to show the chosen fruit. On iPad/Mac, both columns are visible simultaneously.
+            On iPhone, tapping a row pushes the detail view onto a navigation stack.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== THREE-COLUMN ===================== -->
+      <section id="three-column">
+        <h2>Three-Column Layout</h2>
+        <div class="platform-badges">
+          <span class="platform-badge ios">iOS 16+</span>
+          <span class="platform-badge ipados">iPadOS 16+</span>
+          <span class="platform-badge macos">macOS 13+</span>
+        </div>
+        <p>
+          The three-column initializer adds a <code>content</code> closure between sidebar and detail.
+          Two separate selection bindings drive the hierarchy: one for the sidebar-to-content relationship,
+          and one for the content-to-detail relationship.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Category</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> symbol: <span class="ty">String</span>
+    <span class="kw">let</span> items: [<span class="ty">String</span>]
+}
+
+<span class="kw">struct</span> <span class="ty">ThreeColumnView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> categories = [
+        <span class="ty">Category</span>(name: <span class="str">"Fruits"</span>, symbol: <span class="str">"leaf"</span>,
+                 items: [<span class="str">"Apple"</span>, <span class="str">"Banana"</span>, <span class="str">"Cherry"</span>]),
+        <span class="ty">Category</span>(name: <span class="str">"Vegetables"</span>, symbol: <span class="str">"carrot"</span>,
+                 items: [<span class="str">"Carrot"</span>, <span class="str">"Broccoli"</span>, <span class="str">"Spinach"</span>]),
+        <span class="ty">Category</span>(name: <span class="str">"Grains"</span>, symbol: <span class="str">"leaf.circle"</span>,
+                 items: [<span class="str">"Rice"</span>, <span class="str">"Wheat"</span>, <span class="str">"Oats"</span>]),
+    ]
+
+    <span class="at">@State</span> <span class="kw">private var</span> selectedCategory: <span class="ty">Category</span>?
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="cm">// SIDEBAR: category list</span>
+            <span class="ty">List</span>(categories, selection: $selectedCategory) { category <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: category) {
+                    <span class="ty">Label</span>(category.name, systemImage: category.symbol)
+                }
+            }
+            .navigationTitle(<span class="str">"Food Groups"</span>)
+        } content: {
+            <span class="cm">// CONTENT: items in selected category</span>
+            <span class="kw">if let</span> category = selectedCategory {
+                <span class="ty">List</span>(category.items, id: \.<span class="kw">self</span>, selection: $selectedItem) { item <span class="kw">in</span>
+                    <span class="ty">NavigationLink</span>(value: item) {
+                        <span class="ty">Text</span>(item)
+                    }
+                }
+                .navigationTitle(category.name)
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Select a Category"</span>,
+                    systemImage: <span class="str">"sidebar.left"</span>
+                )
+            }
+        } detail: {
+            <span class="cm">// DETAIL: selected item info</span>
+            <span class="kw">if let</span> item = selectedItem {
+                <span class="ty">VStack</span> {
+                    <span class="ty">Text</span>(item)
+                        .font(.largeTitle.bold())
+                    <span class="ty">Text</span>(<span class="str">"Details about \(item) would go here."</span>)
+                        .foregroundStyle(.secondary)
+                }
+                .navigationTitle(item)
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Select an Item"</span>,
+                    systemImage: <span class="str">"doc.text"</span>,
+                    description: <span class="ty">Text</span>(<span class="str">"Choose something from the list."</span>)
+                )
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <p>
+          Notice the two separate <code>@State</code> bindings: <code>selectedCategory</code> drives
+          which items appear in the content column, and <code>selectedItem</code> drives the detail.
+          When the user changes the category, you will typically want to reset <code>selectedItem</code>
+          to <code>nil</code> using an <code>.onChange(of:)</code> modifier.
+        </p>
+      </section>
+
+      <!-- ===================== SELECTION BINDINGS ===================== -->
+      <section id="selection-bindings">
+        <h2>Selection-Driven Navigation with Bindings</h2>
+        <p>
+          The binding flow between columns is the core mechanism of NavigationSplitView. Understanding how
+          selection state propagates is essential for building correct multi-column navigation.
+        </p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant Sidebar
+    participant State as @State Properties
+    participant Content
+    participant Detail
+
+    User->>Sidebar: Taps "Category A"
+    Sidebar->>State: selectedCategory = Category A
+    State->>Content: Re-renders with Category A items
+    Note over State: selectedItem is nil
+
+    User->>Content: Taps "Item 1"
+    Content->>State: selectedItem = Item 1
+    State->>Detail: Re-renders with Item 1 detail
+
+    User->>Sidebar: Taps "Category B"
+    Sidebar->>State: selectedCategory = Category B
+    State->>Content: Re-renders with Category B items
+    Note over State: .onChange resets selectedItem = nil
+    State->>Detail: Shows placeholder
+          </div>
+          <div class="diagram-caption">Figure 3: Selection binding flow between columns. Changes cascade left-to-right through @State.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Email</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> subject: <span class="ty">String</span>
+    <span class="kw">let</span> sender: <span class="ty">String</span>
+    <span class="kw">let</span> body: <span class="ty">String</span>
+    <span class="kw">let</span> isRead: <span class="ty">Bool</span>
+}
+
+<span class="kw">enum</span> <span class="ty">Mailbox</span>: <span class="ty">String</span>, <span class="ty">CaseIterable</span>, <span class="ty">Identifiable</span> {
+    <span class="kw">case</span> inbox, sent, drafts, trash
+    <span class="kw">var</span> id: <span class="ty">String</span> { rawValue }
+    <span class="kw">var</span> symbol: <span class="ty">String</span> {
+        <span class="kw">switch self</span> {
+        <span class="kw">case</span> .inbox: <span class="str">"tray"</span>
+        <span class="kw">case</span> .sent: <span class="str">"paperplane"</span>
+        <span class="kw">case</span> .drafts: <span class="str">"doc"</span>
+        <span class="kw">case</span> .trash: <span class="str">"trash"</span>
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ty">MailAppView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> selectedMailbox: <span class="ty">Mailbox</span>? = .inbox
+    <span class="at">@State</span> <span class="kw">private var</span> selectedEmail: <span class="ty">Email</span>?
+
+    <span class="cm">// Sample data</span>
+    <span class="kw">let</span> emails: [<span class="ty">Mailbox</span>: [<span class="ty">Email</span>]] = [
+        .inbox: [
+            <span class="ty">Email</span>(subject: <span class="str">"Meeting Tomorrow"</span>, sender: <span class="str">"Alice"</span>,
+                  body: <span class="str">"Don't forget about our meeting."</span>, isRead: <span class="kw">false</span>),
+            <span class="ty">Email</span>(subject: <span class="str">"Project Update"</span>, sender: <span class="str">"Bob"</span>,
+                  body: <span class="str">"Here's the latest on the project."</span>, isRead: <span class="kw">true</span>),
+        ],
+        .sent: [
+            <span class="ty">Email</span>(subject: <span class="str">"Re: Hello"</span>, sender: <span class="str">"Me"</span>,
+                  body: <span class="str">"Thanks for reaching out!"</span>, isRead: <span class="kw">true</span>),
+        ],
+        .drafts: [],
+        .trash: [],
+    ]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>(<span class="ty">Mailbox</span>.allCases, selection: $selectedMailbox) { mailbox <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: mailbox) {
+                    <span class="ty">Label</span>(mailbox.rawValue.capitalized,
+                          systemImage: mailbox.symbol)
+                }
+            }
+            .navigationTitle(<span class="str">"Mail"</span>)
+        } content: {
+            <span class="kw">if let</span> mailbox = selectedMailbox,
+               <span class="kw">let</span> mailboxEmails = emails[mailbox] {
+                <span class="kw">if</span> mailboxEmails.isEmpty {
+                    <span class="ty">ContentUnavailableView</span>(
+                        <span class="str">"No Messages"</span>,
+                        systemImage: <span class="str">"tray"</span>
+                    )
+                } <span class="kw">else</span> {
+                    <span class="ty">List</span>(mailboxEmails, selection: $selectedEmail) { email <span class="kw">in</span>
+                        <span class="ty">NavigationLink</span>(value: email) {
+                            <span class="ty">VStack</span>(alignment: .leading) {
+                                <span class="ty">Text</span>(email.subject)
+                                    .fontWeight(email.isRead ? .regular : .bold)
+                                <span class="ty">Text</span>(email.sender)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .navigationTitle(mailbox.rawValue.capitalized)
+                }
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Select a Mailbox"</span>,
+                    systemImage: <span class="str">"sidebar.left"</span>
+                )
+            }
+        } detail: {
+            <span class="kw">if let</span> email = selectedEmail {
+                <span class="ty">VStack</span>(alignment: .leading, spacing: <span class="num">16</span>) {
+                    <span class="ty">Text</span>(email.subject)
+                        .font(.title.bold())
+                    <span class="ty">Text</span>(<span class="str">"From: \(email.sender)"</span>)
+                        .foregroundStyle(.secondary)
+                    <span class="ty">Divider</span>()
+                    <span class="ty">Text</span>(email.body)
+                    <span class="ty">Spacer</span>()
+                }
+                .padding()
+                .navigationTitle(email.subject)
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Select a Message"</span>,
+                    systemImage: <span class="str">"envelope"</span>
+                )
+            }
+        }
+        .onChange(of: selectedMailbox) {
+            selectedEmail = <span class="kw">nil</span>  <span class="cm">// Reset detail when mailbox changes</span>
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">Important: Reset child selections</div>
+          <p>
+            When the parent selection changes (e.g., switching mailboxes), always reset the child
+            selection to <code>nil</code> using <code>.onChange(of:)</code>. Otherwise, the detail
+            column may show stale data from the previous category. This is shown in the
+            <code>.onChange(of: selectedMailbox)</code> modifier above.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== SPLIT + STACK ===================== -->
+      <section id="split-with-stack">
+        <h2>Combining NavigationSplitView with NavigationStack</h2>
+        <p>
+          NavigationSplitView limits you to at most three levels of columns. If you need deeper navigation
+          within the detail column (e.g., tapping an item to see sub-items, then sub-sub-items), embed
+          a <code>NavigationStack</code> inside the detail closure.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Note</div>
+          <p>
+            NavigationSplitView automatically wraps each column's root view inside a NavigationStack
+            internally. You only need to add an explicit <code>NavigationStack</code> when you want
+            to control a <code>NavigationPath</code> or push additional views beyond what the columns provide.
+          </p>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">Recipe</span>: <span class="ty">Identifiable</span>, <span class="ty">Hashable</span> {
+    <span class="kw">let</span> id = <span class="ty">UUID</span>()
+    <span class="kw">let</span> name: <span class="ty">String</span>
+    <span class="kw">let</span> ingredients: [<span class="ty">String</span>]
+}
+
+<span class="kw">struct</span> <span class="ty">SplitWithStackView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> recipes = [
+        <span class="ty">Recipe</span>(name: <span class="str">"Pasta"</span>, ingredients: [<span class="str">"Noodles"</span>, <span class="str">"Tomato Sauce"</span>, <span class="str">"Basil"</span>]),
+        <span class="ty">Recipe</span>(name: <span class="str">"Salad"</span>, ingredients: [<span class="str">"Lettuce"</span>, <span class="str">"Croutons"</span>, <span class="str">"Dressing"</span>]),
+    ]
+
+    <span class="at">@State</span> <span class="kw">private var</span> selectedRecipe: <span class="ty">Recipe</span>?
+    <span class="at">@State</span> <span class="kw">private var</span> detailPath = <span class="ty">NavigationPath</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>(recipes, selection: $selectedRecipe) { recipe <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: recipe) {
+                    <span class="ty">Text</span>(recipe.name)
+                }
+            }
+            .navigationTitle(<span class="str">"Recipes"</span>)
+        } detail: {
+            <span class="cm">// Embed NavigationStack for deep drill-down in detail</span>
+            <span class="ty">NavigationStack</span>(path: $detailPath) {
+                <span class="kw">if let</span> recipe = selectedRecipe {
+                    <span class="ty">List</span> {
+                        <span class="ty">Section</span>(<span class="str">"Ingredients"</span>) {
+                            <span class="ty">ForEach</span>(recipe.ingredients, id: \.<span class="kw">self</span>) { ingredient <span class="kw">in</span>
+                                <span class="ty">NavigationLink</span>(value: ingredient) {
+                                    <span class="ty">Text</span>(ingredient)
+                                }
+                            }
+                        }
+                    }
+                    .navigationTitle(recipe.name)
+                    .navigationDestination(<span class="kw">for</span>: <span class="ty">String</span>.<span class="kw">self</span>) { ingredient <span class="kw">in</span>
+                        <span class="ty">Text</span>(<span class="str">"Details about \(ingredient)"</span>)
+                            .font(.title)
+                            .navigationTitle(ingredient)
+                    }
+                } <span class="kw">else</span> {
+                    <span class="ty">ContentUnavailableView</span>(
+                        <span class="str">"Select a Recipe"</span>,
+                        systemImage: <span class="str">"fork.knife"</span>
+                    )
+                }
+            }
+        }
+        .onChange(of: selectedRecipe) {
+            detailPath.removeLast(detailPath.count)  <span class="cm">// Reset stack when selection changes</span>
+        }
+    }
+}</code></pre>
+        </div>
+
+        <p>
+          The <code>NavigationStack(path:)</code> in the detail column gives you full control over a
+          back-stack within the detail area. When the sidebar selection changes, we clear the
+          detail stack to avoid showing stale pushed views from a different recipe.
+        </p>
+      </section>
+
+      <!-- ===================== COLUMN WIDTH ===================== -->
+      <section id="column-width">
+        <h2>Column Width Customization</h2>
+        <span class="version-badge">iOS 16+</span>
+        <p>
+          By default, SwiftUI uses system-standard widths for each column. You can customize these
+          with the <code>.navigationSplitViewColumnWidth()</code> modifier, applied to the root view
+          inside each column closure.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">struct</span> <span class="ty">CustomColumnWidthView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>([<span class="str">"Item A"</span>, <span class="str">"Item B"</span>, <span class="str">"Item C"</span>], id: \.<span class="kw">self</span>,
+                 selection: $selectedItem) { item <span class="kw">in</span>
+                <span class="ty">Text</span>(item)
+            }
+            .navigationTitle(<span class="str">"Sidebar"</span>)
+            <span class="cm">// Fixed width for sidebar</span>
+            .navigationSplitViewColumnWidth(<span class="num">200</span>)
+        } detail: {
+            <span class="ty">Text</span>(selectedItem ?? <span class="str">"Select an item"</span>)
+                .navigationTitle(<span class="str">"Detail"</span>)
+        }
+    }
+}
+
+<span class="cm">// Flexible width with min/ideal/max:</span>
+<span class="kw">struct</span> <span class="ty">FlexibleWidthView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>([<span class="str">"One"</span>, <span class="str">"Two"</span>, <span class="str">"Three"</span>], id: \.<span class="kw">self</span>,
+                 selection: $selectedItem) { item <span class="kw">in</span>
+                <span class="ty">Text</span>(item)
+            }
+            .navigationTitle(<span class="str">"Sidebar"</span>)
+            <span class="cm">// Flexible: user can resize between min and max</span>
+            .navigationSplitViewColumnWidth(
+                min: <span class="num">180</span>, ideal: <span class="num">220</span>, max: <span class="num">320</span>
+            )
+        } content: {
+            <span class="ty">Text</span>(<span class="str">"Content column"</span>)
+                .navigationSplitViewColumnWidth(
+                    min: <span class="num">200</span>, ideal: <span class="num">300</span>, max: <span class="num">400</span>
+                )
+        } detail: {
+            <span class="ty">Text</span>(selectedItem ?? <span class="str">"Detail"</span>)
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">Platform Caveat</div>
+          <p>
+            The <code>.navigationSplitViewColumnWidth()</code> modifier is a <em>suggestion</em> to
+            the system. SwiftUI may ignore it in certain contexts. In particular, sidebar column width
+            customization has had inconsistent behavior on iPadOS 16 and 17 -- it may not be honored
+            for the sidebar column specifically. The content and detail columns are more reliable.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== PROGRAMMATIC NAVIGATION ===================== -->
+      <section id="programmatic-nav">
+        <h2>Programmatic Navigation</h2>
+        <p>
+          Because NavigationSplitView is selection-driven, programmatic navigation means writing to
+          the selection state properties. This is simpler than NavigationStack's path-based approach
+          for column-level navigation, but you can combine both for full control.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">ProgrammaticNavView</span>: <span class="ty">View</span> {
+    <span class="kw">let</span> items = [<span class="str">"Alpha"</span>, <span class="str">"Beta"</span>, <span class="str">"Gamma"</span>, <span class="str">"Delta"</span>]
+
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+    <span class="at">@State</span> <span class="kw">private var</span> columnVisibility: <span class="ty">NavigationSplitViewVisibility</span> = .all
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span>(columnVisibility: $columnVisibility) {
+            <span class="ty">List</span>(items, id: \.<span class="kw">self</span>, selection: $selectedItem) { item <span class="kw">in</span>
+                <span class="ty">Text</span>(item)
+            }
+            .navigationTitle(<span class="str">"Items"</span>)
+        } detail: {
+            <span class="ty">VStack</span>(spacing: <span class="num">20</span>) {
+                <span class="kw">if let</span> item = selectedItem {
+                    <span class="ty">Text</span>(<span class="str">"Selected: \(item)"</span>)
+                        .font(.title)
+                } <span class="kw">else</span> {
+                    <span class="ty">Text</span>(<span class="str">"Nothing selected"</span>)
+                        .foregroundStyle(.secondary)
+                }
+
+                <span class="cm">// Programmatically select an item</span>
+                <span class="ty">Button</span>(<span class="str">"Select Gamma"</span>) {
+                    selectedItem = <span class="str">"Gamma"</span>
+                }
+
+                <span class="cm">// Programmatically hide sidebar</span>
+                <span class="ty">Button</span>(<span class="str">"Show Detail Only"</span>) {
+                    columnVisibility = .detailOnly
+                }
+
+                <span class="cm">// Show all columns</span>
+                <span class="ty">Button</span>(<span class="str">"Show All Columns"</span>) {
+                    columnVisibility = .all
+                }
+            }
+            .navigationTitle(<span class="str">"Detail"</span>)
+        }
+    }
+}</code></pre>
+        </div>
+
+        <p>
+          Setting <code>selectedItem = "Gamma"</code> programmatically is equivalent to the user tapping
+          "Gamma" in the sidebar list. Similarly, writing to <code>columnVisibility</code> hides or shows
+          columns programmatically -- useful for onboarding flows or deep-link scenarios.
+        </p>
+      </section>
+
+      <!-- ===================== ADAPTIVE SIZING ===================== -->
+      <section id="adaptive-sizing">
+        <h2>Adaptive Behavior for Different Size Classes</h2>
+        <p>
+          One of NavigationSplitView's most powerful features is automatic adaptation. The same code
+          renders as multi-column on wide devices and collapses to a navigation stack on compact devices.
+        </p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+flowchart TD
+    A["NavigationSplitView"] --> B{"Horizontal Size Class?"}
+    B -->|Regular| C["Multi-Column Layout"]
+    B -->|Compact| D["Stack Layout"]
+
+    C --> E["iPad Full Screen"]
+    C --> F["iPad Landscape"]
+    C --> G["Mac Window"]
+    C --> H["iPhone Max Landscape"]
+
+    D --> I["iPhone Portrait"]
+    D --> J["iPad Slide Over"]
+    D --> K["iPad Split 1/3"]
+    D --> L["iPhone Max Portrait"]
+
+    E --> M["Sidebar | Content | Detail<br/>All columns visible"]
+    F --> M
+    G --> M
+    H --> N["Sidebar overlay | Detail<br/>Two columns"]
+
+    I --> O["Single column stack<br/>Push/pop navigation"]
+    J --> O
+    K --> O
+    L --> O
+
+    style A fill:#e8f4fd,stroke:#0071e3,stroke-width:2px
+    style C fill:#e6f7ed,stroke:#30d158
+    style D fill:#fef3e2,stroke:#ff9f0a
+    style M fill:#e6f7ed,stroke:#30d158
+    style N fill:#e6f7ed,stroke:#30d158
+    style O fill:#fef3e2,stroke:#ff9f0a
+          </div>
+          <div class="diagram-caption">Figure 4: NavigationSplitView adapts its layout based on horizontal size class and available width.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">struct</span> <span class="ty">AdaptiveNavView</span>: <span class="ty">View</span> {
+    <span class="at">@Environment</span>(\.<span class="fn">horizontalSizeClass</span>) <span class="kw">private var</span> sizeClass
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+    <span class="at">@State</span> <span class="kw">private var</span> preferredColumn: <span class="ty">NavigationSplitViewColumn</span> = .sidebar
+
+    <span class="kw">let</span> items = [<span class="str">"Dashboard"</span>, <span class="str">"Profile"</span>, <span class="str">"Settings"</span>, <span class="str">"Help"</span>]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="cm">// preferredCompactColumn controls which column appears</span>
+        <span class="cm">// when the split view collapses on compact devices (iOS 17+)</span>
+        <span class="ty">NavigationSplitView</span>(
+            preferredCompactColumn: $preferredColumn
+        ) {
+            <span class="ty">List</span>(items, id: \.<span class="kw">self</span>, selection: $selectedItem) { item <span class="kw">in</span>
+                <span class="ty">Text</span>(item)
+            }
+            .navigationTitle(<span class="str">"Menu"</span>)
+        } detail: {
+            <span class="kw">if let</span> item = selectedItem {
+                <span class="ty">VStack</span> {
+                    <span class="ty">Text</span>(item)
+                        .font(.largeTitle)
+
+                    <span class="kw">if</span> sizeClass == .compact {
+                        <span class="ty">Text</span>(<span class="str">"Running in compact mode"</span>)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .navigationTitle(item)
+            } <span class="kw">else</span> {
+                <span class="ty">ContentUnavailableView</span>(
+                    <span class="str">"Welcome"</span>,
+                    systemImage: <span class="str">"hand.wave"</span>,
+                    description: <span class="ty">Text</span>(<span class="str">"Select an item from the sidebar."</span>)
+                )
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">preferredCompactColumn (iOS 17+)</div>
+          <p>
+            By default, when a NavigationSplitView collapses on compact devices, SwiftUI shows the
+            sidebar. Starting with iOS 17, you can use the <code>preferredCompactColumn</code>
+            parameter to control which column appears initially. For example, setting it to
+            <code>.detail</code> shows the detail view first on iPhone, which is useful for apps
+            where the detail content is more important than the sidebar list.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== COLUMN VISIBILITY ===================== -->
+      <section id="column-visibility">
+        <h2>Column Visibility</h2>
+        <p>
+          <code>NavigationSplitViewVisibility</code> controls which columns are shown. You pass a
+          binding to the NavigationSplitView initializer, and SwiftUI uses it as both a read and write
+          value -- the user can toggle the sidebar, and SwiftUI updates your binding accordingly.
+        </p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+stateDiagram-v2
+    [*] --> automatic
+    automatic --> all: User shows sidebar
+    automatic --> detailOnly: User hides sidebar
+    all --> detailOnly: User hides all leading columns
+    all --> doubleColumn: User hides sidebar (3-col)
+    detailOnly --> all: User shows sidebar
+    detailOnly --> doubleColumn: User shows content only
+    doubleColumn --> all: User shows sidebar
+    doubleColumn --> detailOnly: User hides content
+
+    state "automatic" as automatic: System default\nbehavior
+    state "all" as all: All columns\nvisible
+    state "detailOnly" as detailOnly: Only detail\ncolumn shown
+    state "doubleColumn" as doubleColumn: Content + Detail\n(3-col only)
+          </div>
+          <div class="diagram-caption">Figure 5: State transitions between NavigationSplitViewVisibility values.</div>
+        </div>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Visibility Value</th>
+              <th>Two-Column Effect</th>
+              <th>Three-Column Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>.automatic</code></td>
+              <td>System decides (usually shows both)</td>
+              <td>System decides based on available width</td>
+            </tr>
+            <tr>
+              <td><code>.all</code></td>
+              <td>Sidebar + Detail both visible</td>
+              <td>Sidebar + Content + Detail all visible</td>
+            </tr>
+            <tr>
+              <td><code>.doubleColumn</code></td>
+              <td>Same as <code>.all</code> (sidebar + detail)</td>
+              <td>Hides sidebar, shows Content + Detail</td>
+            </tr>
+            <tr>
+              <td><code>.detailOnly</code></td>
+              <td>Hides sidebar, detail fills width</td>
+              <td>Hides sidebar and content, detail fills width</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">System Override</div>
+          <p>
+            Column visibility is a <em>suggestion</em>. The system may override your preference based
+            on available space. For example, on iPhone the split view always collapses to a single
+            column regardless of the visibility value. On iPad in Slide Over mode, the system also
+            forces a compact layout.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== SPLIT VIEW STYLES ===================== -->
+      <section id="split-view-style">
+        <h2>NavigationSplitView Styles</h2>
+        <p>
+          The <code>.navigationSplitViewStyle()</code> modifier controls how the split view allocates
+          space between columns. There are three built-in styles:
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Style</th>
+              <th>Behavior</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>.automatic</code></td>
+              <td>System decides -- typically <code>.prominentDetail</code> on most platforms</td>
+              <td>Most apps (default)</td>
+            </tr>
+            <tr>
+              <td><code>.prominentDetail</code></td>
+              <td>Detail column gets maximum space. The sidebar overlays the detail as a sheet/overlay when shown.</td>
+              <td>Media apps, document viewers, photo galleries</td>
+            </tr>
+            <tr>
+              <td><code>.balanced</code></td>
+              <td>Leading columns share space equally with the detail. Sidebar and detail resize together.</td>
+              <td>Mail-like apps, file browsers, IDE-style layouts</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">struct</span> <span class="ty">StyledSplitView</span>: <span class="ty">View</span> {
+    <span class="at">@State</span> <span class="kw">private var</span> selectedItem: <span class="ty">String</span>?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationSplitView</span> {
+            <span class="ty">List</span>([<span class="str">"Photos"</span>, <span class="str">"Videos"</span>, <span class="str">"Albums"</span>], id: \.<span class="kw">self</span>,
+                 selection: $selectedItem) { item <span class="kw">in</span>
+                <span class="ty">Label</span>(item, systemImage: <span class="str">"photo"</span>)
+            }
+            .navigationTitle(<span class="str">"Library"</span>)
+        } detail: {
+            <span class="ty">Text</span>(selectedItem ?? <span class="str">"Select something"</span>)
+        }
+        <span class="cm">// .balanced gives equal space to sidebar and detail</span>
+        .navigationSplitViewStyle(.balanced)
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-title">Visual Difference</div>
+          <p>
+            With <code>.prominentDetail</code> (the default on many platforms), the sidebar slides
+            <em>over</em> the detail content like a sheet. With <code>.balanced</code>, the sidebar
+            and detail share the available space side by side, and the detail column shrinks to
+            accommodate the sidebar. For apps like Mail where you want both columns visible at once,
+            <code>.balanced</code> is the right choice.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== COMPACT BEHAVIOR ===================== -->
+      <section id="compact-behavior">
+        <h2>Compact Size Class Behavior</h2>
+        <p>
+          When a NavigationSplitView runs in a compact horizontal size class, it automatically collapses
+          into a single-column stack-based navigation. This includes:
+        </p>
+        <ul>
+          <li>All iPhones in portrait orientation</li>
+          <li>iPhone Max models in portrait (landscape gets regular size class)</li>
+          <li>iPad in Slide Over mode</li>
+          <li>iPad in 1/3 split screen</li>
+          <li>Any multitasking scenario where the app window is narrow</li>
+        </ul>
+
+        <p>
+          In compact mode, the columns become screens in a navigation stack. The sidebar becomes the
+          root, the content column (if present) is pushed when a sidebar item is selected, and the
+          detail is pushed when a content item is selected. The standard back button appears to let
+          users navigate backward through the columns.
+        </p>
+
+        <h3>Controlling Compact Column (iOS 17+)</h3>
+        <p>
+          Starting with iOS 17, you can use the <code>preferredCompactColumn</code> parameter to
+          specify which column appears when the app launches in a compact layout. This gives you control
+          over the initial user experience on iPhone.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Swift</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="cm">// Show the detail column first on compact devices</span>
+<span class="at">@State</span> <span class="kw">private var</span> preferredColumn =
+    <span class="ty">NavigationSplitViewColumn</span>.detail
+
+<span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+    <span class="ty">NavigationSplitView</span>(
+        preferredCompactColumn: $preferredColumn
+    ) {
+        SidebarView()
+    } detail: {
+        DetailView()
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ===================== PLATFORM DIFFERENCES ===================== -->
+      <section id="platform-differences">
+        <h2>Platform Differences</h2>
+        <p>
+          NavigationSplitView behaves differently across Apple's platforms. Understanding these
+          differences is essential for building polished cross-platform apps.
+        </p>
+
+        <h3>iOS (iPhone)</h3>
+        <div class="platform-badges">
+          <span class="platform-badge ios">iPhone</span>
+        </div>
+        <ul>
+          <li><strong>Portrait</strong>: Always compact -- behaves like a NavigationStack with push/pop.</li>
+          <li><strong>Landscape (Max models)</strong>: Gets regular horizontal size class. The sidebar can appear as an overlay alongside the detail.</li>
+          <li><strong>Landscape (standard models)</strong>: Still compact -- single column stack.</li>
+          <li>The sidebar toggle button is automatically provided in the toolbar.</li>
+        </ul>
+
+        <h3>iPadOS</h3>
+        <div class="platform-badges">
+          <span class="platform-badge ipados">iPad</span>
+        </div>
+        <ul>
+          <li><strong>Full screen (portrait or landscape)</strong>: Multi-column layout with all columns visible.</li>
+          <li><strong>Landscape</strong>: Full three-column layout possible with sufficient width.</li>
+          <li><strong>Portrait</strong>: Often shows two columns; sidebar may overlay.</li>
+          <li><strong>Slide Over / 1/3 split</strong>: Collapses to compact (stack) layout.</li>
+          <li><strong>1/2 split</strong>: May show two columns depending on iPad model.</li>
+          <li>Users can drag column dividers to resize (when using <code>.balanced</code> style).</li>
+        </ul>
+
+        <h3>macOS</h3>
+        <div class="platform-badges">
+          <span class="platform-badge macos">Mac</span>
+        </div>
+        <ul>
+          <li>Always multi-column -- never collapses to stack.</li>
+          <li>Sidebar has a translucent material background by default, matching macOS design language.</li>
+          <li>The sidebar can be toggled via the toolbar button or <kbd>Cmd+Ctrl+S</kbd>.</li>
+          <li>Column widths are resizable by dragging dividers.</li>
+          <li>The sidebar uses <code>.listStyle(.sidebar)</code> automatically, giving grouped section headers.</li>
+          <li>Window resizing dynamically adjusts column proportions.</li>
+        </ul>
+
+        <div class="callout callout-info">
+          <div class="callout-title">macOS Sidebar Material</div>
+          <p>
+            On macOS, the sidebar column automatically gets a translucent material background that shows
+            the desktop behind the window. This is the expected macOS design pattern. If you need to
+            customize it, you can apply <code>.background()</code> to the sidebar content, but be
+            aware that this may look out of place compared to native Mac apps.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== TRADEOFFS ===================== -->
+      <section id="tradeoffs">
+        <h2>Tradeoff Analysis</h2>
+
+        <div class="tradeoff-grid">
+          <div class="tradeoff-card pros">
+            <h4>&#10003; Advantages</h4>
+            <ul>
+              <li><strong>Automatic adaptation</strong> -- one codebase works across iPhone, iPad, and Mac</li>
+              <li><strong>Declarative selection binding</strong> -- clean state-driven column coordination</li>
+              <li><strong>Platform-native behavior</strong> -- sidebar overlays, translucent materials, toggle animations all come free</li>
+              <li><strong>Composable with NavigationStack</strong> -- embed stacks in columns for deeper navigation</li>
+              <li><strong>Column visibility control</strong> -- programmatic show/hide of columns</li>
+              <li><strong>Replaces UISplitViewController</strong> -- much less boilerplate than UIKit</li>
+              <li><strong>Future-proof</strong> -- Apple's recommended approach for multi-column navigation</li>
+            </ul>
+          </div>
+          <div class="tradeoff-card cons">
+            <h4>&#10007; Limitations</h4>
+            <ul>
+              <li><strong>iOS 16+ only</strong> -- cannot use on older deployment targets</li>
+              <li><strong>Column width control is unreliable</strong> -- especially for the sidebar on iPadOS</li>
+              <li><strong>Limited to 2-3 columns</strong> -- no support for 4+ column layouts</li>
+              <li><strong>Compact collapse can be surprising</strong> -- navigation state needs careful management when switching between size classes</li>
+              <li><strong>Selection binding quirks</strong> -- needs explicit <code>.onChange</code> to cascade resets</li>
+              <li><strong>State restoration complexity</strong> -- deep link restoration requires restoring all selection bindings in order</li>
+              <li><strong>No custom transitions</strong> -- column show/hide animations are system-controlled</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== WHEN TO USE ===================== -->
+      <section id="when-to-use">
+        <h2>When to Use NavigationSplitView</h2>
+
+        <h3>Use NavigationSplitView when:</h3>
+        <ul>
+          <li>Your app has a <strong>sidebar-driven navigation</strong> pattern (categories, mailboxes, folders)</li>
+          <li>You are targeting <strong>iPad and/or Mac</strong> where multi-column layouts shine</li>
+          <li>You want <strong>automatic adaptation</strong> to iPhone without maintaining separate navigation code</li>
+          <li>Your content follows a <strong>master-detail relationship</strong> (list of items + item detail)</li>
+          <li>You are building a <strong>document-based app</strong>, <strong>mail client</strong>, <strong>file browser</strong>, or <strong>settings interface</strong></li>
+          <li>You want to support <strong>macOS Catalyst or native macOS</strong> with proper sidebar behavior</li>
+        </ul>
+
+        <h3>Use NavigationStack instead when:</h3>
+        <ul>
+          <li>Your app is <strong>iPhone-only</strong> with no plans for iPad/Mac</li>
+          <li>Navigation is <strong>linear and sequential</strong> (onboarding, checkout, wizard)</li>
+          <li>You need <strong>deep push/pop hierarchies</strong> without column structure</li>
+          <li>The app has a <strong>tab-based structure</strong> where each tab has its own stack</li>
+        </ul>
+
+        <h3>Use both together when:</h3>
+        <ul>
+          <li>You need <strong>multi-column layout plus deep drill-down</strong> within the detail column</li>
+          <li>You are building a <strong>universal app</strong> that should feel native on every form factor</li>
+          <li>Your detail views have their <strong>own sub-navigation</strong> that goes beyond the column model</li>
+        </ul>
+      </section>
+
+      <!-- ===================== BEST PRACTICES ===================== -->
+      <section id="best-practices">
+        <h2>Best Practices</h2>
+
+        <h3>1. Always provide a placeholder for empty selections</h3>
+        <p>
+          Use <code>ContentUnavailableView</code> (iOS 17+) or a custom placeholder in the detail
+          column when nothing is selected. On iPad, the detail column is visible even before the user
+          makes a selection.
+        </p>
+
+        <h3>2. Reset child selections when parent changes</h3>
+        <p>
+          In three-column layouts, attach <code>.onChange(of: parentSelection)</code> and set the child
+          selection to <code>nil</code>. This prevents showing stale detail from a different category.
+        </p>
+
+        <h3>3. Make selection types Hashable</h3>
+        <p>
+          The <code>List(selection:)</code> API requires <code>Hashable</code> conformance. Use
+          <code>Identifiable</code> and <code>Hashable</code> on your model types for best results
+          with value-based <code>NavigationLink</code>.
+        </p>
+
+        <h3>4. Use .balanced style for productivity apps</h3>
+        <p>
+          If your sidebar and detail are equally important (like Mail or a file browser), use
+          <code>.navigationSplitViewStyle(.balanced)</code> so both columns share space. Use the
+          default <code>.prominentDetail</code> for media-focused apps where the detail is primary.
+        </p>
+
+        <h3>5. Test on multiple form factors</h3>
+        <p>
+          Always test your NavigationSplitView on iPhone (portrait and landscape), iPad (full screen,
+          split view, and Slide Over), and Mac if applicable. The automatic adaptation can produce
+          unexpected layouts if your state management is not robust.
+        </p>
+
+        <h3>6. Be careful with NavigationStack inside columns</h3>
+        <p>
+          NavigationSplitView automatically wraps column content in a NavigationStack. Only add an
+          explicit <code>NavigationStack</code> if you need to manage a <code>NavigationPath</code>
+          for programmatic push/pop within that column.
+        </p>
+
+        <h3>7. Support keyboard shortcuts on Mac</h3>
+        <p>
+          On macOS, users expect keyboard navigation. The sidebar toggle (<kbd>Cmd+Ctrl+S</kbd>)
+          works automatically. Consider adding <code>.keyboardShortcut()</code> to common actions
+          in your detail view.
+        </p>
+      </section>
+
+      <!-- ===================== COMPATIBILITY ===================== -->
+      <section id="compatibility">
+        <h2>Version Compatibility</h2>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Minimum Version</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>NavigationSplitView</code> (basic)</td>
+              <td>iOS 16, macOS 13, tvOS 16</td>
+              <td>Two-column and three-column initializers</td>
+            </tr>
+            <tr>
+              <td><code>columnVisibility</code> parameter</td>
+              <td>iOS 16, macOS 13</td>
+              <td>Binding to <code>NavigationSplitViewVisibility</code></td>
+            </tr>
+            <tr>
+              <td><code>.navigationSplitViewColumnWidth()</code></td>
+              <td>iOS 16, macOS 13</td>
+              <td>Fixed and flexible (min/ideal/max) variants</td>
+            </tr>
+            <tr>
+              <td><code>.navigationSplitViewStyle()</code></td>
+              <td>iOS 16, macOS 13</td>
+              <td><code>.automatic</code>, <code>.balanced</code>, <code>.prominentDetail</code></td>
+            </tr>
+            <tr>
+              <td><code>preferredCompactColumn</code></td>
+              <td>iOS 17, macOS 14</td>
+              <td>Controls which column shows first on compact devices</td>
+            </tr>
+            <tr>
+              <td><code>ContentUnavailableView</code></td>
+              <td>iOS 17, macOS 14</td>
+              <td>System-provided empty state placeholder</td>
+            </tr>
+            <tr>
+              <td><code>NavigationLink(value:)</code></td>
+              <td>iOS 16, macOS 13</td>
+              <td>Value-based navigation links (used with selection binding)</td>
+            </tr>
+            <tr>
+              <td><code>.onChange(of:)</code> (new form)</td>
+              <td>iOS 17, macOS 14</td>
+              <td>Simplified closure without old/new values. Pre-iOS 17 uses <code>.onChange(of:perform:)</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Migration from NavigationView</div>
+          <p>
+            <code>NavigationView</code> was deprecated in iOS 16. If you are migrating, replace
+            <code>NavigationView { ... }.navigationViewStyle(.columns)</code> with
+            <code>NavigationSplitView { ... }</code>. For stack-style NavigationView, use
+            <code>NavigationStack</code> instead. Apple provides a
+            <a href="https://developer.apple.com/documentation/swiftui/migrating-to-new-navigation-types" target="_blank">migration guide</a>
+            for detailed instructions.
+          </p>
+        </div>
+      </section>
+
+    </div><!-- /content-inner -->
+  </main>
+</div><!-- /page-layout -->
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">&uarr;</button>
+
+<script>
+  // ---- Theme Toggle ----
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    updateThemeUI(!isDark);
+    initMermaid();
+  }
+
+  function updateThemeUI(isDark) {
+    document.getElementById('themeIcon').textContent = isDark ? '\u2600' : '\u263D';
+    document.getElementById('themeLabel').textContent = isDark ? 'Light' : 'Dark';
+  }
+
+  // Load saved theme
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved === 'dark' || (!saved && prefersDark);
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeUI(isDark);
+  })();
+
+  // ---- Mermaid Init ----
+  function initMermaid() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      themeVariables: isDark ? {
+        primaryColor: '#1c3d5a',
+        primaryTextColor: '#f5f5f7',
+        primaryBorderColor: '#0071e3',
+        lineColor: '#6e6e73',
+        secondaryColor: '#2c2c2e',
+        tertiaryColor: '#1c1c1e'
+      } : {
+        primaryColor: '#e8f4fd',
+        primaryTextColor: '#1d1d1f',
+        primaryBorderColor: '#0071e3',
+        lineColor: '#86868b',
+        secondaryColor: '#f5f5f7',
+        tertiaryColor: '#ffffff'
+      },
+      flowchart: { curve: 'basis', htmlLabels: true },
+      sequence: { mirrorActors: false }
+    });
+    // Re-render all mermaid diagrams
+    document.querySelectorAll('.mermaid').forEach(el => {
+      const code = el.getAttribute('data-original') || el.textContent;
+      if (!el.getAttribute('data-original')) {
+        el.setAttribute('data-original', code);
+      }
+      el.removeAttribute('data-processed');
+      el.innerHTML = code;
+    });
+    mermaid.run();
+  }
+
+  document.addEventListener('DOMContentLoaded', initMermaid);
+
+  // ---- Copy Code ----
+  function copyCode(btn) {
+    const block = btn.closest('.code-block');
+    const code = block.querySelector('pre code') || block.querySelector('pre');
+    const text = code.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ---- Sidebar Toggle (mobile) ----
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('open');
+  }
+
+  // Close sidebar on nav click (mobile)
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('open');
+      }
+    });
+  });
+
+  // ---- Active Sidebar Link ----
+  const sections = document.querySelectorAll('section[id]');
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  function updateActiveLink() {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) {
+        current = section.getAttribute('id');
+      }
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  updateActiveLink();
+
+  // ---- Back to Top ----
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+</script>
+</body>
+</html>

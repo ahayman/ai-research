@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Linking &amp; State Restoration in SwiftUI</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root{--color-primary:#0071e3;--color-primary-dark:#0077ED;--color-bg:#ffffff;--color-bg-secondary:#f5f5f7;--color-bg-code:#f4f4f8;--color-text:#1d1d1f;--color-text-secondary:#6e6e73;--color-border:#d2d2d7;--color-sidebar-bg:#fbfbfd;--color-sidebar-active:#e8f0fe;--color-card-bg:#ffffff;--color-card-border:#e5e5ea;--color-success:#34c759;--color-warning:#ff9f0a;--color-danger:#ff3b30;--color-info:#5ac8fa;--shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.1);--radius:10px;--sidebar-width:280px;--font-mono:'SF Mono',SFMono-Regular,Consolas,'Liberation Mono',Menlo,monospace;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif}
+[data-theme="dark"]{--color-primary:#2997ff;--color-primary-dark:#64b5f6;--color-bg:#1d1d1f;--color-bg-secondary:#2c2c2e;--color-bg-code:#2c2c2e;--color-text:#f5f5f7;--color-text-secondary:#a1a1a6;--color-border:#424245;--color-sidebar-bg:#1d1d1f;--color-sidebar-active:#1c3a5e;--color-card-bg:#2c2c2e;--color-card-border:#3a3a3c;--shadow-sm:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.4)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:var(--color-bg);color:var(--color-text);line-height:1.7;transition:background .3s,color .3s}
+a{color:var(--color-primary);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Top bar */
+.top-bar{position:fixed;top:0;left:0;right:0;height:48px;background:var(--color-bg-secondary);border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1000;backdrop-filter:blur(10px)}
+.top-bar .back-link{font-size:14px;font-weight:500}
+.top-bar .controls{display:flex;gap:12px;align-items:center}
+.top-bar button{background:none;border:1px solid var(--color-border);border-radius:6px;padding:4px 12px;font-size:13px;cursor:pointer;color:var(--color-text);transition:all .2s}
+.top-bar button:hover{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+
+/* Sidebar */
+.sidebar{position:fixed;top:48px;left:0;width:var(--sidebar-width);height:calc(100vh - 48px);background:var(--color-sidebar-bg);border-right:1px solid var(--color-border);overflow-y:auto;padding:16px 0;z-index:100;transition:transform .3s}
+.sidebar.hidden{transform:translateX(-100%)}
+.sidebar h3{padding:8px 20px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--color-text-secondary);font-weight:600}
+.sidebar ul{list-style:none}
+.sidebar li a{display:block;padding:6px 20px;font-size:13px;color:var(--color-text-secondary);transition:all .15s;border-left:3px solid transparent}
+.sidebar li a:hover,.sidebar li a.active{background:var(--color-sidebar-active);color:var(--color-primary);text-decoration:none;border-left-color:var(--color-primary)}
+
+/* Main content */
+.main{margin-left:var(--sidebar-width);margin-top:48px;padding:40px 48px 80px;max-width:920px;transition:margin .3s}
+.main.full{margin-left:0}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.show{transform:translateX(0)}.main{margin-left:0!important;padding:24px 16px 60px}}
+
+/* Typography */
+h1{font-size:36px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+h2{font-size:26px;font-weight:600;margin-top:48px;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--color-border);letter-spacing:-0.3px}
+h3{font-size:20px;font-weight:600;margin-top:32px;margin-bottom:12px}
+h4{font-size:16px;font-weight:600;margin-top:24px;margin-bottom:8px}
+p{margin-bottom:16px;color:var(--color-text)}
+.subtitle{font-size:18px;color:var(--color-text-secondary);margin-bottom:32px}
+
+/* Code blocks */
+pre{background:var(--color-bg-code);border:1px solid var(--color-border);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:16px 0 24px;position:relative;font-size:13px;line-height:1.6}
+code{font-family:var(--font-mono);font-size:13px}
+p code,li code{background:var(--color-bg-code);border:1px solid var(--color-border);padding:1px 6px;border-radius:4px;font-size:12px}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);opacity:0;transition:opacity .2s}
+pre:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:var(--color-primary);color:#fff}
+.lang-label{position:absolute;top:8px;left:12px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--color-text-secondary);font-weight:600}
+
+/* Cards & callouts */
+.callout{border-left:4px solid var(--color-primary);background:var(--color-bg-secondary);padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0 24px}
+.callout.warning{border-left-color:var(--color-warning)}
+.callout.danger{border-left-color:var(--color-danger)}
+.callout.success{border-left-color:var(--color-success)}
+.callout strong{display:block;margin-bottom:4px}
+
+.card{background:var(--color-card-bg);border:1px solid var(--color-card-border);border-radius:var(--radius);padding:20px;margin:16px 0}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:14px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--color-border)}
+th{background:var(--color-bg-secondary);font-weight:600;font-size:13px}
+tr:hover{background:var(--color-bg-secondary)}
+
+/* Diagrams */
+.diagram-container{margin:20px 0 28px;text-align:center}
+.diagram-container .mermaid{display:inline-block;text-align:left}
+.diagram-caption{font-size:13px;color:var(--color-text-secondary);margin-top:8px;font-style:italic}
+
+/* Lists */
+ul,ol{margin:8px 0 16px 24px}
+li{margin-bottom:6px}
+
+/* Checklist */
+.checklist{list-style:none;margin-left:0}
+.checklist li{padding:8px 0;border-bottom:1px solid var(--color-border);display:flex;align-items:flex-start;gap:8px}
+.checklist li::before{content:"☐";font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* Back to top */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;background:var(--color-primary);color:#fff;border:none;border-radius:50%;font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow-md);z-index:500;transition:transform .2s}
+.back-to-top:hover{transform:scale(1.1)}
+.back-to-top.show{display:flex}
+
+/* Tradeoff grid */
+.tradeoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 24px}
+@media(max-width:700px){.tradeoff-grid{grid-template-columns:1fr}}
+.tradeoff-card{padding:16px;border-radius:var(--radius);border:1px solid var(--color-card-border)}
+.tradeoff-card.pro{background:rgba(52,199,89,0.08);border-color:var(--color-success)}
+.tradeoff-card.con{background:rgba(255,59,48,0.08);border-color:var(--color-danger)}
+.tradeoff-card h4{margin-top:0}
+
+/* Section anchors */
+section{scroll-margin-top:64px}
+h2{scroll-margin-top:64px}
+h3{scroll-margin-top:64px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../swiftui-navigation-approaches/index.html" class="back-link">&larr; Back to Navigation Dashboard</a>
+  <div class="controls">
+    <button onclick="toggleSidebar()" id="sidebarToggle">Menu</button>
+    <button onclick="toggleTheme()" id="themeToggle">Dark Mode</button>
+  </div>
+</div>
+
+<nav class="sidebar" id="sidebar">
+  <h3>Contents</h3>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#url-schemes-vs-universal">URL Schemes vs Universal Links</a></li>
+    <li><a href="#onopenurl-lifecycle">onOpenURL Lifecycle</a></li>
+    <li><a href="#custom-url-scheme">Custom URL Scheme Setup</a></li>
+    <li><a href="#universal-links">Universal Links Setup</a></li>
+    <li><a href="#url-parsing">URL Parsing Strategies</a></li>
+    <li><a href="#navigation-path-serial">NavigationPath Serialization</a></li>
+    <li><a href="#scene-storage">SceneStorage Persistence</a></li>
+    <li><a href="#state-restoration">State Restoration</a></li>
+    <li><a href="#tabbed-navigation">Tabbed Navigation</a></li>
+    <li><a href="#push-notifications">Push Notifications</a></li>
+    <li><a href="#spotlight-integration">Spotlight / NSUserActivity</a></li>
+    <li><a href="#coordinator-pattern">Coordinator / Router Pattern</a></li>
+    <li><a href="#testing">Testing Deep Links</a></li>
+    <li><a href="#complete-app">Complete Mini-App</a></li>
+    <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+    <li><a href="#checklist">Implementation Checklist</a></li>
+  </ul>
+</nav>
+
+<main class="main" id="main">
+
+<!-- ============================================================ -->
+<section id="overview">
+<h1>Deep Linking &amp; State Restoration in SwiftUI</h1>
+<p class="subtitle">A comprehensive guide to handling external URLs, reconstructing navigation state, and persisting user journeys across app launches.</p>
+
+<p>Deep linking lets users jump directly to specific content inside your app from external sources: web links, push notifications, Spotlight results, Siri suggestions, widgets, or other apps. State restoration ensures that when users return to your app after it has been terminated, they find themselves exactly where they left off.</p>
+
+<p>In SwiftUI, these two capabilities are deeply intertwined. Both rely on <strong>NavigationPath serialization</strong>, both respond to external events, and both require careful coordination with your navigation architecture. This guide covers everything from basic URL handling to production-ready patterns that integrate with coordinators, tab views, and the full notification stack.</p>
+
+<div class="callout">
+<strong>Prerequisites</strong>
+This guide assumes familiarity with SwiftUI's <code>NavigationStack</code>, <code>NavigationPath</code>, and the <code>@Observable</code> macro (iOS 17+). Code examples target iOS 17+ / Xcode 15+ unless noted otherwise.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="url-schemes-vs-universal">
+<h2>Custom URL Schemes vs Universal Links</h2>
+
+<p>iOS supports two fundamentally different mechanisms for opening your app from a URL. Understanding their differences is critical before writing any deep-linking code.</p>
+
+<div class="diagram-container">
+<pre class="mermaid">
+flowchart TB
+  subgraph Custom["Custom URL Scheme"]
+    direction TB
+    C1["myapp://products/42"]
+    C2["Registered in Info.plist"]
+    C3["Any app can claim the scheme"]
+    C4["No web fallback"]
+    C5["Works in Simulator"]
+  end
+  subgraph Universal["Universal Links"]
+    direction TB
+    U1["https://example.com/products/42"]
+    U2["Associated Domains entitlement"]
+    U3["Apple-verified domain ownership"]
+    U4["Falls back to Safari"]
+    U5["Does NOT work in Simulator Safari"]
+  end
+  C1 --> C2 --> C3 --> C4 --> C5
+  U1 --> U2 --> U3 --> U4 --> U5
+</pre>
+<p class="diagram-caption">Figure 1: Custom URL Schemes vs Universal Links comparison</p>
+</div>
+
+<table>
+<thead>
+<tr><th>Feature</th><th>Custom URL Scheme</th><th>Universal Links</th></tr>
+</thead>
+<tbody>
+<tr><td>URL format</td><td><code>myapp://path</code></td><td><code>https://yourdomain.com/path</code></td></tr>
+<tr><td>Setup complexity</td><td>Low (Info.plist only)</td><td>High (server + entitlement + AASA file)</td></tr>
+<tr><td>Uniqueness guarantee</td><td>None &mdash; another app can register same scheme</td><td>Verified via domain ownership</td></tr>
+<tr><td>Web fallback</td><td>No &mdash; fails silently if app not installed</td><td>Yes &mdash; opens in Safari</td></tr>
+<tr><td>Security</td><td>Low &mdash; no verification</td><td>High &mdash; two-way domain/app association</td></tr>
+<tr><td>Simulator support</td><td>Full (via <code>xcrun simctl openurl</code>)</td><td>Partial (Safari won't trigger them)</td></tr>
+<tr><td>SwiftUI handler</td><td><code>.onOpenURL { }</code></td><td><code>.onOpenURL { }</code></td></tr>
+<tr><td>Best for</td><td>Internal / dev / testing</td><td>Production deep links</td></tr>
+</tbody>
+</table>
+
+<div class="callout warning">
+<strong>Important:</strong> Both custom URL schemes and Universal Links are delivered to your SwiftUI code via the same <code>.onOpenURL</code> modifier. The difference is how the URL arrives at iOS, not how your app receives it.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="onopenurl-lifecycle">
+<h2>How onOpenURL Works &amp; Its Lifecycle</h2>
+
+<p>The <code>.onOpenURL</code> view modifier, introduced in iOS 14, is the primary SwiftUI API for receiving deep links. It fires whenever the system delivers a URL to your app, regardless of source.</p>
+
+<h3>When onOpenURL Is Called</h3>
+<ul>
+<li><strong>App in foreground:</strong> Called immediately on the view that has the modifier</li>
+<li><strong>App in background:</strong> Called when the app returns to foreground after the URL opens it</li>
+<li><strong>App terminated:</strong> Called after the app launches and the scene is created</li>
+</ul>
+
+<div class="diagram-container">
+<pre class="mermaid">
+sequenceDiagram
+    participant User
+    participant iOS
+    participant App
+    participant Scene
+    participant View
+
+    User->>iOS: Taps deep link URL
+    alt App is running
+        iOS->>Scene: Deliver URL to active scene
+        Scene->>View: .onOpenURL closure fires
+        View->>View: Parse URL, update navigation
+    else App is terminated
+        iOS->>App: Launch app process
+        App->>Scene: Create WindowGroup scene
+        Scene->>View: Build view hierarchy
+        iOS->>Scene: Deliver URL
+        Scene->>View: .onOpenURL closure fires
+        View->>View: Parse URL, update navigation
+    end
+    Note over View: Navigation state updates<br/>via @Observable router
+</pre>
+<p class="diagram-caption">Figure 2: onOpenURL lifecycle sequence for different app states</p>
+</div>
+
+<h3>Multiple Handlers</h3>
+<p>You can attach <code>.onOpenURL</code> to multiple views in your hierarchy. <strong>All handlers fire</strong> for every URL &mdash; there is no "first responder" chain. This means you should design your URL handling so that only the appropriate handler acts on a given URL pattern.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@main
+struct MyApp: App {
+    @State private var router = AppRouter()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(router)
+                .onOpenURL { url in
+                    // Central handler — parses and routes ALL deep links
+                    router.handle(url: url)
+                }
+        }
+    }
+}</code></pre>
+
+<div class="callout">
+<strong>Best Practice:</strong> Use a single <code>.onOpenURL</code> at the root of your app (on <code>WindowGroup</code>'s content view) and delegate to a centralized router. Avoid scattering handlers across child views unless you have a clear reason.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="custom-url-scheme">
+<h2>Custom URL Scheme Setup &amp; Handling</h2>
+
+<h3>Step 1: Register the URL Scheme in Info.plist</h3>
+<p>Add a <code>CFBundleURLTypes</code> entry to your app's Info.plist:</p>
+
+<pre><span class="lang-label">XML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>&lt;key&gt;CFBundleURLTypes&lt;/key&gt;
+&lt;array&gt;
+    &lt;dict&gt;
+        &lt;key&gt;CFBundleURLName&lt;/key&gt;
+        &lt;string&gt;com.example.myapp&lt;/string&gt;
+        &lt;key&gt;CFBundleURLSchemes&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;myapp&lt;/string&gt;
+        &lt;/array&gt;
+    &lt;/dict&gt;
+&lt;/array&gt;</code></pre>
+
+<p>Or in Xcode: Target &rarr; Info &rarr; URL Types &rarr; add a new entry with scheme <code>myapp</code>.</p>
+
+<h3>Step 2: Handle the URL with onOpenURL</h3>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+// MARK: - Route Definitions
+enum AppRoute: Hashable, Codable {
+    case productDetail(id: Int)
+    case category(name: String)
+    case userProfile(username: String)
+    case settings
+    case orderDetail(orderId: String)
+}
+
+// MARK: - URL Parser
+struct DeepLinkParser {
+    /// Parses URLs like:
+    ///   myapp://products/42
+    ///   myapp://categories/electronics
+    ///   myapp://profile/johndoe
+    ///   myapp://settings
+    ///   myapp://orders/ABC-123
+    static func parse(url: URL) -&gt; AppRoute? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+
+        let pathComponents = components.path
+            .split(separator: "/")
+            .map(String.init)
+
+        // For custom schemes, host acts as the first path segment
+        // myapp://products/42 → host = "products", path = "/42"
+        guard let host = components.host else { return nil }
+
+        switch host {
+        case "products":
+            guard let idStr = pathComponents.first,
+                  let id = Int(idStr) else { return nil }
+            return .productDetail(id: id)
+
+        case "categories":
+            guard let name = pathComponents.first else { return nil }
+            return .category(name: name)
+
+        case "profile":
+            guard let username = pathComponents.first else { return nil }
+            return .userProfile(username: username)
+
+        case "settings":
+            return .settings
+
+        case "orders":
+            guard let orderId = pathComponents.first else { return nil }
+            return .orderDetail(orderId: orderId)
+
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: - App Entry Point
+@main
+struct MyApp: App {
+    @State private var router = AppRouter()
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environment(router)
+                .onOpenURL { url in
+                    if let route = DeepLinkParser.parse(url: url) {
+                        router.navigate(to: route)
+                    }
+                }
+        }
+    }
+}</code></pre>
+
+<h3>Testing Custom URL Schemes in Simulator</h3>
+<pre><span class="lang-label">Shell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code># Open a custom URL in the booted simulator
+xcrun simctl openurl booted "myapp://products/42"
+
+# Or from Terminal to a specific device
+xcrun simctl openurl 4A1B2C3D-... "myapp://categories/electronics"</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="universal-links">
+<h2>Universal Links with Associated Domains</h2>
+
+<h3>Step 1: Create the Apple App Site Association (AASA) File</h3>
+<p>Host this JSON file at <code>https://yourdomain.com/.well-known/apple-app-site-association</code> (no file extension, served with <code>Content-Type: application/json</code>):</p>
+
+<pre><span class="lang-label">JSON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "TEAMID.com.example.myapp",
+                "paths": [
+                    "/products/*",
+                    "/categories/*",
+                    "/profile/*",
+                    "/orders/*"
+                ]
+            }
+        ]
+    }
+}</code></pre>
+
+<div class="callout warning">
+<strong>Server Requirements:</strong>
+<ul style="margin-bottom:0">
+<li>Must be served over HTTPS with a valid certificate</li>
+<li>No redirects allowed when fetching the file</li>
+<li>Content-Type must be <code>application/json</code></li>
+<li>File size must be under 128KB</li>
+</ul>
+</div>
+
+<h3>Step 2: Add Associated Domains Entitlement</h3>
+<p>In Xcode: Target &rarr; Signing &amp; Capabilities &rarr; + Capability &rarr; Associated Domains. Add:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>applinks:yourdomain.com</code></pre>
+
+<p>This also updates your <code>.entitlements</code> file:</p>
+<pre><span class="lang-label">XML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>&lt;key&gt;com.apple.developer.associated-domains&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;applinks:yourdomain.com&lt;/string&gt;
+&lt;/array&gt;</code></pre>
+
+<h3>Step 3: Handle Universal Links in SwiftUI</h3>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>struct UniversalLinkParser {
+    /// Parses URLs like:
+    ///   https://example.com/products/42
+    ///   https://example.com/categories/electronics?sort=price
+    static func parse(url: URL) -&gt; AppRoute? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+
+        // For universal links, use path components directly
+        // https://example.com/products/42 → path = "/products/42"
+        let pathSegments = components.path
+            .split(separator: "/")
+            .map(String.init)
+
+        guard let firstSegment = pathSegments.first else { return nil }
+
+        switch firstSegment {
+        case "products":
+            guard pathSegments.count &gt; 1,
+                  let id = Int(pathSegments[1]) else { return nil }
+            return .productDetail(id: id)
+
+        case "categories":
+            guard pathSegments.count &gt; 1 else { return nil }
+            return .category(name: pathSegments[1])
+
+        case "profile":
+            guard pathSegments.count &gt; 1 else { return nil }
+            return .userProfile(username: pathSegments[1])
+
+        case "orders":
+            guard pathSegments.count &gt; 1 else { return nil }
+            return .orderDetail(orderId: pathSegments[1])
+
+        default:
+            return nil
+        }
+    }
+}
+
+// Unified handler that works with both scheme types
+@main
+struct MyApp: App {
+    @State private var router = AppRouter()
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environment(router)
+                .onOpenURL { url in
+                    let route: AppRoute?
+                    if url.scheme == "myapp" {
+                        route = DeepLinkParser.parse(url: url)
+                    } else {
+                        route = UniversalLinkParser.parse(url: url)
+                    }
+                    if let route {
+                        router.navigate(to: route)
+                    }
+                }
+        }
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="url-parsing">
+<h2>URL Parsing Strategies</h2>
+
+<p>Production apps need robust URL parsing that handles path components, query parameters, fragments, and edge cases. Here are several strategies.</p>
+
+<div class="diagram-container">
+<pre class="mermaid">
+flowchart LR
+    A["Incoming URL"] --> B["URLComponents"]
+    B --> C{"Identify scheme"}
+    C -->|"myapp://"| D["Custom scheme parser"]
+    C -->|"https://"| E["Universal link parser"]
+    D --> F["Extract host as first segment"]
+    E --> G["Extract path components"]
+    F --> H["Match route pattern"]
+    G --> H
+    H --> I{"Route matched?"}
+    I -->|Yes| J["Extract parameters"]
+    I -->|No| K["Return nil / fallback"]
+    J --> L["Create AppRoute"]
+    L --> M["Router.navigate()"]
+    K --> N["Open in Safari / show error"]
+</pre>
+<p class="diagram-caption">Figure 3: Deep link handling pipeline from URL to navigation</p>
+</div>
+
+<h3>Strategy 1: Path-Based Matching</h3>
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>struct PathBasedParser {
+    static func parse(url: URL) -&gt; AppRoute? {
+        let segments = url.pathComponents.filter { $0 != "/" }
+
+        switch segments {
+        case ["products", let id] where Int(id) != nil:
+            return .productDetail(id: Int(id)!)
+
+        case ["categories", let name]:
+            return .category(name: name)
+
+        case ["profile", let user]:
+            return .userProfile(username: user)
+
+        case ["settings"]:
+            return .settings
+
+        default:
+            return nil
+        }
+    }
+}</code></pre>
+
+<h3>Strategy 2: Query Parameter Extraction</h3>
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>struct QueryParser {
+    /// Handles: myapp://navigate?screen=product&amp;id=42&amp;ref=push
+    static func parse(url: URL) -&gt; AppRoute? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let queryItems = components.queryItems else {
+            return nil
+        }
+
+        let params = Dictionary(
+            uniqueKeysWithValues: queryItems.compactMap { item in
+                item.value.map { (item.name, $0) }
+            }
+        )
+
+        guard let screen = params["screen"] else { return nil }
+
+        switch screen {
+        case "product":
+            guard let idStr = params["id"], let id = Int(idStr) else { return nil }
+            return .productDetail(id: id)
+
+        case "category":
+            guard let name = params["name"] else { return nil }
+            return .category(name: name)
+
+        case "profile":
+            guard let username = params["user"] else { return nil }
+            return .userProfile(username: username)
+
+        case "order":
+            guard let orderId = params["orderId"] else { return nil }
+            return .orderDetail(orderId: orderId)
+
+        default:
+            return nil
+        }
+    }
+}</code></pre>
+
+<h3>Strategy 3: Regex-Based Route Matching (iOS 16+)</h3>
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import RegexBuilder
+
+struct RegexRouter {
+    struct RoutePattern {
+        let regex: Regex&lt;Substring&gt;
+        let handler: (String) -&gt; AppRoute?
+    }
+
+    static let routes: [(pattern: String, handler: (String) -&gt; AppRoute?)] = [
+        ("^/products/(\\d+)$", { path in
+            let regex = /^\/products\/(\d+)$/
+            guard let match = path.wholeMatch(of: regex) else { return nil }
+            return .productDetail(id: Int(match.1)!)
+        }),
+        ("^/categories/([\\w-]+)$", { path in
+            let regex = /^\/categories\/([\w-]+)$/
+            guard let match = path.wholeMatch(of: regex) else { return nil }
+            return .category(name: String(match.1))
+        }),
+        ("^/profile/([\\w]+)$", { path in
+            let regex = /^\/profile\/([\w]+)$/
+            guard let match = path.wholeMatch(of: regex) else { return nil }
+            return .userProfile(username: String(match.1))
+        }),
+    ]
+
+    static func parse(url: URL) -&gt; AppRoute? {
+        let path = url.path()
+        for route in routes {
+            if let result = route.handler(path) {
+                return result
+            }
+        }
+        return nil
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="navigation-path-serial">
+<h2>NavigationPath Serialization</h2>
+
+<p>SwiftUI's <code>NavigationPath</code> has built-in support for encoding and decoding via its <code>CodableRepresentation</code> type. This is the foundation for both state restoration and deep linking.</p>
+
+<h3>How CodableRepresentation Works</h3>
+<p>When all types pushed onto a <code>NavigationPath</code> conform to <code>Codable</code>, the path exposes a <code>codable</code> property of type <code>NavigationPath.CodableRepresentation?</code>. This type-erased representation can be serialized to JSON and later decoded to reconstruct the exact same navigation stack.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+@Observable
+class NavigationStore {
+    var path = NavigationPath()
+
+    private let savePath = URL.documentsDirectory
+        .appending(path: "NavigationPath.json")
+
+    func save() {
+        guard let codable = path.codable else {
+            print("NavigationPath contains non-Codable elements")
+            return
+        }
+
+        do {
+            let data = try JSONEncoder().encode(codable)
+            try data.write(to: savePath, options: .atomic)
+        } catch {
+            print("Failed to save navigation path: \(error)")
+        }
+    }
+
+    func restore() {
+        do {
+            let data = try Data(contentsOf: savePath)
+            let decoded = try JSONDecoder().decode(
+                NavigationPath.CodableRepresentation.self,
+                from: data
+            )
+            path = NavigationPath(decoded)
+        } catch {
+            // No saved state or decoding failed — start fresh
+            path = NavigationPath()
+        }
+    }
+}</code></pre>
+
+<h3>Making Your Routes Codable</h3>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>// All route types MUST conform to both Hashable and Codable
+// for NavigationPath serialization to work.
+
+enum AppRoute: Hashable, Codable {
+    case productDetail(id: Int)
+    case category(name: String)
+    case userProfile(username: String)
+    case settings
+    case orderDetail(orderId: String)
+
+    // Swift auto-synthesizes Codable for enums with associated values
+    // as long as all associated value types are Codable.
+}
+
+// For more complex route data:
+struct ProductRoute: Hashable, Codable {
+    let id: Int
+    let source: NavigationSource
+
+    enum NavigationSource: String, Codable {
+        case deepLink, search, browse, notification
+    }
+}
+
+// Usage with NavigationStack:
+struct ContentView: View {
+    @State private var store = NavigationStore()
+
+    var body: some View {
+        NavigationStack(path: $store.path) {
+            HomeView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .productDetail(let id):
+                        ProductDetailView(productId: id)
+                    case .category(let name):
+                        CategoryView(name: name)
+                    case .userProfile(let username):
+                        ProfileView(username: username)
+                    case .settings:
+                        SettingsView()
+                    case .orderDetail(let orderId):
+                        OrderDetailView(orderId: orderId)
+                    }
+                }
+        }
+    }
+}</code></pre>
+
+<div class="callout danger">
+<strong>Pitfall:</strong> If you push <em>any</em> non-Codable type onto a <code>NavigationPath</code>, the <code>.codable</code> property returns <code>nil</code> and you lose the ability to serialize the entire path. Always ensure every type you push conforms to <code>Codable</code>.
+</div>
+
+<h3>Reconstructing NavigationPath from URL Components</h3>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>extension AppRouter {
+    /// Builds a complete NavigationPath for a deep link, including
+    /// any parent screens needed for proper back-navigation.
+    func buildPath(for route: AppRoute) -&gt; NavigationPath {
+        var path = NavigationPath()
+
+        switch route {
+        case .productDetail(let id):
+            // Product detail should have category in the back stack
+            // Optionally: fetch product to know its category first
+            path.append(route)
+
+        case .orderDetail(let orderId):
+            // Order detail should have order list in back stack
+            path.append(AppRoute.settings) // settings contains order list
+            path.append(route)
+
+        default:
+            path.append(route)
+        }
+
+        return path
+    }
+
+    func navigate(to route: AppRoute) {
+        // Replace entire path for deep links (rather than appending)
+        path = buildPath(for: route)
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="scene-storage">
+<h2>SceneStorage for State Persistence</h2>
+
+<p><code>@SceneStorage</code> is a property wrapper that persists simple values on a per-scene basis. It survives app termination and works perfectly for storing navigation state in multi-window environments (iPad, macOS).</p>
+
+<h3>Basic SceneStorage with NavigationPath</h3>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>struct ContentView: View {
+    @SceneStorage("navigationPath") private var savedPathData: Data?
+    @State private var path = NavigationPath()
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            HomeView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    routeView(for: route)
+                }
+        }
+        .onChange(of: path) {
+            saveNavigationState()
+        }
+        .onAppear {
+            restoreNavigationState()
+        }
+    }
+
+    private func saveNavigationState() {
+        guard let codable = path.codable else { return }
+        savedPathData = try? JSONEncoder().encode(codable)
+    }
+
+    private func restoreNavigationState() {
+        guard let data = savedPathData else { return }
+        guard let decoded = try? JSONDecoder().decode(
+            NavigationPath.CodableRepresentation.self,
+            from: data
+        ) else { return }
+        path = NavigationPath(decoded)
+    }
+
+    @ViewBuilder
+    private func routeView(for route: AppRoute) -&gt; some View {
+        switch route {
+        case .productDetail(let id):
+            ProductDetailView(productId: id)
+        case .category(let name):
+            CategoryView(name: name)
+        case .userProfile(let username):
+            ProfileView(username: username)
+        case .settings:
+            SettingsView()
+        case .orderDetail(let orderId):
+            OrderDetailView(orderId: orderId)
+        }
+    }
+}</code></pre>
+
+<div class="diagram-container">
+<pre class="mermaid">
+flowchart LR
+    subgraph Save["Save Flow"]
+        A["NavigationPath changes"] --> B["onChange triggers"]
+        B --> C["path.codable → CodableRepresentation"]
+        C --> D["JSONEncoder → Data"]
+        D --> E["@SceneStorage stores Data"]
+    end
+    subgraph Restore["Restore Flow"]
+        F["App relaunches / scene reconnects"] --> G["onAppear triggers"]
+        G --> H["@SceneStorage → Data?"]
+        H --> I["JSONDecoder → CodableRepresentation"]
+        I --> J["NavigationPath(decoded)"]
+        J --> K["UI renders restored stack"]
+    end
+    E -.->|"persisted across termination"| H
+</pre>
+<p class="diagram-caption">Figure 4: State persistence and restoration with SceneStorage</p>
+</div>
+
+<h3>SceneStorage Limitations</h3>
+<table>
+<thead>
+<tr><th>Aspect</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td>Supported types</td><td><code>String</code>, <code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>URL</code>, <code>Data</code></td></tr>
+<tr><td>Size limit</td><td>Not documented, but keep payloads small (a few KB)</td></tr>
+<tr><td>Scope</td><td>Per-scene (each iPad window gets its own storage)</td></tr>
+<tr><td>Persistence</td><td>Survives app termination, but NOT app deletion</td></tr>
+<tr><td>Sharing</td><td>Cannot share data between scenes</td></tr>
+<tr><td>Encryption</td><td>Not encrypted &mdash; do not store sensitive data</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section id="state-restoration">
+<h2>Restoring Navigation State After App Termination</h2>
+
+<p>Combining <code>SceneStorage</code>, <code>NavigationPath</code>, and your route model gives you full state restoration. Here is the pattern that handles both restoration and deep linking simultaneously.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+@Observable
+class AppRouter {
+    var path = NavigationPath()
+    var selectedTab: AppTab = .home
+
+    /// Called when a deep link arrives
+    func handle(url: URL) {
+        // Determine the route
+        let route: AppRoute?
+        if url.scheme == "myapp" {
+            route = DeepLinkParser.parse(url: url)
+        } else {
+            route = UniversalLinkParser.parse(url: url)
+        }
+
+        guard let route else { return }
+
+        // Switch to the appropriate tab first
+        selectedTab = tab(for: route)
+
+        // Slight delay to let the tab switch settle,
+        // then set the navigation path
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(100))
+            path = NavigationPath()
+            path.append(route)
+        }
+    }
+
+    private func tab(for route: AppRoute) -&gt; AppTab {
+        switch route {
+        case .productDetail, .category: return .home
+        case .userProfile: return .profile
+        case .settings, .orderDetail: return .settings
+        }
+    }
+}
+
+enum AppTab: String, CaseIterable, Codable {
+    case home, search, profile, settings
+}
+
+// MARK: - Root View with State Restoration
+struct RootView: View {
+    @Environment(AppRouter.self) private var router
+    @SceneStorage("savedTab") private var savedTab: String = AppTab.home.rawValue
+    @SceneStorage("savedPath") private var savedPathData: Data?
+
+    var body: some View {
+        @Bindable var router = router
+
+        TabView(selection: $router.selectedTab) {
+            // Tab content here (see Tabbed Navigation section)
+        }
+        .onChange(of: router.selectedTab) { _, newTab in
+            savedTab = newTab.rawValue
+        }
+        .onChange(of: router.path) {
+            guard let codable = router.path.codable else { return }
+            savedPathData = try? JSONEncoder().encode(codable)
+        }
+        .onAppear {
+            restoreState()
+        }
+    }
+
+    private func restoreState() {
+        // Restore selected tab
+        if let tab = AppTab(rawValue: savedTab) {
+            router.selectedTab = tab
+        }
+
+        // Restore navigation path
+        if let data = savedPathData,
+           let decoded = try? JSONDecoder().decode(
+               NavigationPath.CodableRepresentation.self,
+               from: data
+           ) {
+            router.path = NavigationPath(decoded)
+        }
+    }
+}</code></pre>
+
+<div class="callout success">
+<strong>Tip:</strong> Deep links should <strong>replace</strong> the navigation path rather than appending to it. When a user taps a deep link, they expect to arrive at that specific screen, not have it stacked on top of wherever they were before.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="tabbed-navigation">
+<h2>Deep Linking with Tabbed Navigation</h2>
+
+<p>Tab-based apps need deep links that first switch to the correct tab, then navigate within that tab's <code>NavigationStack</code>. The cleanest approach gives each tab its own <code>NavigationPath</code>.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+@Observable
+class TabRouter {
+    var selectedTab: AppTab = .home
+    var homePath = NavigationPath()
+    var searchPath = NavigationPath()
+    var profilePath = NavigationPath()
+    var settingsPath = NavigationPath()
+
+    func path(for tab: AppTab) -&gt; NavigationPath {
+        switch tab {
+        case .home: return homePath
+        case .search: return searchPath
+        case .profile: return profilePath
+        case .settings: return settingsPath
+        }
+    }
+
+    func setPath(_ path: NavigationPath, for tab: AppTab) {
+        switch tab {
+        case .home: homePath = path
+        case .search: searchPath = path
+        case .profile: profilePath = path
+        case .settings: settingsPath = path
+        }
+    }
+
+    func navigate(to route: AppRoute) {
+        let targetTab = tab(for: route)
+        selectedTab = targetTab
+
+        // Clear the tab's path and push the deep link route
+        var newPath = NavigationPath()
+        newPath.append(route)
+        setPath(newPath, for: targetTab)
+    }
+
+    func popToRoot(tab: AppTab) {
+        setPath(NavigationPath(), for: tab)
+    }
+
+    private func tab(for route: AppRoute) -&gt; AppTab {
+        switch route {
+        case .productDetail, .category: return .home
+        case .userProfile: return .profile
+        case .settings, .orderDetail: return .settings
+        }
+    }
+}
+
+// MARK: - Tabbed Root View
+struct TabbedRootView: View {
+    @State private var router = TabRouter()
+
+    var body: some View {
+        @Bindable var router = router
+
+        TabView(selection: $router.selectedTab) {
+            Tab("Home", systemImage: "house", value: .home) {
+                NavigationStack(path: $router.homePath) {
+                    HomeView()
+                        .navigationDestination(for: AppRoute.self) { route in
+                            routeView(for: route)
+                        }
+                }
+            }
+
+            Tab("Search", systemImage: "magnifyingglass", value: .search) {
+                NavigationStack(path: $router.searchPath) {
+                    SearchView()
+                        .navigationDestination(for: AppRoute.self) { route in
+                            routeView(for: route)
+                        }
+                }
+            }
+
+            Tab("Profile", systemImage: "person", value: .profile) {
+                NavigationStack(path: $router.profilePath) {
+                    ProfileView(username: "me")
+                        .navigationDestination(for: AppRoute.self) { route in
+                            routeView(for: route)
+                        }
+                }
+            }
+
+            Tab("Settings", systemImage: "gear", value: .settings) {
+                NavigationStack(path: $router.settingsPath) {
+                    SettingsView()
+                        .navigationDestination(for: AppRoute.self) { route in
+                            routeView(for: route)
+                        }
+                }
+            }
+        }
+        .environment(router)
+        .onOpenURL { url in
+            if let route = DeepLinkParser.parse(url: url) {
+                router.navigate(to: route)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func routeView(for route: AppRoute) -&gt; some View {
+        switch route {
+        case .productDetail(let id):
+            ProductDetailView(productId: id)
+        case .category(let name):
+            CategoryView(name: name)
+        case .userProfile(let username):
+            ProfileView(username: username)
+        case .settings:
+            SettingsView()
+        case .orderDetail(let orderId):
+            OrderDetailView(orderId: orderId)
+        }
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="push-notifications">
+<h2>Push Notification &rarr; Deep Link Navigation</h2>
+
+<p>Push notifications commonly carry a deep link URL in their payload. When the user taps a notification, you extract the URL and route through the same pipeline.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+import UserNotifications
+
+// MARK: - Notification Payload Example
+// {
+//   "aps": {
+//     "alert": { "title": "Order Shipped!", "body": "Your order #ABC-123 is on its way." },
+//     "sound": "default"
+//   },
+//   "deep_link": "myapp://orders/ABC-123"
+// }
+
+// MARK: - AppDelegate for Notification Handling
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    var router: AppRouter?
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -&gt; Bool {
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .badge, .sound]
+        ) { granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                    application.registerForRemoteNotifications()
+                }
+            }
+        }
+        return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        print("APNs token: \(token)")
+    }
+
+    // Called when user taps notification while app is in foreground or background
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -&gt; Void
+    ) {
+        let userInfo = response.notification.request.content.userInfo
+
+        if let deepLinkString = userInfo["deep_link"] as? String,
+           let url = URL(string: deepLinkString) {
+            Task { @MainActor in
+                router?.handle(url: url)
+            }
+        }
+
+        completionHandler()
+    }
+
+    // Show notification even when app is in foreground
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -&gt; Void
+    ) {
+        completionHandler([.banner, .sound, .badge])
+    }
+}
+
+// MARK: - App with Delegate
+@main
+struct MyApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @State private var router = AppRouter()
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environment(router)
+                .onOpenURL { url in
+                    router.handle(url: url)
+                }
+                .onAppear {
+                    appDelegate.router = router
+                }
+        }
+    }
+}</code></pre>
+
+<div class="callout">
+<strong>Why use AppDelegate?</strong> While SwiftUI's <code>.onOpenURL</code> handles URL-based deep links, push notification taps go through <code>UNUserNotificationCenterDelegate</code>. You need an <code>AppDelegate</code> adaptor to bridge this into your SwiftUI router.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="spotlight-integration">
+<h2>Spotlight &amp; NSUserActivity Integration</h2>
+
+<p>You can make your app's content searchable via Spotlight and handle the resulting navigation with <code>.onContinueUserActivity</code>.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import CoreSpotlight
+import SwiftUI
+
+// MARK: - Donating Content to Spotlight
+struct SpotlightIndexer {
+    static let domainIdentifier = "com.example.myapp"
+
+    static func indexProduct(id: Int, name: String, description: String) {
+        let attributeSet = CSSearchableItemAttributeSet(
+            contentType: .content
+        )
+        attributeSet.title = name
+        attributeSet.contentDescription = description
+        attributeSet.relatedUniqueIdentifier = "product-\(id)"
+
+        let item = CSSearchableItem(
+            uniqueIdentifier: "product-\(id)",
+            domainIdentifier: domainIdentifier,
+            attributeSet: attributeSet
+        )
+
+        CSSearchableIndex.default().indexSearchableItems([item]) { error in
+            if let error {
+                print("Spotlight indexing error: \(error)")
+            }
+        }
+    }
+
+    static func removeAllItems() {
+        CSSearchableIndex.default().deleteAllSearchableItems()
+    }
+}
+
+// MARK: - Handling Spotlight Results
+struct RootView: View {
+    @Environment(AppRouter.self) private var router
+
+    var body: some View {
+        NavigationStack(path: Bindable(router).path) {
+            HomeView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    routeView(for: route)
+                }
+        }
+        // Handle Spotlight search results
+        .onContinueUserActivity(
+            CSSearchableItemActionType
+        ) { activity in
+            guard let identifier = activity
+                .userInfo?[CSSearchableItemActivityIdentifier] as? String
+            else { return }
+
+            // Parse identifier like "product-42"
+            let parts = identifier.split(separator: "-")
+            if parts.count == 2,
+               parts[0] == "product",
+               let id = Int(parts[1]) {
+                router.navigate(to: .productDetail(id: id))
+            }
+        }
+        // Handle NSUserActivity from Handoff, Siri, etc.
+        .onContinueUserActivity("com.example.myapp.viewProduct") { activity in
+            guard let id = activity.userInfo?["productId"] as? Int else { return }
+            router.navigate(to: .productDetail(id: id))
+        }
+    }
+
+    @ViewBuilder
+    func routeView(for route: AppRoute) -&gt; some View {
+        switch route {
+        case .productDetail(let id):
+            ProductDetailView(productId: id)
+        case .category(let name):
+            CategoryView(name: name)
+        case .userProfile(let username):
+            ProfileView(username: username)
+        case .settings:
+            SettingsView()
+        case .orderDetail(let orderId):
+            OrderDetailView(orderId: orderId)
+        }
+    }
+}
+
+// MARK: - Advertising Activity from a View
+struct ProductDetailView: View {
+    let productId: Int
+
+    var body: some View {
+        ScrollView {
+            Text("Product \(productId)")
+        }
+        .userActivity("com.example.myapp.viewProduct") { activity in
+            activity.title = "Viewing Product \(productId)"
+            activity.isEligibleForSearch = true
+            activity.isEligibleForHandoff = true
+            activity.userInfo = ["productId": productId]
+
+            let attributes = CSSearchableItemAttributeSet(contentType: .content)
+            attributes.title = "Product \(productId)"
+            activity.contentAttributeSet = attributes
+        }
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="coordinator-pattern">
+<h2>Deep Linking with Coordinators / Routers</h2>
+
+<p>The Coordinator pattern centralizes all navigation logic in a single object, making deep link handling predictable and testable.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+// MARK: - Comprehensive App Router (Coordinator)
+@Observable
+class AppRouter {
+    var selectedTab: AppTab = .home
+    var path = NavigationPath()
+    var presentedSheet: AppSheet?
+    var presentedAlert: AppAlert?
+
+    // MARK: - Deep Link Handling
+    func handle(url: URL) {
+        let route: AppRoute?
+
+        switch url.scheme {
+        case "myapp":
+            route = DeepLinkParser.parse(url: url)
+        case "https", "http":
+            route = UniversalLinkParser.parse(url: url)
+        default:
+            route = nil
+        }
+
+        guard let route else {
+            print("Unhandled URL: \(url)")
+            return
+        }
+
+        navigate(to: route)
+    }
+
+    // MARK: - Programmatic Navigation
+    func navigate(to route: AppRoute) {
+        // Dismiss any presented sheets first
+        presentedSheet = nil
+
+        // Switch to the correct tab
+        selectedTab = tab(for: route)
+
+        // Reset path and push the route
+        // Use async to let tab switch settle
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(50))
+            path = NavigationPath()
+            path.append(route)
+        }
+    }
+
+    func push(_ route: AppRoute) {
+        path.append(route)
+    }
+
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
+    }
+
+    func popToRoot() {
+        path = NavigationPath()
+    }
+
+    func present(sheet: AppSheet) {
+        presentedSheet = sheet
+    }
+
+    // MARK: - Tab Mapping
+    private func tab(for route: AppRoute) -&gt; AppTab {
+        switch route {
+        case .productDetail, .category: return .home
+        case .userProfile: return .profile
+        case .settings, .orderDetail: return .settings
+        }
+    }
+}
+
+// MARK: - Sheet & Alert Types
+enum AppSheet: Identifiable {
+    case login
+    case filter
+    case share(item: String)
+
+    var id: String {
+        switch self {
+        case .login: return "login"
+        case .filter: return "filter"
+        case .share(let item): return "share-\(item)"
+        }
+    }
+}
+
+enum AppAlert: Identifiable {
+    case error(message: String)
+    case confirmDelete(itemId: Int)
+
+    var id: String {
+        switch self {
+        case .error(let msg): return "error-\(msg)"
+        case .confirmDelete(let id): return "delete-\(id)"
+        }
+    }
+}</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="testing">
+<h2>Testing Deep Link Handling</h2>
+
+<h3>Unit Testing the URL Parser</h3>
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import XCTest
+@testable import MyApp
+
+final class DeepLinkParserTests: XCTestCase {
+
+    func testProductDeepLink() {
+        let url = URL(string: "myapp://products/42")!
+        let route = DeepLinkParser.parse(url: url)
+        XCTAssertEqual(route, .productDetail(id: 42))
+    }
+
+    func testCategoryDeepLink() {
+        let url = URL(string: "myapp://categories/electronics")!
+        let route = DeepLinkParser.parse(url: url)
+        XCTAssertEqual(route, .category(name: "electronics"))
+    }
+
+    func testProfileDeepLink() {
+        let url = URL(string: "myapp://profile/johndoe")!
+        let route = DeepLinkParser.parse(url: url)
+        XCTAssertEqual(route, .userProfile(username: "johndoe"))
+    }
+
+    func testInvalidURL() {
+        let url = URL(string: "myapp://unknown/path")!
+        let route = DeepLinkParser.parse(url: url)
+        XCTAssertNil(route)
+    }
+
+    func testUniversalLink() {
+        let url = URL(string: "https://example.com/products/99")!
+        let route = UniversalLinkParser.parse(url: url)
+        XCTAssertEqual(route, .productDetail(id: 99))
+    }
+
+    func testMalformedProductId() {
+        let url = URL(string: "myapp://products/abc")!
+        let route = DeepLinkParser.parse(url: url)
+        XCTAssertNil(route)
+    }
+}
+
+// MARK: - Testing the Router
+final class AppRouterTests: XCTestCase {
+    var router: AppRouter!
+
+    override func setUp() {
+        router = AppRouter()
+    }
+
+    func testHandleProductURL() {
+        let url = URL(string: "myapp://products/42")!
+        router.handle(url: url)
+
+        // Router should switch to home tab
+        XCTAssertEqual(router.selectedTab, .home)
+    }
+
+    func testHandleProfileURL() {
+        let url = URL(string: "myapp://profile/jane")!
+        router.handle(url: url)
+
+        XCTAssertEqual(router.selectedTab, .profile)
+    }
+
+    func testNavigationPathSerialization() throws {
+        var path = NavigationPath()
+        path.append(AppRoute.productDetail(id: 42))
+        path.append(AppRoute.category(name: "shoes"))
+
+        let codable = try XCTUnwrap(path.codable)
+        let data = try JSONEncoder().encode(codable)
+        let decoded = try JSONDecoder().decode(
+            NavigationPath.CodableRepresentation.self,
+            from: data
+        )
+
+        let restoredPath = NavigationPath(decoded)
+        XCTAssertEqual(restoredPath.count, 2)
+    }
+}</code></pre>
+
+<h3>UI Testing with xcrun simctl</h3>
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import XCTest
+
+final class DeepLinkUITests: XCTestCase {
+    let app = XCUIApplication()
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app.launch()
+    }
+
+    func testDeepLinkOpensProductDetail() throws {
+        // iOS 16.4+ — use XCUIDevice to open URL
+        let url = URL(string: "myapp://products/42")!
+
+        // Method 1: Launch with URL argument
+        app.terminate()
+        app.launchArguments = ["-deeplink", "myapp://products/42"]
+        app.launch()
+
+        // Verify the product detail screen is visible
+        XCTAssertTrue(app.staticTexts["Product 42"].waitForExistence(timeout: 5))
+    }
+}
+
+// To test from the command line:
+// xcrun simctl openurl booted "myapp://products/42"</code></pre>
+
+<div class="callout">
+<strong>Tip:</strong> For launch-argument-based testing, add startup code in your app that checks for a <code>-deeplink</code> argument and calls <code>router.handle(url:)</code> with the provided URL. This avoids the complexity of orchestrating URL delivery in UI tests.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="complete-app">
+<h2>Complete Mini-App with Deep Linking</h2>
+
+<p>Here is a complete, working SwiftUI application that demonstrates all the concepts covered in this guide: custom URL scheme handling, state restoration via SceneStorage, tabbed navigation, and a centralized router.</p>
+
+<pre><span class="lang-label">Swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import SwiftUI
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - Route & Tab Definitions
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+enum AppTab: String, CaseIterable, Codable {
+    case home, favorites, profile, settings
+
+    var title: String {
+        rawValue.capitalized
+    }
+
+    var icon: String {
+        switch self {
+        case .home: "house.fill"
+        case .favorites: "heart.fill"
+        case .profile: "person.fill"
+        case .settings: "gearshape.fill"
+        }
+    }
+}
+
+enum AppRoute: Hashable, Codable {
+    case productDetail(id: Int)
+    case category(slug: String)
+    case userProfile(username: String)
+    case orderDetail(orderId: String)
+    case settings
+    case favoritesList
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - Deep Link Parser
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+enum DeepLink {
+    /// Parses both custom scheme and universal link URLs.
+    ///
+    /// Supported patterns:
+    ///   myapp://products/42
+    ///   myapp://categories/shoes
+    ///   myapp://profile/johndoe
+    ///   myapp://orders/ORD-001
+    ///   myapp://favorites
+    ///   myapp://settings
+    ///   https://example.com/products/42
+    ///   https://example.com/categories/shoes
+    static func parse(url: URL) -&gt; AppRoute? {
+        if url.scheme == "myapp" {
+            return parseCustomScheme(url: url)
+        } else {
+            return parseUniversalLink(url: url)
+        }
+    }
+
+    private static func parseCustomScheme(url: URL) -&gt; AppRoute? {
+        guard let host = url.host() else { return nil }
+        let pathSegments = url.pathComponents.filter { $0 != "/" }
+
+        switch host {
+        case "products":
+            guard let idStr = pathSegments.first,
+                  let id = Int(idStr) else { return nil }
+            return .productDetail(id: id)
+        case "categories":
+            guard let slug = pathSegments.first else { return nil }
+            return .category(slug: slug)
+        case "profile":
+            guard let username = pathSegments.first else { return nil }
+            return .userProfile(username: username)
+        case "orders":
+            guard let orderId = pathSegments.first else { return nil }
+            return .orderDetail(orderId: orderId)
+        case "favorites":
+            return .favoritesList
+        case "settings":
+            return .settings
+        default:
+            return nil
+        }
+    }
+
+    private static func parseUniversalLink(url: URL) -&gt; AppRoute? {
+        let segments = url.pathComponents.filter { $0 != "/" }
+        guard let first = segments.first else { return nil }
+
+        switch first {
+        case "products":
+            guard segments.count &gt; 1, let id = Int(segments[1]) else { return nil }
+            return .productDetail(id: id)
+        case "categories":
+            guard segments.count &gt; 1 else { return nil }
+            return .category(slug: segments[1])
+        case "profile":
+            guard segments.count &gt; 1 else { return nil }
+            return .userProfile(username: segments[1])
+        case "orders":
+            guard segments.count &gt; 1 else { return nil }
+            return .orderDetail(orderId: segments[1])
+        default:
+            return nil
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - App Router (Coordinator)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@Observable
+class AppRouter {
+    var selectedTab: AppTab = .home
+    var path = NavigationPath()
+
+    func handle(url: URL) {
+        guard let route = DeepLink.parse(url: url) else {
+            print("⚠️ Unrecognized deep link: \(url)")
+            return
+        }
+        navigate(to: route)
+    }
+
+    func navigate(to route: AppRoute) {
+        // Switch to the appropriate tab
+        selectedTab = targetTab(for: route)
+
+        // Reset and push
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(50))
+            path = NavigationPath()
+            path.append(route)
+        }
+    }
+
+    func push(_ route: AppRoute) {
+        path.append(route)
+    }
+
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
+    }
+
+    func popToRoot() {
+        path = NavigationPath()
+    }
+
+    private func targetTab(for route: AppRoute) -&gt; AppTab {
+        switch route {
+        case .productDetail, .category: return .home
+        case .favoritesList: return .favorites
+        case .userProfile: return .profile
+        case .settings, .orderDetail: return .settings
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - App Entry Point
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@main
+struct DeepLinkDemoApp: App {
+    @State private var router = AppRouter()
+
+    var body: some Scene {
+        WindowGroup {
+            AppTabView()
+                .environment(router)
+                .onOpenURL { url in
+                    router.handle(url: url)
+                }
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - Tab View with State Restoration
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+struct AppTabView: View {
+    @Environment(AppRouter.self) private var router
+    @SceneStorage("selectedTab") private var savedTab: String = AppTab.home.rawValue
+    @SceneStorage("navigationData") private var savedPathData: Data?
+
+    var body: some View {
+        @Bindable var router = router
+
+        TabView(selection: $router.selectedTab) {
+            ForEach(AppTab.allCases, id: \.self) { tab in
+                Tab(tab.title, systemImage: tab.icon, value: tab) {
+                    NavigationStack(path: $router.path) {
+                        tabRootView(for: tab)
+                            .navigationDestination(for: AppRoute.self) { route in
+                                destinationView(for: route)
+                            }
+                    }
+                }
+            }
+        }
+        .onChange(of: router.selectedTab) { _, newTab in
+            savedTab = newTab.rawValue
+        }
+        .onChange(of: router.path) {
+            guard let codable = router.path.codable else { return }
+            savedPathData = try? JSONEncoder().encode(codable)
+        }
+        .task {
+            restoreState()
+        }
+    }
+
+    private func restoreState() {
+        if let tab = AppTab(rawValue: savedTab) {
+            router.selectedTab = tab
+        }
+        if let data = savedPathData,
+           let decoded = try? JSONDecoder().decode(
+               NavigationPath.CodableRepresentation.self,
+               from: data
+           ) {
+            router.path = NavigationPath(decoded)
+        }
+    }
+
+    @ViewBuilder
+    private func tabRootView(for tab: AppTab) -&gt; some View {
+        switch tab {
+        case .home:
+            HomeScreen()
+        case .favorites:
+            FavoritesScreen()
+        case .profile:
+            ProfileScreen()
+        case .settings:
+            SettingsScreen()
+        }
+    }
+
+    @ViewBuilder
+    private func destinationView(for route: AppRoute) -&gt; some View {
+        switch route {
+        case .productDetail(let id):
+            ProductDetailScreen(productId: id)
+        case .category(let slug):
+            CategoryScreen(slug: slug)
+        case .userProfile(let username):
+            UserProfileScreen(username: username)
+        case .orderDetail(let orderId):
+            OrderDetailScreen(orderId: orderId)
+        case .settings:
+            SettingsScreen()
+        case .favoritesList:
+            FavoritesScreen()
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MARK: - Screen Views
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+struct HomeScreen: View {
+    @Environment(AppRouter.self) private var router
+
+    let products = Array(1...20)
+    let categories = ["electronics", "clothing", "books", "sports", "home"]
+
+    var body: some View {
+        List {
+            Section("Categories") {
+                ForEach(categories, id: \.self) { category in
+                    Button(category.capitalized) {
+                        router.push(.category(slug: category))
+                    }
+                }
+            }
+            Section("Products") {
+                ForEach(products, id: \.self) { id in
+                    Button("Product #\(id)") {
+                        router.push(.productDetail(id: id))
+                    }
+                }
+            }
+        }
+        .navigationTitle("Home")
+    }
+}
+
+struct FavoritesScreen: View {
+    @Environment(AppRouter.self) private var router
+
+    var body: some View {
+        List {
+            ForEach(1...5, id: \.self) { id in
+                Button("Favorite Product #\(id)") {
+                    router.push(.productDetail(id: id))
+                }
+            }
+        }
+        .navigationTitle("Favorites")
+    }
+}
+
+struct ProfileScreen: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "person.circle.fill")
+                .font(.system(size: 80))
+                .foregroundStyle(.secondary)
+            Text("My Profile")
+                .font(.title)
+            Text("View and edit your profile settings")
+                .foregroundStyle(.secondary)
+        }
+        .navigationTitle("Profile")
+    }
+}
+
+struct SettingsScreen: View {
+    @Environment(AppRouter.self) private var router
+
+    var body: some View {
+        List {
+            Section("Account") {
+                NavigationLink("Profile", value: AppRoute.userProfile(username: "me"))
+            }
+            Section("Orders") {
+                ForEach(["ORD-001", "ORD-002", "ORD-003"], id: \.self) { orderId in
+                    Button("Order \(orderId)") {
+                        router.push(.orderDetail(orderId: orderId))
+                    }
+                }
+            }
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+struct ProductDetailScreen: View {
+    let productId: Int
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "cube.box.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.blue)
+            Text("Product #\(productId)")
+                .font(.title)
+            Text("This screen was reached via NavigationStack routing.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Text("Deep link: myapp://products/\(productId)")
+                .font(.caption)
+                .monospaced()
+                .foregroundStyle(.tertiary)
+        }
+        .padding()
+        .navigationTitle("Product \(productId)")
+    }
+}
+
+struct CategoryScreen: View {
+    let slug: String
+    @Environment(AppRouter.self) private var router
+
+    var body: some View {
+        List {
+            ForEach(1...10, id: \.self) { id in
+                Button("Product #\(id) in \(slug.capitalized)") {
+                    router.push(.productDetail(id: id))
+                }
+            }
+        }
+        .navigationTitle(slug.capitalized)
+    }
+}
+
+struct UserProfileScreen: View {
+    let username: String
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "person.circle")
+                .font(.system(size: 60))
+                .foregroundStyle(.green)
+            Text("@\(username)")
+                .font(.title)
+        }
+        .navigationTitle(username)
+    }
+}
+
+struct OrderDetailScreen: View {
+    let orderId: String
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "shippingbox.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.orange)
+            Text("Order \(orderId)")
+                .font(.title)
+            Text("Deep link: myapp://orders/\(orderId)")
+                .font(.caption)
+                .monospaced()
+                .foregroundStyle(.tertiary)
+        }
+        .navigationTitle("Order \(orderId)")
+    }
+}</code></pre>
+
+<div class="callout success">
+<strong>Test this app</strong> by running it in the Simulator, then opening Terminal and executing:<br>
+<code>xcrun simctl openurl booted "myapp://products/7"</code><br>
+<code>xcrun simctl openurl booted "myapp://orders/ORD-001"</code><br>
+<code>xcrun simctl openurl booted "myapp://categories/electronics"</code>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="tradeoffs">
+<h2>Tradeoff Analysis</h2>
+
+<h3>URL Scheme Choice</h3>
+<div class="tradeoff-grid">
+<div class="tradeoff-card pro">
+<h4>Custom URL Schemes</h4>
+<ul>
+<li>Zero server setup required</li>
+<li>Full Simulator support</li>
+<li>Quick to implement and test</li>
+<li>Works for app-to-app communication</li>
+</ul>
+</div>
+<div class="tradeoff-card con">
+<h4>Custom URL Schemes: Drawbacks</h4>
+<ul>
+<li>No uniqueness guarantee &mdash; another app can hijack your scheme</li>
+<li>No web fallback if app is not installed</li>
+<li>Cannot be used for App Clips</li>
+<li>Apple discourages for user-facing links</li>
+</ul>
+</div>
+<div class="tradeoff-card pro">
+<h4>Universal Links</h4>
+<ul>
+<li>Domain-verified ownership (secure)</li>
+<li>Graceful web fallback</li>
+<li>Required for App Clips</li>
+<li>Better user experience (no "Open in..." dialog)</li>
+</ul>
+</div>
+<div class="tradeoff-card con">
+<h4>Universal Links: Drawbacks</h4>
+<ul>
+<li>Requires server with HTTPS and AASA file</li>
+<li>Safari on Simulator does not trigger them</li>
+<li>Debugging can be painful (caching, CDN issues)</li>
+<li>Two-way association must be maintained</li>
+</ul>
+</div>
+</div>
+
+<h3>State Restoration Approach</h3>
+<table>
+<thead>
+<tr><th>Approach</th><th>Pros</th><th>Cons</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@SceneStorage</code></td>
+<td>Built-in, per-scene, survives termination</td>
+<td>Limited types, small data only, no encryption</td>
+</tr>
+<tr>
+<td><code>UserDefaults</code></td>
+<td>Simple, shared across scenes</td>
+<td>Not per-scene, synchronous, no encryption</td>
+</tr>
+<tr>
+<td>File-based (Documents)</td>
+<td>Unlimited size, full control</td>
+<td>Manual cleanup, not per-scene by default</td>
+</tr>
+<tr>
+<td>Keychain</td>
+<td>Encrypted, survives reinstalls</td>
+<td>Complex API, not designed for navigation state</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Single Path vs Per-Tab Paths</h3>
+<div class="tradeoff-grid">
+<div class="tradeoff-card pro">
+<h4>Single NavigationPath</h4>
+<ul>
+<li>Simpler to reason about</li>
+<li>One place to serialize/restore</li>
+<li>Works well for simple apps</li>
+</ul>
+</div>
+<div class="tradeoff-card con">
+<h4>Single NavigationPath: Drawbacks</h4>
+<ul>
+<li>Path resets when switching tabs</li>
+<li>Cannot preserve per-tab navigation history</li>
+<li>Deep links destroy current tab's state</li>
+</ul>
+</div>
+<div class="tradeoff-card pro">
+<h4>Per-Tab NavigationPaths</h4>
+<ul>
+<li>Each tab retains its own back stack</li>
+<li>Tab switching preserves navigation</li>
+<li>More natural UX for tabbed apps</li>
+</ul>
+</div>
+<div class="tradeoff-card con">
+<h4>Per-Tab Paths: Drawbacks</h4>
+<ul>
+<li>More complex state management</li>
+<li>Must serialize/restore multiple paths</li>
+<li>Potential memory overhead for deep stacks</li>
+</ul>
+</div>
+</div>
+
+<h3>Router Architecture</h3>
+<div class="tradeoff-grid">
+<div class="tradeoff-card pro">
+<h4>Centralized Router</h4>
+<ul>
+<li>Single source of truth for navigation</li>
+<li>Easy to test (just test the router)</li>
+<li>Deep links route through one place</li>
+<li>Consistent behavior across entry points</li>
+</ul>
+</div>
+<div class="tradeoff-card con">
+<h4>Centralized Router: Drawbacks</h4>
+<ul>
+<li>Can become a "god object" in large apps</li>
+<li>Every view depends on the router</li>
+<li>Harder to modularize into separate packages</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="checklist">
+<h2>Implementation Checklist</h2>
+
+<p>Use this checklist when adding deep linking and state restoration to an existing SwiftUI app.</p>
+
+<h3>Phase 1: Foundation</h3>
+<ul class="checklist">
+<li>Define all routes as a <code>Hashable</code>, <code>Codable</code> enum</li>
+<li>Create an <code>@Observable</code> router/coordinator class</li>
+<li>Replace any <code>NavigationLink(destination:)</code> with <code>NavigationLink(value:)</code></li>
+<li>Use <code>NavigationStack(path:)</code> with your router's <code>NavigationPath</code></li>
+<li>Add <code>.navigationDestination(for:)</code> with a centralized switch</li>
+</ul>
+
+<h3>Phase 2: Custom URL Scheme</h3>
+<ul class="checklist">
+<li>Register URL scheme in Info.plist (<code>CFBundleURLTypes</code>)</li>
+<li>Write a URL parser that converts URLs to your route enum</li>
+<li>Add <code>.onOpenURL { }</code> at the root of your app</li>
+<li>Test with <code>xcrun simctl openurl booted "myapp://..."</code></li>
+<li>Write unit tests for every URL pattern</li>
+</ul>
+
+<h3>Phase 3: Universal Links</h3>
+<ul class="checklist">
+<li>Create and host AASA file at <code>/.well-known/apple-app-site-association</code></li>
+<li>Verify AASA is served over HTTPS, no redirects, correct Content-Type</li>
+<li>Add Associated Domains entitlement (<code>applinks:yourdomain.com</code>)</li>
+<li>Extend your URL parser to handle <code>https://</code> URLs</li>
+<li>Test on a real device (Simulator Safari does not trigger Universal Links)</li>
+<li>Validate with Apple's <a href="https://search.developer.apple.com/appsearch-validation-tool/">App Search Validation Tool</a></li>
+</ul>
+
+<h3>Phase 4: State Restoration</h3>
+<ul class="checklist">
+<li>Verify all route types conform to <code>Codable</code></li>
+<li>Add <code>@SceneStorage</code> for <code>NavigationPath</code> data and selected tab</li>
+<li>Save path on every <code>.onChange(of: path)</code></li>
+<li>Restore path in <code>.onAppear</code> or <code>.task</code></li>
+<li>Test: navigate deep, force-quit app, relaunch &mdash; verify state is restored</li>
+<li>Test: open same app in two iPad windows &mdash; verify independent state</li>
+</ul>
+
+<h3>Phase 5: Notifications &amp; Spotlight</h3>
+<ul class="checklist">
+<li>Add <code>UNUserNotificationCenterDelegate</code> via <code>@UIApplicationDelegateAdaptor</code></li>
+<li>Parse <code>deep_link</code> field from notification payload in <code>didReceive</code></li>
+<li>Route notification URLs through your existing router</li>
+<li>Index key content with <code>CSSearchableItem</code></li>
+<li>Handle Spotlight results with <code>.onContinueUserActivity(CSSearchableItemActionType)</code></li>
+<li>Advertise activities with <code>.userActivity()</code> modifier</li>
+</ul>
+
+<h3>Phase 6: Testing &amp; Validation</h3>
+<ul class="checklist">
+<li>Unit test every URL pattern (valid, invalid, edge cases)</li>
+<li>Unit test router state transitions</li>
+<li>Unit test NavigationPath serialization round-trip</li>
+<li>UI test deep links with <code>xcrun simctl openurl</code></li>
+<li>Test deep link when app is not running (cold start)</li>
+<li>Test deep link when app is in background</li>
+<li>Test deep link when app is in foreground</li>
+<li>Test Universal Links on a real device</li>
+<li>Verify state restoration after force-quit</li>
+<li>Test with multiple windows on iPad</li>
+</ul>
+</section>
+
+</main>
+
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">&uarr;</button>
+
+<script>
+// Theme toggle
+function toggleTheme(){
+  const html=document.documentElement;
+  const current=html.getAttribute('data-theme');
+  const next=current==='light'?'dark':'light';
+  html.setAttribute('data-theme',next);
+  document.getElementById('themeToggle').textContent=next==='dark'?'Light Mode':'Dark Mode';
+  localStorage.setItem('theme',next);
+  initMermaid();
+}
+(function(){
+  const saved=localStorage.getItem('theme');
+  if(saved){
+    document.documentElement.setAttribute('data-theme',saved);
+    if(saved==='dark')document.getElementById('themeToggle').textContent='Light Mode';
+  }
+})();
+
+// Sidebar toggle
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const m=document.getElementById('main');
+  s.classList.toggle('hidden');
+  m.classList.toggle('full');
+}
+
+// Copy code
+function copyCode(btn){
+  const pre=btn.parentElement;
+  const code=pre.querySelector('code');
+  const text=code?code.textContent:pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',1500);
+  });
+}
+
+// Back to top
+const backBtn=document.getElementById('backToTop');
+window.addEventListener('scroll',()=>{
+  backBtn.classList.toggle('show',window.scrollY>400);
+});
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+
+// Active sidebar link
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.sidebar li a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{
+    if(window.scrollY>=s.offsetTop-80)current=s.id;
+  });
+  navLinks.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+  });
+});
+
+// Mermaid init
+function initMermaid(){
+  const theme=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'default';
+  mermaid.initialize({startOnLoad:false,theme:theme,securityLevel:'loose',flowchart:{useMaxWidth:true}});
+  document.querySelectorAll('.mermaid').forEach(el=>{
+    el.removeAttribute('data-processed');
+    el.innerHTML=el.textContent;
+  });
+  mermaid.run();
+}
+document.addEventListener('DOMContentLoaded',initMermaid);
+</script>
+</body>
+</html>

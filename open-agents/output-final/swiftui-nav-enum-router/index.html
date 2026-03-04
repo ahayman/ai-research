@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enum-Based Router Pattern for SwiftUI Navigation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --color-primary: #0071e3;
+  --color-primary-dark: #0058b0;
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f5f5f7;
+  --color-bg-code: #f0f2f5;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+  --color-border: #d2d2d7;
+  --color-sidebar-bg: #fbfbfd;
+  --color-sidebar-active: #e8f0fe;
+  --color-card-bg: #ffffff;
+  --color-card-shadow: rgba(0,0,0,0.06);
+  --color-accent-green: #34c759;
+  --color-accent-orange: #ff9500;
+  --color-accent-red: #ff3b30;
+  --color-accent-purple: #af52de;
+  --color-link: #0071e3;
+  --sidebar-width: 280px;
+  --header-height: 56px;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  --radius: 10px;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #2997ff;
+  --color-primary-dark: #64b5f6;
+  --color-bg: #1c1c1e;
+  --color-bg-secondary: #2c2c2e;
+  --color-bg-code: #2c2c2e;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #98989d;
+  --color-border: #38383a;
+  --color-sidebar-bg: #1c1c1e;
+  --color-sidebar-active: #1a3a5c;
+  --color-card-bg: #2c2c2e;
+  --color-card-shadow: rgba(0,0,0,0.3);
+  --color-link: #2997ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 20px); }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* Header */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--header-height);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.header-left { display: flex; align-items: center; gap: 16px; }
+
+.back-link {
+  font-size: 14px; color: var(--color-link); text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+}
+.back-link:hover { text-decoration: underline; }
+
+.header-title {
+  font-size: 16px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.theme-toggle {
+  background: var(--color-bg-secondary); border: 1px solid var(--color-border);
+  border-radius: 20px; padding: 6px 12px; cursor: pointer;
+  font-size: 14px; color: var(--color-text); transition: all var(--transition);
+}
+.theme-toggle:hover { border-color: var(--color-primary); }
+
+.sidebar-toggle {
+  display: none; background: none; border: none; cursor: pointer;
+  font-size: 20px; color: var(--color-text); padding: 4px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: var(--header-height); left: 0; bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--color-sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto; padding: 20px 0;
+  transition: transform 0.3s ease;
+  z-index: 90;
+}
+
+.sidebar-nav { list-style: none; }
+
+.sidebar-nav li a {
+  display: block; padding: 8px 24px;
+  font-size: 13px; color: var(--color-text-secondary);
+  text-decoration: none; border-left: 3px solid transparent;
+  transition: all var(--transition);
+}
+.sidebar-nav li a:hover {
+  color: var(--color-text); background: var(--color-bg-secondary);
+}
+.sidebar-nav li a.active {
+  color: var(--color-primary); border-left-color: var(--color-primary);
+  background: var(--color-sidebar-active); font-weight: 500;
+}
+.sidebar-nav li.section-label {
+  padding: 16px 24px 6px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+/* Main content */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: 40px 48px 80px;
+  max-width: 900px;
+}
+
+/* Typography */
+h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; font-weight: 700; margin-top: 56px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--color-border); letter-spacing: -0.01em; }
+h3 { font-size: 20px; font-weight: 600; margin-top: 36px; margin-bottom: 12px; }
+h4 { font-size: 16px; font-weight: 600; margin-top: 24px; margin-bottom: 8px; }
+
+p { margin-bottom: 16px; font-size: 16px; }
+
+.subtitle { font-size: 18px; color: var(--color-text-secondary); margin-bottom: 32px; }
+
+a { color: var(--color-link); }
+
+/* Code blocks */
+.code-block {
+  position: relative; margin: 20px 0 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.code-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px; color: var(--color-text-secondary); font-weight: 600;
+}
+.copy-btn {
+  background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer;
+  font-size: 12px; color: var(--color-text-secondary);
+  transition: all var(--transition);
+}
+.copy-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.copy-btn.copied { background: var(--color-accent-green); color: white; border-color: var(--color-accent-green); }
+
+pre {
+  margin: 0; padding: 16px; overflow-x: auto;
+  background: var(--color-bg-code); font-size: 13.5px; line-height: 1.6;
+}
+pre code { font-family: var(--font-mono); }
+
+code {
+  font-family: var(--font-mono); font-size: 0.9em;
+  background: var(--color-bg-code); padding: 2px 6px;
+  border-radius: 4px;
+}
+pre code { background: none; padding: 0; }
+
+/* Keyword highlighting (basic Swift) */
+.kw { color: #d73a49; font-weight: 600; }
+.tp { color: #6f42c1; }
+.st { color: #22863a; }
+.cm { color: #6a737d; font-style: italic; }
+.fn { color: #005cc5; }
+.nb { color: #e36209; }
+
+[data-theme="dark"] .kw { color: #ff7b72; }
+[data-theme="dark"] .tp { color: #d2a8ff; }
+[data-theme="dark"] .st { color: #7ee787; }
+[data-theme="dark"] .cm { color: #8b949e; }
+[data-theme="dark"] .fn { color: #79c0ff; }
+[data-theme="dark"] .nb { color: #ffa657; }
+
+/* Diagrams */
+.diagram-container {
+  margin: 24px 0; padding: 24px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.diagram-container .mermaid { display: flex; justify-content: center; }
+.diagram-caption {
+  text-align: center; font-size: 13px; color: var(--color-text-secondary);
+  margin-top: 12px; font-style: italic;
+}
+
+/* Callouts */
+.callout {
+  margin: 20px 0; padding: 16px 20px;
+  border-radius: var(--radius); border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-info { background: #e8f4fd; border-color: var(--color-primary); }
+.callout-warning { background: #fff8e6; border-color: var(--color-accent-orange); }
+.callout-success { background: #e8faf0; border-color: var(--color-accent-green); }
+.callout-tip { background: #f3e8ff; border-color: var(--color-accent-purple); }
+[data-theme="dark"] .callout-info { background: #1a2a3a; }
+[data-theme="dark"] .callout-warning { background: #2a2510; }
+[data-theme="dark"] .callout-success { background: #1a2a1a; }
+[data-theme="dark"] .callout-tip { background: #2a1a3a; }
+.callout-label { font-weight: 700; margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+/* Tables */
+table {
+  width: 100%; border-collapse: collapse; margin: 20px 0;
+  font-size: 14px;
+}
+th, td {
+  padding: 12px 16px; text-align: left;
+  border: 1px solid var(--color-border);
+}
+th { background: var(--color-bg-secondary); font-weight: 600; }
+td { background: var(--color-card-bg); }
+
+/* Lists */
+ul, ol { margin: 12px 0 16px 24px; }
+li { margin-bottom: 6px; font-size: 15px; }
+li code { font-size: 0.85em; }
+
+/* Cards */
+.comparison-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px; margin: 20px 0;
+}
+.comparison-card {
+  background: var(--color-card-bg); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 20px;
+}
+.comparison-card h4 { margin-top: 0; margin-bottom: 10px; }
+.comparison-card .tag {
+  display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; margin-bottom: 10px;
+}
+.tag-pro { background: #d1fae5; color: #065f46; }
+.tag-con { background: #fee2e2; color: #991b1b; }
+.tag-neutral { background: #e0e7ff; color: #3730a3; }
+[data-theme="dark"] .tag-pro { background: #064e3b; color: #6ee7b7; }
+[data-theme="dark"] .tag-con { background: #7f1d1d; color: #fca5a5; }
+[data-theme="dark"] .tag-neutral { background: #312e81; color: #a5b4fc; }
+
+/* Back to top */
+.back-to-top {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--color-primary); color: white;
+  border: none; cursor: pointer; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 50;
+}
+.back-to-top.visible { opacity: 1; pointer-events: auto; }
+.back-to-top:hover { transform: scale(1.1); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.1); }
+  .sidebar-toggle { display: block; }
+  .main-content { margin-left: 0; padding: 28px 20px 60px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+}
+
+/* Print */
+@media print {
+  .sidebar, .site-header, .back-to-top, .theme-toggle, .sidebar-toggle, .copy-btn { display: none; }
+  .main-content { margin: 0; padding: 20px; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-left">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&larr; Back to Dashboard</a>
+    <span class="header-title">Enum-Based Router Pattern</span>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+  </div>
+</header>
+
+<nav class="sidebar" id="sidebar">
+  <ul class="sidebar-nav">
+    <li class="section-label">Overview</li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#problem">The Problem It Solves</a></li>
+    <li><a href="#architecture">Architecture Overview</a></li>
+    <li class="section-label">Core Concepts</li>
+    <li><a href="#route-enum">Route Enum</a></li>
+    <li><a href="#router-class">Router Class</a></li>
+    <li><a href="#view-factory">View Factory</a></li>
+    <li><a href="#environment-injection">Environment Injection</a></li>
+    <li class="section-label">Advanced Topics</li>
+    <li><a href="#modal-presentations">Modal Presentations</a></li>
+    <li><a href="#deep-linking">Deep Linking</a></li>
+    <li><a href="#navigation-flow">Navigation Flow</a></li>
+    <li><a href="#testing">Testing Navigation</a></li>
+    <li><a href="#scaling">Scaling to Larger Apps</a></li>
+    <li class="section-label">Practical</li>
+    <li><a href="#complete-example">Complete Mini App</a></li>
+    <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+    <li><a href="#when-to-use">When to Use</a></li>
+  </ul>
+</nav>
+
+<main class="main-content">
+
+<!-- ============================================================ -->
+<!-- INTRODUCTION -->
+<!-- ============================================================ -->
+<section id="introduction">
+<h1>Enum-Based Router Pattern</h1>
+<p class="subtitle">A practical, type-safe approach to managing SwiftUI navigation with a centralized router, route enums, and NavigationStack.</p>
+
+<p>The Enum-Based Router Pattern is the most widely adopted architecture for managing navigation in production SwiftUI applications. It uses a Swift <code>enum</code> to define every possible destination in your app, a <code>Router</code> class to manage navigation state, and SwiftUI's <code>NavigationStack</code> to drive the UI. The result is a type-safe, testable, and scalable navigation system.</p>
+
+<p>This pattern occupies a practical middle ground: more structured than using <code>NavigationStack</code> with ad-hoc <code>NavigationLink</code>s, but simpler than a full Coordinator pattern. For most apps, it is the right choice.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- THE PROBLEM -->
+<!-- ============================================================ -->
+<section id="problem">
+<h2>The Problem It Solves</h2>
+
+<p>In a naive SwiftUI app, navigation is scattered across views. Each view decides where it can go next by embedding <code>NavigationLink</code> destinations inline. This creates several problems:</p>
+
+<ul>
+  <li><strong>Tight coupling:</strong> Every view knows about every view it can navigate to. Changing a destination means editing multiple files.</li>
+  <li><strong>No programmatic control:</strong> You cannot navigate in response to an async event (e.g., after a network call completes) without awkward boolean state variables.</li>
+  <li><strong>Deep linking is painful:</strong> Reconstructing a navigation stack from a URL requires manually pushing views in sequence.</li>
+  <li><strong>Untestable navigation:</strong> You cannot unit test which screen appears after a user action without running UI tests.</li>
+  <li><strong>State fragmentation:</strong> Navigation state is distributed across dozens of views with no single source of truth.</li>
+</ul>
+
+<p>The enum-based router solves all of these by centralizing navigation decisions in a single observable object and using an enum to enumerate every valid destination.</p>
+
+<div class="callout callout-info">
+  <div class="callout-label">Key Insight</div>
+  <p>The router pattern doesn't fight SwiftUI's declarative model. It <em>embraces</em> it by making navigation state explicit and data-driven. The router mutates state; SwiftUI reacts.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ARCHITECTURE OVERVIEW -->
+<!-- ============================================================ -->
+<section id="architecture">
+<h2>Architecture Overview</h2>
+
+<p>The pattern has four key components that work together:</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+classDiagram
+    class Route {
+        <<enum>>
+        +home
+        +detail(Item)
+        +profile(userID: String)
+        +settings
+        +Hashable
+    }
+
+    class Router {
+        +path: NavigationPath
+        +sheet: Route?
+        +fullScreenCover: Route?
+        +navigate(to: Route)
+        +pop()
+        +popToRoot()
+        +present(sheet: Route)
+        +present(cover: Route)
+        +dismiss()
+    }
+
+    class NavigationStack {
+        +path: Binding~NavigationPath~
+        +navigationDestination()
+    }
+
+    class ViewFactory {
+        <<protocol>>
+        +view(for: Route) View
+    }
+
+    Router --> Route : manages
+    Router --> NavigationStack : drives
+    NavigationStack --> ViewFactory : resolves views via
+    ViewFactory --> Route : switches on
+  </div>
+  <p class="diagram-caption">Figure 1: Class diagram showing the relationship between Route, Router, NavigationStack, and the view factory.</p>
+</div>
+
+<ol>
+  <li><strong>Route enum</strong> -- Defines every destination in the app as a type-safe enum case, often with associated values for passing data.</li>
+  <li><strong>Router class</strong> -- An <code>@Observable</code> (iOS 17+) or <code>ObservableObject</code> class that owns a <code>NavigationPath</code> and optional sheet/cover state. This is the single source of truth.</li>
+  <li><strong>View factory</strong> -- A <code>switch</code> statement (usually inside <code>.navigationDestination</code>) that maps each <code>Route</code> case to a concrete SwiftUI view.</li>
+  <li><strong>Environment injection</strong> -- The router is injected into the view hierarchy via <code>@Environment</code> or <code>.environmentObject()</code> so any view can trigger navigation.</li>
+</ol>
+</section>
+
+<!-- ============================================================ -->
+<!-- ROUTE ENUM -->
+<!-- ============================================================ -->
+<section id="route-enum">
+<h2>Defining the Route Enum</h2>
+
+<p>The <code>Route</code> enum is the heart of the pattern. Each case represents a screen or destination in your app. It must conform to <code>Hashable</code> so SwiftUI's <code>NavigationPath</code> can track it.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Route.swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="cm">/// Every navigable destination in the app.</span>
+<span class="kw">enum</span> <span class="tp">Route</span>: <span class="tp">Hashable</span> {
+    <span class="cm">// Simple destinations (no data needed)</span>
+    <span class="kw">case</span> home
+    <span class="kw">case</span> settings
+    <span class="kw">case</span> favorites
+
+    <span class="cm">// Destinations with associated values</span>
+    <span class="kw">case</span> detail(item: <span class="tp">Item</span>)
+    <span class="kw">case</span> profile(userID: <span class="tp">String</span>)
+    <span class="kw">case</span> category(name: <span class="tp">String</span>, page: <span class="tp">Int</span>)
+    <span class="kw">case</span> webView(url: <span class="tp">URL</span>)
+}
+</code></pre>
+</div>
+
+<h3>Why Hashable?</h3>
+<p><code>NavigationPath</code> uses a type-erased collection internally and requires every element to be <code>Hashable</code>. Swift automatically synthesizes <code>Hashable</code> conformance for enums whose associated values are all <code>Hashable</code>. For your own model types, just add <code>Hashable</code> conformance:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Item.swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">struct</span> <span class="tp">Item</span>: <span class="tp">Identifiable</span>, <span class="tp">Hashable</span> {
+    <span class="kw">let</span> id: <span class="tp">UUID</span>
+    <span class="kw">let</span> title: <span class="tp">String</span>
+    <span class="kw">let</span> subtitle: <span class="tp">String</span>
+    <span class="kw">let</span> imageURL: <span class="tp">URL</span>?
+
+    <span class="cm">// Hashable is auto-synthesized since all stored</span>
+    <span class="cm">// properties (UUID, String, URL?) are Hashable.</span>
+}
+</code></pre>
+</div>
+
+<h3>Associated Values for Passing Data</h3>
+
+<p>Associated values are the mechanism for passing data to destination views. This eliminates the need for global state, singletons, or environment-based workarounds. The data is carried directly with the route.</p>
+
+<div class="callout callout-tip">
+  <div class="callout-label">Tip</div>
+  <p>Keep associated values lightweight. Pass IDs or small value types rather than large objects. The destination view can fetch additional data from a service layer if needed.</p>
+</div>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Routes with Associated Values</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">enum</span> <span class="tp">Route</span>: <span class="tp">Hashable</span> {
+    <span class="cm">// Pass a whole model (if Hashable)</span>
+    <span class="kw">case</span> detail(item: <span class="tp">Item</span>)
+
+    <span class="cm">// Pass just an identifier -- view fetches its own data</span>
+    <span class="kw">case</span> profile(userID: <span class="tp">String</span>)
+
+    <span class="cm">// Multiple parameters</span>
+    <span class="kw">case</span> search(query: <span class="tp">String</span>, filters: <span class="tp">SearchFilters</span>)
+
+    <span class="cm">// No associated value -- static destination</span>
+    <span class="kw">case</span> settings
+}
+</code></pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ROUTER CLASS -->
+<!-- ============================================================ -->
+<section id="router-class">
+<h2>Creating the Router Class</h2>
+
+<p>The router is a centralized, observable object that owns all navigation state. It provides imperative methods for navigating, but SwiftUI reacts to its published state declaratively.</p>
+
+<h3>iOS 17+ with @Observable</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Router.swift (iOS 17+)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">Router</span> {
+
+    <span class="cm">// MARK: - Push Navigation</span>
+    <span class="kw">var</span> path = <span class="tp">NavigationPath</span>()
+
+    <span class="cm">// MARK: - Modal Presentation</span>
+    <span class="kw">var</span> presentedSheet: <span class="tp">Route</span>?
+    <span class="kw">var</span> presentedCover: <span class="tp">Route</span>?
+
+    <span class="cm">// MARK: - Push Actions</span>
+
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">Route</span>) {
+        path.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeLast(path.count)
+    }
+
+    <span class="cm">// MARK: - Modal Actions</span>
+
+    <span class="kw">func</span> <span class="fn">presentSheet</span>(_ route: <span class="tp">Route</span>) {
+        presentedSheet = route
+    }
+
+    <span class="kw">func</span> <span class="fn">presentFullScreenCover</span>(_ route: <span class="tp">Route</span>) {
+        presentedCover = route
+    }
+
+    <span class="kw">func</span> <span class="fn">dismiss</span>() {
+        presentedSheet = <span class="kw">nil</span>
+        presentedCover = <span class="kw">nil</span>
+    }
+}
+</code></pre>
+</div>
+
+<h3>iOS 16 with ObservableObject</h3>
+
+<p>If you need to support iOS 16, use <code>ObservableObject</code> with <code>@Published</code> properties instead:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Router.swift (iOS 16)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="kw">final class</span> <span class="tp">Router</span>: <span class="tp">ObservableObject</span> {
+
+    <span class="kw">@Published var</span> path = <span class="tp">NavigationPath</span>()
+    <span class="kw">@Published var</span> presentedSheet: <span class="tp">Route</span>?
+    <span class="kw">@Published var</span> presentedCover: <span class="tp">Route</span>?
+
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">Route</span>) {
+        path.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeLast(path.count)
+    }
+
+    <span class="kw">func</span> <span class="fn">presentSheet</span>(_ route: <span class="tp">Route</span>) {
+        presentedSheet = route
+    }
+
+    <span class="kw">func</span> <span class="fn">presentFullScreenCover</span>(_ route: <span class="tp">Route</span>) {
+        presentedCover = route
+    }
+
+    <span class="kw">func</span> <span class="fn">dismiss</span>() {
+        presentedSheet = <span class="kw">nil</span>
+        presentedCover = <span class="kw">nil</span>
+    }
+}
+</code></pre>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-label">@Observable vs ObservableObject</div>
+  <p>With <code>@Observable</code> (iOS 17+), SwiftUI only re-renders views that read the specific property that changed. With <code>ObservableObject</code>, any <code>@Published</code> change triggers re-evaluation of all observing views. For navigation, the practical difference is minor, but <code>@Observable</code> is the modern recommended approach.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- VIEW FACTORY -->
+<!-- ============================================================ -->
+<section id="view-factory">
+<h2>The View Factory Pattern</h2>
+
+<p>The view factory is a <code>switch</code> statement that maps each <code>Route</code> case to a concrete SwiftUI view. In SwiftUI, this lives inside the <code>.navigationDestination(for:)</code> modifier.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- View Factory via navigationDestination</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">struct</span> <span class="tp">ContentView</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">NavigationStack</span>(path: $router.path) {
+            <span class="tp">HomeView</span>()
+                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                    <span class="kw">switch</span> route {
+                    <span class="kw">case</span> .home:
+                        <span class="tp">HomeView</span>()
+                    <span class="kw">case</span> .detail(<span class="kw">let</span> item):
+                        <span class="tp">DetailView</span>(item: item)
+                    <span class="kw">case</span> .profile(<span class="kw">let</span> userID):
+                        <span class="tp">ProfileView</span>(userID: userID)
+                    <span class="kw">case</span> .settings:
+                        <span class="tp">SettingsView</span>()
+                    <span class="kw">case</span> .favorites:
+                        <span class="tp">FavoritesView</span>()
+                    <span class="kw">case</span> .category(<span class="kw">let</span> name, <span class="kw">let</span> page):
+                        <span class="tp">CategoryView</span>(name: name, page: page)
+                    <span class="kw">case</span> .webView(<span class="kw">let</span> url):
+                        <span class="tp">WebView</span>(url: url)
+                    }
+                }
+        }
+        .environment(router)
+    }
+}
+</code></pre>
+</div>
+
+<p>The <code>switch</code> statement is <strong>exhaustive</strong>. The compiler forces you to handle every route case. If you add a new route, every <code>switch</code> produces a build error until it's handled. This eliminates an entire class of "forgot to wire up the new screen" bugs.</p>
+
+<h3>Extracting the Factory into a Helper</h3>
+
+<p>For larger apps, you can extract the factory into a <code>@ViewBuilder</code> function or a dedicated type:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Extracted View Builder</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">@ViewBuilder</span>
+<span class="kw">func</span> <span class="fn">viewForRoute</span>(_ route: <span class="tp">Route</span>) -> <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="kw">switch</span> route {
+    <span class="kw">case</span> .home:
+        <span class="tp">HomeView</span>()
+    <span class="kw">case</span> .detail(<span class="kw">let</span> item):
+        <span class="tp">DetailView</span>(item: item)
+    <span class="kw">case</span> .profile(<span class="kw">let</span> userID):
+        <span class="tp">ProfileView</span>(userID: userID)
+    <span class="kw">case</span> .settings:
+        <span class="tp">SettingsView</span>()
+    <span class="kw">case</span> .favorites:
+        <span class="tp">FavoritesView</span>()
+    <span class="kw">case</span> .category(<span class="kw">let</span> name, <span class="kw">let</span> page):
+        <span class="tp">CategoryView</span>(name: name, page: page)
+    <span class="kw">case</span> .webView(<span class="kw">let</span> url):
+        <span class="tp">WebView</span>(url: url)
+    }
+}
+</code></pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ENVIRONMENT INJECTION -->
+<!-- ============================================================ -->
+<section id="environment-injection">
+<h2>Injecting the Router via Environment</h2>
+
+<p>The router must be accessible from any view in the hierarchy so any view can trigger navigation. SwiftUI provides two mechanisms depending on your iOS target.</p>
+
+<h3>iOS 17+: @Environment</h3>
+
+<p>With <code>@Observable</code>, inject the router using <code>.environment()</code> and access it with <code>@Environment</code>:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Environment injection (iOS 17+)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="cm">// At the root -- inject the router</span>
+<span class="tp">NavigationStack</span>(path: $router.path) {
+    <span class="tp">HomeView</span>()
+        .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+            viewForRoute(route)
+        }
+}
+.environment(router)
+
+<span class="cm">// In any child view -- access the router</span>
+<span class="kw">struct</span> <span class="tp">ItemRow</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+    <span class="kw">let</span> item: <span class="tp">Item</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">Button</span>(item.title) {
+            router.navigate(to: .detail(item: item))
+        }
+    }
+}
+</code></pre>
+</div>
+
+<h3>iOS 16: @EnvironmentObject</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- EnvironmentObject injection (iOS 16)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="cm">// At the root</span>
+<span class="tp">NavigationStack</span>(path: $router.path) { ... }
+    .environmentObject(router)
+
+<span class="cm">// In any child view</span>
+<span class="kw">struct</span> <span class="tp">ItemRow</span>: <span class="tp">View</span> {
+    <span class="kw">@EnvironmentObject private var</span> router: <span class="tp">Router</span>
+    <span class="kw">let</span> item: <span class="tp">Item</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">Button</span>(item.title) {
+            router.navigate(to: .detail(item: item))
+        }
+    }
+}
+</code></pre>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-label">Common Pitfall</div>
+  <p>If you use <code>@EnvironmentObject</code> and forget to inject the router, the app will crash at runtime with a vague error. The <code>@Environment</code> approach on iOS 17+ fails at compile time if the type is wrong, but still crashes at runtime if the value isn't injected. Always inject the router at the <code>NavigationStack</code> level.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- MODAL PRESENTATIONS -->
+<!-- ============================================================ -->
+<section id="modal-presentations">
+<h2>Handling Modal Presentations</h2>
+
+<p>Push navigation via <code>NavigationPath</code> only covers one presentation style. Real apps also need sheets and full-screen covers. The router handles these via optional <code>Route</code> state.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Sheet and FullScreenCover through Router</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">struct</span> <span class="tp">RootView</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">NavigationStack</span>(path: $router.path) {
+            <span class="tp">HomeView</span>()
+                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                    viewForRoute(route)
+                }
+        }
+        <span class="cm">// Sheet presentation</span>
+        .sheet(item: $router.presentedSheet) { route <span class="kw">in</span>
+            <span class="tp">NavigationStack</span> {
+                viewForRoute(route)
+            }
+        }
+        <span class="cm">// Full-screen cover presentation</span>
+        .fullScreenCover(item: $router.presentedCover) { route <span class="kw">in</span>
+            <span class="tp">NavigationStack</span> {
+                viewForRoute(route)
+            }
+        }
+        .environment(router)
+    }
+}
+</code></pre>
+</div>
+
+<p>For this to work, <code>Route</code> must also conform to <code>Identifiable</code>. A simple approach:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Making Route Identifiable</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">extension</span> <span class="tp">Route</span>: <span class="tp">Identifiable</span> {
+    <span class="kw">var</span> id: <span class="tp">Int</span> { hashValue }
+}
+</code></pre>
+</div>
+
+<h3>Triggering Modals from Any View</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Using the Router for Different Presentation Styles</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">struct</span> <span class="tp">SettingsView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">List</span> {
+            <span class="cm">// Push navigation</span>
+            <span class="tp">Button</span>(<span class="st">"Edit Profile"</span>) {
+                router.navigate(to: .profile(userID: <span class="st">"me"</span>))
+            }
+
+            <span class="cm">// Sheet presentation</span>
+            <span class="tp">Button</span>(<span class="st">"Terms of Service"</span>) {
+                router.presentSheet(.webView(
+                    url: <span class="tp">URL</span>(string: <span class="st">"https://example.com/tos"</span>)!
+                ))
+            }
+
+            <span class="cm">// Full-screen cover</span>
+            <span class="tp">Button</span>(<span class="st">"Onboarding"</span>) {
+                router.presentFullScreenCover(.home)
+            }
+        }
+        .navigationTitle(<span class="st">"Settings"</span>)
+    }
+}
+</code></pre>
+</div>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TB
+    UA["User Action<br/>(Button tap, event, deep link)"] --> Router
+    Router --> Decision{Presentation Style?}
+    Decision -->|"navigate(to:)"| Push["Append to<br/>NavigationPath"]
+    Decision -->|"presentSheet(_:)"| Sheet["Set presentedSheet"]
+    Decision -->|"presentFullScreenCover(_:)"| Cover["Set presentedCover"]
+    Push --> NS["NavigationStack<br/>observes path"]
+    Sheet --> SM[".sheet(item:)<br/>observes presentedSheet"]
+    Cover --> FC[".fullScreenCover(item:)<br/>observes presentedCover"]
+    NS --> VF["View Factory<br/>(switch on Route)"]
+    SM --> VF
+    FC --> VF
+    VF --> View["Resolved SwiftUI View"]
+
+    style UA fill:#e8f4fd,stroke:#0071e3,color:#1d1d1f
+    style Router fill:#0071e3,stroke:#0058b0,color:#fff
+    style Decision fill:#fff8e6,stroke:#ff9500,color:#1d1d1f
+    style VF fill:#f3e8ff,stroke:#af52de,color:#1d1d1f
+    style View fill:#e8faf0,stroke:#34c759,color:#1d1d1f
+  </div>
+  <p class="diagram-caption">Figure 2: Navigation flow from user action through router to view resolution for push, sheet, and full-screen cover presentations.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DEEP LINKING -->
+<!-- ============================================================ -->
+<section id="deep-linking">
+<h2>Deep Linking</h2>
+
+<p>One of the strongest benefits of enum-based routing is clean deep linking. Since every destination is a case in an enum, converting a URL into navigation actions is a straightforward parsing exercise.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Deep Link Handler</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">extension</span> <span class="tp">Router</span> {
+
+    <span class="cm">/// Parse a deep link URL and navigate accordingly.</span>
+    <span class="cm">/// Example URLs:</span>
+    <span class="cm">///   myapp://item/abc-123</span>
+    <span class="cm">///   myapp://profile/user42</span>
+    <span class="cm">///   myapp://settings</span>
+    <span class="kw">func</span> <span class="fn">handleDeepLink</span>(_ url: <span class="tp">URL</span>) {
+        <span class="cm">// Reset to root first for a clean slate</span>
+        popToRoot()
+
+        <span class="kw">guard let</span> host = url.host() <span class="kw">else</span> { <span class="kw">return</span> }
+        <span class="kw">let</span> pathComponents = url.pathComponents.filter { $0 != <span class="st">"/"</span> }
+
+        <span class="kw">switch</span> host {
+        <span class="kw">case</span> <span class="st">"item"</span>:
+            <span class="kw">if let</span> itemID = pathComponents.first {
+                <span class="cm">// In a real app, look up the item from a store</span>
+                <span class="kw">let</span> item = <span class="tp">Item</span>(
+                    id: <span class="tp">UUID</span>(uuidString: itemID) ?? <span class="tp">UUID</span>(),
+                    title: <span class="st">"Deep Linked Item"</span>,
+                    subtitle: <span class="st">"Loaded from deep link"</span>,
+                    imageURL: <span class="kw">nil</span>
+                )
+                navigate(to: .detail(item: item))
+            }
+
+        <span class="kw">case</span> <span class="st">"profile"</span>:
+            <span class="kw">if let</span> userID = pathComponents.first {
+                navigate(to: .profile(userID: userID))
+            }
+
+        <span class="kw">case</span> <span class="st">"settings"</span>:
+            navigate(to: .settings)
+
+        <span class="kw">default</span>:
+            <span class="kw">break</span>
+        }
+    }
+}
+</code></pre>
+</div>
+
+<h3>Wiring It Up</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Handling Deep Links in the App</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">@main</span>
+<span class="kw">struct</span> <span class="tp">MyApp</span>: <span class="tp">App</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">Scene</span> {
+        <span class="tp">WindowGroup</span> {
+            <span class="tp">RootView</span>()
+                .environment(router)
+                .onOpenURL { url <span class="kw">in</span>
+                    router.handleDeepLink(url)
+                }
+        }
+    }
+}
+</code></pre>
+</div>
+
+<div class="callout callout-success">
+  <div class="callout-label">Multi-step Deep Links</div>
+  <p>You can construct multi-step navigation stacks by calling <code>navigate(to:)</code> multiple times. For example, a deep link to an item's reviews could push both the detail screen and the reviews screen: <code>navigate(to: .detail(item: item))</code> followed by <code>navigate(to: .reviews(itemID: item.id))</code>.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- NAVIGATION FLOW SEQUENCE DIAGRAM -->
+<!-- ============================================================ -->
+<section id="navigation-flow">
+<h2>Navigation Lifecycle</h2>
+
+<p>Understanding the full cycle of a navigation event helps clarify how the pieces fit together.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+sequenceDiagram
+    participant U as User / Event
+    participant V as SwiftUI View
+    participant R as Router
+    participant NP as NavigationPath
+    participant NS as NavigationStack
+    participant VF as View Factory
+
+    U->>V: Taps button
+    V->>R: router.navigate(to: .detail(item))
+    R->>NP: path.append(.detail(item))
+    NP-->>NS: @Published / @Observable change
+    NS->>VF: .navigationDestination resolves Route
+    VF->>VF: switch route -> DetailView(item:)
+    VF-->>NS: Returns DetailView
+    NS-->>U: Pushes DetailView onto screen
+
+    Note over U,NS: Pop Navigation
+    U->>V: Taps back button (or programmatic pop)
+    V->>R: router.pop()
+    R->>NP: path.removeLast()
+    NP-->>NS: State change triggers pop animation
+    NS-->>U: Returns to previous view
+  </div>
+  <p class="diagram-caption">Figure 3: Sequence diagram showing the complete navigation cycle from user action through router state change to view resolution.</p>
+</div>
+
+<h3>How NavigationStack Observes the Router</h3>
+
+<p>The binding <code>NavigationStack(path: $router.path)</code> creates a two-way connection:</p>
+
+<ul>
+  <li><strong>Programmatic navigation:</strong> When the router appends to <code>path</code>, NavigationStack pushes the corresponding view.</li>
+  <li><strong>User-initiated back:</strong> When the user swipes back or taps the back button, NavigationStack removes the last element from <code>path</code>, keeping the router in sync.</li>
+</ul>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart LR
+    subgraph Router["Router (@Observable)"]
+        NP["NavigationPath<br/>path"]
+        PS["Route?<br/>presentedSheet"]
+        PC["Route?<br/>presentedCover"]
+    end
+
+    subgraph UI["SwiftUI View Tree"]
+        NS["NavigationStack<br/>path: $router.path"]
+        SH[".sheet<br/>item: $router.presentedSheet"]
+        FC[".fullScreenCover<br/>item: $router.presentedCover"]
+        ND[".navigationDestination<br/>for: Route.self"]
+    end
+
+    NP <-->|"Two-way binding"| NS
+    PS <-->|"Two-way binding"| SH
+    PC <-->|"Two-way binding"| FC
+    NS --> ND
+    ND -->|"switch route"| Views["Resolved Views"]
+
+    style Router fill:#e8f4fd,stroke:#0071e3,color:#1d1d1f
+    style UI fill:#f3e8ff,stroke:#af52de,color:#1d1d1f
+  </div>
+  <p class="diagram-caption">Figure 4: How the Router integrates with NavigationStack -- two-way bindings keep programmatic and user-initiated navigation in sync.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TESTING -->
+<!-- ============================================================ -->
+<section id="testing">
+<h2>Testing Navigation Logic</h2>
+
+<p>A major advantage of the router pattern is that navigation logic is completely testable without running UI tests. The router is a plain Swift class. You can verify navigation state in unit tests.</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- RouterTests.swift</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">import</span> XCTest
+<span class="kw">@testable import</span> MyApp
+
+<span class="kw">final class</span> <span class="tp">RouterTests</span>: <span class="tp">XCTestCase</span> {
+    <span class="kw">var</span> router: <span class="tp">Router</span>!
+
+    <span class="kw">override func</span> <span class="fn">setUp</span>() {
+        <span class="kw">super</span>.setUp()
+        router = <span class="tp">Router</span>()
+    }
+
+    <span class="cm">// MARK: - Push Navigation Tests</span>
+
+    <span class="kw">func</span> <span class="fn">testNavigatePushesRoute</span>() {
+        <span class="tp">XCTAssertTrue</span>(router.path.isEmpty)
+
+        router.navigate(to: .settings)
+
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">1</span>)
+    }
+
+    <span class="kw">func</span> <span class="fn">testNavigateMultipleRoutes</span>() {
+        <span class="kw">let</span> item = <span class="tp">Item</span>(
+            id: <span class="tp">UUID</span>(),
+            title: <span class="st">"Test"</span>,
+            subtitle: <span class="st">"Sub"</span>,
+            imageURL: <span class="kw">nil</span>
+        )
+
+        router.navigate(to: .detail(item: item))
+        router.navigate(to: .settings)
+
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">2</span>)
+    }
+
+    <span class="kw">func</span> <span class="fn">testPopRemovesLastRoute</span>() {
+        router.navigate(to: .settings)
+        router.navigate(to: .favorites)
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">2</span>)
+
+        router.pop()
+
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">1</span>)
+    }
+
+    <span class="kw">func</span> <span class="fn">testPopOnEmptyPathDoesNothing</span>() {
+        router.pop()
+        <span class="tp">XCTAssertTrue</span>(router.path.isEmpty)
+    }
+
+    <span class="kw">func</span> <span class="fn">testPopToRootClearsPath</span>() {
+        router.navigate(to: .settings)
+        router.navigate(to: .favorites)
+        router.navigate(to: .profile(userID: <span class="st">"123"</span>))
+
+        router.popToRoot()
+
+        <span class="tp">XCTAssertTrue</span>(router.path.isEmpty)
+    }
+
+    <span class="cm">// MARK: - Modal Tests</span>
+
+    <span class="kw">func</span> <span class="fn">testPresentSheet</span>() {
+        <span class="tp">XCTAssertNil</span>(router.presentedSheet)
+
+        router.presentSheet(.settings)
+
+        <span class="tp">XCTAssertNotNil</span>(router.presentedSheet)
+    }
+
+    <span class="kw">func</span> <span class="fn">testPresentFullScreenCover</span>() {
+        <span class="tp">XCTAssertNil</span>(router.presentedCover)
+
+        router.presentFullScreenCover(.home)
+
+        <span class="tp">XCTAssertNotNil</span>(router.presentedCover)
+    }
+
+    <span class="kw">func</span> <span class="fn">testDismissClearsAllModals</span>() {
+        router.presentSheet(.settings)
+        router.presentFullScreenCover(.home)
+
+        router.dismiss()
+
+        <span class="tp">XCTAssertNil</span>(router.presentedSheet)
+        <span class="tp">XCTAssertNil</span>(router.presentedCover)
+    }
+
+    <span class="cm">// MARK: - Deep Link Tests</span>
+
+    <span class="kw">func</span> <span class="fn">testDeepLinkToSettings</span>() {
+        <span class="kw">let</span> url = <span class="tp">URL</span>(string: <span class="st">"myapp://settings"</span>)!
+
+        router.handleDeepLink(url)
+
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">1</span>)
+    }
+
+    <span class="kw">func</span> <span class="fn">testDeepLinkToProfile</span>() {
+        <span class="kw">let</span> url = <span class="tp">URL</span>(string: <span class="st">"myapp://profile/user42"</span>)!
+
+        router.handleDeepLink(url)
+
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">1</span>)
+    }
+
+    <span class="kw">func</span> <span class="fn">testDeepLinkResetsToRoot</span>() {
+        router.navigate(to: .settings)
+        router.navigate(to: .favorites)
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">2</span>)
+
+        <span class="kw">let</span> url = <span class="tp">URL</span>(string: <span class="st">"myapp://settings"</span>)!
+        router.handleDeepLink(url)
+
+        <span class="cm">// Should have reset and then pushed one route</span>
+        <span class="tp">XCTAssertEqual</span>(router.path.count, <span class="nb">1</span>)
+    }
+}
+</code></pre>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-label">Testing Tip</div>
+  <p>Since <code>NavigationPath</code> is type-erased, you cannot inspect which specific <code>Route</code> values are inside it. You can only check <code>.count</code> and <code>.isEmpty</code>. If you need to assert on specific routes, consider using a typed array <code>[Route]</code> instead of <code>NavigationPath</code> (trading heterogeneous type support for testability).</p>
+</div>
+
+<h3>Using a Typed Array for Full Testability</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Router with Typed Array (for full test inspection)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">Router</span> {
+    <span class="cm">// Use a typed array instead of NavigationPath</span>
+    <span class="cm">// Pro: You can inspect exact route values in tests</span>
+    <span class="cm">// Con: Only supports Route type (no mixed types)</span>
+    <span class="kw">var</span> path: [<span class="tp">Route</span>] = []
+
+    <span class="kw">var</span> presentedSheet: <span class="tp">Route</span>?
+    <span class="kw">var</span> presentedCover: <span class="tp">Route</span>?
+
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">Route</span>) {
+        path.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeAll()
+    }
+}
+
+<span class="cm">// Now in tests you can do:</span>
+<span class="cm">// XCTAssertEqual(router.path.last, .settings)</span>
+</code></pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SCALING -->
+<!-- ============================================================ -->
+<section id="scaling">
+<h2>Scaling to Larger Apps</h2>
+
+<p>As your app grows beyond 10-15 screens, a single flat <code>Route</code> enum can become unwieldy. Here are proven strategies for scaling.</p>
+
+<h3>Strategy 1: Nested Route Enums per Feature</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Nested Route Enums</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">enum</span> <span class="tp">Route</span>: <span class="tp">Hashable</span> {
+    <span class="kw">case</span> shop(<span class="tp">ShopRoute</span>)
+    <span class="kw">case</span> profile(<span class="tp">ProfileRoute</span>)
+    <span class="kw">case</span> settings(<span class="tp">SettingsRoute</span>)
+}
+
+<span class="kw">enum</span> <span class="tp">ShopRoute</span>: <span class="tp">Hashable</span> {
+    <span class="kw">case</span> catalog
+    <span class="kw">case</span> product(id: <span class="tp">String</span>)
+    <span class="kw">case</span> cart
+    <span class="kw">case</span> checkout
+}
+
+<span class="kw">enum</span> <span class="tp">ProfileRoute</span>: <span class="tp">Hashable</span> {
+    <span class="kw">case</span> overview
+    <span class="kw">case</span> editProfile
+    <span class="kw">case</span> orderHistory
+    <span class="kw">case</span> orderDetail(id: <span class="tp">String</span>)
+}
+
+<span class="kw">enum</span> <span class="tp">SettingsRoute</span>: <span class="tp">Hashable</span> {
+    <span class="kw">case</span> general
+    <span class="kw">case</span> notifications
+    <span class="kw">case</span> privacy
+    <span class="kw">case</span> about
+}
+</code></pre>
+</div>
+
+<h3>Strategy 2: Per-Tab Routers</h3>
+
+<p>For tab-based apps, each tab can have its own router with its own <code>NavigationStack</code>:</p>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Per-Tab Routers</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">struct</span> <span class="tp">MainTabView</span>: <span class="tp">View</span> {
+    <span class="kw">@State private var</span> shopRouter = <span class="tp">ShopRouter</span>()
+    <span class="kw">@State private var</span> profileRouter = <span class="tp">ProfileRouter</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">TabView</span> {
+            <span class="tp">ShopTab</span>()
+                .environment(shopRouter)
+                .tabItem { <span class="tp">Label</span>(<span class="st">"Shop"</span>, systemImage: <span class="st">"bag"</span>) }
+
+            <span class="tp">ProfileTab</span>()
+                .environment(profileRouter)
+                .tabItem { <span class="tp">Label</span>(<span class="st">"Profile"</span>, systemImage: <span class="st">"person"</span>) }
+        }
+    }
+}
+</code></pre>
+</div>
+
+<h3>Strategy 3: Protocol-Based Router Abstraction</h3>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Protocol for Shared Router Behavior</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">protocol</span> <span class="tp">Routing</span>: <span class="tp">AnyObject</span> {
+    <span class="kw">associatedtype</span> <span class="tp">RouteType</span>: <span class="tp">Hashable</span>
+
+    <span class="kw">var</span> path: <span class="tp">NavigationPath</span> { <span class="kw">get set</span> }
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">RouteType</span>)
+    <span class="kw">func</span> <span class="fn">pop</span>()
+    <span class="kw">func</span> <span class="fn">popToRoot</span>()
+}
+
+<span class="kw">extension</span> <span class="tp">Routing</span> {
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">RouteType</span>) {
+        path.append(route)
+    }
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeLast(path.count)
+    }
+}
+</code></pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- COMPLETE MINI APP -->
+<!-- ============================================================ -->
+<section id="complete-example">
+<h2>Complete Mini App Example</h2>
+
+<p>Here is a complete, copy-paste-ready SwiftUI app that demonstrates the enum-based router pattern end-to-end. This compiles and runs in Xcode with iOS 17+.</p>
+
+<div class="callout callout-info">
+  <div class="callout-label">Instructions</div>
+  <p>Create a new Xcode project (iOS App, SwiftUI), replace the contents of the generated file with the code below, and run. You will get a working app with push navigation, sheet presentation, full-screen cover, and deep link handling.</p>
+</div>
+
+<div class="code-block">
+  <div class="code-header"><span>Swift -- Complete Mini App (ContentView.swift)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code><span class="kw">import</span> SwiftUI
+
+<span class="cm">// MARK: - Model</span>
+
+<span class="kw">struct</span> <span class="tp">Product</span>: <span class="tp">Identifiable</span>, <span class="tp">Hashable</span> {
+    <span class="kw">let</span> id: <span class="tp">UUID</span>
+    <span class="kw">let</span> name: <span class="tp">String</span>
+    <span class="kw">let</span> price: <span class="tp">Double</span>
+    <span class="kw">let</span> emoji: <span class="tp">String</span>
+}
+
+<span class="kw">extension</span> <span class="tp">Product</span> {
+    <span class="kw">static let</span> samples: [<span class="tp">Product</span>] = [
+        <span class="tp">Product</span>(id: <span class="tp">UUID</span>(), name: <span class="st">"MacBook Pro"</span>,  price: 1999, emoji: <span class="st">"&#x1F4BB;"</span>),
+        <span class="tp">Product</span>(id: <span class="tp">UUID</span>(), name: <span class="st">"iPhone 16"</span>,    price:  999, emoji: <span class="st">"&#x1F4F1;"</span>),
+        <span class="tp">Product</span>(id: <span class="tp">UUID</span>(), name: <span class="st">"AirPods Max"</span>,  price:  549, emoji: <span class="st">"&#x1F3A7;"</span>),
+        <span class="tp">Product</span>(id: <span class="tp">UUID</span>(), name: <span class="st">"iPad Air"</span>,     price:  599, emoji: <span class="st">"&#x1F4F2;"</span>),
+        <span class="tp">Product</span>(id: <span class="tp">UUID</span>(), name: <span class="st">"Apple Watch"</span>,  price:  399, emoji: <span class="st">"&#x231A;"</span>),
+    ]
+}
+
+<span class="cm">// MARK: - Route Enum</span>
+
+<span class="kw">enum</span> <span class="tp">Route</span>: <span class="tp">Hashable</span>, <span class="tp">Identifiable</span> {
+    <span class="kw">case</span> productDetail(<span class="tp">Product</span>)
+    <span class="kw">case</span> profile(userID: <span class="tp">String</span>)
+    <span class="kw">case</span> settings
+    <span class="kw">case</span> favorites
+    <span class="kw">case</span> about
+
+    <span class="kw">var</span> id: <span class="tp">Int</span> { hashValue }
+}
+
+<span class="cm">// MARK: - Router</span>
+
+<span class="kw">@Observable</span>
+<span class="kw">final class</span> <span class="tp">Router</span> {
+    <span class="kw">var</span> path = <span class="tp">NavigationPath</span>()
+    <span class="kw">var</span> presentedSheet: <span class="tp">Route</span>?
+    <span class="kw">var</span> presentedCover: <span class="tp">Route</span>?
+
+    <span class="kw">func</span> <span class="fn">navigate</span>(to route: <span class="tp">Route</span>) {
+        path.append(route)
+    }
+
+    <span class="kw">func</span> <span class="fn">pop</span>() {
+        <span class="kw">guard</span> !path.isEmpty <span class="kw">else</span> { <span class="kw">return</span> }
+        path.removeLast()
+    }
+
+    <span class="kw">func</span> <span class="fn">popToRoot</span>() {
+        path.removeLast(path.count)
+    }
+
+    <span class="kw">func</span> <span class="fn">presentSheet</span>(_ route: <span class="tp">Route</span>) {
+        presentedSheet = route
+    }
+
+    <span class="kw">func</span> <span class="fn">presentFullScreenCover</span>(_ route: <span class="tp">Route</span>) {
+        presentedCover = route
+    }
+
+    <span class="kw">func</span> <span class="fn">dismiss</span>() {
+        presentedSheet = <span class="kw">nil</span>
+        presentedCover = <span class="kw">nil</span>
+    }
+
+    <span class="cm">// Deep link handler</span>
+    <span class="kw">func</span> <span class="fn">handleDeepLink</span>(_ url: <span class="tp">URL</span>) {
+        popToRoot()
+        <span class="kw">guard let</span> host = url.host() <span class="kw">else</span> { <span class="kw">return</span> }
+
+        <span class="kw">switch</span> host {
+        <span class="kw">case</span> <span class="st">"product"</span>:
+            <span class="kw">if let</span> product = <span class="tp">Product</span>.samples.first {
+                navigate(to: .productDetail(product))
+            }
+        <span class="kw">case</span> <span class="st">"profile"</span>:
+            <span class="kw">let</span> userID = url.pathComponents
+                .filter { $0 != <span class="st">"/"</span> }.first ?? <span class="st">"unknown"</span>
+            navigate(to: .profile(userID: userID))
+        <span class="kw">case</span> <span class="st">"settings"</span>:
+            navigate(to: .settings)
+        <span class="kw">default</span>:
+            <span class="kw">break</span>
+        }
+    }
+}
+
+<span class="cm">// MARK: - View Factory</span>
+
+<span class="kw">@ViewBuilder</span>
+<span class="kw">func</span> <span class="fn">viewForRoute</span>(_ route: <span class="tp">Route</span>) -> <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="kw">switch</span> route {
+    <span class="kw">case</span> .productDetail(<span class="kw">let</span> product):
+        <span class="tp">ProductDetailView</span>(product: product)
+    <span class="kw">case</span> .profile(<span class="kw">let</span> userID):
+        <span class="tp">ProfileView</span>(userID: userID)
+    <span class="kw">case</span> .settings:
+        <span class="tp">SettingsView</span>()
+    <span class="kw">case</span> .favorites:
+        <span class="tp">FavoritesView</span>()
+    <span class="kw">case</span> .about:
+        <span class="tp">AboutView</span>()
+    }
+}
+
+<span class="cm">// MARK: - App Entry Point</span>
+
+<span class="kw">@main</span>
+<span class="kw">struct</span> <span class="tp">RouterDemoApp</span>: <span class="tp">App</span> {
+    <span class="kw">@State private var</span> router = <span class="tp">Router</span>()
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">Scene</span> {
+        <span class="tp">WindowGroup</span> {
+            <span class="tp">RootView</span>()
+                .environment(router)
+                .onOpenURL { url <span class="kw">in</span>
+                    router.handleDeepLink(url)
+                }
+        }
+    }
+}
+
+<span class="cm">// MARK: - Root View</span>
+
+<span class="kw">struct</span> <span class="tp">RootView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        @<span class="tp">Bindable</span> <span class="kw">var</span> router = router
+
+        <span class="tp">NavigationStack</span>(path: $router.path) {
+            <span class="tp">HomeView</span>()
+                .navigationDestination(<span class="fn">for</span>: <span class="tp">Route</span>.<span class="kw">self</span>) { route <span class="kw">in</span>
+                    viewForRoute(route)
+                }
+        }
+        .sheet(item: $router.presentedSheet) { route <span class="kw">in</span>
+            <span class="tp">NavigationStack</span> {
+                viewForRoute(route)
+            }
+        }
+        .fullScreenCover(item: $router.presentedCover) { route <span class="kw">in</span>
+            <span class="tp">NavigationStack</span> {
+                viewForRoute(route)
+                    .toolbar {
+                        <span class="tp">ToolbarItem</span>(placement: .cancellationAction) {
+                            <span class="tp">Button</span>(<span class="st">"Close"</span>) { router.dismiss() }
+                        }
+                    }
+            }
+        }
+    }
+}
+
+<span class="cm">// MARK: - Home View</span>
+
+<span class="kw">struct</span> <span class="tp">HomeView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">List</span> {
+            <span class="tp">Section</span>(<span class="st">"Products"</span>) {
+                <span class="tp">ForEach</span>(<span class="tp">Product</span>.samples) { product <span class="kw">in</span>
+                    <span class="tp">Button</span> {
+                        router.navigate(to: .productDetail(product))
+                    } label: {
+                        <span class="tp">HStack</span> {
+                            <span class="tp">Text</span>(product.emoji).font(.title2)
+                            <span class="tp">VStack</span>(alignment: .leading) {
+                                <span class="tp">Text</span>(product.name).font(.headline)
+                                <span class="tp">Text</span>(<span class="st">"$\(product.price, specifier: "%.0f")"</span>)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .tint(.primary)
+                }
+            }
+
+            <span class="tp">Section</span>(<span class="st">"Navigation Examples"</span>) {
+                <span class="cm">// Push navigation</span>
+                <span class="tp">Button</span>(<span class="st">"Settings (Push)"</span>) {
+                    router.navigate(to: .settings)
+                }
+                <span class="tp">Button</span>(<span class="st">"Favorites (Push)"</span>) {
+                    router.navigate(to: .favorites)
+                }
+
+                <span class="cm">// Sheet</span>
+                <span class="tp">Button</span>(<span class="st">"About (Sheet)"</span>) {
+                    router.presentSheet(.about)
+                }
+
+                <span class="cm">// Full-screen cover</span>
+                <span class="tp">Button</span>(<span class="st">"Profile (Full Screen)"</span>) {
+                    router.presentFullScreenCover(
+                        .profile(userID: <span class="st">"current-user"</span>)
+                    )
+                }
+            }
+        }
+        .navigationTitle(<span class="st">"Router Demo"</span>)
+    }
+}
+
+<span class="cm">// MARK: - Product Detail View</span>
+
+<span class="kw">struct</span> <span class="tp">ProductDetailView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+    <span class="kw">let</span> product: <span class="tp">Product</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">VStack</span>(spacing: <span class="nb">24</span>) {
+            <span class="tp">Text</span>(product.emoji).font(.system(size: <span class="nb">80</span>))
+            <span class="tp">Text</span>(product.name).font(.largeTitle.bold())
+            <span class="tp">Text</span>(<span class="st">"$\(product.price, specifier: "%.0f")"</span>)
+                .font(.title2).foregroundStyle(.secondary)
+
+            <span class="tp">Button</span>(<span class="st">"View on Web (Sheet)"</span>) {
+                router.presentSheet(.about)
+            }
+            .buttonStyle(.borderedProminent)
+
+            <span class="tp">Button</span>(<span class="st">"Back to Home"</span>) {
+                router.popToRoot()
+            }
+            .buttonStyle(.bordered)
+        }
+        .navigationTitle(product.name)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+<span class="cm">// MARK: - Settings View</span>
+
+<span class="kw">struct</span> <span class="tp">SettingsView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">List</span> {
+            <span class="tp">Section</span>(<span class="st">"General"</span>) {
+                <span class="tp">Text</span>(<span class="st">"Notifications"</span>)
+                <span class="tp">Text</span>(<span class="st">"Privacy"</span>)
+                <span class="tp">Text</span>(<span class="st">"Appearance"</span>)
+            }
+            <span class="tp">Section</span> {
+                <span class="tp">Button</span>(<span class="st">"View About (Sheet)"</span>) {
+                    router.presentSheet(.about)
+                }
+            }
+        }
+        .navigationTitle(<span class="st">"Settings"</span>)
+    }
+}
+
+<span class="cm">// MARK: - Profile View</span>
+
+<span class="kw">struct</span> <span class="tp">ProfileView</span>: <span class="tp">View</span> {
+    <span class="kw">let</span> userID: <span class="tp">String</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">VStack</span>(spacing: <span class="nb">16</span>) {
+            <span class="tp">Image</span>(systemName: <span class="st">"person.circle.fill"</span>)
+                .font(.system(size: <span class="nb">80</span>))
+                .foregroundStyle(.blue)
+            <span class="tp">Text</span>(<span class="st">"User Profile"</span>).font(.largeTitle.bold())
+            <span class="tp">Text</span>(<span class="st">"ID: \(userID)"</span>)
+                .font(.subheadline).foregroundStyle(.secondary)
+        }
+        .navigationTitle(<span class="st">"Profile"</span>)
+    }
+}
+
+<span class="cm">// MARK: - Favorites View</span>
+
+<span class="kw">struct</span> <span class="tp">FavoritesView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">List</span> {
+            <span class="tp">ForEach</span>(<span class="tp">Product</span>.samples.prefix(<span class="nb">3</span>)) { product <span class="kw">in</span>
+                <span class="tp">Button</span> {
+                    router.navigate(to: .productDetail(product))
+                } label: {
+                    <span class="tp">Label</span>(product.name, systemImage: <span class="st">"heart.fill"</span>)
+                        .tint(.primary)
+                }
+            }
+        }
+        .navigationTitle(<span class="st">"Favorites"</span>)
+    }
+}
+
+<span class="cm">// MARK: - About View</span>
+
+<span class="kw">struct</span> <span class="tp">AboutView</span>: <span class="tp">View</span> {
+    <span class="kw">@Environment</span>(<span class="tp">Router</span>.<span class="kw">self</span>) <span class="kw">private var</span> router
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+        <span class="tp">VStack</span>(spacing: <span class="nb">16</span>) {
+            <span class="tp">Image</span>(systemName: <span class="st">"info.circle"</span>)
+                .font(.system(size: <span class="nb">60</span>))
+                .foregroundStyle(.blue)
+            <span class="tp">Text</span>(<span class="st">"Router Demo App"</span>).font(.title.bold())
+            <span class="tp">Text</span>(<span class="st">"v1.0 -- Demonstrating the Enum-Based Router Pattern"</span>)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            <span class="tp">Button</span>(<span class="st">"Dismiss"</span>) {
+                router.dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+        .navigationTitle(<span class="st">"About"</span>)
+    }
+}
+</code></pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TRADEOFF ANALYSIS -->
+<!-- ============================================================ -->
+<section id="tradeoffs">
+<h2>Tradeoff Analysis</h2>
+
+<p>How does the enum-based router compare to the alternatives?</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Criteria</th>
+      <th>Basic NavigationStack</th>
+      <th>Enum-Based Router</th>
+      <th>Coordinator Pattern</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Complexity</strong></td>
+      <td>Low</td>
+      <td>Medium</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td><strong>Type safety</strong></td>
+      <td>Partial</td>
+      <td>Full (compiler-enforced)</td>
+      <td>Full</td>
+    </tr>
+    <tr>
+      <td><strong>Testability</strong></td>
+      <td>Poor (tied to views)</td>
+      <td>Good (unit test router)</td>
+      <td>Excellent (isolated)</td>
+    </tr>
+    <tr>
+      <td><strong>Deep linking</strong></td>
+      <td>Manual, fragile</td>
+      <td>Clean URL-to-enum mapping</td>
+      <td>Clean, delegated</td>
+    </tr>
+    <tr>
+      <td><strong>View coupling</strong></td>
+      <td>High (views know destinations)</td>
+      <td>Low (views call router)</td>
+      <td>None (coordinator decides)</td>
+    </tr>
+    <tr>
+      <td><strong>Modal support</strong></td>
+      <td>Ad-hoc per view</td>
+      <td>Centralized in router</td>
+      <td>Centralized in coordinator</td>
+    </tr>
+    <tr>
+      <td><strong>Learning curve</strong></td>
+      <td>Minimal</td>
+      <td>Moderate</td>
+      <td>Steep</td>
+    </tr>
+    <tr>
+      <td><strong>Boilerplate</strong></td>
+      <td>Minimal</td>
+      <td>Moderate</td>
+      <td>Significant</td>
+    </tr>
+    <tr>
+      <td><strong>Scales to 50+ screens</strong></td>
+      <td>Poorly</td>
+      <td>Well (with nesting)</td>
+      <td>Very well</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="comparison-grid">
+  <div class="comparison-card">
+    <span class="tag tag-pro">Advantages</span>
+    <h4>What the Router Pattern Does Well</h4>
+    <ul>
+      <li>Compiler-enforced exhaustive routing -- add a case, get build errors everywhere it needs handling</li>
+      <li>Single source of truth for all navigation state</li>
+      <li>Clean deep linking via URL-to-enum parsing</li>
+      <li>Unit-testable navigation logic with no UI dependencies</li>
+      <li>Works naturally with SwiftUI's declarative model</li>
+      <li>Associated values eliminate data-passing hacks</li>
+      <li>Easy programmatic navigation (after async events, push notifications, etc.)</li>
+    </ul>
+  </div>
+  <div class="comparison-card">
+    <span class="tag tag-con">Limitations</span>
+    <h4>Where It Falls Short</h4>
+    <ul>
+      <li><code>NavigationPath</code> is type-erased, limiting route inspection in tests</li>
+      <li>A single large enum can become unwieldy (mitigated by nesting)</li>
+      <li>Adding a new screen requires touching the enum and every switch</li>
+      <li>No built-in navigation guards or middleware (must add manually)</li>
+      <li>Sheet/cover modals need separate state -- not as unified as push navigation</li>
+      <li>iOS 16+ only (NavigationStack requirement)</li>
+    </ul>
+  </div>
+  <div class="comparison-card">
+    <span class="tag tag-neutral">vs. Coordinator Pattern</span>
+    <h4>When to Choose the Coordinator Instead</h4>
+    <ul>
+      <li>You need per-flow encapsulated navigation (e.g., onboarding, checkout)</li>
+      <li>Multiple teams working on separate feature modules</li>
+      <li>Complex parent-child flow relationships</li>
+      <li>You need navigation middleware (auth guards, analytics interceptors)</li>
+      <li>Your app has 50+ screens with deeply nested flows</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- WHEN TO USE -->
+<!-- ============================================================ -->
+<section id="when-to-use">
+<h2>When to Use This Approach</h2>
+
+<div class="callout callout-success">
+  <div class="callout-label">Use the Enum-Based Router When</div>
+  <ul>
+    <li>Your app has <strong>5 to 30 screens</strong> -- enough to benefit from structure, not so many that you need full coordinator isolation.</li>
+    <li>You want <strong>type-safe, compiler-checked navigation</strong> without heavy architecture.</li>
+    <li>You need <strong>programmatic navigation</strong> (navigate after async operations, handle push notifications, etc.).</li>
+    <li>You want <strong>deep linking</strong> without complex URL routing frameworks.</li>
+    <li>You want to <strong>unit test navigation logic</strong> without UI tests.</li>
+    <li>You are building a <strong>new app targeting iOS 16+</strong>.</li>
+    <li>You want a pattern that the <strong>whole team can learn in a day</strong>.</li>
+  </ul>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-label">Consider Alternatives When</div>
+  <ul>
+    <li>Your app is a <strong>simple 2-3 screen prototype</strong> -- basic <code>NavigationStack</code> with inline links is fine.</li>
+    <li>You have <strong>50+ screens with complex multi-step flows</strong> -- the Coordinator pattern gives better isolation.</li>
+    <li>You need to support <strong>iOS 15 or earlier</strong> -- <code>NavigationStack</code> requires iOS 16.</li>
+    <li>You need <strong>navigation guards, middleware, or interceptors</strong> as first-class concepts -- a coordinator or dedicated navigation framework is better suited.</li>
+  </ul>
+</div>
+
+<p>For the majority of production SwiftUI apps in 2025-2026, the enum-based router is the sweet spot. It provides meaningful structure and testability with a fraction of the complexity of the coordinator pattern, while solving the real problems that basic <code>NavigationStack</code> usage cannot address.</p>
+
+</section>
+
+</main>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  initMermaid();
+}
+
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+// Mermaid init
+function initMermaid() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#1a3a5c',
+      primaryTextColor: '#f5f5f7',
+      primaryBorderColor: '#2997ff',
+      lineColor: '#58a6ff',
+      secondaryColor: '#2c2c2e',
+      tertiaryColor: '#38383a',
+      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif'
+    } : {
+      primaryColor: '#e8f4fd',
+      primaryTextColor: '#1d1d1f',
+      primaryBorderColor: '#0071e3',
+      lineColor: '#0071e3',
+      secondaryColor: '#f5f5f7',
+      tertiaryColor: '#e5e5ea',
+      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif'
+    }
+  });
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const id = 'mermaid-' + i + '-' + Date.now();
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) el.setAttribute('data-original', code);
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+    mermaid.render(id, code).then(({svg}) => {
+      el.innerHTML = svg;
+    }).catch(() => {});
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initMermaid);
+
+// Sidebar toggle (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Active sidebar link tracking
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      const id = entry.target.getAttribute('id');
+      const link = document.querySelector('.sidebar-nav a[href="#' + id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+// Back to top
+window.addEventListener('scroll', () => {
+  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// Copy buttons
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Close sidebar on link click (mobile)
+document.querySelectorAll('.sidebar-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

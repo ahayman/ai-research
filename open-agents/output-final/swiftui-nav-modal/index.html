@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwiftUI Modal Navigation Patterns</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --color-primary: #0071e3;
+  --color-primary-light: #4da3ff;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f7;
+  --color-bg-code: #f0f0f2;
+  --color-bg-sidebar: #fbfbfd;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+  --color-border: #d2d2d7;
+  --color-border-light: #e8e8ed;
+  --color-success: #34c759;
+  --color-warning: #ff9500;
+  --color-danger: #ff3b30;
+  --color-info: #5ac8fa;
+  --color-card-shadow: rgba(0,0,0,0.04);
+  --sidebar-width: 280px;
+  --font-mono: 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+[data-theme="dark"] {
+  --color-primary: #4da3ff;
+  --color-primary-light: #0071e3;
+  --color-bg: #1c1c1e;
+  --color-bg-alt: #2c2c2e;
+  --color-bg-code: #2c2c2e;
+  --color-bg-sidebar: #1c1c1e;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #a1a1a6;
+  --color-border: #48484a;
+  --color-border-light: #3a3a3c;
+  --color-card-shadow: rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border-light);
+  overflow-y: auto; z-index: 100;
+  padding: 24px 0;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: 12px;
+}
+
+.sidebar-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.2px;
+}
+
+.sidebar-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.sidebar-header .back-link:hover { text-decoration: underline; }
+
+.sidebar nav ul { list-style: none; }
+
+.sidebar nav > ul > li { margin-bottom: 4px; }
+
+.sidebar nav a {
+  display: block;
+  padding: 6px 20px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  color: var(--color-primary);
+  background: var(--color-bg-alt);
+  border-left-color: var(--color-primary);
+}
+
+.sidebar nav .nav-group-title {
+  padding: 12px 20px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-secondary);
+}
+
+/* Main Content */
+.main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+}
+
+.top-bar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-light);
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+}
+
+.top-bar .menu-toggle {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  color: var(--color-text);
+  font-size: 24px; padding: 4px;
+}
+
+.theme-toggle {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border-light);
+  border-radius: 20px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text);
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover { border-color: var(--color-primary); }
+
+.content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* Typography */
+h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin: 48px 0 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 12px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+}
+
+p { margin-bottom: 16px; }
+
+.subtitle {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* Code Blocks */
+pre {
+  background: var(--color-bg-code);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  position: relative;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+p code, li code, td code {
+  background: var(--color-bg-code);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  border: 1px solid var(--color-border-light);
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: var(--color-bg-alt); }
+.copy-btn.copied { color: var(--color-success); }
+
+/* Cards & Callouts */
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 1px 3px var(--color-card-shadow);
+}
+
+.callout {
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.callout-info {
+  background: color-mix(in srgb, var(--color-info) 10%, var(--color-bg));
+  border-left: 4px solid var(--color-info);
+}
+
+.callout-warning {
+  background: color-mix(in srgb, var(--color-warning) 10%, var(--color-bg));
+  border-left: 4px solid var(--color-warning);
+}
+
+.callout-danger {
+  background: color-mix(in srgb, var(--color-danger) 10%, var(--color-bg));
+  border-left: 4px solid var(--color-danger);
+}
+
+.callout-success {
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-bg));
+  border-left: 4px solid var(--color-success);
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+th {
+  font-weight: 600;
+  background: var(--color-bg-alt);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+
+tr:hover td { background: var(--color-bg-alt); }
+
+/* Mermaid */
+.mermaid-container {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.mermaid-container .caption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+.mermaid { text-align: center; }
+
+/* Badge / Tag */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.badge-ios16 { background: #e8f5e9; color: #2e7d32; }
+.badge-ios17 { background: #e3f2fd; color: #1565c0; }
+.badge-ios164 { background: #fff3e0; color: #e65100; }
+
+[data-theme="dark"] .badge-ios16 { background: #1b5e20; color: #a5d6a7; }
+[data-theme="dark"] .badge-ios17 { background: #0d47a1; color: #90caf9; }
+[data-theme="dark"] .badge-ios164 { background: #bf360c; color: #ffcc80; }
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { transform: translateY(-2px); }
+
+/* Lists */
+ul, ol { margin: 0 0 16px 24px; }
+li { margin-bottom: 6px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); z-index: 200; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.1); }
+  .main { margin-left: 0; }
+  .top-bar .menu-toggle { display: block; }
+  .content { padding: 24px 20px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+}
+
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 150;
+}
+
+.overlay.active { display: block; }
+
+/* Section anchors */
+section[id] { scroll-margin-top: 60px; }
+</style>
+</head>
+<body>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&#8592; Back to Dashboard</a>
+    <h2>Modal Navigation</h2>
+  </div>
+  <nav>
+    <ul>
+      <div class="nav-group-title">Overview</div>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#presentation-model">Presentation Model</a></li>
+      <li><a href="#comparison-diagram">Type Comparison</a></li>
+      <li><a href="#lifecycle">Presentation Lifecycle</a></li>
+
+      <div class="nav-group-title">Modal Types</div>
+      <li><a href="#sheet">Sheet</a></li>
+      <li><a href="#fullscreencover">Full Screen Cover</a></li>
+      <li><a href="#popover">Popover</a></li>
+      <li><a href="#alert">Alert</a></li>
+      <li><a href="#confirmationdialog">Confirmation Dialog</a></li>
+
+      <div class="nav-group-title">Patterns</div>
+      <li><a href="#boolean-vs-item">Boolean vs Item Binding</a></li>
+      <li><a href="#dismiss-patterns">Dismiss Patterns</a></li>
+      <li><a href="#passing-data">Passing Data Back</a></li>
+      <li><a href="#multiple-sheets">Multiple Sheets</a></li>
+      <li><a href="#chaining-modals">Chaining Modals</a></li>
+      <li><a href="#nav-in-sheet">NavigationStack in Sheet</a></li>
+
+      <div class="nav-group-title">Customization</div>
+      <li><a href="#detents">Presentation Detents</a></li>
+      <li><a href="#drag-indicator">Drag Indicator</a></li>
+      <li><a href="#interactive-dismiss">Disable Dismiss</a></li>
+      <li><a href="#background-corner">Background &amp; Corner Radius</a></li>
+
+      <div class="nav-group-title">Advanced</div>
+      <li><a href="#stacking">Modal Stacking Rules</a></li>
+      <li><a href="#pitfalls">Common Pitfalls</a></li>
+      <li><a href="#decision-guide">Decision Guide</a></li>
+      <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- Main -->
+<div class="main">
+  <div class="top-bar">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">&#9776;</button>
+    <span style="font-weight:600;font-size:14px;">SwiftUI Modal Patterns</span>
+    <button class="theme-toggle" id="themeToggle">Dark Mode</button>
+  </div>
+
+  <div class="content">
+
+    <!-- INTRODUCTION -->
+    <section id="introduction">
+      <h1>SwiftUI Modal Navigation Patterns</h1>
+      <p class="subtitle">A comprehensive guide to sheet, fullScreenCover, popover, alert, and confirmationDialog &mdash; covering presentation APIs, customization options, lifecycle management, and best practices for iOS 16+ and 17+.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Scope</div>
+        This guide covers all five modal presentation types in SwiftUI, including the customization modifiers introduced in iOS 16 and 17. All code examples compile against Xcode 15+ targeting iOS 17 unless noted otherwise.
+      </div>
+    </section>
+
+    <!-- PRESENTATION MODEL -->
+    <section id="presentation-model">
+      <h2>SwiftUI's Modal Presentation Model</h2>
+      <p>SwiftUI presents modal content through <strong>view modifiers</strong> attached to the view hierarchy. Unlike UIKit, where you imperatively call <code>present(_:animated:)</code>, SwiftUI uses a <strong>declarative, state-driven</strong> approach: you bind a piece of state to a presentation modifier, and SwiftUI handles showing and hiding the view when that state changes.</p>
+
+      <p>Every modal modifier follows one of two signatures:</p>
+
+      <ul>
+        <li><strong>Boolean binding</strong> &mdash; <code>.sheet(isPresented: $showSheet) { ... }</code></li>
+        <li><strong>Item binding</strong> &mdash; <code>.sheet(item: $selectedItem) { item in ... }</code></li>
+      </ul>
+
+      <p>The boolean pattern uses a simple <code>Bool</code> toggle. The item pattern uses an <code>Optional&lt;Identifiable&gt;</code> value &mdash; the sheet is shown when the value is non-nil, and dismissed when it becomes nil. Both patterns have an optional <code>onDismiss</code> callback that fires after the modal is fully dismissed.</p>
+
+      <h3>Key Principles</h3>
+      <ul>
+        <li>Modals are <strong>view modifiers</strong> &mdash; they attach to a view in the hierarchy and present content over it.</li>
+        <li>Presentation is driven by <strong>state</strong> &mdash; mutating the bound state triggers transitions automatically.</li>
+        <li>Each view can have <strong>one active sheet modifier</strong> at a time &mdash; multiple <code>.sheet()</code> modifiers on the same view produces undefined behavior (the last one wins).</li>
+        <li>Modals create a <strong>new environment scope</strong> &mdash; presented views get their own environment, which is why <code>@Environment(\.dismiss)</code> works from within the modal.</li>
+        <li>Sheets, fullScreenCovers, and popovers present <strong>view hierarchies</strong>. Alerts and confirmationDialogs present <strong>system-managed UI</strong>.</li>
+      </ul>
+    </section>
+
+    <!-- COMPARISON DIAGRAM -->
+    <section id="comparison-diagram">
+      <h2>Modal Type Comparison</h2>
+      <p>The following diagram summarizes all five modal types and their characteristics.</p>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+graph TB
+    subgraph Modal["SwiftUI Modal Presentation Types"]
+        direction TB
+        S["**Sheet**<br/>Partial-screen card<br/>Swipe-to-dismiss<br/>Supports detents"]
+        F["**FullScreenCover**<br/>Full-screen overlay<br/>No swipe dismiss<br/>Must provide close button"]
+        P["**Popover**<br/>Floating bubble<br/>Arrow anchor<br/>iPad/Mac primary"]
+        A["**Alert**<br/>System dialog<br/>Centered overlay<br/>Title + Message + Buttons"]
+        C["**ConfirmationDialog**<br/>Action sheet style<br/>Slides from bottom<br/>Multiple action buttons"]
+    end
+
+    S --- Props1["iOS 13+ | Custom view content<br/>Half/full height via detents"]
+    F --- Props2["iOS 14+ | Custom view content<br/>Immersive experiences"]
+    P --- Props3["iOS 13+ | Custom view content<br/>Contextual info on iPad/Mac"]
+    A --- Props4["iOS 13+ | System-managed UI<br/>Critical decisions"]
+    C --- Props5["iOS 15+ | System-managed UI<br/>Multiple-choice actions"]
+
+    style S fill:#e3f2fd,stroke:#1565c0,color:#000
+    style F fill:#fce4ec,stroke:#c62828,color:#000
+    style P fill:#f3e5f5,stroke:#6a1b9a,color:#000
+    style A fill:#fff3e0,stroke:#e65100,color:#000
+    style C fill:#e8f5e9,stroke:#2e7d32,color:#000
+    style Props1 fill:#fff,stroke:#ccc,color:#333
+    style Props2 fill:#fff,stroke:#ccc,color:#333
+    style Props3 fill:#fff,stroke:#ccc,color:#333
+    style Props4 fill:#fff,stroke:#ccc,color:#333
+    style Props5 fill:#fff,stroke:#ccc,color:#333
+        </div>
+        <div class="caption">Figure 1 &mdash; Overview of SwiftUI modal presentation types with key characteristics</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Sheet</th><th>FullScreenCover</th><th>Popover</th><th>Alert</th><th>ConfirmationDialog</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Content</td><td>Custom view</td><td>Custom view</td><td>Custom view</td><td>System UI</td><td>System UI</td></tr>
+          <tr><td>Coverage</td><td>Partial / Full</td><td>Full screen</td><td>Floating bubble</td><td>Centered</td><td>Bottom sheet</td></tr>
+          <tr><td>Swipe dismiss</td><td>Yes (default)</td><td>No</td><td>Tap outside</td><td>Button only</td><td>Cancel / tap outside</td></tr>
+          <tr><td>Detents</td><td>Yes (iOS 16+)</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+          <tr><td>Nav support</td><td>Full</td><td>Full</td><td>Limited</td><td>None</td><td>None</td></tr>
+          <tr><td>Platform</td><td>All</td><td>iOS/tvOS</td><td>All (behavior differs)</td><td>All</td><td>All</td></tr>
+          <tr><td>Min iOS</td><td>13</td><td>14</td><td>13</td><td>13</td><td>15</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- LIFECYCLE DIAGRAM -->
+    <section id="lifecycle">
+      <h2>Presentation Lifecycle</h2>
+      <p>Understanding the lifecycle of a modal presentation helps with managing state transitions and cleanup. SwiftUI handles animation and state synchronization automatically, but the <code>onDismiss</code> callback fires <em>after</em> the animation completes.</p>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+stateDiagram-v2
+    [*] --> Dismissed: Initial State
+    Dismissed --> Presenting: State becomes true / non-nil
+    Presenting --> Presented: Animation completes
+    Presented --> Dismissing: State becomes false / nil\nor user swipes down\nor dismiss() called
+    Dismissing --> Dismissed: Animation completes\nonDismiss callback fires
+    Presented --> Presented: Content updates\n(state changes within modal)
+        </div>
+        <div class="caption">Figure 2 &mdash; Modal presentation lifecycle state diagram</div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Important Timing</div>
+        The <code>onDismiss</code> callback fires <strong>after</strong> the dismiss animation completes and the state has been reset. This is the safe place to trigger follow-up presentations or clean up resources. Do not set state for the next modal in the same frame as dismissal &mdash; use <code>onDismiss</code> or <code>DispatchQueue.main.async</code>.
+      </div>
+    </section>
+
+    <!-- SHEET -->
+    <section id="sheet">
+      <h2>Sheet</h2>
+      <p>The <code>.sheet()</code> modifier presents a view as a card that slides up from the bottom. On iPhone, it covers most of the screen by default but leaves a small portion of the parent visible at the top. On iPad and Mac, it appears as a centered card. Starting with iOS 16, you can control the height with <strong>presentation detents</strong>.</p>
+
+      <h3>sheet(isPresented:) &mdash; Boolean Pattern</h3>
+      <pre><code>struct SheetBooleanExample: View {
+    @State private var showSettings = false
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Text("Main Content")
+            }
+            .navigationTitle("Home")
+            .toolbar {
+                Button("Settings") {
+                    showSettings = true
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
+        }
+    }
+}
+
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Preferences") {
+                    Toggle("Notifications", isOn: .constant(true))
+                    Toggle("Dark Mode", isOn: .constant(false))
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>sheet(item:) &mdash; Item-Based Pattern (Recommended)</h3>
+      <pre><code>struct User: Identifiable {
+    let id = UUID()
+    let name: String
+    let email: String
+}
+
+struct SheetItemExample: View {
+    @State private var selectedUser: User?
+
+    let users = [
+        User(name: "Alice", email: "alice@example.com"),
+        User(name: "Bob", email: "bob@example.com"),
+        User(name: "Charlie", email: "charlie@example.com")
+    ]
+
+    var body: some View {
+        NavigationStack {
+            List(users) { user in
+                Button(user.name) {
+                    selectedUser = user
+                }
+            }
+            .navigationTitle("Users")
+            .sheet(item: $selectedUser) { user in
+                // 'user' is non-optional here -- safe to use directly
+                UserDetailSheet(user: user)
+            }
+        }
+    }
+}
+
+struct UserDetailSheet: View {
+    let user: User
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text(user.name)
+                .font(.title.bold())
+            Text(user.email)
+                .foregroundStyle(.secondary)
+            Button("Close") { dismiss() }
+                .buttonStyle(.borderedProminent)
+        }
+        .padding()
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-success">
+        <div class="callout-title">Best Practice</div>
+        Prefer the <strong>item-based pattern</strong> over the boolean pattern. It eliminates the class of bugs where the sheet content does not match the intended data, reduces the number of state properties, and gives you a non-optional value in the closure.
+      </div>
+    </section>
+
+    <!-- FULL SCREEN COVER -->
+    <section id="fullscreencover">
+      <h2>Full Screen Cover</h2>
+      <p><code>.fullScreenCover()</code> presents a view that covers the entire screen. Unlike sheets, there is no swipe-to-dismiss gesture, so you <strong>must</strong> provide an explicit way for the user to dismiss the view. Use this for immersive flows like onboarding, authentication, media players, or multi-step wizards.</p>
+
+      <pre><code>struct FullScreenCoverExample: View {
+    @State private var showOnboarding = false
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Welcome back!")
+                .font(.largeTitle.bold())
+            Button("Show Onboarding") {
+                showOnboarding = true
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .fullScreenCover(isPresented: $showOnboarding) {
+            OnboardingView()
+        }
+    }
+}
+
+struct OnboardingView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var currentPage = 0
+
+    let pages = [
+        ("Welcome", "Get started with our app"),
+        ("Features", "Discover powerful tools"),
+        ("Ready", "You're all set!")
+    ]
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            Text(pages[currentPage].0)
+                .font(.largeTitle.bold())
+            Text(pages[currentPage].1)
+                .font(.title3)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            HStack(spacing: 8) {
+                ForEach(0..&lt;pages.count, id: \.self) { i in
+                    Circle()
+                        .fill(i == currentPage ? Color.accentColor : Color.gray.opacity(0.3))
+                        .frame(width: 8, height: 8)
+                }
+            }
+
+            if currentPage &lt; pages.count - 1 {
+                Button("Next") {
+                    withAnimation { currentPage += 1 }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+            } else {
+                Button("Get Started") {
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+            }
+
+            Button("Skip") { dismiss() }
+                .foregroundStyle(.secondary)
+                .padding(.bottom, 40)
+        }
+        .padding()
+        .interactiveDismissDisabled()
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>fullScreenCover with item binding</h3>
+      <pre><code>enum FullScreenDestination: Identifiable {
+    case login
+    case player(videoURL: URL)
+    case imageViewer(image: String)
+
+    var id: String {
+        switch self {
+        case .login: return "login"
+        case .player(let url): return "player-\(url.absoluteString)"
+        case .imageViewer(let img): return "image-\(img)"
+        }
+    }
+}
+
+struct ContentView: View {
+    @State private var activeDestination: FullScreenDestination?
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Button("Sign In") {
+                activeDestination = .login
+            }
+            Button("Play Video") {
+                activeDestination = .player(
+                    videoURL: URL(string: "https://example.com/video.mp4")!
+                )
+            }
+        }
+        .fullScreenCover(item: $activeDestination) { destination in
+            switch destination {
+            case .login:
+                LoginView()
+            case .player(let url):
+                VideoPlayerView(url: url)
+            case .imageViewer(let image):
+                ImageViewerView(imageName: image)
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- POPOVER -->
+    <section id="popover">
+      <h2>Popover</h2>
+      <p>Popovers display a floating view anchored to a source view with an arrow. On <strong>iPad and Mac</strong>, they appear as a floating bubble. On <strong>iPhone</strong>, SwiftUI automatically adapts popovers to sheets. Use popovers for contextual information, quick actions, or supplementary details.</p>
+
+      <pre><code>struct PopoverExample: View {
+    @State private var showPopover = false
+
+    var body: some View {
+        VStack {
+            Button("Show Info") {
+                showPopover.toggle()
+            }
+            .popover(isPresented: $showPopover,
+                     attachmentAnchor: .point(.bottom),
+                     arrowEdge: .top) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Quick Info")
+                        .font(.headline)
+                    Text("This popover appears anchored to the button. On iPad it floats; on iPhone it becomes a sheet.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Link("Learn More",
+                         destination: URL(string: "https://developer.apple.com")!)
+                }
+                .padding()
+                .frame(width: 280)
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Popover with Item Binding</h3>
+      <pre><code>struct InfoItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let detail: String
+}
+
+struct PopoverItemExample: View {
+    @State private var activeInfo: InfoItem?
+
+    var body: some View {
+        HStack(spacing: 20) {
+            Button("Pricing") {
+                activeInfo = InfoItem(
+                    title: "Pricing",
+                    detail: "Starting at $9.99/month"
+                )
+            }
+            Button("Support") {
+                activeInfo = InfoItem(
+                    title: "Support",
+                    detail: "24/7 email and chat"
+                )
+            }
+        }
+        .popover(item: $activeInfo,
+                 attachmentAnchor: .point(.bottom),
+                 arrowEdge: .top) { info in
+            VStack(alignment: .leading, spacing: 8) {
+                Text(info.title).font(.headline)
+                Text(info.detail).font(.body)
+            }
+            .padding()
+            .frame(minWidth: 200)
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Platform Differences</div>
+        The <code>arrowEdge</code> parameter is only respected on <strong>macOS</strong>. On iPadOS, the system may ignore it and place the popover where it fits best. On iPhone, popovers become sheets automatically.
+      </div>
+
+      <h4>Attachment Anchors</h4>
+      <p>The <code>attachmentAnchor</code> parameter accepts <code>.point(UnitPoint)</code> or <code>.rect(Anchor&lt;CGRect&gt;.Source)</code> values. Common anchor points:</p>
+      <ul>
+        <li><code>.point(.top)</code> &mdash; top center of the source view</li>
+        <li><code>.point(.bottom)</code> &mdash; bottom center</li>
+        <li><code>.point(.leading)</code> / <code>.point(.trailing)</code></li>
+        <li><code>.point(.topLeading)</code>, <code>.point(.bottomTrailing)</code>, etc.</li>
+        <li><code>.rect(.bounds)</code> &mdash; anchored to the full bounds of the view</li>
+      </ul>
+    </section>
+
+    <!-- ALERT -->
+    <section id="alert">
+      <h2>Alert</h2>
+      <p>Alerts present a system-managed dialog centered on screen. They are ideal for <strong>critical decisions</strong> that require the user's attention: confirming destructive actions, displaying error messages, or asking for confirmation. Alert content is limited to a title, optional message, and buttons.</p>
+
+      <pre><code>struct AlertExample: View {
+    @State private var showDeleteAlert = false
+    @State private var itemToDelete: String?
+
+    var body: some View {
+        List {
+            ForEach(["Document A", "Document B", "Document C"], id: \.self) { doc in
+                HStack {
+                    Text(doc)
+                    Spacer()
+                    Button("Delete", role: .destructive) {
+                        itemToDelete = doc
+                        showDeleteAlert = true
+                    }
+                }
+            }
+        }
+        .alert("Delete Document",
+               isPresented: $showDeleteAlert,
+               presenting: itemToDelete) { item in
+            Button("Delete \"\(item)\"", role: .destructive) {
+                // Perform deletion
+                print("Deleted: \(item)")
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { item in
+            Text("Are you sure you want to delete \"\(item)\"? This action cannot be undone.")
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Alert with Text Field (iOS 16+)</h3>
+      <pre><code>struct AlertTextFieldExample: View {
+    @State private var showRenameAlert = false
+    @State private var newName = ""
+
+    var body: some View {
+        Button("Rename Item") {
+            newName = ""
+            showRenameAlert = true
+        }
+        .alert("Rename", isPresented: $showRenameAlert) {
+            TextField("New name", text: $newName)
+            Button("Rename") {
+                print("Renamed to: \(newName)")
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Enter a new name for this item.")
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Error Alert Pattern</h3>
+      <pre><code>struct ErrorAlertExample: View {
+    @State private var appError: AppError?
+
+    var body: some View {
+        Button("Trigger Error") {
+            appError = AppError(
+                title: "Network Error",
+                message: "Unable to reach the server. Check your connection."
+            )
+        }
+        .alert(appError?.title ?? "Error",
+               isPresented: Binding(
+                   get: { appError != nil },
+                   set: { if !$0 { appError = nil } }
+               )) {
+            Button("Retry") {
+                // retry logic
+            }
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(appError?.message ?? "")
+        }
+    }
+}
+
+struct AppError {
+    let title: String
+    let message: String
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- CONFIRMATION DIALOG -->
+    <section id="confirmationdialog">
+      <h2>Confirmation Dialog</h2>
+      <p><code>.confirmationDialog()</code> presents an action-sheet-style interface that slides up from the bottom on iPhone, or appears as a popover on iPad. It is designed for presenting <strong>multiple options</strong> or actions. Unlike alerts, it supports many buttons and can be dismissed by tapping outside.</p>
+
+      <pre><code>struct ConfirmationDialogExample: View {
+    @State private var showSortOptions = false
+    @State private var sortOrder = "Name"
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Text("Sorted by: \(sortOrder)")
+            }
+            .navigationTitle("Items")
+            .toolbar {
+                Button("Sort") {
+                    showSortOptions = true
+                }
+            }
+            .confirmationDialog("Sort By",
+                                isPresented: $showSortOptions,
+                                titleVisibility: .visible) {
+                Button("Name") { sortOrder = "Name" }
+                Button("Date Created") { sortOrder = "Date Created" }
+                Button("Date Modified") { sortOrder = "Date Modified" }
+                Button("Size") { sortOrder = "Size" }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Choose how to sort your items.")
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Destructive Confirmation Dialog</h3>
+      <pre><code>struct DestructiveConfirmationExample: View {
+    @State private var showDeleteOptions = false
+    @State private var photos: [String] = ["IMG_001", "IMG_002", "IMG_003"]
+
+    var body: some View {
+        List {
+            ForEach(photos, id: \.self) { photo in
+                Text(photo)
+            }
+        }
+        .toolbar {
+            Button("Clear") { showDeleteOptions = true }
+        }
+        .confirmationDialog(
+            "Remove Photos",
+            isPresented: $showDeleteOptions,
+            titleVisibility: .visible
+        ) {
+            Button("Delete All", role: .destructive) {
+                photos.removeAll()
+            }
+            Button("Delete Oldest") {
+                photos.removeFirst()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This will permanently remove the selected photos.")
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Title Visibility</div>
+        By default, <code>confirmationDialog</code> hides the title on iPhone. Pass <code>titleVisibility: .visible</code> to show it. The title is always shown on iPad/Mac where the dialog appears as a popover.
+      </div>
+    </section>
+
+    <!-- BOOLEAN VS ITEM -->
+    <section id="boolean-vs-item">
+      <h2>Boolean vs Item-Based Presentation</h2>
+      <p>SwiftUI offers two binding patterns for every modal modifier. Understanding when to use each is crucial for clean, bug-free code.</p>
+
+      <h3>Boolean Pattern</h3>
+      <pre><code>// Simple, works for single-purpose sheets
+@State private var showProfile = false
+
+.sheet(isPresented: $showProfile) {
+    ProfileView()
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Item-Based Pattern</h3>
+      <pre><code>// Scales better, passes data safely
+@State private var selectedItem: Item?
+
+.sheet(item: $selectedItem) { item in
+    // 'item' is non-optional and guaranteed valid
+    ItemDetailView(item: item)
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Boolean Pattern</th><th>Item Pattern</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>State properties</td><td>One Bool per sheet</td><td>One Optional per sheet</td></tr>
+          <tr><td>Data passing</td><td>Separate state + risk of mismatch</td><td>Built-in, type-safe</td></tr>
+          <tr><td>Multiple sheets</td><td>Multiple Bools (messy)</td><td>Single enum (clean)</td></tr>
+          <tr><td>Race conditions</td><td>Possible if data changes before sheet appears</td><td>Captured at presentation time</td></tr>
+          <tr><td>Dismiss behavior</td><td>Set Bool to false</td><td>Set Optional to nil</td></tr>
+          <tr><td>Best for</td><td>Static sheets (settings, about)</td><td>Data-driven sheets (detail, edit)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Enum-Based Pattern for Multiple Sheets</h3>
+      <pre><code>enum SheetType: Identifiable {
+    case profile
+    case settings
+    case editItem(Item)
+
+    var id: String {
+        switch self {
+        case .profile: return "profile"
+        case .settings: return "settings"
+        case .editItem(let item): return "edit-\(item.id)"
+        }
+    }
+}
+
+struct MultiSheetView: View {
+    @State private var activeSheet: SheetType?
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Button("Profile") { activeSheet = .profile }
+            Button("Settings") { activeSheet = .settings }
+            Button("Edit") {
+                activeSheet = .editItem(
+                    Item(id: "1", name: "Example")
+                )
+            }
+        }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .profile:
+                ProfileView()
+            case .settings:
+                SettingsView()
+            case .editItem(let item):
+                EditItemView(item: item)
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-success">
+        <div class="callout-title">Recommendation</div>
+        Use the <strong>enum-based item pattern</strong> as your default approach. It scales from one sheet to many without refactoring, prevents data-binding race conditions, and keeps all sheet destinations visible in a single type.
+      </div>
+    </section>
+
+    <!-- DISMISS PATTERNS -->
+    <section id="dismiss-patterns">
+      <h2>Dismiss Patterns</h2>
+      <p>SwiftUI provides several ways to dismiss a modal presentation. The right choice depends on your architecture and where the dismiss logic lives.</p>
+
+      <h3>@Environment(\.dismiss) &mdash; Standard Approach</h3>
+      <pre><code>struct ModalContent: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack {
+            Text("Modal Content")
+            Button("Close") {
+                dismiss()
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Binding-Based Dismiss</h3>
+      <pre><code>// Parent controls presentation
+struct ParentView: View {
+    @State private var showModal = false
+
+    var body: some View {
+        Button("Show") { showModal = true }
+            .sheet(isPresented: $showModal) {
+                ChildView(isPresented: $showModal)
+            }
+    }
+}
+
+// Child can dismiss by setting binding to false
+struct ChildView: View {
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        Button("Done") {
+            isPresented = false
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Item-Based Dismiss (set to nil)</h3>
+      <pre><code>struct ItemDismissExample: View {
+    @State private var selectedItem: Item?
+
+    var body: some View {
+        Button("Show") {
+            selectedItem = Item(id: "1", name: "Test")
+        }
+        .sheet(item: $selectedItem) { item in
+            VStack {
+                Text(item.name)
+                Button("Close") {
+                    selectedItem = nil  // Dismisses the sheet
+                }
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Prefer @Environment(\.dismiss)</div>
+        The environment-based dismiss action is the most flexible approach. It works in any presented context (sheet, fullScreenCover, NavigationStack) without the child needing to know how it was presented.
+      </div>
+    </section>
+
+    <!-- PASSING DATA BACK -->
+    <section id="passing-data">
+      <h2>Passing Data Back on Dismiss</h2>
+      <p>A common need is for the modal to send data back to the presenting view when it dismisses. Here are the main approaches.</p>
+
+      <h3>Callback Closure</h3>
+      <pre><code>struct AddItemSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var itemName = ""
+    let onSave: (String) -> Void
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField("Item name", text: $itemName)
+            }
+            .navigationTitle("New Item")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave(itemName)
+                        dismiss()
+                    }
+                    .disabled(itemName.isEmpty)
+                }
+            }
+        }
+    }
+}
+
+struct ParentWithCallback: View {
+    @State private var showAddItem = false
+    @State private var items: [String] = []
+
+    var body: some View {
+        List(items, id: \.self) { Text($0) }
+            .toolbar {
+                Button("Add") { showAddItem = true }
+            }
+            .sheet(isPresented: $showAddItem) {
+                AddItemSheet { newItem in
+                    items.append(newItem)
+                }
+            }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Binding Pattern</h3>
+      <pre><code>struct ColorPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selectedColor: Color
+
+    let colors: [Color] = [.red, .blue, .green, .orange, .purple]
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Pick a Color").font(.headline)
+            HStack(spacing: 12) {
+                ForEach(colors, id: \.self) { color in
+                    Circle()
+                        .fill(color)
+                        .frame(width: 44, height: 44)
+                        .overlay(
+                            Circle().stroke(.white, lineWidth:
+                                selectedColor == color ? 3 : 0)
+                        )
+                        .onTapGesture {
+                            selectedColor = color
+                            dismiss()
+                        }
+                }
+            }
+        }
+        .padding()
+    }
+}
+
+struct ParentWithBinding: View {
+    @State private var showPicker = false
+    @State private var currentColor: Color = .blue
+
+    var body: some View {
+        VStack {
+            Circle()
+                .fill(currentColor)
+                .frame(width: 100, height: 100)
+            Button("Change Color") { showPicker = true }
+        }
+        .sheet(isPresented: $showPicker) {
+            ColorPickerSheet(selectedColor: $currentColor)
+                .presentationDetents([.height(200)])
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>onDismiss Callback</h3>
+      <pre><code>struct OnDismissExample: View {
+    @State private var showEditor = false
+    @State private var draftText = ""
+
+    var body: some View {
+        Text("Last draft: \(draftText)")
+            .sheet(isPresented: $showEditor, onDismiss: {
+                // Fires after sheet is fully dismissed
+                print("Editor dismissed. Draft: \(draftText)")
+                saveDraft()
+            }) {
+                TextEditor(text: $draftText)
+                    .padding()
+            }
+    }
+
+    func saveDraft() {
+        // Save logic
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- MULTIPLE SHEETS -->
+    <section id="multiple-sheets">
+      <h2>Multiple Sheets from One View</h2>
+      <p>Presenting multiple different sheets from the same view is a common need but has important rules. The <strong>single enum pattern</strong> is the cleanest solution.</p>
+
+      <div class="callout callout-danger">
+        <div class="callout-title">Do Not: Multiple .sheet() Modifiers on the Same View</div>
+        Attaching more than one <code>.sheet()</code> modifier to the same view is <strong>undefined behavior</strong>. Only the last modifier will work, and Xcode may log a warning: <em>"Currently, only presenting a single sheet is supported."</em>
+      </div>
+
+      <h3>Wrong: Multiple sheet modifiers</h3>
+      <pre><code>// DO NOT DO THIS -- only the last .sheet() will work
+struct BrokenMultiSheet: View {
+    @State private var showA = false
+    @State private var showB = false
+
+    var body: some View {
+        VStack {
+            Button("Sheet A") { showA = true }
+            Button("Sheet B") { showB = true }
+        }
+        .sheet(isPresented: $showA) { Text("A") }  // IGNORED
+        .sheet(isPresented: $showB) { Text("B") }  // Only this works
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Correct: Enum-based single sheet modifier</h3>
+      <pre><code>enum ActiveSheet: Identifiable {
+    case compose
+    case settings
+    case share
+
+    var id: Self { self }
+}
+
+struct CorrectMultiSheet: View {
+    @State private var activeSheet: ActiveSheet?
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Button("Compose") { activeSheet = .compose }
+            Button("Settings") { activeSheet = .settings }
+            Button("Share") { activeSheet = .share }
+        }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .compose:  ComposeView()
+            case .settings: SettingsView()
+            case .share:    ShareView()
+            }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Alternative: Sheet modifiers on different child views</h3>
+      <pre><code>// Each button owns its own sheet -- this works
+struct SplitSheetOwnership: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            SheetButtonA()
+            SheetButtonB()
+        }
+    }
+}
+
+struct SheetButtonA: View {
+    @State private var showSheet = false
+    var body: some View {
+        Button("Sheet A") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                Text("Content A")
+            }
+    }
+}
+
+struct SheetButtonB: View {
+    @State private var showSheet = false
+    var body: some View {
+        Button("Sheet B") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                Text("Content B")
+            }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- CHAINING MODALS -->
+    <section id="chaining-modals">
+      <h2>Chaining Modals</h2>
+      <p>Sometimes you need to dismiss one modal and immediately present another. This requires careful timing because SwiftUI needs to complete the dismiss animation before starting a new presentation.</p>
+
+      <pre><code>struct ChainingModalsExample: View {
+    @State private var showFirstSheet = false
+    @State private var showSecondSheet = false
+
+    var body: some View {
+        Button("Start Flow") {
+            showFirstSheet = true
+        }
+        .sheet(isPresented: $showFirstSheet, onDismiss: {
+            // Present second sheet AFTER first is fully dismissed
+            showSecondSheet = true
+        }) {
+            VStack {
+                Text("Step 1")
+                    .font(.title)
+                Button("Continue to Step 2") {
+                    showFirstSheet = false
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+        }
+        .sheet(isPresented: $showSecondSheet) {
+            VStack {
+                Text("Step 2")
+                    .font(.title)
+                Text("Second sheet presented after first dismissed.")
+            }
+            .padding()
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Timing is Critical</div>
+        The <code>onDismiss</code> callback fires after the dismiss animation completes. This is the only reliable place to trigger the next modal. Do <strong>not</strong> try to dismiss and present in the same action &mdash; the second presentation will be lost.
+      </div>
+
+      <h3>Nested Sheet Chaining</h3>
+      <pre><code>// Present second sheet FROM WITHIN the first sheet
+struct NestedSheetChain: View {
+    @State private var showFirst = false
+
+    var body: some View {
+        Button("Open Flow") { showFirst = true }
+            .sheet(isPresented: $showFirst) {
+                FirstStepView()
+            }
+    }
+}
+
+struct FirstStepView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var showSecond = false
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Step 1").font(.title)
+            Button("Next Step") { showSecond = true }
+                .buttonStyle(.borderedProminent)
+            Button("Cancel") { dismiss() }
+        }
+        .sheet(isPresented: $showSecond) {
+            SecondStepView()
+        }
+    }
+}
+
+struct SecondStepView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Step 2").font(.title)
+            Text("This sheet is stacked on top of Step 1")
+            Button("Done") { dismiss() }
+                .buttonStyle(.borderedProminent)
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- NAV IN SHEET -->
+    <section id="nav-in-sheet">
+      <h2>NavigationStack Inside a Sheet</h2>
+      <p>Wrapping sheet content in a <code>NavigationStack</code> gives you full navigation capabilities inside the modal, including toolbar items, navigation titles, and push/pop navigation.</p>
+
+      <pre><code>struct NavigableSheetExample: View {
+    @State private var showSheet = false
+
+    var body: some View {
+        Button("Open Settings") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                NavigationStack {
+                    SettingsRootView()
+                }
+            }
+    }
+}
+
+struct SettingsRootView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        List {
+            NavigationLink("Account") {
+                AccountSettingsView()
+            }
+            NavigationLink("Notifications") {
+                NotificationSettingsView()
+            }
+            NavigationLink("Privacy") {
+                PrivacySettingsView()
+            }
+            NavigationLink("About") {
+                AboutView()
+            }
+        }
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") { dismiss() }
+            }
+        }
+    }
+}
+
+struct AccountSettingsView: View {
+    var body: some View {
+        Form {
+            Section("Profile") {
+                TextField("Name", text: .constant(""))
+                TextField("Email", text: .constant(""))
+            }
+            Section("Security") {
+                NavigationLink("Change Password") {
+                    Text("Password Change Form")
+                }
+            }
+        }
+        .navigationTitle("Account")
+    }
+}
+
+// Placeholder views
+struct NotificationSettingsView: View {
+    var body: some View { Text("Notifications").navigationTitle("Notifications") }
+}
+struct PrivacySettingsView: View {
+    var body: some View { Text("Privacy").navigationTitle("Privacy") }
+}
+struct AboutView: View {
+    var body: some View { Text("Version 1.0").navigationTitle("About") }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Known Issue: Title Display Mode in Sheets</div>
+        On iOS 17, sheets using <code>NavigationStack</code> initialize with <code>.inline</code> title display mode. If the user partially swipes down and releases, the title may switch to <code>.large</code> style. Use <code>.navigationBarTitleDisplayMode(.inline)</code> explicitly to prevent layout jumps.
+      </div>
+    </section>
+
+    <!-- DETENTS -->
+    <section id="detents">
+      <h2>Presentation Detents <span class="badge badge-ios16">iOS 16+</span></h2>
+      <p>Presentation detents control the height of a sheet. Before iOS 16, sheets were always full-height cards. Now you can create half-sheets, custom-height sheets, and sheets that snap between multiple positions.</p>
+
+      <pre><code>struct DetentsExample: View {
+    @State private var showSheet = false
+
+    var body: some View {
+        Button("Show Bottom Sheet") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                SheetContentView()
+                    .presentationDetents([.medium, .large])
+            }
+    }
+}
+
+struct SheetContentView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Bottom Sheet")
+                .font(.title2.bold())
+            Text("This sheet can be dragged between half and full height.")
+                .foregroundStyle(.secondary)
+            Spacer()
+        }
+        .padding()
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Available Detent Types</h3>
+      <table>
+        <thead>
+          <tr><th>Detent</th><th>Description</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>.large</code></td><td>Full sheet height (default)</td><td><code>.presentationDetents([.large])</code></td></tr>
+          <tr><td><code>.medium</code></td><td>Approximately half screen</td><td><code>.presentationDetents([.medium])</code></td></tr>
+          <tr><td><code>.height(CGFloat)</code></td><td>Fixed pixel height</td><td><code>.presentationDetents([.height(200)])</code></td></tr>
+          <tr><td><code>.fraction(CGFloat)</code></td><td>Fraction of screen height</td><td><code>.presentationDetents([.fraction(0.3)])</code></td></tr>
+          <tr><td><code>.custom(Type)</code></td><td>Custom computed height</td><td>See below</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Custom Detent</h3>
+      <pre><code>struct SmallDetent: CustomPresentationDetent {
+    static func height(in context: Context) -> CGFloat? {
+        return max(context.maxDetentValue * 0.25, 180)
+    }
+}
+
+struct CustomDetentExample: View {
+    @State private var showSheet = false
+
+    var body: some View {
+        Button("Show Custom Sheet") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                Text("Custom height sheet")
+                    .padding()
+                    .presentationDetents([
+                        .custom(SmallDetent.self),
+                        .medium,
+                        .large
+                    ])
+            }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Tracking the Selected Detent</h3>
+      <pre><code>struct DetentTrackingExample: View {
+    @State private var showSheet = false
+    @State private var selectedDetent: PresentationDetent = .medium
+
+    var body: some View {
+        Button("Show Sheet") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                VStack {
+                    Text("Current detent: \(String(describing: selectedDetent))")
+                    if selectedDetent == .medium {
+                        Text("Drag up for more content")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding()
+                .presentationDetents(
+                    [.medium, .large],
+                    selection: $selectedDetent
+                )
+            }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </section>
+
+    <!-- DRAG INDICATOR -->
+    <section id="drag-indicator">
+      <h2>Drag Indicator <span class="badge badge-ios16">iOS 16+</span></h2>
+      <p>The drag indicator (the small horizontal bar at the top of a sheet) is shown automatically when a sheet has multiple detents. You can control its visibility explicitly.</p>
+
+      <pre><code>struct DragIndicatorExample: View {
+    @State private var showSheet = false
+
+    var body: some View {
+        Button("Show Sheet") { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                ContentView()
+                    .presentationDetents([.medium, .large])
+                    // Always show the drag indicator
+                    .presentationDragIndicator(.visible)
+            }
+    }
+}
+
+// Force-hide the drag indicator even with multiple detents:
+// .presentationDragIndicator(.hidden)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <p>Options for <code>.presentationDragIndicator()</code>:</p>
+      <ul>
+        <li><code>.automatic</code> &mdash; System decides (shown for multiple detents)</li>
+        <li><code>.visible</code> &mdash; Always show</li>
+        <li><code>.hidden</code> &mdash; Always hide</li>
+      </ul>
+    </section>
+
+    <!-- INTERACTIVE DISMISS -->
+    <section id="interactive-dismiss">
+      <h2>Disable Interactive Dismiss <span class="badge badge-ios16">iOS 15+</span></h2>
+      <p>By default, users can swipe down to dismiss a sheet. For forms with unsaved data or critical flows, you may want to prevent this.</p>
+
+      <pre><code>struct InteractiveDismissExample: View {
+    @State private var showEditor = false
+
+    var body: some View {
+        Button("Edit Document") { showEditor = true }
+            .sheet(isPresented: $showEditor) {
+                DocumentEditor()
+            }
+    }
+}
+
+struct DocumentEditor: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var text = ""
+    @State private var showDiscardAlert = false
+
+    private var hasChanges: Bool { !text.isEmpty }
+
+    var body: some View {
+        NavigationStack {
+            TextEditor(text: $text)
+                .padding()
+                .navigationTitle("Edit")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            if hasChanges {
+                                showDiscardAlert = true
+                            } else {
+                                dismiss()
+                            }
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            // Save logic
+                            dismiss()
+                        }
+                    }
+                }
+                // Prevent swipe-to-dismiss when there are unsaved changes
+                .interactiveDismissDisabled(hasChanges)
+                .alert("Discard Changes?",
+                       isPresented: $showDiscardAlert) {
+                    Button("Discard", role: .destructive) {
+                        dismiss()
+                    }
+                    Button("Keep Editing", role: .cancel) { }
+                } message: {
+                    Text("You have unsaved changes.")
+                }
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Conditional Disable</div>
+        The modifier accepts a <code>Bool</code> parameter. Pass a computed property like <code>hasChanges</code> to conditionally disable interactive dismiss only when the user has made edits.
+      </div>
+    </section>
+
+    <!-- BACKGROUND & CORNER RADIUS -->
+    <section id="background-corner">
+      <h2>Presentation Background &amp; Corner Radius <span class="badge badge-ios164">iOS 16.4+</span></h2>
+      <p>Starting with iOS 16.4, you can customize the visual appearance of sheets with background materials, colors, and corner radius.</p>
+
+      <pre><code>struct StyledSheetExample: View {
+    @State private var showSheet = false
+
+    var body: some View {
+        ZStack {
+            // Background content visible through translucent sheet
+            LinearGradient(
+                colors: [.blue, .purple, .pink],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            Button("Show Styled Sheet") { showSheet = true }
+                .buttonStyle(.borderedProminent)
+                .tint(.white)
+        }
+        .sheet(isPresented: $showSheet) {
+            VStack(spacing: 16) {
+                Text("Translucent Sheet")
+                    .font(.title2.bold())
+                Text("The gradient behind is visible through the material.")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(32)
+            .presentationDetents([.medium])
+            // Translucent material background
+            .presentationBackground(.ultraThinMaterial)
+            // Custom corner radius
+            .presentationCornerRadius(24)
+            .presentationDragIndicator(.visible)
+        }
+    }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Custom Background View</h3>
+      <pre><code>// Use any ShapeStyle or View as background
+.presentationBackground {
+    LinearGradient(
+        colors: [.blue.opacity(0.3), .purple.opacity(0.3)],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+}
+
+// Solid color
+.presentationBackground(.black)
+
+// Material
+.presentationBackground(.regularMaterial)
+
+// Clear (fully transparent)
+.presentationBackground(.clear)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Available Customization Modifiers Summary</h3>
+      <table>
+        <thead>
+          <tr><th>Modifier</th><th>Purpose</th><th>Min iOS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>.presentationDetents()</code></td><td>Set sheet height options</td><td>16.0</td></tr>
+          <tr><td><code>.presentationDragIndicator()</code></td><td>Show/hide drag handle</td><td>16.0</td></tr>
+          <tr><td><code>.interactiveDismissDisabled()</code></td><td>Prevent swipe dismiss</td><td>15.0</td></tr>
+          <tr><td><code>.presentationBackground()</code></td><td>Custom sheet background</td><td>16.4</td></tr>
+          <tr><td><code>.presentationCornerRadius()</code></td><td>Custom corner radius</td><td>16.4</td></tr>
+          <tr><td><code>.presentationContentInteraction()</code></td><td>Scroll vs resize behavior</td><td>16.4</td></tr>
+          <tr><td><code>.presentationBackgroundInteraction()</code></td><td>Allow interaction behind sheet</td><td>16.4</td></tr>
+          <tr><td><code>.presentationCompactAdaptation()</code></td><td>Control compact-size adaptation</td><td>16.4</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- STACKING -->
+    <section id="stacking">
+      <h2>Modal Stacking Rules</h2>
+      <p>Understanding how modals stack (or do not stack) in SwiftUI is essential for building reliable flows.</p>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+graph TB
+    subgraph Rules["Modal Stacking Behavior"]
+        R1["Rule 1: One .sheet() per view"]
+        R2["Rule 2: Sheets can present sheets<br/>(nested stacking)"]
+        R3["Rule 3: Sequential requires onDismiss"]
+        R4["Rule 4: alert/confirmationDialog<br/>can coexist with sheet"]
+    end
+
+    R1 --> Ex1["View A<br/>.sheet(A) .sheet(B)<br/>= Only B works"]
+    R2 --> Ex2["View A presents Sheet 1<br/>Sheet 1 presents Sheet 2<br/>= Both work (stacked)"]
+    R3 --> Ex3["Dismiss Sheet 1<br/>onDismiss: show Sheet 2<br/>= Sequential presentation"]
+    R4 --> Ex4["View A<br/>.sheet(A) .alert(B)<br/>= Both work independently"]
+
+    style R1 fill:#fce4ec,stroke:#c62828,color:#000
+    style R2 fill:#e8f5e9,stroke:#2e7d32,color:#000
+    style R3 fill:#fff3e0,stroke:#e65100,color:#000
+    style R4 fill:#e3f2fd,stroke:#1565c0,color:#000
+    style Ex1 fill:#fff,stroke:#ccc,color:#333
+    style Ex2 fill:#fff,stroke:#ccc,color:#333
+    style Ex3 fill:#fff,stroke:#ccc,color:#333
+    style Ex4 fill:#fff,stroke:#ccc,color:#333
+        </div>
+        <div class="caption">Figure 3 &mdash; Modal stacking rules and their outcomes</div>
+      </div>
+
+      <h3>Rules Summary</h3>
+      <ol>
+        <li><strong>One sheet modifier per view level.</strong> Multiple <code>.sheet()</code> modifiers on the same view is undefined behavior. Use the enum pattern or move modifiers to child views.</li>
+        <li><strong>Sheets can present sheets.</strong> A sheet can have its own <code>.sheet()</code> modifier, creating a visual stack. The system handles layering automatically.</li>
+        <li><strong>Sequential presentation requires onDismiss.</strong> To dismiss one sheet and show another, use the <code>onDismiss</code> callback of the first sheet to trigger the second.</li>
+        <li><strong>Alerts and confirmationDialogs coexist with sheets.</strong> You can have a <code>.sheet()</code> and an <code>.alert()</code> on the same view. They use different presentation channels.</li>
+        <li><strong>fullScreenCover and sheet cannot coexist on the same view.</strong> They share the same presentation channel. Use child views or the enum pattern.</li>
+      </ol>
+    </section>
+
+    <!-- PITFALLS -->
+    <section id="pitfalls">
+      <h2>Common Pitfalls</h2>
+
+      <div class="card">
+        <h4>1. Multiple .sheet() Modifiers on the Same View</h4>
+        <p><strong>Problem:</strong> Only the last <code>.sheet()</code> modifier takes effect.</p>
+        <p><strong>Fix:</strong> Use a single <code>.sheet(item:)</code> with an enum, or attach sheets to different child views.</p>
+      </div>
+
+      <div class="card">
+        <h4>2. Boolean Binding Data Mismatch</h4>
+        <p><strong>Problem:</strong> With <code>isPresented</code>, you set a separate <code>@State</code> variable for data, but the sheet reads old data on first presentation because the state update and boolean toggle happen in the same render cycle.</p>
+        <p><strong>Fix:</strong> Use the <code>item</code>-based pattern. The item is captured at presentation time, guaranteeing the correct value.</p>
+      </div>
+
+      <div class="card">
+        <h4>3. Attempting to Present Multiple Modals Simultaneously</h4>
+        <p><strong>Problem:</strong> Setting two boolean states to <code>true</code> in the same action to show two sheets. Only one appears.</p>
+        <p><strong>Fix:</strong> SwiftUI supports one sheet at a time per presentation channel. Use <code>onDismiss</code> to sequence them, or nest sheets inside sheets.</p>
+      </div>
+
+      <div class="card">
+        <h4>4. Missing Dismiss Button on fullScreenCover</h4>
+        <p><strong>Problem:</strong> Unlike sheets, full-screen covers have no built-in dismiss gesture. Users get stuck.</p>
+        <p><strong>Fix:</strong> Always provide a visible close or done button when using <code>fullScreenCover</code>.</p>
+      </div>
+
+      <div class="card">
+        <h4>5. NavigationStack Title Glitch in Sheets</h4>
+        <p><strong>Problem:</strong> On iOS 17, the navigation title in a sheet may switch between inline and large after a partial swipe.</p>
+        <p><strong>Fix:</strong> Explicitly set <code>.navigationBarTitleDisplayMode(.inline)</code> on your root view inside the sheet.</p>
+      </div>
+
+      <div class="card">
+        <h4>6. Popover Becoming a Sheet on iPhone</h4>
+        <p><strong>Problem:</strong> Popovers automatically adapt to sheets on compact-width devices (iPhone).</p>
+        <p><strong>Fix:</strong> Use <code>.presentationCompactAdaptation(.none)</code> (iOS 16.4+) to force popover style, or design your content to work as both a popover and a sheet.</p>
+      </div>
+
+      <div class="card">
+        <h4>7. Dismissing and Immediately Presenting</h4>
+        <p><strong>Problem:</strong> Setting <code>showSheetA = false; showSheetB = true</code> in the same action. The second sheet may not appear.</p>
+        <p><strong>Fix:</strong> Use <code>onDismiss</code> on the first sheet to trigger the second presentation after the animation completes.</p>
+      </div>
+
+      <div class="card">
+        <h4>8. Using @State for Sheet Content in Lists</h4>
+        <p><strong>Problem:</strong> In a <code>List</code>, setting <code>@State</code> and toggling a boolean for the sheet causes the wrong item to appear because the state updates after the sheet content closure is evaluated.</p>
+        <p><strong>Fix:</strong> Use <code>.sheet(item:)</code> with the list item directly. The closure receives the correct item as a non-optional parameter.</p>
+      </div>
+    </section>
+
+    <!-- DECISION GUIDE -->
+    <section id="decision-guide">
+      <h2>Decision Guide: Which Modal Should I Use?</h2>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+flowchart TD
+    Start["What are you presenting?"] --> Q1{"Critical decision\nrequiring attention?"}
+    Q1 -->|Yes| Q1a{"How many\noptions?"}
+    Q1a -->|"1-2 buttons"| Alert["Use alert()"]
+    Q1a -->|"3+ options"| ConfDialog["Use confirmationDialog()"]
+    Q1 -->|No| Q2{"Custom view\ncontent?"}
+    Q2 -->|No| Alert
+    Q2 -->|Yes| Q3{"Needs full\nscreen?"}
+    Q3 -->|Yes| FullScreen["Use fullScreenCover()"]
+    Q3 -->|No| Q4{"Contextual info\nanchored to element?"}
+    Q4 -->|Yes| Q5{"iPad / Mac\nprimary target?"}
+    Q5 -->|Yes| Popover["Use popover()"]
+    Q5 -->|No| Sheet["Use sheet()\nwith detents"]
+    Q4 -->|No| Q6{"Need partial\nheight?"}
+    Q6 -->|Yes| SheetDetent["Use sheet()\nwith .presentationDetents()"]
+    Q6 -->|No| SheetFull["Use sheet()"]
+
+    style Alert fill:#fff3e0,stroke:#e65100,color:#000
+    style ConfDialog fill:#e8f5e9,stroke:#2e7d32,color:#000
+    style FullScreen fill:#fce4ec,stroke:#c62828,color:#000
+    style Popover fill:#f3e5f5,stroke:#6a1b9a,color:#000
+    style Sheet fill:#e3f2fd,stroke:#1565c0,color:#000
+    style SheetDetent fill:#e3f2fd,stroke:#1565c0,color:#000
+    style SheetFull fill:#e3f2fd,stroke:#1565c0,color:#000
+        </div>
+        <div class="caption">Figure 4 &mdash; Decision flowchart for choosing the right modal type</div>
+      </div>
+
+      <h3>Quick Reference</h3>
+      <table>
+        <thead>
+          <tr><th>Use Case</th><th>Modal Type</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Delete confirmation</td><td>Alert</td><td>Critical, binary decision</td></tr>
+          <tr><td>Sort/filter options</td><td>ConfirmationDialog</td><td>Multiple non-critical options</td></tr>
+          <tr><td>Edit form</td><td>Sheet</td><td>Custom content, easy dismiss</td></tr>
+          <tr><td>Quick info tooltip</td><td>Popover</td><td>Contextual, anchored to element</td></tr>
+          <tr><td>Onboarding flow</td><td>FullScreenCover</td><td>Immersive, no accidental dismiss</td></tr>
+          <tr><td>Map search results</td><td>Sheet + detents</td><td>Partial height, interactive background</td></tr>
+          <tr><td>Photo viewer</td><td>FullScreenCover</td><td>Full-screen media experience</td></tr>
+          <tr><td>Share options</td><td>ConfirmationDialog</td><td>List of actions, bottom sheet style</td></tr>
+          <tr><td>Settings panel</td><td>Sheet + NavigationStack</td><td>Complex content with navigation</td></tr>
+          <tr><td>Error message</td><td>Alert</td><td>System-styled, requires acknowledgment</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TRADEOFF ANALYSIS -->
+    <section id="tradeoffs">
+      <h2>Tradeoff Analysis</h2>
+
+      <h3>Sheet vs FullScreenCover</h3>
+      <table>
+        <thead>
+          <tr><th>Factor</th><th>Sheet</th><th>FullScreenCover</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>User control</td><td>High (swipe dismiss)</td><td>Low (must tap button)</td></tr>
+          <tr><td>Context preservation</td><td>Parent partially visible</td><td>Parent fully hidden</td></tr>
+          <tr><td>Customization</td><td>Detents, background, corner radius</td><td>None (full screen)</td></tr>
+          <tr><td>Immersion</td><td>Low to medium</td><td>High</td></tr>
+          <tr><td>Accidental dismiss risk</td><td>Higher</td><td>None</td></tr>
+          <tr><td>Best for</td><td>Forms, details, quick tasks</td><td>Onboarding, auth, media</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Alert vs ConfirmationDialog</h3>
+      <table>
+        <thead>
+          <tr><th>Factor</th><th>Alert</th><th>ConfirmationDialog</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Visual style</td><td>Centered dialog</td><td>Bottom action sheet</td></tr>
+          <tr><td>Button count</td><td>1-3 recommended</td><td>Many (scrollable)</td></tr>
+          <tr><td>Dismiss method</td><td>Button tap only</td><td>Cancel button or tap outside</td></tr>
+          <tr><td>Text fields</td><td>Supported (iOS 16+)</td><td>Not supported</td></tr>
+          <tr><td>Urgency</td><td>High (blocks interaction)</td><td>Medium (less intrusive)</td></tr>
+          <tr><td>Title visibility</td><td>Always shown</td><td>Hidden by default (iPhone)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Boolean vs Item Pattern</h3>
+      <table>
+        <thead>
+          <tr><th>Factor</th><th>Boolean (isPresented)</th><th>Item-based</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Simplicity</td><td>Simpler for one sheet</td><td>Slightly more setup</td></tr>
+          <tr><td>Scalability</td><td>Poor (one Bool per sheet)</td><td>Excellent (enum covers all)</td></tr>
+          <tr><td>Type safety</td><td>Weak (manual data sync)</td><td>Strong (non-optional in closure)</td></tr>
+          <tr><td>Race conditions</td><td>Possible</td><td>Eliminated</td></tr>
+          <tr><td>Refactoring cost</td><td>High when adding sheets</td><td>Low (add enum case)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-success">
+        <div class="callout-title">Summary Recommendation</div>
+        <ul>
+          <li>Start with <strong>sheet(item:)</strong> using an enum for most cases</li>
+          <li>Use <strong>fullScreenCover</strong> for immersive flows where accidental dismiss is unacceptable</li>
+          <li>Use <strong>popover</strong> for contextual info on iPad/Mac apps</li>
+          <li>Use <strong>alert</strong> for critical 1-2 button decisions</li>
+          <li>Use <strong>confirmationDialog</strong> for multi-option action menus</li>
+          <li>Combine <strong>presentationDetents</strong> with sheets for Maps-like bottom sheet experiences</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer style="margin-top:64px;padding:32px 0;border-top:1px solid var(--color-border-light);text-align:center;color:var(--color-text-secondary);font-size:13px;">
+      <p>SwiftUI Modal Navigation Patterns &mdash; Comprehensive Reference</p>
+      <p style="margin-top:4px;">Covers iOS 13 through iOS 17+ APIs. Last updated March 2026.</p>
+    </footer>
+
+  </div><!-- .content -->
+</div><!-- .main -->
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+const saved = localStorage.getItem('theme');
+if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  html.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = 'Light Mode';
+}
+themeToggle.addEventListener('click', () => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeToggle.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  // Re-render mermaid for theme
+  initMermaid();
+});
+
+// Mobile menu
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+});
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Close sidebar on nav click (mobile)
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+  });
+});
+
+// Back to top
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('visible', window.scrollY > 400);
+});
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Copy button
+function copyCode(btn) {
+  const pre = btn.parentElement;
+  const code = pre.querySelector('code');
+  navigator.clipboard.writeText(code.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Mermaid initialization
+function initMermaid() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'default',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    themeVariables: isDark ? {
+      primaryColor: '#4da3ff',
+      primaryTextColor: '#f5f5f7',
+      primaryBorderColor: '#4da3ff',
+      lineColor: '#a1a1a6',
+      secondaryColor: '#2c2c2e',
+      tertiaryColor: '#3a3a3c'
+    } : {
+      primaryColor: '#0071e3',
+      primaryTextColor: '#1d1d1f',
+      primaryBorderColor: '#0071e3',
+      lineColor: '#6e6e73'
+    }
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const raw = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', el.textContent);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = raw;
+  });
+  mermaid.run();
+}
+
+document.addEventListener('DOMContentLoaded', initMermaid);
+</script>
+</body>
+</html>

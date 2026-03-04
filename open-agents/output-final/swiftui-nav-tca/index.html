@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Composable Architecture (TCA) Navigation in SwiftUI</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --color-primary: #0071e3;
+  --color-primary-light: #4d9fef;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f7;
+  --color-bg-code: #f4f4f8;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+  --color-border: #d2d2d7;
+  --color-sidebar-bg: #fbfbfd;
+  --color-sidebar-active: #e8f0fe;
+  --color-card-bg: #ffffff;
+  --color-card-shadow: rgba(0,0,0,0.06);
+  --color-success: #34c759;
+  --color-warning: #ff9500;
+  --color-danger: #ff3b30;
+  --color-info: #5ac8fa;
+  --color-code-keyword: #ad3da4;
+  --color-code-string: #d12f1b;
+  --color-code-type: #4b21b0;
+  --color-code-func: #326da8;
+  --color-code-comment: #707f8c;
+  --color-code-property: #703daa;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Menlo', monospace;
+  --sidebar-width: 280px;
+  --content-max-width: 900px;
+}
+[data-theme="dark"] {
+  --color-primary: #4d9fef;
+  --color-primary-light: #6db3f5;
+  --color-bg: #1c1c1e;
+  --color-bg-alt: #2c2c2e;
+  --color-bg-code: #2c2c2e;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #98989d;
+  --color-border: #48484a;
+  --color-sidebar-bg: #1c1c1e;
+  --color-sidebar-active: #2c3a4a;
+  --color-card-bg: #2c2c2e;
+  --color-card-shadow: rgba(0,0,0,0.3);
+  --color-code-keyword: #fc5fa3;
+  --color-code-string: #fc6a5d;
+  --color-code-type: #b281eb;
+  --color-code-func: #67b7a4;
+  --color-code-comment: #7f8c8d;
+  --color-code-property: #b281eb;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  transition: background 0.3s, color 0.3s;
+}
+/* Sidebar */
+.sidebar {
+  position: fixed; top:0; left:0; width: var(--sidebar-width); height:100vh;
+  background: var(--color-sidebar-bg); border-right:1px solid var(--color-border);
+  overflow-y: auto; z-index:100; padding:20px 0;
+  transition: transform 0.3s, background 0.3s;
+}
+.sidebar-header { padding:0 20px 16px; border-bottom:1px solid var(--color-border); margin-bottom:12px; }
+.sidebar-header h2 { font-size:15px; font-weight:700; color:var(--color-primary); letter-spacing:-0.2px; }
+.sidebar-header .back-link { display:inline-block; font-size:13px; color:var(--color-text-secondary); text-decoration:none; margin-bottom:8px; }
+.sidebar-header .back-link:hover { color:var(--color-primary); }
+.sidebar nav ul { list-style:none; }
+.sidebar nav ul li a {
+  display:block; padding:6px 20px; font-size:13px; color:var(--color-text-secondary);
+  text-decoration:none; border-left:3px solid transparent; transition: all 0.2s;
+}
+.sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+  color:var(--color-primary); background:var(--color-sidebar-active); border-left-color:var(--color-primary);
+}
+.sidebar nav ul li.section-title {
+  padding:12px 20px 4px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px;
+  color:var(--color-text-secondary); font-weight:700;
+}
+/* Main content */
+.main { margin-left:var(--sidebar-width); padding:40px 60px 80px; max-width: calc(var(--content-max-width) + var(--sidebar-width) + 120px); }
+.content { max-width:var(--content-max-width); }
+h1 { font-size:36px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px; line-height:1.2; }
+.subtitle { font-size:18px; color:var(--color-text-secondary); margin-bottom:32px; line-height:1.5; }
+h2 { font-size:26px; font-weight:700; margin-top:56px; margin-bottom:16px; padding-top:16px; border-top:1px solid var(--color-border); letter-spacing:-0.3px; }
+h3 { font-size:20px; font-weight:600; margin-top:32px; margin-bottom:12px; }
+h4 { font-size:16px; font-weight:600; margin-top:24px; margin-bottom:8px; }
+p { margin-bottom:16px; }
+a { color:var(--color-primary); }
+ul, ol { margin:0 0 16px 24px; }
+li { margin-bottom:6px; }
+strong { font-weight:600; }
+/* Code blocks */
+pre {
+  background:var(--color-bg-code); border:1px solid var(--color-border); border-radius:10px;
+  padding:20px; margin:16px 0 24px; overflow-x:auto; position:relative; font-size:13px; line-height:1.6;
+}
+pre code { font-family:var(--font-mono); color:var(--color-text); }
+code { font-family:var(--font-mono); font-size:0.9em; background:var(--color-bg-code); padding:2px 6px; border-radius:4px; }
+pre code { background:none; padding:0; }
+.copy-btn {
+  position:absolute; top:10px; right:10px; background:var(--color-bg-alt); border:1px solid var(--color-border);
+  border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; color:var(--color-text-secondary);
+  transition:all 0.2s; font-family:var(--font-sans);
+}
+.copy-btn:hover { background:var(--color-primary); color:#fff; border-color:var(--color-primary); }
+/* Syntax highlighting */
+.kw { color:var(--color-code-keyword); font-weight:600; }
+.tp { color:var(--color-code-type); }
+.fn { color:var(--color-code-func); }
+.str { color:var(--color-code-string); }
+.cm { color:var(--color-code-comment); font-style:italic; }
+.pr { color:var(--color-code-property); }
+/* Callouts */
+.callout {
+  border-radius:10px; padding:16px 20px; margin:20px 0; border-left:4px solid;
+}
+.callout-info { background:rgba(90,200,250,0.08); border-color:var(--color-info); }
+.callout-warning { background:rgba(255,149,0,0.08); border-color:var(--color-warning); }
+.callout-success { background:rgba(52,199,89,0.08); border-color:var(--color-success); }
+.callout-danger { background:rgba(255,59,48,0.08); border-color:var(--color-danger); }
+.callout-title { font-weight:700; margin-bottom:6px; font-size:14px; }
+.callout p:last-child { margin-bottom:0; }
+/* Diagram container */
+.diagram-container { margin:24px 0; text-align:center; }
+.diagram-container .mermaid { display:inline-block; }
+.diagram-caption { font-size:13px; color:var(--color-text-secondary); margin-top:8px; font-style:italic; }
+/* Cards / comparison tables */
+.comparison-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+.comp-card {
+  background:var(--color-card-bg); border:1px solid var(--color-border); border-radius:10px;
+  padding:20px; box-shadow:0 2px 8px var(--color-card-shadow);
+}
+.comp-card h4 { margin-top:0; color:var(--color-primary); }
+.comp-card ul { margin-left:16px; }
+/* Tradeoff table */
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+th, td { padding:10px 14px; text-align:left; border-bottom:1px solid var(--color-border); }
+th { background:var(--color-bg-alt); font-weight:600; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; }
+/* Theme toggle */
+.theme-toggle {
+  position:fixed; top:16px; right:20px; z-index:200; background:var(--color-bg-alt);
+  border:1px solid var(--color-border); border-radius:20px; padding:6px 14px;
+  cursor:pointer; font-size:14px; transition:all 0.2s; color:var(--color-text);
+}
+.theme-toggle:hover { border-color:var(--color-primary); }
+/* Back to top */
+.back-to-top {
+  position:fixed; bottom:24px; right:24px; width:40px; height:40px; border-radius:50%;
+  background:var(--color-primary); color:#fff; border:none; cursor:pointer; font-size:18px;
+  display:none; align-items:center; justify-content:center; z-index:200; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+  transition: opacity 0.3s;
+}
+.back-to-top.visible { display:flex; }
+/* Mobile hamburger */
+.hamburger {
+  display:none; position:fixed; top:14px; left:14px; z-index:200; background:var(--color-bg-alt);
+  border:1px solid var(--color-border); border-radius:8px; padding:8px 10px; cursor:pointer;
+  font-size:18px; color:var(--color-text); line-height:1;
+}
+/* Responsive */
+@media(max-width:1024px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); box-shadow:4px 0 20px rgba(0,0,0,0.2); }
+  .main { margin-left:0; padding:60px 24px 80px; }
+  .hamburger { display:block; }
+  .comparison-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+<button class="theme-toggle" onclick="toggleTheme()">&#9790; Dark</button>
+<button class="back-to-top" onclick="window.scrollTo({top:0})">&#8593;</button>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&larr; Back to Dashboard</a>
+    <h2>TCA Navigation</h2>
+  </div>
+  <nav>
+    <ul>
+      <li class="section-title">Foundations</li>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#philosophy">Navigation as State</a></li>
+      <li><a href="#architecture">TCA Architecture Recap</a></li>
+
+      <li class="section-title">Tree-Based</li>
+      <li><a href="#tree-based">Tree-Based Navigation</a></li>
+      <li><a href="#presents-macro">@Presents Macro</a></li>
+      <li><a href="#sheets-covers">Sheets &amp; Covers</a></li>
+      <li><a href="#alerts">Alerts &amp; Dialogs</a></li>
+
+      <li class="section-title">Stack-Based</li>
+      <li><a href="#stack-based">Stack-Based Navigation</a></li>
+      <li><a href="#stack-state-action">StackState &amp; StackAction</a></li>
+      <li><a href="#navigation-stack-store">NavigationStack in TCA</a></li>
+      <li><a href="#deep-linking">Deep Linking</a></li>
+
+      <li class="section-title">Advanced</li>
+      <li><a href="#enum-paths">Enum-Based Paths</a></li>
+      <li><a href="#tca-coordinators">TCACoordinators</a></li>
+      <li><a href="#testing">Testing Navigation</a></li>
+
+      <li class="section-title">Practical</li>
+      <li><a href="#mini-app">Complete Mini-App</a></li>
+      <li><a href="#tradeoffs">Tradeoff Analysis</a></li>
+      <li><a href="#when-to-use">When to Use TCA Nav</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="main">
+<div class="content">
+
+<!-- ============================================================ -->
+<!-- OVERVIEW -->
+<!-- ============================================================ -->
+<h1 id="overview">The Composable Architecture (TCA) Navigation</h1>
+<p class="subtitle">A comprehensive guide to tree-based, stack-based, and presentation navigation patterns in SwiftUI using Point-Free's Composable Architecture.</p>
+
+<div class="callout callout-info">
+  <div class="callout-title">Library Version</div>
+  <p>This guide covers <strong>swift-composable-architecture 1.x</strong> (the modern API with <code>@Reducer</code> macro, <code>@ObservableState</code>, and <code>@Presents</code>). The API has stabilized significantly since 1.0 and these patterns represent the recommended approach as of 2025.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- PHILOSOPHY -->
+<!-- ============================================================ -->
+<h2 id="philosophy">Navigation as State</h2>
+
+<p>The core insight of TCA's navigation system is deceptively simple: <strong>navigation is just state</strong>. Every screen that can be shown, every sheet that can be presented, every alert that can appear &mdash; all are represented as values in your feature's state. When the state is <code>nil</code>, the destination is dismissed. When the state has a value, the destination is presented.</p>
+
+<p>This has profound implications:</p>
+<ul>
+  <li><strong>Deterministic behavior:</strong> Navigation is entirely driven by state mutations in your reducer. There are no side-channel imperative calls to <code>present()</code> or <code>pushViewController()</code>.</li>
+  <li><strong>Full testability:</strong> You can write unit tests that assert on every navigation transition by simply checking state changes.</li>
+  <li><strong>Deep linking for free:</strong> To deep-link into any screen, you just construct the right state. No URL routing frameworks needed.</li>
+  <li><strong>Automatic cleanup:</strong> When a destination is dismissed (state set to <code>nil</code>), TCA automatically cancels all in-flight effects for that feature.</li>
+</ul>
+
+<p>TCA provides two paradigms for modeling navigation: <strong>tree-based</strong> and <strong>stack-based</strong>. Each has distinct strengths, and most real apps use both.</p>
+
+<!-- ============================================================ -->
+<!-- ARCHITECTURE RECAP -->
+<!-- ============================================================ -->
+<h2 id="architecture">TCA Architecture Recap</h2>
+
+<p>Before diving into navigation, here is a quick refresher on TCA's core components and how navigation fits in.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph TB
+    subgraph "TCA Core"
+        View["SwiftUI View"] -->|"send(action)"| Store
+        Store -->|"observe state"| View
+        Store --> Reducer["@Reducer"]
+        Reducer -->|"mutate"| State["@ObservableState"]
+        Reducer -->|"return"| Effects["Effect&lt;Action&gt;"]
+        Effects -->|"feed back"| Store
+    end
+    subgraph "Navigation Layer"
+        State -->|"@Presents destination?"| ChildState["Child State (optional)"]
+        State -->|"path: StackState"| StackS["Stack of Child States"]
+        Reducer -->|".ifLet"| ChildReducer["Child Reducer"]
+        Reducer -->|".forEach"| PathReducer["Path Reducer"]
+    end
+    style View fill:#e8f0fe,stroke:#4d9fef,color:#1d1d1f
+    style Store fill:#e8f0fe,stroke:#4d9fef,color:#1d1d1f
+    style Reducer fill:#fff3e0,stroke:#ff9500,color:#1d1d1f
+    style State fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style Effects fill:#fce4ec,stroke:#ff3b30,color:#1d1d1f
+    style ChildState fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style StackS fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style ChildReducer fill:#fff3e0,stroke:#ff9500,color:#1d1d1f
+    style PathReducer fill:#fff3e0,stroke:#ff9500,color:#1d1d1f
+  </div>
+  <div class="diagram-caption">Figure 1: TCA core architecture with navigation integration points. State drives everything &mdash; including which screens are shown.</div>
+</div>
+
+<p>The key additions for navigation are:</p>
+<ul>
+  <li><code>@Presents</code> &mdash; marks an optional child state property as a presentation destination (tree-based).</li>
+  <li><code>StackState&lt;Path.State&gt;</code> &mdash; an ordered collection of screens for stack navigation.</li>
+  <li><code>.ifLet</code> &mdash; a reducer operator that runs a child reducer when optional state is non-nil.</li>
+  <li><code>.forEach</code> &mdash; a reducer operator that runs a path reducer for each element in a stack.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- TREE-BASED NAVIGATION -->
+<!-- ============================================================ -->
+<h2 id="tree-based">Tree-Based Navigation</h2>
+
+<p>Tree-based navigation models your app's screens as a tree of optional child states nested inside parent states. A parent feature owns a <code>@Presents var destination: Destination.State?</code> property. When that property is <code>nil</code>, no child is shown. When you assign a value, the child screen appears (as a pushed view, sheet, or cover).</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+stateDiagram-v2
+    [*] --> ParentActive: App Launch
+    ParentActive --> ChildPresented: state.destination = .detail(...)
+    ChildPresented --> ParentActive: state.destination = nil
+    ChildPresented --> GrandchildPresented: child.destination = .edit(...)
+    GrandchildPresented --> ChildPresented: child.destination = nil
+
+    note right of ChildPresented: Optional state drives presentation
+    note right of ParentActive: nil = dismissed
+  </div>
+  <div class="diagram-caption">Figure 2: Tree-based navigation &mdash; optional state (nil vs. value) drives whether each destination is presented or dismissed.</div>
+</div>
+
+<p>Here is a complete example. A <code>ContactListFeature</code> can present an <code>AddContactFeature</code> as a sheet.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">import</span> ComposableArchitecture
+<span class="kw">import</span> SwiftUI
+
+<span class="cm">// MARK: - Child Feature (AddContact)</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">AddContactFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> name: <span class="tp">String</span> = <span class="str">""</span>
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span>: <span class="tp">BindableAction</span> {
+    <span class="kw">case</span> binding(<span class="tp">BindingAction</span>&lt;<span class="tp">State</span>&gt;)
+    <span class="kw">case</span> saveButtonTapped
+    <span class="kw">case</span> cancelButtonTapped
+    <span class="kw">case</span> <span class="kw">delegate</span>(<span class="tp">Delegate</span>)
+
+    <span class="kw">enum</span> <span class="tp">Delegate</span> {
+      <span class="kw">case</span> didSave(name: <span class="tp">String</span>)
+    }
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">BindingReducer</span>()
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .saveButtonTapped:
+        <span class="kw">return</span> .send(.delegate(.didSave(name: state.name)))
+      <span class="kw">case</span> .cancelButtonTapped, .binding, .delegate:
+        <span class="kw">return</span> .none
+      }
+    }
+  }
+}
+
+<span class="cm">// MARK: - Parent Feature (ContactList)</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">ContactListFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> contacts: <span class="tp">IdentifiedArrayOf</span>&lt;<span class="tp">String</span>&gt; = []
+    <span class="cm">// Tree-based: optional child state drives sheet presentation</span>
+    <span class="kw">@Presents</span> <span class="kw">var</span> addContact: <span class="tp">AddContactFeature</span>.<span class="tp">State</span>?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> addButtonTapped
+    <span class="cm">// PresentationAction wraps child actions + dismiss</span>
+    <span class="kw">case</span> addContact(<span class="tp">PresentationAction</span>&lt;<span class="tp">AddContactFeature</span>.<span class="tp">Action</span>&gt;)
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .addButtonTapped:
+        <span class="cm">// Present the child by setting state to non-nil</span>
+        state.addContact = <span class="tp">AddContactFeature</span>.<span class="tp">State</span>()
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .addContact(.presented(.delegate(.didSave(name)))):
+        state.contacts.append(name)
+        state.addContact = <span class="kw">nil</span>  <span class="cm">// Dismiss the sheet</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .addContact(.presented(.cancelButtonTapped)):
+        state.addContact = <span class="kw">nil</span>  <span class="cm">// Dismiss the sheet</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .addContact:
+        <span class="kw">return</span> .none
+      }
+    }
+    <span class="cm">// Connect child reducer: runs AddContactFeature when addContact != nil</span>
+    .ifLet(\.$addContact, action: \.addContact) {
+      <span class="tp">AddContactFeature</span>()
+    }
+  }
+}
+
+<span class="cm">// MARK: - Views</span>
+
+<span class="kw">struct</span> <span class="tp">ContactListView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">ContactListFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">NavigationStack</span> {
+      <span class="tp">List</span>(store.contacts, id: \.<span class="kw">self</span>) { contact <span class="kw">in</span>
+        <span class="tp">Text</span>(contact)
+      }
+      .navigationTitle(<span class="str">"Contacts"</span>)
+      .toolbar {
+        <span class="tp">Button</span>(<span class="str">"Add"</span>) { store.send(.addButtonTapped) }
+      }
+      <span class="cm">// .sheet driven by the optional store</span>
+      .sheet(item: $store.scope(state: \.addContact, action: \.addContact)) { addStore <span class="kw">in</span>
+        <span class="tp">AddContactView</span>(store: addStore)
+      }
+    }
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">AddContactView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">AddContactFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">Form</span> {
+      <span class="tp">TextField</span>(<span class="str">"Name"</span>, text: $store.name)
+      <span class="tp">Button</span>(<span class="str">"Save"</span>) { store.send(.saveButtonTapped) }
+      <span class="tp">Button</span>(<span class="str">"Cancel"</span>) { store.send(.cancelButtonTapped) }
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-success">
+  <div class="callout-title">Key Pattern</div>
+  <p>The parent's state holds <code>@Presents var addContact: AddContactFeature.State?</code>. Setting it to a value presents the sheet; setting it to <code>nil</code> dismisses it. The <code>.ifLet(\.$addContact, action: \.addContact)</code> line connects the child reducer so it runs only when the child is presented. TCA automatically cancels any in-flight effects from the child when the state becomes <code>nil</code>.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- @PRESENTS MACRO -->
+<!-- ============================================================ -->
+<h2 id="presents-macro">The @Presents Macro</h2>
+
+<p><code>@Presents</code> is a property wrapper macro that marks an optional child state as a navigation destination. Under the hood, it creates a projected value (<code>\.$destination</code>) that <code>.ifLet</code> uses to observe and manage the child's lifecycle.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">@ObservableState</span>
+<span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+  <span class="cm">// Each @Presents property is an independent navigation destination</span>
+  <span class="kw">@Presents</span> <span class="kw">var</span> detail: <span class="tp">DetailFeature</span>.<span class="tp">State</span>?
+  <span class="kw">@Presents</span> <span class="kw">var</span> alert: <span class="tp">AlertState</span>&lt;<span class="tp">Action</span>.<span class="tp">Alert</span>&gt;?
+  <span class="kw">@Presents</span> <span class="kw">var</span> confirmDialog: <span class="tp">ConfirmationDialogState</span>&lt;<span class="tp">Action</span>.<span class="tp">ConfirmDialog</span>&gt;?
+}</code></pre>
+
+<p>You can also use an enum <code>Destination</code> when a single UI element can present one of several screens (but only one at a time):</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">ParentFeature</span> {
+  <span class="kw">@Reducer</span>
+  <span class="kw">enum</span> <span class="tp">Destination</span> {
+    <span class="kw">case</span> detail(<span class="tp">DetailFeature</span>)
+    <span class="kw">case</span> edit(<span class="tp">EditFeature</span>)
+    <span class="kw">case</span> alert(<span class="tp">AlertState</span>&lt;<span class="tp">Action</span>.<span class="tp">Alert</span>&gt;)
+  }
+
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">@Presents</span> <span class="kw">var</span> destination: <span class="tp">Destination</span>.<span class="tp">State</span>?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> destination(<span class="tp">PresentationAction</span>&lt;<span class="tp">Destination</span>.<span class="tp">Action</span>&gt;)
+    <span class="kw">case</span> showDetailTapped
+    <span class="kw">case</span> showEditTapped
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .showDetailTapped:
+        state.destination = .detail(<span class="tp">DetailFeature</span>.<span class="tp">State</span>(id: <span class="str">"123"</span>))
+        <span class="kw">return</span> .none
+      <span class="kw">case</span> .showEditTapped:
+        state.destination = .edit(<span class="tp">EditFeature</span>.<span class="tp">State</span>())
+        <span class="kw">return</span> .none
+      <span class="kw">case</span> .destination:
+        <span class="kw">return</span> .none
+      }
+    }
+    .ifLet(\.$destination, action: \.destination)
+  }
+}</code></pre>
+
+<div class="callout callout-info">
+  <div class="callout-title">@Reducer enum</div>
+  <p>When you annotate an enum with <code>@Reducer</code>, TCA automatically synthesizes the <code>State</code> and <code>Action</code> enums and the <code>body</code> reducer for the destination. Each case maps to a child feature's reducer. This dramatically reduces boilerplate compared to earlier versions of TCA.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SHEETS & COVERS -->
+<!-- ============================================================ -->
+<h2 id="sheets-covers">Sheet &amp; Full-Screen Cover Presentation</h2>
+
+<p>TCA provides overloads of SwiftUI's <code>.sheet</code> and <code>.fullScreenCover</code> that accept a scoped store binding instead of a <code>Binding&lt;Bool&gt;</code> or <code>Binding&lt;Item?&gt;</code>.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">HomeFeature</span> {
+  <span class="kw">@Reducer</span>
+  <span class="kw">enum</span> <span class="tp">Destination</span> {
+    <span class="kw">case</span> settings(<span class="tp">SettingsFeature</span>)
+    <span class="kw">case</span> profile(<span class="tp">ProfileFeature</span>)
+  }
+
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">@Presents</span> <span class="kw">var</span> destination: <span class="tp">Destination</span>.<span class="tp">State</span>?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> destination(<span class="tp">PresentationAction</span>&lt;<span class="tp">Destination</span>.<span class="tp">Action</span>&gt;)
+    <span class="kw">case</span> settingsButtonTapped
+    <span class="kw">case</span> profileButtonTapped
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .settingsButtonTapped:
+        state.destination = .settings(<span class="tp">SettingsFeature</span>.<span class="tp">State</span>())
+        <span class="kw">return</span> .none
+      <span class="kw">case</span> .profileButtonTapped:
+        state.destination = .profile(<span class="tp">ProfileFeature</span>.<span class="tp">State</span>())
+        <span class="kw">return</span> .none
+      <span class="kw">case</span> .destination:
+        <span class="kw">return</span> .none
+      }
+    }
+    .ifLet(\.$destination, action: \.destination)
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">HomeView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">HomeFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">VStack</span>(spacing: 20) {
+      <span class="tp">Button</span>(<span class="str">"Settings"</span>) { store.send(.settingsButtonTapped) }
+      <span class="tp">Button</span>(<span class="str">"Profile"</span>) { store.send(.profileButtonTapped) }
+    }
+    <span class="cm">// Sheet for settings</span>
+    .sheet(
+      item: $store.scope(state: \.destination?.settings, action: \.destination.settings)
+    ) { settingsStore <span class="kw">in</span>
+      <span class="tp">SettingsView</span>(store: settingsStore)
+    }
+    <span class="cm">// Full-screen cover for profile</span>
+    .fullScreenCover(
+      item: $store.scope(state: \.destination?.profile, action: \.destination.profile)
+    ) { profileStore <span class="kw">in</span>
+      <span class="tp">ProfileView</span>(store: profileStore)
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-warning">
+  <div class="callout-title">SwiftUI Limitation</div>
+  <p>SwiftUI does not support presenting multiple sheets or covers simultaneously. If your destination enum has multiple cases that present as sheets, only one can be active at a time (which TCA's optional state naturally enforces). If you need truly independent presentations, use separate <code>@Presents</code> properties instead of a single enum.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ALERTS & DIALOGS -->
+<!-- ============================================================ -->
+<h2 id="alerts">Alerts &amp; Confirmation Dialogs</h2>
+
+<p>TCA provides <code>AlertState</code> and <code>ConfirmationDialogState</code> types that describe alerts as pure data. Actions for each button are specified as enum cases, making alerts fully testable.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">ItemFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> item: <span class="tp">Item</span>
+    <span class="kw">@Presents</span> <span class="kw">var</span> alert: <span class="tp">AlertState</span>&lt;<span class="tp">Action</span>.<span class="tp">Alert</span>&gt;?
+    <span class="kw">@Presents</span> <span class="kw">var</span> confirmDialog: <span class="tp">ConfirmationDialogState</span>&lt;<span class="tp">Action</span>.<span class="tp">ConfirmDialog</span>&gt;?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> deleteButtonTapped
+    <span class="kw">case</span> archiveButtonTapped
+    <span class="kw">case</span> alert(<span class="tp">PresentationAction</span>&lt;<span class="tp">Alert</span>&gt;)
+    <span class="kw">case</span> confirmDialog(<span class="tp">PresentationAction</span>&lt;<span class="tp">ConfirmDialog</span>&gt;)
+
+    <span class="kw">enum</span> <span class="tp">Alert</span> {
+      <span class="kw">case</span> confirmDelete
+    }
+
+    <span class="kw">enum</span> <span class="tp">ConfirmDialog</span> {
+      <span class="kw">case</span> confirmArchive
+      <span class="kw">case</span> confirmDeleteInstead
+    }
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .deleteButtonTapped:
+        state.alert = <span class="tp">AlertState</span> {
+          <span class="tp">TextState</span>(<span class="str">"Delete Item?"</span>)
+        } actions: {
+          <span class="tp">ButtonState</span>(role: .destructive, action: .confirmDelete) {
+            <span class="tp">TextState</span>(<span class="str">"Delete"</span>)
+          }
+          <span class="tp">ButtonState</span>(role: .cancel) {
+            <span class="tp">TextState</span>(<span class="str">"Cancel"</span>)
+          }
+        } message: {
+          <span class="tp">TextState</span>(<span class="str">"This action cannot be undone."</span>)
+        }
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .archiveButtonTapped:
+        state.confirmDialog = <span class="tp">ConfirmationDialogState</span> {
+          <span class="tp">TextState</span>(<span class="str">"Archive Options"</span>)
+        } actions: {
+          <span class="tp">ButtonState</span>(action: .confirmArchive) {
+            <span class="tp">TextState</span>(<span class="str">"Archive"</span>)
+          }
+          <span class="tp">ButtonState</span>(role: .destructive, action: .confirmDeleteInstead) {
+            <span class="tp">TextState</span>(<span class="str">"Delete Instead"</span>)
+          }
+          <span class="tp">ButtonState</span>(role: .cancel) {
+            <span class="tp">TextState</span>(<span class="str">"Cancel"</span>)
+          }
+        }
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .alert(.presented(.confirmDelete)):
+        <span class="cm">// Perform deletion logic</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .confirmDialog(.presented(.confirmArchive)):
+        <span class="cm">// Perform archive logic</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .confirmDialog(.presented(.confirmDeleteInstead)):
+        <span class="cm">// Perform deletion logic</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .alert, .confirmDialog:
+        <span class="kw">return</span> .none
+      }
+    }
+    .ifLet(\.$alert, action: \.alert)
+    .ifLet(\.$confirmDialog, action: \.confirmDialog)
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">ItemView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">ItemFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">VStack</span> {
+      <span class="tp">Text</span>(store.item.name)
+      <span class="tp">Button</span>(<span class="str">"Delete"</span>) { store.send(.deleteButtonTapped) }
+      <span class="tp">Button</span>(<span class="str">"Archive"</span>) { store.send(.archiveButtonTapped) }
+    }
+    .alert($store.scope(state: \.alert, action: \.alert))
+    .confirmationDialog($store.scope(state: \.confirmDialog, action: \.confirmDialog))
+  }
+}</code></pre>
+
+<!-- ============================================================ -->
+<!-- STACK-BASED NAVIGATION -->
+<!-- ============================================================ -->
+<h2 id="stack-based">Stack-Based Navigation</h2>
+
+<p>Stack-based navigation models a flat collection of screens pushed onto a navigation stack. Instead of nesting child states inside parents, you maintain a <code>StackState</code> &mdash; essentially an array of heterogeneous screen states. This approach mirrors <code>NavigationStack</code> + <code>NavigationPath</code> in vanilla SwiftUI.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TD
+    Q{"How many destinations?"}
+    Q -->|"1-3, distinct modals/sheets"| TB["Tree-Based Navigation"]
+    Q -->|"Many, or same type stacking"| SB["Stack-Based Navigation"]
+
+    TB --> TB1["Use @Presents + optional state"]
+    TB --> TB2["Use .ifLet in reducer"]
+    TB --> TB3["Use .sheet / .navigationDestination"]
+
+    SB --> SB1["Use StackState + StackAction"]
+    SB --> SB2["Use .forEach in reducer"]
+    SB --> SB3["Use NavigationStack(path:)"]
+
+    TB1 --> Best1["Best for: sheets, alerts,<br/>popovers, shallow push"]
+    SB1 --> Best2["Best for: drill-down lists,<br/>deep linking, recursive nav"]
+
+    style Q fill:#fff3e0,stroke:#ff9500,color:#1d1d1f
+    style TB fill:#e8f0fe,stroke:#4d9fef,color:#1d1d1f
+    style SB fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style Best1 fill:#e8f0fe,stroke:#4d9fef,color:#1d1d1f
+    style Best2 fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+  </div>
+  <div class="diagram-caption">Figure 3: Decision flowchart &mdash; tree-based vs. stack-based navigation in TCA.</div>
+</div>
+
+<h3>When to Choose Stack-Based</h3>
+<ul>
+  <li>You have a list that drills into detail screens of varying types.</li>
+  <li>You need to support deep linking more than 2&ndash;3 levels deep.</li>
+  <li>The same type of screen can appear multiple times in the stack (e.g., folder &rarr; subfolder &rarr; subfolder).</li>
+  <li>You want to pop to root or pop to a specific screen programmatically.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- STACKSTATE & STACKACTION -->
+<!-- ============================================================ -->
+<h2 id="stack-state-action">StackState &amp; StackAction</h2>
+
+<p><code>StackState</code> is a special collection type from TCA that behaves like an array but assigns stable IDs to each element. <code>StackAction</code> is an enum that wraps child actions and includes a special <code>.element(id:action:)</code> case for routing actions to the correct child in the stack.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph LR
+    subgraph "StackState&lt;Path.State&gt;"
+        E0["[0] .list(ListState)"] --> E1["[1] .detail(DetailState)"]
+        E1 --> E2["[2] .edit(EditState)"]
+    end
+    subgraph "StackAction&lt;Path.State, Path.Action&gt;"
+        A1[".element(id: 0, action: .list(...))"]
+        A2[".element(id: 1, action: .detail(...))"]
+        A3[".push(id:, state:)"]
+        A4[".popFrom(id:)"]
+    end
+    style E0 fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style E1 fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+    style E2 fill:#e8f5e9,stroke:#34c759,color:#1d1d1f
+  </div>
+  <div class="diagram-caption">Figure 4: StackState holds an ordered collection of heterogeneous screen states. StackAction routes actions to specific elements by ID.</div>
+</div>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">RootFeature</span> {
+  <span class="cm">// Define all possible screens in the stack</span>
+  <span class="kw">@Reducer</span>
+  <span class="kw">enum</span> <span class="tp">Path</span> {
+    <span class="kw">case</span> detail(<span class="tp">DetailFeature</span>)
+    <span class="kw">case</span> edit(<span class="tp">EditFeature</span>)
+    <span class="kw">case</span> settings(<span class="tp">SettingsFeature</span>)
+  }
+
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> items: <span class="tp">IdentifiedArrayOf</span>&lt;<span class="tp">Item</span>&gt; = []
+    <span class="cm">// The navigation stack state</span>
+    <span class="kw">var</span> path = <span class="tp">StackState</span>&lt;<span class="tp">Path</span>.<span class="tp">State</span>&gt;()
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> itemTapped(<span class="tp">Item</span>)
+    <span class="kw">case</span> settingsButtonTapped
+    <span class="cm">// StackAction wraps child actions + push/pop</span>
+    <span class="kw">case</span> path(<span class="tp">StackActionOf</span>&lt;<span class="tp">Path</span>&gt;)
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> <span class="kw">let</span> .itemTapped(item):
+        <span class="cm">// Push a detail screen onto the stack</span>
+        state.path.append(.detail(<span class="tp">DetailFeature</span>.<span class="tp">State</span>(item: item)))
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .settingsButtonTapped:
+        state.path.append(.settings(<span class="tp">SettingsFeature</span>.<span class="tp">State</span>()))
+        <span class="kw">return</span> .none
+
+      <span class="cm">// Handle delegate actions from children in the stack</span>
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: id, action: .detail(.delegate(.editTapped(item))))):
+        state.path.append(.edit(<span class="tp">EditFeature</span>.<span class="tp">State</span>(item: item)))
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: _, action: .edit(.delegate(.didSave(item))))):
+        <span class="cm">// Update item in parent state and pop back</span>
+        state.items[id: item.id] = item
+        <span class="cm">// Pop the edit screen</span>
+        <span class="kw">let</span> _ = state.path.popLast()
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .path:
+        <span class="kw">return</span> .none
+      }
+    }
+    <span class="cm">// Connect the Path reducer to the stack</span>
+    .forEach(\.path, action: \.path)
+  }
+}</code></pre>
+
+<!-- ============================================================ -->
+<!-- NAVIGATION STACK STORE -->
+<!-- ============================================================ -->
+<h2 id="navigation-stack-store">NavigationStack in TCA</h2>
+
+<p>On the view side, you use SwiftUI's <code>NavigationStack(path:root:destination:)</code> with a store scoped to the path state and action. The destination closure switches on each case of <code>Path.State</code> to render the appropriate view.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">struct</span> <span class="tp">RootView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">RootFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">NavigationStack</span>(path: $store.scope(state: \.path, action: \.path)) {
+      <span class="cm">// Root view of the stack</span>
+      <span class="tp">List</span>(store.items) { item <span class="kw">in</span>
+        <span class="tp">Button</span>(item.name) {
+          store.send(.itemTapped(item))
+        }
+      }
+      .navigationTitle(<span class="str">"Items"</span>)
+      .toolbar {
+        <span class="tp">Button</span>(<span class="str">"Settings"</span>) { store.send(.settingsButtonTapped) }
+      }
+    } destination: { pathStore <span class="kw">in</span>
+      <span class="cm">// Switch on the path case to render the correct view</span>
+      <span class="kw">switch</span> pathStore.case {
+      <span class="kw">case</span> <span class="kw">let</span> .detail(detailStore):
+        <span class="tp">DetailView</span>(store: detailStore)
+      <span class="kw">case</span> <span class="kw">let</span> .edit(editStore):
+        <span class="tp">EditView</span>(store: editStore)
+      <span class="kw">case</span> <span class="kw">let</span> .settings(settingsStore):
+        <span class="tp">SettingsView</span>(store: settingsStore)
+      }
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-info">
+  <div class="callout-title">pathStore.case</div>
+  <p>The <code>.case</code> property is synthesized by the <code>@Reducer</code> macro on the Path enum. It returns a scoped store for whichever case is currently active, enabling exhaustive switching over all possible destinations in the stack.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- DEEP LINKING -->
+<!-- ============================================================ -->
+<h2 id="deep-linking">Deep Linking</h2>
+
+<p>Because navigation is just state, deep linking is trivial: construct the desired <code>StackState</code> and you are done. No URL routing, no coordinator chains &mdash; just data.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="cm">// Deep link to: Root → Detail → Edit</span>
+<span class="kw">let</span> deepLinkedState = <span class="tp">RootFeature</span>.<span class="tp">State</span>(
+  items: myItems,
+  path: <span class="tp">StackState</span>([
+    .detail(<span class="tp">DetailFeature</span>.<span class="tp">State</span>(item: targetItem)),
+    .edit(<span class="tp">EditFeature</span>.<span class="tp">State</span>(item: targetItem)),
+  ])
+)
+
+<span class="cm">// Create a store with that state and the app opens right there</span>
+<span class="kw">let</span> store = <span class="tp">Store</span>(initialState: deepLinkedState) {
+  <span class="tp">RootFeature</span>()
+}
+
+<span class="cm">// Or, at runtime, mutate path to deep link:</span>
+store.send(.deepLink(to: targetItem)) <span class="cm">// in your reducer:</span>
+<span class="cm">// case let .deepLink(to: item):</span>
+<span class="cm">//   state.path.removeAll()</span>
+<span class="cm">//   state.path.append(.detail(DetailFeature.State(item: item)))</span>
+<span class="cm">//   state.path.append(.edit(EditFeature.State(item: item)))</span>
+<span class="cm">//   return .none</span></code></pre>
+
+<div class="callout callout-success">
+  <div class="callout-title">Deep Linking Advantage</div>
+  <p>This is one of TCA's strongest selling points for navigation. In vanilla SwiftUI, deep linking into a <code>NavigationStack</code> multiple levels deep is notoriously difficult, often requiring delays and workarounds. In TCA, you just construct the state array and everything renders correctly.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ENUM PATHS -->
+<!-- ============================================================ -->
+<h2 id="enum-paths">Enum-Based Paths with @Reducer</h2>
+
+<p>The <code>@Reducer enum</code> pattern is the modern, idiomatic way to define all possible navigation destinations in a stack. Each enum case holds a child feature's reducer, and TCA synthesizes the <code>State</code> and <code>Action</code> enums automatically.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="cm">// The @Reducer macro on an enum auto-generates:</span>
+<span class="cm">// - Path.State enum with associated values for each case</span>
+<span class="cm">// - Path.Action enum with associated values for each case</span>
+<span class="cm">// - Path.body reducer that routes to the correct child reducer</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">enum</span> <span class="tp">Path</span> {
+  <span class="kw">case</span> featureA(<span class="tp">FeatureA</span>)
+  <span class="kw">case</span> featureB(<span class="tp">FeatureB</span>)
+  <span class="kw">case</span> featureC(<span class="tp">FeatureC</span>)
+}
+
+<span class="cm">// This is equivalent to writing (but you don't have to!):</span>
+<span class="cm">// enum Path: Reducer {</span>
+<span class="cm">//   enum State: Equatable {</span>
+<span class="cm">//     case featureA(FeatureA.State)</span>
+<span class="cm">//     case featureB(FeatureB.State)</span>
+<span class="cm">//     case featureC(FeatureC.State)</span>
+<span class="cm">//   }</span>
+<span class="cm">//   enum Action {</span>
+<span class="cm">//     case featureA(FeatureA.Action)</span>
+<span class="cm">//     case featureB(FeatureB.Action)</span>
+<span class="cm">//     case featureC(FeatureC.Action)</span>
+<span class="cm">//   }</span>
+<span class="cm">//   var body: some ReducerOf&lt;Self&gt; { ... }</span>
+<span class="cm">// }</span></code></pre>
+
+<!-- ============================================================ -->
+<!-- TCA COORDINATORS -->
+<!-- ============================================================ -->
+<h2 id="tca-coordinators">TCACoordinators Library</h2>
+
+<p><a href="https://github.com/johnpatrickmorgan/TCACoordinators" target="_blank">TCACoordinators</a> is a community library by John Patrick Morgan that brings the coordinator pattern to TCA. It builds on top of TCA's native navigation tools and adds a higher-level abstraction for managing complex flows.</p>
+
+<h3>Why Use It?</h3>
+<ul>
+  <li><strong>Screen isolation:</strong> Individual screen features have zero knowledge of the navigation flow. They just send delegate actions.</li>
+  <li><strong>Reusable coordinators:</strong> Break your app's navigation into composable coordinator units.</li>
+  <li><strong>Complex flows:</strong> Onboarding wizards, authentication flows, multi-step forms become clean to manage.</li>
+  <li><strong>SwiftUI workarounds:</strong> Handles edge cases where SwiftUI doesn't support presenting multiple screens in a single state update (important for deep linking).</li>
+</ul>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">import</span> TCACoordinators
+
+<span class="cm">// Define screens as an enum</span>
+<span class="kw">@Reducer</span>
+<span class="kw">enum</span> <span class="tp">Screen</span> {
+  <span class="kw">case</span> login(<span class="tp">LoginFeature</span>)
+  <span class="kw">case</span> home(<span class="tp">HomeFeature</span>)
+  <span class="kw">case</span> profile(<span class="tp">ProfileFeature</span>)
+}
+
+<span class="cm">// Coordinator manages the flow</span>
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">AppCoordinator</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span>, <span class="tp">IndexedRouterState</span> {
+    <span class="kw">var</span> routes: [<span class="tp">Route</span>&lt;<span class="tp">Screen</span>.<span class="tp">State</span>&gt;] = [
+      .root(.login(<span class="tp">LoginFeature</span>.<span class="tp">State</span>()), embedInNavigationView: <span class="kw">true</span>)
+    ]
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span>: <span class="tp">IndexedRouterAction</span> {
+    <span class="kw">case</span> routeAction(_ index: <span class="tp">Int</span>, action: <span class="tp">Screen</span>.<span class="tp">Action</span>)
+    <span class="kw">case</span> updateRoutes([<span class="tp">Route</span>&lt;<span class="tp">Screen</span>.<span class="tp">State</span>&gt;])
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .routeAction(_, action: .login(.delegate(.didLogin))):
+        state.routes = [
+          .root(.home(<span class="tp">HomeFeature</span>.<span class="tp">State</span>()), embedInNavigationView: <span class="kw">true</span>)
+        ]
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .routeAction(_, action: .home(.delegate(.showProfile))):
+        state.routes.push(.profile(<span class="tp">ProfileFeature</span>.<span class="tp">State</span>()))
+        <span class="kw">return</span> .none
+
+      <span class="kw">default</span>:
+        <span class="kw">return</span> .none
+      }
+    }
+    .forEachRoute(\.routes, action: \.routeAction)
+  }
+}
+
+<span class="cm">// View uses TCARouter</span>
+<span class="kw">struct</span> <span class="tp">AppCoordinatorView</span>: <span class="tp">View</span> {
+  <span class="kw">let</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">AppCoordinator</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">TCARouter</span>(store.scope(state: \.routes, action: \.routeAction)) { screen <span class="kw">in</span>
+      <span class="kw">switch</span> screen.case {
+      <span class="kw">case</span> <span class="kw">let</span> .login(store): <span class="tp">LoginView</span>(store: store)
+      <span class="kw">case</span> <span class="kw">let</span> .home(store): <span class="tp">HomeView</span>(store: store)
+      <span class="kw">case</span> <span class="kw">let</span> .profile(store): <span class="tp">ProfileView</span>(store: store)
+      }
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-info">
+  <div class="callout-title">TCACoordinators vs. Native TCA Navigation</div>
+  <p>TCACoordinators is a <em>complementary</em> layer on top of TCA's native tools. For simple apps, native <code>StackState</code> or <code>@Presents</code> is sufficient. Consider TCACoordinators when you have complex multi-step flows, need to swap entire navigation hierarchies (e.g., login &rarr; main app), or want maximum screen isolation.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TESTING NAVIGATION -->
+<!-- ============================================================ -->
+<h2 id="testing">Testing Navigation</h2>
+
+<p>This is where TCA's navigation approach truly shines. Because navigation is state, you can write <strong>exhaustive unit tests</strong> that assert on every screen transition, without launching the simulator or touching any UI.</p>
+
+<h3>Testing Tree-Based Navigation</h3>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">import</span> ComposableArchitecture
+<span class="kw">import</span> XCTest
+
+@<span class="tp">MainActor</span>
+<span class="kw">final class</span> <span class="tp">ContactListTests</span>: <span class="tp">XCTestCase</span> {
+  <span class="kw">func</span> <span class="fn">testAddContactFlow</span>() <span class="kw">async</span> {
+    <span class="kw">let</span> store = <span class="tp">TestStore</span>(initialState: <span class="tp">ContactListFeature</span>.<span class="tp">State</span>()) {
+      <span class="tp">ContactListFeature</span>()
+    }
+
+    <span class="cm">// 1. Tap "Add" — assert sheet is presented</span>
+    <span class="kw">await</span> store.send(.addButtonTapped) {
+      $0.addContact = <span class="tp">AddContactFeature</span>.<span class="tp">State</span>()
+    }
+
+    <span class="cm">// 2. Type a name in the child</span>
+    <span class="kw">await</span> store.send(\.addContact.binding.name, <span class="str">"Alice"</span>) {
+      $0.addContact?.name = <span class="str">"Alice"</span>
+    }
+
+    <span class="cm">// 3. Tap "Save" — assert contact added and sheet dismissed</span>
+    <span class="kw">await</span> store.send(\.addContact.saveButtonTapped)
+    <span class="kw">await</span> store.receive(\.addContact.delegate.didSave) {
+      $0.contacts = [<span class="str">"Alice"</span>]
+      $0.addContact = <span class="kw">nil</span>  <span class="cm">// Sheet dismissed!</span>
+    }
+  }
+
+  <span class="kw">func</span> <span class="fn">testCancelDismissesSheet</span>() <span class="kw">async</span> {
+    <span class="kw">let</span> store = <span class="tp">TestStore</span>(
+      initialState: <span class="tp">ContactListFeature</span>.<span class="tp">State</span>(
+        addContact: <span class="tp">AddContactFeature</span>.<span class="tp">State</span>(name: <span class="str">"Draft"</span>)
+      )
+    ) {
+      <span class="tp">ContactListFeature</span>()
+    }
+
+    <span class="cm">// Cancel dismisses without saving</span>
+    <span class="kw">await</span> store.send(\.addContact.cancelButtonTapped) {
+      $0.addContact = <span class="kw">nil</span>
+    }
+  }
+}</code></pre>
+
+<h3>Testing Stack-Based Navigation</h3>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@<span class="tp">MainActor</span>
+<span class="kw">final class</span> <span class="tp">RootFeatureTests</span>: <span class="tp">XCTestCase</span> {
+  <span class="kw">func</span> <span class="fn">testNavigationPushAndPop</span>() <span class="kw">async</span> {
+    <span class="kw">let</span> item = <span class="tp">Item</span>(id: <span class="str">"1"</span>, name: <span class="str">"Test"</span>)
+    <span class="kw">let</span> store = <span class="tp">TestStore</span>(
+      initialState: <span class="tp">RootFeature</span>.<span class="tp">State</span>(items: [item])
+    ) {
+      <span class="tp">RootFeature</span>()
+    }
+
+    <span class="cm">// Push detail screen onto the stack</span>
+    <span class="kw">await</span> store.send(.itemTapped(item)) {
+      $0.path[id: 0] = .detail(<span class="tp">DetailFeature</span>.<span class="tp">State</span>(item: item))
+    }
+
+    <span class="cm">// From the detail, push edit screen</span>
+    <span class="kw">await</span> store.send(\.path[id: 0].detail.delegate.editTapped, item) {
+      $0.path[id: 1] = .edit(<span class="tp">EditFeature</span>.<span class="tp">State</span>(item: item))
+    }
+
+    <span class="cm">// Assert the stack has two elements</span>
+    <span class="cm">// XCTAssertEqual(store.state.path.count, 2)</span>
+
+    <span class="cm">// Save from edit — item updated, edit screen popped</span>
+    <span class="kw">let</span> updatedItem = <span class="tp">Item</span>(id: <span class="str">"1"</span>, name: <span class="str">"Updated"</span>)
+    <span class="kw">await</span> store.send(\.path[id: 1].edit.delegate.didSave, updatedItem) {
+      $0.items[id: <span class="str">"1"</span>] = updatedItem
+      $0.path.removeLast()
+    }
+  }
+
+  <span class="kw">func</span> <span class="fn">testDeepLinkState</span>() <span class="kw">async</span> {
+    <span class="kw">let</span> item = <span class="tp">Item</span>(id: <span class="str">"1"</span>, name: <span class="str">"Test"</span>)
+    <span class="cm">// Start the store already deep-linked</span>
+    <span class="kw">let</span> store = <span class="tp">TestStore</span>(
+      initialState: <span class="tp">RootFeature</span>.<span class="tp">State</span>(
+        items: [item],
+        path: <span class="tp">StackState</span>([
+          .detail(<span class="tp">DetailFeature</span>.<span class="tp">State</span>(item: item)),
+          .edit(<span class="tp">EditFeature</span>.<span class="tp">State</span>(item: item)),
+        ])
+      )
+    ) {
+      <span class="tp">RootFeature</span>()
+    }
+    <span class="cm">// Test that actions work correctly from the deep-linked state</span>
+    <span class="cm">// ...</span>
+  }
+}</code></pre>
+
+<div class="callout callout-success">
+  <div class="callout-title">Why This Matters</div>
+  <p>These tests run in milliseconds with no simulator. You are testing the actual navigation logic &mdash; which screens appear, which data they receive, what happens when the user taps buttons. This is not possible with vanilla SwiftUI navigation without UI tests, which are orders of magnitude slower and more brittle.</p>
+</div>
+
+<h3>Testing Alerts</h3>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">func</span> <span class="fn">testDeleteAlert</span>() <span class="kw">async</span> {
+  <span class="kw">let</span> store = <span class="tp">TestStore</span>(
+    initialState: <span class="tp">ItemFeature</span>.<span class="tp">State</span>(item: <span class="tp">Item</span>(id: <span class="str">"1"</span>, name: <span class="str">"Test"</span>))
+  ) {
+    <span class="tp">ItemFeature</span>()
+  }
+
+  <span class="cm">// Tap delete — assert alert appears</span>
+  <span class="kw">await</span> store.send(.deleteButtonTapped) {
+    $0.alert = <span class="tp">AlertState</span> {
+      <span class="tp">TextState</span>(<span class="str">"Delete Item?"</span>)
+    } actions: {
+      <span class="tp">ButtonState</span>(role: .destructive, action: .confirmDelete) {
+        <span class="tp">TextState</span>(<span class="str">"Delete"</span>)
+      }
+      <span class="tp">ButtonState</span>(role: .cancel) {
+        <span class="tp">TextState</span>(<span class="str">"Cancel"</span>)
+      }
+    } message: {
+      <span class="tp">TextState</span>(<span class="str">"This action cannot be undone."</span>)
+    }
+  }
+
+  <span class="cm">// Confirm delete</span>
+  <span class="kw">await</span> store.send(\.alert.confirmDelete) {
+    $0.alert = <span class="kw">nil</span>
+  }
+}</code></pre>
+
+<!-- ============================================================ -->
+<!-- COMPLETE MINI-APP -->
+<!-- ============================================================ -->
+<h2 id="mini-app">Complete Mini-App: Task Manager</h2>
+
+<p>Here is a complete, self-contained TCA application demonstrating tree-based and stack-based navigation working together. This code compiles with Xcode and the <code>swift-composable-architecture</code> package dependency.</p>
+
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="cm">// TaskManagerApp.swift</span>
+<span class="cm">// Requires: swift-composable-architecture ~> 1.0</span>
+<span class="cm">// Add via SPM: https://github.com/pointfreeco/swift-composable-architecture</span>
+
+<span class="kw">import</span> ComposableArchitecture
+<span class="kw">import</span> SwiftUI
+
+<span class="cm">// MARK: - Model</span>
+
+<span class="kw">struct</span> <span class="tp">TaskItem</span>: <span class="tp">Equatable</span>, <span class="tp">Identifiable</span> {
+  <span class="kw">let</span> id: <span class="tp">UUID</span>
+  <span class="kw">var</span> title: <span class="tp">String</span>
+  <span class="kw">var</span> isComplete: <span class="tp">Bool</span> = <span class="kw">false</span>
+  <span class="kw">var</span> notes: <span class="tp">String</span> = <span class="str">""</span>
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - Add Task Feature (tree-based, presented as sheet)</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">AddTaskFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> title: <span class="tp">String</span> = <span class="str">""</span>
+    <span class="kw">var</span> notes: <span class="tp">String</span> = <span class="str">""</span>
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span>: <span class="tp">BindableAction</span> {
+    <span class="kw">case</span> binding(<span class="tp">BindingAction</span>&lt;<span class="tp">State</span>&gt;)
+    <span class="kw">case</span> saveButtonTapped
+    <span class="kw">case</span> cancelButtonTapped
+    <span class="kw">case</span> <span class="kw">delegate</span>(<span class="tp">Delegate</span>)
+
+    <span class="kw">enum</span> <span class="tp">Delegate</span> {
+      <span class="kw">case</span> didSave(<span class="tp">TaskItem</span>)
+    }
+  }
+
+  @<span class="tp">Dependency</span>(\.<span class="pr">uuid</span>) <span class="kw">var</span> uuid
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">BindingReducer</span>()
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .saveButtonTapped:
+        <span class="kw">let</span> task = <span class="tp">TaskItem</span>(
+          id: uuid(),
+          title: state.title,
+          notes: state.notes
+        )
+        <span class="kw">return</span> .send(.delegate(.didSave(task)))
+      <span class="kw">case</span> .cancelButtonTapped, .binding, .delegate:
+        <span class="kw">return</span> .none
+      }
+    }
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">AddTaskView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">AddTaskFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">NavigationStack</span> {
+      <span class="tp">Form</span> {
+        <span class="tp">TextField</span>(<span class="str">"Title"</span>, text: $store.title)
+        <span class="tp">TextField</span>(<span class="str">"Notes"</span>, text: $store.notes, axis: .vertical)
+          .lineLimit(3...6)
+      }
+      .navigationTitle(<span class="str">"New Task"</span>)
+      .toolbar {
+        <span class="tp">ToolbarItem</span>(placement: .cancellationAction) {
+          <span class="tp">Button</span>(<span class="str">"Cancel"</span>) { store.send(.cancelButtonTapped) }
+        }
+        <span class="tp">ToolbarItem</span>(placement: .confirmationAction) {
+          <span class="tp">Button</span>(<span class="str">"Save"</span>) { store.send(.saveButtonTapped) }
+            .disabled(store.title.isEmpty)
+        }
+      }
+    }
+  }
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - Task Detail Feature (stack destination)</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">TaskDetailFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> task: <span class="tp">TaskItem</span>
+    <span class="kw">@Presents</span> <span class="kw">var</span> alert: <span class="tp">AlertState</span>&lt;<span class="tp">Action</span>.<span class="tp">Alert</span>&gt;?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span>: <span class="tp">BindableAction</span> {
+    <span class="kw">case</span> binding(<span class="tp">BindingAction</span>&lt;<span class="tp">State</span>&gt;)
+    <span class="kw">case</span> toggleComplete
+    <span class="kw">case</span> deleteButtonTapped
+    <span class="kw">case</span> editButtonTapped
+    <span class="kw">case</span> alert(<span class="tp">PresentationAction</span>&lt;<span class="tp">Alert</span>&gt;)
+    <span class="kw">case</span> <span class="kw">delegate</span>(<span class="tp">Delegate</span>)
+
+    <span class="kw">enum</span> <span class="tp">Alert</span> {
+      <span class="kw">case</span> confirmDelete
+    }
+    <span class="kw">enum</span> <span class="tp">Delegate</span> {
+      <span class="kw">case</span> didDelete(<span class="tp">TaskItem</span>)
+      <span class="kw">case</span> editTask(<span class="tp">TaskItem</span>)
+      <span class="kw">case</span> didUpdate(<span class="tp">TaskItem</span>)
+    }
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">BindingReducer</span>()
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .toggleComplete:
+        state.task.isComplete.toggle()
+        <span class="kw">return</span> .send(.delegate(.didUpdate(state.task)))
+
+      <span class="kw">case</span> .deleteButtonTapped:
+        state.alert = <span class="tp">AlertState</span> {
+          <span class="tp">TextState</span>(<span class="str">"Delete \"\(state.task.title)\"?"</span>)
+        } actions: {
+          <span class="tp">ButtonState</span>(role: .destructive, action: .confirmDelete) {
+            <span class="tp">TextState</span>(<span class="str">"Delete"</span>)
+          }
+          <span class="tp">ButtonState</span>(role: .cancel) { <span class="tp">TextState</span>(<span class="str">"Cancel"</span>) }
+        }
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .alert(.presented(.confirmDelete)):
+        <span class="kw">return</span> .send(.delegate(.didDelete(state.task)))
+
+      <span class="kw">case</span> .editButtonTapped:
+        <span class="kw">return</span> .send(.delegate(.editTask(state.task)))
+
+      <span class="kw">case</span> .binding, .alert, .delegate:
+        <span class="kw">return</span> .none
+      }
+    }
+    .ifLet(\.$alert, action: \.alert)
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">TaskDetailView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">TaskDetailFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">Form</span> {
+      <span class="tp">Section</span>(<span class="str">"Task"</span>) {
+        <span class="tp">Text</span>(store.task.title).font(.headline)
+        <span class="kw">if</span> !store.task.notes.isEmpty {
+          <span class="tp">Text</span>(store.task.notes).foregroundStyle(.secondary)
+        }
+      }
+      <span class="tp">Section</span> {
+        <span class="tp">Button</span> {
+          store.send(.toggleComplete)
+        } label: {
+          <span class="tp">Label</span>(
+            store.task.isComplete ? <span class="str">"Completed"</span> : <span class="str">"Mark Complete"</span>,
+            systemImage: store.task.isComplete ? <span class="str">"checkmark.circle.fill"</span> : <span class="str">"circle"</span>
+          )
+        }
+      }
+      <span class="tp">Section</span> {
+        <span class="tp">Button</span>(<span class="str">"Edit Task"</span>) { store.send(.editButtonTapped) }
+        <span class="tp">Button</span>(<span class="str">"Delete Task"</span>, role: .destructive) { store.send(.deleteButtonTapped) }
+      }
+    }
+    .navigationTitle(<span class="str">"Details"</span>)
+    .alert($store.scope(state: \.alert, action: \.alert))
+  }
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - Edit Task Feature (stack destination)</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">EditTaskFeature</span> {
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> task: <span class="tp">TaskItem</span>
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span>: <span class="tp">BindableAction</span> {
+    <span class="kw">case</span> binding(<span class="tp">BindingAction</span>&lt;<span class="tp">State</span>&gt;)
+    <span class="kw">case</span> saveButtonTapped
+    <span class="kw">case</span> <span class="kw">delegate</span>(<span class="tp">Delegate</span>)
+
+    <span class="kw">enum</span> <span class="tp">Delegate</span> {
+      <span class="kw">case</span> didSave(<span class="tp">TaskItem</span>)
+    }
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">BindingReducer</span>()
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+      <span class="kw">case</span> .saveButtonTapped:
+        <span class="kw">return</span> .send(.delegate(.didSave(state.task)))
+      <span class="kw">case</span> .binding, .delegate:
+        <span class="kw">return</span> .none
+      }
+    }
+  }
+}
+
+<span class="kw">struct</span> <span class="tp">EditTaskView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">EditTaskFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">Form</span> {
+      <span class="tp">TextField</span>(<span class="str">"Title"</span>, text: $store.task.title)
+      <span class="tp">TextField</span>(<span class="str">"Notes"</span>, text: $store.task.notes, axis: .vertical)
+        .lineLimit(3...6)
+      <span class="tp">Toggle</span>(<span class="str">"Completed"</span>, isOn: $store.task.isComplete)
+    }
+    .navigationTitle(<span class="str">"Edit"</span>)
+    .toolbar {
+      <span class="tp">Button</span>(<span class="str">"Save"</span>) { store.send(.saveButtonTapped) }
+    }
+  }
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - App Root Feature (combines tree + stack navigation)</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="kw">@Reducer</span>
+<span class="kw">struct</span> <span class="tp">AppFeature</span> {
+  <span class="cm">// Stack destinations (enum-based path)</span>
+  <span class="kw">@Reducer</span>
+  <span class="kw">enum</span> <span class="tp">Path</span> {
+    <span class="kw">case</span> detail(<span class="tp">TaskDetailFeature</span>)
+    <span class="kw">case</span> edit(<span class="tp">EditTaskFeature</span>)
+  }
+
+  <span class="kw">@ObservableState</span>
+  <span class="kw">struct</span> <span class="tp">State</span>: <span class="tp">Equatable</span> {
+    <span class="kw">var</span> tasks: <span class="tp">IdentifiedArrayOf</span>&lt;<span class="tp">TaskItem</span>&gt; = []
+    <span class="kw">var</span> path = <span class="tp">StackState</span>&lt;<span class="tp">Path</span>.<span class="tp">State</span>&gt;()
+    <span class="cm">// Tree-based: sheet presentation</span>
+    <span class="kw">@Presents</span> <span class="kw">var</span> addTask: <span class="tp">AddTaskFeature</span>.<span class="tp">State</span>?
+  }
+
+  <span class="kw">enum</span> <span class="tp">Action</span> {
+    <span class="kw">case</span> addButtonTapped
+    <span class="kw">case</span> taskTapped(<span class="tp">TaskItem</span>)
+    <span class="cm">// Tree-based action</span>
+    <span class="kw">case</span> addTask(<span class="tp">PresentationAction</span>&lt;<span class="tp">AddTaskFeature</span>.<span class="tp">Action</span>&gt;)
+    <span class="cm">// Stack-based action</span>
+    <span class="kw">case</span> path(<span class="tp">StackActionOf</span>&lt;<span class="tp">Path</span>&gt;)
+  }
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">ReducerOf</span>&lt;<span class="tp">Self</span>&gt; {
+    <span class="tp">Reduce</span> { state, action <span class="kw">in</span>
+      <span class="kw">switch</span> action {
+
+      <span class="cm">// --- Tree-based: Add Task Sheet ---</span>
+      <span class="kw">case</span> .addButtonTapped:
+        state.addTask = <span class="tp">AddTaskFeature</span>.<span class="tp">State</span>()
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .addTask(.presented(.delegate(.didSave(task)))):
+        state.tasks.append(task)
+        state.addTask = <span class="kw">nil</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .addTask(.presented(.cancelButtonTapped)):
+        state.addTask = <span class="kw">nil</span>
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .addTask:
+        <span class="kw">return</span> .none
+
+      <span class="cm">// --- Stack-based: Push Detail ---</span>
+      <span class="kw">case</span> <span class="kw">let</span> .taskTapped(task):
+        state.path.append(.detail(<span class="tp">TaskDetailFeature</span>.<span class="tp">State</span>(task: task)))
+        <span class="kw">return</span> .none
+
+      <span class="cm">// Handle delegate actions from stack children</span>
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: _, action: .detail(.delegate(.didUpdate(task))))):
+        state.tasks[id: task.id] = task
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: _, action: .detail(.delegate(.didDelete(task))))):
+        state.tasks.remove(id: task.id)
+        <span class="kw">let</span> _ = state.path.popLast()
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: _, action: .detail(.delegate(.editTask(task))))):
+        state.path.append(.edit(<span class="tp">EditTaskFeature</span>.<span class="tp">State</span>(task: task)))
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> <span class="kw">let</span> .path(.element(id: _, action: .edit(.delegate(.didSave(task))))):
+        state.tasks[id: task.id] = task
+        <span class="cm">// Also update the detail screen below in the stack</span>
+        <span class="kw">if</span> <span class="kw">let</span> detailIdx = state.path.ids.dropLast().last {
+          state.path[id: detailIdx, <span class="kw">case</span>: \<span class="tp">Path</span>.<span class="tp">State</span>.detail]?.task = task
+        }
+        <span class="kw">let</span> _ = state.path.popLast()
+        <span class="kw">return</span> .none
+
+      <span class="kw">case</span> .path:
+        <span class="kw">return</span> .none
+      }
+    }
+    <span class="cm">// Tree-based child reducer</span>
+    .ifLet(\.$addTask, action: \.addTask) {
+      <span class="tp">AddTaskFeature</span>()
+    }
+    <span class="cm">// Stack-based path reducer</span>
+    .forEach(\.path, action: \.path)
+  }
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - App Root View</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="kw">struct</span> <span class="tp">AppView</span>: <span class="tp">View</span> {
+  @<span class="tp">Bindable</span> <span class="kw">var</span> store: <span class="tp">StoreOf</span>&lt;<span class="tp">AppFeature</span>&gt;
+
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">View</span> {
+    <span class="tp">NavigationStack</span>(path: $store.scope(state: \.path, action: \.path)) {
+      <span class="tp">List</span>(store.tasks) { task <span class="kw">in</span>
+        <span class="tp">Button</span> {
+          store.send(.taskTapped(task))
+        } label: {
+          <span class="tp">HStack</span> {
+            <span class="tp">Image</span>(systemName: task.isComplete ? <span class="str">"checkmark.circle.fill"</span> : <span class="str">"circle"</span>)
+              .foregroundStyle(task.isComplete ? .green : .secondary)
+            <span class="tp">VStack</span>(alignment: .leading) {
+              <span class="tp">Text</span>(task.title)
+                .strikethrough(task.isComplete)
+              <span class="kw">if</span> !task.notes.isEmpty {
+                <span class="tp">Text</span>(task.notes)
+                  .font(.caption)
+                  .foregroundStyle(.secondary)
+                  .lineLimit(1)
+              }
+            }
+          }
+        }
+      }
+      .navigationTitle(<span class="str">"Tasks"</span>)
+      .toolbar {
+        <span class="tp">Button</span>(<span class="str">"Add"</span>, systemImage: <span class="str">"plus"</span>) {
+          store.send(.addButtonTapped)
+        }
+      }
+      <span class="cm">// Tree-based: sheet</span>
+      .sheet(item: $store.scope(state: \.addTask, action: \.addTask)) { addStore <span class="kw">in</span>
+        <span class="tp">AddTaskView</span>(store: addStore)
+      }
+    } destination: { pathStore <span class="kw">in</span>
+      <span class="cm">// Stack-based: switch on path cases</span>
+      <span class="kw">switch</span> pathStore.case {
+      <span class="kw">case</span> <span class="kw">let</span> .detail(store):
+        <span class="tp">TaskDetailView</span>(store: store)
+      <span class="kw">case</span> <span class="kw">let</span> .edit(store):
+        <span class="tp">EditTaskView</span>(store: store)
+      }
+    }
+  }
+}
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="cm">// MARK: - App Entry Point</span>
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+@<span class="kw">main</span>
+<span class="kw">struct</span> <span class="tp">TaskManagerApp</span>: <span class="tp">App</span> {
+  <span class="kw">var</span> body: <span class="kw">some</span> <span class="tp">Scene</span> {
+    <span class="tp">WindowGroup</span> {
+      <span class="tp">AppView</span>(
+        store: <span class="tp">Store</span>(initialState: <span class="tp">AppFeature</span>.<span class="tp">State</span>()) {
+          <span class="tp">AppFeature</span>()
+        }
+      )
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-info">
+  <div class="callout-title">Architecture Summary</div>
+  <p>This mini-app uses <strong>tree-based navigation</strong> for the "Add Task" sheet (presented modally, dismissed by setting state to nil) and <strong>stack-based navigation</strong> for the detail/edit drill-down (pushed onto the NavigationStack via StackState). The two approaches compose naturally within a single feature.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TRADEOFF ANALYSIS -->
+<!-- ============================================================ -->
+<h2 id="tradeoffs">Tradeoff Analysis</h2>
+
+<table>
+  <thead>
+    <tr><th>Dimension</th><th>TCA Navigation</th><th>Vanilla SwiftUI</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Learning Curve</strong></td>
+      <td>Steep. Requires understanding TCA's reducer composition, macros (<code>@Reducer</code>, <code>@Presents</code>, <code>@ObservableState</code>), and navigation operators (<code>.ifLet</code>, <code>.forEach</code>).</td>
+      <td>Moderate. SwiftUI's own navigation APIs have their own complexity but are more widely documented.</td>
+    </tr>
+    <tr>
+      <td><strong>Testability</strong></td>
+      <td>Excellent. Every navigation transition is a state mutation you can assert on in unit tests. TestStore makes this ergonomic.</td>
+      <td>Poor for navigation logic. You must rely on UI tests or manually instrument navigation state.</td>
+    </tr>
+    <tr>
+      <td><strong>Deep Linking</strong></td>
+      <td>Trivial. Construct the state, and the UI renders. Works reliably at any depth.</td>
+      <td>Difficult. NavigationPath deep linking beyond 2-3 levels is buggy; requires workarounds.</td>
+    </tr>
+    <tr>
+      <td><strong>Correctness</strong></td>
+      <td>High. Exhaustive action handling prevents forgotten cases. Automatic effect cancellation on dismissal prevents leaks.</td>
+      <td>Moderate. Easy to forget to cancel tasks or handle edge cases.</td>
+    </tr>
+    <tr>
+      <td><strong>Boilerplate</strong></td>
+      <td>Moderate-high. Each feature needs State, Action, body reducer. The <code>@Reducer</code> macro reduces it significantly compared to pre-1.0 TCA.</td>
+      <td>Low-moderate. SwiftUI views can be self-contained with <code>@State</code> and <code>@Observable</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Debugging</strong></td>
+      <td>Good. <code>_printChanges()</code> logs every action and state change. Deterministic behavior makes issues reproducible.</td>
+      <td>Mixed. SwiftUI's navigation state can be opaque and hard to inspect.</td>
+    </tr>
+    <tr>
+      <td><strong>Performance</strong></td>
+      <td>Good. <code>@ObservableState</code> provides minimal re-renders. Stack elements are lazily initialized.</td>
+      <td>Good. Native SwiftUI optimization.</td>
+    </tr>
+    <tr>
+      <td><strong>Team Adoption</strong></td>
+      <td>Requires the entire team to understand TCA. Not something you can adopt partially for navigation alone.</td>
+      <td>Everyone already knows it.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-warning">
+  <div class="callout-title">Honest Assessment of the Learning Curve</div>
+  <p>TCA navigation has a <strong>significant</strong> learning curve. You need to understand reducers, actions, state composition, case key paths, the <code>.ifLet</code> and <code>.forEach</code> operators, presentation actions, delegate actions, store scoping, and the various macros. For a team new to TCA, expect 2-4 weeks before developers are comfortable writing navigation code independently. The payoff is real &mdash; testability, correctness, and deep linking &mdash; but the investment is substantial.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHEN TO USE -->
+<!-- ============================================================ -->
+<h2 id="when-to-use">When to Use TCA Navigation</h2>
+
+<div class="comparison-grid">
+  <div class="comp-card">
+    <h4>Use TCA Navigation When...</h4>
+    <ul>
+      <li>Your team is already using or committed to TCA</li>
+      <li>Navigation logic is complex (multi-step flows, conditional routing)</li>
+      <li>Deep linking is a core requirement</li>
+      <li>You need exhaustive unit tests for navigation flows</li>
+      <li>Your app has shared state across navigation destinations</li>
+      <li>You want deterministic, reproducible navigation behavior</li>
+      <li>The app is medium-to-large scale with multiple developers</li>
+    </ul>
+  </div>
+  <div class="comp-card">
+    <h4>Stick with Vanilla SwiftUI When...</h4>
+    <ul>
+      <li>Your app is small or a prototype</li>
+      <li>Navigation is simple (a few screens, straightforward flows)</li>
+      <li>Your team doesn't know TCA and timeline is tight</li>
+      <li>You don't need to unit-test navigation transitions</li>
+      <li>Deep linking is not a requirement</li>
+      <li>You prefer Apple-native patterns with minimal dependencies</li>
+      <li>You are building a widget, extension, or embedded SwiftUI view</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RESOURCES -->
+<!-- ============================================================ -->
+<h2 id="resources">Resources</h2>
+
+<h3>Official Documentation</h3>
+<ul>
+  <li><a href="https://github.com/pointfreeco/swift-composable-architecture" target="_blank">swift-composable-architecture on GitHub</a> &mdash; source code, examples, and discussions</li>
+  <li><a href="https://pointfreeco.github.io/swift-composable-architecture/main/documentation/composablearchitecture/navigation/" target="_blank">TCA Navigation Documentation</a> &mdash; official navigation guide</li>
+  <li><a href="https://pointfreeco.github.io/swift-composable-architecture/main/documentation/composablearchitecture/stackbasednavigation/" target="_blank">Stack-Based Navigation Docs</a></li>
+  <li><a href="https://pointfreeco.github.io/swift-composable-architecture/main/tutorials/composablearchitecture/02-04-navigationstacks/" target="_blank">Navigation Stacks Tutorial</a></li>
+  <li><a href="https://www.pointfree.co/blog/posts/106-navigation-tools-come-to-the-composable-architecture" target="_blank">Blog: Navigation Tools Come to TCA</a></li>
+</ul>
+
+<h3>Point-Free Video Episodes</h3>
+<ul>
+  <li><a href="https://www.pointfree.co/collections/composable-architecture/navigation" target="_blank">Composable Navigation Collection</a> &mdash; full video series on navigation in TCA</li>
+  <li><a href="https://www.pointfree.co/collections/composable-architecture" target="_blank">Full TCA Collection</a> &mdash; all episodes on the Composable Architecture</li>
+</ul>
+
+<h3>Community</h3>
+<ul>
+  <li><a href="https://github.com/johnpatrickmorgan/TCACoordinators" target="_blank">TCACoordinators</a> &mdash; coordinator pattern for TCA</li>
+  <li><a href="https://github.com/pointfreeco/swift-composable-architecture/discussions" target="_blank">GitHub Discussions</a> &mdash; active community Q&amp;A</li>
+  <li><a href="https://github.com/pointfreeco/swift-composable-architecture/blob/main/Examples/CaseStudies/SwiftUICaseStudies/01-GettingStarted-AlertsAndConfirmationDialogs.swift" target="_blank">Alerts &amp; Dialogs Case Study</a> (source code)</li>
+</ul>
+
+<h3>Articles</h3>
+<ul>
+  <li><a href="https://medium.com/@felix.anderson1504/tca-navigation-in-swiftui-tree-based-navigation-a24fff96055c" target="_blank">TCA Navigation in SwiftUI: Tree Based Navigation</a> (Felix Anderson)</li>
+  <li><a href="https://medium.com/@yuko-dev/advanced-navigation-with-tca-and-navigationstack-in-swiftui-d6e45f4d7d87" target="_blank">Advanced Navigation with TCA and NavigationStack</a> (yuko-dev)</li>
+  <li><a href="https://saeedrz.medium.com/effortless-deep-linking-with-tca-b751527c7c04" target="_blank">Effortless Deep Linking with TCA</a> (Saeid Rezaeisadrabadi)</li>
+  <li><a href="https://medium.com/@Lakshmnaidu/navigation-in-tca-the-modern-architecture-with-unittests-df4685de0bba" target="_blank">Navigation in TCA with Unit Tests</a> (Lakshminaidu C)</li>
+</ul>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const body = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  if (body.getAttribute('data-theme') === 'dark') {
+    body.removeAttribute('data-theme');
+    btn.innerHTML = '&#9790; Dark';
+    localStorage.setItem('theme', 'light');
+  } else {
+    body.setAttribute('data-theme', 'dark');
+    btn.innerHTML = '&#9788; Light';
+    localStorage.setItem('theme', 'dark');
+  }
+  // Re-init mermaid with correct theme
+  initMermaid();
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').innerHTML = '&#9788; Light';
+  }
+})();
+
+// Mermaid init
+function initMermaid() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#2c3a4a',
+      primaryTextColor: '#f5f5f7',
+      primaryBorderColor: '#4d9fef',
+      lineColor: '#98989d',
+      secondaryColor: '#2c2c2e',
+      tertiaryColor: '#1c1c1e'
+    } : {
+      primaryColor: '#e8f0fe',
+      primaryTextColor: '#1d1d1f',
+      primaryBorderColor: '#0071e3',
+      lineColor: '#6e6e73',
+      secondaryColor: '#f5f5f7',
+      tertiaryColor: '#ffffff'
+    }
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', code);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+document.addEventListener('DOMContentLoaded', initMermaid);
+
+// Copy button
+function copyCode(btn) {
+  const pre = btn.parentElement;
+  const code = pre.querySelector('code');
+  // Strip HTML tags to get plain text
+  const temp = document.createElement('div');
+  temp.innerHTML = code.innerHTML;
+  const text = temp.textContent || temp.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+// Back to top
+const backBtn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  backBtn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Active sidebar link
+const sections = document.querySelectorAll('h2[id], h1[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.scrollY >= section.offsetTop - 100) {
+      current = section.id;
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+
+// Close sidebar on mobile when clicking a link
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+</body>
+</html>

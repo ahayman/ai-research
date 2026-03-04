@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SwiftUI Coordinator Pattern — Hierarchical navigation management with parent-child coordinators, @Observable, testable flows">
+  <title>SwiftUI Coordinator Pattern — Navigation Guide</title>
+  <style>
+    :root {
+      --color-primary: #0071e3;
+      --color-primary-light: #e8f4fd;
+      --color-primary-dark: #0055b3;
+      --color-text: #1d1d1f;
+      --color-text-muted: #6e6e73;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f5f5f7;
+      --color-bg-code: #f5f5f7;
+      --color-border: #d2d2d7;
+      --color-border-light: #e8e8ed;
+      --color-success: #34c759;
+      --color-warning: #ff9500;
+      --color-danger: #ff3b30;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      --max-width: 900px;
+      --sidebar-width: 260px;
+    }
+    [data-theme="dark"] {
+      --color-primary: #2997ff; --color-primary-light: #1a3a5c;
+      --color-text: #f5f5f7; --color-text-muted: #a1a1a6;
+      --color-bg: #000000; --color-bg-alt: #1c1c1e; --color-bg-code: #1c1c1e;
+      --color-border: #38383a; --color-border-light: #2c2c2e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans); color: var(--color-text); background: var(--color-bg); line-height: 1.7; }
+    .page { display: flex; max-width: 1300px; margin: 0 auto; }
+    /* Sidebar */
+    .sidebar { width: var(--sidebar-width); flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 1.5rem 1rem; border-right: 1px solid var(--color-border-light); display: none; }
+    @media (min-width: 1024px) { .sidebar { display: block; } }
+    .sidebar-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin-bottom: 1rem; }
+    .nav-list { list-style: none; }
+    .nav-link { display: block; padding: 0.375rem 0.75rem; color: var(--color-text-muted); text-decoration: none; font-size: 0.8125rem; border-radius: 6px; transition: all 0.15s; }
+    .nav-link:hover { color: var(--color-text); background: var(--color-bg-alt); }
+    .nav-link.active { color: var(--color-primary); background: var(--color-primary-light); font-weight: 500; }
+    .nav-link.nested { padding-left: 1.5rem; font-size: 0.75rem; }
+    /* Main */
+    .main { flex: 1; max-width: var(--max-width); padding: 2rem 3rem; margin: 0 auto; }
+    @media (max-width: 768px) { .main { padding: 1.5rem; } }
+    .back-link { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--color-primary); text-decoration: none; font-size: 0.8125rem; margin-bottom: 1.5rem; }
+    .back-link:hover { text-decoration: underline; }
+    .doc-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-border-light); }
+    .doc-header h1 { font-size: 2.25rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+    .doc-meta { color: var(--color-text-muted); font-size: 0.875rem; }
+    h2 { font-size: 1.5rem; font-weight: 600; margin: 3rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border-light); }
+    h3 { font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+    h4 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    p { margin: 0.75rem 0; }
+    ul, ol { padding-left: 1.5rem; margin: 0.75rem 0; }
+    li { margin: 0.25rem 0; }
+    pre { background: var(--color-bg-code); border: 1px solid var(--color-border-light); border-radius: 10px; padding: 1.25rem; overflow-x: auto; margin: 1.25rem 0; position: relative; }
+    code { font-family: var(--font-mono); font-size: 0.8125rem; }
+    :not(pre) > code { background: var(--color-bg-code); padding: 0.125rem 0.375rem; border-radius: 4px; }
+    .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.2rem 0.5rem; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.15s; color: var(--color-text-muted); }
+    pre:hover .copy-btn { opacity: 1; }
+    .callout { border-left: 4px solid var(--color-primary); background: var(--color-primary-light); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+    .callout h4 { margin-top: 0; color: var(--color-primary); }
+    .callout p, .callout li { font-size: 0.9rem; }
+    .callout-warning { border-left-color: var(--color-warning); background: #fff8e1; }
+    [data-theme="dark"] .callout-warning { background: #3a2e00; }
+    .callout-success { border-left-color: var(--color-success); background: #e8faf0; }
+    [data-theme="dark"] .callout-success { background: #0a2e1a; }
+    .diagram-container { background: var(--color-bg); border: 1px solid var(--color-border-light); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+    .diagram-container .mermaid { display: flex; justify-content: center; }
+    .diagram-caption { text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.75rem; font-style: italic; }
+    table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.875rem; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border: 1px solid var(--color-border-light); }
+    th { background: var(--color-bg-alt); font-weight: 600; }
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    @media (max-width: 600px) { .pros-cons { grid-template-columns: 1fr; } }
+    .pros, .cons { border-radius: 10px; padding: 1.25rem; }
+    .pros { background: #e8faf0; border: 1px solid #34c759; }
+    .cons { background: #fef2f2; border: 1px solid #ff3b30; }
+    [data-theme="dark"] .pros { background: #0a2e1a; }
+    [data-theme="dark"] .cons { background: #2e0a0a; }
+    .pros h4, .cons h4 { margin-top: 0; }
+    .footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border-light); font-size: 0.8125rem; color: var(--color-text-muted); }
+    .theme-toggle { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 50%; width: 44px; height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; z-index: 50; }
+    .back-to-top { position: fixed; bottom: 4.5rem; right: 1.5rem; background: var(--color-primary); color: white; border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; transition: opacity 0.2s; }
+    .back-to-top.visible { opacity: 1; }
+    @media print { .sidebar, .theme-toggle, .back-to-top { display: none !important; } .main { max-width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <aside class="sidebar">
+    <div class="sidebar-title">On this page</div>
+    <nav><ul class="nav-list">
+      <li><a class="nav-link" href="#overview">Overview</a></li>
+      <li><a class="nav-link" href="#origins">Origins &amp; Motivation</a></li>
+      <li><a class="nav-link" href="#architecture">Architecture</a></li>
+      <li><a class="nav-link" href="#protocol">Coordinator Protocol</a></li>
+      <li><a class="nav-link" href="#app-coordinator">App Coordinator</a></li>
+      <li><a class="nav-link" href="#child-coordinators">Child Coordinators</a></li>
+      <li><a class="nav-link" href="#modal">Modal Handling</a></li>
+      <li><a class="nav-link" href="#observable">@Observable vs ObservableObject</a></li>
+      <li><a class="nav-link" href="#di">Dependency Injection</a></li>
+      <li><a class="nav-link" href="#testing">Testing</a></li>
+      <li><a class="nav-link" href="#mini-app">Complete Mini App</a></li>
+      <li><a class="nav-link" href="#tradeoffs">Tradeoff Analysis</a></li>
+      <li><a class="nav-link" href="#when-to-use">When to Use</a></li>
+      <li><a class="nav-link" href="#vs-router">vs. Router Pattern</a></li>
+      <li><a class="nav-link" href="#frameworks">Frameworks</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="main">
+    <a href="../swiftui-navigation-approaches/index.html" class="back-link">&larr; Back to Dashboard</a>
+
+    <header class="doc-header">
+      <h1>Coordinator Pattern in SwiftUI</h1>
+      <p class="doc-meta">Hierarchical navigation management &middot; iOS 16+ &middot; Advanced</p>
+    </header>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>The <strong>Coordinator Pattern</strong> separates navigation logic from view logic by introducing dedicated coordinator objects that manage entire navigation flows. Each coordinator owns a NavigationPath (or sheet bindings) and decides which screen to show next. Views become simple, reusable UI components with zero knowledge of where they sit in the app's navigation hierarchy.</p>
+
+      <div class="callout">
+        <h4>Key Idea</h4>
+        <p>Views don't navigate. Coordinators navigate. Views request actions (e.g., "user tapped Settings"), and the coordinator decides what happens next (push SettingsView, show a sheet, or start a child coordinator flow).</p>
+      </div>
+    </section>
+
+    <!-- ORIGINS -->
+    <section id="origins">
+      <h2>Origins &amp; Motivation</h2>
+      <p>The Coordinator Pattern was popularized by Soroush Khanlou in 2015 for UIKit, where view controllers were notoriously tangled with navigation logic. The same problems exist in SwiftUI when navigation grows beyond a few screens:</p>
+      <ul>
+        <li><strong>Scattered navigation:</strong> NavigationLink destinations spread across dozens of views</li>
+        <li><strong>Tight coupling:</strong> ViewA imports ViewB just to push it — changing one breaks the other</li>
+        <li><strong>Untestable flows:</strong> You can't test "after login, show the home screen" without rendering UI</li>
+        <li><strong>Reuse blocked:</strong> A ProductDetailView that always pushes ReviewView can't be used in a different flow</li>
+        <li><strong>Deep linking pain:</strong> Constructing a navigation path from a URL means touching every view in the chain</li>
+      </ul>
+      <p>Coordinators solve all of these by centralizing navigation decisions in dedicated objects that sit above the view layer.</p>
+    </section>
+
+    <!-- ARCHITECTURE DIAGRAM -->
+    <section id="architecture">
+      <h2>Architecture</h2>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TB
+    AC["AppCoordinator<br/>(owns TabView)"] --> HC["HomeCoordinator<br/>(owns NavigationStack)"]
+    AC --> SC["SettingsCoordinator<br/>(owns NavigationStack)"]
+    AC --> PC["ProfileCoordinator<br/>(owns NavigationStack)"]
+
+    HC --> HS["HomeScreen"]
+    HC --> DS["DetailScreen"]
+    HC --> AuthC["AuthCoordinator<br/>(child, owns sheet)"]
+
+    AuthC --> LS["LoginScreen"]
+    AuthC --> RS["RegisterScreen"]
+    AuthC --> FP["ForgotPasswordScreen"]
+
+    SC --> SS["SettingsScreen"]
+    SC --> NS["NotificationsScreen"]
+    SC --> AS["AccountScreen"]
+
+    PC --> PS["ProfileScreen"]
+    PC --> ES["EditProfileScreen"]
+
+    classDef coordinator fill:#0071e3,color:#fff,stroke:none
+    classDef screen fill:#f5f5f7,color:#1d1d1f,stroke:#d2d2d7
+    classDef child fill:#af52de,color:#fff,stroke:none
+
+    class AC,HC,SC,PC coordinator
+    class AuthC child
+    class HS,DS,LS,RS,FP,SS,NS,AS,PS,ES screen
+        </div>
+        <p class="diagram-caption">Figure 1: Coordinator hierarchy — AppCoordinator owns child coordinators, each managing their own navigation flow</p>
+      </div>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant View
+    participant Coordinator
+    participant NavigationPath
+    participant ChildCoordinator
+
+    User->>View: Taps "View Details"
+    View->>Coordinator: onDetailTapped(item)
+    Coordinator->>NavigationPath: append(.detail(item))
+    NavigationPath->>View: SwiftUI renders DetailView
+
+    User->>View: Taps "Start Auth Flow"
+    View->>Coordinator: onAuthRequired()
+    Coordinator->>ChildCoordinator: create AuthCoordinator
+    Coordinator->>Coordinator: showSheet = true
+    ChildCoordinator->>View: Presents LoginScreen
+
+    User->>View: Completes login
+    View->>ChildCoordinator: onLoginComplete(user)
+    ChildCoordinator->>Coordinator: delegate.authDidComplete(user)
+    Coordinator->>Coordinator: showSheet = false
+    Coordinator->>NavigationPath: append(.profile(user))
+        </div>
+        <p class="diagram-caption">Figure 2: Navigation flow through coordinator — views delegate actions, coordinators make navigation decisions</p>
+      </div>
+    </section>
+
+    <!-- PROTOCOL -->
+    <section id="protocol">
+      <h2>Coordinator Protocol</h2>
+      <p>Start with a base protocol that all coordinators conform to:</p>
+
+      <pre><code>// CoordinatorProtocol.swift
+import SwiftUI
+
+@MainActor
+protocol Coordinator: AnyObject, Observable {
+    associatedtype ContentView: View
+
+    /// Build the coordinator's root view
+    @ViewBuilder func start() -> ContentView
+}
+
+/// For coordinators that manage a NavigationStack
+@MainActor
+protocol StackCoordinator: Coordinator {
+    associatedtype Route: Hashable
+
+    var path: NavigationPath { get set }
+
+    func push(_ route: Route)
+    func pop()
+    func popToRoot()
+
+    @ViewBuilder func destination(for route: Route) -> some View
+}
+
+extension StackCoordinator {
+    func push(_ route: Route) { path.append(route) }
+    func pop() { guard !path.isEmpty else { return }; path.removeLast() }
+    func popToRoot() { path = NavigationPath() }
+}</code><button class="copy-btn">Copy</button></pre>
+
+      <div class="callout">
+        <h4>Why a Protocol?</h4>
+        <p>The protocol gives you a consistent interface across all coordinators. You can swap coordinator implementations for testing, compose them, and enforce that every coordinator provides a <code>start()</code> view and route-to-view mapping.</p>
+      </div>
+    </section>
+
+    <!-- APP COORDINATOR -->
+    <section id="app-coordinator">
+      <h2>App Coordinator (Root)</h2>
+      <p>The AppCoordinator is the root of the hierarchy. For a tabbed app, it owns the TabView and creates child coordinators for each tab:</p>
+
+      <pre><code>// AppCoordinator.swift
+import SwiftUI
+
+@Observable
+@MainActor
+final class AppCoordinator: Coordinator {
+    enum Tab: Hashable {
+        case home, settings, profile
+    }
+
+    var selectedTab: Tab = .home
+
+    // Child coordinators — one per tab
+    let homeCoordinator = HomeCoordinator()
+    let settingsCoordinator = SettingsCoordinator()
+    let profileCoordinator = ProfileCoordinator()
+
+    @ViewBuilder
+    func start() -> some View {
+        TabView(selection: $selectedTab) {
+            homeCoordinator.start()
+                .tabItem { Label("Home", systemImage: "house") }
+                .tag(Tab.home)
+
+            settingsCoordinator.start()
+                .tabItem { Label("Settings", systemImage: "gear") }
+                .tag(Tab.settings)
+
+            profileCoordinator.start()
+                .tabItem { Label("Profile", systemImage: "person") }
+                .tag(Tab.profile)
+        }
+    }
+
+    /// Pop-to-root on tab reselection
+    func selectTab(_ tab: Tab) {
+        if selectedTab == tab {
+            switch tab {
+            case .home: homeCoordinator.popToRoot()
+            case .settings: settingsCoordinator.popToRoot()
+            case .profile: profileCoordinator.popToRoot()
+            }
+        }
+        selectedTab = tab
+    }
+
+    /// Deep link handling
+    func handleDeepLink(url: URL) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
+        let pathParts = components.path.split(separator: "/")
+
+        switch pathParts.first {
+        case "home":
+            selectedTab = .home
+            homeCoordinator.handleDeepLink(pathParts: Array(pathParts.dropFirst()))
+        case "settings":
+            selectedTab = .settings
+            settingsCoordinator.handleDeepLink(pathParts: Array(pathParts.dropFirst()))
+        case "profile":
+            selectedTab = .profile
+            profileCoordinator.handleDeepLink(pathParts: Array(pathParts.dropFirst()))
+        default:
+            break
+        }
+    }
+}
+
+// App entry point
+@main
+struct MyApp: App {
+    @State private var appCoordinator = AppCoordinator()
+
+    var body: some Scene {
+        WindowGroup {
+            appCoordinator.start()
+                .onOpenURL { url in
+                    appCoordinator.handleDeepLink(url: url)
+                }
+        }
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+    </section>
+
+    <!-- CHILD COORDINATORS -->
+    <section id="child-coordinators">
+      <h2>Child Coordinators</h2>
+      <p>Each tab has its own coordinator that manages a NavigationStack and defines routes:</p>
+
+      <pre><code>// HomeCoordinator.swift
+import SwiftUI
+
+@Observable
+@MainActor
+final class HomeCoordinator: StackCoordinator {
+    enum Route: Hashable {
+        case detail(itemId: String)
+        case category(name: String)
+        case favorites
+    }
+
+    var path = NavigationPath()
+
+    // Sheet state for child coordinators
+    var showAuth = false
+    var authCoordinator: AuthCoordinator?
+
+    @ViewBuilder
+    func start() -> some View {
+        NavigationStack(path: $path) {
+            HomeScreen(coordinator: self)
+                .navigationDestination(for: Route.self) { route in
+                    self.destination(for: route)
+                }
+        }
+        .sheet(isPresented: $showAuth) {
+            if let auth = authCoordinator {
+                auth.start()
+            }
+        }
+    }
+
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        switch route {
+        case .detail(let itemId):
+            DetailScreen(itemId: itemId, coordinator: self)
+        case .category(let name):
+            CategoryScreen(name: name, coordinator: self)
+        case .favorites:
+            FavoritesScreen(coordinator: self)
+        }
+    }
+
+    // Actions called by views
+    func showDetail(itemId: String) {
+        push(.detail(itemId: itemId))
+    }
+
+    func showCategory(name: String) {
+        push(.category(name: name))
+    }
+
+    func showFavorites() {
+        push(.favorites)
+    }
+
+    func startAuthFlow() {
+        authCoordinator = AuthCoordinator(delegate: self)
+        showAuth = true
+    }
+
+    func handleDeepLink(pathParts: [Substring]) {
+        popToRoot()
+        guard let first = pathParts.first else { return }
+        switch first {
+        case "detail":
+            if let id = pathParts.dropFirst().first {
+                push(.detail(itemId: String(id)))
+            }
+        case "favorites":
+            push(.favorites)
+        default: break
+        }
+    }
+}
+
+// The delegate pattern for child → parent communication
+extension HomeCoordinator: AuthCoordinatorDelegate {
+    func authDidComplete(user: User) {
+        showAuth = false
+        authCoordinator = nil
+        // Navigate to user's profile or refresh
+    }
+
+    func authDidCancel() {
+        showAuth = false
+        authCoordinator = nil
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+
+      <h3>Auth Coordinator (Sub-flow)</h3>
+      <pre><code>// AuthCoordinator.swift
+import SwiftUI
+
+@MainActor
+protocol AuthCoordinatorDelegate: AnyObject {
+    func authDidComplete(user: User)
+    func authDidCancel()
+}
+
+@Observable
+@MainActor
+final class AuthCoordinator: StackCoordinator {
+    enum Route: Hashable {
+        case register
+        case forgotPassword
+    }
+
+    var path = NavigationPath()
+    weak var delegate: AuthCoordinatorDelegate?
+
+    init(delegate: AuthCoordinatorDelegate?) {
+        self.delegate = delegate
+    }
+
+    @ViewBuilder
+    func start() -> some View {
+        NavigationStack(path: $path) {
+            LoginScreen(coordinator: self)
+                .navigationDestination(for: Route.self) { route in
+                    self.destination(for: route)
+                }
+        }
+    }
+
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        switch route {
+        case .register:
+            RegisterScreen(coordinator: self)
+        case .forgotPassword:
+            ForgotPasswordScreen(coordinator: self)
+        }
+    }
+
+    func showRegister() { push(.register) }
+    func showForgotPassword() { push(.forgotPassword) }
+
+    func completeLogin(user: User) {
+        delegate?.authDidComplete(user: user)
+    }
+
+    func cancel() {
+        delegate?.authDidCancel()
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+stateDiagram-v2
+    [*] --> AppCoordinator
+
+    state AppCoordinator {
+        [*] --> HomeTab
+        HomeTab --> SettingsTab : Tab switch
+        SettingsTab --> ProfileTab : Tab switch
+        ProfileTab --> HomeTab : Tab switch
+
+        state HomeTab {
+            [*] --> HomeScreen
+            HomeScreen --> DetailScreen : showDetail()
+            DetailScreen --> CategoryScreen : showCategory()
+            HomeScreen --> AuthFlow : startAuthFlow()
+
+            state AuthFlow {
+                [*] --> LoginScreen
+                LoginScreen --> RegisterScreen : showRegister()
+                LoginScreen --> ForgotPassword : showForgotPassword()
+                RegisterScreen --> [*] : completeLogin()
+                LoginScreen --> [*] : completeLogin()
+                LoginScreen --> [*] : cancel()
+            }
+        }
+    }
+        </div>
+        <p class="diagram-caption">Figure 3: State diagram showing coordinator-managed navigation states and transitions</p>
+      </div>
+    </section>
+
+    <!-- MODAL -->
+    <section id="modal">
+      <h2>Modal Handling</h2>
+      <p>Coordinators manage modals (sheets, fullScreenCovers, alerts) through state properties:</p>
+
+      <pre><code>@Observable
+@MainActor
+final class SettingsCoordinator: StackCoordinator {
+    enum Route: Hashable {
+        case notifications
+        case account
+        case appearance
+    }
+
+    enum SheetType: Identifiable {
+        case feedback
+        case about
+
+        var id: String { String(describing: self) }
+    }
+
+    enum AlertType: Identifiable {
+        case confirmLogout
+        case confirmDeleteAccount
+
+        var id: String { String(describing: self) }
+    }
+
+    var path = NavigationPath()
+    var activeSheet: SheetType?
+    var activeAlert: AlertType?
+
+    @ViewBuilder
+    func start() -> some View {
+        NavigationStack(path: $path) {
+            SettingsScreen(coordinator: self)
+                .navigationDestination(for: Route.self) { route in
+                    self.destination(for: route)
+                }
+        }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .feedback: FeedbackView()
+            case .about: AboutView()
+            }
+        }
+        .alert(item: $activeAlert) { alert in
+            switch alert {
+            case .confirmLogout:
+                Alert(
+                    title: Text("Log Out?"),
+                    message: Text("Are you sure you want to log out?"),
+                    primaryButton: .destructive(Text("Log Out")) { self.performLogout() },
+                    secondaryButton: .cancel()
+                )
+            case .confirmDeleteAccount:
+                Alert(
+                    title: Text("Delete Account?"),
+                    message: Text("This action cannot be undone."),
+                    primaryButton: .destructive(Text("Delete")) { self.performDeleteAccount() },
+                    secondaryButton: .cancel()
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        switch route {
+        case .notifications: NotificationsScreen(coordinator: self)
+        case .account: AccountScreen(coordinator: self)
+        case .appearance: AppearanceScreen()
+        }
+    }
+
+    func showNotifications() { push(.notifications) }
+    func showAccount() { push(.account) }
+    func showAppearance() { push(.appearance) }
+    func showFeedback() { activeSheet = .feedback }
+    func showAbout() { activeSheet = .about }
+    func confirmLogout() { activeAlert = .confirmLogout }
+    func confirmDeleteAccount() { activeAlert = .confirmDeleteAccount }
+
+    private func performLogout() { /* ... */ }
+    private func performDeleteAccount() { /* ... */ }
+
+    func handleDeepLink(pathParts: [Substring]) {
+        popToRoot()
+        guard let first = pathParts.first else { return }
+        switch first {
+        case "notifications": push(.notifications)
+        case "account": push(.account)
+        default: break
+        }
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+    </section>
+
+    <!-- OBSERVABLE -->
+    <section id="observable">
+      <h2>@Observable vs ObservableObject</h2>
+      <p>iOS 17 introduced the <code>@Observable</code> macro, which is the modern approach. For iOS 16 support, use <code>ObservableObject</code>:</p>
+
+      <table>
+        <thead><tr><th>Feature</th><th>@Observable (iOS 17+)</th><th>ObservableObject (iOS 16)</th></tr></thead>
+        <tbody>
+          <tr><td>Declaration</td><td><code>@Observable class</code></td><td><code>class: ObservableObject</code></td></tr>
+          <tr><td>Properties</td><td>All tracked automatically</td><td>Need <code>@Published</code></td></tr>
+          <tr><td>Injection</td><td><code>@Environment</code></td><td><code>@EnvironmentObject</code></td></tr>
+          <tr><td>View updates</td><td>Only for accessed properties</td><td>All <code>@Published</code> changes</td></tr>
+          <tr><td>Performance</td><td>Better (fine-grained)</td><td>Can over-render</td></tr>
+          <tr><td>Opt-out</td><td><code>@ObservationIgnored</code></td><td>Don't use <code>@Published</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>iOS 16 ObservableObject Version</h3>
+      <pre><code>// For iOS 16 compatibility
+final class HomeCoordinatorLegacy: ObservableObject, StackCoordinator {
+    enum Route: Hashable {
+        case detail(itemId: String)
+        case favorites
+    }
+
+    @Published var path = NavigationPath()
+    @Published var showAuth = false
+
+    @ViewBuilder
+    func start() -> some View {
+        NavigationStack(path: $path) {
+            HomeScreen(coordinator: self)
+                .navigationDestination(for: Route.self) { route in
+                    self.destination(for: route)
+                }
+        }
+    }
+
+    // ... same methods as before
+}
+
+// Usage in views — @EnvironmentObject instead of @Environment
+struct HomeScreen: View {
+    @EnvironmentObject var coordinator: HomeCoordinatorLegacy
+
+    var body: some View {
+        List {
+            Button("Show Detail") { coordinator.showDetail(itemId: "1") }
+        }
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+    </section>
+
+    <!-- DI -->
+    <section id="di">
+      <h2>Dependency Injection</h2>
+      <p>Coordinators are ideal injection points for dependencies. They create views and can pass services:</p>
+
+      <pre><code>@Observable
+@MainActor
+final class HomeCoordinator: StackCoordinator {
+    // Dependencies injected at init
+    let productService: ProductServiceProtocol
+    let analyticsService: AnalyticsProtocol
+    let userSession: UserSession
+
+    init(
+        productService: ProductServiceProtocol,
+        analyticsService: AnalyticsProtocol,
+        userSession: UserSession
+    ) {
+        self.productService = productService
+        self.analyticsService = analyticsService
+        self.userSession = userSession
+    }
+
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        switch route {
+        case .detail(let id):
+            // Coordinator passes only what the view needs
+            DetailScreen(
+                viewModel: DetailViewModel(
+                    itemId: id,
+                    productService: productService,
+                    analytics: analyticsService
+                ),
+                onBack: { self.pop() }
+            )
+        case .favorites:
+            FavoritesScreen(
+                viewModel: FavoritesViewModel(
+                    userSession: userSession,
+                    productService: productService
+                )
+            )
+        }
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+    </section>
+
+    <!-- TESTING -->
+    <section id="testing">
+      <h2>Testing Navigation Logic</h2>
+      <p>The biggest advantage of coordinators: you can <strong>unit test navigation without rendering views</strong>:</p>
+
+      <pre><code>import XCTest
+@testable import MyApp
+
+@MainActor
+final class HomeCoordinatorTests: XCTestCase {
+
+    var coordinator: HomeCoordinator!
+
+    override func setUp() {
+        coordinator = HomeCoordinator(
+            productService: MockProductService(),
+            analyticsService: MockAnalytics(),
+            userSession: MockUserSession()
+        )
+    }
+
+    func testShowDetailPushesRoute() {
+        coordinator.showDetail(itemId: "42")
+        XCTAssertEqual(coordinator.path.count, 1)
+    }
+
+    func testPopRemovesLastRoute() {
+        coordinator.showDetail(itemId: "1")
+        coordinator.showFavorites()
+        XCTAssertEqual(coordinator.path.count, 2)
+
+        coordinator.pop()
+        XCTAssertEqual(coordinator.path.count, 1)
+    }
+
+    func testPopToRootClearsPath() {
+        coordinator.showDetail(itemId: "1")
+        coordinator.showCategory(name: "Electronics")
+        coordinator.showFavorites()
+        XCTAssertEqual(coordinator.path.count, 3)
+
+        coordinator.popToRoot()
+        XCTAssertTrue(coordinator.path.isEmpty)
+    }
+
+    func testStartAuthFlowPresentsSheet() {
+        XCTAssertFalse(coordinator.showAuth)
+        XCTAssertNil(coordinator.authCoordinator)
+
+        coordinator.startAuthFlow()
+
+        XCTAssertTrue(coordinator.showAuth)
+        XCTAssertNotNil(coordinator.authCoordinator)
+    }
+
+    func testAuthCompleteDismissesSheet() {
+        coordinator.startAuthFlow()
+        let mockUser = User(id: "1", name: "Test")
+
+        coordinator.authDidComplete(user: mockUser)
+
+        XCTAssertFalse(coordinator.showAuth)
+        XCTAssertNil(coordinator.authCoordinator)
+    }
+
+    func testDeepLinkNavigatesToDetail() {
+        coordinator.handleDeepLink(pathParts: ["detail", "99"])
+        XCTAssertEqual(coordinator.path.count, 1)
+    }
+
+    func testDeepLinkResetsExistingPath() {
+        coordinator.showFavorites()
+        coordinator.showDetail(itemId: "1")
+        XCTAssertEqual(coordinator.path.count, 2)
+
+        coordinator.handleDeepLink(pathParts: ["favorites"])
+        XCTAssertEqual(coordinator.path.count, 1)
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+
+      <div class="callout-success callout">
+        <h4>Zero UI Required</h4>
+        <p>These tests run in milliseconds with no simulator needed. You're testing that tapping "Show Detail" pushes a route, that deep links construct the right path, and that auth flow lifecycle works correctly — all as pure logic.</p>
+      </div>
+    </section>
+
+    <!-- MINI APP -->
+    <section id="mini-app">
+      <h2>Complete Mini App</h2>
+      <p>Here's a copy-paste-ready example you can drop into Xcode. It demonstrates AppCoordinator with two tabs, a child AuthCoordinator presented as a sheet, and full deep linking:</p>
+
+      <pre><code>// CoordinatorDemoApp.swift — Complete working app
+import SwiftUI
+
+// MARK: - Models
+struct User: Hashable, Identifiable {
+    let id: String
+    let name: String
+}
+
+struct Product: Hashable, Identifiable {
+    let id: String
+    let name: String
+    let price: Double
+}
+
+// MARK: - Coordinator Protocol
+@MainActor
+protocol AppStackCoordinator: AnyObject, Observable {
+    associatedtype Route: Hashable
+    var path: NavigationPath { get set }
+}
+
+extension AppStackCoordinator {
+    func push(_ route: Route) { path.append(route) }
+    func pop() { guard !path.isEmpty else { return }; path.removeLast() }
+    func popToRoot() { path = NavigationPath() }
+}
+
+// MARK: - Auth Coordinator
+@MainActor protocol AuthDelegate: AnyObject {
+    func didLogin(user: User)
+    func didCancelAuth()
+}
+
+@Observable @MainActor
+final class AuthCoordinator: AppStackCoordinator {
+    enum Route: Hashable { case register }
+    var path = NavigationPath()
+    weak var delegate: AuthDelegate?
+
+    init(delegate: AuthDelegate) { self.delegate = delegate }
+
+    @ViewBuilder func start() -> some View {
+        NavigationStack(path: $path) {
+            VStack(spacing: 20) {
+                Text("Login").font(.largeTitle.bold())
+                Button("Log In") {
+                    self.delegate?.didLogin(user: User(id: "1", name: "Aaron"))
+                }
+                .buttonStyle(.borderedProminent)
+                Button("Create Account") { self.push(.register) }
+                Button("Cancel") { self.delegate?.didCancelAuth() }
+                    .foregroundStyle(.secondary)
+            }
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .register:
+                    VStack(spacing: 20) {
+                        Text("Register").font(.largeTitle.bold())
+                        Button("Complete Registration") {
+                            self.delegate?.didLogin(user: User(id: "2", name: "New User"))
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Home Coordinator
+@Observable @MainActor
+final class HomeCoordinator: AppStackCoordinator, AuthDelegate {
+    enum Route: Hashable {
+        case productDetail(Product)
+        case favorites
+    }
+
+    var path = NavigationPath()
+    var showAuth = false
+    var authCoordinator: AuthCoordinator?
+    var currentUser: User?
+
+    let products = [
+        Product(id: "1", name: "MacBook Pro", price: 1999),
+        Product(id: "2", name: "iPhone 16", price: 999),
+        Product(id: "3", name: "iPad Air", price: 599),
+    ]
+
+    @ViewBuilder func start() -> some View {
+        NavigationStack(path: $path) {
+            List {
+                if let user = currentUser {
+                    Section { Text("Welcome, \(user.name)!") }
+                } else {
+                    Section {
+                        Button("Log In") { self.startAuth() }
+                    }
+                }
+
+                Section("Products") {
+                    ForEach(products) { product in
+                        Button {
+                            self.push(.productDetail(product))
+                        } label: {
+                            HStack {
+                                Text(product.name)
+                                Spacer()
+                                Text("$\(product.price, specifier: "%.0f")")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+
+                Section {
+                    Button("Favorites") { self.push(.favorites) }
+                }
+            }
+            .navigationTitle("Home")
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .productDetail(let product):
+                    VStack(spacing: 16) {
+                        Text(product.name).font(.largeTitle.bold())
+                        Text("$\(product.price, specifier: "%.2f")").font(.title2)
+                        Button("Buy Now") { /* purchase logic */ }
+                            .buttonStyle(.borderedProminent)
+                    }
+                    .navigationTitle(product.name)
+                case .favorites:
+                    Text("Your Favorites")
+                        .font(.largeTitle.bold())
+                        .navigationTitle("Favorites")
+                }
+            }
+        }
+        .sheet(isPresented: $showAuth) {
+            authCoordinator?.start()
+        }
+    }
+
+    func startAuth() {
+        authCoordinator = AuthCoordinator(delegate: self)
+        showAuth = true
+    }
+
+    // AuthDelegate
+    func didLogin(user: User) {
+        currentUser = user
+        showAuth = false
+        authCoordinator = nil
+    }
+
+    func didCancelAuth() {
+        showAuth = false
+        authCoordinator = nil
+    }
+
+    func handleDeepLink(_ parts: [Substring]) {
+        popToRoot()
+        guard let first = parts.first else { return }
+        if first == "product", let id = parts.dropFirst().first,
+           let product = products.first(where: { $0.id == String(id) }) {
+            push(.productDetail(product))
+        } else if first == "favorites" {
+            push(.favorites)
+        }
+    }
+}
+
+// MARK: - Settings Coordinator
+@Observable @MainActor
+final class SettingsCoordinator: AppStackCoordinator {
+    enum Route: Hashable { case notifications; case about }
+
+    var path = NavigationPath()
+
+    @ViewBuilder func start() -> some View {
+        NavigationStack(path: $path) {
+            List {
+                Button("Notifications") { self.push(.notifications) }
+                Button("About") { self.push(.about) }
+            }
+            .navigationTitle("Settings")
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .notifications:
+                    Text("Notification Settings").navigationTitle("Notifications")
+                case .about:
+                    Text("App v1.0").navigationTitle("About")
+                }
+            }
+        }
+    }
+
+    func handleDeepLink(_ parts: [Substring]) {
+        popToRoot()
+        if parts.first == "notifications" { push(.notifications) }
+    }
+}
+
+// MARK: - App Coordinator
+@Observable @MainActor
+final class AppCoordinator {
+    enum Tab: Hashable { case home, settings }
+
+    var selectedTab: Tab = .home
+    let home = HomeCoordinator()
+    let settings = SettingsCoordinator()
+
+    @ViewBuilder func start() -> some View {
+        TabView(selection: Binding(
+            get: { self.selectedTab },
+            set: { newTab in
+                if newTab == self.selectedTab {
+                    switch newTab {
+                    case .home: self.home.popToRoot()
+                    case .settings: self.settings.popToRoot()
+                    }
+                }
+                self.selectedTab = newTab
+            }
+        )) {
+            home.start()
+                .tabItem { Label("Home", systemImage: "house") }
+                .tag(Tab.home)
+
+            settings.start()
+                .tabItem { Label("Settings", systemImage: "gear") }
+                .tag(Tab.settings)
+        }
+    }
+
+    func handleURL(_ url: URL) {
+        let parts = url.pathComponents.dropFirst().map { Substring($0) }
+        guard let first = parts.first else { return }
+        switch first {
+        case "home":
+            selectedTab = .home
+            home.handleDeepLink(Array(parts.dropFirst()))
+        case "settings":
+            selectedTab = .settings
+            settings.handleDeepLink(Array(parts.dropFirst()))
+        default: break
+        }
+    }
+}
+
+// MARK: - App Entry
+@main
+struct CoordinatorDemoApp: App {
+    @State private var coordinator = AppCoordinator()
+
+    var body: some Scene {
+        WindowGroup {
+            coordinator.start()
+                .onOpenURL { coordinator.handleURL($0) }
+        }
+    }
+}</code><button class="copy-btn">Copy</button></pre>
+    </section>
+
+    <!-- TRADEOFFS -->
+    <section id="tradeoffs">
+      <h2>Tradeoff Analysis</h2>
+
+      <table>
+        <thead><tr><th>Dimension</th><th>Basic NavigationStack</th><th>Enum Router</th><th>Coordinator</th></tr></thead>
+        <tbody>
+          <tr><td>Setup complexity</td><td>Minimal</td><td>Low-Medium</td><td>High</td></tr>
+          <tr><td>Testability</td><td>Low</td><td>High</td><td>Very High</td></tr>
+          <tr><td>Scalability</td><td>Low</td><td>High</td><td>Very High</td></tr>
+          <tr><td>View isolation</td><td>Low</td><td>Medium</td><td>Very High</td></tr>
+          <tr><td>Learning curve</td><td>Low</td><td>Medium</td><td>High</td></tr>
+          <tr><td>Boilerplate</td><td>Minimal</td><td>Some</td><td>Significant</td></tr>
+          <tr><td>Sub-flow management</td><td>Ad-hoc</td><td>In router</td><td>Child coordinators</td></tr>
+          <tr><td>Deep linking</td><td>Manual</td><td>Centralized</td><td>Hierarchical</td></tr>
+          <tr><td>Team friendliness</td><td>OK</td><td>Good</td><td>Excellent</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Advantages</h4>
+          <ul>
+            <li>Complete separation of navigation from views</li>
+            <li>Unit test all navigation flows without UI</li>
+            <li>Views are fully reusable across different flows</li>
+            <li>Deep linking is hierarchical and clean</li>
+            <li>Teams can work on features independently</li>
+            <li>Sub-flows (auth, onboarding) are self-contained</li>
+            <li>Consistent pattern from UIKit — familiar to many</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Disadvantages</h4>
+          <ul>
+            <li>Significant boilerplate vs. simple patterns</li>
+            <li>Overkill for small apps (&lt; 10 screens)</li>
+            <li>SwiftUI's declarative model makes it less natural than UIKit</li>
+            <li>Coordinator lifecycle management adds complexity</li>
+            <li>Delegate protocols add indirection</li>
+            <li>New team members need onboarding</li>
+            <li>Some fight against SwiftUI's built-in navigation model</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHEN TO USE -->
+    <section id="when-to-use">
+      <h2>When to Use This Approach</h2>
+
+      <div class="callout-success callout">
+        <h4>Good Fit</h4>
+        <ul>
+          <li>Apps with 15+ screens and complex navigation graphs</li>
+          <li>Teams of 3+ developers working on different features</li>
+          <li>Apps with distinct sub-flows (auth, onboarding, checkout)</li>
+          <li>Projects that require comprehensive navigation testing</li>
+          <li>Apps migrating from UIKit that already use coordinators</li>
+          <li>Enterprise apps with strict architecture requirements</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning callout">
+        <h4>Consider Alternatives</h4>
+        <ul>
+          <li>Simple apps with &lt; 10 screens — use Enum Router instead</li>
+          <li>Solo developers on small projects — overhead may not pay off</li>
+          <li>Prototypes and MVPs — keep it simple, refactor later</li>
+          <li>If the team prefers TCA — use TCA's built-in navigation instead</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- VS ROUTER -->
+    <section id="vs-router">
+      <h2>Coordinator vs. Router Pattern</h2>
+      <p>The main distinction:</p>
+      <ul>
+        <li><strong>Router:</strong> A single object managing routes for one NavigationStack. Good for most apps.</li>
+        <li><strong>Coordinator:</strong> A hierarchical system where coordinators create child coordinators for sub-flows. Scales to very large apps.</li>
+      </ul>
+      <p>In practice, a coordinator <em>contains</em> a router. The coordinator adds lifecycle management, parent-child relationships, and delegate-based communication between flows. If you only need centralized routing without sub-flows, the <a href="../swiftui-nav-enum-router/index.html">Enum Router</a> is simpler and sufficient.</p>
+    </section>
+
+    <!-- FRAMEWORKS -->
+    <section id="frameworks">
+      <h2>Open-Source Frameworks</h2>
+      <table>
+        <thead><tr><th>Framework</th><th>Approach</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SwiftUICoordinator</strong></td><td>Protocol-based</td><td>Clean API, good for learning the pattern</td></tr>
+          <tr><td><strong>Stinsen</strong></td><td>Full coordinator tree</td><td>Production-tested (~50 flows, ~100 screens)</td></tr>
+          <tr><td><strong>SUICoordinator</strong></td><td>Type-safe + async</td><td>iOS 16+, supports custom transitions</td></tr>
+          <tr><td><strong>TCACoordinators</strong></td><td>TCA + coordinators</td><td>For apps already using The Composable Architecture</td></tr>
+        </tbody>
+      </table>
+      <p>These can save setup time but add a dependency. The hand-rolled approach shown in this guide gives you full control and understanding.</p>
+    </section>
+
+    <footer class="footer">
+      <p>SwiftUI Coordinator Pattern Guide &middot; March 2026</p>
+      <p><a href="../swiftui-navigation-approaches/index.html">&larr; Back to Dashboard</a></p>
+    </footer>
+  </main>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+</button>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span id="theme-icon">&#9789;</span></button>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  const saved = localStorage.getItem('swiftui-nav-theme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  mermaid.initialize({ startOnLoad: true, theme: saved === 'dark' ? 'dark' : 'neutral', flowchart: { useMaxWidth: true, htmlLabels: true } });
+
+  function toggleTheme() {
+    const d = document.documentElement.hasAttribute('data-theme');
+    if (d) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('swiftui-nav-theme','light'); }
+    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('swiftui-nav-theme','dark'); }
+    location.reload();
+  }
+  if (saved==='dark') document.getElementById('theme-icon').innerHTML='&#9788;';
+
+  window.addEventListener('scroll', () => { document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500); });
+  document.getElementById('backToTop').addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  // Copy buttons
+  document.querySelectorAll('pre').forEach(pre => {
+    const btn = pre.querySelector('.copy-btn');
+    if (btn) btn.addEventListener('click', () => {
+      const code = pre.querySelector('code');
+      navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+      btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  });
+
+  // Scroll spy
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (link) link.classList.toggle('active', e.isIntersecting);
+    });
+  }, { threshold: 0.1, rootMargin: '-10% 0px -80% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' }); });
+  });
+</script>
+</body>
+</html>
