@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive data dashboard: AAC Product Market Analysis - 9 products evaluated against 7 taxonomy domains with patent constraints, clinical evidence, and coverage gap analysis.">
+  <title>AAC Product Market Analysis | Data Dashboard</title>
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #818CF8;
+      --color-primary-dark: #4F46E5;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+      --color-text: #1F2937;
+      --color-text-light: #6B7280;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F3F4F6;
+      --color-bg-card: #FFFFFF;
+      --color-border: #E5E7EB;
+      --font-sans: system-ui, -apple-system, sans-serif;
+      --font-mono: 'SF Mono', Consolas, monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --radius: 8px;
+      --radius-lg: 12px;
+      --d1-receptive: #3B82F6;
+      --d2-expressive: #10B981;
+      --d3-pragmatic: #F59E0B;
+      --d4-physical: #EF4444;
+      --d5-cognitive: #8B5CF6;
+      --d6-psychosocial: #EC4899;
+      --d7-rate: #14B8A6;
+      --validity-confirmed: #10B981;
+      --validity-uncertain: #F59E0B;
+      --validity-invalid: #EF4444;
+    }
+
+    [data-theme="dark"] {
+      --color-text: #F9FAFB;
+      --color-text-light: #9CA3AF;
+      --color-bg: #111827;
+      --color-bg-alt: #1F2937;
+      --color-bg-card: #1F2937;
+      --color-border: #374151;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .dashboard-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .dashboard-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .dashboard-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+    }
+
+    /* Sibling Nav */
+    .sibling-nav {
+      background: var(--color-primary);
+      padding: 0 2rem;
+      overflow-x: auto;
+    }
+    .sibling-nav-list {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      list-style: none;
+    }
+    .sibling-nav-list a {
+      display: block;
+      padding: 0.65rem 1.2rem;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .sibling-nav-list a:hover { color: #fff; }
+    .sibling-nav-list a.active {
+      color: #fff;
+      border-bottom-color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Section Nav */
+    .category-nav {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 2rem;
+      overflow-x: auto;
+      position: sticky;
+      top: 52px;
+      z-index: 99;
+    }
+    .nav-list {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      list-style: none;
+    }
+    .nav-item {
+      padding: 0.75rem 1rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .nav-item:hover, .nav-item.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* Main */
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Hero Stats */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-card.highlight { border-left: 4px solid var(--color-primary); }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+    .stat-value {
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .stat-context {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+      margin-top: 0.35rem;
+    }
+
+    /* Section */
+    .data-section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 130px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin-top: 0.25rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    /* Data Grid */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* Chart Container */
+    .chart-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+    }
+    .chart-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+    }
+    .chart-container-tall {
+      height: 400px;
+    }
+
+    /* Confidence Bar */
+    .confidence-bar {
+      display: flex;
+      height: 28px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .confidence-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      transition: width 0.5s ease;
+    }
+    .confidence-legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Heat Map */
+    .heatmap-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .heatmap-table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: separate;
+      border-spacing: 3px;
+      font-size: 0.8rem;
+    }
+    .heatmap-table th {
+      padding: 0.6rem 0.5rem;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-align: center;
+      color: var(--color-text-light);
+      background: transparent;
+    }
+    .heatmap-table th.domain-header {
+      writing-mode: horizontal-tb;
+      white-space: nowrap;
+    }
+    .heatmap-table th.product-name {
+      text-align: left;
+      padding-left: 0.75rem;
+      color: var(--color-text);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .heatmap-cell {
+      padding: 0.5rem;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 0.72rem;
+      position: relative;
+      min-width: 80px;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.08);
+      z-index: 2;
+      box-shadow: var(--shadow-md);
+    }
+    .heat-strongest { background: #059669; color: #fff; }
+    .heat-strong { background: #10B981; color: #fff; }
+    .heat-moderate { background: #F59E0B; color: #fff; }
+    .heat-weak { background: #EF4444; color: #fff; }
+    .heat-weak-mod { background: #F97316; color: #fff; }
+
+    [data-theme="dark"] .heat-strongest { background: #047857; }
+    [data-theme="dark"] .heat-strong { background: #059669; }
+    [data-theme="dark"] .heat-moderate { background: #D97706; }
+    [data-theme="dark"] .heat-weak { background: #DC2626; }
+    [data-theme="dark"] .heat-weak-mod { background: #EA580C; }
+
+    .heatmap-tooltip {
+      display: none;
+      position: fixed;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      max-width: 320px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      pointer-events: none;
+    }
+    .heatmap-tooltip.visible { display: block; }
+    .tooltip-title { font-weight: 700; margin-bottom: 0.3rem; }
+    .tooltip-detail { color: var(--color-text-light); }
+
+    /* Product Cards */
+    .product-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .product-card:hover { box-shadow: var(--shadow-md); }
+    .product-card-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+      gap: 1rem;
+    }
+    .product-card-header:hover { background: var(--color-bg-alt); }
+    .product-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .product-company {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+    }
+    .product-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .product-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: var(--color-bg-alt);
+      color: var(--color-text-light);
+      border: 1px solid var(--color-border);
+    }
+    .badge-price { border-color: var(--color-primary); color: var(--color-primary); }
+    .badge-platform { border-color: var(--d1-receptive); color: var(--d1-receptive); }
+    .product-expand-icon {
+      font-size: 1.2rem;
+      color: var(--color-text-light);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+    .product-card.expanded .product-expand-icon { transform: rotate(180deg); }
+
+    .domain-coverage-bar {
+      display: flex;
+      gap: 3px;
+      margin-top: 0.65rem;
+    }
+    .domain-pip {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      opacity: 0.3;
+    }
+    .domain-pip.strong, .domain-pip.strongest { opacity: 1; }
+    .domain-pip.moderate { opacity: 0.6; }
+
+    .product-card-body {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .product-card.expanded .product-card-body { display: block; }
+
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .detail-section h4 {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    .detail-section ul {
+      list-style: none;
+      font-size: 0.82rem;
+    }
+    .detail-section li {
+      padding: 0.2rem 0;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .detail-section li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    .strength-item::before { background: var(--validity-confirmed); }
+    .weakness-item::before { background: var(--validity-invalid); }
+    .patent-item::before { background: var(--color-primary); }
+    .evidence-item::before { background: var(--d5-cognitive); }
+
+    /* Comparison Table */
+    .comparison-table-wrapper { overflow-x: auto; }
+    .comparison-table {
+      width: 100%;
+      background: var(--color-bg-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .comparison-table th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+      font-size: 0.78rem;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .comparison-table th:hover { color: var(--color-primary); }
+    .comparison-table th .sort-arrow { margin-left: 0.3rem; font-size: 0.65rem; }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:hover td { background: var(--color-bg-alt); }
+
+    /* Filter Controls */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      padding: 0.4rem 0.85rem;
+      border-radius: 99px;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-card);
+      color: var(--color-text-light);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .filter-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+
+    /* Risk badges */
+    .risk-critical { background: #DC2626; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+    .risk-high { background: #F97316; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+    .risk-medium { background: #F59E0B; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+    .risk-low { background: #10B981; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+
+    /* Validity badges */
+    .validity-confirmed {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      color: var(--validity-confirmed); font-size: 0.72rem; font-weight: 600;
+    }
+    .validity-uncertain {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      color: var(--validity-uncertain); font-size: 0.72rem; font-weight: 600;
+    }
+    .validity-invalid {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      color: var(--validity-invalid); font-size: 0.72rem; font-weight: 600;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .sources-list {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .sources-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .source-item {
+      padding: 0.35rem 0;
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-light);
+    }
+    .source-item a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+    .source-item a:hover { text-decoration: underline; }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      font-size: 0.8rem;
+      color: var(--color-text);
+      z-index: 200;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--color-primary); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .stat-value { font-size: 1.75rem; }
+      .dashboard-container { padding: 1rem; }
+      .product-detail-grid { grid-template-columns: 1fr; }
+      .data-grid { grid-template-columns: 1fr; }
+      .category-nav { top: 44px; }
+      .dashboard-header { padding: 0.75rem 1rem; }
+      .dashboard-title { font-size: 1.1rem; }
+    }
+
+    @media print {
+      .category-nav, .theme-toggle, .sibling-nav, .filter-bar { display: none; }
+      .dashboard-header { position: static; }
+      .data-section { page-break-inside: avoid; }
+      .product-card-body { display: block !important; }
+      .heatmap-cell:hover { transform: none; }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .data-section { animation: fadeIn 0.4s ease-out; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div>
+        <h1 class="dashboard-title">AAC Product Market Analysis</h1>
+        <p class="dashboard-meta">Updated March 5, 2026 | 60+ sources | 97 claims validated</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sibling Navigation -->
+  <nav class="sibling-nav" aria-label="Research hub navigation">
+    <ul class="sibling-nav-list">
+      <li><a href="../aac-research-hub/index.html">Research Hub</a></li>
+      <li><a href="../aac-communication-struggles/index.html">Taxonomy</a></li>
+      <li><a href="index.html" class="active">Market Analysis</a></li>
+      <li><a href="../aac-opportunity-analysis/index.html">Opportunities</a></li>
+    </ul>
+  </nav>
+
+  <!-- Section Navigation -->
+  <nav class="category-nav" aria-label="Dashboard sections">
+    <ul class="nav-list">
+      <li><a href="#overview" class="nav-item active">Overview</a></li>
+      <li><a href="#confidence" class="nav-item">Confidence</a></li>
+      <li><a href="#heatmap" class="nav-item">Coverage Map</a></li>
+      <li><a href="#products" class="nav-item">Products</a></li>
+      <li><a href="#gaps" class="nav-item">Gap Analysis</a></li>
+      <li><a href="#by-condition" class="nav-item">By Condition</a></li>
+      <li><a href="#platforms" class="nav-item">Platforms</a></li>
+      <li><a href="#pricing" class="nav-item">Pricing</a></li>
+      <li><a href="#emerging-tech" class="nav-item">Emerging Tech</a></li>
+      <li><a href="#patents" class="nav-item">Patents</a></li>
+      <li><a href="#sources" class="nav-item">Sources</a></li>
+    </ul>
+  </nav>
+
+  <main class="dashboard-container">
+
+    <!-- Hero Stats -->
+    <section class="hero-stats" id="overview" aria-label="Key metrics">
+      <div class="stat-card highlight">
+        <div class="stat-label">Products Analyzed</div>
+        <div class="stat-value">9</div>
+        <div class="stat-context">Major commercial + open-source AAC apps</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-label">Taxonomy Domains</div>
+        <div class="stat-value">7</div>
+        <div class="stat-context">Communication struggle categories evaluated</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-label">Claims Validated</div>
+        <div class="stat-value">97</div>
+        <div class="stat-context">Independent fact-checking of all data</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-label">Validation Score</div>
+        <div class="stat-value" style="color: var(--validity-uncertain);">59%</div>
+        <div class="stat-context">57 of 97 claims fully confirmed</div>
+      </div>
+      <div class="stat-card" style="cursor: pointer;" onclick="document.getElementById('by-condition').scrollIntoView({behavior:'smooth'})">
+        <div class="stat-label">AAC Abandonment Rate</div>
+        <div class="stat-value">30-50%</div>
+        <div class="stat-context">In children; training and fit are key factors</div>
+        <details style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--color-text-light);">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--color-text-light);">Condition-specific drivers</summary>
+          <ul style="margin-top: 0.35rem; padding-left: 1rem; list-style: disc;">
+            <li><strong>Autism:</strong> Stigma, stakeholder knowledge, device fit</li>
+            <li><strong>Aphasia:</strong> Clinician misconceptions about AAC appropriateness</li>
+            <li><strong>Progressive (ALS/MS):</strong> "Assess once" myth -- failure to re-evaluate as disease progresses</li>
+          </ul>
+        </details>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Speech Rate Gap</div>
+        <div class="stat-value">10x</div>
+        <div class="stat-context">Natural 120-180 WPM vs AAC 8-15 WPM</div>
+      </div>
+    </section>
+
+    <!-- Data Confidence Overview -->
+    <section class="data-section" id="confidence" aria-label="Data confidence overview">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Data Confidence Overview</h2>
+          <p class="section-subtitle">Independent validation of 97 claims across all product analyses</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="confidence-bar">
+          <div class="confidence-segment" style="width: 58.8%; background: var(--validity-confirmed);">57 Confirmed</div>
+          <div class="confidence-segment" style="width: 24.7%; background: var(--validity-uncertain);">24 Uncertain</div>
+          <div class="confidence-segment" style="width: 16.5%; background: var(--validity-invalid);">16 Invalid</div>
+        </div>
+        <div class="confidence-legend">
+          <div class="legend-item"><div class="legend-dot" style="background: var(--validity-confirmed);"></div>Confirmed (59%) -- Verified by independent sources</div>
+          <div class="legend-item"><div class="legend-dot" style="background: var(--validity-uncertain);"></div>Uncertain (25%) -- Partially supported or needs hedging</div>
+          <div class="legend-item"><div class="legend-dot" style="background: var(--validity-invalid);"></div>Invalid (16%) -- Corrected in this dashboard</div>
+        </div>
+
+        <div style="margin-top: 1.25rem;">
+          <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem;">Key Corrections Applied</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">LAMP WFL: Now has AI prediction</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">2025 update added learning word prediction, AI Translate, AI Message Edit</div>
+            </div>
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">Avaz: Now has switch/eye gaze</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">2022-2023 updates added alternative access methods</div>
+            </div>
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">Avaz: PRC-Saltillo subsidiary (Oct 2025)</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">PRC-Saltillo now owns 3 of 9 analyzed products</div>
+            </div>
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">Camera eye tracking: NOT patent-safe</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">Tobii won 2025 lawsuit against Pupil Labs (camera-based)</div>
+            </div>
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">Spoken has icon support</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">Growing icon library paired with predictions; not purely text-based</div>
+            </div>
+            <div style="padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 6px; border-left: 3px solid var(--validity-invalid);">
+              <div style="font-size: 0.78rem; font-weight: 600;">Receptive support: Not TD Snap alone</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-light);">Lingraphica, TouchChat Aphasia, VSD apps also address this</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="data-grid" style="margin-top: 1.25rem;">
+        <div class="chart-card">
+          <h3 class="chart-title">Validation by Category</h3>
+          <div class="chart-container">
+            <canvas id="validationCategoryChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Overall Reliability</h3>
+          <div class="chart-container">
+            <canvas id="validationPieChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Coverage Heat Map -->
+    <section class="data-section" id="heatmap" aria-label="Product coverage heat map">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Product-Domain Coverage Heat Map</h2>
+          <p class="section-subtitle">9 products vs. 7 taxonomy domains. Hover cells for details, click products for profiles. Ratings incorporate validation corrections. Note: Motor Speech Bypass (D2.1) scored Strong+ for all products and is merged into the D2 Expressive column.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+          <div class="legend-item"><div class="legend-dot" style="background: #059669;"></div>Strongest</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #10B981;"></div>Strong</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #F59E0B;"></div>Moderate</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #F97316;"></div>Weak-Moderate</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #EF4444;"></div>Weak</div>
+        </div>
+        <div class="heatmap-wrapper">
+          <table class="heatmap-table" id="coverageHeatmap" role="grid" aria-label="Product coverage matrix">
+            <thead>
+              <tr>
+                <th style="min-width:130px;"></th>
+                <th class="domain-header" style="color: var(--d1-receptive);">D1: Receptive</th>
+                <th class="domain-header" style="color: var(--d2-expressive);">D2: Expressive</th>
+                <th class="domain-header" style="color: var(--d2-expressive);">D2.5: Emotion</th>
+                <th class="domain-header" style="color: var(--d3-pragmatic);">D3: Pragmatic</th>
+                <th class="domain-header" style="color: var(--d4-physical);">D4: Physical</th>
+                <th class="domain-header" style="color: var(--d5-cognitive);">D5: Cognitive</th>
+                <th class="domain-header" style="color: var(--d6-psychosocial);">D6: Psychosocial</th>
+                <th class="domain-header" style="color: var(--d7-rate);">D7: Rate</th>
+              </tr>
+            </thead>
+            <tbody id="heatmapBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="heatmap-tooltip" id="heatmapTooltip"></div>
+    </section>
+
+    <!-- Individual Product Cards -->
+    <section class="data-section" id="products" aria-label="Product profiles">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Product Profiles</h2>
+          <p class="section-subtitle">Click to expand full analysis. Data incorporates validation corrections.</p>
+        </div>
+      </div>
+
+      <div class="filter-bar" id="productFilter" role="group" aria-label="Filter products">
+        <button class="filter-btn active" data-filter="all">All Products</button>
+        <button class="filter-btn" data-filter="ios">iOS</button>
+        <button class="filter-btn" data-filter="android">Android</button>
+        <button class="filter-btn" data-filter="windows">Windows</button>
+        <button class="filter-btn" data-filter="free">Free / Open Source</button>
+        <button class="filter-btn" data-filter="prc">PRC-Saltillo Family</button>
+      </div>
+
+      <div class="data-grid" id="productGrid"></div>
+    </section>
+
+    <!-- Coverage Gap Analysis -->
+    <section class="data-section" id="gaps" aria-label="Coverage gap analysis">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Coverage Gap Analysis</h2>
+          <p class="section-subtitle">Which domains are best and least covered across all 9 products</p>
+        </div>
+      </div>
+      <div class="data-grid">
+        <div class="chart-card">
+          <h3 class="chart-title">Domain Coverage Scores (Average Across All Products)</h3>
+          <div class="chart-container chart-container-tall">
+            <canvas id="domainCoverageChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Products per Coverage Level by Domain</h3>
+          <div class="chart-container chart-container-tall">
+            <canvas id="domainStackedChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;">Critical Unmet Needs</h3>
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Condition / Need</th>
+                <th>Gap Description</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dementia / Alzheimer's</strong></td>
+                <td>No app designed for progressive cognitive decline. All assume stable or improving abilities.</td>
+                <td><span class="validity-confirmed">Confirmed gap</span></td>
+              </tr>
+              <tr>
+                <td><strong>MS (fluctuating)</strong></td>
+                <td>No app supports seamless, automatic access method switching based on energy/ability.</td>
+                <td><span class="validity-confirmed">Confirmed gap</span></td>
+              </tr>
+              <tr>
+                <td><strong>Fatigue Management</strong></td>
+                <td>No app adapts interface complexity to user fatigue levels.</td>
+                <td><span class="validity-confirmed">Confirmed gap</span></td>
+              </tr>
+              <tr>
+                <td><strong>Conversational Timing</strong></td>
+                <td>No "I'm composing" signals, quick interjection banks, or AI turn-taking support in any shipping product.</td>
+                <td><span class="validity-uncertain">Prototype exists (COMPA, CHI 2024)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Social Cognition</strong></td>
+                <td>No AAC app integrates active ToM scaffolding, emotion recognition, or social judgment prompts.</td>
+                <td><span class="validity-uncertain">Standalone therapy apps exist</span></td>
+              </tr>
+              <tr>
+                <td><strong>Cognitive-Communication (TBI)</strong></td>
+                <td>No AAC app has attention aids, memory scaffolding, or executive function prompts built in.</td>
+                <td><span class="validity-uncertain">Adjacent therapy apps (Lingraphica) exist</span></td>
+              </tr>
+              <tr>
+                <td><strong>Conversational Repair</strong></td>
+                <td>Passive repair vocabulary exists but no intelligent breakdown detection or proactive suggestions.</td>
+                <td><span class="validity-uncertain">AlphaTopics AAC partially addresses</span></td>
+              </tr>
+              <tr>
+                <td><strong>Locked-in Syndrome (affordable)</strong></td>
+                <td>Only 3-4 platforms with adequate dedicated eye gaze. All expensive. No affordable option.</td>
+                <td><span class="validity-uncertain">iOS 18 eye tracking helps but imprecise</span></td>
+              </tr>
+              <tr>
+                <td><strong>Head/Neck Cancer (voice banking)</strong></td>
+                <td>Voice banking poorly integrated into AAC workflow. Most apps treat voice as cosmetic, not clinical. No app integrates voice banking timing guidance for pre-surgical patients.</td>
+                <td><span class="validity-uncertain">Uncertain 6/10 -- improving on iOS (Apple Personal Voice)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Stigma Reduction (6.3)</strong></td>
+                <td>No AAC app specifically designed with dedicated stigma-reduction features, though several address it through design choices: Proloquo4Text (messaging-style), Spoken (modern chat UI), SpeechWatch (discreet wearable).</td>
+                <td><span class="validity-uncertain">Partially addressed by design (not explicit features)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Effectiveness by Condition -->
+    <section class="data-section" id="by-condition" aria-label="Effectiveness by condition">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Effectiveness by Condition</h2>
+          <p class="section-subtitle">Clinically actionable: which AAC approach and product works best for each condition, based on current evidence</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table" id="conditionTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable('conditionTable', 0)">Condition <span class="sort-arrow"></span></th>
+                <th>Most Effective Approach</th>
+                <th onclick="sortTable('conditionTable', 2)">Evidence Level <span class="sort-arrow"></span></th>
+                <th>Best Current App</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ASD (children)</strong></td>
+                <td>Symbol-based AAC + aided language modeling</td>
+                <td><span style="color: var(--validity-confirmed); font-weight: 600;">Strong</span> (multiple systematic reviews)</td>
+                <td>Proloquo2Go, LAMP WFL</td>
+              </tr>
+              <tr>
+                <td><strong>ASD (pre-literate)</strong></td>
+                <td>PECS then symbol-based SGD</td>
+                <td><span style="color: var(--validity-confirmed); font-weight: 600;">Strong</span> (meta-analysis)</td>
+                <td>Proloquo2Go, TouchChat</td>
+              </tr>
+              <tr>
+                <td><strong>Aphasia (chronic)</strong></td>
+                <td>Visual Scene Displays</td>
+                <td><span style="color: var(--validity-uncertain); font-weight: 600;">Moderate</span> (multiple studies)</td>
+                <td>TD Snap (Aphasia page set)</td>
+              </tr>
+              <tr>
+                <td><strong>Aphasia (acute)</strong></td>
+                <td>Low-tech AAC + standard treatment</td>
+                <td><span style="color: var(--validity-uncertain); font-weight: 600;">Emerging</span> (RCT 2024)</td>
+                <td>Communication boards (non-app)</td>
+              </tr>
+              <tr>
+                <td><strong>ALS</strong></td>
+                <td>Eye gaze + voice banking early</td>
+                <td><span style="color: var(--validity-confirmed); font-weight: 600;">Strong</span> (PIADS, QUEST 2.0)</td>
+                <td>TD Snap + Tobii hardware, Grid</td>
+              </tr>
+              <tr>
+                <td><strong>Cerebral Palsy</strong></td>
+                <td>Eye gaze (speed advantage over switch)</td>
+                <td><span style="color: var(--validity-uncertain); font-weight: 600;">Moderate</span> (comparative studies)</td>
+                <td>TD Snap, Grid</td>
+              </tr>
+              <tr>
+                <td><strong>Dementia</strong></td>
+                <td>Low-tech memory books, simplified aids</td>
+                <td><span style="color: var(--validity-uncertain); font-weight: 600;">Moderate</span> (multiple studies)</td>
+                <td style="color: var(--validity-invalid); font-weight: 600;">No adequate app exists</td>
+              </tr>
+              <tr>
+                <td><strong>TBI</strong></td>
+                <td>Flexible AAC evolving with recovery</td>
+                <td><span style="color: var(--validity-invalid); font-weight: 600;">Limited</span> (case studies)</td>
+                <td>TD Snap (multiple page sets)</td>
+              </tr>
+              <tr>
+                <td><strong>Parkinson's</strong></td>
+                <td>LSVT LOUD (Level 1 evidence), then progressive AAC</td>
+                <td><span style="color: var(--validity-confirmed); font-weight: 600;">Strong</span> for LSVT; <span style="color: var(--validity-invalid); font-weight: 600;">Weak</span> for AAC apps</td>
+                <td>Voice amplifiers, then Spoken / Grid</td>
+              </tr>
+              <tr>
+                <td><strong>Down Syndrome</strong></td>
+                <td>Multimodal (sign + symbol + speech)</td>
+                <td><span style="color: var(--validity-uncertain); font-weight: 600;">Moderate</span> (systematic review)</td>
+                <td>Proloquo2Go, Avaz</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">AAC Abandonment: Condition-Specific Drivers</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+          <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px; border-left: 3px solid var(--d5-cognitive);">
+            <div style="font-size: 0.82rem; font-weight: 600;">Overall: 30-50% abandonment rate in children</div>
+            <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">Top success factors: caregiver buy-in, family involvement, ongoing support. Top failure factors: lack of training, poor device-user fit.</div>
+          </div>
+          <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px; border-left: 3px solid var(--d3-pragmatic);">
+            <div style="font-size: 0.82rem; font-weight: 600;">Autism</div>
+            <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">Stigma, stakeholder knowledge gaps, and poor device-user fit drive abandonment. Parents and teachers may lack training on aided language stimulation.</div>
+          </div>
+          <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px; border-left: 3px solid var(--d1-receptive);">
+            <div style="font-size: 0.82rem; font-weight: 600;">Aphasia</div>
+            <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">Clinician misconceptions about AAC "giving up on speech" lead to under-referral and late introduction, reducing effectiveness and adoption.</div>
+          </div>
+          <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px; border-left: 3px solid var(--d4-physical);">
+            <div style="font-size: 0.82rem; font-weight: 600;">Progressive Conditions (ALS, MS, Parkinson's)</div>
+            <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">The "assess once" myth: failure to re-evaluate AAC as disease progresses leads to devices that no longer match abilities. Access methods may need to change multiple times.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Availability -->
+    <section class="data-section" id="platforms" aria-label="Platform availability">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Platform Availability</h2>
+          <p class="section-subtitle">Cross-platform reach directly impacts the 72% of smartphone users on Android</p>
+        </div>
+      </div>
+      <div class="data-grid">
+        <div class="chart-card">
+          <h3 class="chart-title">Platform Support Matrix</h3>
+          <div class="chart-container chart-container-tall">
+            <canvas id="platformChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Platform Distribution</h3>
+          <div class="chart-container">
+            <canvas id="platformPieChart"></canvas>
+          </div>
+          <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--color-text-light);">
+            <p><strong>iOS-only apps</strong> exclude the 72% Android global market share. Only 3 of 9 products support Android.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;">Alternative Access Methods by Product</h3>
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table" id="accessTable">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Touch</th>
+                <th>Switch Scanning</th>
+                <th>Eye Gaze</th>
+                <th>Head Tracking</th>
+                <th>Voice Control</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Proloquo2Go</strong></td><td>Yes</td><td>Yes (5 modes)</td><td>iOS 18 system</td><td>No native</td><td>No</td></tr>
+              <tr><td><strong>TouchChat HD</strong></td><td>Yes</td><td>Yes</td><td>iOS 18 system</td><td>Yes (Face ID)</td><td>No</td></tr>
+              <tr><td><strong>LAMP WFL</strong></td><td>Yes</td><td>AeroSwitch</td><td>VersaEye hardware</td><td>Yes</td><td>No</td></tr>
+              <tr><td><strong>TD Snap</strong></td><td>Yes</td><td>Yes (full)</td><td>Tobii hardware (gold standard)</td><td>Yes</td><td>No</td></tr>
+              <tr><td><strong>Grid</strong></td><td>Yes + Virtual Keyguard</td><td>Yes (USB/BT)</td><td>Evo NPU hardware</td><td>Yes</td><td>Yes ("Hey Grid")</td></tr>
+              <tr><td><strong>Avaz</strong></td><td>Yes</td><td>Yes (added 2022)</td><td>Yes (added 2023)</td><td>No</td><td>No</td></tr>
+              <tr><td><strong>Spoken</strong></td><td>Yes</td><td>iOS system only</td><td>iOS 18 system (optimized)</td><td>iOS system</td><td>No</td></tr>
+              <tr><td><strong>Fluent AAC</strong></td><td>Yes</td><td>No native</td><td>No native</td><td>Yes (Face ID)</td><td>No</td></tr>
+              <tr><td><strong>Cboard</strong></td><td>Yes</td><td>OS-level (Android/iOS)</td><td>No</td><td>No</td><td>No</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Comparison -->
+    <section class="data-section" id="pricing" aria-label="Pricing comparison">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Pricing Comparison</h2>
+          <p class="section-subtitle">One-time purchase vs. subscription models. All prices USD unless noted.</p>
+        </div>
+      </div>
+      <div class="data-grid">
+        <div class="chart-card" style="grid-column: 1 / -1;">
+          <h3 class="chart-title">One-Time / Lifetime Cost Comparison (USD)</h3>
+          <div class="chart-container chart-container-tall">
+            <canvas id="pricingChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;">Full Pricing Breakdown</h3>
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table" id="pricingTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable('pricingTable', 0)">Product <span class="sort-arrow"></span></th>
+                <th onclick="sortTable('pricingTable', 1)">Monthly <span class="sort-arrow"></span></th>
+                <th onclick="sortTable('pricingTable', 2)">Annual <span class="sort-arrow"></span></th>
+                <th onclick="sortTable('pricingTable', 3)">One-Time/Lifetime <span class="sort-arrow"></span></th>
+                <th>Model</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Cboard</strong></td><td>Free</td><td>Free</td><td>Free</td><td>Open Source</td><td>UNICEF-backed</td></tr>
+              <tr><td><strong>Avaz</strong></td><td>$9.99</td><td>$99.99</td><td>$199.99</td><td>Sub or Lifetime</td><td><span class="validity-uncertain">Voice requires subscription</span></td></tr>
+              <tr><td><strong>TouchChat HD</strong></td><td>--</td><td>--</td><td>$149.99-$299.99</td><td>One-time</td><td>Base $149.99, +WordPower $299.99</td></tr>
+              <tr><td><strong>Spoken</strong></td><td>$12.99</td><td>$99.99</td><td>$249.99</td><td>Sub or Lifetime</td><td><span class="validity-confirmed">Pricing corrected per validation</span></td></tr>
+              <tr><td><strong>Proloquo2Go</strong></td><td>--</td><td>--</td><td>$249.99</td><td>One-time</td><td>Most widely used commercial AAC</td></tr>
+              <tr><td><strong>LAMP WFL</strong></td><td>--</td><td>--</td><td>$299.99</td><td>One-time</td><td>iOS + Mac (Apple Silicon)</td></tr>
+              <tr><td><strong>Fluent AAC</strong></td><td>$9.99</td><td>$89.99</td><td>$299.99</td><td>Sub or Lifetime</td><td><span class="validity-uncertain">$14.99 tier unconfirmed</span></td></tr>
+              <tr><td><strong>Grid</strong></td><td>~$12.50</td><td>--</td><td>~$299.99</td><td>Sub or Lifetime</td><td><span class="validity-uncertain">UK pricing varies</span></td></tr>
+              <tr><td><strong>TD Snap</strong></td><td>$9.99+</td><td>--</td><td>$149.99 (enterprise)</td><td>Subscription</td><td><span class="validity-confirmed">Deeply controversial switch to sub</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emerging Technology -->
+    <section class="data-section" id="emerging-tech" aria-label="Emerging technology">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Emerging Technology Pipeline</h2>
+          <p class="section-subtitle">Technologies poised to transform AAC. Evidence from Nature, NEJM, and shipping products.</p>
+        </div>
+      </div>
+
+      <div class="hero-stats" style="margin-bottom: 1.5rem;">
+        <div class="stat-card" style="border-left: 4px solid var(--d7-rate);">
+          <div class="stat-label">LLM-Powered AAC</div>
+          <div class="stat-value" style="font-size: 1.75rem;">29-60%</div>
+          <div class="stat-context">Rate improvement in lab/field tests (Nature Communications). SpeakFaster project (Google Research). No commercial AAC-specific deployment yet.</div>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid var(--d4-physical);">
+          <div class="stat-label">BCI ECoG (Metzger, Nature 2023)</div>
+          <div class="stat-value" style="font-size: 1.75rem;">78 WPM</div>
+          <div class="stat-context">Brainstem stroke patient. 75% accuracy. Lab/clinical trial; not commercially available.</div>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid var(--d4-physical);">
+          <div class="stat-label">BCI Intracortical (Card & Willett, NEJM 2024)</div>
+          <div class="stat-value" style="font-size: 1.75rem;">97.5%</div>
+          <div class="stat-context">Accuracy with 125K-word vocabulary, ~32 WPM. ALS patient. Lab/clinical trial; not commercially available.</div>
+        </div>
+      </div>
+
+      <div class="data-grid">
+        <div class="card">
+          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--d7-rate);">Shipping Now</h3>
+          <div style="display: grid; gap: 0.75rem;">
+            <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.85rem; font-weight: 600;">Apple Personal Voice</div>
+                <span class="risk-low" style="font-size: 0.68rem;">SHIPPING (iOS 17+)</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">On-device voice synthesis from 150 sentences (~15 min recording). Free, private, works as system voice in any iOS AAC app. Limited satisfaction data available.</div>
+            </div>
+            <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.85rem; font-weight: 600;">ElevenLabs Voice Cloning</div>
+                <span class="risk-low" style="font-size: 0.68rem;">SHIPPING (via Spoken)</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">Minimum 10 seconds of audio needed (1-2 minutes recommended for quality). Integrated into Spoken app. Free tier limited to ~10 min/month; full access requires ElevenLabs subscription.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--d5-cognitive);">Research Stage</h3>
+          <div style="display: grid; gap: 0.75rem;">
+            <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.85rem; font-weight: 600;">LLM-Powered AAC Prediction</div>
+                <span class="risk-medium" style="font-size: 0.68rem;">EARLY RESEARCH</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">SpeakFaster (Google Research): 29-60% text-entry rate improvement. No AAC-specific LLM patents granted yet -- wide open innovation space.</div>
+            </div>
+            <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.85rem; font-weight: 600;">AI Abbreviation Expansion</div>
+                <span class="risk-medium" style="font-size: 0.68rem;">PROTOTYPE</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">SpeakFaster achieves 70%+ abbreviation expansion accuracy. Full sentences from abbreviated input. Not patented as AAC system.</div>
+            </div>
+            <div style="padding: 0.75rem; background: var(--color-bg-alt); border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.85rem; font-weight: 600;">Brain-Computer Interfaces</div>
+                <span class="risk-high" style="font-size: 0.68rem;">LAB / CLINICAL TRIAL</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-light); margin-top: 0.35rem;">ECoG (78 WPM / 75% accuracy) and intracortical (32 WPM / 97.5% accuracy) approaches show transformative potential but remain years from commercial viability. Note: no single BCI achieves both top speed and top accuracy simultaneously.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Patent Risk Overview -->
+    <section class="data-section" id="patents" aria-label="Patent landscape">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Patent Risk Overview</h2>
+          <p class="section-subtitle">Active patent barriers and open innovation opportunities</p>
+        </div>
+      </div>
+
+      <div class="data-grid">
+        <div class="card">
+          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--validity-invalid);">Active Patent Barriers</h3>
+          <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Innovation</th>
+                  <th>Owner</th>
+                  <th>Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Eye tracking hardware + algorithms</td>
+                  <td>Tobii AB (200+ granted US, 1000+ total incl. applications)</td>
+                  <td><span class="risk-critical">CRITICAL</span></td>
+                </tr>
+                <tr>
+                  <td>Polysemous icon sequences w/ nav aids</td>
+                  <td>PRC-Saltillo (US9208594, US9229925, US9183655; ~2033)</td>
+                  <td><span class="risk-high">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Context-aware AAC prediction</td>
+                  <td>Spoken Inc. (US11145313B2)</td>
+                  <td><span class="risk-high">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Conversational throughput + social cue proxies</td>
+                  <td>Microsoft (US10262555B2, US9679497B2)</td>
+                  <td><span class="risk-high">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Facial gesture device control</td>
+                  <td>Perceptive Devices (8-patent family)</td>
+                  <td><span class="risk-medium">MEDIUM-HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>EMG-based switch access</td>
+                  <td>Control Bionics (US11284844B2) + Microsoft</td>
+                  <td><span class="risk-medium">MEDIUM</span></td>
+                </tr>
+                <tr>
+                  <td>Camera-based eye tracking</td>
+                  <td><span class="validity-invalid">HIGH RISK</span> -- Tobii won 2025 lawsuit vs Pupil Labs</td>
+                  <td><span class="risk-high">HIGH RISK</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--validity-confirmed);">Open Innovation Opportunities</h3>
+          <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Innovation</th>
+                  <th>Why Open</th>
+                  <th>Opportunity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LLM-powered AAC prediction</td>
+                  <td>No AAC-specific LLM patents granted (as of early 2026)</td>
+                  <td><span class="risk-low">VERY HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Receptive comprehension support</td>
+                  <td>Virtually zero patents in this space</td>
+                  <td><span class="risk-low">VERY HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Cognitive-communication support</td>
+                  <td>Virtually no AAC-specific patents</td>
+                  <td><span class="risk-low">VERY HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Fatigue management in AAC</td>
+                  <td>Zero patents</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Conversational repair tools</td>
+                  <td>Zero patents</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Basic polysemous icon-sequence encoding</td>
+                  <td>Baker/Minspeak foundational patents expired</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Dynamic grid navigation</td>
+                  <td>US5748177/US5920303 expired</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>NLP parsing of symbol sequences into grammar</td>
+                  <td>US5299125 expired (filed 1993, expired ~2013)</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>Dwell-time selection</td>
+                  <td>US6160536A expired 2017</td>
+                  <td><span class="risk-low">HIGH</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-top: 1.25rem;">
+        <h3 class="chart-title">Market Consolidation: PRC-Saltillo Product Portfolio</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+          <div style="padding: 1rem; border-radius: 8px; border: 2px solid var(--color-primary); text-align: center;">
+            <div style="font-weight: 700; font-size: 0.9rem;">TouchChat HD</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-light);">WordPower vocabulary</div>
+          </div>
+          <div style="padding: 1rem; border-radius: 8px; border: 2px solid var(--color-primary); text-align: center;">
+            <div style="font-weight: 700; font-size: 0.9rem;">LAMP Words for Life</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-light);">Minspeak/Unity (licensed from SCS)</div>
+          </div>
+          <div style="padding: 1rem; border-radius: 8px; border: 2px solid var(--color-primary); text-align: center;">
+            <div style="font-weight: 700; font-size: 0.9rem;">Avaz AAC</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-light);">Acquired Oct 2025</div>
+          </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--color-text-light);">
+          PRC-Saltillo controls 3 of 9 major AAC products analyzed (33% of market). This consolidation affects competitive dynamics, pricing power, and innovation incentives. SymbolStix symbols used by multiple products are licensed from n2y, LLC (not PRC-Saltillo).
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sources Footer -->
+  <footer class="dashboard-footer" id="sources">
+    <div class="sources-list">
+      <h2 class="sources-title">Data Sources</h2>
+      <p style="margin-bottom:1rem;font-size:0.85rem;color:var(--color-text-light,#6B7280);">
+        <strong>Source documents:</strong>
+        <a href="../../output-drafts/aac-product-market-analysis-research.md" style="color:var(--color-primary,#6366F1);">Research (MD)</a>
+        &nbsp;&bull;&nbsp;
+        <a href="../../output-drafts/aac-product-market-analysis-validation.md" style="color:var(--color-primary,#6366F1);">Validation Report (MD)</a>
+      </p>
+      <div class="source-item">1. <a href="https://apps.apple.com/app/proloquo2go/id308368164" target="_blank">Apple App Store -- Proloquo2Go listing</a></div>
+      <div class="source-item">2. <a href="https://www.assistiveware.com" target="_blank">AssistiveWare -- Proloquo2Go features and ExpressivePower documentation</a></div>
+      <div class="source-item">3. <a href="https://prc-saltillo.com" target="_blank">PRC-Saltillo -- TouchChat HD and LAMP WFL product pages</a></div>
+      <div class="source-item">4. <a href="https://www.tobiidynavox.com" target="_blank">Tobii Dynavox -- TD Snap page sets and documentation</a></div>
+      <div class="source-item">5. <a href="https://thinksmartbox.com" target="_blank">Smartbox -- Grid and Alpha Core documentation</a></div>
+      <div class="source-item">6. <a href="https://avazapp.com" target="_blank">Avaz Inc. -- Avaz AAC features and Expressive Tones</a></div>
+      <div class="source-item">7. <a href="https://spoken.io" target="_blank">Spoken Inc. -- Product features and ElevenLabs integration</a></div>
+      <div class="source-item">8. <a href="https://fluentaac.com" target="_blank">Fluent AAC -- Grammar prediction documentation</a></div>
+      <div class="source-item">9. <a href="https://cboard.io" target="_blank">Cboard -- UNICEF-backed project documentation</a></div>
+      <div class="source-item">10. <a href="https://pubmed.ncbi.nlm.nih.gov/30255726/" target="_blank">PubMed 30255726 -- Collette et al. (2019), Proloquo2Go classroom performance</a></div>
+      <div class="source-item">11. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11253647/" target="_blank">PMC11253647 -- AAC socio-communicative behaviors study</a></div>
+      <div class="source-item">12. <a href="https://pubmed.ncbi.nlm.nih.gov/23834069/" target="_blank">PubMed 23834069 -- Caligari et al. (2013), eye tracking QoL (ALS)</a></div>
+      <div class="source-item">13. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6261685/" target="_blank">PMC6261685 -- Ramig et al. (2018), LSVT LOUD RCT for Parkinson's</a></div>
+      <div class="source-item">14. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5948828/" target="_blank">PMC5948828 -- Barbosa et al. (2018), AAC for Down syndrome (review)</a></div>
+      <div class="source-item">15. <a href="https://www.nature.com/articles/s41467-024-53873-3" target="_blank">Nature Communications -- LLM-powered eye-gaze AAC (SpeakFaster)</a></div>
+      <div class="source-item">16. <a href="https://www.nature.com/articles/s41586-023-06443-4" target="_blank">Nature (2023) -- Metzger et al., BCI speech neuroprosthesis, 78 WPM</a></div>
+      <div class="source-item">17. <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2314132" target="_blank">NEJM (2024) -- Card & Willett et al., BCI 97.5% accuracy, 32 WPM</a></div>
+      <div class="source-item">18. <a href="https://www.tobii.com/products/integration/ip-licensing" target="_blank">Tobii -- IP Licensing (1,000+ patents and applications)</a></div>
+      <div class="source-item">19. <a href="https://community.at3center.net/t/p8ymxld/" target="_blank">AT3 Center -- TD Snap subscription controversy</a></div>
+      <div class="source-item">20. <a href="https://elevenlabs.io/pricing" target="_blank">ElevenLabs -- Voice cloning pricing</a></div>
+      <div class="source-item">21. <a href="https://support.apple.com/en-us/104993" target="_blank">Apple Support -- Personal Voice setup</a></div>
+      <div class="source-item">22. <a href="https://www.nidcd.nih.gov/health/aphasia" target="_blank">NIDCD -- Aphasia statistics (~2M Americans)</a></div>
+      <div class="source-item">23. <a href="https://www.tandfonline.com/doi/full/10.1080/02687038.2024.2406592" target="_blank">Aphasiology (2024) -- AAC in acute aphasia RCT</a></div>
+      <div class="source-item">24. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10131779/" target="_blank">JMIR Aging (2023) -- My PATI dementia prototype</a></div>
+      <div class="source-item">25. <a href="https://lingraphica.com" target="_blank">Lingraphica -- AAC for aphasia, TalkPath</a></div>
+      <div class="source-item">26. <a href="https://prc-saltillo.com/access-methods/eye-tracking" target="_blank">PRC-Saltillo -- VersaEye eye tracking</a></div>
+      <div class="source-item">27. <a href="https://dl.acm.org/doi/10.1145/3613904.3642762" target="_blank">CHI 2024 -- COMPA composing signals prototype</a></div>
+      <div class="source-item">28. <a href="https://www.assistiveware.com/products/proloquo4text" target="_blank">AssistiveWare -- Proloquo4Text discreet AAC</a></div>
+      <div class="source-item">29. <a href="https://www.assistiveware.com/blog/why-does-proloquo-have-a-fixed-grid-size" target="_blank">AssistiveWare -- 80% users don't follow grid recommendations</a></div>
+      <div class="source-item">30. Independent validation report -- 97 claims validated across 5 categories (March 2026)</div>
+    </div>
+  </footer>
+
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">Dark Mode</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script>
+    // ========== THEME ==========
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.querySelector('.theme-toggle');
+      if (html.hasAttribute('data-theme')) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = 'Dark Mode';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = 'Light Mode';
+      }
+      updateChartColors();
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.querySelector('.theme-toggle').textContent = 'Light Mode';
+    }
+
+    function getTextColor() {
+      return document.documentElement.hasAttribute('data-theme') ? '#F9FAFB' : '#1F2937';
+    }
+    function getGridColor() {
+      return document.documentElement.hasAttribute('data-theme') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
+    }
+
+    // ========== DATA ==========
+    const DOMAINS = [
+      { key: 'receptive', label: 'D1: Receptive', color: '#3B82F6' },
+      { key: 'expressive', label: 'D2: Expressive', color: '#10B981' },
+      { key: 'emotion', label: 'D2.5: Emotion', color: '#10B981' },
+      { key: 'pragmatic', label: 'D3: Pragmatic', color: '#F59E0B' },
+      { key: 'physical', label: 'D4: Physical', color: '#EF4444' },
+      { key: 'cognitive', label: 'D5: Cognitive', color: '#8B5CF6' },
+      { key: 'psychosocial', label: 'D6: Psychosocial', color: '#EC4899' },
+      { key: 'rate', label: 'D7: Rate', color: '#14B8A6' }
+    ];
+
+    // Ratings: 4=Strongest, 3=Strong, 2=Moderate, 1.5=Weak-Moderate, 1=Weak
+    const PRODUCTS = [
+      {
+        name: 'Proloquo2Go',
+        company: 'AssistiveWare',
+        price: '$249.99 one-time',
+        priceNum: 249.99,
+        monthly: null,
+        platforms: ['iOS', 'Mac'],
+        tags: ['ios'],
+        ratings: { receptive: 2, expressive: 3, emotion: 3, pragmatic: 2, physical: 2, cognitive: 2, psychosocial: 2, rate: 3 },
+        strengths: [
+          'Gold standard motor speech bypass with 23 grid layouts (9-144 buttons)',
+          'PolyPredix self-learning multi-word prediction',
+          'ExpressivePower + Acapela Neural Voices for emotional expression',
+          'Apple Personal Voice support (iOS 17+)',
+          'Most widely studied commercial AAC app'
+        ],
+        weaknesses: [
+          'iOS-only -- excludes 72% global smartphone market',
+          'No native eye gaze or head tracking (relies on iOS 18 system)',
+          'Switch scanning limited to 5 modes',
+          '80% of users don\'t follow recommended grid settings'
+        ],
+        patents: 'Avoids PRC-Saltillo Minspeak patents via hierarchical folder organization',
+        evidence: 'Enhanced classroom performance in ASD (PubMed 30255726). Increased socio-communicative behaviors (PMC11253647, mixed results).',
+        details: {
+          receptive: 'Visual symbols aid comprehension but no dedicated tools for understanding incoming communication.',
+          expressive: 'Crescendo vocabulary with core words on main page. Structured sentence building.',
+          emotion: 'ExpressivePower + Acapela Neural Voices with anger, questioning, whining tones. Apple Personal Voice.',
+          pragmatic: 'Chat folder with social phrases and Social Stories. No PODD or SCERTS alignment.',
+          physical: 'No native head tracking or eye gaze. iOS 18 selfie camera eye tracking imprecise. 5 switch scanning modes.',
+          cognitive: 'Core word approach supports word retrieval. Sub-categorization can increase cognitive load for TBI/dementia.',
+          psychosocial: 'Widely used/recognized, reducing adoption stigma. No specific psychosocial features.',
+          rate: 'PolyPredix multi-word prediction, abbreviation expansion, pre-stored phrases.'
+        }
+      },
+      {
+        name: 'TouchChat HD',
+        company: 'PRC-Saltillo',
+        price: '$149.99-$299.99 one-time',
+        priceNum: 299.99,
+        monthly: null,
+        platforms: ['iOS'],
+        tags: ['ios', 'prc'],
+        ratings: { receptive: 2, expressive: 3, emotion: 1, pragmatic: 2, physical: 3, cognitive: 2, psychosocial: 2, rate: 3 },
+        strengths: [
+          'WordPower vocabulary is clinically respected',
+          'Grammar function provides morphological endings',
+          'Built-in switch scanning + head tracking on Face ID devices',
+          'Better alternative access than Proloquo2Go'
+        ],
+        weaknesses: [
+          'No expressive tones or prosodic variation',
+          'Vocabulary layout NOT consistent across levels -- contradicts motor planning principles',
+          'No bilingual code-switching',
+          'iOS only'
+        ],
+        patents: 'Parent company PRC-Saltillo owns Minspeak/semantic compaction patents through ~2033. TouchChat uses WordPower (different approach).',
+        evidence: 'Limited published studies. SLPs report effectiveness for autism, Down syndrome, apraxia.',
+        details: {
+          receptive: 'Communication Journey: Aphasia page set available. Basic receptive support.',
+          expressive: 'WordPower vocabulary with word completion and logical next-word suggestions.',
+          emotion: 'Standard synthesized voices only. No expressive tones.',
+          pragmatic: 'Social phrase categories. No structured pragmatic framework.',
+          physical: 'Built-in switch scanning, head tracking on Face ID devices.',
+          cognitive: 'Multiple vocabulary levels. Layout inconsistency a problem for motor learners.',
+          psychosocial: 'Established brand in clinical settings.',
+          rate: 'Word completion, logical next-word suggestions.'
+        }
+      },
+      {
+        name: 'LAMP Words for Life',
+        company: 'PRC-Saltillo',
+        price: '$299.99 one-time',
+        priceNum: 299.99,
+        monthly: null,
+        platforms: ['iOS', 'Mac'],
+        tags: ['ios', 'prc'],
+        ratings: { receptive: 2, expressive: 3, emotion: 1, pragmatic: 2, physical: 3, cognitive: 3, psychosocial: 2, rate: 3 },
+        strengths: [
+          'LAMP motor planning approach mirrors neurological motor learning',
+          'Words NEVER change position -- builds motor automaticity',
+          '[2025] Now includes AI word prediction, AI Translate, AI Message Edit',
+          'AeroSwitch scanning + head tracking + VersaEye eye tracking'
+        ],
+        weaknesses: [
+          'Fixed 84-location grid cannot accommodate users needing larger targets',
+          'Less relevant for adults with acquired conditions (ALS, stroke)',
+          'Reported technical glitches and iPad slowdown'
+        ],
+        patents: 'Uses Minspeak/Unity vocabulary (licensed from SCS). Protected by PRC-Saltillo patent portfolio.',
+        evidence: '8 children with autism: 100% developed social communication through commenting. Parents reported gains greater than previous interventions.',
+        details: {
+          receptive: 'Visual symbols support comprehension. No dedicated receptive tools.',
+          expressive: 'Unique motor plan per word. Pre-programmed vocabulary.',
+          emotion: 'Standard voice options only. No expressive tones.',
+          pragmatic: 'Commenting, requesting, social functions available through vocabulary organization.',
+          physical: 'AeroSwitch scanning, head tracking. VersaEye hardware eye gaze. Fixed 84-location grid cannot change.',
+          cognitive: 'Motor consistency across vocabulary levels reduces learning burden. AI features now complement.',
+          psychosocial: 'Strong clinical reputation for autism spectrum.',
+          rate: '[UPDATED] Now has learning word prediction + AI Message Edit + AI Translate alongside motor planning core.'
+        }
+      },
+      {
+        name: 'TD Snap',
+        company: 'Tobii Dynavox',
+        price: 'Subscription + $149.99 enterprise',
+        priceNum: 149.99,
+        monthly: 9.99,
+        platforms: ['iOS', 'Windows'],
+        tags: ['ios', 'windows'],
+        ratings: { receptive: 3, expressive: 3, emotion: 2, pragmatic: 3, physical: 4, cognitive: 3, psychosocial: 2, rate: 2 },
+        strengths: [
+          'STRONGEST physical access: native Tobii eye gaze (gold standard)',
+          'Only major app with dedicated Aphasia page set for receptive support',
+          'PODD available via in-app purchase for pragmatic organization',
+          'Multiple page sets for different cognitive levels'
+        ],
+        weaknesses: [
+          'Subscription pricing deeply controversial (switched May 2024)',
+          'Eye gaze best features tied to expensive Tobii hardware',
+          'No advanced AI prediction or abbreviation expansion',
+          'Requires SLP guidance for optimal setup'
+        ],
+        patents: 'Tobii holds 1,000+ patents and applications (200+ granted US). Key patent US8025405 expires July 2028.',
+        evidence: 'Eye gaze devices: large QoL increase (PIADS), high satisfaction (QUEST 2.0). PODD has strong clinical evidence.',
+        details: {
+          receptive: 'Aphasia page set with visual cueing, digital whiteboard, SLP-modeled tools. Best receptive support of the 9.',
+          expressive: 'Core First core word approach. Multiple page sets for different levels.',
+          emotion: 'Voice selection available but no emotional inflection feature.',
+          pragmatic: 'Core First includes Social Stories, Scripts, Visual Timer, First-Then boards, Mini Schedules. PODD available.',
+          physical: 'Gold standard. Native Tobii eye gaze. Touch, switch, head tracking. All page sets work with all access methods.',
+          cognitive: 'Aphasia page set for cognitive-linguistic challenges. Multiple levels: Core First, Express, Text.',
+          psychosocial: 'Environment control through Tobii hardware ecosystem.',
+          rate: 'Core word approach for frequent words. No AI prediction or abbreviation expansion.'
+        }
+      },
+      {
+        name: 'Grid',
+        company: 'Smartbox',
+        price: '~$12.50/mo or ~$299.99 lifetime',
+        priceNum: 299.99,
+        monthly: 12.5,
+        platforms: ['iOS', 'Windows'],
+        tags: ['ios', 'windows'],
+        ratings: { receptive: 2, expressive: 3, emotion: 2, pragmatic: 1, physical: 4, cognitive: 3, psychosocial: 3, rate: 3 },
+        strengths: [
+          'Most comprehensive alternative access suite (eye gaze, touch, switch, pointer, voice)',
+          'SwiftKey AI prediction + Fix tool + 7 keyboard types',
+          'Alpha Core designed specifically for ALS/MND progression',
+          'UNIQUE: infrared/radio environment control (TVs, lights, doors, beds)',
+          'Voice control ("Hey Grid 3")'
+        ],
+        weaknesses: [
+          'No structured pragmatic tools (no Social Stories, no PODD)',
+          'Technical instability: audio stops, crashes, freezing',
+          'British English defaults confuse US users',
+          'Weaker US market presence vs UK'
+        ],
+        patents: 'Patented Chat History feature (patent number unverified). Uses SwiftKey (Microsoft) prediction.',
+        evidence: 'Limited peer-reviewed studies. Strong clinical reputation in UK. Alpha Core praised by ALS/MND community.',
+        details: {
+          receptive: 'Auditory descriptions before selection for visual difficulties. No dedicated receptive framework.',
+          expressive: 'Seven keyboard types. SwiftKey prediction. Fix tool for spelling/grammar.',
+          emotion: '"Speak in a voice that truly feels like you" -- but no expressive tones feature.',
+          pragmatic: 'Communication supported through vocabulary but not scaffolded. No structured tools.',
+          physical: 'Most comprehensive: Evo NPU eye gaze, Virtual Keyguard, USB/BT switches, pointer/joystick, voice control.',
+          cognitive: 'AI Fix tool, missing letter filling. Auditory descriptions. Alpha Core for progressive conditions.',
+          psychosocial: 'Environment control for independence. Full computer access. Addresses participation beyond communication.',
+          rate: 'SwiftKey prediction, abbreviation expansion, Fix tool, 7 keyboard types, pre-stored phrases, frequency scanning.'
+        }
+      },
+      {
+        name: 'Avaz AAC',
+        company: 'PRC-Saltillo (subsidiary since Oct 2025)',
+        price: '$9.99/mo or $199.99 lifetime',
+        priceNum: 199.99,
+        monthly: 9.99,
+        platforms: ['iOS', 'Android'],
+        tags: ['ios', 'android', 'prc'],
+        ratings: { receptive: 2, expressive: 2, emotion: 3, pragmatic: 3, physical: 2, cognitive: 2, psychosocial: 2, rate: 2 },
+        strengths: [
+          'Expressive Tones: AI-powered emotional inflection (anger, sarcasm, excitement, whispering, etc.)',
+          'SCERTS framework alignment + Communication Matrix built in',
+          'Cross-platform: iOS AND Android',
+          '8 Indian languages (Hindi, Tamil, Kannada, Malayalam, Telugu, Marathi, Gujarati, Bengali)',
+          'Most affordable comprehensive commercial option ($199.99 lifetime)'
+        ],
+        weaknesses: [
+          'Voice feature requires paid subscription (core AAC behind paywall)',
+          'Switch/eye gaze access added 2022-2023 -- newer, potentially less mature',
+          'Keyword prediction only in keyboard mode; no abbreviation expansion',
+          'Now PRC-Saltillo subsidiary -- market consolidation concerns'
+        ],
+        patents: 'No known granted AAC-specific US patents. Uses SymbolStix from n2y, LLC. Founder has 20+ FreeSpeech patent applications. Benefits from PRC-Saltillo portfolio.',
+        evidence: 'Tested in 25+ schools with 500 children (India, self-reported). Founder: MIT TR Innovators Under 35.',
+        details: {
+          receptive: 'Visual symbols. No dedicated receptive support tools.',
+          expressive: 'Symbol-based vocabulary. Keyword prediction in keyboard mode only.',
+          emotion: 'STANDOUT: Expressive Tones with AI emotional inflection. One of two apps (with Proloquo2Go) for prosodic variation.',
+          pragmatic: 'Strongest pragmatic organization among affordable options. SCERTS alignment. SEL integration. Communication Matrix.',
+          physical: '[CORRECTED] Now has switch access (2022) and eye gaze (2023) with dark theme for eye-tracking. Less mature than TD Snap/Grid.',
+          cognitive: 'Visual vocabulary organization. No progressive disclosure or cognitive load management.',
+          psychosocial: 'Affordable access. Multilingual support for underserved populations.',
+          rate: 'Keyword prediction in keyboard mode only. No advanced AI prediction.'
+        }
+      },
+      {
+        name: 'Spoken',
+        company: 'Spoken Inc.',
+        price: '$12.99/mo or $249.99 lifetime',
+        priceNum: 249.99,
+        monthly: 12.99,
+        platforms: ['iOS', 'Android', 'Mac'],
+        tags: ['ios', 'android'],
+        ratings: { receptive: 1, expressive: 3, emotion: 3, pragmatic: 1, physical: 1.5, cognitive: 3, psychosocial: 3, rate: 4 },
+        strengths: [
+          'STRONGEST AI prediction in AAC market -- self-learning, personalized',
+          'ElevenLabs voice cloning (10 seconds of audio)',
+          'Open-ended complex thought expression (not limited to preset vocabulary)',
+          'Explicitly designed for teens/adults with acquired conditions',
+          'Cross-platform: iOS, Android, Mac'
+        ],
+        weaknesses: [
+          'No built-in native switch scanning or head tracking',
+          'Primarily text-based; icons exist but not a full symbol-grid system',
+          'Suboptimal for moderate-to-severe aphasia (word-finding deficit)',
+          'ElevenLabs free tier limited to ~10 min/month'
+        ],
+        patents: 'Holds US11145313B2 -- context-aware predictive speech for AAC. Potential to enforce against competitors.',
+        evidence: 'Limited peer-reviewed studies. Most evidence anecdotal/testimonial.',
+        details: {
+          receptive: 'No receptive support features.',
+          expressive: '[CORRECTED] Primarily text-based but includes growing icon library paired with predictions. Not purely text.',
+          emotion: 'ElevenLabs voice cloning (10s audio). Apple Personal Voice. Large natural voice selection.',
+          pragmatic: 'Free-form text allows any communication but no scaffolding.',
+          physical: '[CORRECTED] No built-in native access. iOS 18 eye tracking supported with optimized interface. Weak-Moderate.',
+          cognitive: 'AI prediction helps word retrieval by suggesting contextually appropriate words.',
+          psychosocial: 'Modern chat-style interface reduces stigma. Designed for adult identity/dignity.',
+          rate: 'STRONGEST: Self-learning prediction. Learns names, places, patterns. Closest to closing the rate gap.'
+        }
+      },
+      {
+        name: 'Fluent AAC',
+        company: 'Fluent AAC Technology',
+        price: '$9.99/mo or $299.99 lifetime',
+        priceNum: 299.99,
+        monthly: 9.99,
+        platforms: ['iOS', 'Mac'],
+        tags: ['ios'],
+        ratings: { receptive: 2, expressive: 3, emotion: 1, pragmatic: 1, physical: 2, cognitive: 3, psychosocial: 2, rate: 3 },
+        strengths: [
+          'UNIQUE: Grammar-aware prediction that conjugates icons to match sentence grammar',
+          'Hide Words feature for progressive disclosure (words never change position)',
+          '3,000+ fringe word vocabulary',
+          'Motor consistency builds speed through muscle memory'
+        ],
+        weaknesses: [
+          'No expressive tones or prosodic variation',
+          'No native eye gaze; head tracking requires Face ID',
+          'Smaller company with less SLP community support',
+          'iOS only; "#1 Rated" claim unverified (self-reported marketing)'
+        ],
+        patents: 'No known AAC-specific patents. Grammar-aware conjugation may be novel but unfiled.',
+        evidence: 'Rated #1 by AAC users in surveys (self-reported, 2021). Grammar prediction considered linguistically unique.',
+        details: {
+          receptive: 'Visual icons aid comprehension. No dedicated receptive tools.',
+          expressive: 'Grammar-aware prediction auto-conjugates icons. Unique linguistic approach.',
+          emotion: 'Standard voice options only. No expressive tones.',
+          pragmatic: 'No structured pragmatic tools documented.',
+          physical: 'No native eye gaze. Head tracking via Apple Face ID only.',
+          cognitive: 'STANDOUT: Hide Words progressive disclosure. Words never change position. Reduces learning barrier.',
+          psychosocial: 'Modern design. Smaller community.',
+          rate: 'Grammar-aware prediction + auto-conjugation. Motor consistency builds speed over time.'
+        }
+      },
+      {
+        name: 'Cboard',
+        company: 'UNICEF-backed open source',
+        price: 'Free',
+        priceNum: 0,
+        monthly: 0,
+        platforms: ['Web', 'Android', 'iOS', 'Windows'],
+        tags: ['android', 'free'],
+        ratings: { receptive: 1, expressive: 2, emotion: 1, pragmatic: 1, physical: 1.5, cognitive: 1, psychosocial: 1, rate: 1 },
+        strengths: [
+          '33-45+ languages -- massively larger multilingual coverage',
+          'Free, removing the most cited access barrier',
+          'Cross-platform: web-based, works on any device with browser',
+          'UNICEF backing provides credibility and sustainability'
+        ],
+        weaknesses: [
+          'Minimal AI prediction; no abbreviation expansion',
+          'No progressive disclosure or cognitive load management',
+          'Folders disappearing, layouts disrupted (technical instability)',
+          'Mostly web-dependent (limited offline capability)'
+        ],
+        patents: 'Open source. No patent concerns.',
+        evidence: 'Minimal peer-reviewed studies. UNICEF backing provides credibility.',
+        details: {
+          receptive: 'Basic symbol display. No receptive support tools.',
+          expressive: 'Symbol-based vocabulary. Basic sentence building.',
+          emotion: 'No expressive tones or prosodic variation.',
+          pragmatic: 'No structured pragmatic tools.',
+          physical: '[CORRECTED] Works with OS-level switches (Android Switch Access with Ablenet, iOS Switch Control). Not purely touch-only.',
+          cognitive: 'No progressive disclosure. No cognitive load management.',
+          psychosocial: 'Free access removes financial barrier. Global accessibility mission.',
+          rate: 'Basic AI text prediction. Minimal rate enhancement.'
+        }
+      }
+    ];
+
+    // ========== HEAT MAP ==========
+    function getRatingLabel(val) {
+      if (val >= 4) return 'Strongest';
+      if (val >= 3) return 'Strong';
+      if (val >= 2) return 'Moderate';
+      if (val >= 1.5) return 'Weak-Mod';
+      return 'Weak';
+    }
+    function getRatingClass(val) {
+      if (val >= 4) return 'heat-strongest';
+      if (val >= 3) return 'heat-strong';
+      if (val >= 2) return 'heat-moderate';
+      if (val >= 1.5) return 'heat-weak-mod';
+      return 'heat-weak';
+    }
+
+    function buildHeatmap() {
+      const tbody = document.getElementById('heatmapBody');
+      tbody.innerHTML = '';
+      PRODUCTS.forEach((p, pi) => {
+        const tr = document.createElement('tr');
+        const thName = document.createElement('th');
+        thName.className = 'product-name';
+        thName.textContent = p.name;
+        tr.appendChild(thName);
+        DOMAINS.forEach((d, di) => {
+          const td = document.createElement('td');
+          const val = p.ratings[d.key];
+          td.className = 'heatmap-cell ' + getRatingClass(val);
+          td.textContent = getRatingLabel(val);
+          td.setAttribute('data-product', pi);
+          td.setAttribute('data-domain', di);
+          td.setAttribute('role', 'gridcell');
+          td.setAttribute('aria-label', p.name + ' ' + d.label + ': ' + getRatingLabel(val));
+          td.addEventListener('mouseenter', showHeatmapTooltip);
+          td.addEventListener('mouseleave', hideHeatmapTooltip);
+          td.addEventListener('click', function() {
+            const card = document.querySelectorAll('.product-card')[pi];
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.classList.add('expanded');
+              setTimeout(function() { card.style.boxShadow = '0 0 0 3px var(--color-primary)'; }, 400);
+              setTimeout(function() { card.style.boxShadow = ''; }, 2000);
+            }
+          });
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function showHeatmapTooltip(e) {
+      const tooltip = document.getElementById('heatmapTooltip');
+      const pi = parseInt(e.target.getAttribute('data-product'));
+      const di = parseInt(e.target.getAttribute('data-domain'));
+      const p = PRODUCTS[pi];
+      const d = DOMAINS[di];
+      const detail = p.details[d.key] || '';
+      tooltip.innerHTML = '<div class="tooltip-title">' + p.name + ' -- ' + d.label + '</div>' +
+        '<div class="tooltip-detail">' + detail + '</div>';
+      tooltip.classList.add('visible');
+      positionTooltip(e, tooltip);
+    }
+    function positionTooltip(e, tooltip) {
+      const x = e.clientX + 15;
+      const y = e.clientY + 15;
+      const maxX = window.innerWidth - 340;
+      const maxY = window.innerHeight - 200;
+      tooltip.style.left = Math.min(x, maxX) + 'px';
+      tooltip.style.top = Math.min(y, maxY) + 'px';
+    }
+    function hideHeatmapTooltip() {
+      document.getElementById('heatmapTooltip').classList.remove('visible');
+    }
+
+    buildHeatmap();
+
+    // ========== PRODUCT CARDS ==========
+    function buildProductCards() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      PRODUCTS.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.setAttribute('data-tags', p.tags.join(' '));
+
+        // Domain pips
+        let pips = '';
+        DOMAINS.forEach((d) => {
+          const val = p.ratings[d.key];
+          let cls = 'weak';
+          if (val >= 3) cls = 'strong';
+          else if (val >= 2) cls = 'moderate';
+          pips += '<div class="domain-pip ' + cls + '" style="background:' + d.color + ';" title="' + d.label + ': ' + getRatingLabel(val) + '"></div>';
+        });
+
+        // Platform badges
+        let badges = '<span class="product-badge badge-price">' + p.price + '</span>';
+        p.platforms.forEach(pl => {
+          badges += '<span class="product-badge badge-platform">' + pl + '</span>';
+        });
+
+        // Strengths
+        let strengthsHtml = '';
+        p.strengths.forEach(s => { strengthsHtml += '<li class="strength-item">' + s + '</li>'; });
+
+        // Weaknesses
+        let weaknessesHtml = '';
+        p.weaknesses.forEach(w => { weaknessesHtml += '<li class="weakness-item">' + w + '</li>'; });
+
+        card.innerHTML =
+          '<div class="product-card-header" onclick="this.parentElement.classList.toggle(\'expanded\')" aria-expanded="false">' +
+            '<div style="flex:1;">' +
+              '<div class="product-name">' + p.name + '</div>' +
+              '<div class="product-company">' + p.company + '</div>' +
+              '<div class="product-meta">' + badges + '</div>' +
+              '<div class="domain-coverage-bar">' + pips + '</div>' +
+            '</div>' +
+            '<span class="product-expand-icon" aria-hidden="true">&#9660;</span>' +
+          '</div>' +
+          '<div class="product-card-body">' +
+            '<div class="product-detail-grid">' +
+              '<div class="detail-section"><h4>Strengths</h4><ul>' + strengthsHtml + '</ul></div>' +
+              '<div class="detail-section"><h4>Weaknesses</h4><ul>' + weaknessesHtml + '</ul></div>' +
+              '<div class="detail-section"><h4>Patent Position</h4><ul><li class="patent-item">' + p.patents + '</li></ul></div>' +
+              '<div class="detail-section"><h4>Clinical Evidence</h4><ul><li class="evidence-item">' + p.evidence + '</li></ul></div>' +
+            '</div>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    }
+    buildProductCards();
+
+    // Product Filter
+    document.getElementById('productFilter').addEventListener('click', function(e) {
+      if (!e.target.classList.contains('filter-btn')) return;
+      this.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const filter = e.target.getAttribute('data-filter');
+      document.querySelectorAll('.product-card').forEach(card => {
+        const tags = card.getAttribute('data-tags');
+        if (filter === 'all' || tags.includes(filter)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // ========== CHARTS ==========
+    let charts = {};
+
+    function createCharts() {
+      // Validation Category Chart
+      charts.validationCategory = new Chart(document.getElementById('validationCategoryChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Product Features\n& Pricing', 'Clinical\nEvidence', 'Patent\nClaims', 'Gap\nAnalysis', 'Emerging Tech\n& Market'],
+          datasets: [
+            { label: 'Confirmed', data: [22, 9, 12, 4, 10], backgroundColor: '#10B981' },
+            { label: 'Uncertain', data: [5, 6, 5, 5, 3], backgroundColor: '#F59E0B' },
+            { label: 'Invalid', data: [5, 1, 2, 3, 5], backgroundColor: '#EF4444' }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, color: getTextColor() } } },
+          scales: {
+            x: { stacked: true, ticks: { color: getTextColor(), font: { size: 11 } }, grid: { display: false } },
+            y: { stacked: true, ticks: { color: getTextColor() }, grid: { color: getGridColor() } }
+          }
+        }
+      });
+
+      // Validation Pie
+      charts.validationPie = new Chart(document.getElementById('validationPieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Confirmed (57)', 'Uncertain (24)', 'Invalid (16)'],
+          datasets: [{
+            data: [57, 24, 16],
+            backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+            borderWidth: 2,
+            borderColor: document.documentElement.hasAttribute('data-theme') ? '#1F2937' : '#FFFFFF'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, color: getTextColor() } },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) { return ctx.label + ' (' + Math.round(ctx.raw/97*100) + '%)'; }
+              }
+            }
+          },
+          cutout: '55%'
+        }
+      });
+
+      // Domain Coverage Chart
+      const domainAvgs = DOMAINS.map(d => {
+        const vals = PRODUCTS.map(p => p.ratings[d.key]);
+        return +(vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(2);
+      });
+      charts.domainCoverage = new Chart(document.getElementById('domainCoverageChart'), {
+        type: 'bar',
+        data: {
+          labels: DOMAINS.map(d => d.label),
+          datasets: [{
+            label: 'Average Score (0-4)',
+            data: domainAvgs,
+            backgroundColor: DOMAINS.map(d => d.color + 'CC'),
+            borderColor: DOMAINS.map(d => d.color),
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  const val = ctx.raw;
+                  let label = 'Avg: ' + val + '/4';
+                  if (val >= 3) label += ' (Strong)';
+                  else if (val >= 2) label += ' (Moderate)';
+                  else label += ' (Weak)';
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { min: 0, max: 4, ticks: { color: getTextColor(), stepSize: 1 }, grid: { color: getGridColor() } },
+            y: { ticks: { color: getTextColor(), font: { size: 12 } }, grid: { display: false } }
+          }
+        }
+      });
+
+      // Domain Stacked Chart
+      const strongCounts = DOMAINS.map(d => PRODUCTS.filter(p => p.ratings[d.key] >= 3).length);
+      const modCounts = DOMAINS.map(d => PRODUCTS.filter(p => p.ratings[d.key] >= 2 && p.ratings[d.key] < 3).length);
+      const weakCounts = DOMAINS.map(d => PRODUCTS.filter(p => p.ratings[d.key] < 2).length);
+      charts.domainStacked = new Chart(document.getElementById('domainStackedChart'), {
+        type: 'bar',
+        data: {
+          labels: DOMAINS.map(d => d.label),
+          datasets: [
+            { label: 'Strong/Strongest', data: strongCounts, backgroundColor: '#10B981' },
+            { label: 'Moderate', data: modCounts, backgroundColor: '#F59E0B' },
+            { label: 'Weak', data: weakCounts, backgroundColor: '#EF4444' }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, color: getTextColor() } } },
+          scales: {
+            x: { stacked: true, max: 9, ticks: { color: getTextColor(), stepSize: 1 }, grid: { color: getGridColor() } },
+            y: { stacked: true, ticks: { color: getTextColor(), font: { size: 12 } }, grid: { display: false } }
+          }
+        }
+      });
+
+      // Platform Chart
+      const platformLabels = PRODUCTS.map(p => p.name);
+      const platformData = {
+        'iOS': PRODUCTS.map(p => p.platforms.includes('iOS') ? 1 : 0),
+        'Android': PRODUCTS.map(p => p.platforms.includes('Android') ? 1 : 0),
+        'Windows': PRODUCTS.map(p => p.platforms.includes('Windows') ? 1 : 0),
+        'Mac': PRODUCTS.map(p => p.platforms.includes('Mac') ? 1 : 0),
+        'Web': PRODUCTS.map(p => p.platforms.includes('Web') ? 1 : 0)
+      };
+      charts.platform = new Chart(document.getElementById('platformChart'), {
+        type: 'bar',
+        data: {
+          labels: platformLabels,
+          datasets: [
+            { label: 'iOS', data: platformData['iOS'], backgroundColor: '#3B82F6' },
+            { label: 'Android', data: platformData['Android'], backgroundColor: '#10B981' },
+            { label: 'Windows', data: platformData['Windows'], backgroundColor: '#F59E0B' },
+            { label: 'Mac', data: platformData['Mac'], backgroundColor: '#8B5CF6' },
+            { label: 'Web', data: platformData['Web'], backgroundColor: '#EC4899' }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, color: getTextColor() } } },
+          scales: {
+            x: { stacked: true, ticks: { display: false }, grid: { display: false }, max: 5 },
+            y: { stacked: true, ticks: { color: getTextColor(), font: { size: 12 } }, grid: { display: false } }
+          }
+        }
+      });
+
+      // Platform Pie
+      const iosOnly = PRODUCTS.filter(p => p.platforms.length <= 2 && p.platforms.includes('iOS') && !p.platforms.includes('Android') && !p.platforms.includes('Windows') && !p.platforms.includes('Web')).length;
+      const crossPlat = PRODUCTS.filter(p => p.platforms.includes('Android') || p.platforms.includes('Web')).length;
+      const winIncl = PRODUCTS.filter(p => p.platforms.includes('Windows') && !p.platforms.includes('Android') && !p.platforms.includes('Web')).length;
+      charts.platformPie = new Chart(document.getElementById('platformPieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['iOS-only (+ Mac)', 'Cross-platform (incl. Android/Web)', 'iOS + Windows'],
+          datasets: [{
+            data: [iosOnly, crossPlat, winIncl],
+            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B'],
+            borderWidth: 2,
+            borderColor: document.documentElement.hasAttribute('data-theme') ? '#1F2937' : '#FFFFFF'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, color: getTextColor() } } },
+          cutout: '50%'
+        }
+      });
+
+      // Pricing Chart
+      const sortedByPrice = [...PRODUCTS].sort((a,b) => a.priceNum - b.priceNum);
+      charts.pricing = new Chart(document.getElementById('pricingChart'), {
+        type: 'bar',
+        data: {
+          labels: sortedByPrice.map(p => p.name),
+          datasets: [{
+            label: 'One-Time / Lifetime Cost (USD)',
+            data: sortedByPrice.map(p => p.priceNum),
+            backgroundColor: sortedByPrice.map(p => {
+              if (p.priceNum === 0) return '#10B981';
+              if (p.priceNum <= 199.99) return '#3B82F6';
+              if (p.priceNum <= 249.99) return '#F59E0B';
+              return '#EF4444';
+            }),
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  const p = sortedByPrice[ctx.dataIndex];
+                  let label = '$' + ctx.raw.toFixed(2);
+                  if (p.monthly) label += ' (or $' + p.monthly + '/mo)';
+                  if (ctx.raw === 0) label = 'Free (open source)';
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: getTextColor(), font: { size: 11 } }, grid: { display: false } },
+            y: {
+              ticks: { color: getTextColor(), callback: function(v) { return '$' + v; } },
+              grid: { color: getGridColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function updateChartColors() {
+      Object.values(charts).forEach(c => {
+        if (c.options.plugins && c.options.plugins.legend && c.options.plugins.legend.labels) {
+          c.options.plugins.legend.labels.color = getTextColor();
+        }
+        if (c.options.scales) {
+          Object.values(c.options.scales).forEach(s => {
+            if (s.ticks) s.ticks.color = getTextColor();
+            if (s.grid) s.grid.color = getGridColor();
+          });
+        }
+        // Update doughnut border colors
+        if (c.config.type === 'doughnut') {
+          c.data.datasets[0].borderColor = document.documentElement.hasAttribute('data-theme') ? '#1F2937' : '#FFFFFF';
+        }
+        c.update();
+      });
+    }
+
+    createCharts();
+
+    // ========== TABLE SORT ==========
+    function sortTable(tableId, colIndex) {
+      const table = document.getElementById(tableId);
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const isAsc = table.getAttribute('data-sort-dir') === 'asc' && parseInt(table.getAttribute('data-sort-col')) === colIndex;
+      const dir = isAsc ? -1 : 1;
+      table.setAttribute('data-sort-dir', isAsc ? 'desc' : 'asc');
+      table.setAttribute('data-sort-col', colIndex);
+
+      rows.sort((a, b) => {
+        let aVal = a.children[colIndex].textContent.trim();
+        let bVal = b.children[colIndex].textContent.trim();
+        // Try numeric
+        const aNum = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+        const bNum = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+        if (!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum) * dir;
+        return aVal.localeCompare(bVal) * dir;
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    // ========== SCROLL SPY ==========
+    const sections = document.querySelectorAll('.data-section, #overview');
+    const navItems = document.querySelectorAll('.nav-item');
+    const sectionNav = document.querySelector('.category-nav');
+
+    window.addEventListener('scroll', function() {
+      let current = '';
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 160) {
+          current = section.getAttribute('id');
+        }
+      });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + current) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
