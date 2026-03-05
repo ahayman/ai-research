@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TitaNet: NVIDIA's Speaker Embedding Model | Explainer</title>
+<meta name="description" content="Comprehensive technical explainer of TitaNet, NVIDIA's neural model for speaker representation using 1D depth-wise separable convolutions with global context, for speaker verification and diarization.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #76b900;
+  --color-primary-light: #8ecf0e;
+  --color-primary-dark: #5a8f00;
+  --color-primary-bg: #f0fbe0;
+  --color-secondary: #1a1a2e;
+  --color-accent: #00bcd4;
+  --color-accent-light: #26c6da;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #2563eb;
+  --color-link-hover: #1d4ed8;
+  --color-code-bg: #f1f5f9;
+  --color-code-text: #334155;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-callout-border: #76b900;
+  --color-callout-bg: #f0fbe0;
+  --color-callout-info-border: #3b82f6;
+  --color-callout-info-bg: #eff6ff;
+  --color-callout-warn-border: #f59e0b;
+  --color-callout-warn-bg: #fffbeb;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-badge-green: #dcfce7;
+  --color-badge-green-text: #166534;
+  --color-badge-blue: #dbeafe;
+  --color-badge-blue-text: #1e40af;
+  --color-badge-amber: #fef3c7;
+  --color-badge-amber-text: #92400e;
+  --color-badge-red: #fee2e2;
+  --color-badge-red-text: #991b1b;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #8ecf0e;
+  --color-primary-light: #a4e028;
+  --color-primary-dark: #76b900;
+  --color-primary-bg: #1a2e05;
+  --color-secondary: #e2e8f0;
+  --color-accent: #26c6da;
+  --color-accent-light: #4dd0e1;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #60a5fa;
+  --color-link-hover: #93bbfd;
+  --color-code-bg: #1e293b;
+  --color-code-text: #e2e8f0;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-callout-border: #76b900;
+  --color-callout-bg: #1a2e05;
+  --color-callout-info-border: #3b82f6;
+  --color-callout-info-bg: #172554;
+  --color-callout-warn-border: #f59e0b;
+  --color-callout-warn-bg: #422006;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-badge-green: #14532d;
+  --color-badge-green-text: #86efac;
+  --color-badge-blue: #1e3a5f;
+  --color-badge-blue-text: #93c5fd;
+  --color-badge-amber: #422006;
+  --color-badge-amber-text: #fcd34d;
+  --color-badge-red: #450a0a;
+  --color-badge-red-text: #fca5a5;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.sidebar-brand {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+.sidebar-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+.sidebar-title .nvidia-green { color: var(--color-primary); }
+
+.sidebar-nav { padding: 1rem 0; flex: 1; }
+.sidebar-nav ul { list-style: none; }
+.sidebar-nav li { margin: 0; }
+.sidebar-nav a {
+  display: block;
+  padding: 0.45rem 1.5rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+}
+.sidebar-nav a:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  border-left-color: var(--color-primary);
+}
+.sidebar-nav a.active {
+  color: var(--color-primary-dark);
+  background: var(--color-primary-bg);
+  border-left-color: var(--color-primary);
+  font-weight: 600;
+}
+.sidebar-nav .nav-group-title {
+  padding: 0.75rem 1.5rem 0.35rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color var(--transition);
+}
+.back-link:hover { color: var(--color-primary); }
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+.content-wrapper {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 3rem 4rem;
+}
+
+/* ===== Mobile Toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem; left: 1.5rem;
+  z-index: 200;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 1rem; right: 1rem;
+  z-index: 200;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.theme-toggle:hover {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary);
+}
+
+/* ===== Hero / Page Header ===== */
+.page-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  padding: 3rem 3rem 2.5rem;
+  margin: -2.5rem -3rem 2.5rem;
+  border-radius: 0 0 1rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 75% 25%, rgba(118,185,0,0.2) 0%, transparent 55%),
+              radial-gradient(circle at 25% 75%, rgba(0,188,212,0.1) 0%, transparent 50%);
+}
+.page-hero-content { position: relative; z-index: 1; }
+.page-hero .back-link-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  transition: color var(--transition);
+}
+.page-hero .back-link-hero:hover { color: rgba(255,255,255,0.9); }
+.page-hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.page-hero h1 .nvidia-green { color: var(--color-primary); }
+.page-hero .subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  max-width: 650px;
+  line-height: 1.5;
+}
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  opacity: 0.6;
+  flex-wrap: wrap;
+}
+.hero-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.hero-badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.hero-badge.green { background: rgba(118,185,0,0.25); color: #a4e028; }
+.hero-badge.blue { background: rgba(0,188,212,0.2); color: #4dd0e1; }
+.hero-badge.amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
+/* ===== Typography ===== */
+h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 3rem 0 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--color-heading);
+  margin: 2rem 0 0.75rem;
+}
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 1.5rem 0 0.5rem;
+}
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a { color: var(--color-link); text-decoration: none; }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+ul, ol { margin: 0 0 1rem 1.5rem; }
+li { margin-bottom: 0.35rem; }
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead { background: var(--color-table-header); }
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Callout Boxes ===== */
+.callout {
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.25rem 0 1.5rem;
+}
+.callout.info {
+  border-left-color: var(--color-callout-info-border);
+  background: var(--color-callout-info-bg);
+}
+.callout.warn {
+  border-left-color: var(--color-callout-warn-border);
+  background: var(--color-callout-warn-bg);
+}
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  color: var(--color-heading);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.25rem 0 1.5rem;
+  overflow-x: auto;
+}
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+.diagram-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-green { background: var(--color-badge-green); color: var(--color-badge-green-text); }
+.badge-blue { background: var(--color-badge-blue); color: var(--color-badge-blue-text); }
+.badge-amber { background: var(--color-badge-amber); color: var(--color-badge-amber-text); }
+.badge-red { background: var(--color-badge-red); color: var(--color-badge-red-text); }
+
+/* ===== Comparison Cards ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1.5rem;
+}
+.comparison-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+.comparison-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+.comparison-card ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* ===== Feature Grid ===== */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1.5rem;
+}
+.feature-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.feature-card .metric {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+.feature-card .metric-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ===== Strengths & Weaknesses ===== */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.25rem 0 1.5rem;
+}
+.sw-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+.sw-card.strengths { border-top: 3px solid #22c55e; }
+.sw-card.weaknesses { border-top: 3px solid #ef4444; }
+.sw-card h4 { margin: 0 0 0.75rem; }
+.sw-card ul { margin: 0; padding-left: 1.25rem; font-size: 0.9rem; }
+
+/* ===== Sources ===== */
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sources-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.88rem;
+}
+.sources-list li:last-child { border-bottom: none; }
+.sources-list .source-type {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-right: 0.35rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+  .sidebar-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content-wrapper { padding: 2rem 1.5rem 3rem; }
+  .page-hero { margin: -2rem -1.5rem 2rem; padding: 2rem 1.5rem; }
+  .sw-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .content-wrapper { padding: 1.25rem 1rem 2rem; }
+  .page-hero { margin: -1.25rem -1rem 1.25rem; padding: 1.5rem 1rem; }
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.1rem; }
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Section ===== */
+section { scroll-margin-top: 1rem; }
+
+/* ===== Pipeline Steps ===== */
+.pipeline-steps {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.5rem;
+}
+.pipeline-step {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  text-align: center;
+  flex: 1;
+  min-width: 110px;
+}
+.pipeline-step.highlight {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+.pipeline-arrow {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">NVIDIA Speaker AI</div>
+      <div class="sidebar-title"><span class="nvidia-green">TitaNet</span> Explainer</div>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="nav-group-title">Overview</li>
+        <li><a href="#overview">What is TitaNet?</a></li>
+        <li><a href="#key-innovations">Key Innovations</a></li>
+
+        <li class="nav-group-title">Architecture</li>
+        <li><a href="#architecture">Architecture Overview</a></li>
+        <li><a href="#mega-blocks">Mega Blocks</a></li>
+        <li><a href="#se-layers">SE Layers &amp; Global Context</a></li>
+        <li><a href="#channel-attention">Channel-Attention Pooling</a></li>
+        <li><a href="#arch-diagram">Architecture Diagram</a></li>
+
+        <li class="nav-group-title">Model Variants</li>
+        <li><a href="#variants">TitaNet-S / M / L</a></li>
+
+        <li class="nav-group-title">Training</li>
+        <li><a href="#training">Training Pipeline</a></li>
+
+        <li class="nav-group-title">Performance</li>
+        <li><a href="#benchmarks">Benchmarks</a></li>
+        <li><a href="#comparison">Model Comparison</a></li>
+
+        <li class="nav-group-title">NeMo Integration</li>
+        <li><a href="#nemo-framework">NeMo Framework</a></li>
+        <li><a href="#diarization-pipeline">Diarization Pipeline</a></li>
+        <li><a href="#tutorial">Tutorial Walkthrough</a></li>
+
+        <li class="nav-group-title">Production</li>
+        <li><a href="#deployment">Deployment</a></li>
+        <li><a href="#strengths-weaknesses">Strengths &amp; Weaknesses</a></li>
+
+        <li class="nav-group-title">Reference</li>
+        <li><a href="#sources">Sources</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Speaker Identification Overview</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="content-wrapper">
+
+      <!-- Hero -->
+      <header class="page-hero">
+        <div class="page-hero-content">
+          <a href="../voice-speaker-identification/index.html" class="back-link-hero">&#8592; Back to Speaker Identification Overview</a>
+          <h1><span class="nvidia-green">TitaNet</span>: Neural Model for Speaker Representation</h1>
+          <p class="subtitle">NVIDIA's state-of-the-art speaker embedding model using 1D depth-wise separable convolutions with global context for speaker verification and diarization.</p>
+          <div class="hero-badges">
+            <span class="hero-badge green">Speaker Verification</span>
+            <span class="hero-badge blue">Speaker Diarization</span>
+            <span class="hero-badge amber">NVIDIA NeMo</span>
+          </div>
+          <div class="hero-meta">
+            <span>Paper: arXiv:2110.04410</span>
+            <span>Published: ICASSP 2022</span>
+            <span>Authors: Koluguri et al. (NVIDIA)</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Key Metrics -->
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="metric">0.68%</div>
+          <div class="metric-label">EER on VoxCeleb1</div>
+        </div>
+        <div class="feature-card">
+          <div class="metric">1.73%</div>
+          <div class="metric-label">DER on AMI MixHeadset</div>
+        </div>
+        <div class="feature-card">
+          <div class="metric">192-d</div>
+          <div class="metric-label">Embedding Dimension</div>
+        </div>
+        <div class="feature-card">
+          <div class="metric">6.4&ndash;25.3M</div>
+          <div class="metric-label">Parameters (S / M / L)</div>
+        </div>
+      </div>
+
+      <!-- Section: Overview -->
+      <section id="overview">
+        <h2>What is TitaNet?</h2>
+        <p>TitaNet is a neural network architecture developed by NVIDIA for extracting fixed-length speaker representations (called <strong>t-vectors</strong>) from variable-length speech utterances. Published at ICASSP 2022, TitaNet achieves state-of-the-art results on both speaker verification and speaker diarization benchmarks while offering a scalable architecture that ranges from 6.4M to 25.3M parameters.</p>
+
+        <p>The model builds on the <strong>ContextNet</strong> architecture (originally designed for ASR) and adapts it for speaker recognition by introducing:</p>
+        <ul>
+          <li><strong>1D depth-wise separable convolutions</strong> for parameter-efficient temporal feature extraction</li>
+          <li><strong>Squeeze-and-Excitation (SE) layers with global context</strong> to capture long-range dependencies</li>
+          <li><strong>Channel-attention statistics pooling</strong> to produce discriminative fixed-length speaker embeddings</li>
+        </ul>
+
+        <p>TitaNet is natively integrated into NVIDIA's <strong>NeMo</strong> speech AI toolkit, making it directly usable for speaker verification, identification, and as the embedding backbone in NeMo's multi-scale speaker diarization pipeline.</p>
+      </section>
+
+      <!-- Section: Key Innovations -->
+      <section id="key-innovations">
+        <h2>Key Innovations</h2>
+
+        <h3>1. Depth-Wise Separable Convolutions for Speaker Modeling</h3>
+        <p>Traditional speaker embedding networks like x-vectors and ECAPA-TDNN use standard 1D convolutions that jointly process temporal and channel dimensions. TitaNet factorizes these into two steps:</p>
+        <ul>
+          <li><strong>Depth-wise convolution</strong>: Applies a separate filter to each input channel independently, capturing temporal patterns per channel.</li>
+          <li><strong>Point-wise (1x1) convolution</strong>: Mixes information across channels, learning cross-channel interactions.</li>
+        </ul>
+        <p>This factorization significantly reduces the number of parameters and FLOPs. For a kernel of size <code>K</code>, input channels <code>C_in</code>, and output channels <code>C_out</code>, a standard convolution uses <code>K * C_in * C_out</code> parameters, while a depth-wise separable convolution uses only <code>K * C_in + C_in * C_out</code> parameters &mdash; a reduction by a factor of approximately <code>C_out / K</code>.</p>
+
+        <h3>2. SE Layers with Global Average Pooling</h3>
+        <p>While ECAPA-TDNN also uses Squeeze-and-Excitation modules, TitaNet enhances the SE mechanism by incorporating <strong>global average pooling</strong> in the squeeze operation. Instead of operating on local windows, the SE layer in TitaNet computes a global context vector by averaging across the entire time dimension. This gives every sub-block access to utterance-level information, which is critical for speaker discrimination.</p>
+
+        <h3>3. Channel-Attention Statistics Pooling</h3>
+        <p>Rather than using simple temporal average pooling or standard attentive statistics pooling, TitaNet introduces channel-dependent attention weights. The attention mechanism operates <strong>across both time and channels</strong>, computing weighted means and weighted standard deviations that are concatenated to form the final utterance-level representation before the decoder projects it to the 192-dimensional t-vector embedding.</p>
+      </section>
+
+      <!-- Section: Architecture -->
+      <section id="architecture">
+        <h2>Architecture Overview</h2>
+        <p>TitaNet follows an encoder-decoder paradigm. The encoder extracts frame-level acoustic features and the decoder maps them to an utterance-level embedding.</p>
+
+        <h3>Encoder Structure</h3>
+        <p>The encoder consists of three logical sections:</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Components</th>
+                <th>Kernel Size</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Prolog</strong></td>
+                <td>Conv1D + BatchNorm + ReLU</td>
+                <td>3</td>
+                <td>Initial feature transformation from mel-spectrogram input</td>
+              </tr>
+              <tr>
+                <td><strong>Body (Mega Blocks)</strong></td>
+                <td>B blocks, each with R repeated sub-blocks containing DW-Sep Conv + BN + ReLU + Dropout + SE</td>
+                <td>3, 7, 11, 15</td>
+                <td>Hierarchical temporal and speaker feature extraction</td>
+              </tr>
+              <tr>
+                <td><strong>Epilog</strong></td>
+                <td>Conv1D (1x1) + BatchNorm + ReLU</td>
+                <td>1</td>
+                <td>Final channel projection before pooling</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">Notation: B x R x C</div>
+          <p>TitaNet architectures are described using the notation <code>B x R x C</code>, where <code>B</code> is the number of mega blocks, <code>R</code> is the number of repeated sub-blocks per mega block, and <code>C</code> is the number of channels (filters) in convolution layers. All TitaNet variants use <code>R = 3</code> and kernel sizes of 3, 7, 11, and 15 across the blocks.</p>
+        </div>
+
+        <h3>Decoder Structure</h3>
+        <p>The decoder receives the encoder's output (frame-level features) and processes them through:</p>
+        <ol>
+          <li><strong>Channel-attention statistics pooling</strong>: Computes channel-weighted means and standard deviations across time, producing a fixed-length vector regardless of input duration.</li>
+          <li><strong>Linear projection</strong>: Maps the pooled representation to a 192-dimensional embedding (the t-vector).</li>
+          <li><strong>Classification head</strong> (training only): An angular margin softmax layer for discriminative training.</li>
+        </ol>
+      </section>
+
+      <!-- Section: Mega Blocks -->
+      <section id="mega-blocks">
+        <h2>Mega Block Detail</h2>
+        <p>Each mega block is the fundamental building unit of TitaNet's encoder. It contains <code>R</code> repeated sub-blocks (R=3 for all variants) that are residually connected.</p>
+
+        <h3>Sub-Block Structure</h3>
+        <p>Each sub-block in a mega block processes the input through the following stages:</p>
+        <ol>
+          <li><strong>Depth-wise convolution</strong> (1D, stride=1, dilation=1) &mdash; temporal filtering per channel</li>
+          <li><strong>Batch normalization</strong> &mdash; stabilizes training</li>
+          <li><strong>ReLU activation</strong> &mdash; non-linearity</li>
+          <li><strong>Point-wise convolution</strong> (1x1) &mdash; channel mixing</li>
+          <li><strong>Batch normalization</strong></li>
+          <li><strong>ReLU activation</strong></li>
+          <li><strong>Dropout</strong> &mdash; regularization</li>
+        </ol>
+        <p>After the R repeated sub-blocks, a <strong>Squeeze-and-Excitation (SE) layer with global context</strong> is applied. The output is then added to the input via a residual connection.</p>
+
+        <div class="callout">
+          <div class="callout-title">Progressive Kernel Sizes</div>
+          <p>Different mega blocks use increasing kernel sizes (3, 7, 11, 15), enabling the network to capture temporal patterns at multiple scales. Earlier blocks with smaller kernels capture fine-grained phonetic features, while later blocks with larger kernels capture broader speaking patterns and prosody.</p>
+        </div>
+      </section>
+
+      <!-- Section: SE Layers -->
+      <section id="se-layers">
+        <h2>SE Layers &amp; Global Context</h2>
+        <p>The Squeeze-and-Excitation (SE) mechanism in TitaNet is a critical differentiator. It provides the model with <strong>global context</strong> at every block, allowing each frame's representation to be modulated by information from the entire utterance.</p>
+
+        <h3>How It Works</h3>
+        <ol>
+          <li><strong>Squeeze (Global Average Pooling)</strong>: The feature map of shape <code>[B, C, T]</code> (batch, channels, time) is averaged across the entire time dimension to produce a global context vector of shape <code>[B, C, 1]</code>.</li>
+          <li><strong>Excitation (Two FC layers)</strong>: The context vector passes through a bottleneck of two fully connected layers with ReLU activation and a sigmoid gate, producing per-channel scaling factors.</li>
+          <li><strong>Scale</strong>: The original feature map is multiplied element-wise by the channel scaling factors, effectively recalibrating channel responses based on the global utterance context.</li>
+        </ol>
+
+        <p>The use of <strong>global</strong> average pooling (rather than local windowed pooling) is what distinguishes TitaNet's SE implementation from ECAPA-TDNN's. This allows TitaNet to model utterance-level speaker characteristics at every block in the network, not just at the final pooling stage.</p>
+      </section>
+
+      <!-- Section: Channel Attention Pooling -->
+      <section id="channel-attention">
+        <h2>Channel-Attention Statistics Pooling</h2>
+        <p>The pooling layer in TitaNet is responsible for collapsing the variable-length frame-level encoder output into a fixed-length utterance-level representation. TitaNet uses <strong>channel-attention statistics pooling</strong>, which extends standard attentive statistics pooling with channel-specific attention.</p>
+
+        <h3>Mechanism</h3>
+        <ol>
+          <li><strong>Attention scores</strong>: A small neural network computes attention weights for each (time, channel) position, producing a 2D attention map rather than a 1D temporal attention vector.</li>
+          <li><strong>Weighted mean</strong>: For each channel, the time-domain features are weighted by the attention scores and averaged to compute a channel-specific weighted mean.</li>
+          <li><strong>Weighted standard deviation</strong>: Similarly, the weighted variance is computed and its square root yields the weighted standard deviation per channel.</li>
+          <li><strong>Concatenation</strong>: The weighted means and standard deviations are concatenated to form a vector of size <code>2C</code>, which is projected to the 192-dimensional embedding space by a linear layer.</li>
+        </ol>
+
+        <p>This approach allows the model to assign different importance to different time-frequency regions on a per-channel basis, better capturing the discriminative aspects of each speaker's voice.</p>
+      </section>
+
+      <!-- Section: Architecture Diagram -->
+      <section id="arch-diagram">
+        <h2>Architecture Diagram</h2>
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph Input
+        A["Mel Spectrogram<br/>(80-dim features)"]
+    end
+
+    subgraph Encoder
+        B["<b>Prolog Block</b><br/>Conv1D (k=3) + BN + ReLU"]
+
+        subgraph MB1["Mega Block 1 (k=3)"]
+            C1["DW-Sep Conv1D (k=3)"]
+            C2["BN + ReLU + Dropout"]
+            C3["x R=3 sub-blocks<br/>(residual)"]
+            C4["SE Layer<br/>(Global Avg Pool)"]
+        end
+
+        subgraph MB2["Mega Block 2 (k=7)"]
+            D1["DW-Sep Conv1D (k=7)"]
+            D2["BN + ReLU + Dropout"]
+            D3["x R=3 sub-blocks<br/>(residual)"]
+            D4["SE Layer<br/>(Global Avg Pool)"]
+        end
+
+        subgraph MB3["Mega Block 3 (k=11)"]
+            E1["DW-Sep Conv1D (k=11)"]
+            E2["BN + ReLU + Dropout"]
+            E3["x R=3 sub-blocks<br/>(residual)"]
+            E4["SE Layer<br/>(Global Avg Pool)"]
+        end
+
+        subgraph MB4["Mega Block B (k=15)"]
+            F1["DW-Sep Conv1D (k=15)"]
+            F2["BN + ReLU + Dropout"]
+            F3["x R=3 sub-blocks<br/>(residual)"]
+            F4["SE Layer<br/>(Global Avg Pool)"]
+        end
+
+        G["<b>Epilog Block</b><br/>Conv1D (k=1) + BN + ReLU"]
+    end
+
+    subgraph Decoder
+        H["<b>Channel-Attention<br/>Statistics Pooling</b><br/>(weighted mean + std)"]
+        I["Linear Projection<br/>&#8594; 192-d t-vector"]
+    end
+
+    subgraph Training_Only["Training Only"]
+        J["AAM-Softmax Loss<br/>(Angular Additive Margin)"]
+    end
+
+    A --> B
+    B --> C1 --> C2 --> C3 --> C4
+    C4 --> D1 --> D2 --> D3 --> D4
+    D4 --> E1 --> E2 --> E3 --> E4
+    E4 --> F1 --> F2 --> F3 --> F4
+    F4 --> G
+    G --> H --> I
+    I --> J
+
+    style Input fill:#1a1a2e,stroke:#76b900,color:#fff
+    style Encoder fill:#16213e,stroke:#76b900,color:#fff
+    style Decoder fill:#0f3460,stroke:#00bcd4,color:#fff
+    style Training_Only fill:#2d1b69,stroke:#f59e0b,color:#fff
+    style MB1 fill:#1e293b,stroke:#76b900,color:#e2e8f0
+    style MB2 fill:#1e293b,stroke:#76b900,color:#e2e8f0
+    style MB3 fill:#1e293b,stroke:#76b900,color:#e2e8f0
+    style MB4 fill:#1e293b,stroke:#76b900,color:#e2e8f0
+          </div>
+          <div class="diagram-caption">Figure 1: TitaNet architecture showing Prolog, Mega Blocks with SE layers, Epilog, and Channel-Attention Statistics Pooling decoder.</div>
+        </div>
+      </section>
+
+      <!-- Section: Model Variants -->
+      <section id="variants">
+        <h2>TitaNet Model Variants</h2>
+        <p>TitaNet is a scalable architecture. All variants share the same depth (R=3 sub-blocks per mega block) and the same progressive kernel sizes (3, 7, 11, 15). They differ primarily in the <strong>number of channels (C)</strong> per mega block, which determines the model width and overall parameter count.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>Channels (C)</th>
+                <th>Parameters</th>
+                <th>Embedding Dim</th>
+                <th>Sub-blocks (R)</th>
+                <th>Kernel Sizes</th>
+                <th>Target Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>TitaNet-S</strong> <span class="badge badge-green">Small</span></td>
+                <td>256</td>
+                <td>6.4M</td>
+                <td>192</td>
+                <td>3</td>
+                <td>3, 7, 11, 15</td>
+                <td>Edge / real-time / resource-constrained</td>
+              </tr>
+              <tr>
+                <td><strong>TitaNet-M</strong> <span class="badge badge-blue">Medium</span></td>
+                <td>512</td>
+                <td>13.4M</td>
+                <td>192</td>
+                <td>3</td>
+                <td>3, 7, 11, 15</td>
+                <td>Balanced accuracy / efficiency</td>
+              </tr>
+              <tr>
+                <td><strong>TitaNet-L</strong> <span class="badge badge-amber">Large</span></td>
+                <td>1024</td>
+                <td>25.3M</td>
+                <td>192</td>
+                <td>3</td>
+                <td>3, 7, 11, 15</td>
+                <td>Maximum accuracy / server-side</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Scaling Strategy</div>
+          <p>TitaNet scales by increasing <strong>width</strong> (channel count) rather than depth. This is an important design choice: all variants have the same number of layers and receptive field, but wider models can represent richer speaker characteristics. The 192-dimensional embedding output is fixed across all variants, enabling drop-in replacement between model sizes without changing downstream systems.</p>
+        </div>
+
+        <h3>Variant Trade-offs</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h4>TitaNet-S (6.4M params)</h4>
+            <ul>
+              <li>Near state-of-the-art diarization results</li>
+              <li>4x fewer parameters than TitaNet-L</li>
+              <li>Suitable for edge devices and mobile</li>
+              <li>Fastest inference latency</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h4>TitaNet-M (13.4M params)</h4>
+            <ul>
+              <li>Half the size of ECAPA-TDNN baselines</li>
+              <li>Outperforms larger models on diarization</li>
+              <li>Best accuracy/compute ratio</li>
+              <li>Good for most production scenarios</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h4>TitaNet-L (25.3M params)</h4>
+            <ul>
+              <li>State-of-the-art on VoxCeleb1 (0.68% EER)</li>
+              <li>Best diarization performance across benchmarks</li>
+              <li>Recommended for server-side applications</li>
+              <li>Default model in NeMo diarization pipeline</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Training -->
+      <section id="training">
+        <h2>Training Pipeline</h2>
+
+        <h3>Training Data</h3>
+        <p>TitaNet models are trained on a large-scale combined dataset including:</p>
+        <ul>
+          <li><strong>VoxCeleb1</strong> &mdash; 1,211 speakers, 153k utterances</li>
+          <li><strong>VoxCeleb2</strong> &mdash; 5,994 speakers, 1.1M utterances</li>
+          <li><strong>Fisher</strong> &mdash; conversational telephone speech</li>
+          <li><strong>SRE (NIST Speaker Recognition Evaluation)</strong> &mdash; diverse telephone and microphone data</li>
+          <li><strong>LibriSpeech</strong> &mdash; clean read speech</li>
+        </ul>
+
+        <h3>Loss Function</h3>
+        <p>TitaNet is trained end-to-end using <strong>Additive Angular Margin Softmax (AAM-Softmax)</strong> loss, which is designed to maximize inter-speaker separation and minimize intra-speaker variation in the embedding space:</p>
+        <pre><code>L = -log( exp(s * cos(theta_y + m)) / (exp(s * cos(theta_y + m)) + sum_j exp(s * cos(theta_j))) )</code></pre>
+        <p>Where <code>s = 30</code> (scale factor) and <code>m = 0.2</code> (angular margin). This loss encourages the model to learn embeddings where same-speaker pairs are angularly close and different-speaker pairs are far apart on the hypersphere.</p>
+
+        <h3>Data Augmentation</h3>
+        <p>On-the-fly data augmentation is applied during training using:</p>
+        <ul>
+          <li><strong>MUSAN noise</strong>: Background noise, music, and babble from the MUSAN corpus are added at random SNRs</li>
+          <li><strong>Room Impulse Responses (RIR)</strong>: Simulated and real room impulse responses are convolved with clean speech to simulate reverberant conditions</li>
+          <li><strong>Speed perturbation</strong>: Audio playback speed is randomly varied to increase speaker diversity</li>
+        </ul>
+
+        <h3>Training Configuration</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Optimizer</td><td>SGD with momentum (Novograd also used)</td></tr>
+              <tr><td>Learning rate</td><td>Cosine annealing schedule</td></tr>
+              <tr><td>Input features</td><td>80-dim log-mel spectrogram</td></tr>
+              <tr><td>Sample rate</td><td>16 kHz</td></tr>
+              <tr><td>Training epochs</td><td>Several hundred</td></tr>
+              <tr><td>Loss scale (s)</td><td>30</td></tr>
+              <tr><td>Loss margin (m)</td><td>0.2</td></tr>
+              <tr><td>Embedding dim</td><td>192</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: Benchmarks -->
+      <section id="benchmarks">
+        <h2>Performance Benchmarks</h2>
+
+        <h3>Speaker Verification (VoxCeleb1)</h3>
+        <p>Equal Error Rate (EER) measures the point where the false acceptance rate equals the false rejection rate. Lower is better.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Parameters</th>
+                <th>VoxCeleb1-O EER (%)</th>
+                <th>VoxCeleb1-E EER (%)</th>
+                <th>VoxCeleb1-H EER (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TitaNet-L</td>
+                <td>25.3M</td>
+                <td><strong>0.68</strong></td>
+                <td><strong>0.73</strong></td>
+                <td><strong>1.29</strong></td>
+              </tr>
+              <tr>
+                <td>TitaNet-M</td>
+                <td>13.4M</td>
+                <td>0.84</td>
+                <td>0.86</td>
+                <td>1.56</td>
+              </tr>
+              <tr>
+                <td>TitaNet-S</td>
+                <td>6.4M</td>
+                <td>1.24</td>
+                <td>1.17</td>
+                <td>2.16</td>
+              </tr>
+              <tr>
+                <td>ECAPA-TDNN (1024)</td>
+                <td>~14.7M</td>
+                <td>0.87</td>
+                <td>1.01</td>
+                <td>1.81</td>
+              </tr>
+              <tr>
+                <td>SpeakerNet-L</td>
+                <td>~5M</td>
+                <td>1.85</td>
+                <td>1.97</td>
+                <td>3.41</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">VoxCeleb1 Trial Lists</div>
+          <p><strong>VoxCeleb1-O</strong> (Original): The standard cleaned test set with 37,611 trial pairs. <strong>VoxCeleb1-E</strong> (Extended): A larger evaluation set. <strong>VoxCeleb1-H</strong> (Hard): Pairs with same nationality and gender, making verification more challenging.</p>
+        </div>
+
+        <h3>Speaker Diarization</h3>
+        <p>Diarization Error Rate (DER) measures the percentage of time that is incorrectly attributed to a speaker. Lower is better. Results shown use oracle VAD (known speech regions).</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>AMI MixHeadset DER (%)</th>
+                <th>AMI Lapel DER (%)</th>
+                <th>CH109 (CALLHOME) DER (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TitaNet-L</td>
+                <td><strong>1.73</strong></td>
+                <td><strong>1.99</strong></td>
+                <td><strong>1.11</strong></td>
+              </tr>
+              <tr>
+                <td>TitaNet-M</td>
+                <td>1.85</td>
+                <td>2.08</td>
+                <td>1.28</td>
+              </tr>
+              <tr>
+                <td>TitaNet-S</td>
+                <td>2.01</td>
+                <td>2.35</td>
+                <td>1.47</td>
+              </tr>
+              <tr>
+                <td>ECAPA-TDNN</td>
+                <td>2.31</td>
+                <td>2.82</td>
+                <td>1.52</td>
+              </tr>
+              <tr>
+                <td>SpeakerNet</td>
+                <td>3.15</td>
+                <td>3.58</td>
+                <td>2.24</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Key Takeaway</div>
+          <p>TitaNet-M, with only 13.4M parameters (roughly half the size of ECAPA-TDNN), <strong>outperforms</strong> larger models on all diarization benchmarks. Even TitaNet-S at 6.4M parameters achieves competitive diarization performance, making it viable for resource-constrained environments.</p>
+        </div>
+      </section>
+
+      <!-- Section: Comparison -->
+      <section id="comparison">
+        <h2>Model Comparison: TitaNet vs. ECAPA-TDNN vs. SpeakerNet</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>TitaNet-L</th>
+                <th>ECAPA-TDNN</th>
+                <th>SpeakerNet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Architecture Basis</strong></td>
+                <td>ContextNet (1D DW-Sep Conv)</td>
+                <td>x-vector TDNN + Res2Net</td>
+                <td>QuartzNet (1D Conv)</td>
+              </tr>
+              <tr>
+                <td><strong>Convolution Type</strong></td>
+                <td>1D Depth-wise Separable</td>
+                <td>Standard 1D + Res2Net</td>
+                <td>Standard 1D</td>
+              </tr>
+              <tr>
+                <td><strong>SE Mechanism</strong></td>
+                <td>SE with <em>global</em> average pooling</td>
+                <td>SE with local context</td>
+                <td>No SE</td>
+              </tr>
+              <tr>
+                <td><strong>Pooling</strong></td>
+                <td>Channel-attention statistics</td>
+                <td>Attentive statistics</td>
+                <td>Statistics (mean + var)</td>
+              </tr>
+              <tr>
+                <td><strong>Parameters</strong></td>
+                <td>25.3M</td>
+                <td>~14.7M (1024-ch)</td>
+                <td>~5M</td>
+              </tr>
+              <tr>
+                <td><strong>Embedding Dim</strong></td>
+                <td>192</td>
+                <td>192</td>
+                <td>256</td>
+              </tr>
+              <tr>
+                <td><strong>VoxCeleb1-O EER</strong></td>
+                <td><strong>0.68%</strong></td>
+                <td>0.87%</td>
+                <td>1.85%</td>
+              </tr>
+              <tr>
+                <td><strong>AMI MixHeadset DER</strong></td>
+                <td><strong>1.73%</strong></td>
+                <td>2.31%</td>
+                <td>3.15%</td>
+              </tr>
+              <tr>
+                <td><strong>Scalability</strong></td>
+                <td>S / M / L variants</td>
+                <td>Single size typically</td>
+                <td>M / L variants</td>
+              </tr>
+              <tr>
+                <td><strong>NeMo Support</strong></td>
+                <td>Full (default for diarization)</td>
+                <td>Full</td>
+                <td>Full</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h4>When to Choose TitaNet</h4>
+            <ul>
+              <li>Need state-of-the-art verification or diarization accuracy</li>
+              <li>Want a scalable architecture for different deployment targets</li>
+              <li>Using NeMo's diarization pipeline (it is the default)</li>
+              <li>Need strong performance on short utterances</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h4>When to Choose ECAPA-TDNN</h4>
+            <ul>
+              <li>Need a well-established model with broad ecosystem support</li>
+              <li>Using frameworks beyond NeMo (e.g., SpeechBrain)</li>
+              <li>Want a single mid-sized model with strong all-round performance</li>
+              <li>Prefer Res2Net multi-scale feature extraction</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h4>When to Choose SpeakerNet</h4>
+            <ul>
+              <li>Extreme resource constraints (only ~5M parameters)</li>
+              <li>Speed is the top priority over accuracy</li>
+              <li>Simple speaker ID tasks with cooperative speakers</li>
+              <li>Prototyping and quick experiments</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: NeMo Framework -->
+      <section id="nemo-framework">
+        <h2>NeMo Framework Integration</h2>
+        <p>TitaNet is a first-class citizen in NVIDIA's <strong>NeMo</strong> (Neural Modules) toolkit, an open-source framework for building, training, and deploying conversational AI models. All TitaNet variants are available as pretrained checkpoints.</p>
+
+        <h3>Model Class</h3>
+        <p>TitaNet models are instantiated using the <code>EncDecSpeakerLabelModel</code> class in NeMo:</p>
+        <pre><code>import nemo.collections.asr as nemo_asr
+
+# Load pretrained TitaNet-Large
+speaker_model = nemo_asr.models.EncDecSpeakerLabelModel.from_pretrained(
+    "nvidia/speakerverification_en_titanet_large"
+)</code></pre>
+
+        <h3>Available Pretrained Models</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Model Name</th>
+                <th>HuggingFace ID</th>
+                <th>NGC Catalog</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TitaNet-Large</td>
+                <td><code>nvidia/speakerverification_en_titanet_large</code></td>
+                <td><code>nemo/titanet_large</code></td>
+              </tr>
+              <tr>
+                <td>TitaNet-Small (Ambernet)</td>
+                <td><code>nvidia/speakerverification_en_titanet_small</code></td>
+                <td><code>nemo/titanet_small</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Core Operations</h3>
+
+        <h4>Extract Speaker Embedding</h4>
+        <pre><code># Extract a 192-dimensional embedding from an audio file
+embedding = speaker_model.get_embedding("path/to/audio.wav")
+print(embedding.shape)  # torch.Size([1, 192])</code></pre>
+
+        <h4>Speaker Verification (1:1)</h4>
+        <pre><code># Verify if two audio files are from the same speaker
+# Returns: (is_same_speaker: bool, similarity_score: float)
+result = speaker_model.verify_speakers(
+    "path/to/speaker_a.wav",
+    "path/to/speaker_b.wav"
+)
+print(f"Same speaker: {result[0]}, Score: {result[1]:.4f}")</code></pre>
+
+        <h4>Batch Embedding Extraction</h4>
+        <pre><code># Extract embeddings from multiple files listed in a manifest
+embs, logits, gt_labels, trained_labels = speaker_model.batch_inference(
+    manifest_filepath="manifest.json",
+    batch_size=32
+)</code></pre>
+
+        <h4>Manifest File Format</h4>
+        <pre><code>// manifest.json - one JSON object per line
+{"audio_filepath": "audio1.wav", "offset": 0, "duration": null, "label": "speaker_0"}
+{"audio_filepath": "audio2.wav", "offset": 0, "duration": null, "label": "speaker_1"}</code></pre>
+
+        <div class="callout info">
+          <div class="callout-title">Audio Requirements</div>
+          <p>TitaNet expects <strong>16 kHz mono-channel WAV</strong> audio. If your audio is in a different format, convert it first using tools like FFmpeg: <code>ffmpeg -i input.mp3 -ar 16000 -ac 1 output.wav</code></p>
+        </div>
+      </section>
+
+      <!-- Section: Diarization Pipeline -->
+      <section id="diarization-pipeline">
+        <h2>Speaker Diarization Pipeline</h2>
+        <p>TitaNet serves as the <strong>speaker embedding backbone</strong> in NeMo's state-of-the-art speaker diarization system. The pipeline answers the question: "Who spoke when?"</p>
+
+        <h3>Pipeline Steps</h3>
+        <div class="pipeline-steps">
+          <div class="pipeline-step">1. Audio Input</div>
+          <span class="pipeline-arrow">&#8594;</span>
+          <div class="pipeline-step">2. VAD (MarbleNet)</div>
+          <span class="pipeline-arrow">&#8594;</span>
+          <div class="pipeline-step highlight">3. Embeddings (TitaNet)</div>
+          <span class="pipeline-arrow">&#8594;</span>
+          <div class="pipeline-step">4. Clustering</div>
+          <span class="pipeline-arrow">&#8594;</span>
+          <div class="pipeline-step">5. MSDD Refinement</div>
+          <span class="pipeline-arrow">&#8594;</span>
+          <div class="pipeline-step">6. Speaker Labels</div>
+        </div>
+
+        <h3>Component Details</h3>
+
+        <h4>Step 1: Voice Activity Detection (MarbleNet)</h4>
+        <p>MarbleNet, a small and efficient neural VAD model, identifies speech-active regions in the audio and filters out silence and background noise. This produces speech timestamps that define segments for embedding extraction.</p>
+
+        <h4>Step 2: Multi-Scale Segment Extraction</h4>
+        <p>Speech segments are extracted at <strong>multiple time scales</strong> (window lengths). Default NeMo configuration uses windows of 1.5, 1.25, 1.0, 0.75, and 0.5 seconds with corresponding shifts of 0.75, 0.625, 0.5, 0.375, and 0.25 seconds. This multi-scale approach captures speaker characteristics at different temporal granularities.</p>
+
+        <h4>Step 3: TitaNet Embedding Extraction</h4>
+        <p>For each multi-scale segment, TitaNet extracts a 192-dimensional speaker embedding. This produces a sequence of embedding vectors at each scale.</p>
+
+        <h4>Step 4: Spectral Clustering</h4>
+        <p>The embeddings are clustered using spectral clustering to produce an initial estimate of speaker identities and the number of speakers. Cosine similarity between embeddings forms the affinity matrix.</p>
+
+        <h4>Step 5: Multi-Scale Diarization Decoder (MSDD)</h4>
+        <p>A neural network refines the clustering results by:</p>
+        <ul>
+          <li>Computing cluster-average embeddings for each speaker</li>
+          <li>Comparing these averages with the input embedding sequences</li>
+          <li>Dynamically weighting the importance of each temporal scale</li>
+          <li>Outputting final speaker label probabilities for overlapping speech and boundary regions</li>
+        </ul>
+
+        <h3>Diarization Pipeline Diagram</h3>
+        <div class="diagram-container">
+          <div class="mermaid">
+graph LR
+    subgraph Input
+        A["Audio File<br/>(16 kHz WAV)"]
+    end
+
+    subgraph VAD["Voice Activity Detection"]
+        B["MarbleNet<br/>(Neural VAD)"]
+        C["Speech<br/>Timestamps"]
+    end
+
+    subgraph Embedding["Speaker Embedding Extraction"]
+        D["Multi-Scale<br/>Segmentation<br/>(0.5s - 1.5s windows)"]
+        E["TitaNet<br/>(192-d embeddings)"]
+    end
+
+    subgraph Clustering
+        F["Cosine Similarity<br/>Affinity Matrix"]
+        G["Spectral<br/>Clustering"]
+        H["Initial Speaker<br/>Labels + Count"]
+    end
+
+    subgraph MSDD["Neural Refinement"]
+        I["Cluster-Average<br/>Embeddings"]
+        J["Multi-Scale<br/>Diarization Decoder"]
+        K["Scale Weight<br/>Estimation"]
+    end
+
+    subgraph Output
+        L["Final Speaker<br/>Labels (RTTM)"]
+    end
+
+    A --> B --> C --> D --> E
+    E --> F --> G --> H
+    H --> I --> J
+    E --> J
+    K --> J
+    J --> L
+
+    style Input fill:#1a1a2e,stroke:#76b900,color:#fff
+    style VAD fill:#16213e,stroke:#00bcd4,color:#e2e8f0
+    style Embedding fill:#1a2e05,stroke:#76b900,color:#e2e8f0
+    style Clustering fill:#2d1b3e,stroke:#a78bfa,color:#e2e8f0
+    style MSDD fill:#0f3460,stroke:#f59e0b,color:#e2e8f0
+    style Output fill:#1a1a2e,stroke:#76b900,color:#fff
+          </div>
+          <div class="diagram-caption">Figure 2: NeMo speaker diarization pipeline with TitaNet as the embedding backbone, MarbleNet VAD, spectral clustering, and MSDD neural refinement.</div>
+        </div>
+      </section>
+
+      <!-- Section: Tutorial Walkthrough -->
+      <section id="tutorial">
+        <h2>NeMo Tutorial Walkthrough</h2>
+        <p>This section walks through the key steps of using TitaNet for speaker tasks in NeMo.</p>
+
+        <h3>Installation</h3>
+        <pre><code># Install NeMo with ASR support
+pip install nemo_toolkit[asr]
+
+# Or install from source for latest features
+git clone https://github.com/NVIDIA/NeMo.git
+cd NeMo && pip install -e ".[asr]"</code></pre>
+
+        <h3>Speaker Verification Pipeline</h3>
+        <pre><code>import nemo.collections.asr as nemo_asr
+import torch
+
+# Step 1: Load pretrained TitaNet-Large
+model = nemo_asr.models.EncDecSpeakerLabelModel.from_pretrained(
+    "nvidia/speakerverification_en_titanet_large"
+)
+model.eval()
+
+# Step 2: Extract embeddings
+emb_a = model.get_embedding("enrollment.wav")   # shape: [1, 192]
+emb_b = model.get_embedding("test_query.wav")    # shape: [1, 192]
+
+# Step 3: Compute cosine similarity
+cos_sim = torch.nn.functional.cosine_similarity(emb_a, emb_b)
+print(f"Cosine similarity: {cos_sim.item():.4f}")
+
+# Step 4: Apply threshold (typical range: 0.4 - 0.7)
+threshold = 0.5
+is_same = cos_sim.item() > threshold
+print(f"Same speaker: {is_same}")
+
+# Or use the built-in verify method:
+is_same, score = model.verify_speakers("enrollment.wav", "test_query.wav")
+print(f"Verification result: {is_same}, Score: {score:.4f}")</code></pre>
+
+        <h3>Speaker Diarization Pipeline</h3>
+        <pre><code>import nemo.collections.asr as nemo_asr
+from omegaconf import OmegaConf
+
+# Step 1: Load the diarization config
+config = OmegaConf.load("conf/diar_infer_meeting.yaml")
+
+# Step 2: Set the speaker embedding model
+config.diarizer.speaker_embeddings.model_path = \
+    "nvidia/speakerverification_en_titanet_large"
+
+# Step 3: Configure multi-scale parameters
+config.diarizer.speaker_embeddings.parameters.window_length_in_sec = \
+    [1.5, 1.25, 1.0, 0.75, 0.5]
+config.diarizer.speaker_embeddings.parameters.shift_length_in_sec = \
+    [0.75, 0.625, 0.5, 0.375, 0.25]
+
+# Step 4: Set input manifest
+config.diarizer.manifest_filepath = "input_manifest.json"
+config.diarizer.out_dir = "diarization_output"
+
+# Step 5: Run diarization
+from nemo.collections.asr.models import ClusteringDiarizer
+diarizer = ClusteringDiarizer(cfg=config)
+diarizer.diarize()</code></pre>
+
+        <h3>Fine-Tuning TitaNet</h3>
+        <pre><code># Fine-tune on your custom speaker dataset
+# Prepare a manifest file with your audio and speaker labels
+
+python examples/speaker_tasks/recognition/speaker_reco.py \
+    --config-path=conf \
+    --config-name=titanet-large.yaml \
+    model.train_ds.manifest_filepath=train_manifest.json \
+    model.validation_ds.manifest_filepath=val_manifest.json \
+    model.decoder.num_classes=NUM_SPEAKERS \
+    trainer.max_epochs=100 \
+    trainer.devices=1</code></pre>
+
+        <h3>Embedding Extraction at Scale</h3>
+        <pre><code># Command-line batch extraction
+python examples/speaker_tasks/recognition/extract_speaker_embeddings.py \
+    --manifest=input_manifest.json \
+    --model_path="nvidia/speakerverification_en_titanet_large" \
+    --embedding_dir=embeddings_output/ \
+    --batch_size=64</code></pre>
+
+        <div class="callout">
+          <div class="callout-title">NeMo Tutorials</div>
+          <p>NVIDIA provides interactive Jupyter notebooks for hands-on learning:
+          <br><strong>Speaker_Identification_Verification.ipynb</strong> &mdash; End-to-end speaker verification workflow
+          <br><strong>Speaker_Diarization_Inference.ipynb</strong> &mdash; Running the full diarization pipeline
+          <br><strong>Speaker_Diarization_Training.ipynb</strong> &mdash; Training custom diarization models
+          <br>These notebooks are available in the <a href="https://github.com/NVIDIA/NeMo/tree/main/tutorials/speaker_tasks">NeMo GitHub repository</a> and can be run directly on Google Colab.</p>
+        </div>
+      </section>
+
+      <!-- Section: Deployment -->
+      <section id="deployment">
+        <h2>Production Deployment Considerations</h2>
+
+        <h3>Export and Optimization</h3>
+        <p>TitaNet models can be exported from NeMo's native format to optimized inference formats:</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Export Format</th>
+                <th>Use Case</th>
+                <th>Typical Speedup</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ONNX</strong></td>
+                <td>Cross-platform deployment, ONNX Runtime</td>
+                <td>1.5-2x over PyTorch</td>
+              </tr>
+              <tr>
+                <td><strong>TensorRT</strong></td>
+                <td>NVIDIA GPU-optimized inference</td>
+                <td>3-5x over PyTorch</td>
+              </tr>
+              <tr>
+                <td><strong>Triton Inference Server</strong></td>
+                <td>Production serving with batching, scaling</td>
+                <td>5x+ with dynamic batching</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Export to ONNX</h4>
+        <pre><code># Export NeMo model to ONNX
+model = nemo_asr.models.EncDecSpeakerLabelModel.from_pretrained(
+    "nvidia/speakerverification_en_titanet_large"
+)
+model.export("titanet_large.onnx")</code></pre>
+
+        <h3>Deployment Architecture Patterns</h3>
+
+        <h4>Pattern 1: Embedding Microservice</h4>
+        <p>Deploy TitaNet as a standalone embedding extraction service. Client applications send audio and receive 192-d vectors. Speaker matching logic lives in the application layer with a vector database (e.g., FAISS, Milvus) for efficient similarity search.</p>
+
+        <h4>Pattern 2: Full Diarization Service</h4>
+        <p>Deploy the entire NeMo diarization pipeline (VAD + TitaNet + Clustering + MSDD) as an end-to-end service using Triton Inference Server with model ensemble pipelines.</p>
+
+        <h4>Pattern 3: Edge Deployment</h4>
+        <p>Use TitaNet-S (6.4M parameters) exported to TensorRT for on-device speaker verification. Suitable for smart speakers, telephony devices, and access control systems.</p>
+
+        <h3>Scaling Considerations</h3>
+        <ul>
+          <li><strong>Latency</strong>: TitaNet-L processes a 3-second utterance in ~10ms on an A100 GPU; TitaNet-S achieves ~3ms</li>
+          <li><strong>Throughput</strong>: Dynamic batching via Triton can process 1000+ utterances/second on a single GPU</li>
+          <li><strong>Memory</strong>: TitaNet-L requires ~100MB GPU memory; TitaNet-S requires ~25MB</li>
+          <li><strong>Embedding storage</strong>: Each speaker enrollment requires only 192 floats (768 bytes), making it highly storage-efficient</li>
+          <li><strong>Cosine similarity search</strong>: Over 100M comparisons per second on CPU with optimized BLAS libraries</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">Production Checklist</div>
+          <ul>
+            <li>Ensure 16 kHz mono audio preprocessing in your ingestion pipeline</li>
+            <li>Set appropriate verification thresholds based on your FAR/FRR requirements (use ROC analysis on your domain data)</li>
+            <li>Consider enrollment with multiple utterances per speaker for robustness (average 3-5 enrollment embeddings)</li>
+            <li>Monitor embedding drift over time if speakers' voices may change</li>
+            <li>Apply voice activity detection before embedding extraction to avoid extracting embeddings from silence or noise</li>
+            <li>For multilingual scenarios, note that TitaNet was primarily trained on English data; evaluate performance on target languages</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section: Strengths & Weaknesses -->
+      <section id="strengths-weaknesses">
+        <h2>Strengths &amp; Weaknesses</h2>
+
+        <div class="sw-grid">
+          <div class="sw-card strengths">
+            <h4>Strengths</h4>
+            <ul>
+              <li><strong>State-of-the-art accuracy</strong>: Best-in-class EER on VoxCeleb1 and DER on AMI/CALLHOME benchmarks</li>
+              <li><strong>Scalable architecture</strong>: Three well-characterized variants (S/M/L) for different compute budgets</li>
+              <li><strong>Parameter efficient</strong>: Depth-wise separable convolutions achieve high accuracy with fewer parameters than standard convolutions</li>
+              <li><strong>Global context at every layer</strong>: SE with global average pooling gives the model utterance-level awareness throughout the encoder</li>
+              <li><strong>NeMo ecosystem</strong>: Full integration with NVIDIA's production-grade speech AI toolkit including diarization pipeline</li>
+              <li><strong>Export-friendly</strong>: Clean ONNX/TensorRT export path with Triton serving support</li>
+              <li><strong>Fixed 192-d output</strong>: Compact embedding enables efficient storage and fast similarity computation</li>
+              <li><strong>Multi-scale diarization</strong>: The default embedding model for NeMo's state-of-the-art MSDD diarization pipeline</li>
+              <li><strong>Open weights</strong>: Pretrained models freely available on HuggingFace and NGC</li>
+            </ul>
+          </div>
+          <div class="sw-card weaknesses">
+            <h4>Weaknesses</h4>
+            <ul>
+              <li><strong>English-centric training</strong>: Primarily trained on English speech data; may underperform on other languages without fine-tuning</li>
+              <li><strong>NeMo dependency</strong>: Full feature set requires the NeMo toolkit; less portable than framework-agnostic models</li>
+              <li><strong>Limited public ablation</strong>: The paper provides less detailed ablation studies compared to some competing architectures</li>
+              <li><strong>No streaming support</strong>: Designed for offline (full-utterance) processing; not natively suited for real-time streaming speaker identification</li>
+              <li><strong>Larger than ECAPA-TDNN</strong>: TitaNet-L (25.3M) is larger than ECAPA-TDNN (~14.7M) for a somewhat modest verification EER improvement</li>
+              <li><strong>Training data not fully public</strong>: Some training corpora (Fisher, SRE) require paid licenses, complicating reproduction</li>
+              <li><strong>No built-in anti-spoofing</strong>: Vulnerable to voice cloning and replay attacks without an additional spoofing detection module</li>
+              <li><strong>Short utterance degradation</strong>: Like all embedding models, performance degrades on very short (&lt;1s) utterances</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Sources -->
+      <section id="sources">
+        <h2>Sources &amp; References</h2>
+        <ul class="sources-list">
+          <li>
+            <span class="source-type badge badge-amber">Paper</span>
+            <a href="https://arxiv.org/abs/2110.04410" target="_blank">Koluguri, N. R., Park, T., &amp; Ginsburg, B. (2022). TitaNet: Neural Model for Speaker Representation with 1D Depth-wise Separable Convolutions and Global Context. ICASSP 2022.</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-amber">Paper PDF</span>
+            <a href="https://arxiv.org/pdf/2110.04410" target="_blank">TitaNet Full Paper (arXiv:2110.04410)</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-blue">Model</span>
+            <a href="https://huggingface.co/nvidia/speakerverification_en_titanet_large" target="_blank">NVIDIA TitaNet-Large on HuggingFace</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-blue">Model</span>
+            <a href="https://catalog.ngc.nvidia.com/orgs/nvidia/teams/nemo/models/titanet_large" target="_blank">TitaNet-Large on NVIDIA NGC Catalog</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-green">Docs</span>
+            <a href="https://docs.nvidia.com/nemo-framework/user-guide/latest/nemotoolkit/asr/speaker_recognition/models.html" target="_blank">NeMo Speaker Recognition Models Documentation</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-green">Docs</span>
+            <a href="https://docs.nvidia.com/nemo-framework/user-guide/latest/nemotoolkit/asr/speaker_diarization/models.html" target="_blank">NeMo Speaker Diarization Models Documentation</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-green">Tutorial</span>
+            <a href="https://github.com/NVIDIA/NeMo/blob/main/tutorials/speaker_tasks/Speaker_Diarization_Inference.ipynb" target="_blank">NeMo Speaker Diarization Inference Tutorial (Jupyter Notebook)</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-green">Tutorial</span>
+            <a href="https://github.com/NVIDIA/NeMo/blob/main/tutorials/speaker_tasks/Speaker_Identification_Verification.ipynb" target="_blank">NeMo Speaker Identification &amp; Verification Tutorial</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-amber">Paper</span>
+            <a href="https://www.mdpi.com/2076-3417/14/4/1329" target="_blank">Comparison of Modern Deep Learning Models for Speaker Verification (Applied Sciences, 2024)</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-blue">Code</span>
+            <a href="https://github.com/NVIDIA/NeMo" target="_blank">NVIDIA NeMo GitHub Repository</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-green">Research</span>
+            <a href="https://research.nvidia.com/publication/2022-05_titanet-neural-model-speaker-representation-1d-depth-wise-separable" target="_blank">NVIDIA Research: TitaNet Publication Page</a>
+          </li>
+          <li>
+            <span class="source-type badge badge-amber">Paper</span>
+            <a href="https://www.nature.com/articles/s41598-025-09385-1" target="_blank">Enhanced Speaker Diarization Using TitaNet, MarbleNet and TDNN (Scientific Reports, 2025)</a>
+          </li>
+        </ul>
+      </section>
+
+    </div><!-- /content-wrapper -->
+  </main>
+</div><!-- /layout -->
+
+<!-- Sidebar Toggle (Mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar navigation">&#9776;</button>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">&#9790;</button>
+
+<script>
+// ===== Mermaid Init =====
+document.addEventListener('DOMContentLoaded', function() {
+  const isDark = localStorage.getItem('theme') === 'dark' ||
+    (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    themeVariables: isDark ? {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#76b900',
+      lineColor: '#64748b',
+      secondaryColor: '#334155',
+      tertiaryColor: '#0f172a',
+      background: '#1e293b',
+      mainBkg: '#1e293b',
+      nodeBorder: '#76b900'
+    } : {
+      primaryColor: '#f0fbe0',
+      primaryTextColor: '#1e293b',
+      primaryBorderColor: '#76b900',
+      lineColor: '#94a3b8',
+      secondaryColor: '#f1f5f9',
+      tertiaryColor: '#ffffff'
+    }
+  });
+});
+
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
+  if (next === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+  } else {
+    html.removeAttribute('data-theme');
+  }
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next === 'dark' ? '\u2600' : '\u263E';
+
+  // Re-render Mermaid diagrams with new theme
+  document.querySelectorAll('.mermaid').forEach(function(el) {
+    const svg = el.querySelector('svg');
+    if (svg) svg.remove();
+    el.removeAttribute('data-processed');
+  });
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: next === 'dark' ? 'dark' : 'default',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    themeVariables: next === 'dark' ? {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#76b900',
+      lineColor: '#64748b',
+      secondaryColor: '#334155',
+      tertiaryColor: '#0f172a'
+    } : {
+      primaryColor: '#f0fbe0',
+      primaryTextColor: '#1e293b',
+      primaryBorderColor: '#76b900',
+      lineColor: '#94a3b8',
+      secondaryColor: '#f1f5f9',
+      tertiaryColor: '#ffffff'
+    }
+  });
+  mermaid.run();
+});
+
+// Set initial icon
+(function() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  themeToggle.textContent = isDark ? '\u2600' : '\u263E';
+})();
+
+// ===== Sidebar Toggle (Mobile) =====
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.getElementById('sidebar');
+sidebarToggle.addEventListener('click', function() {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar on link click (mobile)
+sidebar.querySelectorAll('a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// ===== Active Sidebar Link on Scroll =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+function updateActiveLink() {
+  let current = '';
+  sections.forEach(function(section) {
+    const sectionTop = section.offsetTop - 120;
+    if (window.scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink, { passive: true });
+updateActiveLink();
+</script>
+</body>
+</html>

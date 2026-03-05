@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-Vector: Deep Embedding Vectors for Speaker Identification</title>
+<meta name="description" content="A comprehensive technical explainer on D-Vector (Deep Embedding Vectors) for speaker identification, covering DNN and LSTM architectures, GE2E loss, extraction pipelines, and practical applications.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-success: #059669;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEF2F2;
+  --sidebar-width: 280px;
+  --content-max-width: 900px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #2E1065;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #2E1065;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-primary);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+.heading-anchor {
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary);
+  text-decoration: none;
+  opacity: 0;
+  font-size: 0.9em;
+  font-weight: 400;
+  transition: opacity var(--transition);
+  padding-bottom: 0.5rem;
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor {
+  opacity: 0.6;
+}
+
+h3 .heading-anchor {
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: none;
+  margin-right: 0.25rem;
+  padding-bottom: 0;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--color-code-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul {
+  margin-bottom: 0;
+}
+
+.takeaways li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong {
+  color: var(--color-heading);
+}
+
+.info-box.success {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+}
+
+.info-box.warning {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning);
+}
+
+.info-box.danger {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead {
+  background: var(--color-table-header);
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-table-stripe);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  margin: 2rem 0;
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 12px;
+  background: var(--color-diagram-bg);
+  overflow: hidden;
+}
+
+.diagram-container figure {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 1.5rem;
+  margin: 0;
+  max-width: 100%;
+}
+
+.diagram-container figcaption {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-diagram-border);
+  background: var(--color-bg-alt);
+}
+
+.diagram-container figcaption strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.diagram-container figcaption span {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+}
+
+.glossary-term .tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  width: 300px;
+  max-width: 90vw;
+  z-index: 200;
+  pointer-events: none;
+  transition: opacity 0.15s, visibility 0.15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.glossary-term .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+.glossary-term:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  margin: 2rem 0;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.75rem;
+  padding-left: 1.25rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.85rem;
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.timeline-year {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title {
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== Step Process ===== */
+.steps {
+  counter-reset: step;
+  margin: 1.5rem 0;
+}
+
+.step {
+  counter-increment: step;
+  position: relative;
+  padding: 1.25rem 1.5rem 1.25rem 4rem;
+  margin-bottom: 1rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.step::before {
+  content: counter(step);
+  position: absolute;
+  left: 1.25rem;
+  top: 1.25rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.step-title {
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-bottom: 0.35rem;
+}
+
+.step-desc {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== Pros/Cons Grid ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.pros, .cons {
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+}
+
+.pros {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+}
+
+.cons {
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger);
+}
+
+.pros strong, .cons strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.pros strong { color: var(--color-success); }
+.cons strong { color: var(--color-danger); }
+
+.pros ul, .cons ul {
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+}
+
+.pros li, .cons li {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
+}
+
+/* ===== Sources ===== */
+.sources-list {
+  list-style: decimal;
+  padding-left: 1.75rem;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+.sources-list li {
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.sources-list a {
+  word-break: break-all;
+}
+
+/* ===== Back to Top Button ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+  z-index: 90;
+  font-size: 1.2rem;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  transform: scale(1.1);
+}
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 90;
+  transition: all var(--transition);
+  color: var(--color-text);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* ===== Mobile Sidebar Toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.open {
+    display: block;
+  }
+  .sidebar-toggle {
+    display: block;
+  }
+  .main {
+    margin-left: 0;
+  }
+  .content {
+    padding-top: 3.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.05rem; }
+  .heading-anchor { display: none; }
+  .diagram-container figure { padding: 1rem; }
+  .theme-toggle { right: 4rem; bottom: 1.25rem; }
+  .back-to-top { bottom: 1.25rem; right: 1.25rem; }
+  .pros-cons { grid-template-columns: 1fr; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .sidebar-toggle, .sidebar-overlay, .theme-toggle, .back-to-top { display: none !important; }
+  .main { margin-left: 0; }
+  .content { max-width: 100%; padding: 0; }
+  h2 { break-after: avoid; }
+  .diagram-container { break-inside: avoid; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Sidebar Toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">&#9776;</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+
+<!-- Sidebar Navigation -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">D-Vector (Deep Embedding)</div>
+    <div class="sidebar-subtitle">Speaker Identification Technology</div>
+  </div>
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a class="sidebar-link" href="#overview">What is a D-Vector?</a>
+    <a class="sidebar-link" href="#history">Origin &amp; History</a>
+    <a class="sidebar-link" href="#timeline">Timeline of Development</a>
+
+    <div class="sidebar-nav-section">Architecture</div>
+    <a class="sidebar-link" href="#dnn-variant">DNN-Based D-Vectors</a>
+    <a class="sidebar-link sub" href="#dnn-architecture">Architecture</a>
+    <a class="sidebar-link sub" href="#dnn-training">Training Process</a>
+    <a class="sidebar-link" href="#lstm-variant">LSTM-Based D-Vectors</a>
+    <a class="sidebar-link sub" href="#lstm-architecture">Architecture</a>
+    <a class="sidebar-link sub" href="#lstm-advantages">Advantages over DNN</a>
+
+    <div class="sidebar-nav-section">Training</div>
+    <a class="sidebar-link" href="#ge2e-loss">GE2E Loss Function</a>
+    <a class="sidebar-link sub" href="#ge2e-concept">Core Concept</a>
+    <a class="sidebar-link sub" href="#ge2e-vs-te2e">GE2E vs. TE2E</a>
+    <a class="sidebar-link sub" href="#ge2e-variants">Softmax &amp; Contrast</a>
+
+    <div class="sidebar-nav-section">Pipeline</div>
+    <a class="sidebar-link" href="#extraction">Extraction Pipeline</a>
+    <a class="sidebar-link sub" href="#preprocessing">Preprocessing</a>
+    <a class="sidebar-link sub" href="#frame-level">Frame-Level Features</a>
+    <a class="sidebar-link sub" href="#utterance-level">Utterance-Level Embedding</a>
+    <a class="sidebar-link sub" href="#enrollment-verification">Enrollment &amp; Verification</a>
+
+    <div class="sidebar-nav-section">Applications</div>
+    <a class="sidebar-link" href="#google-products">Use in Google Products</a>
+    <a class="sidebar-link" href="#practical-applications">Practical Applications</a>
+    <a class="sidebar-link" href="#resemblyzer">Resemblyzer Library</a>
+
+    <div class="sidebar-nav-section">Comparisons</div>
+    <a class="sidebar-link" href="#comparison">Embedding Comparison</a>
+    <a class="sidebar-link sub" href="#vs-ivectors">vs. i-Vectors</a>
+    <a class="sidebar-link sub" href="#vs-xvectors">vs. x-Vectors</a>
+    <a class="sidebar-link sub" href="#vs-ecapa">vs. ECAPA-TDNN</a>
+
+    <div class="sidebar-nav-section">Evaluation</div>
+    <a class="sidebar-link" href="#strengths-weaknesses">Strengths &amp; Weaknesses</a>
+    <a class="sidebar-link" href="#summary">Summary</a>
+    <a class="sidebar-link" href="#glossary">Glossary</a>
+    <a class="sidebar-link" href="#sources">Sources</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+<div class="content">
+
+<a class="back-link" href="../voice-speaker-identification/index.html">&larr; Back to Voice &amp; Speaker Identification Overview</a>
+
+<h1 id="top">D-Vector: Deep Embedding Vectors for Speaker Identification</h1>
+<p class="subtitle">How deep neural networks learn compact speaker representations -- from Google's 2014 breakthrough to modern production systems</p>
+
+<!-- ==================== OVERVIEW ==================== -->
+<section id="overview">
+<h2><a class="heading-anchor" href="#overview">#</a>What is a D-Vector?</h2>
+
+<p>A <strong>d-vector</strong> (short for "deep vector") is a fixed-dimensional speaker embedding extracted from a trained neural network. It represents the unique vocal characteristics of a speaker as a compact numerical vector -- typically 256 dimensions -- regardless of what words were spoken. The core idea is straightforward: train a deep neural network to classify speakers, then repurpose the network's internal representation (the activations of a hidden layer) as a speaker-specific fingerprint.</p>
+
+<p>Unlike traditional approaches such as <span class="glossary-term">i-vectors<span class="tooltip">Identity vectors. A speaker representation derived from factor analysis of Gaussian Mixture Model supervectors. The dominant paradigm before deep learning approaches.</span></span> that rely on statistical modeling of acoustic features, d-vectors are learned end-to-end by neural networks that directly optimize for speaker discrimination. This allows them to capture complex, nonlinear patterns in speech that statistical methods may miss.</p>
+
+<div class="takeaways">
+<strong>Key Takeaways</strong>
+<ul>
+  <li>A d-vector is a fixed-size numerical vector (typically 256-d) that encodes a speaker's vocal identity.</li>
+  <li>Introduced by Variani et al. at Google in 2014 for text-dependent speaker verification.</li>
+  <li>Extracted from the last hidden layer of a neural network trained for speaker classification.</li>
+  <li>Enables comparison of speakers via simple cosine similarity between their d-vectors.</li>
+  <li>Evolved from DNN-based to LSTM-based architectures, with GE2E loss as the state-of-the-art training objective.</li>
+</ul>
+</div>
+</section>
+
+<!-- ==================== HISTORY ==================== -->
+<section id="history">
+<h2><a class="heading-anchor" href="#history">#</a>Origin and History</h2>
+
+<p>The d-vector concept was introduced by <strong>Ehsan Variani, Xin Lei, Erik McDermott, Ignacio Lopez Moreno, and Javier Gonzalez-Dominguez</strong> at Google in their 2014 paper <em>"Deep Neural Networks for Small Footprint Text-Dependent Speaker Verification"</em>, presented at the IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP 2014).</p>
+
+<p>The motivating problem was practical: Google needed a speaker verification system that could run on resource-constrained devices (hence "small footprint") for the "Ok Google" wake word feature. Traditional i-vector systems required large <span class="glossary-term">UBM-GMM<span class="tooltip">Universal Background Model - Gaussian Mixture Model. A large GMM trained on speech from many speakers, used as the reference model in i-vector extraction.</span></span> models and expensive matrix factorization at inference time. The d-vector approach replaced all of this with a single neural network forward pass, dramatically reducing both computational cost and model size.</p>
+
+<p>The key insight was that a DNN trained to classify speakers develops internal representations in its hidden layers that capture speaker-discriminative information. By extracting these hidden-layer activations -- which they named "d-vectors" -- and averaging them across the frames of an utterance, a compact and effective speaker representation could be obtained without the complex statistical machinery of i-vectors.</p>
+
+<div class="info-box">
+<p><strong>Why "d-vector"?</strong> The "d" stands for "deep," referring to the deep neural network from which the vector is extracted. The naming follows the convention established by i-vectors ("identity vectors") and later x-vectors ("DNN embeddings from TDNN architectures"). Each naming reflects the underlying technology used to produce the speaker embedding.</p>
+</div>
+</section>
+
+<!-- ==================== TIMELINE ==================== -->
+<section id="timeline">
+<h2><a class="heading-anchor" href="#timeline">#</a>Timeline of Development</h2>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-year">2014</div>
+    <div class="timeline-title">Variani et al. -- Original D-Vector Paper</div>
+    <div class="timeline-desc">Google researchers introduce d-vectors using a feed-forward DNN for text-dependent speaker verification. The system outperforms i-vectors on small-footprint tasks and is more robust to additive noise.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2016</div>
+    <div class="timeline-title">LSTM-Based D-Vectors</div>
+    <div class="timeline-desc">Google extends the approach to use LSTM (Long Short-Term Memory) networks, enabling the model to capture temporal dynamics across longer speech segments. This significantly improves performance for text-independent verification.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2017</div>
+    <div class="timeline-title">Google Home Voice Match Launch</div>
+    <div class="timeline-desc">Google deploys d-vector-based speaker identification in Google Home, enabling multi-user personalization. The system can distinguish between up to six household members.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2017</div>
+    <div class="timeline-title">TE2E Loss &amp; End-to-End Training</div>
+    <div class="timeline-desc">Google introduces Tuple-based End-to-End (TE2E) loss, moving away from speaker classification toward directly optimizing the verification objective during training.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2018</div>
+    <div class="timeline-title">GE2E Loss (Wan et al.)</div>
+    <div class="timeline-desc">Generalized End-to-End (GE2E) loss is published at ICASSP 2018. It reduces EER by more than 10% compared to TE2E while cutting training time by 60%. Becomes the standard training objective for d-vector systems.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2018</div>
+    <div class="timeline-title">Transfer Learning to Multi-Speaker TTS</div>
+    <div class="timeline-desc">Google demonstrates that d-vectors trained for speaker verification can be transferred to condition multi-speaker text-to-speech synthesis (SV2TTS), enabling voice cloning from short reference audio.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2019</div>
+    <div class="timeline-title">Resemblyzer Released</div>
+    <div class="timeline-desc">Resemble AI publishes Resemblyzer, an open-source Python library implementing the GE2E-trained speaker encoder. It becomes the most popular open-source d-vector implementation.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2020+</div>
+    <div class="timeline-title">Continued Evolution</div>
+    <div class="timeline-desc">D-vectors are deployed across Google products (Meet, Assistant). Newer architectures like ECAPA-TDNN and Res2Net push absolute performance further, but the d-vector paradigm -- neural network-extracted speaker embeddings -- remains foundational.</div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== DNN VARIANT ==================== -->
+<section id="dnn-variant">
+<h2><a class="heading-anchor" href="#dnn-variant">#</a>DNN-Based D-Vectors (2014)</h2>
+
+<h3 id="dnn-architecture"><a class="heading-anchor" href="#dnn-architecture">#</a>Architecture</h3>
+
+<p>The original d-vector system uses a standard feed-forward deep neural network (DNN) with several fully connected hidden layers. The architecture is deliberately simple, designed to meet the "small footprint" requirement for on-device deployment:</p>
+
+<ul>
+  <li><strong>Input layer:</strong> Stacked frames of acoustic features (typically 40-dimensional log-mel filterbank energies, with left and right context frames for a total input of ~120 dimensions).</li>
+  <li><strong>Hidden layers:</strong> 4 fully connected layers, each with ~256 nodes and sigmoid activation functions.</li>
+  <li><strong>Output layer:</strong> Softmax layer with one node per training speaker (e.g., ~1,000-10,000 nodes).</li>
+</ul>
+
+<p>After training, the softmax output layer is discarded. The activations of the <strong>last hidden layer</strong> are used as the d-vector for a given input frame. Since these activations were trained to be maximally discriminative for speaker identity, they encode precisely the information needed for speaker verification.</p>
+
+<h3 id="dnn-training"><a class="heading-anchor" href="#dnn-training">#</a>Training Process</h3>
+
+<p>Training proceeds in a standard supervised fashion:</p>
+
+<ol>
+  <li><strong>Frame-level classification:</strong> Each frame (plus context) is presented to the DNN, which outputs a probability distribution over all training speakers.</li>
+  <li><strong>Cross-entropy loss:</strong> The network is trained to minimize classification error -- correctly identifying which speaker produced each frame.</li>
+  <li><strong>Convergence:</strong> After training, the network's hidden layers have learned to extract speaker-discriminative features from raw acoustic input.</li>
+</ol>
+
+<div class="info-box">
+<p><strong>Important distinction:</strong> The DNN is trained as a <em>classifier</em> (predicting speaker identity), but it is <em>used</em> as a feature extractor. The classification output (softmax) is thrown away; only the learned internal representation matters. This is a form of transfer learning -- the classification task is a proxy for learning good speaker representations.</p>
+</div>
+</section>
+
+<!-- ==================== LSTM VARIANT ==================== -->
+<section id="lstm-variant">
+<h2><a class="heading-anchor" href="#lstm-variant">#</a>LSTM-Based D-Vectors</h2>
+
+<h3 id="lstm-architecture"><a class="heading-anchor" href="#lstm-architecture">#</a>Architecture</h3>
+
+<p>The LSTM-based d-vector system replaced the feed-forward DNN with a recurrent neural network based on <span class="glossary-term">LSTM<span class="tooltip">Long Short-Term Memory. A type of recurrent neural network (RNN) designed to capture long-range temporal dependencies. Uses gating mechanisms to control information flow through the network.</span></span> cells. This was a significant advancement because speech is inherently sequential -- the order and timing of sounds carry critical speaker information that a frame-level DNN cannot capture.</p>
+
+<p>A typical LSTM d-vector architecture consists of:</p>
+
+<ul>
+  <li><strong>Input:</strong> Sequence of log-mel spectrogram frames (typically 40 mel channels, computed every 10ms with a 25ms window).</li>
+  <li><strong>LSTM layers:</strong> 3 LSTM layers with 768 hidden units each (or 3 layers with 256 units in smaller configurations).</li>
+  <li><strong>Projection:</strong> A linear projection layer that maps the final LSTM output to the d-vector dimension (typically 256).</li>
+  <li><strong>L2 normalization:</strong> The output is normalized to unit length, placing all d-vectors on a hypersphere for cosine similarity comparison.</li>
+</ul>
+
+<p>The d-vector is taken from the output of the last LSTM layer at the final time step of the input sequence. For longer utterances, a sliding window approach is used: d-vectors are computed for overlapping windows (e.g., 1.6 seconds with 50% overlap), then averaged and re-normalized.</p>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph TB
+    subgraph Input["Input Processing"]
+        A["Raw Audio Waveform"] --> B["Mel Spectrogram<br/>(40 channels, 25ms window)"]
+        B --> C["Frame Sequence<br/>f1, f2, f3, ... fT"]
+    end
+
+    subgraph LSTM_Net["LSTM Network (3 layers)"]
+        C --> D["LSTM Layer 1<br/>(768 units)"]
+        D --> E["LSTM Layer 2<br/>(768 units)"]
+        E --> F["LSTM Layer 3<br/>(768 units)"]
+    end
+
+    subgraph Output["D-Vector Output"]
+        F --> G["Final Hidden State<br/>(at time T)"]
+        G --> H["Linear Projection<br/>(768 -> 256)"]
+        H --> I["L2 Normalization"]
+        I --> J["D-Vector<br/>(256-dim unit vector)"]
+    end
+
+    style Input fill:#f5f3ff,stroke:#7c3aed,color:#1e293b
+    style LSTM_Net fill:#ede9fe,stroke:#7c3aed,color:#1e293b
+    style Output fill:#f5f3ff,stroke:#7c3aed,color:#1e293b
+    style J fill:#7c3aed,stroke:#5b21b6,color:#ffffff
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Figure 1: D-Vector Extraction from LSTM Network</strong>
+    <span>Audio is converted to mel spectrogram frames, processed sequentially through 3 LSTM layers. The final hidden state is projected to 256 dimensions and L2-normalized to produce the d-vector.</span>
+  </figcaption>
+</div>
+
+<h3 id="lstm-advantages"><a class="heading-anchor" href="#lstm-advantages">#</a>Advantages over DNN-Based D-Vectors</h3>
+
+<ul>
+  <li><strong>Temporal modeling:</strong> LSTMs capture how a speaker's voice evolves over time -- transitions between phonemes, speaking rhythm, and prosody patterns that are unique to each individual.</li>
+  <li><strong>Variable-length input:</strong> Unlike the fixed-context DNN, LSTMs naturally handle utterances of any length, accumulating speaker information as the sequence progresses.</li>
+  <li><strong>Text-independent operation:</strong> The temporal awareness means the LSTM can extract speaker identity even when the spoken content varies, making it suitable for text-independent verification.</li>
+  <li><strong>Better generalization:</strong> The LSTM-based approach generalizes better to unseen speakers -- speakers never encountered during training -- because it learns more fundamental vocal characteristics.</li>
+</ul>
+</section>
+
+<!-- ==================== GE2E LOSS ==================== -->
+<section id="ge2e-loss">
+<h2><a class="heading-anchor" href="#ge2e-loss">#</a>GE2E (Generalized End-to-End) Loss Function</h2>
+
+<h3 id="ge2e-concept"><a class="heading-anchor" href="#ge2e-concept">#</a>Core Concept</h3>
+
+<p>The <strong>Generalized End-to-End (GE2E)</strong> loss function, introduced by Li Wan, Quan Wang, Alan Papir, and Ignacio Lopez Moreno at Google in 2018, represents a major improvement in how d-vector networks are trained. Instead of training the network as a speaker classifier (which does not directly optimize for verification), GE2E trains the network to directly produce embeddings where same-speaker utterances are close together and different-speaker utterances are far apart.</p>
+
+<p>The training process works as follows:</p>
+
+<ol>
+  <li><strong>Construct a batch:</strong> Select <code>N</code> speakers, with <code>M</code> utterances per speaker, forming an <code>N x M</code> matrix of utterances.</li>
+  <li><strong>Compute embeddings:</strong> Pass all <code>N x M</code> utterances through the network to produce d-vectors.</li>
+  <li><strong>Calculate centroids:</strong> For each speaker, compute the centroid (average) of their <code>M</code> d-vectors.</li>
+  <li><strong>Build similarity matrix:</strong> Compute the cosine similarity between every d-vector and every speaker centroid, producing an <code>(N*M) x N</code> similarity matrix.</li>
+  <li><strong>Apply loss:</strong> The loss pushes each d-vector toward its own speaker's centroid and away from the most similar different speaker's centroid.</li>
+</ol>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph LR
+    subgraph Batch["Training Batch (N speakers x M utterances)"]
+        direction TB
+        S1["Speaker 1<br/>u1,1 u1,2 ... u1,M"]
+        S2["Speaker 2<br/>u2,1 u2,2 ... u2,M"]
+        S3["Speaker 3<br/>u3,1 u3,2 ... u3,M"]
+        SN["Speaker N<br/>uN,1 uN,2 ... uN,M"]
+    end
+
+    subgraph Embed["Embedding Network"]
+        NET["LSTM<br/>Encoder"]
+    end
+
+    subgraph DVecs["D-Vectors"]
+        direction TB
+        D1["e1,1 e1,2 ... e1,M"]
+        D2["e2,1 e2,2 ... e2,M"]
+        D3["e3,1 e3,2 ... e3,M"]
+        DN["eN,1 eN,2 ... eN,M"]
+    end
+
+    subgraph Centroids["Speaker Centroids"]
+        C1["c1"]
+        C2["c2"]
+        C3["c3"]
+        CN["cN"]
+    end
+
+    subgraph SimMatrix["Similarity Matrix"]
+        SM["cosine_sim(e_ij, c_k)<br/>for all i,j,k<br/><br/>Diagonal = same speaker<br/>Off-diagonal = different"]
+    end
+
+    subgraph Loss["GE2E Loss"]
+        L["Push e_ij toward c_i<br/>Push e_ij away from<br/>hardest negative c_k"]
+    end
+
+    Batch --> Embed --> DVecs --> Centroids
+    DVecs --> SimMatrix
+    Centroids --> SimMatrix
+    SimMatrix --> Loss
+
+    style Batch fill:#f5f3ff,stroke:#7c3aed,color:#1e293b
+    style Embed fill:#ede9fe,stroke:#7c3aed,color:#1e293b
+    style DVecs fill:#f5f3ff,stroke:#7c3aed,color:#1e293b
+    style Centroids fill:#ede9fe,stroke:#7c3aed,color:#1e293b
+    style SimMatrix fill:#f5f3ff,stroke:#7c3aed,color:#1e293b
+    style Loss fill:#7c3aed,stroke:#5b21b6,color:#ffffff
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Figure 2: GE2E Loss Concept</strong>
+    <span>A batch of N speakers with M utterances each is embedded, centroids are computed, and a similarity matrix drives the loss function to optimize speaker discrimination.</span>
+  </figcaption>
+</div>
+
+<h3 id="ge2e-vs-te2e"><a class="heading-anchor" href="#ge2e-vs-te2e">#</a>GE2E vs. TE2E</h3>
+
+<p>The predecessor to GE2E was <strong>Tuple-based End-to-End (TE2E)</strong> loss. The key differences are:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>TE2E</th>
+      <th>GE2E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Training unit</td>
+      <td>Tuples of (enrollment, verification) pairs</td>
+      <td>Full N x M batch of all speakers</td>
+    </tr>
+    <tr>
+      <td>Similarity computation</td>
+      <td>Scalar: one embedding vs. one centroid</td>
+      <td>Matrix: all embeddings vs. all centroids</td>
+    </tr>
+    <tr>
+      <td>Hard example mining</td>
+      <td>Requires separate selection stage</td>
+      <td>Implicit -- hardest negatives emerge from the similarity matrix</td>
+    </tr>
+    <tr>
+      <td>Training efficiency</td>
+      <td>Baseline</td>
+      <td>60% faster convergence</td>
+    </tr>
+    <tr>
+      <td>EER improvement</td>
+      <td>Baseline</td>
+      <td>&gt;10% relative reduction</td>
+    </tr>
+    <tr>
+      <td>Implementation complexity</td>
+      <td>Requires tuple sampling strategy</td>
+      <td>Simpler -- just batch speakers uniformly</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="ge2e-variants"><a class="heading-anchor" href="#ge2e-variants">#</a>Softmax and Contrast Variants</h3>
+
+<p>GE2E defines two variants of the loss function:</p>
+
+<h4>Softmax Variant (Text-Independent)</h4>
+<p>For each d-vector <code>e<sub>ji</sub></code> (the j-th utterance of speaker i), the loss computes a softmax over cosine similarities to all speaker centroids. The goal is to maximize the probability that the d-vector is most similar to its own speaker's centroid. This variant is generally preferred for text-independent speaker verification.</p>
+
+<h4>Contrast Variant (Text-Dependent)</h4>
+<p>The contrast loss considers only the positive similarity (to the correct speaker's centroid) and the hardest negative similarity (to the most similar wrong speaker's centroid). It explicitly pushes the d-vector toward its true centroid and away from the hardest impostor centroid. This variant was found to work better for text-dependent verification where the spoken content is fixed.</p>
+
+<div class="info-box">
+<p><strong>Centroid exclusion:</strong> A critical implementation detail in GE2E is that when computing the similarity between a d-vector and its own speaker's centroid, that particular d-vector is excluded from the centroid calculation. This prevents trivial solutions and ensures the network learns genuinely discriminative features rather than simply memorizing.</p>
+</div>
+</section>
+
+<!-- ==================== EXTRACTION PIPELINE ==================== -->
+<section id="extraction">
+<h2><a class="heading-anchor" href="#extraction">#</a>D-Vector Extraction Pipeline</h2>
+
+<p>The complete pipeline from raw audio to speaker verification decision involves several well-defined stages:</p>
+
+<h3 id="preprocessing"><a class="heading-anchor" href="#preprocessing">#</a>Step 1: Audio Preprocessing</h3>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-title">Resampling</div>
+    <div class="step-desc">Audio is resampled to a standard rate (typically 16 kHz). Higher rates add no useful speaker information for this task and increase computation.</div>
+  </div>
+  <div class="step">
+    <div class="step-title">Voice Activity Detection (VAD)</div>
+    <div class="step-desc">Non-speech segments (silence, noise) are removed. Only frames containing actual speech are retained, as silence carries no speaker identity information and dilutes the embedding.</div>
+  </div>
+  <div class="step">
+    <div class="step-title">Feature Extraction</div>
+    <div class="step-desc">Log-mel spectrogram features are computed: 40 mel-frequency channels, with a 25ms analysis window and 10ms hop between frames. This produces a 2D time-frequency representation of the speech signal.</div>
+  </div>
+</div>
+
+<h3 id="frame-level"><a class="heading-anchor" href="#frame-level">#</a>Step 2: Frame-Level Processing</h3>
+
+<p>In the <strong>DNN-based approach</strong>, each frame (plus a context window of neighboring frames) is passed independently through the network. The last hidden layer's activations constitute a frame-level d-vector -- a speaker representation derived from a small slice of audio (~100ms).</p>
+
+<p>In the <strong>LSTM-based approach</strong>, the entire sequence of frames is processed in order. The LSTM accumulates information across time, with its hidden state progressively refining its speaker representation. The output at the final time step (or from a projection layer applied to the final hidden state) is the d-vector for that segment.</p>
+
+<h3 id="utterance-level"><a class="heading-anchor" href="#utterance-level">#</a>Step 3: Utterance-Level Aggregation</h3>
+
+<p>For the DNN approach, frame-level d-vectors must be aggregated to produce a single utterance-level d-vector. This is done by <strong>element-wise averaging</strong> all frame-level d-vectors from the same utterance.</p>
+
+<p>For the LSTM approach with long utterances, a sliding window strategy is used:</p>
+
+<ol>
+  <li>Divide the utterance into overlapping windows (e.g., 1.6s windows with 50% overlap).</li>
+  <li>Compute a d-vector for each window.</li>
+  <li>L2-normalize each window-level d-vector.</li>
+  <li>Average all window-level d-vectors element-wise.</li>
+  <li>L2-normalize the averaged vector to produce the final utterance-level d-vector.</li>
+</ol>
+
+<h3 id="enrollment-verification"><a class="heading-anchor" href="#enrollment-verification">#</a>Step 4: Enrollment and Verification</h3>
+
+<p><strong>Enrollment:</strong> During enrollment, a speaker provides one or more reference utterances. The d-vectors from these utterances are averaged and normalized to create a <strong>speaker profile</strong> (the enrolled centroid). Using multiple enrollment utterances (5-30 seconds total) produces more robust profiles.</p>
+
+<p><strong>Verification:</strong> At verification time, a test utterance is processed to produce its d-vector. The <span class="glossary-term">cosine similarity<span class="tooltip">A measure of similarity between two vectors based on the cosine of the angle between them. Ranges from -1 (opposite) through 0 (orthogonal) to +1 (identical direction). Standard metric for comparing speaker embeddings.</span></span> between the test d-vector and the enrolled speaker profile is computed. If the similarity exceeds a predefined threshold, the speaker is accepted; otherwise, they are rejected.</p>
+
+<div class="info-box">
+<p><strong>Robustness through averaging:</strong> Speaker embeddings become more robust when computed from multiple utterances. Taking the mean embedding from several recordings of the same speaker and re-normalizing to unit length produces a more stable and accurate speaker profile than any single utterance could provide.</p>
+</div>
+</section>
+
+<!-- ==================== GOOGLE PRODUCTS ==================== -->
+<section id="google-products">
+<h2><a class="heading-anchor" href="#google-products">#</a>Use in Google Products</h2>
+
+<p>D-vectors are the foundational technology behind several key Google product features:</p>
+
+<h3>Google Home / Nest -- Voice Match</h3>
+
+<p><strong>Voice Match</strong> uses d-vector-based speaker identification to distinguish between up to six household members on Google Home and Nest smart speakers. When a user sets up Voice Match, they speak the phrases "Ok Google" and "Hey Google" twice each. The system extracts d-vectors from these enrollment utterances to create a voice model.</p>
+
+<p>At runtime, every time someone says the wake phrase, the system extracts a d-vector from the incoming audio and compares it against all enrolled voice models. The matched speaker's personal information (calendar, messages, music preferences) is used to personalize the response. The voice model is created on Google's servers but stored only on the devices where Voice Match is active.</p>
+
+<h3>Google Meet -- Speaker Attribution</h3>
+
+<p>In Google Meet, d-vector technology is used for speaker diarization -- attributing speech segments to specific meeting participants. This enables features like automatic captioning with speaker labels and meeting transcription with speaker attribution.</p>
+
+<h3>Google Assistant -- Personalization</h3>
+
+<p>Across the Google Assistant ecosystem, speaker identification via d-vectors enables personalized responses, secure access to personal information, and multi-user household experiences. The system can distinguish between registered users and guests, providing appropriate levels of access.</p>
+
+<div class="info-box">
+<p><strong>On-device efficiency:</strong> The original motivation for d-vectors -- small footprint operation -- proved prescient. The relatively compact LSTM architecture (a few million parameters) can run efficiently on-device, enabling speaker identification without sending audio to the cloud for every interaction. This benefits both latency and privacy.</p>
+</div>
+</section>
+
+<!-- ==================== PRACTICAL APPLICATIONS ==================== -->
+<section id="practical-applications">
+<h2><a class="heading-anchor" href="#practical-applications">#</a>Practical Applications</h2>
+
+<p>Beyond Google products, d-vectors and the embedding paradigm they established have found applications across the speech technology landscape:</p>
+
+<h3>Speaker Verification and Authentication</h3>
+<p>The primary use case. Banking, telecom, and security systems use speaker embeddings to verify caller identity. A customer enrolls their voice, and subsequent calls are verified by comparing d-vectors. This provides a seamless biometric authentication layer that does not require passwords or PINs.</p>
+
+<h3>Speaker Diarization</h3>
+<p>Determining "who spoke when" in multi-speaker audio. D-vectors are extracted from short sliding windows across a recording, then clustered to identify distinct speakers. This is essential for meeting transcription, podcast processing, call center analytics, and courtroom recording analysis.</p>
+
+<h3>Voice Cloning and Multi-Speaker TTS</h3>
+<p>D-vectors serve as the speaker conditioning mechanism in modern text-to-speech systems. Google's <strong>SV2TTS</strong> (Speaker Verification to Text-to-Speech) architecture uses a pretrained d-vector encoder to capture a target speaker's voice from a short reference clip (3-10 seconds), then conditions a Tacotron synthesizer to generate speech in that voice. This enables zero-shot voice cloning -- synthesizing speech in a voice never seen during TTS training.</p>
+
+<h3>Target Speaker Extraction</h3>
+<p>In cocktail party scenarios (multiple overlapping speakers), a d-vector of the target speaker can guide a neural network to extract only that speaker's voice from the mixture. The d-vector acts as a "query" that tells the extraction network which voice to isolate.</p>
+
+<h3>Fake Speech Detection</h3>
+<p>By comparing the d-vector of a suspicious audio sample against known reference d-vectors of a person, systems can detect synthetic or manipulated speech. If the claimed speaker's d-vector does not match the reference profile, the audio may be a deepfake.</p>
+</section>
+
+<!-- ==================== RESEMBLYZER ==================== -->
+<section id="resemblyzer">
+<h2><a class="heading-anchor" href="#resemblyzer">#</a>Resemblyzer: Open-Source Implementation</h2>
+
+<p><strong>Resemblyzer</strong> is an open-source Python library published by <a href="https://github.com/resemble-ai/Resemblyzer">Resemble AI</a> that provides a production-ready implementation of the GE2E-trained speaker encoder. It is the most widely used open-source d-vector implementation and has become the de facto reference for researchers and developers working with speaker embeddings.</p>
+
+<h3>Key Features</h3>
+<ul>
+  <li><strong>256-dimensional embeddings:</strong> Generates a 256-element real vector of unit length for any input speech, trained to be unique to the speaker identity.</li>
+  <li><strong>Fast inference:</strong> Approximately 1000x real-time on a GTX 1080 GPU, with a minimum of 10ms for I/O operations. Also runs efficiently on CPU.</li>
+  <li><strong>Pretrained model:</strong> Ships with a pretrained model that generalizes well to unseen speakers, producing reasonable embeddings for speakers never encountered during training.</li>
+  <li><strong>PyTorch backend:</strong> The voice encoder is implemented in PyTorch, with model weights available as a TorchScript-compiled module.</li>
+</ul>
+
+<h3>Usage Example</h3>
+<pre><code>from resemblyzer import VoiceEncoder, preprocess_wav
+from pathlib import Path
+import numpy as np
+
+# Load the pretrained encoder
+encoder = VoiceEncoder()
+
+# Load and preprocess audio
+wav = preprocess_wav(Path("speaker_audio.wav"))
+
+# Generate the d-vector (256-dim embedding)
+embedding = encoder.embed_utterance(wav)
+print(f"Embedding shape: {embedding.shape}")  # (256,)
+
+# Compare two speakers
+wav_a = preprocess_wav(Path("speaker_a.wav"))
+wav_b = preprocess_wav(Path("speaker_b.wav"))
+embed_a = encoder.embed_utterance(wav_a)
+embed_b = encoder.embed_utterance(wav_b)
+
+# Cosine similarity
+similarity = np.dot(embed_a, embed_b)
+print(f"Speaker similarity: {similarity:.3f}")</code></pre>
+
+<h3>Supported Applications</h3>
+<ul>
+  <li><strong>Speaker diarization:</strong> Compares voice profiles against continuous speech embedding to determine who is talking when.</li>
+  <li><strong>Speaker verification:</strong> Creates a voice profile from 5-30 seconds of speech and compares against new audio.</li>
+  <li><strong>Fake speech detection:</strong> Compares similarity of potentially synthetic speech against genuine speaker samples.</li>
+</ul>
+
+<h3>Other Open-Source Implementations</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Framework</th>
+      <th>Loss</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://github.com/resemble-ai/Resemblyzer">Resemblyzer</a></td>
+      <td>PyTorch</td>
+      <td>GE2E</td>
+      <td>Most popular; pretrained model included</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/yistLin/dvector">yistLin/dvector</a></td>
+      <td>PyTorch</td>
+      <td>GE2E</td>
+      <td>Clean implementation with TorchScript support</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/cvqluu/GE2E-Loss">cvqluu/GE2E-Loss</a></td>
+      <td>PyTorch</td>
+      <td>GE2E</td>
+      <td>Standalone GE2E loss module</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/Janghyun1230/Speaker_Verification">Speaker_Verification</a></td>
+      <td>TensorFlow</td>
+      <td>GE2E</td>
+      <td>TensorFlow implementation of the GE2E paper</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ==================== COMPARISON ==================== -->
+<section id="comparison">
+<h2><a class="heading-anchor" href="#comparison">#</a>Comparison with Other Speaker Embeddings</h2>
+
+<p>D-vectors exist within a broader ecosystem of speaker embedding techniques. Understanding how they compare helps clarify when each approach is most appropriate.</p>
+
+<h3 id="vs-ivectors"><a class="heading-anchor" href="#vs-ivectors">#</a>D-Vectors vs. i-Vectors</h3>
+
+<p><span class="glossary-term">i-Vectors<span class="tooltip">Identity vectors derived from factor analysis of GMM supervectors. The dominant speaker representation before deep learning (2011-2016). Require a Universal Background Model (UBM), T-matrix, and typically PLDA backend scoring.</span></span> were the dominant speaker representation from 2011 until deep learning approaches took over. They rely on factor analysis of GMM (Gaussian Mixture Model) supervectors.</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>i-Vector</th>
+      <th>D-Vector</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Approach</td>
+      <td>Statistical (factor analysis of GMM)</td>
+      <td>Neural (DNN/LSTM embeddings)</td>
+    </tr>
+    <tr>
+      <td>Components</td>
+      <td>UBM + T-matrix + PLDA backend</td>
+      <td>Single neural network</td>
+    </tr>
+    <tr>
+      <td>Model size</td>
+      <td>Large (UBM + T-matrix can be 100s of MB)</td>
+      <td>Compact (a few MB)</td>
+    </tr>
+    <tr>
+      <td>Inference cost</td>
+      <td>High (Baum-Welch stats + matrix projection)</td>
+      <td>Low (single forward pass)</td>
+    </tr>
+    <tr>
+      <td>Short utterances</td>
+      <td>Poor (needs 10-30s for reliability)</td>
+      <td>Better (usable from ~2-5s)</td>
+    </tr>
+    <tr>
+      <td>Noise robustness</td>
+      <td>Moderate</td>
+      <td>Better (Variani et al. showed d-vectors outperform i-vectors in noise)</td>
+    </tr>
+    <tr>
+      <td>On-device viability</td>
+      <td>Difficult</td>
+      <td>Practical</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="vs-xvectors"><a class="heading-anchor" href="#vs-xvectors">#</a>D-Vectors vs. x-Vectors</h3>
+
+<p><span class="glossary-term">x-Vectors<span class="tooltip">Speaker embeddings extracted from a Time-Delay Neural Network (TDNN) architecture. Introduced by Snyder et al. at Johns Hopkins University (2018). Use a statistics pooling layer to aggregate frame-level features into a fixed-length representation.</span></span>, introduced by David Snyder et al. at Johns Hopkins University in 2018, use a Time-Delay Neural Network (TDNN) architecture with a statistics pooling layer.</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>D-Vector (LSTM)</th>
+      <th>x-Vector (TDNN)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Architecture</td>
+      <td>LSTM (recurrent)</td>
+      <td>TDNN (feed-forward with temporal context)</td>
+    </tr>
+    <tr>
+      <td>Aggregation</td>
+      <td>Last hidden state / averaging</td>
+      <td>Statistics pooling (mean + std)</td>
+    </tr>
+    <tr>
+      <td>Training loss</td>
+      <td>GE2E (verification-oriented)</td>
+      <td>Cross-entropy + PLDA backend</td>
+    </tr>
+    <tr>
+      <td>Backend scoring</td>
+      <td>Direct cosine similarity</td>
+      <td>Typically requires PLDA</td>
+    </tr>
+    <tr>
+      <td>End-to-end</td>
+      <td>Yes (GE2E trains for verification directly)</td>
+      <td>No (classification + separate backend)</td>
+    </tr>
+    <tr>
+      <td>Training data scale</td>
+      <td>Effective with moderate data</td>
+      <td>Benefits from very large datasets</td>
+    </tr>
+    <tr>
+      <td>Typical dimension</td>
+      <td>256</td>
+      <td>512</td>
+    </tr>
+    <tr>
+      <td>Benchmark EER (VoxCeleb1)</td>
+      <td>~3-5%</td>
+      <td>~2-4%</td>
+    </tr>
+    <tr>
+      <td>Industry adoption</td>
+      <td>Google ecosystem</td>
+      <td>Kaldi ecosystem, academia</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="vs-ecapa"><a class="heading-anchor" href="#vs-ecapa">#</a>D-Vectors vs. ECAPA-TDNN</h3>
+
+<p><span class="glossary-term">ECAPA-TDNN<span class="tooltip">Emphasized Channel Attention, Propagation and Aggregation in TDNN. An enhanced x-vector architecture incorporating Squeeze-and-Excitation blocks, Res2Net modules, and channel-dependent attentive statistics pooling. Current state-of-the-art on many benchmarks.</span></span> (2020) represents the current state-of-the-art in speaker embedding architectures. It builds upon the x-vector TDNN framework with several enhancements:</p>
+
+<ul>
+  <li><strong>Squeeze-and-Excitation (SE) blocks</strong> model channel interdependencies within 1-D Res2Net modules.</li>
+  <li><strong>Multi-scale feature aggregation</strong> captures both fine-grained and coarse-grained temporal patterns.</li>
+  <li><strong>Channel-dependent attentive statistics pooling</strong> replaces simple mean+std pooling with attention-weighted aggregation.</li>
+</ul>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>D-Vector (GE2E)</th>
+      <th>ECAPA-TDNN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Year</td>
+      <td>2014/2018</td>
+      <td>2020</td>
+    </tr>
+    <tr>
+      <td>Architecture</td>
+      <td>LSTM</td>
+      <td>TDNN + SE + Res2Net + attention pooling</td>
+    </tr>
+    <tr>
+      <td>Typical EER (VoxCeleb1-O)</td>
+      <td>~3-5%</td>
+      <td>~0.8-1.7%</td>
+    </tr>
+    <tr>
+      <td>Parameters</td>
+      <td>~2-6M</td>
+      <td>~6-20M</td>
+    </tr>
+    <tr>
+      <td>Complexity</td>
+      <td>Simple, well-understood</td>
+      <td>Complex, many hyperparameters</td>
+    </tr>
+    <tr>
+      <td>On-device suitability</td>
+      <td>Excellent</td>
+      <td>Moderate (larger, more compute)</td>
+    </tr>
+    <tr>
+      <td>Ecosystem</td>
+      <td>Google, Resemblyzer</td>
+      <td>SpeechBrain, NeMo</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="info-box">
+<p><strong>The d-vector paradigm lives on:</strong> While ECAPA-TDNN achieves better raw performance on benchmarks, the fundamental paradigm introduced by d-vectors -- training a neural network and using its internal representations as speaker embeddings -- remains the foundation for all modern speaker embedding approaches. D-vectors did not just introduce a method; they established an entire framework for thinking about speaker representation.</p>
+</div>
+</section>
+
+<!-- ==================== STRENGTHS & WEAKNESSES ==================== -->
+<section id="strengths-weaknesses">
+<h2><a class="heading-anchor" href="#strengths-weaknesses">#</a>Strengths and Weaknesses</h2>
+
+<div class="pros-cons">
+  <div class="pros">
+    <strong>Strengths</strong>
+    <ul>
+      <li>Compact representation -- 256 dimensions is very storage-efficient</li>
+      <li>Fast inference -- single forward pass, no complex backend required</li>
+      <li>Small model footprint -- suitable for edge/on-device deployment</li>
+      <li>Direct cosine similarity scoring -- no PLDA or other backend needed</li>
+      <li>Good noise robustness -- outperforms i-vectors in noisy conditions</li>
+      <li>Effective with short utterances (2-5 seconds)</li>
+      <li>GE2E loss provides end-to-end optimization for verification</li>
+      <li>Well-tested in production at massive scale (Google products)</li>
+      <li>Excellent open-source ecosystem (Resemblyzer)</li>
+      <li>Transfers well to downstream tasks (TTS, diarization)</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <strong>Weaknesses</strong>
+    <ul>
+      <li>Lower raw accuracy than modern architectures (ECAPA-TDNN) on benchmarks</li>
+      <li>LSTM sequential processing limits parallelization during inference</li>
+      <li>Performance degrades in highly reverberant environments</li>
+      <li>Sensitive to domain mismatch between training and deployment conditions</li>
+      <li>Simple averaging may lose temporal information in long utterances</li>
+      <li>Vulnerable to adversarial attacks and sophisticated voice spoofing</li>
+      <li>Text-dependent variants require fixed phrases</li>
+      <li>Data augmentation strategies need careful tuning to avoid harming performance</li>
+      <li>Emotional state and health changes can affect verification accuracy</li>
+      <li>Frame-level DNN variant has limited temporal context</li>
+    </ul>
+  </div>
+</div>
+
+<div class="info-box warning">
+<p><strong>When to choose d-vectors:</strong> D-vectors remain an excellent choice when on-device deployment is required, when model size and inference speed are critical constraints, when you need an end-to-end system without complex backends, or when transferring speaker embeddings to other tasks (TTS, diarization). For maximum benchmark accuracy where compute is not constrained, newer architectures like ECAPA-TDNN will generally perform better.</p>
+</div>
+</section>
+
+<!-- ==================== SUMMARY ==================== -->
+<section id="summary">
+<h2><a class="heading-anchor" href="#summary">#</a>Summary</h2>
+
+<p>D-vectors represent a foundational shift in speaker identification technology. By demonstrating that a neural network trained for speaker classification naturally learns compact, discriminative speaker representations in its hidden layers, Variani et al. (2014) opened the door to a new paradigm that has come to dominate the field.</p>
+
+<p>The evolution from the original DNN-based d-vectors to LSTM-based architectures trained with GE2E loss represents a progression from proof-of-concept to production-ready technology. Key milestones include:</p>
+
+<ul>
+  <li><strong>2014:</strong> DNN d-vectors demonstrated neural embeddings could replace i-vectors for small-footprint applications.</li>
+  <li><strong>2016:</strong> LSTM d-vectors added temporal modeling, enabling text-independent verification.</li>
+  <li><strong>2018:</strong> GE2E loss provided an efficient, end-to-end training objective that eliminated the need for complex sampling strategies.</li>
+  <li><strong>2018-present:</strong> D-vectors deployed at scale in Google products and transferred to voice cloning, diarization, and speech enhancement.</li>
+</ul>
+
+<p>While newer architectures have surpassed d-vectors in absolute benchmark performance, the core paradigm they established -- neural network-extracted fixed-dimensional speaker embeddings compared via cosine similarity -- remains the universally adopted framework for speaker identification. Every modern speaker embedding system, from x-vectors to ECAPA-TDNN to large-scale self-supervised models, traces its conceptual lineage back to the d-vector.</p>
+
+<div class="takeaways">
+<strong>Final Takeaways</strong>
+<ul>
+  <li>D-vectors transformed speaker identification from a statistical modeling problem into a representation learning problem.</li>
+  <li>The GE2E loss function is the key innovation that makes d-vector training both efficient and effective.</li>
+  <li>Production deployment at Google scale validates the approach's practical viability.</li>
+  <li>Open-source tools like Resemblyzer make the technology accessible to anyone.</li>
+  <li>The d-vector paradigm is the foundation on which all modern speaker embedding methods are built.</li>
+</ul>
+</div>
+</section>
+
+<!-- ==================== GLOSSARY ==================== -->
+<section id="glossary">
+<h2><a class="heading-anchor" href="#glossary">#</a>Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Term</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>D-Vector</strong></td>
+      <td>Deep vector. A fixed-dimensional speaker embedding extracted from the hidden layers of a neural network trained for speaker recognition.</td>
+    </tr>
+    <tr>
+      <td><strong>i-Vector</strong></td>
+      <td>Identity vector. A speaker representation derived from factor analysis of GMM supervectors. The dominant paradigm before deep learning (2011-2016).</td>
+    </tr>
+    <tr>
+      <td><strong>x-Vector</strong></td>
+      <td>Speaker embedding extracted from a Time-Delay Neural Network (TDNN) with statistics pooling. Introduced by Snyder et al. (2018).</td>
+    </tr>
+    <tr>
+      <td><strong>ECAPA-TDNN</strong></td>
+      <td>Emphasized Channel Attention, Propagation and Aggregation TDNN. An enhanced x-vector architecture with Squeeze-and-Excitation blocks and multi-scale features (2020).</td>
+    </tr>
+    <tr>
+      <td><strong>GE2E</strong></td>
+      <td>Generalized End-to-End loss. A training objective that builds a similarity matrix across a batch of speakers and directly optimizes for speaker discrimination.</td>
+    </tr>
+    <tr>
+      <td><strong>TE2E</strong></td>
+      <td>Tuple-based End-to-End loss. Predecessor to GE2E that operates on (enrollment, verification) tuple pairs rather than full batch similarity matrices.</td>
+    </tr>
+    <tr>
+      <td><strong>EER</strong></td>
+      <td>Equal Error Rate. The point where the false acceptance rate equals the false rejection rate. Lower is better. The standard metric for speaker verification systems.</td>
+    </tr>
+    <tr>
+      <td><strong>Cosine Similarity</strong></td>
+      <td>A measure of similarity between two vectors based on the cosine of the angle between them. Ranges from -1 to +1. The standard comparison method for speaker embeddings.</td>
+    </tr>
+    <tr>
+      <td><strong>Mel Spectrogram</strong></td>
+      <td>A time-frequency representation of audio where the frequency axis uses the mel scale, which approximates human auditory perception.</td>
+    </tr>
+    <tr>
+      <td><strong>LSTM</strong></td>
+      <td>Long Short-Term Memory. A recurrent neural network architecture with gating mechanisms that enable it to capture long-range temporal dependencies in sequential data.</td>
+    </tr>
+    <tr>
+      <td><strong>PLDA</strong></td>
+      <td>Probabilistic Linear Discriminant Analysis. A statistical scoring backend commonly used with i-vectors and x-vectors to compute verification scores.</td>
+    </tr>
+    <tr>
+      <td><strong>UBM</strong></td>
+      <td>Universal Background Model. A large GMM trained on speech from many speakers, used as the reference distribution in i-vector extraction.</td>
+    </tr>
+    <tr>
+      <td><strong>Speaker Diarization</strong></td>
+      <td>The task of determining "who spoke when" in an audio recording containing multiple speakers.</td>
+    </tr>
+    <tr>
+      <td><strong>Speaker Verification</strong></td>
+      <td>Confirming that a speaker is who they claim to be (1:1 comparison). Also called speaker authentication.</td>
+    </tr>
+    <tr>
+      <td><strong>Speaker Identification</strong></td>
+      <td>Determining which speaker in a known set produced a given utterance (1:N comparison).</td>
+    </tr>
+    <tr>
+      <td><strong>SV2TTS</strong></td>
+      <td>Speaker Verification to Text-to-Speech. Google's system for transferring learned speaker embeddings to condition a multi-speaker TTS synthesizer.</td>
+    </tr>
+    <tr>
+      <td><strong>VAD</strong></td>
+      <td>Voice Activity Detection. The process of identifying segments of audio that contain speech, used to filter out silence and noise before feature extraction.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ==================== SOURCES ==================== -->
+<section id="sources">
+<h2><a class="heading-anchor" href="#sources">#</a>Sources</h2>
+
+<ol class="sources-list">
+  <li>Variani, E., Lei, X., McDermott, E., Lopez Moreno, I., &amp; Gonzalez-Dominguez, J. (2014). "Deep Neural Networks for Small Footprint Text-Dependent Speaker Verification." <em>ICASSP 2014.</em> <a href="https://www.semanticscholar.org/paper/Deep-neural-networks-for-small-footprint-speaker-Variani-Lei/576e7eb1131c925179d0dd57f8c25b8adfc2e7bd">Semantic Scholar</a></li>
+  <li>Wan, L., Wang, Q., Papir, A., &amp; Lopez Moreno, I. (2018). "Generalized End-to-End Loss for Speaker Verification." <em>ICASSP 2018.</em> <a href="https://arxiv.org/abs/1710.10467">arXiv:1710.10467</a></li>
+  <li>Google Speaker ID Publications. "Generalized End-to-End Loss for Speaker Verification." <a href="https://google.github.io/speaker-id/publications/GE2E/">google.github.io/speaker-id</a></li>
+  <li>Jia, Y., Zhang, Y., Weiss, R. J., et al. (2018). "Transfer Learning from Speaker Verification to Multispeaker Text-To-Speech Synthesis." <a href="https://google.github.io/tacotron/publications/speaker_adaptation/">Google Tacotron Project</a></li>
+  <li>Snyder, D., Garcia-Romero, D., Sell, G., Povey, D., &amp; Khudanpur, S. (2018). "X-Vectors: Robust DNN Embeddings for Speaker Recognition." <em>ICASSP 2018.</em> <a href="https://www.danielpovey.com/files/2018_icassp_xvectors.pdf">PDF</a></li>
+  <li>Desplanques, B., Thienpondt, J., &amp; Demuynck, K. (2020). "ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification." <em>Interspeech 2020.</em></li>
+  <li>Resemble AI. "Resemblyzer: A Python Package to Analyze and Compare Voices with Deep Learning." <a href="https://github.com/resemble-ai/Resemblyzer">GitHub</a></li>
+  <li>Lin, Y. "dvector: Speaker Embedding Trained with GE2E Loss." <a href="https://github.com/yistLin/dvector">GitHub</a></li>
+  <li>Bai, Z. &amp; Zhang, X. L. (2021). "Speaker Recognition Based on Deep Learning: An Overview." <em>Neural Networks, 140</em>, 65-99. <a href="https://arxiv.org/pdf/1911.06615">arXiv:1911.06615</a></li>
+  <li>Kabir, M. M., Mridha, M. F., et al. (2023). "Deep Speaker Embeddings for Speaker Verification: Review and Experimental Comparison." <em>Engineering Applications of Artificial Intelligence, 127.</em> <a href="https://www.sciencedirect.com/science/article/abs/pii/S0952197623014161">ScienceDirect</a></li>
+  <li>Zapletal, O., et al. (2024). "Comparison of Modern Deep Learning Models for Speaker Verification." <em>Applied Sciences, 14(4).</em> <a href="https://www.mdpi.com/2076-3417/14/4/1329">MDPI</a></li>
+  <li>Google. "Voice Match on Google Nest and Home Devices." <a href="https://support.google.com/googlenest/answer/7342711">Google Support</a></li>
+  <li>cvqluu. "GE2E-Loss: PyTorch Implementation of Generalized End-to-End Loss." <a href="https://github.com/cvqluu/GE2E-Loss">GitHub</a></li>
+</ol>
+</section>
+
+</div>
+</main>
+</div>
+
+<!-- Dark Mode Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <span class="theme-icon">&#9789;</span>
+  <span class="theme-label">Dark</span>
+</button>
+
+<!-- Back to Top -->
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<script>
+// ===== Mermaid Initialization =====
+document.addEventListener('DOMContentLoaded', function() {
+  const isDark = localStorage.getItem('theme') === 'dark';
+  if (isDark) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeButton();
+  }
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#F1F5F9',
+      primaryBorderColor: '#A78BFA',
+      lineColor: '#A78BFA',
+      secondaryColor: '#334155',
+      tertiaryColor: '#1E293B',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    } : {
+      primaryColor: '#F5F3FF',
+      primaryTextColor: '#1E293B',
+      primaryBorderColor: '#7C3AED',
+      lineColor: '#7C3AED',
+      secondaryColor: '#EDE9FE',
+      tertiaryColor: '#F8FAFC',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    securityLevel: 'loose'
+  });
+});
+
+// ===== Theme Toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  updateThemeButton();
+
+  // Re-render Mermaid diagrams with new theme
+  const newIsDark = !isDark;
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: newIsDark ? 'dark' : 'default',
+    themeVariables: newIsDark ? {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#F1F5F9',
+      primaryBorderColor: '#A78BFA',
+      lineColor: '#A78BFA',
+      secondaryColor: '#334155',
+      tertiaryColor: '#1E293B',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    } : {
+      primaryColor: '#F5F3FF',
+      primaryTextColor: '#1E293B',
+      primaryBorderColor: '#7C3AED',
+      lineColor: '#7C3AED',
+      secondaryColor: '#EDE9FE',
+      tertiaryColor: '#F8FAFC',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    securityLevel: 'loose'
+  });
+
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', el.querySelector('svg') ? '' : code);
+    }
+    if (el.getAttribute('data-original')) {
+      el.removeAttribute('data-processed');
+      el.innerHTML = el.getAttribute('data-original');
+      mermaid.run({ nodes: [el] });
+    }
+  });
+}
+
+function updateThemeButton() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const icon = document.querySelector('.theme-icon');
+  const label = document.querySelector('.theme-label');
+  if (icon) icon.textContent = isDark ? '\u2600' : '\u263D';
+  if (label) label.textContent = isDark ? 'Light' : 'Dark';
+}
+
+// ===== Sidebar Toggle (Mobile) =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
+// ===== Active Sidebar Link Tracking =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+document.querySelectorAll('section[id], h2[id], h3[id]').forEach(el => {
+  observer.observe(el);
+});
+
+// ===== Back to Top Button =====
+window.addEventListener('scroll', () => {
+  const btn = document.querySelector('.back-to-top');
+  if (btn) {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }
+});
+
+// ===== Close sidebar on link click (mobile) =====
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('open');
+    }
+  });
+});
+
+// ===== Store Mermaid source before rendering =====
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.mermaid').forEach(el => {
+    if (!el.querySelector('svg')) {
+      el.setAttribute('data-original', el.textContent.trim());
+    }
+  });
+});
+</script>
+
+</body>
+</html>

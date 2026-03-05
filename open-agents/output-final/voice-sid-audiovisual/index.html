@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio-Visual Multimodal Speaker Diarization</title>
+<meta name="description" content="Comprehensive explainer on audio-visual multimodal speaker diarization: how audio, visual, and semantic modalities are fused to solve 'who spoke when' in video.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-audio: #2563EB;
+  --color-audio-bg: #DBEAFE;
+  --color-visual: #059669;
+  --color-visual-bg: #D1FAE5;
+  --color-semantic: #D97706;
+  --color-semantic-bg: #FEF3C7;
+  --color-fusion: #DC2626;
+  --color-fusion-bg: #FEE2E2;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #2E1065;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #2E1065;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-audio: #60A5FA;
+  --color-audio-bg: #1e3a5f;
+  --color-visual: #34D399;
+  --color-visual-bg: #064e3b;
+  --color-semantic: #FBBF24;
+  --color-semantic-bg: #451a03;
+  --color-fusion: #F87171;
+  --color-fusion-bg: #450a0a;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6, #7C3AED);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== Mobile menu toggle ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Dark mode toggle ===== */
+.dark-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.4rem 0;
+  user-select: none;
+}
+
+.dark-toggle-track {
+  width: 36px;
+  height: 20px;
+  background: var(--color-border);
+  border-radius: 10px;
+  position: relative;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .dark-toggle-track {
+  background: var(--color-primary);
+}
+
+.dark-toggle-thumb {
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] .dark-toggle-thumb {
+  transform: translateX(16px);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: all var(--transition);
+  background: var(--color-primary-bg);
+}
+
+.back-link:hover {
+  background: var(--color-primary);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+.takeaways li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+.info-box.audio { border-left: 4px solid var(--color-audio); background: var(--color-audio-bg); }
+.info-box.visual { border-left: 4px solid var(--color-visual); background: var(--color-visual-bg); }
+.info-box.semantic { border-left: 4px solid var(--color-semantic); background: var(--color-semantic-bg); }
+.info-box.fusion { border-left: 4px solid var(--color-fusion); background: var(--color-fusion-bg); }
+
+/* ===== Modality Cards ===== */
+.modality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.modality-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  border-top: 4px solid var(--color-border);
+}
+
+.modality-card.audio { border-top-color: var(--color-audio); }
+.modality-card.visual { border-top-color: var(--color-visual); }
+.modality-card.semantic { border-top-color: var(--color-semantic); }
+
+.modality-card h4 {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modality-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.modality-card p {
+  font-size: 0.92rem;
+  margin-bottom: 0.5rem;
+}
+
+.modality-card ul {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ===== Comparison Table ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  margin: 2rem 0;
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 12px;
+  background: var(--color-diagram-bg);
+  overflow: hidden;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-caption {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-diagram-border);
+  background: var(--color-bg-alt);
+}
+
+.diagram-caption strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.diagram-caption span {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== Pipeline Steps ===== */
+.pipeline-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 1.5rem 0;
+  justify-content: center;
+}
+
+.pipeline-step {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  text-align: center;
+  min-width: 100px;
+}
+
+.pipeline-arrow {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+}
+
+.pipeline-step.audio { border-color: var(--color-audio); color: var(--color-audio); }
+.pipeline-step.visual { border-color: var(--color-visual); color: var(--color-visual); }
+.pipeline-step.semantic { border-color: var(--color-semantic); color: var(--color-semantic); }
+.pipeline-step.fusion { border-color: var(--color-fusion); color: var(--color-fusion); background: var(--color-fusion-bg); }
+
+/* ===== Strengths & Weaknesses ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.pros, .cons {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.pros { border-top: 4px solid #059669; }
+.cons { border-top: 4px solid #DC2626; }
+
+.pros h4, .cons h4 { margin-top: 0; }
+.pros li, .cons li { font-size: 0.92rem; }
+
+/* ===== Sources List ===== */
+.sources-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sources-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.sources-list li:last-child { border-bottom: none; }
+
+.source-type {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.source-type.paper { background: var(--color-audio-bg); color: var(--color-audio); }
+.source-type.dataset { background: var(--color-visual-bg); color: var(--color-visual); }
+.source-type.toolkit { background: var(--color-semantic-bg); color: var(--color-semantic); }
+.source-type.survey { background: var(--color-fusion-bg); color: var(--color-fusion); }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+  }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .modality-grid { grid-template-columns: 1fr; }
+  .pipeline-steps { flex-direction: column; }
+  .pipeline-arrow { transform: rotate(90deg); }
+}
+
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 3rem; }
+  h1 { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Audio-Visual Multimodal Speaker Diarization</div>
+    <div class="sidebar-subtitle">Fusing sight, sound, and semantics</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a class="sidebar-link" href="#introduction">Introduction</a>
+    <a class="sidebar-link" href="#why-multimodal">Why Multimodal?</a>
+
+    <div class="sidebar-nav-section">Modalities</div>
+    <a class="sidebar-link" href="#audio-modality">Audio: Speaker Embeddings</a>
+    <a class="sidebar-link sub" href="#x-vectors">X-Vectors</a>
+    <a class="sidebar-link sub" href="#ecapa-tdnn">ECAPA-TDNN</a>
+    <a class="sidebar-link" href="#visual-modality">Visual: Face & Lips</a>
+    <a class="sidebar-link sub" href="#face-detection">Face Detection</a>
+    <a class="sidebar-link sub" href="#lip-movement">Lip Movement</a>
+    <a class="sidebar-link sub" href="#active-speaker">Active Speaker Detection</a>
+    <a class="sidebar-link" href="#semantic-modality">Semantic: Text Cues</a>
+
+    <div class="sidebar-nav-section">Fusion</div>
+    <a class="sidebar-link" href="#fusion-strategies">Fusion Strategies</a>
+    <a class="sidebar-link sub" href="#early-fusion">Early Fusion</a>
+    <a class="sidebar-link sub" href="#late-fusion">Late Fusion</a>
+    <a class="sidebar-link sub" href="#hybrid-fusion">Hybrid Fusion</a>
+    <a class="sidebar-link" href="#fusion-diagram">Pipeline Diagram</a>
+
+    <div class="sidebar-nav-section">Key Methods</div>
+    <a class="sidebar-link" href="#pairwise-constraint">Joint Pairwise Constraint Propagation</a>
+    <a class="sidebar-link" href="#av-sync">Audio-Visual Synchronization</a>
+    <a class="sidebar-link" href="#occlusion">Handling Occlusion</a>
+
+    <div class="sidebar-nav-section">Applications & Data</div>
+    <a class="sidebar-link" href="#applications">Applications</a>
+    <a class="sidebar-link" href="#datasets">Datasets & Benchmarks</a>
+    <a class="sidebar-link" href="#strengths-weaknesses">Strengths & Weaknesses</a>
+    <a class="sidebar-link" href="#sources">Sources</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <label class="dark-toggle" id="darkToggle">
+      <div class="dark-toggle-track">
+        <div class="dark-toggle-thumb"></div>
+      </div>
+      <span>Dark mode</span>
+    </label>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main">
+<div class="content">
+
+<a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Back to Speaker Identification Overview</a>
+
+<h1>Audio-Visual Multimodal Speaker Diarization</h1>
+<p class="page-subtitle">
+  Speaker diarization answers "who spoke when" in a recording. While traditional systems rely on audio alone, multimodal approaches incorporate visual and semantic signals from video to dramatically improve accuracy -- especially in challenging real-world conditions with overlapping speech, background noise, and multiple participants.
+</p>
+
+<div class="takeaways">
+  <strong>Key Takeaways</strong>
+  <ul>
+    <li>Multimodal diarization fuses <strong>audio</strong> (speaker embeddings), <strong>visual</strong> (face/lip detection), and <strong>semantic</strong> (text content) signals to determine who is speaking.</li>
+    <li>Visual cues are especially valuable for resolving <strong>overlapping speech</strong> -- the single biggest source of diarization errors.</li>
+    <li>The ACL 2025 tri-modal approach using <strong>joint pairwise constraint propagation</strong> consistently outperforms audio-only and two-modality baselines.</li>
+    <li>Audio-visual synchronization models like <strong>SyncNet</strong> and <strong>TalkNet</strong> match lip movements to voice activity for active speaker detection.</li>
+    <li>Real-world challenges remain: <strong>occlusion</strong>, off-camera speakers, poor lighting, and computational cost.</li>
+  </ul>
+</div>
+
+<!-- ======================== -->
+<h2 id="introduction">Introduction</h2>
+
+<p>
+  Speaker diarization is the task of partitioning an audio (or audio-visual) stream into speaker-homogeneous segments. The output is a timeline annotated with speaker labels -- enabling downstream tasks like meeting transcription, subtitle generation, and conversation analytics.
+</p>
+
+<p>
+  Traditional audio-only diarization pipelines follow a well-established sequence: Voice Activity Detection (VAD) identifies speech regions, speaker embeddings are extracted for each segment, and clustering groups segments by speaker identity. While this works well in controlled environments, it struggles badly with <strong>overlapping speech</strong>, <strong>noisy backgrounds</strong>, and <strong>high speaker counts</strong> -- exactly the conditions found in real meetings, broadcasts, and movies.
+</p>
+
+<div class="pipeline-steps">
+  <div class="pipeline-step">VAD</div>
+  <span class="pipeline-arrow">&#10132;</span>
+  <div class="pipeline-step audio">Embedding Extraction</div>
+  <span class="pipeline-arrow">&#10132;</span>
+  <div class="pipeline-step">Clustering</div>
+  <span class="pipeline-arrow">&#10132;</span>
+  <div class="pipeline-step">Speaker Labels</div>
+</div>
+
+<p>
+  Audio-visual multimodal diarization augments this pipeline with visual and semantic information, exploiting the fact that video recordings contain rich complementary signals: who is visible, whose lips are moving, and what is being said.
+</p>
+
+<!-- ======================== -->
+<h2 id="why-multimodal">Why Multimodal Approaches Improve Diarization</h2>
+
+<p>
+  Each modality provides unique information that compensates for the limitations of others:
+</p>
+
+<div class="modality-grid">
+  <div class="modality-card audio">
+    <h4><span class="modality-icon">&#127925;</span> Audio</h4>
+    <p>Speaker identity from vocal characteristics. Works even when speaker is off-camera.</p>
+    <ul>
+      <li>Robust speaker discrimination via embeddings</li>
+      <li>Fails with overlapping speech</li>
+      <li>Sensitive to noise/reverberation</li>
+    </ul>
+  </div>
+  <div class="modality-card visual">
+    <h4><span class="modality-icon">&#128065;</span> Visual</h4>
+    <p>Active speaker detection from face and lip movements. Resolves overlaps when speakers are visible.</p>
+    <ul>
+      <li>Directly shows who is speaking</li>
+      <li>Handles overlapping speech well</li>
+      <li>Fails when speaker is off-camera</li>
+    </ul>
+  </div>
+  <div class="modality-card semantic">
+    <h4><span class="modality-icon">&#128172;</span> Semantic</h4>
+    <p>Speaker turn cues from transcribed text. Exploits conversational structure and named entities.</p>
+    <ul>
+      <li>Detects speaker changes from context</li>
+      <li>Identifies roles (interviewer, guest)</li>
+      <li>Depends on ASR accuracy</li>
+    </ul>
+  </div>
+</div>
+
+<p>
+  The fundamental insight is that <strong>modalities fail in complementary ways</strong>. When two speakers talk simultaneously, audio clustering collapses, but video can show two moving mouths. When a speaker is off-camera, visual detection fails, but audio embeddings still capture their voice. When acoustic conditions are poor, semantic analysis of what was said can reveal speaker changes through discourse structure.
+</p>
+
+<div class="info-box">
+  <strong>Evidence from MISP 2025 Challenge:</strong> The best-performing audio-visual speaker diarization systems at the MISP 2025 Challenge achieved a Diarization Error Rate (DER) of <strong>8.09%</strong> -- an improvement of 7.43 percentage points over the audio-only baseline. This dramatic reduction demonstrates the value of incorporating visual information.
+</div>
+
+<!-- ======================== -->
+<h2 id="audio-modality">Audio Modality: Speaker Embeddings</h2>
+
+<p>
+  The audio branch of multimodal diarization focuses on extracting <strong>speaker embeddings</strong> -- fixed-dimensional vector representations that capture the unique vocal characteristics of each speaker. These embeddings form the backbone of the clustering process that ultimately assigns speaker labels.
+</p>
+
+<h3 id="x-vectors">X-Vectors</h3>
+
+<p>
+  The x-vector architecture, introduced by Snyder et al. (2018), established the deep-learning paradigm for speaker embeddings. It uses a <strong>Time Delay Neural Network (TDNN)</strong> that processes variable-length speech segments through frame-level layers, applies <strong>statistics pooling</strong> (computing mean and standard deviation across frames), and projects the result into a fixed-dimensional embedding through segment-level layers.
+</p>
+
+<p>
+  X-vectors replaced earlier i-vector representations and became the de facto standard for speaker verification and diarization, demonstrating strong performance in the VoxSRC and DIHARD challenges.
+</p>
+
+<h3 id="ecapa-tdnn">ECAPA-TDNN</h3>
+
+<p>
+  The <strong>Emphasized Channel Attention, Propagation and Aggregation TDNN</strong> (ECAPA-TDNN) by Desplanques et al. (2020) significantly improved upon the x-vector architecture with several enhancements:
+</p>
+
+<ul>
+  <li><strong>Res2Net modules:</strong> Frame-level layers are restructured into 1D Res2Net blocks with multi-scale skip connections, enabling the model to capture patterns at multiple temporal resolutions.</li>
+  <li><strong>Squeeze-and-Excitation (SE) blocks:</strong> Borrowed from face verification, these blocks model channel interdependencies to emphasize more discriminative feature channels.</li>
+  <li><strong>Channel-dependent frame attention:</strong> The statistics pooling layer is upgraded with attention that lets the network focus on different subsets of frames for different channels, improving how the model aggregates temporal information.</li>
+</ul>
+
+<p>
+  ECAPA-TDNN embeddings have proven particularly robust for diarization, performing well under both close-talking and far-field (distant) microphone conditions. The <strong>pyannote.audio</strong> toolkit (version 3.1) uses ECAPA-TDNN embeddings within its two-stage EEND-VC pipeline, where local end-to-end neural diarization produces frame-level speaker activity predictions that are then consolidated through embedding-based clustering.
+</p>
+
+<div class="takeaways">
+  <strong>Audio Embedding Pipeline</strong>
+  <ul>
+    <li><strong>Input:</strong> Short speech segments (typically 1-3 seconds) from VAD output</li>
+    <li><strong>Feature extraction:</strong> Mel-frequency filterbanks or similar acoustic features</li>
+    <li><strong>Model:</strong> ECAPA-TDNN or similar deep network</li>
+    <li><strong>Output:</strong> Fixed-dimensional embedding vector (typically 192 or 256 dimensions)</li>
+    <li><strong>Clustering:</strong> Agglomerative hierarchical clustering or spectral clustering on cosine similarity matrix</li>
+  </ul>
+</div>
+
+<!-- ======================== -->
+<h2 id="visual-modality">Visual Modality: Face Detection, Lip Movement, Active Speaker Detection</h2>
+
+<p>
+  Visual information provides a powerful complementary signal to audio. The visual pipeline typically involves three stages: detecting faces, tracking lip movements, and determining which visible person is actually speaking.
+</p>
+
+<h3 id="face-detection">Face Detection and Tracking</h3>
+
+<p>
+  The visual pipeline begins with detecting and tracking faces across video frames. Modern face detectors (such as RetinaFace or MTCNN) locate all visible faces in each frame, and multi-object trackers (like SORT or DeepSORT) maintain consistent identity tracks across time. Each face track produces a sequence of cropped face images that can be analyzed for speaking activity.
+</p>
+
+<p>
+  Face recognition models can additionally generate <strong>face embeddings</strong> that, analogous to speaker embeddings on the audio side, provide a discriminative representation of visual identity. These are particularly useful for re-identifying speakers who leave and re-enter the frame.
+</p>
+
+<h3 id="lip-movement">Lip Movement Analysis</h3>
+
+<p>
+  Lip movement is one of the most direct visual indicators of speaking activity. Two main approaches are used:
+</p>
+
+<ul>
+  <li><strong>Geometric approaches:</strong> Track facial landmarks around the mouth region (typically 20 landmarks) and measure displacement over time. A lip distance threshold (commonly around 10 pixels) can distinguish speaking from silence.</li>
+  <li><strong>Appearance-based approaches:</strong> Use 3D convolutional networks (e.g., ResNet-18 with 3D convolutions) to learn speaking patterns directly from sequences of mouth-region crops, capturing subtle movements that geometric methods might miss.</li>
+</ul>
+
+<h3 id="active-speaker">Active Speaker Detection (ASD)</h3>
+
+<p>
+  Active Speaker Detection is the task of determining, for each visible face at each moment, whether that person is currently speaking. This is the critical bridge between visual and audio modalities.
+</p>
+
+<h4>TalkNet (ACM MM 2021)</h4>
+
+<p>
+  TalkNet is a landmark architecture for active speaker detection that uses separate <strong>audio and visual temporal encoders</strong> to process their respective inputs, an <strong>audio-visual cross-attention mechanism</strong> for inter-modality interaction, and a <strong>self-attention mechanism</strong> for capturing long-term speaking patterns. Unlike earlier RNN-based approaches, TalkNet uses attention to model both short-term and long-term temporal context.
+</p>
+
+<p>
+  The architecture achieved 3.5% improvement on the AVA-ActiveSpeaker dataset over prior systems. An extension called <strong>TS-TalkNet</strong> (Target Speaker TalkNet) further incorporates a pre-enrolled speaker embedding to detect whether a specific target speaker is speaking, useful for scenarios where you are tracking a particular individual.
+</p>
+
+<div class="info-box">
+  <strong>How ASD Helps Diarization:</strong> When audio detects speech but cannot determine the speaker (e.g., during overlap), ASD can identify which of the visible faces has moving lips synchronized with the audio. This directly resolves the overlap problem without needing to separate the mixed audio signal.
+</div>
+
+<!-- ======================== -->
+<h2 id="semantic-modality">Semantic Modality: Text-Based Speaker Cues</h2>
+
+<p>
+  The semantic modality extracts speaker-related information from the <strong>transcribed content</strong> of speech, providing cues that are completely orthogonal to acoustic and visual features. This is the newest of the three modalities to be integrated into diarization systems, and was a key contribution of the ACL 2025 tri-modal paper.
+</p>
+
+<h3>Types of Semantic Cues</h3>
+
+<ul>
+  <li><strong>Speaker change detection:</strong> NLP models identify points in the transcript where the speaker likely changes, based on discourse markers ("Well, I think..." vs. "No, the issue is..."), topic shifts, and turn-taking patterns.</li>
+  <li><strong>Role profiling:</strong> In structured conversations (interviews, medical consultations, customer service), the vocabulary and phrasing used can identify speaker roles. An interviewer asks questions; a doctor uses medical terminology.</li>
+  <li><strong>Named entity references:</strong> If a transcript contains "As Dr. Smith mentioned...", the semantic system can infer that a different speaker (not Dr. Smith) is currently talking and link a previous segment to Dr. Smith.</li>
+  <li><strong>Conversational coherence:</strong> Consecutive utterances by the same speaker tend to be topically coherent, while speaker changes often correlate with topic or perspective shifts.</li>
+</ul>
+
+<h3>From Text to Pairwise Constraints</h3>
+
+<p>
+  Semantic cues are typically structured as <strong>pairwise constraints</strong> between speech segments: a "must-link" constraint indicates two segments are likely from the same speaker, while a "cannot-link" constraint indicates they are likely from different speakers. These constraints are derived from:
+</p>
+
+<ul>
+  <li>Segments with very similar vocabulary/topic receive must-link constraints</li>
+  <li>Segments on opposite sides of a detected speaker change receive cannot-link constraints</li>
+  <li>Segments referencing different named roles receive cannot-link constraints</li>
+</ul>
+
+<p>
+  These constraints are then integrated into the clustering process alongside audio and visual constraints, as described in the joint pairwise constraint propagation section below.
+</p>
+
+<!-- ======================== -->
+<h2 id="fusion-strategies">Fusion Strategies</h2>
+
+<p>
+  How and when to combine information from different modalities is one of the most consequential design decisions in multimodal diarization. Three main strategies have been explored.
+</p>
+
+<h3 id="early-fusion">Early Fusion (Feature-Level)</h3>
+
+<p>
+  In early fusion, features from each modality are <strong>concatenated into a single joint representation</strong> before any classification or clustering. For example, audio embeddings, visual face features, and text embeddings might be concatenated into a single vector for each speech segment.
+</p>
+
+<div class="info-box">
+  <strong>Advantages:</strong> Can learn cross-modal correlations at the lowest level. A single model learns joint representations that capture synergies between modalities.<br>
+  <strong>Disadvantages:</strong> Suffers from the curse of dimensionality. Different modalities operate at different temporal resolutions and scales, making alignment challenging. Missing modalities (e.g., no video for an off-camera speaker) cause the entire fused representation to degrade.
+</div>
+
+<h3 id="late-fusion">Late Fusion (Decision-Level)</h3>
+
+<p>
+  Late fusion trains <strong>separate models for each modality</strong>, producing independent diarization outputs that are combined at the decision level through techniques like weighted voting, score averaging, or learned combination functions.
+</p>
+
+<p>
+  A notable example is the late audio-visual fusion system by Chung et al. (2022), which combines an audio-only sub-system (using ECAPA-TDNN embeddings and spectral clustering) with a visual-centric sub-system (using face tracking and lip-sync scores). The final speaker labels are produced by merging the two outputs with rules that prefer the visual system during detected overlap regions.
+</p>
+
+<div class="info-box">
+  <strong>Advantages:</strong> Each modality can be optimized independently. Robust to missing modalities -- if video is unavailable, the audio sub-system operates alone. Easier to debug and interpret.<br>
+  <strong>Disadvantages:</strong> Cannot capture fine-grained cross-modal interactions. The combination rules may be brittle. Each sub-system misses information that would be available through earlier integration.
+</div>
+
+<h3 id="hybrid-fusion">Hybrid Fusion</h3>
+
+<p>
+  Hybrid approaches perform fusion at <strong>intermediate levels</strong> of the processing pipeline, combining the benefits of both early and late fusion. For example, audio and visual features might be fused at the embedding level (early-ish), while semantic constraints are applied at the clustering level (late-ish).
+</p>
+
+<p>
+  The ACL 2025 tri-modal system exemplifies hybrid fusion: it extracts modality-specific features independently, converts visual and semantic information into <strong>pairwise constraints</strong>, and then integrates these constraints into the <strong>clustering stage</strong> of an otherwise standard audio diarization pipeline. This preserves the well-tuned audio pipeline while injecting multimodal information where it matters most.
+</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Strategy</th>
+        <th>Fusion Point</th>
+        <th>Cross-Modal Learning</th>
+        <th>Missing Modality</th>
+        <th>Complexity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Early</strong></td>
+        <td>Feature level</td>
+        <td>Strong</td>
+        <td>Poor (degrades)</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td><strong>Late</strong></td>
+        <td>Decision level</td>
+        <td>None</td>
+        <td>Good (fallback)</td>
+        <td>Low</td>
+      </tr>
+      <tr>
+        <td><strong>Hybrid</strong></td>
+        <td>Intermediate</td>
+        <td>Moderate</td>
+        <td>Moderate</td>
+        <td>Medium</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================== -->
+<h2 id="fusion-diagram">Multimodal Fusion Pipeline</h2>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph TD
+    subgraph Input ["Input Video Stream"]
+        V["Video Frames"]
+        A["Audio Waveform"]
+        T["ASR Transcript"]
+    end
+
+    subgraph Audio_Branch ["Audio Branch"]
+        A --> VAD["Voice Activity Detection"]
+        VAD --> SE["Speaker Embedding<br/>(ECAPA-TDNN)"]
+        SE --> AM["Affinity Matrix<br/>(Cosine Similarity)"]
+    end
+
+    subgraph Visual_Branch ["Visual Branch"]
+        V --> FD["Face Detection<br/>& Tracking"]
+        FD --> LM["Lip Movement<br/>Analysis"]
+        A --> |"Audio signal"|ASD["Active Speaker<br/>Detection (TalkNet)"]
+        LM --> ASD
+        ASD --> VC["Visual Pairwise<br/>Constraints"]
+    end
+
+    subgraph Semantic_Branch ["Semantic Branch"]
+        T --> SCD["Speaker Change<br/>Detection"]
+        T --> RP["Role Profiling<br/>& NER"]
+        SCD --> SC["Semantic Pairwise<br/>Constraints"]
+        RP --> SC
+    end
+
+    subgraph Fusion ["Constraint-Guided Clustering"]
+        AM --> JPCP["Joint Pairwise<br/>Constraint Propagation"]
+        VC --> JPCP
+        SC --> JPCP
+        JPCP --> RAM["Refined<br/>Affinity Matrix"]
+        RAM --> CL["Spectral / AHC<br/>Clustering"]
+        CL --> OUT["Speaker Labels<br/>(who spoke when)"]
+    end
+
+    style Input fill:#f0f0ff,stroke:#7C3AED,stroke-width:2px
+    style Audio_Branch fill:#DBEAFE,stroke:#2563EB,stroke-width:2px
+    style Visual_Branch fill:#D1FAE5,stroke:#059669,stroke-width:2px
+    style Semantic_Branch fill:#FEF3C7,stroke:#D97706,stroke-width:2px
+    style Fusion fill:#FEE2E2,stroke:#DC2626,stroke-width:2px
+  </div>
+  <div class="diagram-caption">
+    <strong>Figure 1: Multimodal Fusion Pipeline for Speaker Diarization</strong>
+    <span>Three modality branches extract complementary information that converges through joint pairwise constraint propagation to produce refined speaker clustering.</span>
+  </div>
+</div>
+
+<!-- ======================== -->
+<h2 id="pairwise-constraint">Joint Pairwise Constraint Propagation (ACL 2025)</h2>
+
+<p>
+  The most significant recent advance in multimodal diarization is the <strong>tri-modal framework</strong> presented at ACL 2025 by Cheng, Wang, Deng et al. ("Integrating Audio, Visual, and Semantic Information for Enhanced Multimodal Speaker Diarization on Multi-party Conversation"). This is the first systematic effort to integrate all three modalities -- audio, visual, and semantic -- into a unified diarization system.
+</p>
+
+<h3>Core Idea</h3>
+
+<p>
+  Rather than directly fusing features, the system converts visual and semantic information into <strong>pairwise constraints</strong> on speaker segments, then uses these constraints to refine the acoustic affinity matrix before clustering. This elegant formulation preserves the proven audio diarization pipeline while injecting multimodal knowledge at the most impactful point.
+</p>
+
+<h3>Algorithm Steps</h3>
+
+<ol>
+  <li><strong>Audio affinity computation:</strong> Extract speaker embeddings using ECAPA-TDNN and compute a cosine similarity affinity matrix A between all speech segments.</li>
+  <li><strong>Visual constraint generation:</strong> Use face recognition and active speaker detection to build visual pairwise constraints. If two segments show the same active face, generate a "must-link" constraint. If they show different active faces, generate a "cannot-link" constraint.</li>
+  <li><strong>Semantic constraint generation:</strong> Use NLP models on ASR transcripts to detect speaker changes and role profiles. Segments on the same side of a change boundary get must-link constraints; segments across boundaries get cannot-link constraints.</li>
+  <li><strong>Constraint propagation (E2CP):</strong> The Exhaustive-and-Efficient Constraint Propagation algorithm takes the initial affinity matrix A and the set of pairwise constraints, then propagates these constraints through the graph to estimate a <strong>refined affinity matrix A'</strong>. This step spreads the information from a relatively small number of confident constraints to the entire affinity matrix.</li>
+  <li><strong>Conflict resolution:</strong> When visual and semantic constraints disagree, a <strong>weighted combination</strong> informed by audio data fidelity resolves the conflict. The system trusts constraints that are consistent with the acoustic evidence more heavily.</li>
+  <li><strong>Final clustering:</strong> Standard spectral clustering or agglomerative hierarchical clustering is applied to the refined affinity matrix A' to produce final speaker labels.</li>
+</ol>
+
+<div class="takeaways">
+  <strong>Results</strong>
+  <ul>
+    <li>The tri-modal system <strong>consistently outperforms</strong> audio-only and two-modality baselines across multiple datasets.</li>
+    <li>Even incorporating just one additional modality (audio + visual or audio + semantic) improves results, but the full three-modality combination achieves the best performance.</li>
+    <li>The approach largely <strong>preserves the overall system framework</strong> of standard audio diarization, making it practical to integrate into existing pipelines.</li>
+    <li>The constraint propagation mechanism is robust to sparse constraints -- even a small number of high-confidence multimodal constraints can significantly improve the affinity matrix.</li>
+  </ul>
+</div>
+
+<!-- ======================== -->
+<h2 id="av-sync">Audio-Visual Synchronization Models</h2>
+
+<p>
+  Audio-visual synchronization is the task of determining whether a video stream of a person's face is temporally aligned with an audio stream. This capability is fundamental to active speaker detection: if a face's lip movements are synchronized with the audio, that person is likely speaking.
+</p>
+
+<h3>SyncNet</h3>
+
+<p>
+  <strong>SyncNet</strong> (Chung & Zisserman, 2017) was the first end-to-end lip synchronization network. It uses a two-stream architecture with separate audio and visual encoders that project their inputs into a shared embedding space. The model predicts whether audio and video are in sync by computing the similarity between audio and visual embeddings.
+</p>
+
+<p>
+  For speaker diarization, a pre-trained SyncNet analyzes each detected face track alongside the audio, producing a <strong>synchronization score over time</strong>. Faces with high sync scores during speech activity are identified as active speakers.
+</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph LR
+    subgraph Visual_Stream ["Visual Stream"]
+        FC["Face Crop<br/>Sequence"] --> VE["Visual Encoder<br/>(CNN)"]
+        VE --> VEmb["Visual<br/>Embedding"]
+    end
+
+    subgraph Audio_Stream ["Audio Stream"]
+        MF["Mel Spectrogram<br/>Segment"] --> AE["Audio Encoder<br/>(CNN)"]
+        AE --> AEmb["Audio<br/>Embedding"]
+    end
+
+    VEmb --> SIM["Cosine<br/>Similarity"]
+    AEmb --> SIM
+    SIM --> SCORE["Sync Score"]
+    SCORE --> DEC{{"Score > threshold?"}}
+    DEC -->|Yes| ACTIVE["Active Speaker"]
+    DEC -->|No| INACTIVE["Not Speaking"]
+
+    style Visual_Stream fill:#D1FAE5,stroke:#059669,stroke-width:2px
+    style Audio_Stream fill:#DBEAFE,stroke:#2563EB,stroke-width:2px
+    style SIM fill:#FEE2E2,stroke:#DC2626,stroke-width:1px
+  </div>
+  <div class="diagram-caption">
+    <strong>Figure 2: Audio-Visual Synchronization (SyncNet-style Architecture)</strong>
+    <span>Separate encoders project face crops and audio spectrograms into a shared space. High cosine similarity indicates the visible person is speaking.</span>
+  </div>
+</div>
+
+<h3>Multi-Speaker Extensions</h3>
+
+<p>
+  In multi-speaker scenarios, the sync model is applied to <strong>each face track independently</strong> against the full audio mix. The system produces a synchronization score for every (face, time) pair, creating a matrix that indicates which faces are speaking at each moment. When combined with speaker embeddings, this enables joint audio-visual clustering that is far more robust than either modality alone.
+</p>
+
+<p>
+  Key implementation details from the literature:
+</p>
+
+<ul>
+  <li><strong>Temporal windows:</strong> Sync scores are computed over short windows (typically 0.2-0.5 seconds) and smoothed to avoid flickering.</li>
+  <li><strong>Confidence calibration:</strong> Raw sync scores are calibrated so that the threshold for "active speaker" can be set consistently across different videos and lighting conditions.</li>
+  <li><strong>Multi-scale analysis:</strong> Some systems compute sync at multiple temporal scales to capture both rapid lip movements and longer-term speaking patterns.</li>
+</ul>
+
+<!-- ======================== -->
+<h2 id="occlusion">Handling Occlusion and Off-Camera Speakers</h2>
+
+<p>
+  One of the most significant challenges for audio-visual diarization is dealing with situations where the visual modality provides incomplete or misleading information.
+</p>
+
+<h3>Types of Visual Failure</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>Problem</th>
+        <th>Mitigation Strategy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Off-camera speaker</strong></td>
+        <td>Speaker is audible but not visible in any frame</td>
+        <td>Fall back to audio-only diarization for unmatched segments; visual constraints only apply to visible speakers</td>
+      </tr>
+      <tr>
+        <td><strong>Partial occlusion</strong></td>
+        <td>Face partially blocked by objects, hands, or other people</td>
+        <td>Use robust face detectors; reduce confidence weight for occluded detections; rely on audio for those segments</td>
+      </tr>
+      <tr>
+        <td><strong>Head turn</strong></td>
+        <td>Speaker turns away from camera, hiding lip region</td>
+        <td>Track face identity across pose changes; use head pose estimation to detect non-frontal frames</td>
+      </tr>
+      <tr>
+        <td><strong>Poor lighting</strong></td>
+        <td>Low light or harsh shadows make face/lip detection unreliable</td>
+        <td>Image enhancement preprocessing; reduce visual constraint weight when detection confidence is low</td>
+      </tr>
+      <tr>
+        <td><strong>Blurred video</strong></td>
+        <td>Motion blur or low resolution corrupts lip movement features</td>
+        <td>Quality-aware weighting: assign lower confidence to visual features from low-quality frames</td>
+      </tr>
+      <tr>
+        <td><strong>Multiple cameras</strong></td>
+        <td>Speaker visible in some camera views but not others</td>
+        <td>Multi-view fusion: aggregate visual evidence across all available camera streams</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Modality Masking</h3>
+
+<p>
+  A key technique is <strong>modality masking</strong>, introduced in the AVR-Net architecture for the AVA-AVD dataset. When visual features are unreliable (low face detection confidence, poor lighting, extreme pose), the system learns to mask or down-weight the visual contribution and rely more heavily on audio. This is implemented as a learned gating mechanism that dynamically adjusts the balance between modalities based on signal quality.
+</p>
+
+<div class="takeaways">
+  <strong>Design Principle</strong>
+  <ul>
+    <li>Robust multimodal systems must <strong>gracefully degrade</strong> to audio-only operation when visual information is unavailable or unreliable.</li>
+    <li>The visual modality should <strong>help when it can</strong> (visible, well-lit, frontal faces with moving lips) and <strong>step aside when it cannot</strong> (occlusion, off-camera, blur).</li>
+    <li>Confidence-weighted fusion is essential: never force visual information into the pipeline when it has low reliability.</li>
+  </ul>
+</div>
+
+<!-- ======================== -->
+<h2 id="applications">Applications</h2>
+
+<h3>Video Meetings</h3>
+<p>
+  Video conferencing platforms (Zoom, Teams, Meet) are a natural fit for audio-visual diarization. Each participant has a dedicated video tile with a frontal face view, creating ideal conditions for lip-sync-based active speaker detection. Meeting transcription with speaker attribution is one of the most commercially valuable applications, enabling automated meeting minutes, action item extraction, and speaking time analytics.
+</p>
+
+<h3>Broadcast News and Talk Shows</h3>
+<p>
+  Broadcast content features multiple speakers with varying amounts of screen time, frequent camera switches, and both on-camera and off-camera narration. Audio-visual diarization improves automatic indexing and search of broadcast archives, enables speaker-attributed subtitling, and supports content analysis (e.g., measuring speaking time for political candidates).
+</p>
+
+<h3>Movies and Entertainment</h3>
+<p>
+  Movies present the most challenging scenarios: rapid camera changes, background music and sound effects, artistic lighting, characters speaking off-screen, and large casts. The AVA-AVD dataset specifically targets this domain. Applications include automatic subtitle alignment, character analysis, and accessibility tools that identify speakers for hearing-impaired viewers.
+</p>
+
+<h3>Surveillance and Security</h3>
+<p>
+  In surveillance scenarios, audio-visual diarization can attribute speech to individuals captured on security cameras. This raises significant privacy concerns but has applications in forensic analysis and access control.
+</p>
+
+<h3>Healthcare and Education</h3>
+<p>
+  Medical consultations and classroom lectures benefit from speaker-attributed transcription. In clinical settings, distinguishing doctor from patient speech enables automated documentation. In education, tracking teacher vs. student speech supports engagement analysis.
+</p>
+
+<!-- ======================== -->
+<h2 id="datasets">Datasets and Benchmarks</h2>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Dataset</th>
+        <th>Domain</th>
+        <th>Size</th>
+        <th>Modalities</th>
+        <th>Key Challenge</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AVA-AVD</strong></td>
+        <td>Movies / in-the-wild</td>
+        <td>351 clips, 29.25 hrs, ~1500 identities</td>
+        <td>Audio + Video</td>
+        <td>Off-screen speakers, diverse scenes, complex acoustics</td>
+      </tr>
+      <tr>
+        <td><strong>VoxConverse</strong></td>
+        <td>YouTube / in-the-wild</td>
+        <td>63.8 hrs, 2-21+ speakers</td>
+        <td>Audio (+ video available)</td>
+        <td>High speaker counts, noisy backgrounds, overlapping speech</td>
+      </tr>
+      <tr>
+        <td><strong>MSDWild</strong></td>
+        <td>YouTube / in-the-wild</td>
+        <td>3000+ clips, 80 hrs</td>
+        <td>Audio + Video</td>
+        <td>Multi-modal, real-world scenarios, cocktail-party conditions</td>
+      </tr>
+      <tr>
+        <td><strong>MISP</strong></td>
+        <td>Meetings (multi-device)</td>
+        <td>Multi-room, multi-mic</td>
+        <td>Audio + Video (multi-device)</td>
+        <td>Far-field, multi-channel, real meeting noise</td>
+      </tr>
+      <tr>
+        <td><strong>AMI</strong></td>
+        <td>Meeting rooms</td>
+        <td>100 hrs meetings</td>
+        <td>Audio + Video (multi-cam)</td>
+        <td>Overlapping speech, cross-talk, far-field microphones</td>
+      </tr>
+      <tr>
+        <td><strong>M3SD</strong></td>
+        <td>Multi-scenario / multi-language</td>
+        <td>Multi-scenario collection</td>
+        <td>Audio + Video</td>
+        <td>Language diversity, scenario diversity</td>
+      </tr>
+      <tr>
+        <td><strong>AVA-ActiveSpeaker</strong></td>
+        <td>Movies</td>
+        <td>Subset of AVA</td>
+        <td>Audio + Video</td>
+        <td>Active speaker detection benchmark (binary per-face labels)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Evaluation Metric: Diarization Error Rate (DER)</h3>
+
+<p>
+  DER is the standard metric for speaker diarization, defined as the sum of three error types divided by total speech duration:
+</p>
+
+<ul>
+  <li><strong>False alarm (FA):</strong> Non-speech classified as speech</li>
+  <li><strong>Missed speech (MS):</strong> Speech classified as non-speech</li>
+  <li><strong>Speaker confusion (SC):</strong> Speech attributed to the wrong speaker</li>
+</ul>
+
+<p>
+  <code>DER = (FA + MS + SC) / Total Speech Duration</code>
+</p>
+
+<p>
+  Lower DER is better. State-of-the-art systems achieve DER below 10% on most benchmarks, with the best MISP 2025 systems reaching 8.09%.
+</p>
+
+<!-- ======================== -->
+<h2 id="strengths-weaknesses">Strengths and Weaknesses</h2>
+
+<div class="pros-cons">
+  <div class="pros">
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Overlap resolution:</strong> Visual cues directly resolve overlapping speech, the largest error source in audio-only systems.</li>
+      <li><strong>Complementary failure modes:</strong> When one modality fails (e.g., noise degrades audio), another often compensates (e.g., visual still works).</li>
+      <li><strong>No enrollment needed:</strong> Unlike speaker verification, diarization does not require pre-enrolled speaker profiles.</li>
+      <li><strong>Rich applications:</strong> The same pipeline serves meeting transcription, broadcast indexing, and media analysis.</li>
+      <li><strong>Improving rapidly:</strong> MISP 2025 results show significant year-over-year DER improvements as models and fusion strategies mature.</li>
+      <li><strong>Modular architecture:</strong> Constraint-based approaches (like the ACL 2025 method) allow multimodal upgrades to existing audio pipelines.</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>Weaknesses</h4>
+    <ul>
+      <li><strong>Off-camera speakers:</strong> Visual modality is useless when speakers are not visible, requiring graceful degradation.</li>
+      <li><strong>Computational cost:</strong> Running face detection, lip analysis, ASD, and audio embedding models simultaneously is expensive.</li>
+      <li><strong>Video quality dependence:</strong> Poor lighting, low resolution, and motion blur can cause visual features to hurt rather than help.</li>
+      <li><strong>Privacy concerns:</strong> Face detection and tracking in video raises significant privacy and ethical questions.</li>
+      <li><strong>Data scarcity:</strong> Large-scale annotated audio-visual diarization datasets are expensive to create and relatively few exist.</li>
+      <li><strong>Domain gap:</strong> Models trained on meetings may not generalize to movies or surveillance footage.</li>
+      <li><strong>Real-time constraints:</strong> Full multimodal pipelines are difficult to run in real-time, limiting live applications.</li>
+      <li><strong>ASR dependency:</strong> The semantic modality requires accurate speech recognition, which may itself be degraded by the same noise that motivates multimodal diarization.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================== -->
+<h2 id="sources">Sources</h2>
+
+<ul class="sources-list">
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://aclanthology.org/2025.acl-long.977/" target="_blank">Cheng et al. (ACL 2025) -- "Integrating Audio, Visual, and Semantic Information for Enhanced Multimodal Speaker Diarization on Multi-party Conversation"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://arxiv.org/abs/2309.10456" target="_blank">Cheng et al. (2023) -- "Improving Speaker Diarization using Semantic Information: Joint Pairwise Constraints Propagation"</a>
+  </li>
+  <li>
+    <span class="source-type survey">Survey</span>
+    <a href="https://arxiv.org/html/2409.05659v1" target="_blank">Audio-Visual Speaker Diarization: Current Databases, Approaches and Challenges (2024 Survey)</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://arxiv.org/abs/2111.14448" target="_blank">Xu et al. (2022) -- "AVA-AVD: Audio-Visual Speaker Diarization in the Wild"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://dl.acm.org/doi/abs/10.1145/3474085.3475587" target="_blank">Tao et al. (ACM MM 2021) -- "TalkNet: Is Someone Speaking? Exploring Long-term Temporal Features for Audio-visual Active Speaker Detection"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://www.mdpi.com/1424-8220/19/23/5163" target="_blank">Chung (2019) -- "Multimodal Speaker Diarization Using a Pre-Trained Audio-Visual Synchronization Model"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://arxiv.org/abs/2104.01466" target="_blank">Dawalatabad et al. (2021) -- "ECAPA-TDNN Embeddings for Speaker Diarization"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://arxiv.org/abs/2211.01299" target="_blank">Chung et al. (2022) -- "Late Audio-Visual Fusion for In-The-Wild Speaker Diarization"</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://asmp-eurasipjournals.springeropen.com/articles/10.1186/s13636-024-00382-2" target="_blank">A Lightweight Approach to Real-Time Speaker Diarization: From Audio Toward Audio-Visual Data Streams (EURASIP 2024)</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://arxiv.org/html/2505.13971v2" target="_blank">The Multimodal Information Based Speech Processing (MISP) 2025 Challenge</a>
+  </li>
+  <li>
+    <span class="source-type paper">Paper</span>
+    <a href="https://www.mdpi.com/1424-8220/24/13/4229" target="_blank">Multisensory Fusion for Unsupervised Spatiotemporal Speaker Diarization (MDPI Sensors 2024)</a>
+  </li>
+  <li>
+    <span class="source-type dataset">Dataset</span>
+    <a href="https://www.robots.ox.ac.uk/~vgg/data/voxconverse/" target="_blank">VoxConverse -- Speaker Diarisation in the Wild</a>
+  </li>
+  <li>
+    <span class="source-type dataset">Dataset</span>
+    <a href="https://x-lance.github.io/MSDWILD/" target="_blank">MSDWild -- Multi-Modal Speaker Diarization Dataset in the Wild</a>
+  </li>
+  <li>
+    <span class="source-type toolkit">Toolkit</span>
+    <a href="https://github.com/pyannote/pyannote-audio" target="_blank">pyannote.audio -- Neural Building Blocks for Speaker Diarization</a>
+  </li>
+  <li>
+    <span class="source-type toolkit">Toolkit</span>
+    <a href="https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb" target="_blank">SpeechBrain ECAPA-TDNN Speaker Recognition Model</a>
+  </li>
+  <li>
+    <span class="source-type toolkit">Toolkit</span>
+    <a href="https://github.com/TaoRuijie/TalkNet-ASD" target="_blank">TalkNet-ASD -- Active Speaker Detection (GitHub)</a>
+  </li>
+  <li>
+    <span class="source-type toolkit">Toolkit</span>
+    <a href="https://github.com/wangyz1999/syncnet-speaker-diarization" target="_blank">SyncNet Speaker Diarization (GitHub)</a>
+  </li>
+</ul>
+
+<hr>
+
+<p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center; margin-top: 2rem;">
+  Last updated: March 2026. Generated from research literature through March 2026.
+</p>
+
+</div><!-- .content -->
+</div><!-- .main -->
+
+</div><!-- .layout -->
+
+<script>
+// ===== Dark Mode Toggle =====
+const toggle = document.getElementById('darkToggle');
+const html = document.documentElement;
+
+// Check for saved preference or system preference
+const savedTheme = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+  html.setAttribute('data-theme', 'dark');
+}
+
+toggle.addEventListener('click', () => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+});
+
+// ===== Active Sidebar Link Tracking =====
+const sections = document.querySelectorAll('h2[id], h3[id]');
+const navLinks = document.querySelectorAll('.sidebar-link');
+
+const observerOptions = {
+  rootMargin: '-20% 0px -70% 0px',
+  threshold: 0
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
+
+// ===== Mobile sidebar close on link click =====
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+
+// ===== Initialize Mermaid =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: html.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  themeVariables: {
+    primaryColor: '#7C3AED',
+    primaryTextColor: '#fff',
+    primaryBorderColor: '#5B21B6',
+    lineColor: '#94A3B8',
+    secondaryColor: '#DBEAFE',
+    tertiaryColor: '#D1FAE5'
+  }
+});
+
+// Re-render mermaid on theme change
+toggle.addEventListener('click', () => {
+  setTimeout(() => {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      theme: isDark ? 'dark' : 'default',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+    });
+    document.querySelectorAll('.mermaid').forEach(el => {
+      const svg = el.querySelector('svg');
+      if (svg) svg.remove();
+      el.removeAttribute('data-processed');
+    });
+    mermaid.init(undefined, '.mermaid');
+  }, 100);
+});
+</script>
+
+</body>
+</html>

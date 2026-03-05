@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X-Vector / TDNN for Speaker Identification</title>
+<meta name="description" content="Comprehensive explainer on X-Vector embeddings extracted from Time Delay Neural Networks (TDNNs) for speaker identification and verification, covering architecture, training, and deployment.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-accent: #06B6D4;
+  --color-accent-bg: #ECFEFF;
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-success: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEF2F2;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #1E1046;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #1E1046;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-accent: #22D3EE;
+  --color-accent-bg: #0C2D3E;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #2D2206;
+  --color-success: #34D399;
+  --color-success-bg: #062D1F;
+  --color-danger: #F87171;
+  --color-danger-bg: #2D0A0A;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6, #7C3AED);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== Mobile menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-toggle-track {
+  width: 36px;
+  height: 20px;
+  background: var(--color-border);
+  border-radius: 10px;
+  position: relative;
+  transition: background var(--transition);
+}
+
+[data-theme="dark"] .theme-toggle-track {
+  background: var(--color-primary);
+}
+
+.theme-toggle-thumb {
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] .theme-toggle-thumb {
+  transform: translateX(16px);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+.takeaways li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+.info-box.accent {
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-accent-bg);
+}
+
+.info-box.warning {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.info-box.success {
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.info-box.danger {
+  border-left: 4px solid var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] code {
+  color: var(--color-primary-light);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-wrapper {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-wrapper .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Architecture Diagram (custom) ===== */
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.arch-layer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 700px;
+}
+
+.arch-label {
+  flex-shrink: 0;
+  width: 100px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+.arch-block {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+
+.arch-block.input { background: #475569; }
+.arch-block.frame { background: #2563EB; }
+.arch-block.pool { background: #7C3AED; }
+.arch-block.segment { background: #059669; }
+.arch-block.output { background: #DC2626; }
+.arch-block.extract { background: #D97706; border: 2px dashed #FCD34D; }
+
+.arch-detail {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.85;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.arch-arrow {
+  display: flex;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* ===== Comparison Cards ===== */
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.compare-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  border-top: 3px solid var(--color-primary);
+}
+
+.compare-card h4 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.compare-card ul {
+  margin-bottom: 0;
+  font-size: 0.92rem;
+}
+
+/* ===== Strengths / Weaknesses ===== */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.sw-card {
+  border-radius: 8px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+}
+
+.sw-card.strengths {
+  background: var(--color-success-bg);
+  border-left: 4px solid var(--color-success);
+}
+
+.sw-card.weaknesses {
+  background: var(--color-danger-bg);
+  border-left: 4px solid var(--color-danger);
+}
+
+.sw-card h4 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.sw-card.strengths h4 { color: var(--color-success); }
+.sw-card.weaknesses h4 { color: var(--color-danger); }
+
+.sw-card ul { margin-bottom: 0; font-size: 0.92rem; }
+
+/* ===== Metric Highlights ===== */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.metric-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.45rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.25rem;
+  padding-left: 0.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.6rem;
+  top: 0.55rem;
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.timeline-year {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.timeline-text {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 3.5rem 1.25rem 3rem; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .sw-grid { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .content { padding: 3.5rem 1rem 2rem; }
+  .metrics-row { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu Toggle -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">X-Vector / TDNN</div>
+    <div class="sidebar-subtitle">Speaker Identification Deep Dive</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#introduction" class="sidebar-link">Introduction</a>
+    <a href="#history" class="sidebar-link">Historical Context</a>
+    <a href="#key-concepts" class="sidebar-link">Key Concepts</a>
+
+    <div class="sidebar-nav-section">Architecture</div>
+    <a href="#tdnn-architecture" class="sidebar-link">TDNN Architecture</a>
+    <a href="#temporal-context" class="sidebar-link sub">Temporal Context</a>
+    <a href="#dilation" class="sidebar-link sub">Dilation &amp; Subsampling</a>
+    <a href="#stats-pooling" class="sidebar-link">Statistics Pooling</a>
+    <a href="#xvector-extraction" class="sidebar-link">X-Vector Extraction</a>
+    <a href="#full-pipeline" class="sidebar-link">Full Pipeline Diagram</a>
+
+    <div class="sidebar-nav-section">Training</div>
+    <a href="#training-objective" class="sidebar-link">Training Objective</a>
+    <a href="#data-augmentation" class="sidebar-link">Data Augmentation</a>
+    <a href="#backend-scoring" class="sidebar-link">Backend Scoring</a>
+
+    <div class="sidebar-nav-section">Implementation</div>
+    <a href="#kaldi" class="sidebar-link">Kaldi Implementation</a>
+    <a href="#speechbrain" class="sidebar-link">SpeechBrain</a>
+    <a href="#other-frameworks" class="sidebar-link">Other Frameworks</a>
+
+    <div class="sidebar-nav-section">Evaluation</div>
+    <a href="#benchmarks" class="sidebar-link">Performance Benchmarks</a>
+    <a href="#comparison" class="sidebar-link">vs. i-Vectors &amp; ECAPA-TDNN</a>
+    <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+
+    <div class="sidebar-nav-section">Practical</div>
+    <a href="#deployment" class="sidebar-link">Deployment Considerations</a>
+    <a href="#variants" class="sidebar-link">Variants &amp; Extensions</a>
+    <a href="#sources" class="sidebar-link">Sources</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="theme-toggle" id="themeToggle">
+      <span>Dark mode</span>
+      <div class="theme-toggle-track">
+        <div class="theme-toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Speaker Identification Overview</a>
+
+<h1>X-Vector / TDNN for Speaker Identification</h1>
+<p class="page-subtitle">How Time Delay Neural Networks produce robust speaker embeddings that revolutionized modern speaker recognition systems.</p>
+
+<div class="takeaways">
+  <strong>Key Takeaways</strong>
+  <ul>
+    <li>X-vectors are fixed-dimensional speaker embeddings extracted from a TDNN trained to discriminate speakers with softmax cross-entropy loss.</li>
+    <li>The TDNN captures temporal context through dilated 1D convolutions across multiple frame-level layers, building up to ~15 frames of context.</li>
+    <li>A statistics pooling layer aggregates variable-length frame outputs into a single fixed-size representation by computing mean and standard deviation.</li>
+    <li>Aggressive data augmentation (noise, reverberation, music) is essential to achieving robust performance.</li>
+    <li>X-vectors largely replaced i-vectors as the standard speaker embedding from 2018 onward, and have since been extended by ECAPA-TDNN and other architectures.</li>
+  </ul>
+</div>
+
+<!-- ==================== INTRODUCTION ==================== -->
+<h2 id="introduction">Introduction</h2>
+
+<p>Speaker identification is the task of determining <em>who</em> is speaking from an audio recording. A core challenge is converting a variable-length speech signal into a compact, fixed-dimensional vector -- a <strong>speaker embedding</strong> -- that captures the unique vocal characteristics of a person while being invariant to what they are saying, recording conditions, and background noise.</p>
+
+<p>The <strong>x-vector</strong> system, introduced by David Snyder and colleagues at Johns Hopkins University in 2018, addressed this challenge with a Time Delay Neural Network (TDNN) architecture that processes speech at the frame level, aggregates information across an entire utterance via statistics pooling, and produces a discriminatively-trained embedding. This approach quickly became the dominant paradigm for speaker recognition, replacing the previous generation of i-vector systems and forming the foundation for subsequent advances like ECAPA-TDNN.</p>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">512-d</div>
+    <div class="metric-label">Embedding dimension</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">~4.2M</div>
+    <div class="metric-label">Parameters (standard)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">2018</div>
+    <div class="metric-label">Year introduced</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">~2.8%</div>
+    <div class="metric-label">EER on VoxCeleb1</div>
+  </div>
+</div>
+
+<!-- ==================== HISTORY ==================== -->
+<h2 id="history">Historical Context</h2>
+
+<p>Understanding x-vectors requires context about the evolution of speaker recognition technology. The field progressed through several distinct paradigms over the past three decades:</p>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-year">1990s</div>
+    <div class="timeline-text"><strong>GMM-UBM era</strong> -- Gaussian Mixture Models trained on acoustic features (MFCCs), with a Universal Background Model adapted to individual speakers via MAP adaptation. These systems were effective but required significant enrollment data.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2005-2010</div>
+    <div class="timeline-text"><strong>Joint Factor Analysis &amp; i-vectors</strong> -- Dehak et al. introduced the i-vector framework, which models speaker and channel variability in a single low-dimensional "total variability" space. Combined with PLDA scoring, i-vectors dominated for nearly a decade.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2014-2016</div>
+    <div class="timeline-text"><strong>DNN embeddings (d-vectors)</strong> -- Google and others began extracting speaker embeddings from the last hidden layer of DNNs trained for speaker classification. These early "d-vectors" showed promise but were trained on simpler architectures.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2017-2018</div>
+    <div class="timeline-text"><strong>X-vectors</strong> -- Snyder et al. combined a TDNN architecture with statistics pooling and aggressive data augmentation, producing embeddings that significantly outperformed i-vectors. The system was released as part of the Kaldi toolkit.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-year">2020+</div>
+    <div class="timeline-text"><strong>ECAPA-TDNN &amp; beyond</strong> -- Desplanques et al. (2020) enhanced the TDNN with squeeze-excitation, Res2Net blocks, and multi-layer feature aggregation. ResNet-based and Transformer-based architectures further pushed accuracy.</div>
+  </div>
+</div>
+
+<!-- ==================== KEY CONCEPTS ==================== -->
+<h2 id="key-concepts">Key Concepts</h2>
+
+<h3>What is a TDNN?</h3>
+<p>A <strong>Time Delay Neural Network</strong> is essentially a 1-dimensional convolutional neural network designed for sequential data. Originally proposed by Alex Waibel in 1989 for phoneme recognition, TDNNs apply learned filters across time to capture local temporal patterns. Unlike standard CNNs, TDNNs typically do not use pooling between layers and employ <strong>dilation</strong> (also called subsampling) to efficiently increase the temporal receptive field without increasing computation proportionally.</p>
+
+<h3>What is an X-Vector?</h3>
+<p>An x-vector is the activation extracted from a specific hidden layer of a TDNN that has been trained to classify speakers. The network is trained with a standard softmax cross-entropy objective over thousands of speakers, but after training, we discard the classification layer and instead extract the activations from a segment-level layer (before the nonlinearity) as a fixed-dimensional embedding. This 512-dimensional vector is the "x-vector" -- a compact representation of a speaker's vocal identity.</p>
+
+<div class="info-box accent">
+  <strong>Why "x-vector"?</strong> The name follows the tradition of i-vectors (identity vectors) and d-vectors (DNN vectors). The "x" was chosen to distinguish these TDNN-based embeddings from earlier DNN approaches, representing the next generation of speaker embeddings.
+</div>
+
+<h3>Frame-Level vs. Segment-Level Processing</h3>
+<p>A crucial architectural principle of the x-vector system is the division into two stages:</p>
+<ul>
+  <li><strong>Frame-level layers:</strong> Operate on individual speech frames (typically 25ms windows), learning to extract speaker-discriminative features from the acoustic signal across local temporal contexts.</li>
+  <li><strong>Segment-level layers:</strong> Operate on the entire utterance (or segment) as a single unit, after frame-level features have been aggregated through statistics pooling. These layers compress the aggregated representation into the final embedding.</li>
+</ul>
+
+<!-- ==================== TDNN ARCHITECTURE ==================== -->
+<h2 id="tdnn-architecture">TDNN Architecture</h2>
+
+<p>The standard x-vector TDNN architecture consists of five frame-level layers, a statistics pooling layer, and two segment-level layers, followed by a softmax output layer. Each layer uses ReLU activations and batch normalization.</p>
+
+<h3 id="temporal-context">Temporal Context Windows</h3>
+
+<p>Each frame-level layer operates on a specific temporal context centered at the current frame <em>t</em>. The key innovation is that each layer builds upon the context established by previous layers, creating an expanding receptive field:</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Context</th>
+        <th>Input Dim</th>
+        <th>Output Dim</th>
+        <th>Total Context</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>frame1</strong></td>
+        <td>[t-2, t-1, t, t+1, t+2]</td>
+        <td>120 (5 x 24 filterbanks)</td>
+        <td>512</td>
+        <td>5 frames</td>
+      </tr>
+      <tr>
+        <td><strong>frame2</strong></td>
+        <td>{t-2, t, t+2}</td>
+        <td>1536 (3 x 512)</td>
+        <td>512</td>
+        <td>9 frames</td>
+      </tr>
+      <tr>
+        <td><strong>frame3</strong></td>
+        <td>{t-3, t, t+3}</td>
+        <td>1536 (3 x 512)</td>
+        <td>512</td>
+        <td>15 frames</td>
+      </tr>
+      <tr>
+        <td><strong>frame4</strong></td>
+        <td>{t}</td>
+        <td>512</td>
+        <td>512</td>
+        <td>15 frames</td>
+      </tr>
+      <tr>
+        <td><strong>frame5</strong></td>
+        <td>{t}</td>
+        <td>512</td>
+        <td>1500</td>
+        <td>15 frames</td>
+      </tr>
+      <tr>
+        <td><strong>stats pooling</strong></td>
+        <td>[0, T)</td>
+        <td>1500 x T</td>
+        <td>3000</td>
+        <td>Full utterance</td>
+      </tr>
+      <tr>
+        <td><strong>segment6</strong></td>
+        <td>--</td>
+        <td>3000</td>
+        <td>512</td>
+        <td>--</td>
+      </tr>
+      <tr>
+        <td><strong>segment7</strong></td>
+        <td>--</td>
+        <td>512</td>
+        <td>512</td>
+        <td>--</td>
+      </tr>
+      <tr>
+        <td><strong>softmax</strong></td>
+        <td>--</td>
+        <td>512</td>
+        <td>N speakers</td>
+        <td>--</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Notice how frames 1 through 3 progressively expand the temporal context from 5 to 15 frames (~150ms at a 10ms frame shift). Layers frame4 and frame5 operate only on the current frame without additional temporal splicing, serving as further nonlinear transformations. Layer frame5 expands the dimensionality to 1500 to provide a richer representation before the pooling stage.</p>
+
+<h3 id="dilation">Dilation and Subsampling</h3>
+
+<p>The term <strong>dilation</strong> in TDNN refers to examining non-contiguous frames. Rather than looking at every consecutive frame, dilated layers skip frames and examine positions at regular intervals (e.g., {t-3, t, t+3} instead of {t-3, t-2, t-1, t, t+1, t+2, t+3}). This is computationally identical to a dilated 1D convolution.</p>
+
+<div class="info-box">
+  <strong>Why dilation matters:</strong> By skipping frames, each layer can "see" a wider range of the temporal signal without increasing the number of parameters. This is critical for speaker recognition because speaker-characteristic patterns (formant trajectories, speaking rate, pitch contours) span different timescales. Dilation lets the network efficiently capture both short-term phonetic patterns and longer-term prosodic features.
+</div>
+
+<p>The cumulative effect of stacked dilated layers means that frame3 effectively sees 15 frames of context (approximately 150ms), which is sufficient to capture most of the temporal structure relevant to speaker identity at the frame level. The remaining utterance-level temporal aggregation is handled by the statistics pooling layer.</p>
+
+<!-- Custom Architecture Diagram -->
+<div class="arch-diagram">
+  <div class="arch-layer">
+    <div class="arch-label">Input</div>
+    <div class="arch-block input">
+      24-dim Filterbanks
+      <span class="arch-detail">25ms frames, 10ms shift, 3s mean normalization</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Frame 1</div>
+    <div class="arch-block frame">
+      512-d, context [-2,+2]
+      <span class="arch-detail">5 contiguous frames &rarr; total context: 5</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Frame 2</div>
+    <div class="arch-block frame">
+      512-d, context {t-2, t, t+2}
+      <span class="arch-detail">Dilation=2 &rarr; total context: 9</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Frame 3</div>
+    <div class="arch-block frame">
+      512-d, context {t-3, t, t+3}
+      <span class="arch-detail">Dilation=3 &rarr; total context: 15</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Frame 4</div>
+    <div class="arch-block frame">
+      512-d, context {t}
+      <span class="arch-detail">No dilation &rarr; total context: 15</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Frame 5</div>
+    <div class="arch-block frame">
+      1500-d, context {t}
+      <span class="arch-detail">Dimension expansion for pooling</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Pooling</div>
+    <div class="arch-block pool">
+      Statistics Pooling (mean + std)
+      <span class="arch-detail">1500-d &rarr; 3000-d (aggregate over full utterance)</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Segment 6</div>
+    <div class="arch-block segment">
+      512-d &nbsp; (ReLU + BatchNorm)
+      <span class="arch-detail">Compress to embedding dimension</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">X-Vector</div>
+    <div class="arch-block extract">
+      X-Vector Extracted Here (512-d)
+      <span class="arch-detail">Before nonlinearity at segment6</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Segment 7</div>
+    <div class="arch-block segment">
+      512-d &nbsp; (ReLU + BatchNorm)
+      <span class="arch-detail">Second segment-level layer</span>
+    </div>
+  </div>
+  <div class="arch-arrow">&darr;</div>
+  <div class="arch-layer">
+    <div class="arch-label">Output</div>
+    <div class="arch-block output">
+      Softmax (N speakers)
+      <span class="arch-detail">Classification head (discarded at inference)</span>
+    </div>
+  </div>
+</div>
+<div class="diagram-caption">Figure 1: X-Vector TDNN architecture with layer dimensions, temporal contexts, and extraction point.</div>
+
+<!-- ==================== STATISTICS POOLING ==================== -->
+<h2 id="stats-pooling">Statistics Pooling Layer</h2>
+
+<p>The statistics pooling layer is the bridge between frame-level and segment-level processing. It solves the fundamental problem of converting a variable-length sequence of frame features into a fixed-dimensional representation that can be processed by standard fully-connected layers.</p>
+
+<h3>How It Works</h3>
+
+<p>Given <em>T</em> frame-level outputs from frame5, each of dimension 1500, the statistics pooling layer computes two quantities:</p>
+
+<ol>
+  <li><strong>Mean vector</strong> (1500-d): The temporal average across all T frames, capturing the "central tendency" of the speaker's acoustic characteristics in the utterance.</li>
+  <li><strong>Standard deviation vector</strong> (1500-d): The temporal standard deviation across all T frames, capturing the variability or dynamic range of the speaker's features.</li>
+</ol>
+
+<p>These two vectors are concatenated to form a 3000-dimensional vector that is passed to the segment-level layers.</p>
+
+<pre><code># Pseudocode for statistics pooling
+def statistics_pooling(frame_outputs):
+    # frame_outputs: shape (T, 1500)
+    mean = frame_outputs.mean(dim=0)       # (1500,)
+    std  = frame_outputs.std(dim=0)        # (1500,)
+    return concatenate(mean, std)          # (3000,)
+</code></pre>
+
+<div class="info-box accent">
+  <strong>Why standard deviation matters:</strong> Including the standard deviation is crucial because it captures information about how a speaker's voice varies over time. Two speakers might have similar average formant frequencies but differ in how much their pitch varies, how consistently they articulate consonants, or how much their vocal energy fluctuates. The standard deviation encodes this variability, making the embedding much more discriminative than using the mean alone.
+</div>
+
+<h3>Variants of Pooling</h3>
+
+<p>While the original x-vector used simple temporal statistics pooling, several enhanced variants have been proposed:</p>
+
+<ul>
+  <li><strong>Temporal Average Pooling (TAP):</strong> Uses only the mean vector. Simpler but less effective.</li>
+  <li><strong>Self-Attentive Pooling (SAP):</strong> Learns frame-level attention weights, so that more "informative" frames contribute more to the aggregate. Proposed by Zhu et al. (2018).</li>
+  <li><strong>Attentive Statistics Pooling (ASP):</strong> Combines attention-weighted mean and standard deviation. The attention mechanism helps focus on speaker-discriminative portions of the utterance.</li>
+  <li><strong>Multi-Head Attentive Pooling:</strong> Uses multiple attention heads to capture different aspects of speaker information.</li>
+  <li><strong>Channel-Dependent Attentive Statistics Pooling:</strong> Used in ECAPA-TDNN, applies separate attention per channel dimension for finer-grained aggregation.</li>
+</ul>
+
+<!-- ==================== X-VECTOR EXTRACTION ==================== -->
+<h2 id="xvector-extraction">X-Vector Extraction Process</h2>
+
+<p>The complete process of extracting an x-vector from a speech recording involves several well-defined stages:</p>
+
+<h3>Step 1: Feature Extraction</h3>
+<p>The raw audio waveform is converted to acoustic features. The standard x-vector configuration uses:</p>
+<ul>
+  <li><strong>24-dimensional log filterbank energies</strong> (not MFCCs) computed over 25ms frames with a 10ms frame shift</li>
+  <li><strong>Sliding-window mean normalization</strong> over a 3-second window to reduce channel effects</li>
+  <li>No delta or acceleration features -- the TDNN learns temporal dynamics directly</li>
+</ul>
+
+<h3>Step 2: Voice Activity Detection (VAD)</h3>
+<p>Non-speech frames are removed using an energy-based VAD. Only frames containing actual speech are passed to the TDNN, ensuring the embedding captures speaker characteristics rather than silence or background noise patterns.</p>
+
+<h3>Step 3: Forward Pass Through TDNN</h3>
+<p>The filtered speech frames are processed through the five frame-level layers, each progressively building temporal context. The output of frame5 is a sequence of 1500-dimensional feature vectors, one per speech frame.</p>
+
+<h3>Step 4: Statistics Pooling</h3>
+<p>The frame-level outputs are aggregated into a single 3000-dimensional vector by computing the mean and standard deviation across all frames.</p>
+
+<h3>Step 5: Embedding Extraction</h3>
+<p>The 3000-dimensional pooled vector passes through segment6 (a 512-dimensional affine transformation). The output of this layer, <strong>before the ReLU nonlinearity</strong>, is extracted as the x-vector. This is a critical detail -- extracting before the nonlinearity preserves the full range of the representation, including negative values that carry speaker information.</p>
+
+<h3>Step 6: Post-Processing</h3>
+<p>Before scoring, x-vectors typically undergo:</p>
+<ul>
+  <li><strong>Length normalization:</strong> Projecting vectors onto the unit hypersphere to reduce the influence of utterance duration on the embedding magnitude.</li>
+  <li><strong>Centering:</strong> Subtracting the global mean x-vector to remove dataset-level bias.</li>
+  <li><strong>LDA projection:</strong> Linear Discriminant Analysis to reduce dimensionality (e.g., from 512 to 150-200) while maximizing speaker discrimination.</li>
+</ul>
+
+<h2 id="full-pipeline">Full Pipeline Diagram</h2>
+
+<div class="diagram-wrapper">
+  <div class="mermaid">
+graph LR
+    A["Raw Audio<br/>Waveform"] --> B["Feature Extraction<br/>24-dim filterbanks"]
+    B --> C["VAD<br/>Remove silence"]
+    C --> D["TDNN<br/>Frame-level layers<br/>(5 layers)"]
+    D --> E["Statistics Pooling<br/>mean + std<br/>(3000-d)"]
+    E --> F["Segment Layers<br/>FC layers"]
+    F --> G["X-Vector<br/>512-d embedding"]
+    G --> H["Post-Processing<br/>LDA + length norm"]
+    H --> I["Backend Scoring<br/>PLDA / Cosine"]
+    I --> J["Decision<br/>Accept / Reject"]
+
+    style A fill:#475569,color:#fff,stroke:none
+    style B fill:#475569,color:#fff,stroke:none
+    style C fill:#475569,color:#fff,stroke:none
+    style D fill:#2563EB,color:#fff,stroke:none
+    style E fill:#7C3AED,color:#fff,stroke:none
+    style F fill:#059669,color:#fff,stroke:none
+    style G fill:#D97706,color:#fff,stroke:none
+    style H fill:#475569,color:#fff,stroke:none
+    style I fill:#DC2626,color:#fff,stroke:none
+    style J fill:#DC2626,color:#fff,stroke:none
+  </div>
+  <div class="diagram-caption">Figure 2: End-to-end x-vector speaker verification pipeline, from raw audio to accept/reject decision.</div>
+</div>
+
+<!-- ==================== TRAINING ==================== -->
+<h2 id="training-objective">Training Objective</h2>
+
+<p>The x-vector TDNN is trained as a multi-class classifier. During training, each speaker in the training set is treated as a separate class, and the network learns to predict which speaker produced each utterance using a standard <strong>softmax cross-entropy loss</strong>:</p>
+
+<pre><code>L = -log( exp(W_y * h + b_y) / sum_j( exp(W_j * h + b_j) ) )</code></pre>
+
+<p>where <em>h</em> is the segment-level representation, <em>W_y</em> and <em>b_y</em> are the weight and bias for the correct speaker class <em>y</em>, and the sum is over all training speakers.</p>
+
+<div class="info-box">
+  <strong>Training vs. inference:</strong> During training, the network classifies speakers into a fixed set (e.g., 7,185 speakers in the Kaldi VoxCeleb recipe). At inference time, the softmax layer is discarded entirely, and embeddings are extracted from a hidden layer. The network never needs to have seen the test speakers during training -- the learned representation generalizes to novel speakers.
+</div>
+
+<h3>Training Data Segments</h3>
+<p>Training segments are randomly cropped from full utterances, typically between 2-4 seconds long. This teaches the network to produce useful embeddings from short speech segments, which is critical for real-world applications where only brief speech samples may be available.</p>
+
+<h3>Large-Scale Training</h3>
+<p>X-vector systems benefit enormously from large training sets. The original system used data from NIST SRE datasets and Switchboard combined with augmentation, totaling thousands of hours. More recent systems trained on VoxCeleb 1+2 use over 2,400 hours from over 7,000 speakers collected from YouTube interviews.</p>
+
+<!-- ==================== DATA AUGMENTATION ==================== -->
+<h2 id="data-augmentation">Data Augmentation</h2>
+
+<p>Data augmentation is arguably the single most important factor in x-vector performance. The original paper demonstrated that augmentation was essential for the x-vector system to outperform i-vectors. Without augmentation, the advantage was minimal; with augmentation, x-vectors significantly surpassed i-vectors.</p>
+
+<h3>Augmentation Strategy</h3>
+
+<p>The standard augmentation pipeline multiplies the training data, typically creating a 3-fold or 5-fold augmented version by combining the original "clean" data with multiple augmented copies:</p>
+
+<h4>Additive Noise (MUSAN dataset)</h4>
+<ul>
+  <li><strong>Babble noise:</strong> 3-7 speakers randomly selected from the MUSAN speech corpus, mixed at 13-20 dB SNR to simulate crowded environments</li>
+  <li><strong>Music:</strong> Random music tracks from MUSAN (42 hours of music from various genres), mixed at 5-15 dB SNR</li>
+  <li><strong>General noise:</strong> Over 900 noise clips from MUSAN (ambient sounds, clicks, etc.), added at 0-15 dB SNR at 1-second intervals</li>
+</ul>
+
+<h4>Reverberation (RIR datasets)</h4>
+<ul>
+  <li>Convolution with simulated and real <strong>Room Impulse Responses (RIRs)</strong> to simulate different acoustic environments</li>
+  <li>Uses the OpenSLR RIR dataset containing thousands of simulated room configurations</li>
+  <li>Simulates small rooms, large halls, offices, and other realistic acoustic spaces</li>
+</ul>
+
+<h4>Speed Perturbation</h4>
+<ul>
+  <li>Playback speed modified by factors of 0.9 and 1.1</li>
+  <li>Effectively creates new "speakers" with slightly different pitch and speaking rate</li>
+  <li>Particularly useful for increasing speaker count in the training set</li>
+</ul>
+
+<div class="info-box warning">
+  <strong>Augmentation is not optional:</strong> The original x-vector paper showed that without data augmentation, the system performed only marginally better than i-vectors. Augmentation is what enables the TDNN to learn noise-robust, channel-invariant speaker representations. Both MUSAN and the RIR datasets are freely available from <a href="http://www.openslr.org">OpenSLR</a>.
+</div>
+
+<!-- ==================== BACKEND SCORING ==================== -->
+<h2 id="backend-scoring">Backend Scoring</h2>
+
+<p>After x-vectors are extracted, a backend scoring system computes the similarity between pairs of embeddings to make verification or identification decisions.</p>
+
+<h3>PLDA (Probabilistic Linear Discriminant Analysis)</h3>
+<p>PLDA is the traditional backend for x-vectors, inherited from the i-vector era. It models the distribution of x-vectors as a generative model with speaker-specific and channel-specific latent factors:</p>
+<ul>
+  <li>Learns to separate speaker variability from nuisance variability (channel, noise, session effects)</li>
+  <li>Outputs a log-likelihood ratio: how much more likely the two x-vectors come from the same speaker vs. different speakers</li>
+  <li>Typically preceded by LDA dimensionality reduction (e.g., 512 to 150 dimensions)</li>
+  <li>The standard Kaldi recipe uses Gaussian PLDA (G-PLDA) with ~150 latent dimensions</li>
+</ul>
+
+<h3>Cosine Similarity</h3>
+<p>A simpler alternative that directly computes the cosine of the angle between two x-vectors:</p>
+<pre><code>score = (x1 . x2) / (||x1|| * ||x2||)</code></pre>
+<p>Recent research has shown that for embeddings trained with large-margin losses (AAM-Softmax, etc.), cosine similarity can perform as well as or better than PLDA, since the training loss already encourages compact intra-speaker clusters and large inter-speaker margins. Cosine scoring is mathematically a special case of PLDA with identity covariance matrices.</p>
+
+<h3>Score Normalization</h3>
+<p>Scores are often normalized to improve calibration. Common techniques include:</p>
+<ul>
+  <li><strong>Adaptive S-Norm:</strong> Normalizes scores against a cohort of impostor models, reducing the effect of speaker-specific score distributions</li>
+  <li><strong>Z-Norm / T-Norm:</strong> Earlier normalization techniques using zero and test cohorts</li>
+</ul>
+
+<!-- ==================== KALDI ==================== -->
+<h2 id="kaldi">Kaldi Implementation</h2>
+
+<p><a href="https://kaldi-asr.org/">Kaldi</a> is the toolkit in which x-vectors were originally developed and released. The Kaldi x-vector recipes are considered the reference implementation and have been extensively tested in NIST evaluations.</p>
+
+<h3>Key Recipes</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Recipe</th>
+        <th>Location</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SRE16 v2</strong></td>
+        <td><code>egs/sre16/v2</code></td>
+        <td>Original x-vector recipe for NIST SRE evaluation. Trains on SRE + Switchboard + Mixer 6.</td>
+      </tr>
+      <tr>
+        <td><strong>VoxCeleb v2</strong></td>
+        <td><code>egs/voxceleb/v2</code></td>
+        <td>X-vector recipe trained on VoxCeleb 1 &amp; 2. Most commonly used community benchmark.</td>
+      </tr>
+      <tr>
+        <td><strong>CallHome</strong></td>
+        <td><code>egs/callhome_diarization/v2</code></td>
+        <td>X-vectors applied to speaker diarization (who spoke when).</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Kaldi Pipeline Steps</h3>
+<pre><code># Typical Kaldi x-vector recipe pipeline
+# 1. Data preparation
+local/make_voxceleb1.pl $data_dir
+local/make_voxceleb2.pl $data_dir
+
+# 2. Feature extraction (24-dim filterbanks)
+steps/make_fbank.sh --fbank-config conf/fbank.conf
+utils/fix_data_dir.sh data/train
+
+# 3. Data augmentation (MUSAN + RIR)
+steps/data/make_musan.sh /path/to/musan data/musan
+steps/data/reverberate_data_dir.py
+
+# 4. VAD (energy-based voice activity detection)
+sid/compute_vad_decision.sh
+
+# 5. Train x-vector TDNN
+local/nnet3/xvector/run_xvector.sh
+
+# 6. Extract x-vectors
+sid/nnet3/xvector/extract_xvectors.sh
+
+# 7. Train PLDA backend
+ivector/compute_mean.sh  # center x-vectors
+ivector/lda.sh           # LDA dimensionality reduction
+ivector/train_plda.sh    # train PLDA model
+
+# 8. Score and evaluate
+ivector/plda_scoring.sh
+local/score_sre16.sh</code></pre>
+
+<div class="info-box">
+  <strong>Pre-trained models:</strong> Kaldi provides pre-trained x-vector models and PLDA backends that can be downloaded directly. The model trained on augmented VoxCeleb data is available from the <a href="https://kaldi-asr.org/models/m3">Kaldi model repository</a> and can be used for extraction without retraining.
+</div>
+
+<!-- ==================== SPEECHBRAIN ==================== -->
+<h2 id="speechbrain">SpeechBrain</h2>
+
+<p><a href="https://speechbrain.github.io/">SpeechBrain</a> is a modern, PyTorch-based toolkit that provides user-friendly implementations of x-vector and ECAPA-TDNN models with pre-trained weights available on Hugging Face.</p>
+
+<h3>Using Pre-Trained X-Vectors</h3>
+<pre><code>from speechbrain.pretrained import EncoderClassifier
+
+# Load pre-trained x-vector model
+classifier = EncoderClassifier.from_hparams(
+    source="speechbrain/spkrec-xvect-voxceleb",
+    savedir="pretrained_models/spkrec-xvect-voxceleb"
+)
+
+# Extract x-vector from audio file
+signal = classifier.load_audio("speaker_audio.wav")
+embedding = classifier.encode_batch(signal)
+# embedding shape: (1, 1, 512)
+
+# Compare two speakers
+emb1 = classifier.encode_batch(classifier.load_audio("spk1.wav"))
+emb2 = classifier.encode_batch(classifier.load_audio("spk2.wav"))
+similarity = torch.nn.functional.cosine_similarity(
+    emb1.squeeze(), emb2.squeeze(), dim=0
+)</code></pre>
+
+<h3>SpeechBrain vs. Kaldi</h3>
+<div class="compare-grid">
+  <div class="compare-card">
+    <h4>Kaldi</h4>
+    <ul>
+      <li>Reference implementation</li>
+      <li>C++/Bash-based toolkit</li>
+      <li>Highly optimized for production</li>
+      <li>Steep learning curve</li>
+      <li>Recipe-based workflow</li>
+      <li>Excellent documentation for experts</li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4>SpeechBrain</h4>
+    <ul>
+      <li>PyTorch-native</li>
+      <li>Python-first API</li>
+      <li>Easy Hugging Face integration</li>
+      <li>Rapid prototyping</li>
+      <li>YAML configuration system</li>
+      <li>Better for research iteration</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== OTHER FRAMEWORKS ==================== -->
+<h2 id="other-frameworks">Other Frameworks</h2>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Framework</th>
+        <th>Language</th>
+        <th>X-Vector Support</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>NVIDIA NeMo</strong></td>
+        <td>Python/PyTorch</td>
+        <td>ECAPA-TDNN, TitaNet</td>
+        <td>GPU-optimized, production-ready pipelines</td>
+      </tr>
+      <tr>
+        <td><strong>Wespeaker</strong></td>
+        <td>Python/PyTorch</td>
+        <td>TDNN, ECAPA-TDNN, ResNet</td>
+        <td>From WeNet team, strong community</td>
+      </tr>
+      <tr>
+        <td><strong>PyAnnote</strong></td>
+        <td>Python/PyTorch</td>
+        <td>X-vector/ECAPA-based</td>
+        <td>Focused on speaker diarization</td>
+      </tr>
+      <tr>
+        <td><strong>MATLAB Audio Toolbox</strong></td>
+        <td>MATLAB</td>
+        <td>X-vector recipe</td>
+        <td>Good for educational/prototyping use</td>
+      </tr>
+      <tr>
+        <td><strong>TensorFlow (BUTSpeechFIT)</strong></td>
+        <td>Python/TF</td>
+        <td>X-vector TDNN</td>
+        <td>TF implementation of Kaldi topology</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== BENCHMARKS ==================== -->
+<h2 id="benchmarks">Performance Benchmarks</h2>
+
+<p>Performance is typically measured by <strong>Equal Error Rate (EER)</strong> -- the operating point where the false acceptance rate equals the false rejection rate -- and <strong>minimum Detection Cost Function (minDCF)</strong>, which weights errors according to application-specific priors.</p>
+
+<h3>VoxCeleb Benchmarks</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Training Data</th>
+        <th>Vox1-O EER (%)</th>
+        <th>Vox1-E EER (%)</th>
+        <th>Vox1-H EER (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>i-vector + PLDA</td>
+        <td>VoxCeleb2</td>
+        <td>5.30</td>
+        <td>5.10</td>
+        <td>8.70</td>
+      </tr>
+      <tr>
+        <td><strong>X-vector TDNN + PLDA</strong></td>
+        <td>VoxCeleb2</td>
+        <td>2.82</td>
+        <td>3.04</td>
+        <td>5.24</td>
+      </tr>
+      <tr>
+        <td>Extended TDNN (E-TDNN)</td>
+        <td>VoxCeleb2</td>
+        <td>2.29</td>
+        <td>2.56</td>
+        <td>4.39</td>
+      </tr>
+      <tr>
+        <td>ResNet-34</td>
+        <td>VoxCeleb2</td>
+        <td>1.19</td>
+        <td>1.33</td>
+        <td>2.41</td>
+      </tr>
+      <tr>
+        <td><strong>ECAPA-TDNN (C=1024)</strong></td>
+        <td>VoxCeleb2</td>
+        <td>0.87</td>
+        <td>1.12</td>
+        <td>2.12</td>
+      </tr>
+      <tr>
+        <td>ECAPA-TDNN (unofficial)</td>
+        <td>VoxCeleb2</td>
+        <td>0.86</td>
+        <td>--</td>
+        <td>--</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p><em>Vox1-O: Original test set. Vox1-E: Extended test set. Vox1-H: Hard test set (same nationality pairs).</em></p>
+
+<h3>NIST SRE Benchmarks</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Evaluation</th>
+        <th>EER (%)</th>
+        <th>Scoring</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>i-vector + PLDA</td>
+        <td>SRE16 (Cantonese)</td>
+        <td>8.67</td>
+        <td>PLDA</td>
+      </tr>
+      <tr>
+        <td><strong>X-vector + PLDA</strong></td>
+        <td>SRE16 (Cantonese)</td>
+        <td>5.75</td>
+        <td>PLDA</td>
+      </tr>
+      <tr>
+        <td>X-vector + augmentation + PLDA</td>
+        <td>SRE16 (Cantonese)</td>
+        <td>4.37</td>
+        <td>PLDA</td>
+      </tr>
+      <tr>
+        <td>X-vector NIST baseline</td>
+        <td>SRE CTS Superset</td>
+        <td>4.74</td>
+        <td>Cosine</td>
+      </tr>
+      <tr>
+        <td>X-vector NIST baseline</td>
+        <td>SRE CTS Superset</td>
+        <td>4.67</td>
+        <td>PLDA</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="info-box accent">
+  <strong>Impact of augmentation on NIST SRE16:</strong> The x-vector system without augmentation achieved 8.00% EER on SRE16 Cantonese -- barely better than i-vectors at 8.67%. With augmentation, the same architecture dropped to 5.75%, and adding microphone augmented data further reduced it to 4.37%. This ~45% relative improvement from augmentation alone underscores its critical importance.
+</div>
+
+<!-- ==================== COMPARISON ==================== -->
+<h2 id="comparison">Comparison: i-Vectors, X-Vectors, and ECAPA-TDNN</h2>
+
+<h3>X-Vectors vs. i-Vectors</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>i-Vector</th>
+        <th>X-Vector</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Approach</strong></td>
+        <td>Generative (GMM-based factor analysis)</td>
+        <td>Discriminative (DNN classification)</td>
+      </tr>
+      <tr>
+        <td><strong>Feature extraction</strong></td>
+        <td>MFCCs + deltas (60-d)</td>
+        <td>Filterbanks (24-d)</td>
+      </tr>
+      <tr>
+        <td><strong>Temporal modeling</strong></td>
+        <td>GMM sufficient statistics (global)</td>
+        <td>TDNN frame layers + statistics pooling</td>
+      </tr>
+      <tr>
+        <td><strong>Training data</strong></td>
+        <td>~1,000 hours ideal</td>
+        <td>~10,000+ hours ideal</td>
+      </tr>
+      <tr>
+        <td><strong>Speaker/channel separation</strong></td>
+        <td>Requires PLDA or LDA to separate</td>
+        <td>Learned implicitly during training</td>
+      </tr>
+      <tr>
+        <td><strong>Augmentation benefit</strong></td>
+        <td>Moderate</td>
+        <td>Critical (45%+ relative improvement)</td>
+      </tr>
+      <tr>
+        <td><strong>Short utterances</strong></td>
+        <td>Degrades significantly (&lt;5s)</td>
+        <td>More robust for short segments</td>
+      </tr>
+      <tr>
+        <td><strong>Computational cost</strong></td>
+        <td>Expensive UBM training, fast extraction</td>
+        <td>Expensive DNN training, fast extraction</td>
+      </tr>
+      <tr>
+        <td><strong>Typical dimension</strong></td>
+        <td>400-600</td>
+        <td>512</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>X-Vectors vs. ECAPA-TDNN</h3>
+
+<p>ECAPA-TDNN (Emphasized Channel Attention, Propagation and Aggregation in TDNN) was proposed by Desplanques et al. at Interspeech 2020. It builds directly on the x-vector TDNN but introduces several architectural improvements:</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Enhancement</th>
+        <th>X-Vector TDNN</th>
+        <th>ECAPA-TDNN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Residual connections</strong></td>
+        <td>None</td>
+        <td>Res2Net-style multi-scale residual blocks</td>
+      </tr>
+      <tr>
+        <td><strong>Channel attention</strong></td>
+        <td>None</td>
+        <td>Squeeze-Excitation (SE) blocks per frame layer</td>
+      </tr>
+      <tr>
+        <td><strong>Feature aggregation</strong></td>
+        <td>Single layer output to pooling</td>
+        <td>Multi-layer feature aggregation (MFA)</td>
+      </tr>
+      <tr>
+        <td><strong>Pooling</strong></td>
+        <td>Simple mean + std</td>
+        <td>Channel-dependent attentive statistics pooling</td>
+      </tr>
+      <tr>
+        <td><strong>Temporal context</strong></td>
+        <td>15 frames (~150ms)</td>
+        <td>Much larger through dense connections + SE global context</td>
+      </tr>
+      <tr>
+        <td><strong>Vox1-O EER</strong></td>
+        <td>~2.8%</td>
+        <td>~0.87%</td>
+      </tr>
+      <tr>
+        <td><strong>Parameters</strong></td>
+        <td>~4.2M</td>
+        <td>~6.2M (C=512) / ~14.7M (C=1024)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="diagram-wrapper">
+  <div class="mermaid">
+graph TD
+    subgraph XVector["X-Vector TDNN"]
+        X1["Frame layers<br/>(simple TDNN)"] --> X2["Statistics<br/>Pooling"]
+        X2 --> X3["Segment<br/>layers"]
+        X3 --> X4["512-d<br/>X-Vector"]
+    end
+
+    subgraph ECAPA["ECAPA-TDNN"]
+        E1["SE-Res2Net<br/>Blocks"] --> E2["Multi-Layer<br/>Feature Aggregation"]
+        E2 --> E3["Channel-Dep.<br/>Attentive Pooling"]
+        E3 --> E4["192-d<br/>Embedding"]
+        E1 --> E2
+    end
+
+    subgraph iVector["i-Vector System"]
+        I1["UBM +<br/>Total Variability"] --> I2["i-Vector<br/>Extraction"]
+        I2 --> I3["LDA +<br/>PLDA"]
+        I3 --> I4["400-d<br/>i-Vector"]
+    end
+
+    style XVector fill:#2563EB10,stroke:#2563EB,color:var(--color-text)
+    style ECAPA fill:#7C3AED10,stroke:#7C3AED,color:var(--color-text)
+    style iVector fill:#D9770610,stroke:#D97706,color:var(--color-text)
+  </div>
+  <div class="diagram-caption">Figure 3: Architectural comparison of i-vector, x-vector, and ECAPA-TDNN systems.</div>
+</div>
+
+<!-- ==================== STRENGTHS & WEAKNESSES ==================== -->
+<h2 id="strengths-weaknesses">Strengths and Weaknesses</h2>
+
+<div class="sw-grid">
+  <div class="sw-card strengths">
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Robust to noise:</strong> With augmentation, x-vectors handle noisy, reverberant audio far better than i-vectors</li>
+      <li><strong>Short utterance performance:</strong> Effective even with 2-3 second segments, unlike i-vectors which degrade rapidly below 5 seconds</li>
+      <li><strong>Scalable training:</strong> Benefits from large-scale datasets; performance improves steadily with more training data and speakers</li>
+      <li><strong>Fast extraction:</strong> Once trained, a forward pass through the TDNN is computationally cheap, suitable for real-time applications</li>
+      <li><strong>Well-supported:</strong> Reference implementations in Kaldi and SpeechBrain with pre-trained models freely available</li>
+      <li><strong>Flexible backend:</strong> Works with PLDA, cosine similarity, or learned scoring functions</li>
+      <li><strong>Proven at scale:</strong> Tested in NIST SRE evaluations, deployed in commercial systems worldwide</li>
+    </ul>
+  </div>
+  <div class="sw-card weaknesses">
+    <h4>Weaknesses</h4>
+    <ul>
+      <li><strong>Data hungry:</strong> Requires ~10,000+ hours of labeled speaker data for optimal performance; much more than i-vectors (~1,000 hours)</li>
+      <li><strong>Limited temporal context:</strong> The standard architecture sees only ~15 frames locally; ECAPA-TDNN and attention-based models capture broader context</li>
+      <li><strong>No channel attention:</strong> Treats all feature channels equally; ECAPA-TDNN showed significant gains from channel-wise recalibration</li>
+      <li><strong>Single-layer aggregation:</strong> Only uses the last frame layer for pooling; multi-layer feature aggregation (ECAPA) captures richer information</li>
+      <li><strong>Surpassed by newer architectures:</strong> ECAPA-TDNN achieves ~3x lower EER on VoxCeleb; ResNets and Transformers are also superior</li>
+      <li><strong>Static pooling:</strong> Mean+std pooling treats all frames equally; attentive pooling methods better handle variable-quality speech</li>
+      <li><strong>Domain mismatch:</strong> Performance degrades when training and test domains differ significantly (e.g., telephony model on microphone speech)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== DEPLOYMENT ==================== -->
+<h2 id="deployment">Deployment Considerations</h2>
+
+<h3>Model Size and Latency</h3>
+<p>The standard x-vector TDNN is relatively lightweight compared to modern deep learning models:</p>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">~4.2M</div>
+    <div class="metric-label">Parameters</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">~17 MB</div>
+    <div class="metric-label">Model size (FP32)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">&lt;50ms</div>
+    <div class="metric-label">Extraction latency (GPU)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">512</div>
+    <div class="metric-label">Embedding dimensions</div>
+  </div>
+</div>
+
+<h3>Practical Deployment Checklist</h3>
+<ul>
+  <li><strong>Enrollment:</strong> Collect 10-30 seconds of clean enrollment speech per speaker. Multiple enrollment utterances improve robustness. Compute and store the average x-vector.</li>
+  <li><strong>Threshold tuning:</strong> The decision threshold must be calibrated for the target application. Security applications require a lower FAR (higher threshold); convenience applications tolerate higher FAR for lower FRR.</li>
+  <li><strong>Domain matching:</strong> Train or fine-tune on data matching the deployment domain (telephony, microphone, far-field, etc.). Domain mismatch is the most common cause of poor real-world performance.</li>
+  <li><strong>VAD quality:</strong> Poor voice activity detection directly degrades embedding quality. Invest in robust VAD, especially for noisy environments.</li>
+  <li><strong>Embedding storage:</strong> Each speaker requires only a 512-dimensional float vector (2 KB). A database of 1 million speakers requires only ~2 GB of embedding storage.</li>
+  <li><strong>Quantization:</strong> X-vector models can be quantized to INT8 with minimal accuracy loss, reducing model size by ~4x and improving inference speed on edge devices.</li>
+  <li><strong>Score normalization:</strong> Always apply adaptive s-norm in production to reduce score variability across different speakers and conditions.</li>
+</ul>
+
+<h3>Use Cases</h3>
+<div class="compare-grid">
+  <div class="compare-card">
+    <h4>Speaker Verification</h4>
+    <ul>
+      <li>Voice biometric authentication</li>
+      <li>Phone banking security</li>
+      <li>Smart home personalization</li>
+      <li>Access control systems</li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4>Speaker Identification</h4>
+    <ul>
+      <li>Meeting transcription (who said what)</li>
+      <li>Media indexing and search</li>
+      <li>Forensic speaker analysis</li>
+      <li>Call center analytics</li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4>Speaker Diarization</h4>
+    <ul>
+      <li>Multi-speaker segmentation</li>
+      <li>Podcast/interview processing</li>
+      <li>Court transcription</li>
+      <li>Medical dictation separation</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== VARIANTS ==================== -->
+<h2 id="variants">Variants and Extensions</h2>
+
+<p>The original x-vector architecture has spawned numerous variants, each addressing specific limitations:</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Variant</th>
+        <th>Key Innovation</th>
+        <th>Improvement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Extended TDNN (E-TDNN)</strong></td>
+        <td>Interleaved dense layers with wider context, skip connections</td>
+        <td>~18% relative EER reduction over standard TDNN</td>
+      </tr>
+      <tr>
+        <td><strong>Factorized TDNN (F-TDNN)</strong></td>
+        <td>Factorizes weight matrices into low-rank products, reducing parameters</td>
+        <td>Similar accuracy with ~50% fewer parameters</td>
+      </tr>
+      <tr>
+        <td><strong>ECAPA-TDNN</strong></td>
+        <td>SE blocks, Res2Net, MFA, channel-dependent attention pooling</td>
+        <td>~70% relative EER reduction (0.87% vs 2.82%)</td>
+      </tr>
+      <tr>
+        <td><strong>D-TDNN</strong></td>
+        <td>Dense connections between all layers (DenseNet-style)</td>
+        <td>Better feature reuse, improved short-utterance performance</td>
+      </tr>
+      <tr>
+        <td><strong>Crossed-TDNN (CT-DNN)</strong></td>
+        <td>Cross-attention between parallel TDNN branches</td>
+        <td>Better multi-scale temporal modeling</td>
+      </tr>
+      <tr>
+        <td><strong>DS-TDNN</strong></td>
+        <td>Dual-stream with global-aware filter</td>
+        <td>Captures both local and global temporal patterns simultaneously</td>
+      </tr>
+      <tr>
+        <td><strong>Xi-Vector</strong></td>
+        <td>Hierarchical pooling with multi-resolution aggregation</td>
+        <td>Better long-utterance utilization</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Training Loss Improvements</h3>
+<p>The original softmax cross-entropy has been largely replaced by large-margin losses:</p>
+<ul>
+  <li><strong>Additive Margin Softmax (AM-Softmax / CosFace):</strong> Adds a cosine margin to the softmax, encouraging more compact speaker clusters.</li>
+  <li><strong>Additive Angular Margin (AAM-Softmax / ArcFace):</strong> The most popular variant; adds an angular margin directly to the target angle, producing more discriminative embeddings. Used in most modern systems.</li>
+  <li><strong>Sub-center ArcFace:</strong> Allows multiple sub-centers per class to handle intra-speaker variability.</li>
+</ul>
+
+<!-- ==================== SOURCES ==================== -->
+<h2 id="sources">Sources and References</h2>
+
+<h3>Primary Papers</h3>
+<ol>
+  <li>Snyder, D., Garcia-Romero, D., Sell, G., Povey, D., &amp; Khudanpur, S. (2018). <a href="https://www.danielpovey.com/files/2018_icassp_xvectors.pdf">"X-Vectors: Robust DNN Embeddings for Speaker Recognition."</a> <em>IEEE ICASSP 2018</em>.</li>
+  <li>Snyder, D., Garcia-Romero, D., Sell, G., McCree, A., Povey, D., &amp; Khudanpur, S. (2019). <a href="https://www.danielpovey.com/files/2019_icassp_multi_speaker.pdf">"Speaker Recognition for Multi-Speaker Conversations Using X-Vectors."</a> <em>IEEE ICASSP 2019</em>.</li>
+  <li>Desplanques, B., Thienpondt, J., &amp; Demuynck, K. (2020). <a href="https://arxiv.org/abs/2005.07143">"ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification."</a> <em>Interspeech 2020</em>.</li>
+  <li>Snyder, D., Garcia-Romero, D., Povey, D., &amp; Khudanpur, S. (2017). <a href="https://danielpovey.com/files/2017_icassp_reverberation.pdf">"A Study on Data Augmentation of Reverberant Speech for Robust Speech Recognition."</a> <em>IEEE ICASSP 2017</em>.</li>
+</ol>
+
+<h3>Toolkits and Implementations</h3>
+<ul>
+  <li><a href="https://kaldi-asr.org/models/m3">Kaldi X-Vector Pre-Trained Model</a></li>
+  <li><a href="https://github.com/kaldi-asr/kaldi/tree/master/egs/sre16/v1">Kaldi SRE16 X-Vector Recipe</a></li>
+  <li><a href="https://david-ryan-snyder.github.io/2017/10/04/model_sre16_v2.html">NIST SRE 2016 X-Vector Recipe (David Snyder)</a></li>
+  <li><a href="https://speechbrain.github.io/">SpeechBrain Toolkit</a></li>
+  <li><a href="https://huggingface.co/speechbrain/spkrec-xvect-voxceleb">SpeechBrain X-Vector Model (Hugging Face)</a></li>
+  <li><a href="https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb">SpeechBrain ECAPA-TDNN Model (Hugging Face)</a></li>
+  <li><a href="https://github.com/TaoRuijie/ECAPA-TDNN">Unofficial ECAPA-TDNN PyTorch Implementation</a></li>
+  <li><a href="https://github.com/BUTSpeechFIT/x-vector-kaldi-tf">TensorFlow X-Vector Implementation (BUTSpeechFIT)</a></li>
+</ul>
+
+<h3>Datasets</h3>
+<ul>
+  <li><a href="https://www.robots.ox.ac.uk/~vgg/data/voxceleb/">VoxCeleb 1 &amp; 2</a> -- Large-scale speaker recognition dataset from YouTube</li>
+  <li><a href="http://www.openslr.org/17/">MUSAN</a> -- Music, Speech, and Noise corpus for data augmentation</li>
+  <li><a href="http://www.openslr.org/28/">Room Impulse Response (RIR) Dataset</a> -- Simulated RIRs for reverberation augmentation</li>
+  <li><a href="https://www.nist.gov/itl/iad/mig/speaker-recognition">NIST Speaker Recognition Evaluations</a> -- Standard evaluation benchmarks</li>
+</ul>
+
+<h3>Further Reading</h3>
+<ul>
+  <li><a href="https://desh2608.github.io/2022-04-07-gbo-ivectors/">GBO Notes: i-Vectors and X-Vectors</a> -- Accessible tutorial on both frameworks</li>
+  <li><a href="https://maelfabien.github.io/signal/kaldi2/">Kaldi for Speaker Verification</a> -- Step-by-step Kaldi x-vector walkthrough</li>
+  <li><a href="https://tusharnema.medium.com/x-vectors-vs-i-vectors-63d4babf00ce">X-Vectors vs. I-Vectors (Medium)</a> -- Concise comparison article</li>
+  <li><a href="https://gotranscript.com/public/understanding-i-vectors-and-x-vectors-in-speaker-recognition">Understanding I-Vectors and X-Vectors in Speaker Recognition</a></li>
+  <li><a href="https://huggingface.co/blog/norwooodsystems/ecapa-vs-xvector-speaker-recognition-comparison">ECAPA vs X-Vector: SpeechBrain Comparison</a></li>
+  <li><a href="https://arxiv.org/abs/2204.10523">Unifying Cosine and PLDA Back-ends for Speaker Verification</a></li>
+</ul>
+
+<div class="page-footer">
+  <p>X-Vector / TDNN for Speaker Identification &mdash; A comprehensive technical explainer.</p>
+  <p>Last updated: March 2026</p>
+</div>
+
+</div>
+</main>
+
+</div><!-- .layout -->
+
+<script>
+// ===== Dark Mode Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+function setTheme(dark) {
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+}
+
+// Init from localStorage or system preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  setTheme(savedTheme === 'dark');
+} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  setTheme(true);
+}
+
+themeToggle.addEventListener('click', () => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  setTheme(!isDark);
+});
+
+// ===== Mobile Menu =====
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar when clicking a link on mobile
+sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// ===== Active Sidebar Link Tracking =====
+const sections = document.querySelectorAll('h2[id], h3[id]');
+const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+function updateActiveLink() {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 100) {
+      current = section.id;
+    }
+  });
+  sidebarLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink, { passive: true });
+updateActiveLink();
+
+// ===== Mermaid Init =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: html.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  securityLevel: 'loose'
+});
+
+// Re-render Mermaid on theme change
+const observer = new MutationObserver(() => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const svg = el.querySelector('svg');
+    if (svg) {
+      el.removeAttribute('data-processed');
+      el.innerHTML = el.getAttribute('data-original') || el.innerHTML;
+    }
+  });
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'neutral',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    securityLevel: 'loose'
+  });
+  mermaid.run();
+});
+// Store original mermaid content
+document.querySelectorAll('.mermaid').forEach(el => {
+  el.setAttribute('data-original', el.innerHTML);
+});
+observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
+
+</body>
+</html>

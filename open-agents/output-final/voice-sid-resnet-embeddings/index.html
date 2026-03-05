@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResNet-Based Speaker Embeddings: VGGVox, ResNetSE34 &amp; Thin ResNet-34</title>
+<meta name="description" content="Comprehensive explainer on ResNet-based speaker embeddings for speaker identification, covering VGGVox, Thin ResNet-34, ResNetSE34, Squeeze-and-Excitation, VoxCeleb benchmarks, and comparisons with TDNN approaches.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-callout-border: #7C3AED;
+  --color-callout-bg: #F5F3FF;
+  --color-info-border: #06B6D4;
+  --color-info-bg: #ECFEFF;
+  --color-warn-border: #F59E0B;
+  --color-warn-bg: #FFFBEB;
+  --color-success-border: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --sidebar-width: 280px;
+  --content-max-width: 900px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #1E1B4B;
+  --color-accent: #22D3EE;
+  --color-accent-light: #67E8F9;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-callout-border: #7C3AED;
+  --color-callout-bg: #1E1B4B;
+  --color-info-border: #06B6D4;
+  --color-info-bg: #164E63;
+  --color-warn-border: #F59E0B;
+  --color-warn-bg: #451A03;
+  --color-success-border: #10B981;
+  --color-success-bg: #064E3B;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  padding: 1.25rem 0;
+  transition: transform var(--transition);
+}
+
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 4px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 0 1.25rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+  transition: color var(--transition);
+}
+
+.sidebar-header .back-link:hover { color: var(--color-primary); }
+
+.sidebar-header h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+.sidebar-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav { padding: 0 0.75rem; }
+
+.sidebar-nav .nav-group { margin-bottom: 0.5rem; }
+
+.sidebar-nav .nav-group-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: 0.5rem 0.5rem 0.25rem;
+  font-weight: 600;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-nav a:hover {
+  background: var(--color-border-light);
+  color: var(--color-primary);
+}
+
+.sidebar-nav a.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ===== Mobile sidebar toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Main content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Top bar ===== */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.theme-toggle {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+a { color: var(--color-link); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+strong { color: var(--color-heading); font-weight: 600; }
+
+/* ===== Hero header ===== */
+.page-hero {
+  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 30%, #4C1D95 60%, #5B21B6 100%);
+  color: white;
+  padding: 3rem 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 75% 25%, rgba(124,58,237,0.35) 0%, transparent 50%),
+              radial-gradient(circle at 25% 75%, rgba(6,182,212,0.15) 0%, transparent 50%);
+}
+
+.page-hero .hero-inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero h1 { color: white; font-size: clamp(1.5rem, 3.5vw, 2.25rem); margin-bottom: 0.5rem; }
+.page-hero .hero-subtitle { opacity: 0.85; font-size: 1.05rem; max-width: 700px; line-height: 1.5; }
+
+.page-hero .hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  flex-wrap: wrap;
+}
+
+/* ===== Callout boxes ===== */
+.callout {
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.callout.info {
+  border-left-color: var(--color-info-border);
+  background: var(--color-info-bg);
+}
+
+.callout.warn {
+  border-left-color: var(--color-warn-border);
+  background: var(--color-warn-bg);
+}
+
+.callout.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-heading);
+  margin-bottom: 0.35rem;
+}
+
+.callout p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+/* ===== Code blocks ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] code { color: var(--color-primary-light); }
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--color-text);
+}
+
+/* ===== Tables ===== */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-container .caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin: 0.75rem 0 1rem 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+li { margin-bottom: 0.35rem; font-size: 0.95rem; }
+
+li strong { color: var(--color-heading); }
+
+/* ===== Feature grid ===== */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.feature-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-color: var(--color-primary-light);
+}
+
+.feature-card .card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card h4 {
+  margin-top: 0;
+  font-size: 0.95rem;
+}
+
+.feature-card p {
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+/* ===== Comparison columns ===== */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.comparison-col {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.comparison-col h4 {
+  margin-top: 0;
+  font-size: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.comparison-col.alt h4 {
+  border-bottom-color: var(--color-accent);
+}
+
+/* ===== Architecture block ===== */
+.arch-block {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.arch-block h4 {
+  margin-top: 0;
+  color: var(--color-primary);
+}
+
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.arch-layer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  font-size: 0.88rem;
+  position: relative;
+}
+
+.arch-layer .layer-name {
+  font-weight: 600;
+  color: var(--color-heading);
+  min-width: 120px;
+}
+
+.arch-layer .layer-detail {
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+.arch-layer .layer-output {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.arch-layer::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--color-border);
+}
+
+.arch-layer:last-child::after { display: none; }
+
+/* ===== Strengths/Weaknesses ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.pros, .cons {
+  background: var(--color-bg-alt);
+  border-radius: 10px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+}
+
+.pros { border-top: 3px solid #10B981; }
+.cons { border-top: 3px solid #EF4444; }
+
+.pros h4, .cons h4 { margin-top: 0; }
+
+.pros li::marker { color: #10B981; }
+.cons li::marker { color: #EF4444; }
+
+/* ===== Sources ===== */
+.sources {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sources h3 { margin-top: 0; }
+
+.sources ol {
+  font-size: 0.85rem;
+  margin-left: 1.25rem;
+}
+
+.sources li {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+}
+
+.sources a { word-break: break-all; }
+
+/* ===== Tag pills ===== */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  list-style: none;
+  padding: 0;
+}
+
+.tag-list li {
+  margin: 0;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.15); }
+  .sidebar-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 1.5rem 1rem 3rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  .comparison, .pros-cons { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .arch-layer { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  .arch-layer .layer-output { margin-top: 0.15rem; }
+}
+
+@media (max-width: 600px) {
+  .page-hero { padding: 2rem 1rem 1.5rem; }
+  .top-bar { padding: 0.5rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Speaker ID Overview</a>
+    <h2>ResNet-Based Speaker Embeddings</h2>
+    <div class="subtitle">VGGVox, ResNetSE34, Thin ResNet-34</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-group-title">Foundations</div>
+      <a href="#overview">Overview</a>
+      <a href="#spectrograms-as-images">Spectrograms as Images</a>
+      <a href="#why-2d-cnns">Why 2D CNNs Work</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Core Architectures</div>
+      <a href="#vggvox">VGGVox Architecture</a>
+      <a href="#voxceleb-dataset">VoxCeleb Dataset</a>
+      <a href="#thin-resnet-34">Thin ResNet-34</a>
+      <a href="#resnetse34">ResNetSE34 (SE Blocks)</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Technical Deep-Dive</div>
+      <a href="#squeeze-excitation">Squeeze-and-Excitation</a>
+      <a href="#pooling-strategies">Pooling Strategies</a>
+      <a href="#training-losses">Training & Loss Functions</a>
+      <a href="#frequency-patterns">Frequency Patterns</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Comparisons & Variants</div>
+      <a href="#tdnn-vs-resnet">1D TDNN vs 2D ResNet</a>
+      <a href="#rawnet-sincnet">RawNet3 & SincNet</a>
+      <a href="#benchmarks">VoxCeleb Benchmarks</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Assessment</div>
+      <a href="#strengths-weaknesses">Strengths & Weaknesses</a>
+      <a href="#sources">Sources</a>
+    </div>
+  </nav>
+</aside>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">&#9776;</button>
+
+<!-- Main content area -->
+<div class="main">
+  <!-- Top bar with dark mode toggle -->
+  <div class="top-bar">
+    <button class="theme-toggle" id="themeToggle">Dark Mode</button>
+  </div>
+
+  <!-- Hero header -->
+  <div class="page-hero">
+    <div class="hero-inner">
+      <h1>ResNet-Based Speaker Embeddings</h1>
+      <p class="hero-subtitle">How 2D convolutional networks transform spectrograms into discriminative speaker representations -- from VGGVox to Squeeze-and-Excitation ResNets on VoxCeleb benchmarks.</p>
+      <div class="hero-meta">
+        <span>Speaker Identification</span>
+        <span>Deep Learning</span>
+        <span>2D CNN Architectures</span>
+        <span>March 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ============================================ -->
+    <!-- OVERVIEW -->
+    <!-- ============================================ -->
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>ResNet-based speaker embeddings represent one of the most successful families of deep neural network architectures for speaker identification and verification. Inspired by the dramatic success of Residual Networks (ResNets) in image recognition, researchers at the Visual Geometry Group (VGG) at Oxford adapted these architectures to treat audio spectrograms as single-channel images, enabling powerful 2D convolutional feature extraction for speaker discrimination.</p>
+
+      <p>The core idea is deceptively simple: compute a spectrogram from raw audio, feed it into a 2D CNN originally designed for images, and train the network to produce a compact <strong>embedding vector</strong> (typically 128-512 dimensions) that captures the speaker's vocal identity. Distances in this embedding space directly correspond to speaker similarity.</p>
+
+      <div class="callout info">
+        <div class="callout-title">Key Insight</div>
+        <p>Unlike 1D approaches (TDNN/x-vectors) that treat audio frames as sequential features, 2D ResNet approaches treat spectrograms as images. This allows the network to learn <strong>joint time-frequency patterns</strong> -- capturing formant structures, harmonic relationships, and spectral envelope shapes that are distinctive to individual speakers.</p>
+      </div>
+
+      <ul class="tag-list">
+        <li>VGGVox</li>
+        <li>Thin ResNet-34</li>
+        <li>ResNetSE34</li>
+        <li>Squeeze-and-Excitation</li>
+        <li>VoxCeleb</li>
+        <li>Speaker Embedding</li>
+        <li>2D CNN</li>
+        <li>NetVLAD</li>
+      </ul>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SPECTROGRAMS AS IMAGES -->
+    <!-- ============================================ -->
+    <section id="spectrograms-as-images">
+      <h2>How 2D CNNs Process Spectrograms as Images</h2>
+      <p>The fundamental insight behind ResNet-based speaker embeddings is that a spectrogram -- a 2D representation of audio with frequency on one axis and time on the other -- can be processed exactly like a grayscale image. Each pixel's intensity represents the energy at a particular frequency and time step.</p>
+
+      <h3>Spectrogram Computation</h3>
+      <p>The input pipeline typically works as follows:</p>
+      <ol>
+        <li><strong>Raw audio</strong> is segmented into short overlapping frames (e.g., 25ms windows with 10ms hop).</li>
+        <li>A <strong>Short-Time Fourier Transform (STFT)</strong> is applied to each frame, producing a magnitude spectrogram.</li>
+        <li>The spectrogram (or sometimes log-mel filterbank features) is treated as a <strong>single-channel 2D image</strong> with dimensions <code>[Frequency bins x Time frames]</code>.</li>
+        <li><strong>Mean and variance normalization</strong> is applied per frequency bin -- no voice activity detection, silence removal, or other speech-specific preprocessing is required.</li>
+      </ol>
+
+      <div class="diagram-container">
+        <pre class="mermaid">
+flowchart LR
+    A["Raw Audio\nWaveform"] --> B["Windowing\n25ms / 10ms hop"]
+    B --> C["STFT\nMagnitude\nSpectrogram"]
+    C --> D["Normalization\nPer-frequency\nmean/var"]
+    D --> E["2D CNN\nResNet Trunk"]
+    E --> F["Pooling\nLayer"]
+    F --> G["FC Layer"]
+    G --> H["Speaker\nEmbedding\n256-512d"]
+
+    style A fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style C fill:#06B6D4,color:#fff,stroke:#0891B2
+    style E fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style H fill:#10B981,color:#fff,stroke:#059669
+        </pre>
+        <div class="caption">Figure 1: The spectrogram-to-embedding pipeline in ResNet-based speaker systems</div>
+      </div>
+
+      <h3>Why This Works</h3>
+      <p>Spectrograms contain rich visual patterns that are speaker-specific:</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="card-icon">~</div>
+          <h4>Formant Patterns</h4>
+          <p>Bands of concentrated energy at specific frequencies, shaped by the speaker's unique vocal tract geometry. Formants appear as horizontal ridges in spectrograms.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">|||</div>
+          <h4>Harmonic Structure</h4>
+          <p>Evenly spaced vertical lines reflecting the speaker's fundamental frequency (pitch) and its harmonics. Spacing encodes vocal cord characteristics.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">/\</div>
+          <h4>Spectral Envelope</h4>
+          <p>The overall shape connecting formant peaks, determined by vocal tract resonances. This "spectral fingerprint" is highly speaker-dependent.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">&lt;&gt;</div>
+          <h4>Temporal Dynamics</h4>
+          <p>Transition patterns between phonemes, speaking rate characteristics, and co-articulation effects visible as diagonal energy trajectories.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">VGGVox Input Format</div>
+        <p>In the original VGGVox system, input spectrograms have dimensions <code>512 x 300</code> (512 frequency bins by 300 time frames), corresponding to approximately 3 seconds of audio. The network can accept variable-length inputs due to its fully convolutional design with an average pooling layer over the time dimension.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- WHY 2D CNNS -->
+    <!-- ============================================ -->
+    <section id="why-2d-cnns">
+      <h2>Why 2D CNNs Excel at Speaker Discrimination</h2>
+      <p>Standard 2D convolutions slide a small kernel (e.g., 3x3 or 7x7) across both the frequency and time axes of the spectrogram simultaneously. This gives them a fundamentally different inductive bias compared to 1D approaches:</p>
+
+      <h3>Local Receptive Fields in Both Dimensions</h3>
+      <p>A 2D convolutional kernel at position (f, t) in the spectrogram sees a small patch spanning a few frequency bins and a few time frames. This means it naturally learns to detect:</p>
+      <ul>
+        <li><strong>Frequency-local patterns:</strong> Formant peaks, harmonic spacing, and spectral tilt within a narrow band.</li>
+        <li><strong>Time-local patterns:</strong> Onset/offset transients, micro-prosody, and within-phoneme dynamics.</li>
+        <li><strong>Joint time-frequency patterns:</strong> Frequency modulations, formant transitions, and spectro-temporal modulation features that encode speaker identity.</li>
+      </ul>
+
+      <h3>Hierarchical Feature Learning</h3>
+      <p>As features pass through successive convolutional layers and residual blocks:</p>
+      <ol>
+        <li><strong>Early layers</strong> learn low-level spectro-temporal edges and textures (similar to Gabor-like filters in vision).</li>
+        <li><strong>Middle layers</strong> combine these into phoneme-level spectral patterns, formant contours, and harmonic structures.</li>
+        <li><strong>Deep layers</strong> capture high-level speaker identity features that are invariant to phonetic content, encoding the distinctive "voice quality" that makes a speaker recognizable.</li>
+      </ol>
+
+      <div class="callout info">
+        <div class="callout-title">2D vs 1D Convolution on Spectrograms</div>
+        <p>A 1D convolution along the time axis treats each frequency bin independently and cannot model cross-frequency relationships within its kernel. A 2D convolution naturally captures correlations <em>between</em> frequency bins, which is crucial for detecting formant patterns and harmonic series -- both key speaker-discriminative features.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VGGVOX -->
+    <!-- ============================================ -->
+    <section id="vggvox">
+      <h2>VGGVox Architecture</h2>
+      <p>VGGVox was introduced by the Visual Geometry Group at Oxford University as part of the VoxCeleb project. It was the first large-scale CNN system to demonstrate that speaker identification could be treated as an image classification problem, achieving strong results by directly applying VGG-style networks to spectrograms.</p>
+
+      <h3>VGG-M Based Trunk (VGGVox v1)</h3>
+      <p>The original VGGVox used a modified VGG-M architecture -- a lighter variant of VGGNet designed for efficiency. Key modifications for speech:</p>
+
+      <div class="arch-block">
+        <h4>VGGVox (VGG-M Trunk) Layer Architecture</h4>
+        <div class="arch-layers">
+          <div class="arch-layer">
+            <span class="layer-name">Conv1</span>
+            <span class="layer-detail">96 filters, 7x7 kernel, stride 2, BN + ReLU</span>
+            <span class="layer-output">253 x 148</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">MaxPool1</span>
+            <span class="layer-detail">3x3 pool, stride 2</span>
+            <span class="layer-output">126 x 74</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Conv2</span>
+            <span class="layer-detail">256 filters, 5x5 kernel, stride 2, BN + ReLU</span>
+            <span class="layer-output">62 x 36</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">MaxPool2</span>
+            <span class="layer-detail">3x3 pool, stride 2</span>
+            <span class="layer-output">30 x 17</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Conv3</span>
+            <span class="layer-detail">384 filters, 3x3 kernel, pad 1, BN + ReLU</span>
+            <span class="layer-output">30 x 17</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Conv4</span>
+            <span class="layer-detail">256 filters, 3x3 kernel, pad 1, BN + ReLU</span>
+            <span class="layer-output">30 x 17</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Conv5</span>
+            <span class="layer-detail">256 filters, 3x3 kernel, pad 1, BN + ReLU</span>
+            <span class="layer-output">30 x 17</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">FC6</span>
+            <span class="layer-detail">9x1 conv (frequency), avg pool over time</span>
+            <span class="layer-output">1 x 1 x 4096</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">FC7 / Agg</span>
+            <span class="layer-detail">Fully connected 1024-d, L2 normalization</span>
+            <span class="layer-output">1024-d embedding</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Key Design Decisions</h3>
+      <ul>
+        <li><strong>Modified FC6 layer:</strong> The standard VGG-M fc6 layer (9x8 kernel) was replaced with a 9x1 convolution over frequency followed by average pooling over time. This makes the network invariant to temporal position but not frequency -- critical since frequency position carries speaker identity information while temporal position does not.</li>
+        <li><strong>Parameter reduction:</strong> This modification reduced parameters from 319M (standard VGG-M) to approximately 67M, significantly mitigating overfitting.</li>
+        <li><strong>Batch normalization:</strong> Applied before ReLU activations throughout, aiding training convergence on the spectrogram domain.</li>
+        <li><strong>No speech preprocessing:</strong> Only per-frequency-bin mean/variance normalization -- no VAD, silence removal, or hand-crafted features.</li>
+      </ul>
+
+      <h3>VGGVox v2: ResNet Trunk</h3>
+      <p>The second generation of VGGVox (introduced with VoxCeleb2) replaced the VGG-M trunk with modified <strong>ResNet-34</strong> and <strong>ResNet-50</strong> architectures, yielding substantial improvements. These ResNet variants became the foundation for what is now called "Thin ResNet-34" in the speaker recognition community.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VOXCELEB DATASET -->
+    <!-- ============================================ -->
+    <section id="voxceleb-dataset">
+      <h2>The VoxCeleb Dataset</h2>
+      <p>The VoxCeleb datasets are the primary training and benchmarking resources for ResNet-based speaker embedding systems. Created by the VGG group at Oxford, they transformed speaker recognition research by providing large-scale, "in-the-wild" data.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>VoxCeleb1</th>
+              <th>VoxCeleb2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Speakers</td>
+              <td>1,251</td>
+              <td>6,112</td>
+            </tr>
+            <tr>
+              <td>Utterances</td>
+              <td>~153,000</td>
+              <td>~1,128,000</td>
+            </tr>
+            <tr>
+              <td>Source</td>
+              <td>YouTube celebrity interviews</td>
+              <td>YouTube celebrity interviews</td>
+            </tr>
+            <tr>
+              <td>Gender Balance</td>
+              <td>55% male / 45% female</td>
+              <td>61% male / 39% female</td>
+            </tr>
+            <tr>
+              <td>Diversity</td>
+              <td>Multiple ethnicities, accents, ages</td>
+              <td>Multiple ethnicities, accents, ages</td>
+            </tr>
+            <tr>
+              <td>Noise Conditions</td>
+              <td>In-the-wild (background noise, reverb, compression)</td>
+              <td>In-the-wild (more diverse conditions)</td>
+            </tr>
+            <tr>
+              <td>Typical Use</td>
+              <td>Evaluation / test set</td>
+              <td>Training set</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Evaluation Protocols</h3>
+      <p>VoxCeleb1 defines three standard evaluation protocols of increasing difficulty:</p>
+      <ul>
+        <li><strong>VoxCeleb1-O (Original):</strong> The standard test pairs. Most commonly reported benchmark.</li>
+        <li><strong>VoxCeleb1-E (Extended):</strong> A larger set of test pairs covering more speakers.</li>
+        <li><strong>VoxCeleb1-H (Hard):</strong> Pairs where both speakers are of the same gender and nationality, making discrimination more challenging.</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">Construction Pipeline</div>
+        <p>Both datasets were created semi-automatically: (1) Identify celebrity names from public lists, (2) Download YouTube interview videos, (3) Use a CNN-based active speaker detection system to locate face tracks with aligned audio, (4) Verify speaker identity using face recognition. This pipeline produces naturalistic, noisy, real-world speech data -- far more challenging than studio recordings.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- THIN RESNET-34 -->
+    <!-- ============================================ -->
+    <section id="thin-resnet-34">
+      <h2>Thin ResNet-34 Architecture</h2>
+      <p>The "Thin ResNet-34" is a modified version of the standard ResNet-34 from image recognition, adapted for speaker verification spectrograms. It is called "thin" because the channel widths are reduced compared to the original ResNet-34, keeping the model compact while maintaining strong performance.</p>
+
+      <h3>Architecture Details</h3>
+      <div class="arch-block">
+        <h4>Thin ResNet-34 Layer Configuration</h4>
+        <div class="arch-layers">
+          <div class="arch-layer">
+            <span class="layer-name">Conv1</span>
+            <span class="layer-detail">64 filters, 7x7 kernel, stride 2, BN + ReLU</span>
+            <span class="layer-output">H/2 x W/2 x 64</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">MaxPool</span>
+            <span class="layer-detail">3x3 pool, stride 2</span>
+            <span class="layer-output">H/4 x W/4 x 64</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Stage 1</span>
+            <span class="layer-detail">3 residual blocks, 32 channels, 3x3 convs</span>
+            <span class="layer-output">H/4 x W/4 x 32</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Stage 2</span>
+            <span class="layer-detail">4 residual blocks, 64 channels, stride 2 downsample</span>
+            <span class="layer-output">H/8 x W/8 x 64</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Stage 3</span>
+            <span class="layer-detail">6 residual blocks, 128 channels, stride 2 downsample</span>
+            <span class="layer-output">H/16 x W/16 x 128</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Stage 4</span>
+            <span class="layer-detail">3 residual blocks, 128 channels, stride 2 downsample</span>
+            <span class="layer-output">H/32 x W/32 x 128</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">Aggregation</span>
+            <span class="layer-detail">NetVLAD / GhostVLAD / ASP pooling</span>
+            <span class="layer-output">K x D vector</span>
+          </div>
+          <div class="arch-layer">
+            <span class="layer-name">FC + Norm</span>
+            <span class="layer-detail">Fully connected, L2 normalization</span>
+            <span class="layer-output">256-512d embedding</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Why "Thin"?</h3>
+      <p>The standard ResNet-34 for ImageNet uses channel widths of [64, 128, 256, 512] across its four stages. The Thin ResNet-34 for speaker verification reduces these to <strong>[32, 64, 128, 128]</strong> (or similar reduced configurations). This "thinning" serves multiple purposes:</p>
+      <ul>
+        <li><strong>Reduced parameters:</strong> Speaker spectrograms have less visual complexity than natural images, so fewer channels suffice.</li>
+        <li><strong>Faster training:</strong> The model trains efficiently on VoxCeleb2's ~1M utterances.</li>
+        <li><strong>Better generalization:</strong> Fewer parameters reduce overfitting risk on limited speaker data.</li>
+        <li><strong>Practical deployment:</strong> Smaller models are feasible for real-time speaker verification.</li>
+      </ul>
+
+      <h3>Residual Connections</h3>
+      <p>Each residual block in Thin ResNet-34 follows the standard ResNet pattern:</p>
+      <pre><code>output = ReLU(BN(Conv(ReLU(BN(Conv(input))))) + input)</code></pre>
+      <p>The skip (identity) connections allow gradients to flow directly through the network, enabling training of the 34-layer deep architecture without vanishing gradient issues. At stage boundaries where spatial dimensions change, a 1x1 convolution with stride 2 adapts the shortcut path.</p>
+
+      <div class="callout success">
+        <div class="callout-title">Performance Highlight</div>
+        <p>Despite being shallower and having fewer parameters than ResNet-50, Thin ResNet-34 with NetVLAD aggregation achieved an EER of <strong>3.57%</strong> on VoxCeleb1, outperforming the previous VGGVox VGG-M baseline (4.19% EER) by a significant margin. Adding AM-Softmax loss further improved this to <strong>3.22% EER</strong> with GhostVLAD aggregation.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- RESNETSE34 -->
+    <!-- ============================================ -->
+    <section id="resnetse34">
+      <h2>ResNetSE34: Thin ResNet with Squeeze-and-Excitation</h2>
+      <p>ResNetSE34 extends the Thin ResNet-34 architecture by incorporating <strong>Squeeze-and-Excitation (SE) blocks</strong> into the residual blocks. This channel-attention mechanism allows the network to dynamically emphasize the most speaker-informative feature channels while suppressing less relevant ones.</p>
+
+      <div class="diagram-container">
+        <pre class="mermaid">
+flowchart TB
+    subgraph SE_ResBlock["SE-Residual Block"]
+        direction TB
+        IN["Input Feature Map\nC x H x W"] --> CONV1["3x3 Conv + BN + ReLU"]
+        CONV1 --> CONV2["3x3 Conv + BN"]
+        CONV2 --> SE["SE Block"]
+        SE --> ADD["+ (Element-wise Add)"]
+        IN --> |"Identity / 1x1 Conv"| ADD
+        ADD --> OUT["ReLU Output\nC x H x W"]
+
+        subgraph SE["Squeeze-and-Excitation"]
+            direction TB
+            GAP["Global Avg Pool\nC x 1 x 1"]
+            FC1["FC + ReLU\nC/r dims"]
+            FC2["FC + Sigmoid\nC dims"]
+            SCALE["Channel-wise\nScaling"]
+            GAP --> FC1 --> FC2 --> SCALE
+        end
+    end
+
+    style IN fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style CONV1 fill:#3B82F6,color:#fff,stroke:#2563EB
+    style CONV2 fill:#3B82F6,color:#fff,stroke:#2563EB
+    style GAP fill:#06B6D4,color:#fff,stroke:#0891B2
+    style FC1 fill:#06B6D4,color:#fff,stroke:#0891B2
+    style FC2 fill:#06B6D4,color:#fff,stroke:#0891B2
+    style SCALE fill:#06B6D4,color:#fff,stroke:#0891B2
+    style OUT fill:#10B981,color:#fff,stroke:#059669
+    style ADD fill:#F59E0B,color:#fff,stroke:#D97706
+        </pre>
+        <div class="caption">Figure 2: SE-Residual Block in ResNetSE34 -- the SE module learns per-channel attention weights</div>
+      </div>
+
+      <h3>ResNetSE34 vs ResNetSE34V2</h3>
+      <p>Two versions of SE-enhanced ResNets are commonly referenced in the speaker verification literature:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Variant</th>
+              <th>SE Placement</th>
+              <th>Reduction Ratio</th>
+              <th>Channels</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ResNetSE34</strong> (v1)</td>
+              <td>SE block in every residual block</td>
+              <td>r = 8</td>
+              <td>[32, 64, 128, 128]</td>
+              <td>Baseline SE variant from voxceleb_trainer</td>
+            </tr>
+            <tr>
+              <td><strong>ResNetSE34V2</strong></td>
+              <td>SE block in early stages only</td>
+              <td>r = 8</td>
+              <td>[32, 64, 128, 256]</td>
+              <td>Wider final stage, improved EER</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Strategic SE Placement</div>
+        <p>Research has shown that applying SE blocks only in the first stages of the ResNet can better capture speaker information for verification tasks. Early layers benefit most from channel attention because they process lower-level spectral features where frequency-channel emphasis directly relates to formant and harmonic selection. In later layers, the features are already highly abstract and channel re-weighting provides diminishing returns.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SQUEEZE AND EXCITATION DEEP DIVE -->
+    <!-- ============================================ -->
+    <section id="squeeze-excitation">
+      <h2>Squeeze-and-Excitation: A Deep Dive</h2>
+      <p>Squeeze-and-Excitation (SE) blocks, introduced by Hu et al. (CVPR 2018), add a lightweight channel-attention mechanism to any CNN. For speaker recognition, they provide a particularly elegant solution: dynamically amplifying frequency channels that carry speaker identity while suppressing noise and content-dependent channels.</p>
+
+      <h3>The Two Operations</h3>
+
+      <h4>1. Squeeze: Global Information Aggregation</h4>
+      <p>The "squeeze" operation performs <strong>global average pooling</strong> across the spatial (time x frequency) dimensions of each feature map channel, producing a channel descriptor vector of size C (one scalar per channel):</p>
+      <pre><code>z_c = (1 / H*W) * sum(x_c(i,j))   for all (i,j) positions</code></pre>
+      <p>This compresses each 2D feature map into a single number representing its "average activation level." The squeeze step gives the network a <strong>global receptive field</strong> -- even in early layers, each channel's descriptor reflects information from the entire spectrogram, not just the local convolutional receptive field.</p>
+
+      <h4>2. Excitation: Adaptive Channel Re-weighting</h4>
+      <p>The "excitation" operation learns to predict which channels are most important for the current input, using a small bottleneck fully-connected network:</p>
+      <pre><code>s = Sigmoid(W2 * ReLU(W1 * z))</code></pre>
+      <p>Where <code>W1</code> reduces dimensionality by ratio r (typically r=8 or r=16), and <code>W2</code> restores it. The sigmoid output <code>s</code> is a vector of per-channel scaling factors between 0 and 1. Each channel of the feature map is then multiplied by its corresponding scale factor.</p>
+
+      <h3>Why SE Matters for Speaker Recognition</h3>
+      <ul>
+        <li><strong>Formant emphasis:</strong> Channels that detect formant-frequency patterns can be amplified for speakers with distinctive vocal tract resonances.</li>
+        <li><strong>Noise suppression:</strong> Channels activated primarily by background noise or channel artifacts can be attenuated.</li>
+        <li><strong>Content invariance:</strong> Channels that fire for specific phonetic content (rather than speaker identity) receive lower weights.</li>
+        <li><strong>Negligible overhead:</strong> SE blocks add less than 1% extra parameters and computation while consistently improving EER by 5-15% relative.</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Reduction Ratio Trade-off</div>
+        <p>The reduction ratio <code>r</code> in the SE bottleneck controls the model capacity vs. efficiency trade-off. Larger r values (e.g., r=16) reduce parameters but may lose fine-grained channel relationships. Smaller r values (e.g., r=4) provide more expressive attention but increase computation. r=8 is the most common choice in speaker verification systems, balancing discrimination power with efficiency.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- POOLING STRATEGIES -->
+    <!-- ============================================ -->
+    <section id="pooling-strategies">
+      <h2>Pooling & Aggregation Strategies</h2>
+      <p>A critical component of any speaker embedding system is the <strong>aggregation layer</strong> that converts variable-length frame-level features (output of the CNN trunk) into a fixed-dimensional utterance-level embedding. The choice of aggregation strategy has a major impact on performance.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Mechanism</th>
+              <th>Output Dim</th>
+              <th>Strengths</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>TAP</strong></td>
+              <td>Temporal Average Pooling: simple mean over time</td>
+              <td>D</td>
+              <td>Simple, fast, good baseline</td>
+            </tr>
+            <tr>
+              <td><strong>TSTP</strong></td>
+              <td>Temporal Statistics Pooling: concatenated mean + std over time</td>
+              <td>2D</td>
+              <td>Captures variability; widely used</td>
+            </tr>
+            <tr>
+              <td><strong>SAP</strong></td>
+              <td>Self-Attentive Pooling: attention-weighted mean over time</td>
+              <td>D</td>
+              <td>Focuses on informative frames</td>
+            </tr>
+            <tr>
+              <td><strong>ASP</strong></td>
+              <td>Attentive Statistics Pooling: attention-weighted mean + std</td>
+              <td>2D</td>
+              <td>Best of SAP + statistics; strong results</td>
+            </tr>
+            <tr>
+              <td><strong>NetVLAD</strong></td>
+              <td>Differentiable VLAD encoding with K learned cluster centers</td>
+              <td>K x D</td>
+              <td>Rich encoding of temporal feature distribution</td>
+            </tr>
+            <tr>
+              <td><strong>GhostVLAD</strong></td>
+              <td>NetVLAD + "ghost" clusters that absorb irrelevant info</td>
+              <td>K x D (K &lt; total)</td>
+              <td>Filters noise; best with Thin ResNet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>NetVLAD: The Aggregation That Defined Thin ResNet-34</h3>
+      <p>NetVLAD (Vector of Locally Aggregated Descriptors) was a key innovation that propelled Thin ResNet-34 to state-of-the-art performance. It works by learning K cluster centers and encoding each frame's residual (difference from its nearest cluster center) into the output:</p>
+      <ol>
+        <li>For each frame-level feature vector x_t, compute soft-assignment weights to K clusters.</li>
+        <li>For each cluster k, accumulate the weighted residuals (x_t - c_k).</li>
+        <li>Concatenate all K residual vectors into a single K*D descriptor.</li>
+        <li>Apply L2 normalization (intra-cluster then global).</li>
+      </ol>
+      <p>GhostVLAD extends this by adding "ghost" clusters that absorb noisy or irrelevant frames, preventing them from polluting the speaker embedding.</p>
+
+      <div class="callout success">
+        <div class="callout-title">Aggregation Impact</div>
+        <p>Switching from simple average pooling to NetVLAD on the same Thin ResNet-34 trunk improved EER from approximately 4.5% to 3.57% on VoxCeleb1 -- a relative improvement of over 20%, demonstrating that aggregation strategy is as important as the trunk architecture itself.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- TRAINING AND LOSS FUNCTIONS -->
+    <!-- ============================================ -->
+    <section id="training-losses">
+      <h2>Training & Loss Functions</h2>
+      <p>Training ResNet-based speaker embedding systems involves choosing between classification-based and metric-learning-based loss functions. Modern systems almost universally use angular margin losses, which push embeddings to be well-separated on a hypersphere.</p>
+
+      <h3>Classification-Based Losses</h3>
+
+      <h4>Softmax Cross-Entropy</h4>
+      <p>The baseline approach: add a classification head with N outputs (one per training speaker) and train with standard softmax cross-entropy. The embedding is extracted from the penultimate layer at inference time. Simple but effective, though it does not explicitly optimize the embedding geometry.</p>
+
+      <h4>AM-Softmax (Additive Margin Softmax)</h4>
+      <p>Adds a fixed angular margin <code>m</code> to the target speaker's cosine similarity before the softmax:</p>
+      <pre><code>L = -log( exp(s*(cos(theta_y) - m)) / (exp(s*(cos(theta_y) - m)) + sum_j exp(s*cos(theta_j))) )</code></pre>
+      <p>This forces the network to learn more discriminative embeddings by requiring a larger angular separation between speakers. Parameters: margin <code>m</code> (typically 0.2) and scale <code>s</code> (typically 30).</p>
+
+      <h4>AAM-Softmax (Additive Angular Margin Softmax / ArcFace)</h4>
+      <p>Adds the margin to the angle itself rather than the cosine, producing a geometrically more uniform angular margin:</p>
+      <pre><code>L = -log( exp(s*cos(theta_y + m)) / (exp(s*cos(theta_y + m)) + sum_j exp(s*cos(theta_j))) )</code></pre>
+      <p>AAM-Softmax is currently the most popular loss for speaker verification training, consistently outperforming plain softmax by 20-40% in relative EER reduction.</p>
+
+      <h3>Metric Learning Losses</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Loss</th>
+              <th>Mechanism</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Triplet Loss</strong></td>
+              <td>Minimize d(anchor, positive) while maximizing d(anchor, negative)</td>
+              <td>Hard to tune; requires careful mining</td>
+            </tr>
+            <tr>
+              <td><strong>Prototypical</strong></td>
+              <td>Classify into speaker classes using prototype (mean) vectors</td>
+              <td>Effective with multiple negatives per batch</td>
+            </tr>
+            <tr>
+              <td><strong>GE2E</strong></td>
+              <td>Generalized End-to-End loss: similarity matrix across batch</td>
+              <td>Used in Google's speaker systems</td>
+            </tr>
+            <tr>
+              <td><strong>Angular Prototypical</strong></td>
+              <td>Prototypical loss in angular (cosine) space</td>
+              <td>Outperforms all others in some comparisons</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Training Recipe</div>
+        <p>A typical strong training recipe for ResNet-34 speaker embeddings: Train on VoxCeleb2 dev set (5,994 speakers), use AAM-Softmax loss (m=0.2, s=30), SGD optimizer with cosine annealing learning rate schedule, 2-second random crops for data augmentation, online noise/reverb augmentation (MUSAN + RIR datasets), and fine-tune with large-margin on longer utterances.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- LOCAL FREQUENCY PATTERNS -->
+    <!-- ============================================ -->
+    <section id="frequency-patterns">
+      <h2>How Local Frequency Patterns Enable Speaker Discrimination</h2>
+      <p>The power of 2D CNNs for speaker recognition lies in their ability to detect and combine <strong>local spectro-temporal patterns</strong> that are characteristic of individual speakers. Understanding what these patterns represent acoustically reveals why this approach is so effective.</p>
+
+      <h3>Formant Frequencies and Vocal Tract Shape</h3>
+      <p>Every person has a unique vocal tract -- the air passage from the larynx through the mouth and nose. This produces characteristic <strong>formant frequencies</strong> (resonance peaks) that appear as concentrated energy bands in spectrograms. The first two formants (F1 and F2) primarily encode vowel identity, while higher formants (F3-F5) encode speaker-specific vocal tract geometry.</p>
+      <p>2D convolutional filters naturally learn to detect these horizontal energy bands and the spacing between them. A 3x3 kernel spanning a few frequency bins can detect formant peaks, while deeper layers learn the characteristic <strong>formant spacing ratios</strong> that distinguish one speaker from another.</p>
+
+      <h3>Harmonic Structure and Pitch</h3>
+      <p>When a speaker produces voiced sounds, the vocal cords vibrate at a <strong>fundamental frequency (F0)</strong>, creating harmonics at integer multiples. In a spectrogram, these appear as evenly-spaced horizontal lines. The spacing between harmonics encodes:</p>
+      <ul>
+        <li><strong>Average pitch:</strong> Higher F0 means wider harmonic spacing.</li>
+        <li><strong>Pitch variability:</strong> Changes in harmonic spacing over time reflect prosodic patterns.</li>
+        <li><strong>Voice quality:</strong> The relative amplitudes of harmonics encode breathiness, creakiness, and other quality markers.</li>
+      </ul>
+
+      <h3>Spectral Tilt and Source Characteristics</h3>
+      <p>The rate at which spectral energy decreases from low to high frequencies (spectral tilt) is speaker-dependent, reflecting glottal pulse shape and vocal effort. 2D CNN filters in early layers learn these global spectral slope features, while deeper layers combine them with formant information for robust speaker discrimination.</p>
+
+      <h3>What the Network Learns at Each Depth</h3>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Layers 1-2 (Early)</h4>
+          <p>Edge detectors in time-frequency space: horizontal edges (formant boundaries), vertical edges (onset/offset), diagonal edges (frequency sweeps). Similar to Gabor filters in visual cortex.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Layers 3-8 (Low-Mid)</h4>
+          <p>Harmonic patterns, formant bandwidth detectors, spectral tilt features. Combinations of edges into texture-like spectro-temporal modulation patterns.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Layers 9-20 (Mid-Deep)</h4>
+          <p>Phoneme-level spectral templates, formant transition patterns, speaking style features. Beginning to abstract away phonetic content toward speaker identity.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Layers 21-34 (Deep)</h4>
+          <p>High-level speaker identity features that are largely invariant to what is being said. These encode the composite "voice quality" or "vocal fingerprint" of the speaker.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- TDNN vs RESNET -->
+    <!-- ============================================ -->
+    <section id="tdnn-vs-resnet">
+      <h2>1D TDNN (x-vector) vs 2D ResNet Approaches</h2>
+      <p>The two dominant paradigms in speaker embedding are <strong>Time-Delay Neural Networks (TDNNs)</strong>, which produce x-vectors, and <strong>2D ResNets</strong>, which produce r-vectors. Both achieve state-of-the-art performance but differ fundamentally in how they process audio features.</p>
+
+      <div class="comparison">
+        <div class="comparison-col">
+          <h4>1D TDNN / x-vector</h4>
+          <ul>
+            <li><strong>Input:</strong> Sequence of frame-level features (MFCC or filterbanks) treated as 1D temporal signal</li>
+            <li><strong>Convolution:</strong> 1D along time axis only; each layer sees all frequency bins simultaneously</li>
+            <li><strong>Frequency handling:</strong> Treats frequency bins as channels (or input features); no convolution across frequency</li>
+            <li><strong>Context:</strong> Captures wide temporal context through dilated convolutions</li>
+            <li><strong>Architecture:</strong> Shallow (5-7 layers for ECAPA-TDNN)</li>
+            <li><strong>Key models:</strong> x-vector, ECAPA-TDNN</li>
+            <li><strong>Strengths:</strong> Long temporal context, computationally efficient, translational invariance in time</li>
+          </ul>
+        </div>
+        <div class="comparison-col alt">
+          <h4>2D ResNet / r-vector</h4>
+          <ul>
+            <li><strong>Input:</strong> 2D spectrogram treated as single-channel image</li>
+            <li><strong>Convolution:</strong> 2D across both time and frequency dimensions</li>
+            <li><strong>Frequency handling:</strong> Convolves across frequency bins, learning cross-frequency patterns</li>
+            <li><strong>Context:</strong> Local receptive field grows through depth</li>
+            <li><strong>Architecture:</strong> Deep (34+ layers)</li>
+            <li><strong>Key models:</strong> VGGVox, Thin ResNet-34, ResNetSE34</li>
+            <li><strong>Strengths:</strong> Captures frequency-domain structure, formant patterns, harmonic relationships</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Key Architectural Differences</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>TDNN (1D)</th>
+              <th>ResNet (2D)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Frequency modeling</td>
+              <td>Global (all bins per layer)</td>
+              <td>Local (kernel spans few bins)</td>
+            </tr>
+            <tr>
+              <td>Temporal context per layer</td>
+              <td>Wide (dilated convolutions)</td>
+              <td>Narrow (3x3 kernels)</td>
+            </tr>
+            <tr>
+              <td>Network depth</td>
+              <td>5-7 layers (shallow)</td>
+              <td>34-50+ layers (deep)</td>
+            </tr>
+            <tr>
+              <td>Parameters</td>
+              <td>~6-20M</td>
+              <td>~6-25M</td>
+            </tr>
+            <tr>
+              <td>Frequency invariance</td>
+              <td>Translational (same filter at all freqs)</td>
+              <td>Position-dependent (learns freq-specific features)</td>
+            </tr>
+            <tr>
+              <td>Pooling</td>
+              <td>Statistics pooling over time</td>
+              <td>NetVLAD / ASP / statistics over time</td>
+            </tr>
+            <tr>
+              <td>VoxCeleb1-O EER</td>
+              <td>~0.8-1.0% (ECAPA-TDNN)</td>
+              <td>~0.9-1.2% (ResNet-34/SE)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Hybrid Approaches: Best of Both Worlds</div>
+        <p>Recent research on hybrid CNN-TDNN architectures (such as TB-ResNet and ECAPA CNN-TDNN) combines 2D ResNet's frequency modeling with TDNN's temporal context. These hybrids have shown <strong>11.4% relative improvement in EER</strong> over ECAPA-TDNN alone, suggesting that both time and frequency inductive biases are valuable for speaker recognition.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- RAWNET3 AND SINCNET -->
+    <!-- ============================================ -->
+    <section id="rawnet-sincnet">
+      <h2>RawNet3 & SincNet: Raw Waveform Variants</h2>
+      <p>While ResNet-based systems operate on pre-computed spectrograms, an alternative family of models processes the <strong>raw audio waveform directly</strong>, learning the feature extraction front-end jointly with the speaker embedding.</p>
+
+      <h3>SincNet</h3>
+      <p>SincNet (Ravanelli & Bengio, 2018) replaces the first convolutional layer with <strong>parametrized sinc functions</strong> that implement learnable band-pass filters:</p>
+      <ul>
+        <li>Each filter is defined by only two parameters: a low cutoff frequency (f1) and a high cutoff frequency (f2).</li>
+        <li>The filter impulse response is computed as <code>sinc(2*pi*f2*t) - sinc(2*pi*f1*t)</code>, windowed by a Hamming function.</li>
+        <li>The network learns to place band-pass filters at acoustically meaningful frequencies, naturally discovering formant bands and pitch-related frequencies.</li>
+        <li>Remaining layers are standard 1D CNNs.</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">SincNet's Advantage</div>
+        <p>By constraining the first layer to learn band-pass filters, SincNet achieves faster convergence and more interpretable features compared to unconstrained 1D convolutions on raw waveforms. The learned filter cutoffs can be visualized and often correspond to linguistically meaningful frequency bands.</p>
+      </div>
+
+      <h3>RawNet3</h3>
+      <p>RawNet3 (Jung et al., Interspeech 2022) is a more advanced raw-waveform model that hybridizes ideas from ECAPA-TDNN and earlier RawNet architectures:</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>ParamFbank Layer</h4>
+          <p>Replaces SincNet's sinc filters with a <strong>parameterized analytic filterbank</strong> that learns real-valued frequency responses. Transforms 1D waveform into 2D feature maps, serving as a learnable spectrogram.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Res2Dilated Blocks</h4>
+          <p>Multi-scale residual blocks with dilated convolutions, derived from ECAPA-TDNN architecture. Captures temporal context at multiple resolutions.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Feature Map Scaling</h4>
+          <p>Applies channel-wise scaling (related to SE blocks) to emphasize speaker-discriminative feature channels after each block.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Max Pooling Aggregation</h4>
+          <p>Uses attentive statistics pooling with channel-dependent frame-level attention for utterance-level representation.</p>
+        </div>
+      </div>
+
+      <h3>Comparison with Spectrogram-Based ResNets</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Spectrogram + ResNet</th>
+              <th>SincNet</th>
+              <th>RawNet3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Input</td>
+              <td>Pre-computed spectrogram</td>
+              <td>Raw waveform</td>
+              <td>Raw waveform</td>
+            </tr>
+            <tr>
+              <td>Front-end</td>
+              <td>Fixed STFT/mel filters</td>
+              <td>Learnable sinc band-pass filters</td>
+              <td>Learnable analytic filterbank</td>
+            </tr>
+            <tr>
+              <td>Feature type</td>
+              <td>2D (time x freq)</td>
+              <td>2D (time x filter)</td>
+              <td>2D (time x filter)</td>
+            </tr>
+            <tr>
+              <td>Backbone</td>
+              <td>2D ResNet</td>
+              <td>1D CNN</td>
+              <td>ECAPA-TDNN-like</td>
+            </tr>
+            <tr>
+              <td>End-to-end</td>
+              <td>No (fixed STFT)</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>VoxCeleb1-O EER</td>
+              <td>~0.9-1.2%</td>
+              <td>~3-5% (original)</td>
+              <td>~0.9-1.1%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">MR-RawNet (2024)</div>
+        <p>The latest evolution, MR-RawNet (Multi-Resolution RawNet), extends RawNet3 with multiple temporal resolutions in the ParamFbank layer, allowing the network to simultaneously analyze audio at different time scales. This has shown further improvements for handling variable-duration utterances.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VOXCELEB BENCHMARKS -->
+    <!-- ============================================ -->
+    <section id="benchmarks">
+      <h2>VoxCeleb Benchmark Results</h2>
+      <p>The VoxCeleb Speaker Recognition Challenges (VoxSRC), held annually from 2019 to 2023, provide the definitive benchmarks for comparing speaker embedding architectures. ResNet-based systems have been consistently competitive, particularly in ensemble configurations.</p>
+
+      <h3>VoxSRC Challenge Results (Selected Highlights)</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Top EER</th>
+              <th>Architecture</th>
+              <th>Key Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VoxSRC 2019</td>
+              <td>1.42%</td>
+              <td>ResNet / TDNN ensemble</td>
+              <td>First challenge; established ResNet + AM-Softmax as baseline</td>
+            </tr>
+            <tr>
+              <td>VoxSRC 2020</td>
+              <td>~1.2%</td>
+              <td>ResNet-34/50 + ECAPA-TDNN</td>
+              <td>Confirmed value of ensemble approaches</td>
+            </tr>
+            <tr>
+              <td>VoxSRC 2021</td>
+              <td>1.49%</td>
+              <td>ResNet + self-supervised</td>
+              <td>Self-supervised methods approaching supervised performance</td>
+            </tr>
+            <tr>
+              <td>VoxSRC 2022</td>
+              <td>1.40%</td>
+              <td>ResNet-34 (base=64)</td>
+              <td>2nd place; Microsoft system at 1.44% EER</td>
+            </tr>
+            <tr>
+              <td>VoxSRC 2023</td>
+              <td>1.30%</td>
+              <td>ResNet + RepVGG ensemble</td>
+              <td>ID R&D 1st place; WeSpeaker baselines widely adopted</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Single-Model Benchmarks (VoxCeleb1-O)</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Params</th>
+              <th>EER (%)</th>
+              <th>MinDCF</th>
+              <th>Loss</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VGGVox (VGG-M)</td>
+              <td>67M</td>
+              <td>7.8</td>
+              <td>--</td>
+              <td>Softmax</td>
+            </tr>
+            <tr>
+              <td>Thin ResNet-34 + NetVLAD</td>
+              <td>~12M</td>
+              <td>3.57</td>
+              <td>--</td>
+              <td>Softmax</td>
+            </tr>
+            <tr>
+              <td>Thin ResNet-34 + GhostVLAD</td>
+              <td>~12M</td>
+              <td>3.22</td>
+              <td>--</td>
+              <td>AM-Softmax</td>
+            </tr>
+            <tr>
+              <td>ResNetSE34 + ASP</td>
+              <td>~8M</td>
+              <td>1.1-1.3</td>
+              <td>0.08-0.10</td>
+              <td>AAM-Softmax</td>
+            </tr>
+            <tr>
+              <td>ResNet-34 (WeSpeaker)</td>
+              <td>~6.6M</td>
+              <td>0.93</td>
+              <td>0.073</td>
+              <td>AAM-Softmax + LM</td>
+            </tr>
+            <tr>
+              <td>ECAPA-TDNN (1024)</td>
+              <td>~14M</td>
+              <td>0.87</td>
+              <td>0.065</td>
+              <td>AAM-Softmax</td>
+            </tr>
+            <tr>
+              <td>RawNet3</td>
+              <td>~15M</td>
+              <td>0.89</td>
+              <td>0.07</td>
+              <td>AAM-Softmax</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Trend: Winning Systems Use Ensembles</div>
+        <p>All VoxSRC challenge winners from 2019-2023 used <strong>ensemble fusion</strong> of multiple architectures (typically combining ResNet-34/50, ECAPA-TDNN, and sometimes RepVGG or Conformer models). Training is done with AM-Softmax or AAM-Softmax loss, and score-level fusion (averaging cosine similarities) is applied across models. This suggests that 1D and 2D approaches capture complementary speaker information.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- STRENGTHS AND WEAKNESSES -->
+    <!-- ============================================ -->
+    <section id="strengths-weaknesses">
+      <h2>Strengths & Weaknesses</h2>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li><strong>Rich frequency modeling:</strong> 2D convolutions capture cross-frequency patterns (formants, harmonics) that 1D systems miss, providing complementary information in ensembles.</li>
+            <li><strong>Proven architecture:</strong> Directly benefits from decades of image recognition research -- ResNet, SE blocks, batch normalization, etc. are well-understood and highly optimized.</li>
+            <li><strong>Strong baseline performance:</strong> ResNet-34 with AAM-Softmax achieves sub-1% EER on VoxCeleb1-O with relatively simple training.</li>
+            <li><strong>Flexible input:</strong> Can handle variable-length utterances through temporal pooling, with no fixed input size requirement.</li>
+            <li><strong>Well-supported toolkits:</strong> Available in VoxCeleb Trainer, WeSpeaker, SpeechBrain, and pyannote-audio with pre-trained models.</li>
+            <li><strong>Good noise robustness:</strong> 2D patterns in spectrograms are relatively stable under additive noise compared to frame-level features.</li>
+            <li><strong>Compact embeddings:</strong> Produces 256-512 dimensional embeddings suitable for efficient similarity computation and storage.</li>
+            <li><strong>SE blocks improve accuracy with negligible cost:</strong> Less than 1% parameter increase for 5-15% relative EER improvement.</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li><strong>Limited temporal context per layer:</strong> Small 3x3 kernels require many layers to build long-range temporal dependencies, unlike dilated TDNNs.</li>
+            <li><strong>Frequency invariance is a double-edged sword:</strong> 2D convolutions apply the same filter at all frequency positions, but speaker features are frequency-position-dependent (formants at specific bands).</li>
+            <li><strong>Deeper than necessary:</strong> 34 layers is deep for the relatively simple structure of spectrograms; some capacity may be wasted compared to shallow ECAPA-TDNN.</li>
+            <li><strong>Fixed spectrogram front-end:</strong> Unlike RawNet3/SincNet, the STFT parameters are not learned jointly, potentially discarding useful raw waveform information.</li>
+            <li><strong>Sensitivity to hyperparameters:</strong> AM/AAM-Softmax margin and scale values significantly affect performance and require careful tuning.</li>
+            <li><strong>Slightly behind ECAPA-TDNN as single model:</strong> On VoxCeleb1-O, ECAPA-TDNN typically edges out ResNet-34 by 0.1-0.3% absolute EER.</li>
+            <li><strong>Computational cost:</strong> More FLOPs than ECAPA-TDNN for similar embedding quality due to 2D convolutions over the full spectrogram.</li>
+            <li><strong>Short utterance degradation:</strong> Performance drops more sharply on very short utterances (&lt;1s) compared to attention-based systems.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Bottom Line</div>
+        <p>ResNet-based speaker embeddings remain a cornerstone of modern speaker recognition systems. While they may be slightly outperformed by ECAPA-TDNN as single models on VoxCeleb benchmarks, their complementary frequency-domain modeling makes them indispensable in winning ensemble systems. The addition of SE blocks (ResNetSE34) and advanced pooling (ASP/NetVLAD) has kept this architecture family competitive through 2023-2025 challenge cycles. For practical deployments, pre-trained ResNet-34 models from WeSpeaker or pyannote-audio offer an excellent balance of accuracy, speed, and simplicity.</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SOURCES -->
+    <!-- ============================================ -->
+    <section id="sources">
+      <h2>Sources & References</h2>
+      <div class="sources">
+        <h3>Key Papers</h3>
+        <ol>
+          <li>Nagrani, A., Chung, J. S., & Zisserman, A. (2017). "VoxCeleb: A Large-Scale Speaker Identification Dataset." <em>Interspeech 2017.</em> <a href="https://www.robots.ox.ac.uk/~vgg/publications/2017/Nagrani17/nagrani17.pdf" target="_blank">PDF</a></li>
+          <li>Chung, J. S., Nagrani, A., & Zisserman, A. (2018). "VoxCeleb2: Deep Speaker Recognition." <em>Interspeech 2018.</em> <a href="https://ar5iv.labs.arxiv.org/html/1806.05622" target="_blank">arXiv:1806.05622</a></li>
+          <li>Nagrani, A., Chung, J. S., Xie, W., & Zisserman, A. (2020). "Voxceleb: Large-Scale Speaker Verification in the Wild." <em>Computer Speech & Language.</em> <a href="https://www.sciencedirect.com/science/article/pii/S0885230819302712" target="_blank">ScienceDirect</a></li>
+          <li>Chung, J. S., Huh, J., Mun, S., Lee, M., Heo, H. S., Choe, S., Ham, C., Jung, S., Lee, B.-J., & Han, I. (2020). "In Defence of Metric Learning for Speaker Recognition." <em>Interspeech 2020.</em> <a href="https://github.com/clovaai/voxceleb_trainer" target="_blank">GitHub: voxceleb_trainer</a></li>
+          <li>Hu, J., Shen, L., & Sun, G. (2018). "Squeeze-and-Excitation Networks." <em>CVPR 2018.</em> <a href="https://arxiv.org/abs/1709.01507" target="_blank">arXiv:1709.01507</a></li>
+          <li>Thienpondt, J., Desplanques, B., & Demuynck, K. (2021). "Studying Squeeze-and-Excitation Used in CNN for Speaker Verification." <em>arXiv:2109.05977.</em> <a href="https://arxiv.org/abs/2109.05977" target="_blank">arXiv</a></li>
+          <li>Ravanelli, M. & Bengio, Y. (2018). "Speaker Recognition from Raw Waveform with SincNet." <em>SLT 2018.</em> <a href="https://arxiv.org/abs/1808.00158" target="_blank">arXiv:1808.00158</a></li>
+          <li>Jung, J., Kim, Y., Heo, H. S., Lee, B.-J., Kwon, Y., & Chung, J. S. (2022). "Pushing the Limits of Raw Waveform Speaker Recognition." <em>Interspeech 2022 (RawNet3).</em> <a href="https://arxiv.org/abs/2203.08488" target="_blank">arXiv:2203.08488</a></li>
+          <li>Kwak, I.-Y. et al. (2024). "TB-ResNet: Bridging the Gap from TDNN to ResNet in Automatic Speaker Verification." <a href="https://ikwak2.github.io/publications/choi2024.pdf" target="_blank">PDF</a></li>
+          <li>Choi, H.-S., Park, J., & Huh, J. (2024). "The VoxCeleb Speaker Recognition Challenge: A Retrospective." <a href="https://arxiv.org/html/2408.14886v1" target="_blank">arXiv:2408.14886</a></li>
+        </ol>
+
+        <h3>Toolkits & Implementations</h3>
+        <ol start="11">
+          <li>VoxCeleb Trainer (Clova AI): <a href="https://github.com/clovaai/voxceleb_trainer" target="_blank">github.com/clovaai/voxceleb_trainer</a> -- Reference ResNetSE34 and loss function implementations.</li>
+          <li>WeSpeaker ResNet-34: <a href="https://huggingface.co/Wespeaker/wespeaker-voxceleb-resnet34-LM" target="_blank">Hugging Face model</a> -- Pre-trained ResNet-34 for speaker verification.</li>
+          <li>VGGVox original: <a href="https://github.com/a-nagrani/VGGVox" target="_blank">github.com/a-nagrani/VGGVox</a> -- Original MATLAB/MatConvNet implementation.</li>
+          <li>VGGVox PyTorch: <a href="https://github.com/Derpimort/VGGVox-PyTorch" target="_blank">github.com/Derpimort/VGGVox-PyTorch</a> -- Community PyTorch port.</li>
+          <li>RawNet3: <a href="https://github.com/Jungjee/RawNet" target="_blank">github.com/Jungjee/RawNet</a> -- Official RawNet/RawNet2/RawNet3 repository.</li>
+          <li>VoxCeleb Dataset: <a href="https://www.robots.ox.ac.uk/~vgg/data/voxceleb/" target="_blank">robots.ox.ac.uk/~vgg/data/voxceleb/</a> -- Official dataset page.</li>
+        </ol>
+      </div>
+    </section>
+
+  </div><!-- end .content -->
+</div><!-- end .main -->
+
+<script>
+// ===== Mermaid initialization =====
+document.addEventListener('DOMContentLoaded', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    flowchart: { curve: 'basis', padding: 15 },
+    securityLevel: 'loose'
+  });
+});
+
+// ===== Dark mode toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+function setTheme(dark) {
+  root.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeToggle.textContent = dark ? 'Light Mode' : 'Dark Mode';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  // Re-render mermaid diagrams with correct theme
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    flowchart: { curve: 'basis', padding: 15 },
+    securityLevel: 'loose'
+  });
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', el.textContent);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Check saved preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') setTheme(true);
+
+themeToggle.addEventListener('click', () => {
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  setTheme(!isDark);
+});
+
+// ===== Sidebar navigation highlighting =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+function highlightNav() {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 100) current = section.getAttribute('id');
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', highlightNav, { passive: true });
+highlightNav();
+
+// ===== Mobile sidebar toggle =====
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.getElementById('sidebar');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar when clicking a nav link on mobile
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// Close sidebar on outside click (mobile)
+document.addEventListener('click', (e) => {
+  if (window.innerWidth <= 900 && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+    sidebar.classList.remove('open');
+  }
+});
+</script>
+
+</body>
+</html>

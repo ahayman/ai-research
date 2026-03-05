@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSL Foundation Models for Speaker Identification: wav2vec 2.0, HuBERT, WavLM</title>
+<meta name="description" content="Comprehensive explainer on self-supervised learning foundation models (wav2vec 2.0, HuBERT, WavLM) for speaker identification, verification, and diarization.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-info: #0284c7;
+  --color-info-bg: #f0f9ff;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #2e1065;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #2e1065;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-success: #34d399;
+  --color-success-bg: #064e3b;
+  --color-warning: #fbbf24;
+  --color-warning-bg: #451a03;
+  --color-danger: #f87171;
+  --color-danger-bg: #450a0a;
+  --color-info: #38bdf8;
+  --color-info-bg: #0c4a6e;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6, #7C3AED);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Top Bar ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.breadcrumb a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumb .sep {
+  color: var(--color-text-muted);
+}
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu Button ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+li > ul, li > ol { margin-top: 0.4rem; margin-bottom: 0; }
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+.takeaways li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+.info-box.success {
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.info-box.warning {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.info-box.danger {
+  border-left: 4px solid var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+.info-box.info {
+  border-left: 4px solid var(--color-info);
+  background: var(--color-info-bg);
+}
+
+/* ===== Code ===== */
+code {
+  background: var(--color-code-bg);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:hover { background: var(--color-primary-bg); }
+
+/* ===== Diagram Container ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Comparison Cards ===== */
+.model-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.model-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.model-card:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+}
+
+.model-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.model-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.model-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.model-card-subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.model-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.model-card ul {
+  font-size: 0.88rem;
+  margin-bottom: 0;
+}
+
+.model-card li {
+  margin-bottom: 0.3rem;
+}
+
+/* Metric badges */
+.metric-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.metric-badge.best {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.metric-badge.good {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+  border: 1px solid var(--color-info);
+}
+
+.metric-badge.neutral {
+  background: var(--color-bg-alt);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+/* ===== Strengths/Weaknesses Grid ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.pros-box, .cons-box {
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.pros-box {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+}
+
+.cons-box {
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger);
+}
+
+.pros-box h4, .cons-box h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.pros-box h4 { color: var(--color-success); }
+.cons-box h4 { color: var(--color-danger); }
+
+.pros-box ul, .cons-box ul {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ===== Layer Visualization ===== */
+.layer-viz {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.layer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.layer-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 110px;
+  text-align: right;
+}
+
+.layer-bar {
+  flex: 1;
+  height: 28px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-border-light);
+}
+
+.layer-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  transition: width 0.6s ease;
+}
+
+.layer-fill.acoustic { background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+.layer-fill.speaker { background: linear-gradient(90deg, #059669, #34d399); }
+.layer-fill.linguistic { background: linear-gradient(90deg, #2563EB, #60A5FA); }
+
+.layer-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.layer-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.layer-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.65rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+}
+
+.timeline-item h4 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.timeline-item p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.timeline-date {
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+
+  .model-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pros-cons {
+    grid-template-columns: 1fr;
+  }
+
+  .layer-label {
+    min-width: 80px;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 1rem 1rem 2rem;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile menu button -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">SSL Foundation Models</div>
+      <div class="sidebar-subtitle">Speaker Identification Deep Dive</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-section">Overview</div>
+      <a href="#introduction" class="sidebar-link">Introduction</a>
+      <a href="#ssl-paradigm" class="sidebar-link">Self-Supervised Paradigm</a>
+      <a href="#pipeline-diagram" class="sidebar-link sub">Pre-train / Fine-tune Pipeline</a>
+
+      <div class="sidebar-nav-section">Model Architectures</div>
+      <a href="#wav2vec2" class="sidebar-link">wav2vec 2.0</a>
+      <a href="#wav2vec2-contrastive" class="sidebar-link sub">Contrastive Learning</a>
+      <a href="#hubert" class="sidebar-link">HuBERT</a>
+      <a href="#hubert-clustering" class="sidebar-link sub">Offline Clustering</a>
+      <a href="#wavlm" class="sidebar-link">WavLM</a>
+      <a href="#wavlm-denoising" class="sidebar-link sub">Denoising Pre-training</a>
+      <a href="#architecture-diagram" class="sidebar-link sub">Architecture Diagram</a>
+
+      <div class="sidebar-nav-section">Speaker Tasks</div>
+      <a href="#fine-tuning" class="sidebar-link">Fine-tuning for SV/SD</a>
+      <a href="#layer-analysis" class="sidebar-link">Layer-wise Analysis</a>
+      <a href="#superb" class="sidebar-link">SUPERB Benchmark</a>
+      <a href="#few-shot" class="sidebar-link">Few-shot &amp; Zero-shot</a>
+
+      <div class="sidebar-nav-section">Integration</div>
+      <a href="#eend" class="sidebar-link">EEND Integration</a>
+      <a href="#pruning" class="sidebar-link">Model Pruning</a>
+
+      <div class="sidebar-nav-section">Assessment</div>
+      <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+      <a href="#sources" class="sidebar-link">Sources</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Back to Speaker ID Overview</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+    <div class="content">
+
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="breadcrumb">
+          <a href="../voice-speaker-identification/index.html">Speaker ID</a>
+          <span class="sep">/</span>
+          <span>SSL Foundation Models</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeIcon">&#9789;</span>
+          <span id="themeLabel">Dark mode</span>
+        </button>
+      </div>
+
+      <!-- Page Title -->
+      <h1>Self-Supervised Learning Foundation Models for Speaker Identification</h1>
+      <p class="page-subtitle">
+        How wav2vec 2.0, HuBERT, and WavLM learn universal speech representations from unlabeled audio, and why they have revolutionized speaker verification, identification, and diarization.
+      </p>
+
+      <div class="takeaways">
+        <strong>Key Takeaways</strong>
+        <ul>
+          <li><strong>Self-supervised pre-training</strong> on massive unlabeled speech data produces representations that capture speaker identity, phonetics, and prosody without any labels.</li>
+          <li><strong>wav2vec 2.0</strong> uses contrastive learning with quantized targets; <strong>HuBERT</strong> uses offline k-means clustering with masked prediction; <strong>WavLM</strong> adds denoising of overlapped speech for multi-speaker robustness.</li>
+          <li><strong>WavLM Large</strong> achieves state-of-the-art on the SUPERB benchmark, outperforming HuBERT Large on 14 of 15 tasks including speaker identification and diarization.</li>
+          <li>Layer-wise analysis reveals a <strong>three-stage hierarchy</strong>: early layers encode acoustic/timbre features, middle layers synthesize abstract speaker traits, and final layers prioritize linguistic content.</li>
+          <li>With structured pruning, SSL models can be compressed by <strong>up to 80%</strong> with minimal performance loss, enabling real-time deployment.</li>
+        </ul>
+      </div>
+
+      <!-- ===== SECTION: Introduction ===== -->
+      <h2 id="introduction">Introduction</h2>
+      <p>
+        Speaker identification -- determining <em>who</em> is speaking from an audio signal -- has undergone a paradigm shift with the advent of self-supervised learning (SSL) foundation models. Before SSL, speaker recognition systems relied on hand-engineered features (MFCCs, i-vectors) or supervised deep learning (x-vectors, ECAPA-TDNN) trained on large labeled datasets. SSL models changed the game by learning rich, general-purpose speech representations from hundreds of thousands of hours of <strong>unlabeled</strong> audio.
+      </p>
+      <p>
+        Three models dominate this landscape: <strong>wav2vec 2.0</strong> (Meta AI, 2020), <strong>HuBERT</strong> (Meta AI, 2021), and <strong>WavLM</strong> (Microsoft, 2021). Each employs a distinct self-supervised objective but shares a common Transformer-based architecture. When fine-tuned for speaker tasks, these models achieve performance competitive with -- or surpassing -- fully supervised systems, even with remarkably little labeled data.
+      </p>
+      <p>
+        This page provides a deep technical walkthrough of each model, how they are adapted for speaker identification and verification, what their internal representations look like, and practical considerations for deployment in real-world diarization pipelines.
+      </p>
+
+      <!-- ===== SECTION: SSL Paradigm ===== -->
+      <h2 id="ssl-paradigm">The Self-Supervised Pre-training Paradigm</h2>
+      <p>
+        Self-supervised learning for speech follows a two-phase approach analogous to BERT in NLP: first, a model is pre-trained on a large corpus of unlabeled audio using a pretext task (such as predicting masked regions), then it is fine-tuned on a smaller labeled dataset for a specific downstream task like speaker verification or diarization.
+      </p>
+
+      <h3>Why Self-Supervised?</h3>
+      <ul>
+        <li><strong>Data efficiency:</strong> Labeled speaker datasets are expensive to create. SSL leverages the vast availability of unlabeled speech (e.g., LibriLight's 60,000 hours).</li>
+        <li><strong>Transfer learning:</strong> Representations learned from diverse speech capture phonetic, prosodic, and speaker information simultaneously, transferring well across tasks.</li>
+        <li><strong>Universality:</strong> A single pre-trained model serves as a foundation for ASR, speaker ID, emotion recognition, language identification, and more.</li>
+      </ul>
+
+      <h3>The Masked Prediction Framework</h3>
+      <p>
+        All three models share a core idea: <strong>mask portions of the input speech</strong> and train the model to predict what was masked, forcing it to learn contextual representations. The key differences lie in <em>what</em> is predicted (quantized codes, cluster IDs, or pseudo-labels) and <em>what loss function</em> drives learning (contrastive, cross-entropy, or denoising).
+      </p>
+
+      <h3 id="pipeline-diagram">Pre-training to Fine-tuning Pipeline</h3>
+      <div class="diagram-container">
+        <div class="mermaid">
+flowchart LR
+    subgraph PT["Phase 1: Self-Supervised Pre-training"]
+        direction TB
+        A["Unlabeled Audio\n(60K+ hours)"] --> B["Feature Encoder\n(CNN layers)"]
+        B --> C["Masking\n(span masks)"]
+        C --> D["Transformer\nEncoder"]
+        D --> E["Pretext Loss\n(contrastive / prediction)"]
+        E -.->|"Update weights"| D
+        E -.->|"Update weights"| B
+    end
+
+    subgraph FT["Phase 2: Task-Specific Fine-tuning"]
+        direction TB
+        F["Labeled Data\n(speaker labels)"] --> G["Frozen or Tuned\nSSL Backbone"]
+        G --> H["Task Head\n(linear / ECAPA-TDNN)"]
+        H --> I["Speaker Embeddings"]
+        I --> J["Verification\nor Diarization"]
+    end
+
+    PT --> FT
+
+    style PT fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px
+    style FT fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style A fill:#EDE9FE,stroke:#7C3AED
+    style F fill:#D1FAE5,stroke:#059669
+    style J fill:#D1FAE5,stroke:#059669
+        </div>
+        <div class="diagram-caption">Figure 1: The two-phase SSL pipeline. Pre-training learns general representations; fine-tuning adapts them to speaker tasks.</div>
+      </div>
+
+      <!-- ===== SECTION: wav2vec 2.0 ===== -->
+      <h2 id="wav2vec2">wav2vec 2.0: Contrastive Learning on Speech</h2>
+      <p>
+        Released by Meta AI (then Facebook AI Research) in June 2020, <strong>wav2vec 2.0</strong> was the first SSL model to demonstrate that learning from raw waveforms alone could match or exceed supervised ASR systems. Its success catalyzed the SSL revolution in speech processing.
+      </p>
+
+      <h3>Architecture Overview</h3>
+      <p>wav2vec 2.0 consists of three main components:</p>
+      <ol>
+        <li><strong>Feature Encoder:</strong> A 7-layer convolutional neural network (CNN) that processes raw 16kHz audio waveforms. Each layer uses 512 channels with decreasing kernel widths and strides, producing one feature vector per ~20ms of audio. The total receptive field is 400 samples (25ms).</li>
+        <li><strong>Context Network (Transformer):</strong> A stack of Transformer encoder blocks (12 blocks for Base, 24 for Large) that processes the CNN features with full self-attention. Instead of absolute positional embeddings, it uses a <strong>grouped convolutional layer</strong> to learn relative positional information.</li>
+        <li><strong>Quantization Module:</strong> Uses Gumbel-Softmax to discretize CNN outputs into a finite set of speech units via <strong>product quantization</strong>. With <em>G</em> codebooks of <em>V</em> entries each, one entry per codebook is selected, concatenated, and linearly projected.</li>
+      </ol>
+
+      <h3 id="wav2vec2-contrastive">The Contrastive Learning Objective</h3>
+      <p>
+        During pre-training, wav2vec 2.0 masks spans of the latent CNN output (not the raw audio) and trains the Transformer to identify the correct quantized representation for each masked time step among a set of distractors sampled from the same utterance.
+      </p>
+
+      <div class="info-box info">
+        <strong>Dual Loss Functions</strong>
+        <p style="margin-bottom:0.5rem;">The training loss combines two terms:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>Contrastive Loss (L<sub>m</sub>):</strong> Maximizes similarity between the Transformer output at masked positions and the true quantized target, relative to K=100 distractors.</li>
+          <li><strong>Diversity Loss (L<sub>d</sub>):</strong> Encourages uniform use of all codebook entries by maximizing entropy of the Gumbel-Softmax distribution, preventing codebook collapse.</li>
+        </ul>
+      </div>
+
+      <h3>Model Variants</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Variant</th>
+              <th>Transformer Layers</th>
+              <th>Hidden Dim</th>
+              <th>Attention Heads</th>
+              <th>Parameters</th>
+              <th>Pre-training Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Base</strong></td>
+              <td>12</td>
+              <td>768</td>
+              <td>8</td>
+              <td>95M</td>
+              <td>LibriSpeech 960h</td>
+            </tr>
+            <tr>
+              <td><strong>Large</strong></td>
+              <td>24</td>
+              <td>1024</td>
+              <td>16</td>
+              <td>317M</td>
+              <td>LibriLight 60Kh</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Speaker ID Performance</h3>
+      <p>
+        When adapted for speaker verification on VoxCeleb1, wav2vec 2.0 achieved an Equal Error Rate (EER) of <strong>3.61%</strong>, demonstrating that representations learned for ASR also capture speaker-discriminative information. The SUPERB benchmark evaluation of wav2vec 2.0 Large achieves <strong>86.14% accuracy</strong> on the speaker identification (SID) task using a simple linear head on frozen features.
+      </p>
+
+      <!-- ===== SECTION: HuBERT ===== -->
+      <h2 id="hubert">HuBERT: Offline Clustering + Masked Prediction</h2>
+      <p>
+        <strong>HuBERT</strong> (Hidden-Unit BERT), also from Meta AI (June 2021), addresses a fundamental challenge in speech SSL: unlike text, speech has no natural discrete vocabulary. HuBERT solves this by creating <em>pseudo-labels</em> through offline clustering, then training a masked prediction model against those labels.
+      </p>
+
+      <h3 id="hubert-clustering">The Offline Clustering Approach</h3>
+      <p>HuBERT's training proceeds through an iterative three-step process:</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">Step 1: Acoustic Feature Clustering</div>
+          <h4>Generate Pseudo-Labels</h4>
+          <p>Run k-means clustering (k=100 or k=500) on MFCC features extracted from the unlabeled audio. Each audio frame receives a cluster assignment serving as its pseudo-label.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Step 2: Masked Prediction Training</div>
+          <h4>Train the Transformer</h4>
+          <p>Mask spans of the input features and train the model with a cross-entropy loss to predict the cluster assignment of each masked frame. Crucially, the loss is applied <strong>only over masked regions</strong>, forcing the model to learn from context.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Step 3: Iterative Refinement</div>
+          <h4>Re-cluster with Learned Features</h4>
+          <p>Extract intermediate representations from the trained model, run k-means again on these improved features, and retrain. Each iteration produces better pseudo-labels, creating a virtuous cycle.</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Why Does This Work?</strong>
+        <p style="margin-bottom:0;">
+          HuBERT relies on the <strong>consistency</strong> of clustering rather than the quality of individual cluster assignments. Even noisy pseudo-labels provide a stable learning signal when applied consistently. Starting with simple MFCC-based k-means (100 clusters) and iterating just twice, HuBERT matches or outperforms wav2vec 2.0 across all fine-tuning conditions on LibriSpeech.
+        </p>
+      </div>
+
+      <h3>Key Differences from wav2vec 2.0</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>wav2vec 2.0</th>
+              <th>HuBERT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Target Type</strong></td>
+              <td>Quantized latent codes (learned online)</td>
+              <td>Offline k-means cluster IDs (pseudo-labels)</td>
+            </tr>
+            <tr>
+              <td><strong>Loss Function</strong></td>
+              <td>Contrastive (InfoNCE-style)</td>
+              <td>Cross-entropy (classification)</td>
+            </tr>
+            <tr>
+              <td><strong>Negative Sampling</strong></td>
+              <td>Required (K distractors per step)</td>
+              <td>Not needed (direct label prediction)</td>
+            </tr>
+            <tr>
+              <td><strong>Iterative Training</strong></td>
+              <td>Single stage</td>
+              <td>Multi-iteration cluster refinement</td>
+            </tr>
+            <tr>
+              <td><strong>Ultra-low Resource ASR</strong></td>
+              <td>4.8% / 8.2% WER (10min)</td>
+              <td>4.7% / 7.6% WER (10min)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== SECTION: WavLM ===== -->
+      <h2 id="wavlm">WavLM: Denoising + Multi-Task Pre-training</h2>
+      <p>
+        <strong>WavLM</strong> (Microsoft, October 2021) builds on HuBERT's masked prediction framework but introduces a critical innovation: <strong>masked speech denoising</strong>. By training on simulated noisy and overlapping speech, WavLM learns representations that are inherently robust to multi-speaker scenarios -- exactly what speaker diarization requires.
+      </p>
+
+      <h3 id="wavlm-denoising">The Denoising Pre-training Framework</h3>
+      <p>WavLM combines two pre-training tasks:</p>
+      <ol>
+        <li><strong>Masked Speech Prediction</strong> (same as HuBERT): Mask spans of the feature sequence and predict pseudo-labels generated via offline k-means clustering.</li>
+        <li><strong>Masked Speech Denoising</strong> (novel): Mix the input audio with either other speech utterances or environmental noise. The model must still predict the pseudo-labels of the <em>original clean speech</em> at masked positions, even under corrupted conditions.</li>
+      </ol>
+
+      <div class="info-box success">
+        <strong>Why Denoising Matters for Speaker ID</strong>
+        <p style="margin-bottom:0;">
+          By encountering overlapped speech during pre-training, WavLM learns to disentangle different speakers at the representation level. This gives it a significant advantage on speaker diarization (who spoke when) and overlapping speech detection. WavLM Base outperforms HuBERT Base on speaker diarization by <strong>22.6% relative improvement</strong>. Ablation studies confirm that removing the denoising task causes significant degradation specifically on speaker diarization.
+        </p>
+      </div>
+
+      <h3>Architectural Enhancements</h3>
+      <p>WavLM introduces a <strong>gated relative position bias</strong> in its Transformer attention mechanism, replacing the convolutional position encoding used by wav2vec 2.0 and HuBERT. This provides more flexible positional information and contributes to improved performance across tasks.</p>
+
+      <h3>Model Variants</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Variant</th>
+              <th>Layers</th>
+              <th>Hidden Dim</th>
+              <th>Parameters</th>
+              <th>Pre-training Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Base</strong></td>
+              <td>12</td>
+              <td>768</td>
+              <td>94.7M</td>
+              <td>LibriSpeech 960h</td>
+            </tr>
+            <tr>
+              <td><strong>Base+</strong></td>
+              <td>12</td>
+              <td>768</td>
+              <td>94.7M</td>
+              <td>94K hours (diverse)</td>
+            </tr>
+            <tr>
+              <td><strong>Large</strong></td>
+              <td>24</td>
+              <td>1024</td>
+              <td>316M</td>
+              <td>94K hours (diverse)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The <strong>Base+</strong> variant is notable: with the same architecture as Base but trained on much larger and more diverse data (94K hours vs 960h), it often outperforms wav2vec 2.0 Large and HuBERT Large despite having fewer parameters.
+      </p>
+
+      <h3 id="architecture-diagram">Architecture Overview Diagram</h3>
+      <div class="diagram-container">
+        <div class="mermaid">
+flowchart TB
+    subgraph INPUT["Input Processing"]
+        RAW["Raw Waveform\n(16kHz)"] --> CNN["7-Layer CNN\nFeature Encoder"]
+        CNN --> LATENT["Latent Features\n(~50Hz frame rate)"]
+    end
+
+    subgraph MASK["Masking Strategy"]
+        LATENT --> SPANS["Span Masking\n(~49% of frames)"]
+    end
+
+    subgraph QUANT["Target Generation"]
+        direction TB
+        LATENT2["Latent Features"] --> KMEANS["Offline k-means\nClustering"]
+        KMEANS --> PSEUDO["Pseudo-labels\n(Cluster IDs)"]
+    end
+
+    subgraph DENOISE["WavLM-Specific: Denoising"]
+        direction TB
+        CLEAN["Clean Audio"] --> MIX["Mix with noise\nor other speakers"]
+        MIX --> NOISY["Corrupted Input"]
+    end
+
+    subgraph TRANSFORMER["Transformer Encoder"]
+        direction TB
+        SPANS --> TF["12 or 24\nTransformer Blocks"]
+        NOISY -.-> TF
+        TF --> |"Gated Relative\nPosition Bias"| OUT["Contextual\nRepresentations"]
+    end
+
+    subgraph LOSS["Training Objectives"]
+        OUT --> PRED["Predict Pseudo-labels\n(Cross-Entropy)"]
+        PSEUDO --> PRED
+    end
+
+    subgraph DOWNSTREAM["Downstream: Speaker Tasks"]
+        direction TB
+        OUT --> HEAD["Task Head\n(Linear / ECAPA-TDNN / MHFA)"]
+        HEAD --> SID["Speaker ID"]
+        HEAD --> SV["Speaker\nVerification"]
+        HEAD --> SD["Speaker\nDiarization"]
+    end
+
+    style INPUT fill:#EDE9FE,stroke:#7C3AED,stroke-width:1px
+    style MASK fill:#FEF3C7,stroke:#D97706,stroke-width:1px
+    style QUANT fill:#DBEAFE,stroke:#2563EB,stroke-width:1px
+    style DENOISE fill:#FCE7F3,stroke:#DB2777,stroke-width:1px
+    style TRANSFORMER fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px
+    style LOSS fill:#FEE2E2,stroke:#DC2626,stroke-width:1px
+    style DOWNSTREAM fill:#D1FAE5,stroke:#059669,stroke-width:2px
+        </div>
+        <div class="diagram-caption">Figure 2: Unified architecture of wav2vec 2.0 / HuBERT / WavLM. The denoising path (pink) is WavLM-specific. All models share the CNN encoder, masking, and Transformer backbone.</div>
+      </div>
+
+      <!-- ===== SECTION: Model Comparison Cards ===== -->
+      <h3>Three Models at a Glance</h3>
+      <div class="model-cards">
+        <div class="model-card">
+          <div class="model-card-header">
+            <div class="model-card-icon" style="background: linear-gradient(135deg, #2563EB, #3B82F6);">W2</div>
+            <div>
+              <div class="model-card-title">wav2vec 2.0</div>
+              <div class="model-card-subtitle">Meta AI, 2020</div>
+            </div>
+          </div>
+          <p><strong>Pretext task:</strong> Contrastive learning with product quantization</p>
+          <ul>
+            <li>Learns codebook of discrete speech units</li>
+            <li>InfoNCE loss with 100 distractors</li>
+            <li>Diversity loss prevents codebook collapse</li>
+            <li>First SSL model to match supervised ASR</li>
+          </ul>
+          <p><span class="metric-badge good">EER 3.61%</span> <span class="metric-badge neutral">VoxCeleb1</span></p>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card-header">
+            <div class="model-card-icon" style="background: linear-gradient(135deg, #059669, #34d399);">Hu</div>
+            <div>
+              <div class="model-card-title">HuBERT</div>
+              <div class="model-card-subtitle">Meta AI, 2021</div>
+            </div>
+          </div>
+          <p><strong>Pretext task:</strong> Masked prediction of offline cluster IDs</p>
+          <ul>
+            <li>Offline k-means generates pseudo-labels</li>
+            <li>Cross-entropy loss (no negatives needed)</li>
+            <li>Iterative refinement of clusters</li>
+            <li>Consistency matters more than label quality</li>
+          </ul>
+          <p><span class="metric-badge good">EER 2.36%</span> <span class="metric-badge neutral">VoxCeleb1 (fine-tuned)</span></p>
+        </div>
+
+        <div class="model-card">
+          <div class="model-card-header">
+            <div class="model-card-icon" style="background: linear-gradient(135deg, #7C3AED, #A78BFA);">WL</div>
+            <div>
+              <div class="model-card-title">WavLM</div>
+              <div class="model-card-subtitle">Microsoft, 2021</div>
+            </div>
+          </div>
+          <p><strong>Pretext task:</strong> Masked prediction + speech denoising</p>
+          <ul>
+            <li>Simulated noisy/overlapped speech input</li>
+            <li>Gated relative position bias attention</li>
+            <li>Best multi-speaker robustness</li>
+            <li>SOTA on SUPERB (14/15 tasks)</li>
+          </ul>
+          <p><span class="metric-badge best">EER 0.99%</span> <span class="metric-badge neutral">VoxCeleb1-O (SSL)</span></p>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: Fine-tuning ===== -->
+      <h2 id="fine-tuning">Fine-tuning for Speaker Verification and Diarization</h2>
+      <p>
+        Adapting a pre-trained SSL model for speaker tasks involves adding a lightweight <strong>task head</strong> on top of the frozen (or partially frozen) Transformer, then training on labeled speaker data. Several fine-tuning strategies have emerged:
+      </p>
+
+      <h3>Feature Extraction (Frozen Backbone)</h3>
+      <p>
+        The simplest approach: freeze all SSL model weights and train only a downstream classifier on the extracted representations. This is computationally cheap and works surprisingly well. The SUPERB benchmark uses this approach exclusively, with a single learnable weighted sum over all Transformer layers fed into a linear classifier.
+      </p>
+
+      <h3>Partial Fine-tuning</h3>
+      <p>
+        Unfreeze the top N layers of the Transformer while keeping lower layers frozen. This strikes a balance: lower layers encode general acoustic features that transfer universally, while upper layers can be adapted to speaker-specific patterns. Research shows unfreezing the final 4-6 layers typically yields the best speaker verification results.
+      </p>
+
+      <h3>Full Fine-tuning</h3>
+      <p>
+        All parameters are trainable. This yields the best absolute performance but requires careful learning rate scheduling (typically with a lower rate for pre-trained layers). Fine-tuned wav2vec 2.0 and HuBERT achieve <strong>2.36% EER</strong> on VoxCeleb1 speaker verification with this approach.
+      </p>
+
+      <h3>Backend Architectures</h3>
+      <p>The choice of task head significantly impacts performance:</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Backend</th>
+              <th>Description</th>
+              <th>Best Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Linear Head</strong></td>
+              <td>Simple linear projection + pooling</td>
+              <td>Quick evaluation, SUPERB benchmark</td>
+            </tr>
+            <tr>
+              <td><strong>ECAPA-TDNN</strong></td>
+              <td>Emphasized Channel Attention, Propagation and Aggregation TDNN</td>
+              <td>Speaker verification (high accuracy)</td>
+            </tr>
+            <tr>
+              <td><strong>MHFA</strong></td>
+              <td>Multi-Head Factorized Attentive pooling</td>
+              <td>Layer aggregation for speaker embeddings</td>
+            </tr>
+            <tr>
+              <td><strong>x-vector + PLDA</strong></td>
+              <td>Classical x-vector extraction + probabilistic scoring</td>
+              <td>Hybrid systems, compatibility with legacy pipelines</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <strong>WavLM + ECAPA-TDNN Cascade</strong>
+        <p style="margin-bottom:0;">
+          The combination of WavLM Large features fed into an ECAPA-TDNN backend has emerged as the dominant architecture for speaker verification. This cascade achieved as low as <strong>0.39% EER</strong> on VoxCeleb1-O in optimized implementations (ESPnet-SPK), approaching the limits of the benchmark dataset itself.
+        </p>
+      </div>
+
+      <!-- ===== SECTION: Layer-wise Analysis ===== -->
+      <h2 id="layer-analysis">Layer-wise Analysis: Where Is Speaker Information?</h2>
+      <p>
+        Not all layers of an SSL model contribute equally to speaker identification. A growing body of research using probing classifiers, canonical correlation analysis (CCA), and mutual information has revealed a consistent pattern across wav2vec 2.0, HuBERT, and WavLM.
+      </p>
+
+      <h3>The Three-Stage Hierarchy</h3>
+      <p>
+        A 2025 large-scale probing analysis validated a consistent three-stage hierarchy across multiple SSL model families:
+      </p>
+
+      <div class="layer-viz">
+        <div style="text-align:center; font-weight:600; color:var(--color-heading); margin-bottom:0.75rem; font-size:1rem;">Information Encoding Across Transformer Layers (Conceptual)</div>
+
+        <div class="layer-row">
+          <div class="layer-label">Layer 1-4<br>(Early)</div>
+          <div class="layer-bar">
+            <div class="layer-fill acoustic" style="width:85%;">Acoustic/Timbre</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill speaker" style="width:45%;">Speaker</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill linguistic" style="width:25%;">Linguistic</div>
+          </div>
+        </div>
+
+        <hr style="margin:0.75rem 0; border-color: var(--color-border-light);">
+
+        <div class="layer-row">
+          <div class="layer-label">Layer 5-8<br>(Middle)</div>
+          <div class="layer-bar">
+            <div class="layer-fill acoustic" style="width:50%;">Acoustic</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill speaker" style="width:80%;">Speaker Identity</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill linguistic" style="width:55%;">Linguistic</div>
+          </div>
+        </div>
+
+        <hr style="margin:0.75rem 0; border-color: var(--color-border-light);">
+
+        <div class="layer-row">
+          <div class="layer-label">Layer 9-12<br>(Late)</div>
+          <div class="layer-bar">
+            <div class="layer-fill acoustic" style="width:25%;">Acoustic</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill speaker" style="width:40%;">Speaker</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-label"></div>
+          <div class="layer-bar">
+            <div class="layer-fill linguistic" style="width:90%;">Linguistic Content</div>
+          </div>
+        </div>
+
+        <div class="layer-legend">
+          <div class="layer-legend-item">
+            <div class="layer-legend-dot" style="background: linear-gradient(90deg, #7C3AED, #A78BFA);"></div>
+            Acoustic/Timbre
+          </div>
+          <div class="layer-legend-item">
+            <div class="layer-legend-dot" style="background: linear-gradient(90deg, #059669, #34d399);"></div>
+            Speaker Identity
+          </div>
+          <div class="layer-legend-item">
+            <div class="layer-legend-dot" style="background: linear-gradient(90deg, #2563EB, #60A5FA);"></div>
+            Linguistic Content
+          </div>
+        </div>
+      </div>
+
+      <h3>Practical Implications</h3>
+      <ul>
+        <li><strong>For speaker verification:</strong> Middle layers (5-8 in Base models, ~8-16 in Large models) contain the richest speaker information. Using a weighted sum across all layers with learned weights is better than using only the final layer.</li>
+        <li><strong>For ASR:</strong> Final layers are most informative, as they prioritize linguistic content over speaker identity.</li>
+        <li><strong>For diarization:</strong> Middle layers work best, but WavLM specifically preserves more speaker information in later layers than HuBERT or wav2vec 2.0, likely due to its denoising objective.</li>
+        <li><strong>Speaker SSL models</strong> (models pre-trained specifically for speaker tasks) tend to disregard linguistic information but develop more sophisticated speaker representations across all layers.</li>
+      </ul>
+
+      <div class="info-box info">
+        <strong>Cross-Model Finding</strong>
+        <p style="margin-bottom:0;">
+          Research from 2024 reveals that the capacity to represent content information is somewhat unrelated to enhanced speaker representation. This means SSL models can encode both types of information in parallel without one necessarily degrading the other -- explaining why a single pre-trained model works well for both ASR and speaker tasks with appropriate layer selection.
+        </p>
+      </div>
+
+      <!-- ===== SECTION: SUPERB ===== -->
+      <h2 id="superb">SUPERB Benchmark Results</h2>
+      <p>
+        The <strong>Speech processing Universal PERformance Benchmark (SUPERB)</strong> evaluates SSL models across 15 speech tasks using a standardized protocol: freeze the pre-trained model and train only a lightweight task head. This reveals the intrinsic quality of learned representations without the confound of fine-tuning capacity.
+      </p>
+
+      <h3>Speaker-Relevant SUPERB Tasks</h3>
+      <ul>
+        <li><strong>Speaker Identification (SID):</strong> Multi-class classification on VoxCeleb1 (1,251 speakers). Metric: accuracy.</li>
+        <li><strong>Automatic Speaker Verification (ASV):</strong> Binary same/different speaker decision on VoxCeleb1 pairs. Metric: EER.</li>
+        <li><strong>Speaker Diarization (SD):</strong> Frame-level speaker labeling on LibriMix simulated meetings. Metric: DER.</li>
+      </ul>
+
+      <h3>Results Comparison</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Params</th>
+              <th>SID (Acc %)</th>
+              <th>ASV (EER %)</th>
+              <th>SD (DER %)</th>
+              <th>Overall Rank</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>FBANK baseline</td>
+              <td>--</td>
+              <td>41.60</td>
+              <td>9.56</td>
+              <td>10.05</td>
+              <td>--</td>
+            </tr>
+            <tr>
+              <td>wav2vec 2.0 Base</td>
+              <td>95M</td>
+              <td>75.18</td>
+              <td>6.02</td>
+              <td>6.08</td>
+              <td>Mid</td>
+            </tr>
+            <tr>
+              <td>wav2vec 2.0 Large</td>
+              <td>317M</td>
+              <td>86.14</td>
+              <td>5.65</td>
+              <td>5.62</td>
+              <td>Good</td>
+            </tr>
+            <tr>
+              <td>HuBERT Base</td>
+              <td>95M</td>
+              <td>81.42</td>
+              <td>5.11</td>
+              <td>5.88</td>
+              <td>Good</td>
+            </tr>
+            <tr>
+              <td>HuBERT Large</td>
+              <td>317M</td>
+              <td>90.33</td>
+              <td>5.98</td>
+              <td>5.75</td>
+              <td>Strong</td>
+            </tr>
+            <tr style="background: var(--color-primary-bg);">
+              <td><strong>WavLM Base</strong></td>
+              <td>94.7M</td>
+              <td>84.51</td>
+              <td>4.69</td>
+              <td>4.55</td>
+              <td>Strong</td>
+            </tr>
+            <tr style="background: var(--color-primary-bg);">
+              <td><strong>WavLM Base+</strong></td>
+              <td>94.7M</td>
+              <td>87.68</td>
+              <td>4.22</td>
+              <td>3.98</td>
+              <td>Very Strong</td>
+            </tr>
+            <tr style="background: var(--color-primary-bg); font-weight:600;">
+              <td><strong>WavLM Large</strong></td>
+              <td>316M</td>
+              <td>93.56</td>
+              <td>4.07</td>
+              <td>3.31</td>
+              <td>Best</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.85rem; color:var(--color-text-muted);">
+        Note: Results reflect the SUPERB protocol (frozen features + linear head). Fine-tuned results are significantly better. Numbers consolidated from SUPERB and WavLM papers.
+      </p>
+
+      <div class="takeaways">
+        <strong>Key Observations</strong>
+        <ul>
+          <li><strong>WavLM Large outperforms all models</strong> on speaker tasks, achieving the best SID accuracy (93.56%) and best diarization DER (3.31%).</li>
+          <li><strong>WavLM Base+ punches above its weight:</strong> despite having only 94.7M parameters, it outperforms wav2vec 2.0 Large (317M) and HuBERT Large (317M) in the overall SUPERB score.</li>
+          <li><strong>Diarization shows the biggest gap:</strong> WavLM Base's 4.55% DER vs HuBERT Base's 5.88% DER represents a 22.6% relative improvement, directly attributable to denoising pre-training.</li>
+          <li><strong>WavLM Large achieves a 2.4-point absolute improvement</strong> over HuBERT Large in the overall SUPERB evaluation score.</li>
+        </ul>
+      </div>
+
+      <!-- ===== SECTION: Few-shot ===== -->
+      <h2 id="few-shot">Few-shot and Zero-shot Speaker Recognition</h2>
+      <p>
+        One of the most compelling advantages of SSL models is their ability to perform speaker recognition with minimal labeled data. This is critical for real-world deployment where enrolling new speakers with extensive recordings is impractical.
+      </p>
+
+      <h3>Few-shot Speaker Identification</h3>
+      <p>
+        SSL representations are so speaker-discriminative that a simple nearest-neighbor classifier on frozen features can identify speakers from just a few enrollment utterances. Recent work on <strong>open-set speaker identification</strong> combines a pre-trained SSL frontend with a few-shot tunable neural network backend that learns to discriminate target speakers while modeling "otherness" (unknown speakers not in the enrollment set).
+      </p>
+
+      <h3>Zero-shot Speaker Embeddings</h3>
+      <p>
+        Without any task-specific fine-tuning, SSL models produce embeddings that cluster naturally by speaker identity. This enables:
+      </p>
+      <ul>
+        <li><strong>Speaker clustering:</strong> Group unlabeled utterances by speaker using k-means or spectral clustering on raw SSL features.</li>
+        <li><strong>Speaker similarity search:</strong> Find similar speakers in a corpus using cosine similarity on mean-pooled SSL representations.</li>
+        <li><strong>Cross-lingual speaker matching:</strong> SSL features capture speaker identity regardless of spoken language, enabling speaker matching across languages.</li>
+      </ul>
+
+      <h3>Self-Supervised Speaker Verification</h3>
+      <p>
+        A particularly impressive result: a self-supervised speaker verification approach using WavLM with pseudo-labels (no human-annotated speaker labels at all) achieved <strong>0.99% EER on VoxCeleb1-O</strong>. This is remarkably close to the fully supervised baseline of 0.94% EER, demonstrating that SSL representations contain nearly all the speaker information needed without ever seeing explicit speaker labels.
+      </p>
+
+      <div class="info-box warning">
+        <strong>Practical Consideration</strong>
+        <p style="margin-bottom:0;">
+          While zero-shot and few-shot capabilities are impressive, production systems typically benefit from at least some task-specific fine-tuning. The gap between frozen features and fine-tuned models is largest for challenging conditions: noisy audio, short utterances (under 3 seconds), and large speaker populations.
+        </p>
+      </div>
+
+      <!-- ===== SECTION: EEND Integration ===== -->
+      <h2 id="eend">Integration with EEND and Diarization Pipelines</h2>
+      <p>
+        End-to-End Neural Diarization (EEND) systems directly output frame-level speaker activity, handling overlapping speech natively. SSL models have become the preferred frontend for modern EEND systems.
+      </p>
+
+      <h3>How SSL Models Enhance EEND</h3>
+      <ol>
+        <li><strong>Feature replacement:</strong> Replace traditional MFCC or filterbank features with SSL representations as input to the EEND model. WavLM features are most commonly used due to their multi-speaker robustness.</li>
+        <li><strong>Conformer-based EEND:</strong> A Conformer-based EEND model with WavLM features infers frame-level speaker activity within short windows, achieving state-of-the-art diarization error rates.</li>
+        <li><strong>Hybrid pipelines:</strong> Combine EEND for overlap detection with clustering-based diarization for non-overlapping regions, using SSL embeddings as the shared representation.</li>
+      </ol>
+
+      <h3>Diarization Pipeline Architecture</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Traditional</th>
+              <th>SSL-Enhanced</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Features</strong></td>
+              <td>MFCC / Filterbank</td>
+              <td>WavLM Layer 6-8 representations</td>
+            </tr>
+            <tr>
+              <td><strong>Speaker Embeddings</strong></td>
+              <td>x-vector / ECAPA-TDNN</td>
+              <td>WavLM + ECAPA-TDNN cascade</td>
+            </tr>
+            <tr>
+              <td><strong>Overlap Detection</strong></td>
+              <td>Separate module (often poor)</td>
+              <td>Inherent in EEND + WavLM features</td>
+            </tr>
+            <tr>
+              <td><strong>Clustering</strong></td>
+              <td>AHC / Spectral on x-vectors</td>
+              <td>AHC / Spectral on SSL embeddings</td>
+            </tr>
+            <tr>
+              <td><strong>Typical DER</strong></td>
+              <td>8-12%</td>
+              <td>3-6%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>EEND-SS: Joint Diarization and Separation</h3>
+      <p>
+        Advanced frameworks like EEND-SS integrate speaker diarization, speaker counting (via encoder-decoder attractors), and speech separation (via Conv-TasNet) in a single model. SSL features provide the shared representation backbone for all three tasks, allowing end-to-end optimization.
+      </p>
+
+      <!-- ===== SECTION: Pruning ===== -->
+      <h2 id="pruning">Model Pruning and Efficiency</h2>
+      <p>
+        While SSL foundation models achieve remarkable accuracy, their size (95M-317M parameters) and computational cost pose challenges for real-time deployment, particularly on edge devices. Several compression strategies have been developed.
+      </p>
+
+      <h3>Structured Pruning</h3>
+      <p>
+        Knowledge distillation-guided structured pruning has emerged as the most effective compression approach for SSL speaker models. Key results:
+      </p>
+      <ul>
+        <li><strong>Up to 80% model size reduction</strong> with minimal performance degradation on speaker verification tasks.</li>
+        <li><strong>4x faster inference</strong> without accuracy loss on speaker diarization benchmarks.</li>
+        <li>Pruned models <strong>consistently match or surpass</strong> the performance of their uncompressed counterparts across eight public diarization datasets, suggesting that the full-size models may be over-parameterized for speaker tasks.</li>
+      </ul>
+
+      <h3>Knowledge Distillation</h3>
+      <p>
+        Distillation transfers the representational capacity of a large teacher model into a compact student model. Notable examples include:
+      </p>
+      <ul>
+        <li><strong>DistilHuBERT:</strong> A distilled version of HuBERT that reduces layers from 12 to 2 while retaining strong performance on several SUPERB tasks.</li>
+        <li><strong>DPHuBERT:</strong> Combines distillation and pruning for HuBERT, achieving a better efficiency-performance tradeoff than either technique alone.</li>
+        <li><strong>DistilALHuBERT:</strong> A lightweight recursive audio model distilled from HuBERT with parameter sharing across layers.</li>
+      </ul>
+
+      <h3>Efficiency Comparison</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Approach</th>
+              <th>Size Reduction</th>
+              <th>Speedup</th>
+              <th>SV Performance</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full WavLM Large</td>
+              <td>Baseline (316M)</td>
+              <td>1x</td>
+              <td>Best</td>
+              <td>Reference model</td>
+            </tr>
+            <tr>
+              <td>WavLM Base+ (smaller model)</td>
+              <td>~3.3x fewer params</td>
+              <td>~2.5x</td>
+              <td>Near-best</td>
+              <td>Often sufficient</td>
+            </tr>
+            <tr>
+              <td>Structured Pruning (80%)</td>
+              <td>5x fewer params</td>
+              <td>~4x</td>
+              <td>Minimal loss</td>
+              <td>Best efficiency tradeoff</td>
+            </tr>
+            <tr>
+              <td>DistilHuBERT</td>
+              <td>~5x fewer params</td>
+              <td>~5x</td>
+              <td>Moderate loss</td>
+              <td>2 layers only</td>
+            </tr>
+            <tr>
+              <td>DPHuBERT</td>
+              <td>~4x fewer params</td>
+              <td>~3.5x</td>
+              <td>Small loss</td>
+              <td>Distill + prune</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <strong>Deployment Recommendation</strong>
+        <p style="margin-bottom:0;">
+          For real-time speaker diarization on resource-constrained hardware, <strong>WavLM Base+</strong> with structured pruning offers the best balance. It provides near-state-of-the-art accuracy with 3-4x lower latency than WavLM Large. For server-side batch processing where latency is less critical, the full WavLM Large remains the performance leader.
+        </p>
+      </div>
+
+      <!-- ===== SECTION: Strengths & Weaknesses ===== -->
+      <h2 id="strengths-weaknesses">Strengths and Weaknesses</h2>
+
+      <div class="pros-cons">
+        <div class="pros-box">
+          <h4>Strengths</h4>
+          <ul>
+            <li><strong>Data efficiency:</strong> Excellent speaker recognition with minimal labeled data (few-shot, even zero-shot).</li>
+            <li><strong>Universal representations:</strong> A single pre-trained model serves speaker ID, ASR, emotion recognition, and more.</li>
+            <li><strong>SOTA accuracy:</strong> WavLM + ECAPA-TDNN achieves sub-1% EER on VoxCeleb1, near human-level.</li>
+            <li><strong>Overlap robustness:</strong> WavLM's denoising pre-training provides inherent multi-speaker handling.</li>
+            <li><strong>Cross-lingual transfer:</strong> Speaker representations generalize across languages and domains.</li>
+            <li><strong>Compressible:</strong> 80% pruning with minimal accuracy loss enables edge deployment.</li>
+            <li><strong>Active ecosystem:</strong> Strong support in SpeechBrain, HuggingFace Transformers, and ESPnet.</li>
+          </ul>
+        </div>
+        <div class="cons-box">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li><strong>Computational cost:</strong> Full models require significant GPU memory (1.2-4GB for inference) and are slow on CPU.</li>
+            <li><strong>Pre-training expense:</strong> Training from scratch requires hundreds of GPU-days on thousands of hours of audio.</li>
+            <li><strong>Short utterance sensitivity:</strong> Performance degrades on utterances under 2-3 seconds; SSL models expect longer context.</li>
+            <li><strong>Domain mismatch:</strong> Models pre-trained on clean read speech (LibriSpeech) may underperform on telephony, far-field, or heavily accented speech without domain adaptation.</li>
+            <li><strong>Large output dimensionality:</strong> 768-1024 dimensional frame-level features create high memory bandwidth demands.</li>
+            <li><strong>Layer selection complexity:</strong> Optimal layers vary by task, requiring empirical tuning or learned weighted sums.</li>
+            <li><strong>Lack of streaming support:</strong> Transformer self-attention requires the full utterance, limiting real-time streaming applications without chunking workarounds.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>When to Use SSL Foundation Models</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Recommendation</th>
+              <th>Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>High accuracy, offline processing</td>
+              <td><span class="metric-badge best">WavLM Large</span></td>
+              <td>Best accuracy across all speaker tasks</td>
+            </tr>
+            <tr>
+              <td>Balanced accuracy + speed</td>
+              <td><span class="metric-badge best">WavLM Base+</span></td>
+              <td>Near-SOTA at 3x lower cost</td>
+            </tr>
+            <tr>
+              <td>Limited labeled data (&lt;1hr)</td>
+              <td><span class="metric-badge best">Any SSL model</span></td>
+              <td>SSL excels in low-resource regimes</td>
+            </tr>
+            <tr>
+              <td>Overlapping speech / meetings</td>
+              <td><span class="metric-badge best">WavLM</span></td>
+              <td>Denoising pre-training critical here</td>
+            </tr>
+            <tr>
+              <td>Edge / mobile deployment</td>
+              <td><span class="metric-badge good">Pruned WavLM Base+</span></td>
+              <td>80% smaller with ~4x speedup</td>
+            </tr>
+            <tr>
+              <td>Real-time streaming</td>
+              <td><span class="metric-badge neutral">ECAPA-TDNN alone</span></td>
+              <td>SSL models lack native streaming; consider traditional embeddings or chunked SSL</td>
+            </tr>
+            <tr>
+              <td>Multi-task (ASR + speaker)</td>
+              <td><span class="metric-badge best">WavLM Large</span></td>
+              <td>Different layers serve different tasks from same backbone</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== SECTION: Sources ===== -->
+      <h2 id="sources">Sources and References</h2>
+
+      <h3>Primary Model Papers</h3>
+      <ul>
+        <li>Baevski, A. et al. (2020). <a href="https://arxiv.org/abs/2006.11477" target="_blank" rel="noopener">wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations</a>. NeurIPS 2020.</li>
+        <li>Hsu, W.-N. et al. (2021). <a href="https://arxiv.org/abs/2106.07447" target="_blank" rel="noopener">HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units</a>. IEEE/ACM TASLP.</li>
+        <li>Chen, S. et al. (2022). <a href="https://arxiv.org/abs/2110.13900" target="_blank" rel="noopener">WavLM: Large-Scale Self-Supervised Pre-Training for Full Stack Speech Processing</a>. IEEE JSTSP.</li>
+      </ul>
+
+      <h3>Benchmarks and Evaluation</h3>
+      <ul>
+        <li>Yang, S.-w. et al. (2021). <a href="https://arxiv.org/abs/2105.01051" target="_blank" rel="noopener">SUPERB: Speech processing Universal PERformance Benchmark</a>. Interspeech 2021.</li>
+        <li>Wang, Y. et al. (2021). <a href="https://arxiv.org/abs/2111.02735" target="_blank" rel="noopener">A Fine-tuned Wav2vec 2.0/HuBERT Benchmark For Speech Emotion Recognition, Speaker Verification and Spoken Language Understanding</a>.</li>
+      </ul>
+
+      <h3>Layer-wise Analysis</h3>
+      <ul>
+        <li>Pasad, A. et al. (2021). <a href="https://arxiv.org/abs/2107.04734" target="_blank" rel="noopener">Layer-wise Analysis of a Self-supervised Speech Representation Model</a>. IEEE ASRU 2021.</li>
+        <li>Pasad, A. et al. (2024). <a href="https://arxiv.org/abs/2401.17632" target="_blank" rel="noopener">What Do Self-Supervised Speech and Speaker Models Learn? New Findings From a Cross Model Layer-Wise Analysis</a>.</li>
+        <li>Large-Scale Probing Analysis of Speaker-Specific Attributes in Self-Supervised Speech Representations (2025). <a href="https://arxiv.org/html/2501.05310v2" target="_blank" rel="noopener">arXiv:2501.05310</a>.</li>
+      </ul>
+
+      <h3>Speaker Verification and Diarization</h3>
+      <ul>
+        <li>Fan, Z. et al. (2020). <a href="https://www.researchgate.net/publication/354221824" target="_blank" rel="noopener">Exploring wav2vec 2.0 on Speaker Verification and Language Identification</a>.</li>
+        <li>Miara, R. et al. (2024). <a href="https://www.isca-archive.org/interspeech_2024/miara24_interspeech.pdf" target="_blank" rel="noopener">Towards Supervised Performance on Speaker Verification with Self-Supervised Learning by Leveraging Large-Scale ASR Models</a>. Interspeech 2024.</li>
+        <li><a href="https://arxiv.org/html/2506.18623" target="_blank" rel="noopener">Efficient and Generalizable Speaker Diarization via Structured Pruning of Self-Supervised Models</a> (2025).</li>
+        <li><a href="https://arxiv.org/pdf/2409.09408" target="_blank" rel="noopener">Leveraging Self-Supervised Learning for Speaker Diarization</a> (2024).</li>
+      </ul>
+
+      <h3>Model Compression and Efficiency</h3>
+      <ul>
+        <li><a href="https://arxiv.org/html/2510.04213v1" target="_blank" rel="noopener">Enhancing Speaker Verification with w2v-BERT 2.0 and Knowledge Distillation guided Structured Pruning</a> (2025).</li>
+        <li><a href="https://dl.acm.org/doi/fullHtml/10.1145/3614008.3614015" target="_blank" rel="noopener">DistilALHuBERT: A Distilled Parameter Sharing Audio Representation Model</a>. ACM MM Asia 2023.</li>
+      </ul>
+
+      <h3>Toolkits and Implementations</h3>
+      <ul>
+        <li><a href="https://speechbrain.readthedocs.io/en/v1.0.2/tutorials/nn/using-wav2vec-2.0-hubert-wavlm-and-whisper-from-huggingface-with-speechbrain.html" target="_blank" rel="noopener">SpeechBrain: Using wav2vec 2.0, HuBERT, WavLM with SpeechBrain</a>.</li>
+        <li><a href="https://huggingface.co/docs/transformers/en/model_doc/wav2vec2" target="_blank" rel="noopener">HuggingFace Transformers: Wav2Vec2</a>.</li>
+        <li><a href="https://huggingface.co/microsoft/wavlm-base-sv" target="_blank" rel="noopener">WavLM Base for Speaker Verification (HuggingFace)</a>.</li>
+        <li><a href="https://huggingface.co/superb/wav2vec2-base-superb-sid" target="_blank" rel="noopener">SUPERB wav2vec2 Speaker ID model (HuggingFace)</a>.</li>
+      </ul>
+
+      <hr>
+      <p style="text-align:center; font-size:0.85rem; color:var(--color-text-muted);">
+        Generated March 2026 &middot; <a href="../voice-speaker-identification/index.html">Back to Speaker Identification Overview</a>
+      </p>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ===== Mermaid Initialization =====
+document.addEventListener('DOMContentLoaded', function() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    themeVariables: isDark ? {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#f1f5f9',
+      primaryBorderColor: '#A78BFA',
+      lineColor: '#64748b',
+      secondaryColor: '#1e293b',
+      tertiaryColor: '#334155',
+      background: '#1e293b',
+      mainBkg: '#1e293b',
+      nodeBorder: '#A78BFA'
+    } : {
+      primaryColor: '#EDE9FE',
+      primaryTextColor: '#1e293b',
+      primaryBorderColor: '#7C3AED',
+      lineColor: '#94a3b8',
+      secondaryColor: '#F5F3FF',
+      tertiaryColor: '#f1f5f9'
+    }
+  });
+});
+
+// ===== Dark Mode Toggle =====
+(function() {
+  const toggle = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  const root = document.documentElement;
+
+  function setTheme(dark) {
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    icon.textContent = dark ? '\u2600' : '\u263D';
+    label.textContent = dark ? 'Light mode' : 'Dark mode';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+
+    // Re-render mermaid diagrams with appropriate theme
+    const mermaidDivs = document.querySelectorAll('.mermaid');
+    mermaidDivs.forEach(function(el) {
+      // Store original content if not already stored
+      if (!el.getAttribute('data-original')) {
+        el.setAttribute('data-original', el.getAttribute('data-processed') ? '' : el.textContent);
+      }
+    });
+
+    // Re-initialize mermaid with new theme
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: dark ? 'dark' : 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      themeVariables: dark ? {
+        primaryColor: '#7C3AED',
+        primaryTextColor: '#f1f5f9',
+        primaryBorderColor: '#A78BFA',
+        lineColor: '#64748b',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#334155',
+        background: '#1e293b',
+        mainBkg: '#1e293b',
+        nodeBorder: '#A78BFA'
+      } : {
+        primaryColor: '#EDE9FE',
+        primaryTextColor: '#1e293b',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#94a3b8',
+        secondaryColor: '#F5F3FF',
+        tertiaryColor: '#f1f5f9'
+      }
+    });
+  }
+
+  // Check saved preference or system preference
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    setTheme(saved === 'dark');
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    setTheme(true);
+  }
+
+  toggle.addEventListener('click', function() {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    setTheme(!isDark);
+  });
+})();
+
+// ===== Mobile Menu Toggle =====
+(function() {
+  const menuBtn = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+
+  menuBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+  });
+
+  // Close sidebar when clicking a link (mobile)
+  sidebar.addEventListener('click', function(e) {
+    if (e.target.classList.contains('sidebar-link') && window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Close sidebar when clicking outside (mobile)
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 900 &&
+        !sidebar.contains(e.target) &&
+        !menuBtn.contains(e.target) &&
+        sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+    }
+  });
+})();
+
+// ===== Active Sidebar Link Tracking =====
+(function() {
+  const sections = document.querySelectorAll('h2[id], h3[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  function updateActive() {
+    let current = '';
+    const scrollY = window.scrollY;
+
+    sections.forEach(function(section) {
+      const top = section.offsetTop - 100;
+      if (scrollY >= top) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    links.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        updateActive();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActive();
+})();
+
+// ===== Smooth scroll for sidebar links =====
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, null, href);
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

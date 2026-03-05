@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metric Learning &amp; Loss Functions for Speaker Identification/Verification</title>
+<meta name="description" content="Comprehensive explainer on metric learning loss functions used to train speaker embedding models: Softmax, Triplet Loss, GE2E, AAM-Softmax (ArcFace), Angular Prototypical, Supervised Contrastive, and MFCon losses.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-warning-border: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-success-border: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-danger-border: #EF4444;
+  --color-danger-bg: #FEF2F2;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #2E1065;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #2E1065;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-warning-border: #D97706;
+  --color-warning-bg: #451a0340;
+  --color-success-border: #059669;
+  --color-success-bg: #064e3b40;
+  --color-danger-border: #DC2626;
+  --color-danger-bg: #450a0a40;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== Mobile Menu Toggle ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  transition: all var(--transition);
+  width: 100%;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p {
+  margin-bottom: 1rem;
+}
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways .box-title {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul {
+  margin-bottom: 0;
+}
+
+.takeaways li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* ===== Alert Boxes ===== */
+.alert-box {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+  border-left: 4px solid;
+}
+
+.alert-box.warning {
+  border-left-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.alert-box.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.alert-box.danger {
+  border-left-color: var(--color-danger-border);
+  background: var(--color-danger-bg);
+}
+
+.alert-box .box-title {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong {
+  color: var(--color-heading);
+}
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ===== Math-like formulas ===== */
+.formula {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  overflow-x: auto;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.formula .label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+thead {
+  background: var(--color-table-header);
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-table-stripe);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Loss Cards ===== */
+.loss-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  transition: border-color var(--transition);
+}
+
+.loss-card:hover {
+  border-color: var(--color-primary-light);
+}
+
+.loss-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.loss-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.loss-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.loss-card-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.loss-card .pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.loss-card .pros, .loss-card .cons {
+  font-size: 0.88rem;
+}
+
+.loss-card .pros strong {
+  color: #059669;
+}
+
+.loss-card .cons strong {
+  color: #DC2626;
+}
+
+.loss-card .pros li, .loss-card .cons li {
+  margin-bottom: 0.3rem;
+}
+
+/* ===== Embedding Visualization ===== */
+.embed-viz {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.embed-viz-item {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.embed-viz-item h4 {
+  font-size: 0.9rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+.embed-viz-item p {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+}
+
+.embed-viz-item canvas {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 0.75rem;
+}
+
+/* ===== Comparison Grid ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.comparison-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.comparison-card h4 {
+  margin-top: 0;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
+
+.comparison-card p {
+  font-size: 0.88rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== Score Badges ===== */
+.score-badge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.score-high {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.score-mid {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.score-low {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+[data-theme="dark"] .score-high {
+  background: #064e3b;
+  color: #6EE7B7;
+}
+
+[data-theme="dark"] .score-mid {
+  background: #78350f;
+  color: #FCD34D;
+}
+
+[data-theme="dark"] .score-low {
+  background: #7f1d1d;
+  color: #FCA5A5;
+}
+
+/* ===== Sources ===== */
+.sources-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sources-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.88rem;
+}
+
+.sources-list li:last-child {
+  border-bottom: none;
+}
+
+.source-type {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.1em 0.5em;
+  border-radius: 3px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  margin-right: 0.5rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+
+  .loss-card .pros-cons {
+    grid-template-columns: 1fr;
+  }
+
+  .embed-viz {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.65rem;
+  }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Metric Learning &amp; Loss Functions</div>
+    <div class="sidebar-subtitle">Speaker Identification &amp; Verification</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Foundations</div>
+    <a href="#introduction" class="sidebar-link">Introduction</a>
+    <a href="#why-loss-matters" class="sidebar-link">Why Loss Functions Matter</a>
+    <a href="#embedding-space" class="sidebar-link">The Embedding Space</a>
+
+    <div class="sidebar-nav-section">Classification-Based</div>
+    <a href="#softmax" class="sidebar-link">Softmax &amp; Its Limitations</a>
+    <a href="#aam-softmax" class="sidebar-link">AAM-Softmax (ArcFace/CosFace)</a>
+
+    <div class="sidebar-nav-section">Metric Learning</div>
+    <a href="#triplet-loss" class="sidebar-link">Triplet Loss</a>
+    <a href="#ge2e" class="sidebar-link">GE2E Loss</a>
+    <a href="#angular-prototypical" class="sidebar-link">Angular Prototypical Loss</a>
+
+    <div class="sidebar-nav-section">Contrastive Methods</div>
+    <a href="#supervised-contrastive" class="sidebar-link">Supervised Contrastive Loss</a>
+    <a href="#mfcon" class="sidebar-link">MFCon Loss</a>
+
+    <div class="sidebar-nav-section">Analysis</div>
+    <a href="#embedding-shaping" class="sidebar-link">How Losses Shape Embeddings</a>
+    <a href="#performance" class="sidebar-link">Performance Comparison</a>
+    <a href="#practical-guidance" class="sidebar-link">Practical Guidance</a>
+    <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#sources" class="sidebar-link">Sources</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="theme-icon">&#9790;</span>
+      <span class="theme-label">Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Mobile Menu Toggle ===== -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Voice &amp; Speaker Identification</a>
+
+<h1>Metric Learning &amp; Loss Functions for Speaker ID</h1>
+<p class="page-subtitle">How the choice of loss function during training fundamentally determines the quality of speaker embeddings -- and why getting it right is the single most impactful decision in building a speaker verification system.</p>
+
+<!-- ===== Introduction ===== -->
+<h2 id="introduction">Introduction</h2>
+
+<p>Modern speaker identification and verification systems share a common architectural pattern: an encoder network maps variable-length audio into fixed-dimensional <strong>speaker embeddings</strong> (typically 128- to 512-dimensional vectors). At test time, the system compares two embeddings using cosine similarity to decide whether they belong to the same speaker.</p>
+
+<p>The encoder's architecture matters, but the <strong>loss function</strong> used to train it arguably matters more. The loss function defines <em>what the network learns to optimize</em>: it shapes the geometry of the embedding space, determines how tightly same-speaker utterances cluster together, how far apart different speakers are pushed, and ultimately how well the system generalizes to speakers never seen during training.</p>
+
+<div class="takeaways">
+  <span class="box-title">Key Insight</span>
+  <ul>
+    <li>The loss function is the primary force shaping the embedding space geometry.</li>
+    <li>Two broad families exist: <strong>classification-based losses</strong> (Softmax, AAM-Softmax) that learn embedding-to-class-center relations, and <strong>metric learning losses</strong> (Triplet, GE2E, Prototypical) that directly learn embedding-to-embedding relations.</li>
+    <li>Recent hybrid approaches (Supervised Contrastive, MFCon) combine benefits of both.</li>
+    <li>No single loss dominates every scenario -- the best choice depends on dataset size, number of speakers, and deployment constraints.</li>
+  </ul>
+</div>
+
+
+<!-- ===== Why Loss Functions Matter ===== -->
+<h2 id="why-loss-matters">Why Loss Functions Matter for Speaker Embeddings</h2>
+
+<p>Speaker verification is fundamentally an <strong>open-set problem</strong>: speakers encountered at test time are entirely different from those seen during training. This creates a critical challenge that distinguishes it from standard classification.</p>
+
+<h3>The Training-Testing Mismatch</h3>
+
+<p>During training, the system sees a finite, closed set of speakers (e.g., 7,000 speakers in VoxCeleb2). During deployment, it must verify speakers it has <em>never seen</em>. This mismatch means the network cannot simply memorize speaker identities -- it must learn a <strong>generalizable embedding function</strong> that captures the fundamental structure of "what makes voices different."</p>
+
+<p>The loss function directly controls how well this generalization works:</p>
+
+<ul>
+  <li><strong>Intra-class compactness:</strong> How tightly are embeddings from the same speaker clustered? Loose clusters lead to false rejections.</li>
+  <li><strong>Inter-class separation:</strong> How far apart are embeddings from different speakers? Insufficient separation leads to false acceptances.</li>
+  <li><strong>Angular uniformity:</strong> Are speakers distributed evenly on the hypersphere, or do some regions get overcrowded while others remain empty?</li>
+  <li><strong>Generalization:</strong> Does the learned geometry transfer to unseen speakers, or does it overfit to the training speaker set?</li>
+</ul>
+
+<div class="info-box">
+  <strong>Why Cosine Similarity?</strong>
+  <p style="margin-top:0.5rem; margin-bottom:0;">Speaker embeddings live on a <strong>unit hypersphere</strong> -- the network's final layer typically applies L2 normalization. On this surface, cosine similarity equals the dot product, and the geodesic distance between two points corresponds to the angle between them. This is why angular margin methods are so natural for this domain: they directly optimize the metric used at test time.</p>
+</div>
+
+
+<!-- ===== The Embedding Space ===== -->
+<h2 id="embedding-space">The Embedding Space</h2>
+
+<p>Before diving into specific losses, it helps to visualize what we are trying to achieve. Each speaker's utterances should map to a tight cluster in embedding space, with clear separation between different speakers. The animation below shows how different losses create different geometric structures.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+graph LR
+    subgraph "Ideal Embedding Space (Hypersphere Surface)"
+        direction TB
+        A["Speaker A<br/>Tight Cluster"] --- C["Large Angular<br/>Margin"]
+        C --- B["Speaker B<br/>Tight Cluster"]
+        B --- D["Large Angular<br/>Margin"]
+        D --- E["Speaker C<br/>Tight Cluster"]
+    end
+
+    subgraph "Poor Embedding Space"
+        direction TB
+        F["Speaker A<br/>Spread Out"] --- G["Small/No<br/>Margin"]
+        G --- H["Speaker B<br/>Overlapping"]
+    end
+
+    style A fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style B fill:#06B6D4,color:#fff,stroke:#0891B2
+    style E fill:#F59E0B,color:#fff,stroke:#D97706
+    style C fill:#D1FAE5,color:#065F46,stroke:#059669
+    style D fill:#D1FAE5,color:#065F46,stroke:#059669
+    style F fill:#EF4444,color:#fff,stroke:#DC2626
+    style H fill:#EF4444,color:#fff,stroke:#DC2626
+    style G fill:#FEE2E2,color:#991B1B,stroke:#EF4444
+  </div>
+  <div class="diagram-caption">Left: Well-trained embeddings with compact clusters and clear margins. Right: Poorly trained embeddings with overlapping speakers.</div>
+</div>
+
+<div class="embed-viz">
+  <div class="embed-viz-item">
+    <h4>Softmax</h4>
+    <canvas id="vizSoftmax"></canvas>
+    <p>Separable but not compact. No explicit margin enforcement.</p>
+  </div>
+  <div class="embed-viz-item">
+    <h4>Triplet Loss</h4>
+    <canvas id="vizTriplet"></canvas>
+    <p>Local pairwise constraints. Can leave gaps in global structure.</p>
+  </div>
+  <div class="embed-viz-item">
+    <h4>AAM-Softmax</h4>
+    <canvas id="vizAAM"></canvas>
+    <p>Compact clusters with enforced angular margins between all classes.</p>
+  </div>
+  <div class="embed-viz-item">
+    <h4>GE2E / Prototypical</h4>
+    <canvas id="vizGE2E"></canvas>
+    <p>Centroid-aware. Pulls to own center, pushes from hardest negative center.</p>
+  </div>
+</div>
+
+
+<!-- ===== Softmax ===== -->
+<h2 id="softmax">Softmax &amp; Its Limitations</h2>
+
+<p>The standard Softmax cross-entropy loss treats speaker verification as a <strong>multi-class classification problem</strong>. The network learns a weight vector for each training speaker, and the loss encourages each embedding to have maximal dot product with its corresponding class weight while minimizing dot product with all other class weights.</p>
+
+<div class="formula">
+  L<sub>softmax</sub> = -log( exp(W<sub>y</sub><sup>T</sup> x + b<sub>y</sub>) / &Sigma;<sub>j</sub> exp(W<sub>j</sub><sup>T</sup> x + b<sub>j</sub>) )
+  <span class="label">Standard Softmax Cross-Entropy Loss</span>
+</div>
+
+<h3>How It Works</h3>
+<ol>
+  <li>The encoder produces an embedding <code>x</code> for each utterance.</li>
+  <li>A fully-connected classification head with <code>N</code> output neurons (one per training speaker) computes logits.</li>
+  <li>Softmax converts logits to probabilities; cross-entropy loss penalizes incorrect classifications.</li>
+  <li>At test time, the classification head is discarded; only the embedding is used.</li>
+</ol>
+
+<h3>Limitations</h3>
+
+<div class="alert-box warning">
+  <div class="box-title">Critical Limitations of Standard Softmax</div>
+  <ul>
+    <li><strong>No margin enforcement:</strong> Softmax only requires that the correct class logit be the largest -- it does not enforce any gap between classes. Embeddings can be separable yet geometrically close, causing verification failures.</li>
+    <li><strong>Training-testing mismatch:</strong> Training optimizes a closed-set classification objective (N-way classification), but testing is an open-set verification problem (binary same/different decision). The objectives are fundamentally misaligned.</li>
+    <li><strong>No intra-class compactness constraint:</strong> Softmax does not explicitly minimize the variance within each speaker's cluster.</li>
+    <li><strong>Classification head dependency:</strong> The weight matrix grows linearly with the number of training speakers (N), creating scalability issues for very large datasets.</li>
+  </ul>
+</div>
+
+<p>These limitations motivated two divergent lines of research: <strong>margin-enhanced softmax variants</strong> (which add geometric constraints to the classification framework) and <strong>metric learning approaches</strong> (which abandon classification entirely in favor of directly optimizing embedding geometry).</p>
+
+
+<!-- ===== AAM-Softmax ===== -->
+<h2 id="aam-softmax">AAM-Softmax (ArcFace / CosFace)</h2>
+
+<p>Additive Angular Margin Softmax (AAM-Softmax), also known as <strong>ArcFace</strong>, is the dominant classification-based loss in modern speaker verification. It addresses Softmax's lack of margin by introducing an explicit angular penalty that forces embeddings away from the decision boundary.</p>
+
+<h3>The Evolution of Margin-Based Softmax</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr><th>Method</th><th>Margin Type</th><th>Formula Modification</th><th>Year</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SphereFace</strong> (A-Softmax)</td>
+        <td>Multiplicative angular</td>
+        <td>cos(<em>m</em> &middot; &theta;)</td>
+        <td>2017</td>
+      </tr>
+      <tr>
+        <td><strong>CosFace</strong> (AM-Softmax)</td>
+        <td>Additive cosine</td>
+        <td>cos(&theta;) - <em>m</em></td>
+        <td>2018</td>
+      </tr>
+      <tr>
+        <td><strong>ArcFace</strong> (AAM-Softmax)</td>
+        <td>Additive angular</td>
+        <td>cos(&theta; + <em>m</em>)</td>
+        <td>2019</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>How AAM-Softmax Works</h3>
+
+<div class="formula">
+  L<sub>AAM</sub> = -log( exp(s &middot; cos(&theta;<sub>y</sub> + m)) / [exp(s &middot; cos(&theta;<sub>y</sub> + m)) + &Sigma;<sub>j&ne;y</sub> exp(s &middot; cos(&theta;<sub>j</sub>))] )
+  <span class="label">AAM-Softmax Loss: s = scale factor, m = angular margin, &theta; = angle between embedding and class center</span>
+</div>
+
+<ol>
+  <li><strong>Normalize</strong> both the embedding <code>x</code> and the weight vectors <code>W</code> to unit length. This projects everything onto the hypersphere.</li>
+  <li><strong>Compute angles</strong> <code>&theta;</code> between the embedding and each class center via <code>cos(&theta;) = W<sup>T</sup>x</code>.</li>
+  <li><strong>Add angular margin</strong> <code>m</code> (typically 0.2) to the angle of the correct class. This makes it harder for the embedding to be classified correctly -- the network must push embeddings closer to their class center.</li>
+  <li><strong>Scale</strong> by factor <code>s</code> (typically 30) to control the sharpness of the probability distribution.</li>
+  <li>Apply standard softmax cross-entropy on the modified logits.</li>
+</ol>
+
+<h3>Geometric Interpretation</h3>
+
+<p>The angular margin <code>m</code> creates a "dead zone" around each class decision boundary. An embedding must be at least <code>m</code> radians closer to its own class center than to any other class center to be classified correctly during training. This directly enforces inter-class angular separation on the hypersphere.</p>
+
+<p>ArcFace's additive angular margin has a constant effect throughout the entire angular range (unlike SphereFace's multiplicative margin, which has non-linear effects). This provides more uniform margin enforcement and a cleaner geometric interpretation: the margin corresponds exactly to the geodesic distance on the hypersphere.</p>
+
+<h3>Hyperparameter Sensitivity</h3>
+
+<div class="alert-box warning">
+  <div class="box-title">Margin and Scale Sensitivity</div>
+  <p>Performance of AAM-Softmax is <strong>very sensitive</strong> to the margin <code>m</code> and scale <code>s</code> parameters. Research has shown that the most common setting (AM-Softmax with m=0.3, s=30) can actually be <em>outperformed</em> by vanilla triplet loss if not properly tuned. Typical effective ranges: <code>m</code> in [0.1, 0.3], <code>s</code> in [15, 64].</p>
+</div>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #EDE9FE; color: #7C3AED;">&#8738;</div>
+    <div>
+      <div class="loss-card-title">AAM-Softmax Summary</div>
+      <div class="loss-card-subtitle">ArcFace / CosFace -- Classification with Angular Margins</div>
+    </div>
+  </div>
+  <p>The workhorse of modern speaker verification. Used by nearly all top-performing systems on VoxSRC challenges. Requires a classification head with N outputs (one per training speaker), which is discarded at inference.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>Strong performance with large training sets</li>
+        <li>Clear geometric interpretation</li>
+        <li>Stable training (no mining needed)</li>
+        <li>Well-studied hyperparameter ranges</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Classification head scales with speaker count</li>
+        <li>Sensitive to margin/scale parameters</li>
+        <li>Training-testing paradigm mismatch persists</li>
+        <li>Requires all training speakers labeled</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== Triplet Loss ===== -->
+<h2 id="triplet-loss">Triplet Loss</h2>
+
+<p>Triplet Loss was one of the first metric learning losses applied to speaker verification, borrowed from face recognition (FaceNet, 2015). It operates on triplets of examples: an <strong>anchor</strong>, a <strong>positive</strong> (same speaker), and a <strong>negative</strong> (different speaker).</p>
+
+<div class="formula">
+  L<sub>triplet</sub> = max(0, ||f(a) - f(p)||<sup>2</sup> - ||f(a) - f(n)||<sup>2</sup> + &alpha;)
+  <span class="label">Triplet Loss: a = anchor, p = positive, n = negative, &alpha; = margin</span>
+</div>
+
+<h3>How It Works</h3>
+
+<ol>
+  <li>For each training step, select triplets (a, p, n) where a and p are from the same speaker and n is from a different speaker.</li>
+  <li>The loss pushes the anchor-positive distance below the anchor-negative distance by at least margin &alpha;.</li>
+  <li>If the constraint is already satisfied, the loss is zero (the triplet contributes no gradient).</li>
+</ol>
+
+<h3>Triplet Mining Strategies</h3>
+
+<p>The effectiveness of triplet loss depends critically on <strong>how triplets are selected</strong>. Most randomly chosen triplets are "easy" (the constraint is already satisfied), providing no useful gradient.</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr><th>Strategy</th><th>Selection Rule</th><th>Training Behavior</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Easy Triplets</strong></td>
+        <td>Random selection</td>
+        <td>Fast but highly inefficient; most triplets have zero loss</td>
+      </tr>
+      <tr>
+        <td><strong>Hard Negative Mining</strong></td>
+        <td>Select the closest negative to the anchor</td>
+        <td>Fast convergence but can be unstable; may collapse embeddings</td>
+      </tr>
+      <tr>
+        <td><strong>Semi-Hard Mining</strong></td>
+        <td>Negatives farther than positive but within the margin</td>
+        <td>Stable compromise; the standard recommended approach</td>
+      </tr>
+      <tr>
+        <td><strong>Batch Hard</strong></td>
+        <td>For each anchor, find hardest positive and hardest negative in the batch</td>
+        <td>Efficient GPU utilization; every anchor contributes to the loss</td>
+      </tr>
+      <tr>
+        <td><strong>Batch All</strong></td>
+        <td>Average loss over all valid triplets in the batch</td>
+        <td>Comprehensive but diluted by easy triplets</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>A common speaker verification setup constructs mini-batches with <strong>32 speakers, 4 utterances each</strong>, forming 128 "hard triplets" per batch via batch-hard mining.</p>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #DBEAFE; color: #2563EB;">&#9651;</div>
+    <div>
+      <div class="loss-card-title">Triplet Loss Summary</div>
+      <div class="loss-card-subtitle">Pairwise Distance Metric Learning</div>
+    </div>
+  </div>
+  <p>The foundational metric learning loss. Directly optimizes the embedding distance between same/different speaker pairs. No classification head needed, but requires careful triplet mining for effective training.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>No classification head needed</li>
+        <li>Directly optimizes the test-time metric</li>
+        <li>Conceptually simple and well-understood</li>
+        <li>Can outperform poorly-tuned margin softmax</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Slow convergence without proper mining</li>
+        <li>Only considers one negative per update step</li>
+        <li>Training instability with hard mining</li>
+        <li>Requires large batch sizes for effective mining</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== GE2E Loss ===== -->
+<h2 id="ge2e">GE2E (Generalized End-to-End) Loss</h2>
+
+<p>GE2E Loss, introduced by Google in 2018, was designed specifically for speaker verification. It generalizes the earlier Tuple-based End-to-End (TE2E) loss by constructing a full <strong>similarity matrix</strong> between all utterance embeddings and all speaker centroids in a batch, enabling much more efficient training.</p>
+
+<h3>Centroid Computation</h3>
+
+<p>Given a batch of <strong>N speakers</strong> with <strong>M utterances</strong> each, GE2E first computes the centroid (average embedding) for each speaker:</p>
+
+<div class="formula">
+  c<sub>k</sub> = (1/M) &middot; &Sigma;<sub>i=1..M</sub> e<sub>ki</sub>
+  <span class="label">Speaker centroid: average of all M utterance embeddings for speaker k</span>
+</div>
+
+<p>For numerical stability and to prevent trivial solutions, GE2E uses <strong>leave-one-out centroids</strong>: when computing the similarity for utterance <code>e<sub>ki</sub></code> against its own speaker's centroid, that utterance is excluded from the centroid calculation.</p>
+
+<h3>The Similarity Matrix</h3>
+
+<div class="diagram-container">
+  <div class="mermaid">
+block-beta
+    columns 6
+    space:1 c1["c1<br/>Spk 1"] c2["c2<br/>Spk 2"] c3["c3<br/>Spk 3"] c4["..."] cN["cN<br/>Spk N"]
+    e11["e(1,1)"] s11["HIGH"] s12["low"] s13["low"] s14["..."] s1N["low"]
+    e12["e(1,2)"] s21["HIGH"] s22["low"] s23["low"] s24["..."] s2N["low"]
+    e13["e(1,3)"] s31["HIGH"] s32["low"] s33["low"] s34["..."] s3N["low"]
+    e21["e(2,1)"] s41["low"] s42["HIGH"] s43["low"] s44["..."] s4N["low"]
+    e22["e(2,2)"] s51["low"] s52["HIGH"] s53["low"] s54["..."] s5N["low"]
+
+    style s11 fill:#7C3AED,color:#fff
+    style s21 fill:#7C3AED,color:#fff
+    style s31 fill:#7C3AED,color:#fff
+    style s42 fill:#06B6D4,color:#fff
+    style s52 fill:#06B6D4,color:#fff
+    style c1 fill:#7C3AED,color:#fff
+    style c2 fill:#06B6D4,color:#fff
+    style c3 fill:#F59E0B,color:#fff
+  </div>
+  <div class="diagram-caption">GE2E Similarity Matrix: Rows are utterance embeddings, columns are speaker centroids. Diagonal blocks (same speaker) should have high cosine similarity, off-diagonal entries should be low. The loss optimizes all entries simultaneously.</div>
+</div>
+
+<h3>How GE2E Training Works</h3>
+
+<ol>
+  <li><strong>Batch formation:</strong> Sample N speakers (typically N=64) with M utterances each (typically M=10).</li>
+  <li><strong>Extract embeddings:</strong> Pass all N&times;M utterances through the encoder.</li>
+  <li><strong>Compute centroids:</strong> Calculate the mean embedding for each of the N speakers (using leave-one-out for self-comparisons).</li>
+  <li><strong>Build similarity matrix:</strong> Compute the scaled cosine similarity between every embedding and every centroid, producing an (N&times;M) &times; N matrix.</li>
+  <li><strong>Apply softmax or contrast loss:</strong> For each utterance, the loss pushes its similarity to its own speaker's centroid up, and its similarity to all other centroids down.</li>
+</ol>
+
+<div class="formula">
+  S<sub>ji,k</sub> = w &middot; cos(e<sub>ji</sub>, c<sub>k</sub>) + b
+  <span class="label">Similarity: w and b are learnable scale and bias; cos is cosine similarity</span>
+</div>
+
+<h3>Key Advantages Over Triplet Loss</h3>
+
+<ul>
+  <li><strong>All-pairs comparison:</strong> Each utterance is compared against all N centroids, not just one negative. This provides N-1 negative comparisons per sample per step.</li>
+  <li><strong>Implicit hard mining:</strong> The softmax over the similarity matrix naturally emphasizes the hardest negative (the centroid most similar to the utterance from a wrong speaker).</li>
+  <li><strong>No separate mining stage:</strong> Mining is implicit in the batch structure, eliminating the need for expensive pre-computation of hard triplets.</li>
+  <li><strong>Efficiency:</strong> Reports show 10% EER reduction and 60% training time reduction compared to TE2E.</li>
+</ul>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #D1FAE5; color: #059669;">&#9635;</div>
+    <div>
+      <div class="loss-card-title">GE2E Loss Summary</div>
+      <div class="loss-card-subtitle">Centroid-Based Generalized End-to-End Loss (Google, 2018)</div>
+    </div>
+  </div>
+  <p>Designed specifically for speaker verification. Constructs a full similarity matrix between utterance embeddings and speaker centroids, enabling efficient all-pairs training. No classification head needed.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>Built-in hard negative mining via similarity matrix</li>
+        <li>No classification head; scales to any speaker count</li>
+        <li>60% training speedup over tuple-based methods</li>
+        <li>10%+ EER improvement over TE2E</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Requires multiple utterances per speaker per batch</li>
+        <li>Centroid quality degrades with few utterances per speaker</li>
+        <li>Unequal centroid sizes across speakers in a batch can cause imbalance</li>
+        <li>Less common in recent VoxSRC-winning systems than AAM-Softmax</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== Angular Prototypical Loss ===== -->
+<h2 id="angular-prototypical">Angular Prototypical Loss</h2>
+
+<p>Angular Prototypical Loss, introduced by Chung et al. (2020) in their influential paper "In Defence of Metric Learning for Speaker Recognition," adapts prototypical networks for speaker verification with an angular (cosine-based) similarity metric. It emerged as the <strong>top-performing metric learning loss</strong> in their comprehensive comparison.</p>
+
+<h3>Prototypical Networks Background</h3>
+
+<p>Prototypical networks (Snell et al., 2017) were originally designed for few-shot classification. The key idea: compute a <strong>prototype</strong> (centroid) for each class from a small "support set," then classify query examples based on distance to each prototype.</p>
+
+<h3>How Angular Prototypical Loss Works</h3>
+
+<ol>
+  <li><strong>Batch formation:</strong> Sample N speakers with M+1 utterances each. Reserve 1 utterance as the <strong>query</strong>; the remaining M form the <strong>support set</strong>.</li>
+  <li><strong>Compute prototypes:</strong> For each speaker, average the M support embeddings to get the prototype (centroid).</li>
+  <li><strong>Normalize:</strong> All embeddings and prototypes are L2-normalized, projecting to the unit hypersphere.</li>
+  <li><strong>Angular similarity:</strong> Compute the cosine similarity between each query and all prototypes, scaled by a learnable parameter <code>w</code> with bias <code>b</code>.</li>
+  <li><strong>Softmax loss:</strong> Apply cross-entropy loss encouraging each query to be most similar to its own prototype.</li>
+</ol>
+
+<div class="formula">
+  L<sub>AP</sub> = -log( exp(w &middot; cos(q<sub>k</sub>, p<sub>k</sub>) + b) / &Sigma;<sub>j</sub> exp(w &middot; cos(q<sub>k</sub>, p<sub>j</sub>) + b) )
+  <span class="label">Angular Prototypical Loss: q = query embedding, p = prototype centroid, w = learnable scale, b = learnable bias</span>
+</div>
+
+<h3>Key Differences from GE2E</h3>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr><th>Aspect</th><th>GE2E</th><th>Angular Prototypical</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Query/Support split</td>
+        <td>No explicit split; all utterances used</td>
+        <td>Explicit 1-query, M-support split per speaker</td>
+      </tr>
+      <tr>
+        <td>Centroid usage</td>
+        <td>Leave-one-out centroids; some centroids computed from different counts</td>
+        <td>All centroids use exactly M utterances (uniform)</td>
+      </tr>
+      <tr>
+        <td>Test-time mimicry</td>
+        <td>Partial -- similarity matrix doesn't match test protocol</td>
+        <td>Strong -- support/query split directly mimics enrollment/test</td>
+      </tr>
+      <tr>
+        <td>Similarity metric</td>
+        <td>Scaled cosine with learnable w, b</td>
+        <td>Normalized cosine with learnable w, b</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="takeaways">
+  <span class="box-title">Why Angular Prototypical Excels</span>
+  <ul>
+    <li>Every centroid is computed from the same number of utterances, eliminating size-imbalance effects.</li>
+    <li>The support/query split <strong>exactly mimics the test scenario</strong> during training, removing the need for hyperparameter search on M.</li>
+    <li>Normalization ensures the inner product equals cosine similarity, directly optimizing the test-time metric.</li>
+    <li>In the Chung et al. comparison, angular prototypical outperformed Softmax, AM-Softmax, AAM-Softmax, Triplet, and GE2E.</li>
+  </ul>
+</div>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #FEF3C7; color: #D97706;">&#9678;</div>
+    <div>
+      <div class="loss-card-title">Angular Prototypical Loss Summary</div>
+      <div class="loss-card-subtitle">Cosine Prototypical Networks for Speaker Verification</div>
+    </div>
+  </div>
+  <p>Combines the structure of prototypical networks with angular similarity on the hypersphere. The explicit support/query split during training mimics the enrollment/verification protocol at test time, leading to strong generalization.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>Training mirrors test-time protocol</li>
+        <li>Uniform centroid computation</li>
+        <li>No classification head needed</li>
+        <li>Top metric learning performer in comparisons</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Requires multiple utterances per speaker per batch</li>
+        <li>Larger batch sizes improve performance (more GPU memory)</li>
+        <li>Less widely adopted than AAM-Softmax in production</li>
+        <li>Performance depends on batch composition strategy</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== Supervised Contrastive Loss ===== -->
+<h2 id="supervised-contrastive">Supervised Contrastive Loss</h2>
+
+<p>Supervised Contrastive (SupCon) Loss extends self-supervised contrastive learning (SimCLR, MoCo) to the supervised setting. In speaker verification, it treats all utterances from the same speaker as positives and all utterances from different speakers as negatives, creating a much richer set of training signals than triplet loss.</p>
+
+<div class="formula">
+  L<sub>SupCon</sub> = -&Sigma;<sub>i</sub> (1/|P(i)|) &Sigma;<sub>p&isin;P(i)</sub> log( exp(z<sub>i</sub> &middot; z<sub>p</sub> / &tau;) / &Sigma;<sub>a&ne;i</sub> exp(z<sub>i</sub> &middot; z<sub>a</sub> / &tau;) )
+  <span class="label">Supervised Contrastive Loss: P(i) = set of same-speaker samples, &tau; = temperature parameter</span>
+</div>
+
+<h3>How It Works</h3>
+
+<ol>
+  <li><strong>Augmented pairs:</strong> For each utterance, data augmentation produces multiple views. All views of same-speaker utterances form positive pairs.</li>
+  <li><strong>All-pairs contrast:</strong> Each sample is contrasted against all other samples in the batch. Same-speaker pairs are pulled together; different-speaker pairs are pushed apart.</li>
+  <li><strong>Temperature scaling:</strong> The temperature &tau; controls the sharpness of the similarity distribution, analogous to the scale factor in AAM-Softmax.</li>
+  <li><strong>Multi-positive:</strong> Unlike triplet loss (one positive) or standard contrastive loss (one positive pair), SupCon leverages ALL same-speaker samples as positives simultaneously.</li>
+</ol>
+
+<h3>Angular Margin Enhancement (AMSupCon)</h3>
+
+<p>Recent work has enhanced supervised contrastive loss by incorporating <strong>additive angular margins</strong> into the similarity computation, combining the benefits of AAM-Softmax's margin enforcement with contrastive learning's direct embedding optimization. This "AMSupCon" approach adds a margin penalty to same-speaker similarities, forcing the network to achieve even tighter clustering to satisfy the contrastive objective.</p>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #FCE7F3; color: #DB2777;">&#8644;</div>
+    <div>
+      <div class="loss-card-title">Supervised Contrastive Loss Summary</div>
+      <div class="loss-card-subtitle">Multi-Positive Contrastive Learning</div>
+    </div>
+  </div>
+  <p>Extends the contrastive learning paradigm to use label information. All same-speaker pairs are treated as positives, providing a much richer training signal than pairwise or triplet methods. Works particularly well when combined with angular margin variants.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>Leverages all positives and negatives in a batch</li>
+        <li>No classification head needed</li>
+        <li>Naturally benefits from data augmentation</li>
+        <li>Combines well with angular margin enhancements</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Requires large batch sizes for sufficient negatives</li>
+        <li>Temperature parameter needs tuning</li>
+        <li>Computationally expensive (all-pairs similarity)</li>
+        <li>Less established track record than AAM-Softmax</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== MFCon Loss ===== -->
+<h2 id="mfcon">Multi-Scale Feature Contrastive (MFCon) Loss</h2>
+
+<p>MFCon Loss, introduced in October 2024, represents the cutting edge of loss function research for speaker verification. It applies contrastive learning not just to the final speaker embedding, but to <strong>all intermediate feature maps</strong> within the network, encouraging discriminative representations at every scale of the encoder.</p>
+
+<h3>The Multi-Scale Insight</h3>
+
+<p>Modern speaker encoders (like MFA-Conformer) use multi-scale feature aggregation, extracting features at different temporal and spectral resolutions. The MFCon hypothesis is that explicitly enforcing speaker separability at each intermediate scale will produce a more robust final embedding, rather than relying on the final loss alone to propagate discriminative gradients backward through many layers.</p>
+
+<h3>How MFCon Works</h3>
+
+<ol>
+  <li><strong>Extract multi-scale features:</strong> At each encoder block (e.g., each Conformer layer), extract the intermediate feature map and project it to a common embedding dimension.</li>
+  <li><strong>Apply contrastive loss at each scale:</strong> For each intermediate embedding, compute supervised contrastive loss -- same-speaker features should be similar, different-speaker features should be dissimilar.</li>
+  <li><strong>Combine with final embedding loss:</strong> The total loss is a weighted sum of the MFCon losses at each scale plus the primary loss (typically AAM-Softmax or AMSupCon) applied to the final embedding.</li>
+</ol>
+
+<div class="formula">
+  L<sub>total</sub> = L<sub>primary</sub>(final embedding) + &lambda; &middot; &Sigma;<sub>l=1..L</sub> L<sub>SupCon</sub>(feature map at layer l)
+  <span class="label">MFCon: Apply contrastive loss at every intermediate layer, not just the final output</span>
+</div>
+
+<h3>Results</h3>
+
+<p>On the VoxCeleb1-O benchmark with an MFA-Conformer backbone:</p>
+
+<ul>
+  <li><strong>MFCon alone:</strong> 4.91% relative EER reduction over the baseline AAM-Softmax</li>
+  <li><strong>MFCon + AMSupCon:</strong> 9.05% relative EER reduction, demonstrating that multi-scale and final-embedding contrastive losses are complementary</li>
+</ul>
+
+<div class="loss-card">
+  <div class="loss-card-header">
+    <div class="loss-card-icon" style="background: #CFFAFE; color: #0891B2;">&#9881;</div>
+    <div>
+      <div class="loss-card-title">MFCon Loss Summary</div>
+      <div class="loss-card-subtitle">Multi-Scale Feature Contrastive Loss (2024)</div>
+    </div>
+  </div>
+  <p>The newest entry in the speaker verification loss landscape. Applies supervised contrastive learning to intermediate feature maps, not just the final embedding. Designed to complement rather than replace existing losses like AAM-Softmax.</p>
+  <div class="pros-cons">
+    <div class="pros">
+      <strong>Strengths</strong>
+      <ul>
+        <li>Improves feature quality at every network layer</li>
+        <li>Complementary to existing loss functions</li>
+        <li>~5-9% relative EER improvement on VoxCeleb1-O</li>
+        <li>Applicable to any multi-scale architecture</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <strong>Weaknesses</strong>
+      <ul>
+        <li>Very new (2024); limited independent validation</li>
+        <li>Adds computational overhead for intermediate losses</li>
+        <li>Requires multi-scale architecture (e.g., MFA-Conformer)</li>
+        <li>Additional hyperparameter (&lambda;) for loss weighting</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== How Losses Shape the Embedding Space ===== -->
+<h2 id="embedding-shaping">How Each Loss Shapes the Embedding Space</h2>
+
+<p>Different losses create fundamentally different embedding space geometries. Understanding these differences is crucial for selecting the right loss for your application.</p>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TB
+    subgraph "Loss Function Geometries on the Hypersphere"
+        direction LR
+        subgraph S["Softmax"]
+            S1["Separable regions<br/>No margin guarantee<br/>Variable cluster sizes"]
+        end
+        subgraph T["Triplet"]
+            T1["Local pairwise<br/>constraints only<br/>No global structure"]
+        end
+        subgraph A["AAM-Softmax"]
+            A1["Angular margins<br/>enforced between<br/>ALL class pairs"]
+        end
+        subgraph G["GE2E / Prototypical"]
+            G1["Centroid-aware<br/>Pulls to own center<br/>Pushes from nearest"]
+        end
+        subgraph C["Contrastive"]
+            C1["Uniform distribution<br/>All-pairs optimization<br/>Temperature-controlled"]
+        end
+    end
+
+    style S fill:#FEE2E2,stroke:#EF4444,color:#991B1B
+    style T fill:#FEF3C7,stroke:#F59E0B,color:#92400E
+    style A fill:#D1FAE5,stroke:#10B981,color:#065F46
+    style G fill:#DBEAFE,stroke:#3B82F6,color:#1E40AF
+    style C fill:#EDE9FE,stroke:#7C3AED,color:#5B21B6
+  </div>
+  <div class="diagram-caption">Each loss function creates distinct geometric patterns in the embedding space.</div>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Loss</th>
+        <th>Cluster Shape</th>
+        <th>Separation Mechanism</th>
+        <th>Global vs. Local</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Softmax</strong></td>
+        <td>Variable-size clusters oriented toward weight vectors</td>
+        <td>Linear decision boundaries between classes</td>
+        <td>Global (all classes via softmax denominator)</td>
+      </tr>
+      <tr>
+        <td><strong>AAM-Softmax</strong></td>
+        <td>Compact angular cones on the hypersphere</td>
+        <td>Angular margins create dead zones at decision boundaries</td>
+        <td>Global with explicit margin enforcement</td>
+      </tr>
+      <tr>
+        <td><strong>Triplet</strong></td>
+        <td>Irregular clusters shaped by pairwise constraints</td>
+        <td>Each triplet enforces a local distance constraint</td>
+        <td>Local only (one positive + one negative)</td>
+      </tr>
+      <tr>
+        <td><strong>GE2E</strong></td>
+        <td>Spherical clusters pulled toward centroids</td>
+        <td>Centroid-based push/pull; hardest negative centroid emphasized</td>
+        <td>Semi-global (all centroids in batch)</td>
+      </tr>
+      <tr>
+        <td><strong>Angular Prototypical</strong></td>
+        <td>Angular cones around prototypes on unit sphere</td>
+        <td>Query-prototype softmax with normalized cosine</td>
+        <td>Semi-global (all prototypes in batch)</td>
+      </tr>
+      <tr>
+        <td><strong>Supervised Contrastive</strong></td>
+        <td>Uniformly distributed compact clusters</td>
+        <td>All-pairs attraction/repulsion with temperature control</td>
+        <td>Global (all pairs in batch)</td>
+      </tr>
+      <tr>
+        <td><strong>MFCon</strong></td>
+        <td>Hierarchically discriminative at multiple scales</td>
+        <td>Contrastive separation at every network layer</td>
+        <td>Global + multi-scale</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>The Uniformity-Alignment Framework</h3>
+
+<p>A useful lens for comparing losses comes from contrastive learning theory, which identifies two key properties of a good embedding space:</p>
+
+<ul>
+  <li><strong>Alignment:</strong> Embeddings of the same speaker (positive pairs) should be close together. This corresponds to intra-class compactness.</li>
+  <li><strong>Uniformity:</strong> The overall distribution of embeddings should be spread uniformly on the hypersphere. This maximizes the use of the available space and prevents degenerate solutions.</li>
+</ul>
+
+<p>Classification-based losses (Softmax, AAM-Softmax) primarily optimize alignment via the classification objective, with uniformity emerging as a byproduct of multi-class competition. Contrastive losses (SupCon, MFCon) explicitly optimize both properties through their attraction/repulsion dynamics. Metric learning losses (Triplet, GE2E) focus on local alignment and relative distances, with uniformity depending on the diversity of negatives encountered during training.</p>
+
+
+<!-- ===== Performance Comparison ===== -->
+<h2 id="performance">Performance Comparison Across Losses</h2>
+
+<p>The following table synthesizes results from multiple studies, primarily on the VoxCeleb1 dataset using ResNet-based encoders. Note that absolute numbers vary significantly by encoder architecture, data augmentation, and training data -- the relative ranking is more informative than the absolute EER values.</p>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Loss Function</th>
+        <th>VoxCeleb1-O EER</th>
+        <th>Training Stability</th>
+        <th>Scalability</th>
+        <th>Test-Time Alignment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Softmax</strong></td>
+        <td><span class="score-low">Baseline (~3-5%)</span></td>
+        <td><span class="score-high">Excellent</span></td>
+        <td><span class="score-mid">Linear in #speakers</span></td>
+        <td><span class="score-low">Poor</span></td>
+      </tr>
+      <tr>
+        <td><strong>AM-Softmax (m=0.3, s=30)</strong></td>
+        <td><span class="score-mid">~2-3%</span></td>
+        <td><span class="score-high">Good</span></td>
+        <td><span class="score-mid">Linear in #speakers</span></td>
+        <td><span class="score-mid">Moderate</span></td>
+      </tr>
+      <tr>
+        <td><strong>AAM-Softmax (tuned)</strong></td>
+        <td><span class="score-high">~1-2%</span></td>
+        <td><span class="score-high">Good</span></td>
+        <td><span class="score-mid">Linear in #speakers</span></td>
+        <td><span class="score-mid">Moderate</span></td>
+      </tr>
+      <tr>
+        <td><strong>Triplet Loss</strong></td>
+        <td><span class="score-mid">~2-3%</span></td>
+        <td><span class="score-mid">Moderate</span></td>
+        <td><span class="score-high">No head needed</span></td>
+        <td><span class="score-high">Good</span></td>
+      </tr>
+      <tr>
+        <td><strong>GE2E</strong></td>
+        <td><span class="score-mid">~1.5-2.5%</span></td>
+        <td><span class="score-high">Good</span></td>
+        <td><span class="score-high">No head needed</span></td>
+        <td><span class="score-high">Good</span></td>
+      </tr>
+      <tr>
+        <td><strong>Angular Prototypical</strong></td>
+        <td><span class="score-high">~1-2%</span></td>
+        <td><span class="score-high">Good</span></td>
+        <td><span class="score-high">No head needed</span></td>
+        <td><span class="score-high">Excellent</span></td>
+      </tr>
+      <tr>
+        <td><strong>Supervised Contrastive</strong></td>
+        <td><span class="score-high">~1-2%</span></td>
+        <td><span class="score-mid">Moderate</span></td>
+        <td><span class="score-high">No head needed</span></td>
+        <td><span class="score-high">Good</span></td>
+      </tr>
+      <tr>
+        <td><strong>AAM-Softmax + MFCon</strong></td>
+        <td><span class="score-high">Best (~0.9-1.5%)</span></td>
+        <td><span class="score-mid">Moderate</span></td>
+        <td><span class="score-mid">Linear + overhead</span></td>
+        <td><span class="score-high">Good</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-box success">
+  <div class="box-title">State of the Art (2024-2025)</div>
+  <p>The current best-performing systems on VoxCeleb1-O achieve EERs below 0.2% with architectures like WavLM, ECAPA-TDNN, and ResNet-293, primarily trained with AAM-Softmax + large-scale data augmentation. The combination of AAM-Softmax with multi-scale contrastive losses (MFCon + AMSupCon) represents the newest frontier, though AAM-Softmax remains the backbone loss in virtually all competition-winning systems.</p>
+</div>
+
+<h3>Key Findings from Comparative Studies</h3>
+
+<ul>
+  <li><strong>Chung et al. (2020):</strong> Angular prototypical loss outperformed all classification-based (Softmax, AM-Softmax, AAM-Softmax) and metric learning (Triplet, GE2E, Prototypical) losses in a controlled comparison on VoxCeleb.</li>
+  <li><strong>Margin sensitivity:</strong> Poorly tuned AM-Softmax (default m=0.3, s=30) was outperformed by vanilla triplet loss, emphasizing that hyperparameter tuning matters as much as loss function choice.</li>
+  <li><strong>Batch size effect:</strong> Metric learning losses (Triplet, GE2E, Prototypical, Contrastive) benefit significantly from larger batch sizes, which provide more diverse negatives. Classification losses are less sensitive to batch size.</li>
+  <li><strong>Data scale:</strong> Classification-based losses (AAM-Softmax) tend to dominate at very large training data scales (>10K speakers), while metric learning losses can be more competitive at smaller scales.</li>
+</ul>
+
+
+<!-- ===== Practical Guidance ===== -->
+<h2 id="practical-guidance">Practical Guidance: Which Loss to Use When</h2>
+
+<div class="comparison-grid">
+  <div class="comparison-card">
+    <h4>Production System with Large Data</h4>
+    <p><strong>Recommended:</strong> AAM-Softmax</p>
+    <p>When you have >5,000 training speakers and ample GPU resources, AAM-Softmax with a well-tuned encoder (ECAPA-TDNN, ResNet-293, or WavLM) is the proven choice. Nearly all VoxSRC challenge winners use this approach.</p>
+    <p><strong>Tune:</strong> margin m in [0.1-0.3], scale s in [15-64]</p>
+  </div>
+
+  <div class="comparison-card">
+    <h4>Cutting-Edge Research</h4>
+    <p><strong>Recommended:</strong> AAM-Softmax + MFCon + AMSupCon</p>
+    <p>If squeezing the last fraction of a percent matters, combine AAM-Softmax on the final embedding with MFCon losses at intermediate layers and AMSupCon on the speaker embedding. This multi-objective approach yields the current state of the art.</p>
+  </div>
+
+  <div class="comparison-card">
+    <h4>Limited Training Speakers (&lt;1K)</h4>
+    <p><strong>Recommended:</strong> Angular Prototypical Loss</p>
+    <p>With fewer training speakers, metric learning losses that directly optimize embedding relationships outperform classification approaches. Angular prototypical loss's test-time mimicry gives it an edge in low-resource scenarios.</p>
+  </div>
+
+  <div class="comparison-card">
+    <h4>Few-Shot Enrollment</h4>
+    <p><strong>Recommended:</strong> GE2E or Angular Prototypical</p>
+    <p>When the target system enrolls speakers with very few utterances (1-3), centroid-based losses that train with similar enrollment conditions are ideal. GE2E and prototypical networks naturally handle this setting.</p>
+  </div>
+
+  <div class="comparison-card">
+    <h4>On-Device / Edge Deployment</h4>
+    <p><strong>Recommended:</strong> AAM-Softmax or Triplet</p>
+    <p>Train with AAM-Softmax (best absolute performance) or triplet loss (no classification head overhead during training, simpler pipeline). The choice of loss doesn't affect inference cost -- only the embedding encoder runs at test time.</p>
+  </div>
+
+  <div class="comparison-card">
+    <h4>Self-Supervised / Semi-Supervised</h4>
+    <p><strong>Recommended:</strong> Supervised Contrastive + Pseudo-Labels</p>
+    <p>When labels are scarce or noisy, contrastive losses are most natural. Start with self-supervised contrastive pre-training, then fine-tune with supervised contrastive or AAM-Softmax on labeled data.</p>
+  </div>
+</div>
+
+<h3>Decision Flowchart</h3>
+
+<div class="diagram-container">
+  <div class="mermaid">
+flowchart TD
+    A["Starting a speaker<br/>verification project?"] --> B{"How many<br/>labeled speakers?"}
+    B -->|"<1,000"| C{"How many utterances<br/>per speaker?"}
+    B -->|"1,000-10,000"| D["AAM-Softmax<br/>or Angular Prototypical"]
+    B -->|">10,000"| E["AAM-Softmax<br/>(tuned m, s)"]
+
+    C -->|"<5 per speaker"| F["Angular Prototypical<br/>or GE2E"]
+    C -->|"5+ per speaker"| G["Angular Prototypical"]
+
+    E --> H{"Need SOTA<br/>performance?"}
+    H -->|"Yes"| I["AAM-Softmax<br/>+ MFCon + AMSupCon"]
+    H -->|"No"| J["AAM-Softmax<br/>(standard)"]
+
+    D --> K{"Large batch<br/>GPU available?"}
+    K -->|"Yes"| L["Angular Prototypical<br/>or Sup. Contrastive"]
+    K -->|"No"| M["AAM-Softmax"]
+
+    style A fill:#7C3AED,color:#fff
+    style E fill:#059669,color:#fff
+    style I fill:#059669,color:#fff
+    style F fill:#2563EB,color:#fff
+    style G fill:#2563EB,color:#fff
+    style L fill:#2563EB,color:#fff
+    style J fill:#059669,color:#fff
+    style M fill:#059669,color:#fff
+    style D fill:#F59E0B,color:#fff
+  </div>
+  <div class="diagram-caption">Decision guide for selecting a speaker verification loss function based on data scale, resources, and requirements.</div>
+</div>
+
+
+<!-- ===== Strengths & Weaknesses ===== -->
+<h2 id="strengths-weaknesses">Comprehensive Strengths &amp; Weaknesses</h2>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Loss Function</th>
+        <th>Category</th>
+        <th>Key Strength</th>
+        <th>Key Weakness</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Softmax</strong></td>
+        <td>Classification</td>
+        <td>Simple, stable training</td>
+        <td>No margin; poor generalization</td>
+        <td>Baseline / pre-training</td>
+      </tr>
+      <tr>
+        <td><strong>AAM-Softmax</strong></td>
+        <td>Classification</td>
+        <td>Best at scale; proven in competitions</td>
+        <td>Margin/scale sensitivity; needs large speaker set</td>
+        <td>Production systems, large datasets</td>
+      </tr>
+      <tr>
+        <td><strong>Triplet</strong></td>
+        <td>Metric Learning</td>
+        <td>Direct metric optimization; no classification head</td>
+        <td>Slow convergence; mining complexity</td>
+        <td>Small datasets; conceptual simplicity</td>
+      </tr>
+      <tr>
+        <td><strong>GE2E</strong></td>
+        <td>Metric Learning</td>
+        <td>Efficient all-pairs training; implicit hard mining</td>
+        <td>Centroid quality with few utterances</td>
+        <td>Text-dependent SV; multi-utterance enrollment</td>
+      </tr>
+      <tr>
+        <td><strong>Angular Prototypical</strong></td>
+        <td>Metric Learning</td>
+        <td>Test-time protocol mimicry; top metric learner</td>
+        <td>Needs many utterances per speaker per batch</td>
+        <td>Few-shot enrollment; limited speakers</td>
+      </tr>
+      <tr>
+        <td><strong>Supervised Contrastive</strong></td>
+        <td>Contrastive</td>
+        <td>Rich multi-positive training signal</td>
+        <td>Large batch size requirement; tuning</td>
+        <td>Semi-supervised settings; augmentation-heavy</td>
+      </tr>
+      <tr>
+        <td><strong>MFCon</strong></td>
+        <td>Contrastive (Multi-Scale)</td>
+        <td>Improves intermediate representations</td>
+        <td>New; requires multi-scale architecture</td>
+        <td>SOTA pushing; combined with AAM-Softmax</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>The Classification vs. Metric Learning Debate</h3>
+
+<p>The speaker verification community has long debated whether classification-based or metric learning losses are fundamentally superior. The evidence suggests a nuanced answer:</p>
+
+<ul>
+  <li><strong>At large scale</strong> (>10K speakers, large augmentation budgets), AAM-Softmax consistently wins in practice. The VoxSRC challenge results from 2019-2023 are dominated by AAM-Softmax-trained systems.</li>
+  <li><strong>In controlled comparisons</strong> (same architecture, same data, same augmentation), angular prototypical loss can match or exceed AAM-Softmax, particularly when batch sizes are large enough for effective negative sampling.</li>
+  <li><strong>The gap is narrowing.</strong> Modern contrastive losses with angular margins (AMSupCon) blur the line between the two families, and hybrid approaches (AAM-Softmax + MFCon) combine their strengths.</li>
+  <li><strong>Poorly tuned losses of either family will underperform well-tuned losses of the other.</strong> Hyperparameter optimization often matters more than the choice of loss function itself.</li>
+</ul>
+
+<div class="takeaways">
+  <span class="box-title">Bottom Line</span>
+  <ul>
+    <li>For most practitioners, <strong>AAM-Softmax with careful margin/scale tuning</strong> is the safe, high-performing default.</li>
+    <li>For researchers pushing the frontier, <strong>combining AAM-Softmax with contrastive auxiliary losses</strong> (MFCon, AMSupCon) yields measurable gains.</li>
+    <li>For low-resource or few-shot scenarios, <strong>angular prototypical loss</strong> is the strongest metric learning choice.</li>
+    <li>Never use vanilla Softmax for production speaker verification -- always add margins.</li>
+  </ul>
+</div>
+
+
+<!-- ===== Sources ===== -->
+<h2 id="sources">Sources &amp; References</h2>
+
+<ul class="sources-list">
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/2003.11982" target="_blank">Chung, J.S., Huh, J., Mun, S., et al. "In Defence of Metric Learning for Speaker Recognition." Interspeech 2020.</a> -- Comprehensive comparison of Softmax, AM-Softmax, AAM-Softmax, Triplet, GE2E, Prototypical, and Angular Prototypical losses.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/1710.10467" target="_blank">Wan, L., Wang, Q., Papir, A., Moreno, I.L. "Generalized End-to-End Loss for Speaker Verification." ICASSP 2018.</a> -- Original GE2E loss paper from Google.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/1801.07698" target="_blank">Deng, J., Guo, J., Xue, N., Zafeiriou, S. "ArcFace: Additive Angular Margin Loss for Deep Face Recognition." CVPR 2019.</a> -- Original ArcFace (AAM-Softmax) paper.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://ar5iv.labs.arxiv.org/html/2003.14021" target="_blank">Kye, S.M., et al. "A Comparison of Metric Learning Loss Functions for End-to-End Speaker Verification." SLSP 2020.</a> -- Systematic comparison of metric learning losses for speaker verification.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/2410.05037" target="_blank">Yun, H., et al. "Improving Speaker Representations Using Contrastive Losses on Multi-scale Features." October 2024.</a> -- MFCon loss paper introducing multi-scale contrastive learning for speaker verification.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/2210.16636" target="_blank">Li, Y., Mak, M. "Speaker Representation Learning via Contrastive Loss with Maximal Speaker Separability." 2022.</a> -- Angular margin supervised contrastive loss (AMSupCon) for speaker verification.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://www.researchgate.net/publication/335829780_Large_Margin_Softmax_Loss_for_Speaker_Verification" target="_blank">Liu, Y., He, L., Liu, J. "Large Margin Softmax Loss for Speaker Verification." Interspeech 2019.</a> -- Analysis of margin-based softmax variants for speaker recognition.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://arxiv.org/abs/1806.03464" target="_blank">Li, J., Gao, M., et al. "Angular Softmax Loss for End-to-end Speaker Verification." 2018.</a> -- Angular softmax for speaker verification.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://www.mdpi.com/2076-3417/14/4/1329" target="_blank">Comparison of Modern Deep Learning Models for Speaker Verification. Applied Sciences, 2024.</a> -- Recent benchmark of WavLM, TitaNet, ECAPA, PyAnnote on VoxCeleb.
+  </li>
+  <li>
+    <span class="source-type">Paper</span>
+    <a href="https://robots.ox.ac.uk/~vgg/publications/2024/Huh24/huh24.pdf" target="_blank">Huh, J., et al. "The VoxCeleb Speaker Recognition Challenge: A Retrospective." 2024.</a> -- VoxSRC retrospective covering challenge results 2019-2023.
+  </li>
+  <li>
+    <span class="source-type">Code</span>
+    <a href="https://github.com/clovaai/voxceleb_trainer" target="_blank">VoxCeleb Trainer (CLOVA AI)</a> -- Reference implementation for metric learning losses in speaker verification.
+  </li>
+  <li>
+    <span class="source-type">Code</span>
+    <a href="https://github.com/cvqluu/GE2E-Loss" target="_blank">GE2E-Loss PyTorch Implementation</a> -- Open-source GE2E loss implementation.
+  </li>
+  <li>
+    <span class="source-type">Code</span>
+    <a href="https://github.com/cvqluu/Angular-Penalty-Softmax-Losses-Pytorch" target="_blank">Angular Penalty Softmax Losses (PyTorch)</a> -- ArcFace, SphereFace, CosFace implementations.
+  </li>
+</ul>
+
+<hr>
+<p style="font-size:0.82rem; color:var(--color-text-muted); text-align:center;">
+  Last updated: March 2026. Research in speaker verification loss functions is rapidly evolving; results and recommendations may change as new methods emerge.
+</p>
+
+</div>
+</main>
+</div>
+
+<!-- ===== JavaScript ===== -->
+<script>
+// Initialize Mermaid
+mermaid.initialize({
+  startOnLoad: true,
+  theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+  flowchart: { curve: 'basis', padding: 20 },
+  themeVariables: {
+    primaryColor: '#7C3AED',
+    primaryTextColor: '#fff',
+    primaryBorderColor: '#5B21B6',
+    lineColor: '#94A3B8',
+    secondaryColor: '#E0E7FF',
+    tertiaryColor: '#F5F3FF'
+  }
+});
+
+// Dark mode toggle
+const themeToggle = document.getElementById('themeToggle');
+const themeLabel = themeToggle.querySelector('.theme-label');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+
+function setTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeLabel.textContent = dark ? 'Light Mode' : 'Dark Mode';
+  themeIcon.textContent = dark ? '\u2600' : '\u263E';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+
+  // Re-render mermaid with appropriate theme
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    flowchart: { curve: 'basis', padding: 20 }
+  });
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const parent = el.parentElement;
+    const original = el.getAttribute('data-original') || el.textContent;
+    el.setAttribute('data-original', original);
+    el.removeAttribute('data-processed');
+    el.innerHTML = original;
+  });
+  mermaid.init(undefined, '.mermaid');
+}
+
+// Check saved preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  setTheme(true);
+}
+
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  setTheme(!isDark);
+});
+
+// Mobile menu toggle
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar on link click (mobile)
+sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// Active sidebar link tracking
+const sections = document.querySelectorAll('h2[id]');
+const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+const observerOptions = {
+  rootMargin: '-20% 0px -70% 0px',
+  threshold: 0
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      sidebarLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
+
+// ===== Embedding Space Visualizations (Canvas) =====
+function drawEmbeddingViz(canvasId, drawFunc) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+
+  function draw() {
+    const w = canvas.width / dpr;
+    const h = canvas.height / dpr;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    ctx.clearRect(0, 0, w, h);
+    drawFunc(ctx, w, h, isDark);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Redraw on theme change
+  const mo = new MutationObserver(() => { draw(); });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+
+// Seeded random for reproducibility
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+// Generate cluster points
+function generateCluster(cx, cy, radius, count, rng) {
+  const points = [];
+  for (let i = 0; i < count; i++) {
+    const angle = rng() * Math.PI * 2;
+    const r = radius * Math.sqrt(rng());
+    points.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
+  }
+  return points;
+}
+
+const colors = ['#7C3AED', '#06B6D4', '#F59E0B', '#EF4444', '#10B981'];
+const colorsDark = ['#A78BFA', '#67E8F9', '#FCD34D', '#FCA5A5', '#6EE7B7'];
+
+// Softmax viz: separable but not compact
+drawEmbeddingViz('vizSoftmax', (ctx, w, h, isDark) => {
+  const rng = seededRandom(42);
+  const pal = isDark ? colorsDark : colors;
+  const bgColor = isDark ? '#1e293b' : '#f8fafc';
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw circle
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(w/2, h/2, Math.min(w,h)/2 - 10, 0, Math.PI*2);
+  ctx.stroke();
+
+  const centers = [
+    { x: w*0.3, y: h*0.3 },
+    { x: w*0.7, y: h*0.25 },
+    { x: w*0.5, y: h*0.7 },
+    { x: w*0.2, y: h*0.65 },
+    { x: w*0.8, y: h*0.6 }
+  ];
+
+  centers.forEach((c, i) => {
+    const pts = generateCluster(c.x, c.y, 22, 12, rng);
+    ctx.fillStyle = pal[i];
+    pts.forEach(p => {
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  });
+  ctx.globalAlpha = 1;
+});
+
+// Triplet viz: irregular clusters
+drawEmbeddingViz('vizTriplet', (ctx, w, h, isDark) => {
+  const rng = seededRandom(101);
+  const pal = isDark ? colorsDark : colors;
+  const bgColor = isDark ? '#1e293b' : '#f8fafc';
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(w/2, h/2, Math.min(w,h)/2 - 10, 0, Math.PI*2);
+  ctx.stroke();
+
+  const centers = [
+    { x: w*0.35, y: h*0.3, rx: 25, ry: 12 },
+    { x: w*0.65, y: h*0.3, rx: 15, ry: 20 },
+    { x: w*0.5, y: h*0.65, rx: 20, ry: 18 },
+    { x: w*0.2, y: h*0.6, rx: 18, ry: 22 },
+    { x: w*0.78, y: h*0.65, rx: 22, ry: 14 }
+  ];
+
+  centers.forEach((c, i) => {
+    ctx.fillStyle = pal[i];
+    for (let j = 0; j < 12; j++) {
+      const angle = rng() * Math.PI * 2;
+      const rx = c.rx * Math.sqrt(rng());
+      const ry = c.ry * Math.sqrt(rng());
+      const px = c.x + Math.cos(angle) * rx;
+      const py = c.y + Math.sin(angle) * ry;
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+});
+
+// AAM-Softmax viz: compact cones with margins
+drawEmbeddingViz('vizAAM', (ctx, w, h, isDark) => {
+  const rng = seededRandom(77);
+  const pal = isDark ? colorsDark : colors;
+  const bgColor = isDark ? '#1e293b' : '#f8fafc';
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(w/2, h/2, Math.min(w,h)/2 - 10, 0, Math.PI*2);
+  ctx.stroke();
+
+  const angles = [0.4, 1.5, 2.8, 4.0, 5.2];
+  const R = Math.min(w,h)/2 - 25;
+
+  angles.forEach((a, i) => {
+    const cx = w/2 + Math.cos(a) * R * 0.6;
+    const cy = h/2 + Math.sin(a) * R * 0.6;
+    const pts = generateCluster(cx, cy, 10, 12, rng);
+
+    // Draw margin zone
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = pal[i];
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = pal[i];
+    ctx.globalAlpha = 0.3;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = pal[i];
+    pts.forEach(p => {
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  });
+  ctx.globalAlpha = 1;
+});
+
+// GE2E viz: centroids with pull/push arrows
+drawEmbeddingViz('vizGE2E', (ctx, w, h, isDark) => {
+  const rng = seededRandom(55);
+  const pal = isDark ? colorsDark : colors;
+  const bgColor = isDark ? '#1e293b' : '#f8fafc';
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(w/2, h/2, Math.min(w,h)/2 - 10, 0, Math.PI*2);
+  ctx.stroke();
+
+  const centers = [
+    { x: w*0.28, y: h*0.3 },
+    { x: w*0.72, y: h*0.28 },
+    { x: w*0.5, y: h*0.72 },
+    { x: w*0.22, y: h*0.65 },
+    { x: w*0.78, y: h*0.65 }
+  ];
+
+  centers.forEach((c, i) => {
+    const pts = generateCluster(c.x, c.y, 14, 10, rng);
+
+    ctx.fillStyle = pal[i];
+    pts.forEach(p => {
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Draw centroid
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = pal[i];
+    ctx.strokeStyle = isDark ? '#f1f5f9' : '#0f172a';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+});
+</script>
+</body>
+</html>

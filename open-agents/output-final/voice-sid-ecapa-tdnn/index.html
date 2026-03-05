@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN</title>
+<meta name="description" content="Comprehensive technical explainer of the ECAPA-TDNN architecture for speaker identification and verification, covering SE-Res2Net blocks, multi-layer feature aggregation, channel-dependent attention pooling, training strategies, and real-world deployments.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 290px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #1E1545;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #1E1545;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A5F;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+
+.sidebar-back:hover {
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-controls {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+h1 .subtitle {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+li > ul, li > ol { margin-top: 0.4rem; margin-bottom: 0; }
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways .label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.takeaways ul { margin-bottom: 0; }
+.takeaways li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+/* ===== Info / Alert Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box.tip {
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.info-box.warning {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.info-box.note {
+  border-left: 4px solid var(--color-info);
+  background: var(--color-info-bg);
+}
+
+.info-box .box-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] code {
+  color: var(--color-primary-light);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Diagram Container ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-container .diagram-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== Comparison Cards ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.compare-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.compare-card.highlight {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.compare-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.compare-card ul {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ===== Metric Cards ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.metric-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+
+.metric-card .metric-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.metric-card .metric-label {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.metric-card .metric-context {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* ===== Architecture Block Diagram ===== */
+.arch-block {
+  background: var(--color-bg-alt);
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  position: relative;
+}
+
+.arch-block.primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.arch-block.accent {
+  border-color: var(--color-accent);
+}
+
+.arch-block .block-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Strengths/Weaknesses ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.pros, .cons {
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.pros {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+}
+
+.cons {
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger);
+}
+
+.pros h4, .cons h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.pros h4 { color: var(--color-success); }
+.cons h4 { color: var(--color-danger); }
+
+.pros ul, .cons ul {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.65rem;
+  top: 0.35rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+}
+
+.timeline-item .year {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+}
+
+.timeline-item .event {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Source List ===== */
+.source-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.source-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.88rem;
+}
+
+.source-list li:last-child { border-bottom: none; }
+
+.source-list .source-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  margin-right: 0.35rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .menu-toggle {
+    display: flex;
+  }
+  .main {
+    margin-left: 0;
+  }
+  .content {
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .comparison-grid,
+  .pros-cons {
+    grid-template-columns: 1fr;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu Toggle -->
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">ECAPA-TDNN</div>
+    <div class="sidebar-subtitle">Speaker Embedding Architecture</div>
+  </div>
+  <a href="../voice-speaker-identification/index.html" class="sidebar-back">&larr; Back to Speaker ID Overview</a>
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#introduction" class="sidebar-link">Introduction</a>
+    <a href="#why-standard" class="sidebar-link">Why It Became the Standard</a>
+    <a href="#evolution" class="sidebar-link">Evolution from x-vector</a>
+
+    <div class="sidebar-nav-section">Architecture</div>
+    <a href="#architecture-overview" class="sidebar-link">Architecture Overview</a>
+    <a href="#se-res2net" class="sidebar-link">SE-Res2Net Blocks</a>
+    <a href="#se-blocks" class="sidebar-link sub">Squeeze-and-Excitation</a>
+    <a href="#res2net" class="sidebar-link sub">Res2Net Multi-Scale</a>
+    <a href="#mfa" class="sidebar-link">Multi-Layer Feature Aggregation</a>
+    <a href="#attention-pooling" class="sidebar-link">Attentive Statistics Pooling</a>
+    <a href="#arch-diagram" class="sidebar-link">Architecture Diagram</a>
+
+    <div class="sidebar-nav-section">Training</div>
+    <a href="#training" class="sidebar-link">Training Strategy</a>
+    <a href="#augmentation" class="sidebar-link sub">Data Augmentation</a>
+    <a href="#loss-functions" class="sidebar-link sub">Loss Functions</a>
+    <a href="#large-margin" class="sidebar-link sub">Large Margin Fine-Tuning</a>
+
+    <div class="sidebar-nav-section">Performance</div>
+    <a href="#performance" class="sidebar-link">Benchmark Results</a>
+    <a href="#voxsrc" class="sidebar-link sub">VoxCeleb &amp; VoxSRC</a>
+    <a href="#configurations" class="sidebar-link sub">Model Configurations</a>
+
+    <div class="sidebar-nav-section">Ecosystem</div>
+    <a href="#implementations" class="sidebar-link">Implementations</a>
+    <a href="#speechbrain" class="sidebar-link sub">SpeechBrain</a>
+    <a href="#other-frameworks" class="sidebar-link sub">Other Frameworks</a>
+    <a href="#diarization" class="sidebar-link">Use in Diarization</a>
+    <a href="#pyannote" class="sidebar-link sub">pyannote Pipeline</a>
+
+    <div class="sidebar-nav-section">Variants &amp; Future</div>
+    <a href="#ecapa2" class="sidebar-link">ECAPA2</a>
+    <a href="#other-variants" class="sidebar-link">Other Variants</a>
+    <a href="#alternatives" class="sidebar-link">Emerging Alternatives</a>
+
+    <div class="sidebar-nav-section">Assessment</div>
+    <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+    <a href="#when-to-use" class="sidebar-link">When to Use ECAPA-TDNN</a>
+    <a href="#sources" class="sidebar-link">Sources</a>
+  </nav>
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span class="theme-label">Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Speaker Identification Overview</a>
+
+<h1>ECAPA-TDNN
+  <span class="subtitle">Emphasized Channel Attention, Propagation and Aggregation in Time Delay Neural Networks</span>
+</h1>
+
+<p>ECAPA-TDNN, introduced by Desplanques, Thienpondt, and Demuynck at Interspeech 2020, is the dominant neural architecture for extracting fixed-dimensional speaker embeddings from variable-length audio. It builds upon the x-vector/TDNN paradigm with three key innovations: <strong>SE-Res2Net blocks</strong> for multi-scale temporal processing with channel attention, <strong>multi-layer feature aggregation</strong> for hierarchical feature fusion, and <strong>channel-dependent attentive statistics pooling</strong> for more discriminative utterance-level representations.</p>
+
+<div class="takeaways">
+  <span class="label">Key Takeaways</span>
+  <ul>
+    <li>ECAPA-TDNN is the <strong>de facto standard</strong> for speaker embedding extraction since 2020, used in verification, identification, and diarization systems worldwide.</li>
+    <li>It achieves <strong>0.87% EER on VoxCeleb1-O</strong> with the C=1024 variant (14.7M parameters), dramatically outperforming the original x-vector system.</li>
+    <li>The architecture combines <strong>Res2Net multi-scale convolutions</strong>, <strong>Squeeze-and-Excitation channel attention</strong>, and <strong>channel-dependent attentive statistics pooling</strong> into a single coherent design.</li>
+    <li>Available in <strong>SpeechBrain, NVIDIA NeMo, WeSpeaker, and 3D-Speaker</strong> with pretrained models on Hugging Face.</li>
+    <li>Its successor <strong>ECAPA2</strong> (2024) introduces a hybrid 1D+2D convolutional design with improved robustness for short utterances and overlapping speech.</li>
+  </ul>
+</div>
+
+<!-- ===== INTRODUCTION ===== -->
+<h2 id="introduction">Introduction</h2>
+
+<p>Speaker identification and verification systems fundamentally rely on the quality of their <strong>speaker embeddings</strong> -- fixed-length vector representations that encode the unique vocal characteristics of a speaker, independent of what they say. The architecture that extracts these embeddings determines system performance across all downstream tasks.</p>
+
+<p>Before ECAPA-TDNN, the x-vector system (Snyder et al., 2018) was the standard approach. It used a Time Delay Neural Network (TDNN) to process frame-level features, then applied statistics pooling to aggregate them into a single utterance-level representation. While effective, x-vectors had notable limitations: they used a relatively simple temporal context model, their pooling was channel-agnostic, and they only leveraged the final hidden layer's output.</p>
+
+<p>ECAPA-TDNN addresses all three limitations through carefully designed architectural innovations, resulting in speaker embeddings that are substantially more discriminative while remaining computationally practical for real-world deployment.</p>
+
+<!-- ===== WHY IT BECAME THE STANDARD ===== -->
+<h2 id="why-standard">Why ECAPA-TDNN Became the Standard</h2>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-value">0.87%</div>
+    <div class="metric-label">EER on VoxCeleb1-O</div>
+    <div class="metric-context">C=1024 variant</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">14.7M</div>
+    <div class="metric-label">Parameters (C=1024)</div>
+    <div class="metric-context">Efficient for the accuracy</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">192-d</div>
+    <div class="metric-label">Embedding Dimension</div>
+    <div class="metric-context">Compact representation</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">5+</div>
+    <div class="metric-label">Years as Baseline</div>
+    <div class="metric-context">2020 to present</div>
+  </div>
+</div>
+
+<p>Several factors contribute to ECAPA-TDNN's dominance as the go-to speaker embedding architecture:</p>
+
+<ul>
+  <li><strong>Consistent empirical gains:</strong> It significantly outperformed all prior TDNN-based systems on VoxCeleb1 benchmarks and the VoxSRC 2019 challenge at the time of publication, and continued winning through VoxSRC 2020 and 2021.</li>
+  <li><strong>Modular, extensible design:</strong> The SE-Res2Net block structure makes it easy to scale (by adjusting C, the number of channels) and to integrate into larger pipelines.</li>
+  <li><strong>Multiple high-quality implementations:</strong> Available in SpeechBrain, NVIDIA NeMo, WeSpeaker, and other frameworks with pretrained checkpoints, lowering the barrier to adoption.</li>
+  <li><strong>Generalization across tasks:</strong> Beyond verification, ECAPA-TDNN embeddings perform well for diarization, language identification, emotion recognition, and even TTS speaker conditioning.</li>
+  <li><strong>Practical embedding size:</strong> The 192-dimensional embedding is compact enough for large-scale retrieval while retaining strong discriminative power.</li>
+</ul>
+
+<!-- ===== EVOLUTION FROM X-VECTOR ===== -->
+<h2 id="evolution">Evolution from x-vector TDNN</h2>
+
+<div class="comparison-grid">
+  <div class="compare-card">
+    <h4>Standard x-vector TDNN</h4>
+    <ul>
+      <li>5 frame-level TDNN layers with fixed dilations</li>
+      <li>Simple statistics pooling (global mean + std)</li>
+      <li>Only the last frame layer feeds into pooling</li>
+      <li>No channel attention mechanism</li>
+      <li>No multi-scale feature extraction within layers</li>
+      <li>~4.2M parameters</li>
+    </ul>
+  </div>
+  <div class="compare-card highlight">
+    <h4>ECAPA-TDNN</h4>
+    <ul>
+      <li>SE-Res2Net blocks with multi-scale convolutions</li>
+      <li>Channel-dependent attentive statistics pooling</li>
+      <li>Multi-layer feature aggregation from all blocks</li>
+      <li>Squeeze-and-Excitation for channel recalibration</li>
+      <li>Res2Net for hierarchical multi-scale features</li>
+      <li>6.2M (C=512) to 14.7M (C=1024) parameters</li>
+    </ul>
+  </div>
+</div>
+
+<p>The x-vector system processes audio through a series of TDNN layers where each layer sees a fixed context window. Its final architecture is relatively shallow and applies a single, channel-agnostic statistics pooling layer to produce the embedding. ECAPA-TDNN retains the TDNN paradigm (1D convolutions along the time axis) but replaces the simple frame layers with sophisticated SE-Res2Net blocks and fundamentally rethinks both how features from different layers are combined and how temporal information is aggregated into a fixed-length vector.</p>
+
+<!-- ===== ARCHITECTURE DIAGRAM (Mermaid) ===== -->
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<p>The ECAPA-TDNN architecture can be understood as four major stages: an initial convolutional layer, a stack of SE-Res2Net blocks, multi-layer feature aggregation, and channel-dependent attentive statistics pooling followed by a fully connected embedding layer.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">ECAPA-TDNN vs Standard TDNN Architecture Comparison</div>
+  <div class="mermaid">
+graph LR
+  subgraph Standard["Standard x-vector TDNN"]
+    direction TB
+    A1["MFCC Input<br/>24-dim"] --> A2["TDNN Layer 1<br/>t-2 to t+2"]
+    A2 --> A3["TDNN Layer 2<br/>t-2, t, t+2"]
+    A3 --> A4["TDNN Layer 3<br/>t-3, t, t+3"]
+    A4 --> A5["TDNN Layer 4<br/>full context"]
+    A5 --> A6["TDNN Layer 5<br/>full context"]
+    A6 --> A7["Statistics Pooling<br/>global mean + std"]
+    A7 --> A8["FC 512"]
+    A8 --> A9["FC 512"]
+    A9 --> A10["x-vector<br/>512-dim"]
+  end
+
+  subgraph ECAPA["ECAPA-TDNN"]
+    direction TB
+    B1["80-dim Fbank<br/>or MFCC"] --> B2["Conv1D + ReLU + BN<br/>C channels, k=5"]
+    B2 --> B3["SE-Res2Net Block 1<br/>dilation=2"]
+    B3 --> B4["SE-Res2Net Block 2<br/>dilation=3"]
+    B4 --> B5["SE-Res2Net Block 3<br/>dilation=4"]
+    B3 --> B6["MFA: Concatenate"]
+    B4 --> B6
+    B5 --> B6
+    B6 --> B7["Conv1D 1536-&gt;C"]
+    B7 --> B8["Channel-Dependent<br/>Attentive Stats Pooling"]
+    B8 --> B9["BN + FC 192"]
+    B9 --> B10["Speaker Embedding<br/>192-dim"]
+  end
+
+  style Standard fill:#f1f5f9,stroke:#94a3b8
+  style ECAPA fill:#f5f3ff,stroke:#7c3aed
+  </div>
+</div>
+
+<div class="info-box note">
+  <div class="box-title">Configuration Details</div>
+  <p>The standard ECAPA-TDNN uses 80-dimensional filterbank features as input. The number of channels <code>C</code> in the convolutional frame layers is typically 512 or 1024. The bottleneck dimension in the SE-Block and attention module is 128, the Res2Net scale dimension <code>s</code> is 8, and the final embedding layer produces a 192-dimensional vector.</p>
+</div>
+
+<!-- ===== SE-RES2NET BLOCKS ===== -->
+<h2 id="se-res2net">SE-Res2Net Blocks: The Core Building Unit</h2>
+
+<p>The SE-Res2Net block is the fundamental building unit of ECAPA-TDNN, combining three powerful mechanisms into a single module: <strong>1D convolution for temporal context</strong>, <strong>Res2Net for multi-scale feature extraction</strong>, and <strong>Squeeze-and-Excitation for channel recalibration</strong>. Each block follows a TDNN-Res2Net-TDNN-SE pattern with a residual skip connection.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">SE-Res2Net Block Internal Architecture</div>
+  <div class="mermaid">
+graph TB
+  Input["Input Features<br/>(C channels)"] --> Conv1["1x1 Conv (Bottleneck)<br/>C &rarr; C channels"]
+  Conv1 --> BN1["Batch Norm + ReLU"]
+  BN1 --> Split["Split into s=8 sub-groups"]
+  Split --> G1["Group 1<br/>(passthrough)"]
+  Split --> G2["Conv1D k=3<br/>dilation=d"]
+  Split --> G3["Conv1D k=3<br/>dilation=d"]
+  Split --> G4["Conv1D k=3<br/>dilation=d"]
+  G1 --> Cat["Concatenate Groups"]
+  G2 --> G3
+  G3 --> G4
+  G2 --> Cat
+  G3 --> Cat
+  G4 --> Cat
+  Cat --> Conv2["1x1 Conv<br/>C &rarr; C channels"]
+  Conv2 --> BN2["Batch Norm + ReLU"]
+  BN2 --> SE["Squeeze-and-Excitation<br/>(global avg pool &rarr; FC &rarr; ReLU &rarr; FC &rarr; Sigmoid)"]
+  SE --> Scale["Channel-wise Scaling"]
+  BN2 --> Scale
+  Scale --> Add["+ Residual Connection"]
+  Input --> Add
+
+  style SE fill:#f5f3ff,stroke:#7c3aed
+  style Split fill:#dbeafe,stroke:#2563eb
+  </div>
+</div>
+
+<h3 id="se-blocks">Squeeze-and-Excitation (SE) Blocks</h3>
+
+<p>The Squeeze-and-Excitation mechanism, originally proposed for image classification by Hu et al. (2018), is adapted here to explicitly model channel interdependencies in the speaker embedding context. It operates in two stages:</p>
+
+<ol>
+  <li><strong>Squeeze:</strong> Global average pooling across the entire temporal dimension compresses frame-level features into a single channel descriptor. This captures the "global" properties of the recording for each channel.</li>
+  <li><strong>Excitation:</strong> Two fully connected layers (with a bottleneck of 128 dimensions) followed by a sigmoid activation produce per-channel scaling factors. These scaling factors are applied element-wise to the feature map, allowing the network to emphasize informative channels and suppress less useful ones.</li>
+</ol>
+
+<p>By operating on the entire temporal context of the recording, the SE block effectively expands the receptive field of each frame layer to encompass global information. This means that even frame-level features become informed by recording-level properties -- crucial for speaker-discriminative representations where channel conditions, noise profiles, and speaking styles affect all frames.</p>
+
+<div class="info-box">
+  <strong>Why SE matters for speaker embeddings:</strong> Different speakers have distinctive energy distributions across frequency channels. The SE block learns to recalibrate these channels based on the full recording context, making the representation more robust to within-speaker variability (e.g., different loudness levels, microphones) while preserving between-speaker differences.
+</div>
+
+<h3 id="res2net">Res2Net: Multi-Scale Feature Extraction</h3>
+
+<p>The Res2Net module, adapted from Gao et al. (2019), enhances the model's ability to capture temporal patterns at multiple scales within a single convolutional layer. Instead of processing all channels through a single convolution, the input features are split into <code>s = 8</code> sub-groups:</p>
+
+<ul>
+  <li><strong>Group 1:</strong> Passes through directly (identity/passthrough), providing the finest-scale features.</li>
+  <li><strong>Group 2:</strong> Processed by a 1D convolution with kernel size 3 and dilation <code>d</code>.</li>
+  <li><strong>Group 3:</strong> The output of Group 2 is added to Group 3's input before convolution, effectively doubling the receptive field.</li>
+  <li><strong>Groups 4-8:</strong> Each group receives the cumulative output of the previous group, progressively increasing the effective receptive field.</li>
+</ul>
+
+<p>This cascading structure means the network can simultaneously capture short-range phonetic details and longer-range prosodic patterns within a single block. The dilation factors across the three SE-Res2Net blocks are set to <code>d = 2, 3, 4</code>, further expanding the temporal context at each stage.</p>
+
+<div class="takeaways">
+  <span class="label">Multi-Scale Impact</span>
+  <ul>
+    <li>With scale <code>s = 8</code> and cascading connections, each block effectively contains 8 different receptive field sizes.</li>
+    <li>Combined with dilations of 2, 3, and 4 across blocks, the full network captures temporal patterns from sub-phoneme to utterance level.</li>
+    <li>This multi-scale design captures both fine-grained spectral characteristics (voice quality, formant structure) and broader temporal dynamics (speaking rate, rhythm).</li>
+  </ul>
+</div>
+
+<!-- ===== MULTI-LAYER FEATURE AGGREGATION ===== -->
+<h2 id="mfa">Multi-Layer Feature Aggregation (MFA)</h2>
+
+<p>A critical insight in ECAPA-TDNN is that <strong>different layers of a deep network learn different types of features</strong>. Shallow layers tend to capture low-level acoustic patterns (spectral shape, pitch), while deeper layers encode more abstract speaker characteristics (speaking style, voice identity). The original x-vector system discarded all of this hierarchical information by only using the output of the last frame layer.</p>
+
+<p>ECAPA-TDNN's Multi-Layer Feature Aggregation addresses this by <strong>concatenating the output feature maps of all three SE-Res2Net blocks</strong> for each time frame. If each block produces <code>C</code> channels, the concatenation yields <code>3C</code> channels. A subsequent 1D pointwise convolution (1x1 Conv) then compresses these <code>3C</code> channels back to <code>C</code> channels, learning the optimal combination of features from different depths.</p>
+
+<div class="info-box note">
+  <div class="box-title">Why MFA Works</div>
+  <p>Neural networks are known to learn hierarchical features at different levels of complexity. By allowing both shallow and deep feature maps to contribute to the final embedding, ECAPA-TDNN creates more robust speaker representations. The learned 1x1 convolution discovers the optimal weighting of features from each depth, effectively performing a learned feature selection across the network's full representational hierarchy.</p>
+</div>
+
+<!-- ===== ATTENTION POOLING ===== -->
+<h2 id="attention-pooling">Channel-Dependent Attentive Statistics Pooling</h2>
+
+<p>Perhaps the most impactful innovation in ECAPA-TDNN is the extension of standard statistics pooling to be both <strong>attentive</strong> (learned frame weighting) and <strong>channel-dependent</strong> (different attention weights per channel). This component alone improves EER by approximately 9.8% and MinDCF by 3.2% relative to channel-independent approaches.</p>
+
+<h4>Standard Statistics Pooling (x-vector)</h4>
+<p>In the original x-vector, statistics pooling computes a simple global mean and standard deviation across all time frames for each channel. Every frame contributes equally, regardless of whether it contains informative speech or silence/noise.</p>
+
+<h4>Attentive Statistics Pooling</h4>
+<p>Attentive pooling introduces learnable attention weights that determine how much each frame contributes to the statistics. A self-attention mechanism produces a scalar weight for each frame, and the weighted mean and standard deviation are computed. This allows the network to focus on the most speaker-discriminative frames (typically voiced speech) and downweight less informative regions.</p>
+
+<h4>Channel-Dependent Extension (ECAPA-TDNN)</h4>
+<p>ECAPA-TDNN further extends this by computing <strong>separate attention weights for each channel</strong>. The intuition is that different channels encode different aspects of speaker identity, and the optimal set of frames may differ for each aspect. For example:</p>
+
+<ul>
+  <li>Channels encoding <strong>fundamental frequency</strong> information might benefit from focusing on sustained vowels.</li>
+  <li>Channels capturing <strong>spectral envelope</strong> characteristics might weight consonant transitions more heavily.</li>
+  <li>Channels related to <strong>speaking rate</strong> might attend to rhythm patterns across the full utterance.</li>
+</ul>
+
+<p>The result is a concatenation of the channel-dependent weighted mean and weighted standard deviation vectors, producing a <code>2C</code>-dimensional utterance-level representation that captures rich, multi-faceted speaker information.</p>
+
+<div class="takeaways">
+  <span class="label">Pooling Comparison</span>
+  <ul>
+    <li><strong>x-vector:</strong> Global mean + std (all frames equal, all channels share weights)</li>
+    <li><strong>Attentive pooling:</strong> Learned frame weights, but shared across channels</li>
+    <li><strong>ECAPA-TDNN:</strong> Learned frame weights that are <em>different for each channel</em>, enabling the richest possible utterance summary</li>
+  </ul>
+</div>
+
+<!-- ===== FULL ARCHITECTURE DIAGRAM ===== -->
+<h2 id="arch-diagram">Full Architecture Diagram</h2>
+
+<div class="diagram-container">
+  <div class="diagram-title">Complete ECAPA-TDNN Architecture with Data Flow</div>
+  <div class="mermaid">
+graph TB
+  subgraph Input["Input Processing"]
+    I1["Raw Audio"] --> I2["80-dim Mel Filterbanks"]
+  end
+
+  subgraph Frame["Frame-Level Processing"]
+    I2 --> F1["Conv1D (k=5, C channels)<br/>+ ReLU + BatchNorm"]
+    F1 --> S1["SE-Res2Net Block 1<br/>dilation=2, scale=8"]
+    S1 --> S2["SE-Res2Net Block 2<br/>dilation=3, scale=8"]
+    S2 --> S3["SE-Res2Net Block 3<br/>dilation=4, scale=8"]
+  end
+
+  subgraph MFA["Multi-Layer Feature Aggregation"]
+    S1 --> C1["Concatenate<br/>3C channels"]
+    S2 --> C1
+    S3 --> C1
+    C1 --> D1["1x1 Conv (3C &rarr; C)<br/>+ ReLU + BatchNorm"]
+  end
+
+  subgraph Pool["Utterance-Level Aggregation"]
+    D1 --> P1["Channel-Dependent<br/>Attentive Statistics Pooling"]
+    P1 --> P2["Weighted Mean + Std<br/>2C dimensions"]
+  end
+
+  subgraph Embed["Embedding Layer"]
+    P2 --> E1["BatchNorm"]
+    E1 --> E2["FC 192"]
+    E2 --> E3["Speaker Embedding<br/>192-dim"]
+  end
+
+  subgraph Train["Training Head (removed at inference)"]
+    E3 --> T1["AAM-Softmax<br/>Classification Head"]
+  end
+
+  style Input fill:#dbeafe,stroke:#2563eb
+  style Frame fill:#f5f3ff,stroke:#7c3aed
+  style MFA fill:#d1fae5,stroke:#059669
+  style Pool fill:#fef3c7,stroke:#d97706
+  style Embed fill:#fce7f3,stroke:#db2777
+  style Train fill:#fee2e2,stroke:#dc2626
+  </div>
+</div>
+
+<!-- ===== TRAINING STRATEGY ===== -->
+<h2 id="training">Training Strategy</h2>
+
+<p>The training methodology for ECAPA-TDNN is as important as the architecture itself. The standard training pipeline involves a two-phase approach: initial training with shorter segments and moderate margins, followed by large-margin fine-tuning with longer segments.</p>
+
+<h3 id="augmentation">Data Augmentation</h3>
+
+<p>ECAPA-TDNN training relies heavily on aggressive, on-the-fly data augmentation to improve robustness. SpeechBrain's implementation uses six augmentation variants per batch, effectively multiplying the batch size by 7 (original + 6 augmented):</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Augmentation</th>
+      <th>Details</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Additive Noise</strong></td>
+      <td>MUSAN noise at random SNR 0-15 dB</td>
+      <td>Robustness to background noise</td>
+    </tr>
+    <tr>
+      <td><strong>Reverberation</strong></td>
+      <td>Convolution with random RIRs dataset impulse responses</td>
+      <td>Robustness to room acoustics</td>
+    </tr>
+    <tr>
+      <td><strong>Speed Perturbation</strong></td>
+      <td>0.95x to 1.05x speed variation</td>
+      <td>Robustness to speaking rate changes</td>
+    </tr>
+    <tr>
+      <td><strong>Waveform Dropout</strong></td>
+      <td>Random zeroing of waveform segments</td>
+      <td>Regularization, missing data robustness</td>
+    </tr>
+    <tr>
+      <td><strong>Frequency Dropout</strong></td>
+      <td>Random zeroing of frequency bands (SpecAugment-style)</td>
+      <td>Prevents over-reliance on specific frequencies</td>
+    </tr>
+    <tr>
+      <td><strong>Combined</strong></td>
+      <td>Noise + Reverb simultaneously</td>
+      <td>Realistic adverse conditions</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="info-box tip">
+  <div class="box-title">Batch Construction</div>
+  <p>In SpeechBrain's training recipe, the original batch is augmented in six different ways, leading to an equivalent batch size of <strong>192</strong> (if the base batch is ~27 utterances). Each contaminated version of the same signal is placed in the same training batch, helping the network learn speaker-invariant representations across noise conditions.</p>
+</div>
+
+<h3 id="loss-functions">Loss Functions: AAM-Softmax</h3>
+
+<p>ECAPA-TDNN is trained with <strong>Additive Angular Margin Softmax (AAM-Softmax)</strong>, which enforces angular margin separation in the embedding space. This loss function operates on the cosine similarity between the embedding and class (speaker) prototypes, adding a margin penalty to the target class angle:</p>
+
+<pre><code>L = -log( exp(s * cos(theta_y + m)) / (exp(s * cos(theta_y + m)) + sum_j exp(s * cos(theta_j))) )</code></pre>
+
+<p>Typical hyperparameters:</p>
+<ul>
+  <li><strong>Scale factor (s):</strong> 30-32</li>
+  <li><strong>Margin (m):</strong> 0.2 during initial training</li>
+  <li>The margin enforces a minimum angular separation between speaker classes, producing more discriminative embeddings that transfer better to unseen speakers.</li>
+</ul>
+
+<h3 id="large-margin">Large Margin Fine-Tuning</h3>
+
+<p>The IDLab team (the same group behind ECAPA-TDNN) introduced a <strong>two-stage training strategy</strong> that proved critical for competitive performance, especially in VoxSRC challenges:</p>
+
+<ol>
+  <li><strong>Stage 1 -- Initial Training:</strong> Train with shorter audio segments (2-3 seconds), moderate AAM-Softmax margin (m=0.2), and standard batch size. This phase provides broad coverage of speaker characteristics.</li>
+  <li><strong>Stage 2 -- Large Margin Fine-Tuning:</strong> Switch to longer segments (6 seconds), increase the margin penalty (m=0.5), and use a lower learning rate. The longer segments give the pooling mechanism more temporal context, while the larger margin creates tighter speaker clusters.</li>
+</ol>
+
+<p>This two-stage approach also incorporates <strong>sample mining</strong> that exploits speaker distances between the AAM-softmax prototypes to construct challenging training batches, further improving discriminative power.</p>
+
+<!-- ===== PERFORMANCE ===== -->
+<h2 id="performance">Benchmark Results</h2>
+
+<h3 id="voxsrc">VoxCeleb and VoxSRC Challenges</h3>
+
+<p>ECAPA-TDNN has been the dominant architecture across multiple VoxCeleb Speaker Recognition Challenges:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Test Set</th>
+      <th>System</th>
+      <th>EER (%)</th>
+      <th>MinDCF</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VoxCeleb1-O</td>
+      <td>x-vector baseline</td>
+      <td>3.13</td>
+      <td>0.337</td>
+      <td>Original x-vector (Snyder 2018)</td>
+    </tr>
+    <tr>
+      <td>VoxCeleb1-O</td>
+      <td>ECAPA-TDNN C=512</td>
+      <td>1.01</td>
+      <td>0.127</td>
+      <td>6.2M params</td>
+    </tr>
+    <tr>
+      <td>VoxCeleb1-O</td>
+      <td>ECAPA-TDNN C=1024</td>
+      <td>0.87</td>
+      <td>0.107</td>
+      <td>14.7M params</td>
+    </tr>
+    <tr>
+      <td>VoxCeleb1-O</td>
+      <td>SpeechBrain ECAPA</td>
+      <td>0.80</td>
+      <td>--</td>
+      <td>With augmentation pipeline</td>
+    </tr>
+    <tr>
+      <td>VoxCeleb1-O</td>
+      <td>Unofficial (TaoRuijie)</td>
+      <td>0.86</td>
+      <td>--</td>
+      <td>Train on VoxCeleb2 only</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="year">2019</div>
+    <div class="event">IDLab's ECAPA-TDNN-based system achieves top performance at VoxSRC-2019.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2020</div>
+    <div class="event">ECAPA-TDNN paper published at Interspeech 2020. Dominates VoxSRC-2020 with large margin fine-tuning.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2021</div>
+    <div class="event">ECAPA-TDNN adopted into SpeechBrain, NVIDIA NeMo. Continued success at VoxSRC-2021 and SdSVC-2021.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2022-2023</div>
+    <div class="event">Becomes the universal baseline. VoxSRC-2022 and 2023 entries build upon ECAPA-TDNN. Speaker verification approaches near-0% EER on VoxCeleb.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2024</div>
+    <div class="event">ECAPA2 published. NeXt-TDNN, CAM++, and ERes2Net variants emerge. ECAPA-TDNN remains default in most toolkits.</div>
+  </div>
+</div>
+
+<h3 id="configurations">Model Configurations</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Configuration</th>
+      <th>Channels (C)</th>
+      <th>Parameters</th>
+      <th>Embedding Dim</th>
+      <th>SE Bottleneck</th>
+      <th>Res2Net Scale (s)</th>
+      <th>EER (Vox1-O)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ECAPA-TDNN Small</td>
+      <td>512</td>
+      <td>6.2M</td>
+      <td>192</td>
+      <td>128</td>
+      <td>8</td>
+      <td>1.01%</td>
+    </tr>
+    <tr>
+      <td>ECAPA-TDNN Large</td>
+      <td>1024</td>
+      <td>14.7M</td>
+      <td>192</td>
+      <td>128</td>
+      <td>8</td>
+      <td>0.87%</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The C=1024 variant is the standard choice for research and competitions, while C=512 offers a good balance of performance and efficiency for deployment. Both variants produce the same 192-dimensional embedding, making them interchangeable in downstream systems.</p>
+
+<!-- ===== IMPLEMENTATIONS ===== -->
+<h2 id="implementations">Implementations</h2>
+
+<h3 id="speechbrain">SpeechBrain</h3>
+
+<p><a href="https://speechbrain.readthedocs.io/en/latest/API/speechbrain.lobes.models.ECAPA_TDNN.html" target="_blank">SpeechBrain</a> provides the most widely-used implementation of ECAPA-TDNN, with a pretrained model available on Hugging Face (<code>speechbrain/spkrec-ecapa-voxceleb</code>). Key features of the SpeechBrain implementation:</p>
+
+<ul>
+  <li>Full ECAPA-TDNN architecture with configurable channels, scales, and dilations</li>
+  <li>Extensive on-the-fly augmentation pipeline (MUSAN noise, RIRs, speed perturbation)</li>
+  <li>AAM-Softmax loss with configurable margin and scale</li>
+  <li>Ready-to-use training recipes for VoxCeleb</li>
+  <li>Pretrained speaker verification model achieving ~0.80% EER on VoxCeleb1-O</li>
+</ul>
+
+<pre><code># SpeechBrain ECAPA-TDNN inference example
+from speechbrain.inference.speaker import EncoderClassifier
+
+classifier = EncoderClassifier.from_hparams(
+    source="speechbrain/spkrec-ecapa-voxceleb",
+    savedir="pretrained_models/spkrec-ecapa-voxceleb"
+)
+
+# Extract speaker embedding
+embedding = classifier.encode_batch(signal)  # Returns 192-dim embedding
+
+# Verify two speakers
+score = classifier.verify_batch(signal1, signal2)  # Cosine similarity score</code></pre>
+
+<h3 id="other-frameworks">Other Frameworks</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Framework</th>
+      <th>Repository / Model</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>NVIDIA NeMo</strong></td>
+      <td><code>nvidia/nemo:ecapa_tdnn</code></td>
+      <td>NGC catalog, optimized for GPU training, NeMo toolkit integration</td>
+    </tr>
+    <tr>
+      <td><strong>WeSpeaker</strong></td>
+      <td><code>Wespeaker/wespeaker-ecapa-tdnn512-LM</code></td>
+      <td>Large-margin fine-tuned, used in pyannote pipeline</td>
+    </tr>
+    <tr>
+      <td><strong>3D-Speaker</strong></td>
+      <td><code>modelscope/3D-Speaker</code></td>
+      <td>ModelScope ecosystem, includes ECAPA-TDNN implementation</td>
+    </tr>
+    <tr>
+      <td><strong>TaoRuijie (unofficial)</strong></td>
+      <td><code>TaoRuijie/ECAPA-TDNN</code></td>
+      <td>Popular unofficial reimplementation, achieves 0.86% EER</td>
+    </tr>
+    <tr>
+      <td><strong>Hugging Face</strong></td>
+      <td>Multiple pretrained checkpoints</td>
+      <td>Easy integration via transformers/speechbrain pipelines</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== DIARIZATION ===== -->
+<h2 id="diarization">Use in Speaker Diarization</h2>
+
+<p>ECAPA-TDNN embeddings have been extensively applied to speaker diarization -- the task of determining "who spoke when" in a multi-speaker recording. The robustness of ECAPA-TDNN embeddings, particularly under overlapping speech and varying recording conditions, makes them well-suited for diarization pipelines.</p>
+
+<p>Dawalatabad et al. (2021) demonstrated that ECAPA-TDNN embeddings improve speaker diarization through a powerful augmentation scheme that concatenates several contaminated versions of the same signal within the same training batch. The embeddings provide robust speaker-specific features under both close-talking and distant-talking conditions.</p>
+
+<h3 id="pyannote">pyannote Speaker Diarization Pipeline</h3>
+
+<p>The popular <a href="https://huggingface.co/pyannote/speaker-diarization-3.1" target="_blank">pyannote speaker-diarization-3.1</a> pipeline uses a modular architecture for speaker diarization:</p>
+
+<ul>
+  <li><strong>Segmentation:</strong> PyanNet model for voice activity detection and speaker change detection</li>
+  <li><strong>Embedding:</strong> WeSpeaker ResNet34-LM for speaker embedding extraction (note: this replaced earlier ECAPA-TDNN-based configurations)</li>
+  <li><strong>Clustering:</strong> Agglomerative clustering of embeddings to assign speaker labels</li>
+  <li><strong>Overlap handling:</strong> Powerset multi-class segmentation to handle overlapping speech</li>
+</ul>
+
+<div class="info-box warning">
+  <div class="box-title">pyannote 3.1 Embedding Model</div>
+  <p>While earlier versions of pyannote and many custom diarization pipelines use ECAPA-TDNN embeddings, pyannote 3.1 specifically uses <strong>WeSpeaker ResNet34-LM</strong> as its default embedding model. However, WeSpeaker also offers ECAPA-TDNN variants (<code>wespeaker-ecapa-tdnn512-LM</code>), and the pipeline can be configured to use ECAPA-TDNN embeddings if preferred. pyannote 3.1 removed onnxruntime dependency, running entirely in PyTorch.</p>
+</div>
+
+<p>Many research systems and custom diarization pipelines continue to use ECAPA-TDNN embeddings directly, often achieving competitive Diarization Error Rates (DER) of 11-19% on standard benchmarks.</p>
+
+<!-- ===== ECAPA2 ===== -->
+<h2 id="ecapa2">ECAPA2: The Next Generation</h2>
+
+<p>In January 2024, Thienpondt and Demuynck published <strong>ECAPA2</strong>, a significant evolution that addresses fundamental limitations of the original architecture through a hybrid 1D+2D convolutional design.</p>
+
+<h3>Key Architectural Changes</h3>
+
+<p>Most speaker verification models are based on either 1D convolutions (TDNNs, processing time only) or 2D convolutions (ResNets, processing time-frequency jointly). ECAPA2 explores <strong>stacking 1D modules on top of deep 2D blocks</strong>, combining the strengths of both approaches:</p>
+
+<ul>
+  <li><strong>2D Convolutional Stem:</strong> The input 80-dim Mel filterbanks are first processed by deep 2D convolutional blocks that capture local time-frequency patterns. This allows the network to learn spectro-temporal features that purely 1D approaches miss.</li>
+  <li><strong>Frequency-wise SE (fwSE):</strong> A specialized Squeeze-and-Excitation module operates on the frequency dimension, enabling the network to learn robust, spatially-invariant features and counteract sensitivity to input alterations.</li>
+  <li><strong>Learnable Positional Encoding:</strong> A learnable positional encoding vector across the frequency dimension integrates frequency positional information into the features, addressing the translation-invariance limitation of convolutions.</li>
+  <li><strong>1D Processing Head:</strong> After 2D processing collapses the frequency dimension, 1D temporal processing modules refine the features for the final embedding.</li>
+</ul>
+
+<h3>Training Strategy Improvements</h3>
+
+<ul>
+  <li><strong>Short Utterance Robustness:</strong> A novel short utterance sampling strategy randomly crops training segments with probability alpha=0.4, improving performance on short test utterances (Vox1-S) by 10.9% relative without impacting regular test sets.</li>
+  <li><strong>Overlapping Speech Handling:</strong> Training strategy improvements make embeddings more robust against overlapping speech, critical for real-world applications.</li>
+</ul>
+
+<h3>ECAPA2 Performance</h3>
+
+<p>ECAPA2 achieves state-of-the-art performance on VoxCeleb1 test sets with <strong>significantly fewer parameters</strong> than competing models. A pretrained model is available on Hugging Face (<code>Jenthe/ECAPA2</code>).</p>
+
+<div class="info-box note">
+  <div class="box-title">ECAPA2 Availability</div>
+  <p>The ECAPA2 pretrained model is publicly available on Hugging Face for research and downstream tasks. However, adoption is still growing -- most production systems and toolkits continue to use the original ECAPA-TDNN as of early 2026.</p>
+</div>
+
+<!-- ===== OTHER VARIANTS ===== -->
+<h2 id="other-variants">Other ECAPA-TDNN Variants</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Year</th>
+      <th>Key Innovation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>ECAPA++</strong></td>
+      <td>2023</td>
+      <td>Fine-grained deep embedding learning with improved inter/intra-class discrimination</td>
+    </tr>
+    <tr>
+      <td><strong>WavLM-ECAPA-TDNN</strong></td>
+      <td>2022</td>
+      <td>Uses WavLM self-supervised features as input instead of filterbanks, achieving state-of-the-art results</td>
+    </tr>
+    <tr>
+      <td><strong>EPCNet-TDNN</strong></td>
+      <td>2025</td>
+      <td>Replaces SE blocks with Efficient Channel and Spatial Attention Mechanism (ECAM)</td>
+    </tr>
+    <tr>
+      <td><strong>Bi-SE-Res2Block</strong></td>
+      <td>2024</td>
+      <td>Bi-directional Res2Blocks expanding context to both past and future frames (up to 23% relative EER reduction)</td>
+    </tr>
+    <tr>
+      <td><strong>CRET</strong></td>
+      <td>2025</td>
+      <td>Fusion of Conv2D, ResNet, and ECAPA-TDNN for enhanced speaker recognition</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== EMERGING ALTERNATIVES ===== -->
+<h2 id="alternatives">Emerging Alternatives</h2>
+
+<p>While ECAPA-TDNN remains the default baseline, several architectures have emerged as competitive or superior alternatives in specific settings:</p>
+
+<h3>CAM++ (Context-Aware Masking)</h3>
+<p>CAM++ achieves <strong>superior performance with lower computational complexity</strong> and faster inference speed than both ECAPA-TDNN and ResNet34 systems. It uses context-aware masking to efficiently model temporal dependencies without the overhead of full self-attention or multi-scale convolutions. CAM++ is particularly attractive for on-device deployment due to its efficiency.</p>
+
+<h3>NeXt-TDNN</h3>
+<p>Published in late 2023, NeXt-TDNN modernizes the multi-scale temporal convolution backbone by incorporating design principles from ConvNeXt (a modern CNN architecture from the vision domain). It achieves competitive or better results than ECAPA-TDNN while using a cleaner, more modern design that may be easier to optimize and scale.</p>
+
+<h3>ERes2Net / ERes2NetV2</h3>
+<p>Enhanced Res2Net variants introduce <strong>local and global feature fusion</strong> techniques, using attentional feature fusion modules instead of simple concatenation or summation for multi-scale feature aggregation. ERes2NetV2 (2024) specifically targets short-duration speaker verification performance.</p>
+
+<h3>Transformer/Conformer Approaches</h3>
+<p>Self-supervised models like WavLM and HuBERT, combined with ECAPA-TDNN or transformer-based pooling heads, increasingly dominate leaderboards. These approaches leverage massive pre-training on unlabeled speech data, with the ECAPA-TDNN architecture often serving as the downstream feature processor.</p>
+
+<div class="info-box">
+  <strong>The Trend:</strong> Rather than replacing ECAPA-TDNN entirely, most advances either (a) improve specific components within the ECAPA-TDNN framework, or (b) use self-supervised pre-trained features as input to an ECAPA-TDNN-like architecture. This speaks to the fundamental soundness of the design.
+</div>
+
+<!-- ===== STRENGTHS & WEAKNESSES ===== -->
+<h2 id="strengths-weaknesses">Strengths &amp; Weaknesses</h2>
+
+<div class="pros-cons">
+  <div class="pros">
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>State-of-the-art accuracy:</strong> Sub-1% EER on VoxCeleb benchmarks, competitive with much larger models</li>
+      <li><strong>Compact embeddings:</strong> 192-dimensional output is efficient for storage and retrieval at scale</li>
+      <li><strong>Well-understood:</strong> Extensively studied, with clear ablation studies showing each component's contribution</li>
+      <li><strong>Modular design:</strong> Easy to scale (adjust C), extend (add blocks), or modify (swap components)</li>
+      <li><strong>Multi-toolkit support:</strong> SpeechBrain, NeMo, WeSpeaker, with pretrained models on Hugging Face</li>
+      <li><strong>Versatile:</strong> Works for verification, identification, diarization, language ID, and speaker conditioning</li>
+      <li><strong>Robust augmentation recipe:</strong> Well-established training pipeline produces embeddings that generalize across conditions</li>
+      <li><strong>Efficient inference:</strong> 6.2-14.7M parameters is moderate; real-time processing on modern hardware</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>Weaknesses</h4>
+    <ul>
+      <li><strong>Limited long-range context:</strong> Causal Res2Blocks have restricted modeling of temporal dependencies compared to transformers or bi-directional approaches</li>
+      <li><strong>Multi-scale limitations:</strong> Despite Res2Net, can struggle with complex multi-scale audio patterns in some scenarios</li>
+      <li><strong>Short utterance sensitivity:</strong> Performance degrades significantly for utterances under 2 seconds (addressed partially by ECAPA2)</li>
+      <li><strong>TTS mismatch:</strong> Embeddings may not transfer well to speech synthesis tasks due to domain and dimensionality mismatches</li>
+      <li><strong>Fixed architecture:</strong> The number of SE-Res2Net blocks (3) and their dilation pattern (2,3,4) are fixed design choices, not learned</li>
+      <li><strong>Surpassed in some settings:</strong> CAM++ offers better efficiency; ResNet-based systems may outperform on some benchmarks; self-supervised approaches dominate when pre-training data is available</li>
+      <li><strong>No native streaming support:</strong> Designed for offline processing of complete utterances, not real-time streaming</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== WHEN TO USE ===== -->
+<h2 id="when-to-use">When to Use ECAPA-TDNN</h2>
+
+<div class="comparison-grid">
+  <div class="compare-card highlight">
+    <h4>Use ECAPA-TDNN When:</h4>
+    <ul>
+      <li>Building a speaker verification or identification system</li>
+      <li>You need a well-tested, reliable speaker embedding architecture</li>
+      <li>Pretrained models and established training recipes matter</li>
+      <li>Utterances are typically 2+ seconds</li>
+      <li>You want compatibility with existing toolkits and pipelines</li>
+      <li>You need a baseline to compare novel approaches against</li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4>Consider Alternatives When:</h4>
+    <ul>
+      <li>Deploying on-device with strict latency/compute constraints (consider CAM++)</li>
+      <li>Working with very short utterances under 2 seconds (consider ECAPA2)</li>
+      <li>Maximum possible accuracy is needed and you have compute for pre-training (consider WavLM + ECAPA-TDNN)</li>
+      <li>Real-time streaming is required (consider streaming-adapted architectures)</li>
+      <li>The task is speech synthesis conditioning (consider specialized TTS embeddings)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SOURCES ===== -->
+<h2 id="sources">Sources</h2>
+
+<ul class="source-list">
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://arxiv.org/abs/2005.07143" target="_blank">Desplanques, B., Thienpondt, J., &amp; Demuynck, K. (2020). "ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification." Interspeech 2020, pp. 3830-3834.</a>
+  </li>
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://arxiv.org/abs/2401.08342" target="_blank">Thienpondt, J. &amp; Demuynck, K. (2024). "ECAPA2: A Hybrid Neural Network Architecture and Training Strategy for Robust Speaker Embeddings." IEEE SLT 2024.</a>
+  </li>
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://arxiv.org/abs/2104.01466" target="_blank">Dawalatabad, N. et al. (2021). "ECAPA-TDNN Embeddings for Speaker Diarization." Interspeech 2021.</a>
+  </li>
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://arxiv.org/html/2312.08603v2" target="_blank">NeXt-TDNN: Modernizing Multi-Scale Temporal Convolution Backbone for Speaker Verification (2023).</a>
+  </li>
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://www.nature.com/articles/s41598-025-09386-0" target="_blank">TDNN Architecture with Efficient Channel Attention and Improved Residual Blocks for Accurate Speaker Recognition. Scientific Reports (2025).</a>
+  </li>
+  <li>
+    <span class="source-tag">Paper</span>
+    <a href="https://arxiv.org/html/2408.14886v1" target="_blank">Huh, J. et al. (2024). "The VoxCeleb Speaker Recognition Challenge: A Retrospective." IEEE/ACM TASLP.</a>
+  </li>
+  <li>
+    <span class="source-tag">Code</span>
+    <a href="https://speechbrain.readthedocs.io/en/latest/API/speechbrain.lobes.models.ECAPA_TDNN.html" target="_blank">SpeechBrain ECAPA-TDNN Module Documentation</a>
+  </li>
+  <li>
+    <span class="source-tag">Model</span>
+    <a href="https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb" target="_blank">SpeechBrain ECAPA-TDNN Pretrained Model (Hugging Face)</a>
+  </li>
+  <li>
+    <span class="source-tag">Code</span>
+    <a href="https://github.com/speechbrain/speechbrain/blob/develop/recipes/VoxCeleb/SpeakerRec/hparams/train_ecapa_tdnn.yaml" target="_blank">SpeechBrain VoxCeleb Training Recipe for ECAPA-TDNN</a>
+  </li>
+  <li>
+    <span class="source-tag">Code</span>
+    <a href="https://github.com/TaoRuijie/ECAPA-TDNN" target="_blank">Unofficial ECAPA-TDNN Reimplementation by TaoRuijie (GitHub)</a>
+  </li>
+  <li>
+    <span class="source-tag">Model</span>
+    <a href="https://huggingface.co/Jenthe/ECAPA2" target="_blank">ECAPA2 Pretrained Model (Hugging Face)</a>
+  </li>
+  <li>
+    <span class="source-tag">Model</span>
+    <a href="https://huggingface.co/pyannote/speaker-diarization-3.1" target="_blank">pyannote speaker-diarization-3.1 (Hugging Face)</a>
+  </li>
+  <li>
+    <span class="source-tag">Code</span>
+    <a href="https://github.com/modelscope/3D-Speaker" target="_blank">3D-Speaker: Multi-modal Speaker Verification and Diarization (GitHub)</a>
+  </li>
+  <li>
+    <span class="source-tag">Code</span>
+    <a href="https://huggingface.co/Wespeaker/wespeaker-ecapa-tdnn512-LM" target="_blank">WeSpeaker ECAPA-TDNN-512 Large-Margin (Hugging Face)</a>
+  </li>
+  <li>
+    <span class="source-tag">Survey</span>
+    <a href="https://www.emergentmind.com/topics/ecapa-tdnn-architecture" target="_blank">Emergent Mind: ECAPA-TDNN Architecture Overview</a>
+  </li>
+</ul>
+
+<hr>
+<p style="font-size: 0.8rem; color: var(--color-text-muted); text-align: center;">
+  Last updated: March 2026 &middot; Part of the <a href="../voice-speaker-identification/index.html">Voice &amp; Speaker Identification</a> series
+</p>
+
+</div>
+</main>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  // Re-init mermaid for theme
+  reinitMermaid(next);
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+// Mermaid initialization
+function reinitMermaid(theme) {
+  const isDark = theme === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#F1F5F9',
+      primaryBorderColor: '#A78BFA',
+      lineColor: '#64748B',
+      secondaryColor: '#1E293B',
+      tertiaryColor: '#334155',
+      background: '#1E293B',
+      mainBkg: '#1E293B',
+      nodeBorder: '#475569',
+      clusterBkg: '#0F172A',
+      clusterBorder: '#475569',
+      titleColor: '#F1F5F9',
+      edgeLabelBackground: '#1E293B'
+    } : {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#1E293B',
+      primaryBorderColor: '#5B21B6',
+      lineColor: '#94A3B8',
+      secondaryColor: '#F5F3FF',
+      tertiaryColor: '#F1F5F9'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', code);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Initial mermaid setup
+document.addEventListener('DOMContentLoaded', function() {
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+  reinitMermaid(theme);
+});
+
+// Active sidebar link tracking
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('h2[id], h3[id]');
+  const navLinks = document.querySelectorAll('.sidebar-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, {
+    rootMargin: '-20% 0px -70% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(section => observer.observe(section));
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

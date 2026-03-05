@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive explainer on End-to-End Neural Diarization (EEND) for speaker identification: architecture, training, streaming variants, and comparison with clustering-based approaches.">
+  <title>End-to-End Neural Diarization (EEND) &mdash; Deep Dive Explainer</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    /* ===== CSS Variables ===== */
+    :root {
+      --color-primary: #7C3AED;
+      --color-primary-light: #A78BFA;
+      --color-primary-dark: #5B21B6;
+      --color-accent: #06B6D4;
+      --color-accent-light: #67E8F9;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+      --color-text: #1E293B;
+      --color-text-light: #64748B;
+      --color-text-lighter: #94A3B8;
+      --color-bg: #FAFBFF;
+      --color-bg-alt: #F1F5F9;
+      --color-bg-card: #FFFFFF;
+      --color-border: #E2E8F0;
+      --color-border-light: #F1F5F9;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+      --shadow-glow: 0 0 20px rgba(124,58,237,0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --sidebar-width: 280px;
+    }
+
+    [data-theme="dark"] {
+      --color-text: #F1F5F9;
+      --color-text-light: #CBD5E1;
+      --color-text-lighter: #94A3B8;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 20px rgba(124,58,237,0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== Back Link ===== */
+    .back-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1001;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-xs);
+      color: white;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .back-link:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateX(-2px);
+    }
+    [data-theme="dark"] .back-link {
+      background: rgba(30,41,59,0.7);
+      border-color: rgba(100,116,139,0.3);
+      color: var(--color-text);
+    }
+
+    /* ===== Dark Mode Toggle ===== */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1001;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+      color: white;
+    }
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.05);
+    }
+    [data-theme="dark"] .theme-toggle {
+      background: rgba(30,41,59,0.7);
+      border-color: rgba(100,116,139,0.3);
+      color: var(--color-text);
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 30%, #4C1D95 60%, #5B21B6 100%);
+      color: white;
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(6,182,212,0.2);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: var(--color-accent-light);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      opacity: 0.85;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-xs);
+      font-size: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .hero-stat strong { color: var(--color-accent-light); }
+
+    /* ===== Layout ===== */
+    .page-layout {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: calc(100vh - 300px);
+    }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem 1.25rem;
+      border-right: 1px solid var(--color-border);
+      background: var(--color-bg);
+    }
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-lighter);
+      margin-bottom: 1rem;
+      padding-left: 0.75rem;
+    }
+    .sidebar nav a {
+      display: block;
+      padding: 0.45rem 0.75rem;
+      margin-bottom: 2px;
+      border-radius: var(--radius-xs);
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 450;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar nav a:hover {
+      background: var(--color-bg-alt);
+      color: var(--color-primary);
+    }
+    .sidebar nav a.active {
+      background: var(--color-bg-alt);
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+      font-weight: 600;
+    }
+    .sidebar nav a.sub {
+      padding-left: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* ===== Main Content ===== */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 3rem 3.5rem 5rem;
+    }
+
+    .main-content section {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .main-content h2 {
+      font-size: 1.85rem;
+      font-weight: 750;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .main-content h3 {
+      font-size: 1.3rem;
+      font-weight: 650;
+      margin: 2rem 0 0.75rem;
+      color: var(--color-text);
+    }
+
+    .main-content h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--color-primary);
+    }
+
+    .main-content p {
+      margin-bottom: 1rem;
+      color: var(--color-text-light);
+      font-size: 0.95rem;
+    }
+
+    .main-content ul, .main-content ol {
+      margin: 0.75rem 0 1.25rem 1.5rem;
+      color: var(--color-text-light);
+      font-size: 0.95rem;
+    }
+    .main-content li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* ===== Info Boxes ===== */
+    .info-box {
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-sm);
+      margin: 1.5rem 0;
+      border-left: 4px solid;
+      font-size: 0.9rem;
+    }
+    .info-box.concept {
+      background: rgba(124,58,237,0.06);
+      border-color: var(--color-primary);
+    }
+    [data-theme="dark"] .info-box.concept {
+      background: rgba(124,58,237,0.12);
+    }
+    .info-box.tip {
+      background: rgba(16,185,129,0.06);
+      border-color: var(--color-success);
+    }
+    [data-theme="dark"] .info-box.tip {
+      background: rgba(16,185,129,0.12);
+    }
+    .info-box.warning {
+      background: rgba(245,158,11,0.06);
+      border-color: var(--color-warning);
+    }
+    [data-theme="dark"] .info-box.warning {
+      background: rgba(245,158,11,0.12);
+    }
+    .info-box.danger {
+      background: rgba(239,68,68,0.06);
+      border-color: var(--color-danger);
+    }
+    [data-theme="dark"] .info-box.danger {
+      background: rgba(239,68,68,0.12);
+    }
+    .info-box-title {
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--color-text);
+      font-size: 0.9rem;
+    }
+    .info-box p {
+      margin-bottom: 0.5rem;
+      color: var(--color-text-light);
+    }
+
+    /* ===== Cards ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary-light);
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+    .card-icon.purple { background: rgba(124,58,237,0.1); }
+    .card-icon.blue { background: rgba(37,99,235,0.1); }
+    .card-icon.green { background: rgba(16,185,129,0.1); }
+    .card-icon.orange { background: rgba(245,158,11,0.1); }
+    .card-icon.red { background: rgba(239,68,68,0.1); }
+    .card-icon.cyan { background: rgba(6,182,212,0.1); }
+    .card h4 {
+      font-size: 1rem;
+      font-weight: 650;
+      margin: 0 0 0.5rem;
+      color: var(--color-text);
+    }
+    .card p {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin: 0;
+    }
+
+    /* ===== Diagram Container ===== */
+    .diagram-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 1.75rem 0;
+      overflow-x: auto;
+    }
+    .diagram-container .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--color-text-lighter);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    /* ===== Comparison Table ===== */
+    .comparison-table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .comparison-table th {
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      font-weight: 650;
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border-light);
+      color: var(--color-text-light);
+      vertical-align: top;
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    .comparison-table tr:hover td {
+      background: var(--color-bg-alt);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge.good { background: rgba(16,185,129,0.15); color: #059669; }
+    .badge.moderate { background: rgba(245,158,11,0.15); color: #D97706; }
+    .badge.poor { background: rgba(239,68,68,0.15); color: #DC2626; }
+    [data-theme="dark"] .badge.good { color: #34D399; }
+    [data-theme="dark"] .badge.moderate { color: #FBBF24; }
+    [data-theme="dark"] .badge.poor { color: #F87171; }
+
+    /* ===== Code Block ===== */
+    .code-block {
+      background: #1E293B;
+      color: #E2E8F0;
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+    .code-block .comment { color: #64748B; }
+    .code-block .keyword { color: #C084FC; }
+    .code-block .func { color: #67E8F9; }
+    .code-block .string { color: #86EFAC; }
+    .code-block .number { color: #FCD34D; }
+
+    /* ===== Timeline ===== */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
+      border-radius: 1px;
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.75rem;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -1.65rem;
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 3px solid var(--color-bg);
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+    .timeline-year {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .timeline-title {
+      font-weight: 650;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+    }
+
+    /* ===== Equation Block ===== */
+    .equation-block {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--color-text);
+      overflow-x: auto;
+    }
+
+    /* ===== Strengths / Weaknesses ===== */
+    .sw-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .sw-box {
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      border: 1px solid;
+    }
+    .sw-box.strengths {
+      background: rgba(16,185,129,0.04);
+      border-color: rgba(16,185,129,0.2);
+    }
+    .sw-box.weaknesses {
+      background: rgba(239,68,68,0.04);
+      border-color: rgba(239,68,68,0.2);
+    }
+    [data-theme="dark"] .sw-box.strengths {
+      background: rgba(16,185,129,0.08);
+    }
+    [data-theme="dark"] .sw-box.weaknesses {
+      background: rgba(239,68,68,0.08);
+    }
+    .sw-box h4 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+    }
+    .sw-box.strengths h4 { color: var(--color-success); }
+    .sw-box.weaknesses h4 { color: var(--color-danger); }
+    .sw-box ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .sw-box li {
+      padding: 0.35rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.88rem;
+      color: var(--color-text-light);
+    }
+    .sw-box.strengths li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .sw-box.weaknesses li::before {
+      content: '-';
+      position: absolute;
+      left: 0.15rem;
+      color: var(--color-danger);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* ===== Sources ===== */
+    .sources-list {
+      list-style: none;
+      margin: 1rem 0;
+      padding: 0;
+    }
+    .sources-list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--color-border-light);
+      font-size: 0.85rem;
+    }
+    .sources-list li:last-child { border-bottom: none; }
+    .sources-list a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+    .sources-list .source-meta {
+      color: var(--color-text-lighter);
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+
+    /* ===== Architecture Flow ===== */
+    .arch-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+      padding: 1.25rem;
+      background: var(--color-bg-alt);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+    .arch-step {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xs);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 550;
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+    .arch-step.highlight {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+    .arch-arrow {
+      color: var(--color-text-lighter);
+      font-size: 1.1rem;
+    }
+
+    /* ===== Footer ===== */
+    .page-footer {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 3.5rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-lighter);
+      font-size: 0.8rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .main-content { padding: 2rem 1.5rem 4rem; }
+      .sw-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.8rem; }
+      .hero { padding: 4rem 1.25rem 2.5rem; }
+      .main-content { padding: 1.5rem 1rem 3rem; }
+      .main-content h2 { font-size: 1.5rem; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== Mermaid theme overrides ===== */
+    [data-theme="dark"] .mermaid svg {
+      filter: invert(0.88) hue-rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Link -->
+  <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Speaker ID Overview</a>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+    <span id="theme-icon">&#9790;</span>
+  </button>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">Speaker Diarization &middot; Deep Dive</div>
+      <h1>End-to-End Neural Diarization</h1>
+      <p class="hero-subtitle">
+        How EEND replaces the traditional multi-stage diarization pipeline with a single neural network
+        that directly answers "who spoke when" &mdash; including overlapping speech.
+      </p>
+      <div class="hero-meta">
+        <span class="hero-stat">Origin: <strong>Fujita et al., 2019</strong></span>
+        <span class="hero-stat">Key Idea: <strong>Multi-label Classification</strong></span>
+        <span class="hero-stat">Training: <strong>Permutation Invariant (PIT)</strong></span>
+        <span class="hero-stat">Metric: <strong>Diarization Error Rate (DER)</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="page-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">On This Page</div>
+      <nav id="sidebar-nav">
+        <a href="#overview">Overview &amp; Motivation</a>
+        <a href="#traditional-vs-eend">Traditional vs. EEND</a>
+        <a href="#core-architectures">Core Architectures</a>
+        <a href="#arch-blstm" class="sub">BLSTM-EEND</a>
+        <a href="#arch-sa" class="sub">SA-EEND (Self-Attention)</a>
+        <a href="#pit">Permutation Invariant Training</a>
+        <a href="#eda">Encoder-Decoder Attractor</a>
+        <a href="#streaming">Streaming: BW-EDA-EEND</a>
+        <a href="#eend-vc">EEND-VC (Vector Clustering)</a>
+        <a href="#overlap">Handling Overlapping Speech</a>
+        <a href="#ssl-integration">SSL Integration (WavLM)</a>
+        <a href="#comparison">Comparison Table</a>
+        <a href="#strengths-weaknesses">Strengths &amp; Weaknesses</a>
+        <a href="#evolution">Evolution Timeline</a>
+        <a href="#sources">Sources</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Section 1: Overview -->
+      <section id="overview">
+        <h2>Overview &amp; Motivation</h2>
+        <p>
+          Speaker diarization is the task of determining "who spoke when" in an audio recording containing
+          multiple speakers. Traditional approaches decompose this into a pipeline of separately optimized
+          modules: voice activity detection (VAD), speaker embedding extraction, and clustering. While
+          functional, this pipeline has a fundamental flaw &mdash; it cannot natively handle <strong>overlapping speech</strong>,
+          a common phenomenon in natural conversation where multiple people speak simultaneously.
+        </p>
+
+        <div class="info-box concept">
+          <div class="info-box-title">Core Insight</div>
+          <p>
+            EEND reformulates speaker diarization as a <strong>multi-label classification problem</strong>.
+            For each time frame, the network outputs independent speech activity probabilities for each speaker.
+            When two speakers overlap, both outputs are active simultaneously &mdash; something the traditional
+            "one label per frame" clustering approach fundamentally cannot represent.
+          </p>
+        </div>
+
+        <p>
+          End-to-End Neural Diarization (EEND) was introduced by Fujita et al. at Interspeech 2019. The key
+          innovation was training a single neural network end-to-end with a permutation-free objective function,
+          enabling the model to directly minimize diarization errors rather than optimizing each pipeline
+          component in isolation. This approach proved especially powerful for conversational speech with
+          frequent speaker overlaps.
+        </p>
+
+        <h3>What "End-to-End" Means Here</h3>
+        <p>
+          Unlike the traditional pipeline where VAD, feature extraction, embedding, and clustering are
+          separate modules, EEND uses a single neural network that takes acoustic features as input and
+          directly outputs per-frame, per-speaker activity labels. There are no intermediate hand-designed
+          representations or separately trained components. The entire system is optimized with a single
+          loss function that directly measures diarization accuracy.
+        </p>
+      </section>
+
+      <!-- Section 2: Traditional vs EEND -->
+      <section id="traditional-vs-eend">
+        <h2>Traditional Pipeline vs. EEND</h2>
+        <p>
+          To understand why EEND represents a paradigm shift, it helps to contrast the two approaches
+          visually. The traditional pipeline breaks diarization into sequential steps, each optimized
+          independently. EEND collapses these into a single differentiable network.
+        </p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '14px', 'fontFamily': 'system-ui, sans-serif' }}}%%
+flowchart LR
+    subgraph Traditional["Traditional Clustering Pipeline"]
+        direction LR
+        A1["Audio<br/>Input"] --> A2["VAD<br/>(Voice Activity<br/>Detection)"]
+        A2 --> A3["Segmentation<br/>& Windowing"]
+        A3 --> A4["Speaker<br/>Embedding<br/>(x-vector/d-vector)"]
+        A4 --> A5["Clustering<br/>(AHC / SC)"]
+        A5 --> A6["Diarization<br/>Output"]
+    end
+
+    subgraph EEND["End-to-End Neural Diarization"]
+        direction LR
+        B1["Audio<br/>Input"] --> B2["Mel-<br/>Filterbank"]
+        B2 --> B3["Neural Network<br/>(BLSTM or<br/>Transformer)"]
+        B3 --> B4["Per-Speaker<br/>Activity<br/>Probabilities"]
+        B4 --> B5["Diarization<br/>Output"]
+    end
+
+    style Traditional fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1E293B
+    style EEND fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#1E293B
+    style A1 fill:#fff,stroke:#d97706,color:#1E293B
+    style A2 fill:#fff,stroke:#d97706,color:#1E293B
+    style A3 fill:#fff,stroke:#d97706,color:#1E293B
+    style A4 fill:#fff,stroke:#d97706,color:#1E293B
+    style A5 fill:#fff,stroke:#d97706,color:#1E293B
+    style A6 fill:#fff,stroke:#d97706,color:#1E293B
+    style B1 fill:#fff,stroke:#7c3aed,color:#1E293B
+    style B2 fill:#fff,stroke:#7c3aed,color:#1E293B
+    style B3 fill:#f5f3ff,stroke:#7c3aed,stroke-width:3px,color:#1E293B
+    style B4 fill:#fff,stroke:#7c3aed,color:#1E293B
+    style B5 fill:#fff,stroke:#7c3aed,color:#1E293B
+          </div>
+          <div class="diagram-caption">Figure 1: Traditional clustering-based pipeline (top) vs. EEND approach (bottom). EEND replaces 4+ separate modules with one neural network.</div>
+        </div>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon orange">&#9888;</div>
+            <h4>Traditional Pipeline Problems</h4>
+            <p>Each module optimized independently &mdash; VAD errors propagate to embeddings, embedding errors propagate to clustering. No overlap handling. Not end-to-end optimizable for DER.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon purple">&#10003;</div>
+            <h4>EEND Advantages</h4>
+            <p>Single network optimized end-to-end with a loss that directly minimizes diarization errors. Natively handles overlapping speech via multi-label output. Simpler deployment.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Core Architectures -->
+      <section id="core-architectures">
+        <h2>Core Architectures</h2>
+        <p>
+          EEND has evolved through several architectural generations, each improving the model's ability
+          to capture speaker-relevant temporal patterns. All share the same fundamental formulation &mdash;
+          multi-label classification per frame &mdash; but differ in the neural network backbone.
+        </p>
+
+        <!-- BLSTM -->
+        <div id="arch-blstm">
+          <h3>BLSTM-EEND (2019)</h3>
+          <p>
+            The original EEND architecture used a <strong>Bidirectional Long Short-Term Memory</strong> (BLSTM)
+            network. The input is a sequence of acoustic features (typically log-Mel filterbank features),
+            and the BLSTM processes them in both forward and backward directions to capture temporal context.
+          </p>
+
+          <div class="arch-flow">
+            <span class="arch-step">Log-Mel Features</span>
+            <span class="arch-arrow">&#8594;</span>
+            <span class="arch-step">Linear Layer</span>
+            <span class="arch-arrow">&#8594;</span>
+            <span class="arch-step highlight">BLSTM Layers (x5)</span>
+            <span class="arch-arrow">&#8594;</span>
+            <span class="arch-step">Linear + Sigmoid</span>
+            <span class="arch-arrow">&#8594;</span>
+            <span class="arch-step">Per-Speaker Posteriors</span>
+          </div>
+
+          <p>
+            Each BLSTM layer sees the hidden states from its neighboring frames (previous in the forward
+            pass, next in the backward pass). This provides temporal context but limits the model to only
+            indirect access to distant frames through the recurrent chain. For diarization, where speaker
+            identity must be consistent across an entire recording, this indirect long-range dependency
+            proved to be a limitation.
+          </p>
+
+          <div class="info-box tip">
+            <div class="info-box-title">Historical Note</div>
+            <p>
+              The BLSTM-EEND was the proof of concept that end-to-end diarization was viable. It demonstrated
+              that a single neural network could learn to jointly detect speech activity and assign speaker
+              labels, outperforming x-vector clustering on recordings with overlapping speech.
+            </p>
+          </div>
+        </div>
+
+        <!-- Self-Attention -->
+        <div id="arch-sa">
+          <h3>SA-EEND: Self-Attention EEND (2019)</h3>
+          <p>
+            Recognizing the limitations of recurrent context, Fujita et al. replaced the BLSTM backbone with
+            <strong>Transformer encoder blocks</strong> using multi-head self-attention (MHSA). This architecture,
+            called SA-EEND, became the foundation for all subsequent EEND research.
+          </p>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '13px', 'fontFamily': 'system-ui, sans-serif' }}}%%
+flowchart TB
+    Input["Log-Mel Filterbank<br/>(T frames x F features)"] --> Lin1["Linear Projection<br/>(2 layers)"]
+    Lin1 --> PE["+ Positional<br/>Encoding"]
+    PE --> T1
+
+    subgraph Enc["Transformer Encoder Stack (x4)"]
+        direction TB
+        T1["Multi-Head<br/>Self-Attention"] --> N1["Layer Norm<br/>+ Residual"]
+        N1 --> FF1["Feed-Forward<br/>Network"]
+        FF1 --> N2["Layer Norm<br/>+ Residual"]
+    end
+
+    N2 --> Lin2["Linear Layer<br/>(D &rarr; S speakers)"]
+    Lin2 --> Sig["Sigmoid<br/>Activation"]
+    Sig --> Out["Frame-wise Speaker<br/>Activity Posteriors<br/>(T x S matrix)"]
+
+    style Input fill:#f0f9ff,stroke:#0284c7,color:#1E293B
+    style Enc fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px,color:#1E293B
+    style T1 fill:#ede9fe,stroke:#7c3aed,color:#1E293B
+    style N1 fill:#fff,stroke:#7c3aed,color:#1E293B
+    style FF1 fill:#ede9fe,stroke:#7c3aed,color:#1E293B
+    style N2 fill:#fff,stroke:#7c3aed,color:#1E293B
+    style Out fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1E293B
+    style Lin1 fill:#fff,stroke:#64748b,color:#1E293B
+    style PE fill:#fff,stroke:#64748b,color:#1E293B
+    style Lin2 fill:#fff,stroke:#64748b,color:#1E293B
+    style Sig fill:#fff,stroke:#64748b,color:#1E293B
+            </div>
+            <div class="diagram-caption">Figure 2: SA-EEND architecture. Self-attention in the Transformer encoder provides direct access to all frames, enabling global speaker modeling.</div>
+          </div>
+
+          <h4>Why Self-Attention Works Better</h4>
+          <p>
+            In speaker diarization, the model must recognize that the voice heard at minute 1 belongs to the
+            same speaker heard at minute 10. Self-attention provides <strong>direct pairwise attention</strong>
+            between all frames in the sequence &mdash; every frame can attend to every other frame in a single
+            layer. This makes it naturally suited for capturing global speaker characteristics across the
+            entire recording, whereas BLSTM must propagate this information hop by hop through the recurrent chain.
+          </p>
+
+          <p>
+            The self-attention mechanism computes attention weights between all pairs of frames:
+          </p>
+          <div class="equation-block">
+            Attention(Q, K, V) = softmax(Q K<sup>T</sup> / &radic;d<sub>k</sub>) V
+          </div>
+          <p>
+            where Q, K, V are query, key, and value projections of the frame embeddings, and d<sub>k</sub>
+            is the key dimension. Each attention head can learn to focus on different aspects: some heads
+            capture speaker identity patterns, others capture speech activity dynamics.
+          </p>
+
+          <div class="info-box concept">
+            <div class="info-box-title">Multi-Head Self-Attention in Diarization</div>
+            <p>
+              Research has shown that different attention heads in SA-EEND specialize for different roles.
+              Some heads develop strong diagonal attention patterns (local context for activity detection),
+              while others develop block-diagonal patterns that correspond to speaker turns (global speaker
+              identity). This emergent specialization is key to why self-attention outperforms recurrence
+              for diarization.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: PIT -->
+      <section id="pit">
+        <h2>Permutation Invariant Training (PIT)</h2>
+        <p>
+          One of the fundamental challenges in training EEND is the <strong>speaker permutation problem</strong>.
+          When the model outputs activity probabilities for speaker 1 and speaker 2, there is no inherent
+          reason why output channel 1 should correspond to a specific speaker. The assignment is arbitrary.
+        </p>
+
+        <h3>The Permutation Problem</h3>
+        <p>
+          Consider a recording with speakers A and B. The model might output:
+        </p>
+        <ul>
+          <li>Channel 1 = Speaker A activity, Channel 2 = Speaker B activity</li>
+          <li>Channel 1 = Speaker B activity, Channel 2 = Speaker A activity</li>
+        </ul>
+        <p>
+          Both assignments are equally valid. If the ground truth labels happen to use the first mapping
+          but the model learns the second, a naive loss function would penalize the model even though its
+          predictions are correct &mdash; just in a different order. This ambiguity makes standard
+          cross-entropy training impossible.
+        </p>
+
+        <h3>How PIT Solves This</h3>
+        <p>
+          Permutation Invariant Training (PIT), originally developed for speech separation (Kolbaek et al., 2017),
+          solves this by evaluating the loss under <strong>all possible speaker permutations</strong> and using
+          only the minimum loss for backpropagation.
+        </p>
+
+        <div class="equation-block">
+          L<sub>PIT</sub> = min<sub>&pi; &isin; Perms(S)</sub> &sum;<sub>t=1</sub><sup>T</sup> &sum;<sub>s=1</sub><sup>S</sup> BCE(y&#770;<sub>t,s</sub>, y<sub>t,&pi;(s)</sub>)
+        </div>
+
+        <p>
+          where &pi; ranges over all permutations of S speakers, y&#770; is the model output, y is the ground truth,
+          and BCE is binary cross-entropy. For each training sample, the permutation that yields the lowest
+          loss is selected, and only that permutation's gradients are used for parameter updates.
+        </p>
+
+        <div class="info-box warning">
+          <div class="info-box-title">Computational Cost of PIT</div>
+          <p>
+            PIT requires evaluating S! (S factorial) permutations for each training sample. For 2 speakers,
+            this is trivial (2! = 2). For 3 speakers (3! = 6), it is still manageable. But for large numbers
+            of speakers, the factorial explosion makes PIT intractable. This is one reason the original
+            SA-EEND was limited to a <strong>fixed, small number of speakers</strong> (typically 2-3), and
+            why the EDA mechanism was later developed.
+          </p>
+        </div>
+
+        <h3>Utterance-Level vs. Frame-Level PIT</h3>
+        <p>
+          EEND uses <strong>utterance-level PIT</strong> (also called Deep Clustering PIT or DC-PIT), where
+          a single best permutation is found for the entire recording. This is more stable than frame-level
+          PIT used in some speech separation systems, because in diarization, speaker identities should be
+          consistent across the entire recording. The best permutation is computed by summing the frame-level
+          losses across all frames, then selecting the permutation with the minimum total loss.
+        </p>
+      </section>
+
+      <!-- Section 5: EDA -->
+      <section id="eda">
+        <h2>Encoder-Decoder Attractor (EDA)</h2>
+        <p>
+          The original SA-EEND with PIT requires a fixed number of output channels (one per speaker),
+          determined at training time. This is a serious limitation for real-world recordings where the
+          number of speakers is unknown and variable. The <strong>Encoder-Decoder-based Attractor</strong> (EDA)
+          module, introduced by Horiguchi et al. (2021), elegantly solves this problem.
+        </p>
+
+        <h3>How EDA Works</h3>
+        <p>
+          Instead of using a fixed output layer, EDA uses an LSTM-based encoder-decoder to generate
+          <strong>speaker-wise attractors</strong> in an autoregressive manner. Each attractor is a
+          learned vector that represents one speaker. The number of attractors (and thus the number of
+          detected speakers) is determined dynamically during inference.
+        </p>
+
+        <div class="arch-flow">
+          <span class="arch-step">Frame Embeddings (from Transformer)</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">LSTM Encoder</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step highlight">LSTM Decoder (autoregressive)</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Attractors a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>S</sub></span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Dot Product with Embeddings</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Per-Speaker Activities</span>
+        </div>
+
+        <h4>Attractor Generation</h4>
+        <ol>
+          <li>The Transformer encoder produces frame-wise embeddings <strong>e</strong><sub>1</sub>, ..., <strong>e</strong><sub>T</sub>.</li>
+          <li>These embeddings are passed through the LSTM encoder, producing a context vector.</li>
+          <li>The LSTM decoder generates attractors one at a time, starting from a zero vector.</li>
+          <li>At each decoding step, the decoder outputs a candidate attractor and an <strong>existence probability</strong>.</li>
+          <li>Generation continues until the existence probability drops below a threshold (e.g., 0.5).</li>
+        </ol>
+
+        <h4>Diarization via Dot Products</h4>
+        <p>
+          Once attractors are generated, diarization results are computed as the dot product between
+          each attractor and each frame embedding, followed by a sigmoid activation:
+        </p>
+        <div class="equation-block">
+          y&#770;<sub>t,s</sub> = &sigma;(<strong>a</strong><sub>s</sub> &middot; <strong>e</strong><sub>t</sub>)
+        </div>
+        <p>
+          This is elegant because when two speakers overlap at frame t, the embedding <strong>e</strong><sub>t</sub>
+          will have a large dot product with both speakers' attractors, naturally producing high activity
+          probabilities for multiple speakers simultaneously.
+        </p>
+
+        <div class="info-box concept">
+          <div class="info-box-title">Attractor Interpretation</div>
+          <p>
+            Each attractor can be thought of as a "template" vector representing what a particular speaker
+            sounds like in the embedding space. The dot product measures how well each frame matches each
+            speaker template. This is conceptually similar to speaker embeddings in clustering-based systems,
+            but here the attractors are generated dynamically by the network rather than extracted by a
+            separately trained model.
+          </p>
+        </div>
+
+        <h4>Transformer-Based Attractors (EEND-TA)</h4>
+        <p>
+          Recent work has replaced the LSTM-based EDA with <strong>Transformer-based attractor decoders</strong>
+          (EEND-TA). These use cross-attention between learned speaker queries and the frame embeddings,
+          similar to the decoder in DETR (object detection). This improves both convergence speed and
+          final accuracy, achieving state-of-the-art DER of 14.49% on DIHARD III.
+        </p>
+      </section>
+
+      <!-- Section 6: Streaming EEND -->
+      <section id="streaming">
+        <h2>Streaming: BW-EDA-EEND</h2>
+        <p>
+          Standard EEND requires the entire recording to be available before processing, which makes it
+          unsuitable for real-time applications like live transcription or video conferencing. <strong>Block-Wise
+          EDA-EEND (BW-EDA-EEND)</strong>, developed at Amazon, adapts EEND for streaming scenarios.
+        </p>
+
+        <h3>Block-Wise Processing</h3>
+        <p>
+          Instead of processing the entire recording at once, BW-EDA-EEND divides the audio into fixed-size
+          blocks (e.g., 10 seconds) and processes them incrementally. The key challenge is maintaining
+          speaker consistency across blocks without access to future audio.
+        </p>
+
+        <h4>Incremental Transformer Encoder</h4>
+        <p>
+          The standard Transformer encoder uses bidirectional self-attention (each frame attends to all
+          other frames). BW-EDA-EEND replaces this with a <strong>causal/left-context-only</strong>
+          Transformer encoder that:
+        </p>
+        <ul>
+          <li>Attends only to frames in the current and previous blocks (no future lookahead).</li>
+          <li>Uses <strong>block-level recurrence</strong> to carry hidden states from one block to the next, propagating speaker identity information across time.</li>
+          <li>Achieves <strong>linear time complexity</strong> in the length of the recording (vs. quadratic for full self-attention).</li>
+        </ul>
+
+        <h4>Streaming Attractor Update</h4>
+        <p>
+          The EDA module generates attractors for each block using information from the current block
+          and the accumulated hidden states from previous blocks. New speakers can be detected as they
+          appear, and the attractor set grows dynamically. Previous attractors are carried forward and
+          refined with each new block.
+        </p>
+
+        <div class="info-box tip">
+          <div class="info-box-title">Performance Characteristics</div>
+          <p>
+            For unlimited-latency BW-EDA-EEND (which still processes in linear time), degradation is moderate
+            compared to offline EDA-EEND &mdash; especially for 2-speaker recordings with a context size of
+            10 seconds. For limited-latency (block-by-block) operation, accuracy is comparable to offline
+            clustering-based methods while supporting true real-time processing.
+          </p>
+        </div>
+
+        <h3>Further Advances: FS-EEND and LS-EEND</h3>
+        <p>
+          More recent streaming variants include:
+        </p>
+        <ul>
+          <li><strong>FS-EEND</strong> (Frame-wise Streaming EEND, ICASSP 2024): achieves frame-synchronous operation
+            with non-autoregressive attractor extraction, enabling even lower latency.</li>
+          <li><strong>LS-EEND</strong> (Long-form Streaming EEND, TASLP 2025): unifies embedding extraction,
+            attractor generation, and diarization into a single causal network with linear complexity,
+            achieving state-of-the-art online DER: 12.11% on CALLHOME, 27.58% on DIHARD II, 19.61% on DIHARD III.</li>
+        </ul>
+      </section>
+
+      <!-- Section 7: EEND-VC -->
+      <section id="eend-vc">
+        <h2>EEND-VC: Vector Clustering Hybrid</h2>
+        <p>
+          Despite its advantages, pure EEND struggles with two practical scenarios: <strong>long recordings</strong>
+          (more than ~10 minutes) and recordings with a <strong>large number of speakers</strong>. EEND-VC
+          (End-to-End Neural Diarization with Vector Clustering), introduced by Kinoshita et al. (2021),
+          combines the strengths of both paradigms.
+        </p>
+
+        <h3>Architecture</h3>
+        <p>
+          EEND-VC operates in two stages:
+        </p>
+        <ol>
+          <li><strong>Local EEND Segmentation:</strong> The input recording is split into short, overlapping chunks
+            (e.g., 10-30 seconds). A standard EEND model processes each chunk independently, producing local
+            diarization labels and speaker embeddings for each chunk.</li>
+          <li><strong>Global Vector Clustering:</strong> The speaker embeddings from all chunks are clustered
+            (typically using agglomerative hierarchical clustering or spectral clustering) to resolve cross-chunk
+            speaker identity, stitching the local diarization results into a coherent global output.</li>
+        </ol>
+
+        <div class="arch-flow">
+          <span class="arch-step">Long Recording</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Split into Chunks</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step highlight">EEND per Chunk</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Local Labels + Embeddings</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step highlight">Vector Clustering</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Global Diarization</span>
+        </div>
+
+        <h3>Why Hybrid?</h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon green">&#8645;</div>
+            <h4>Scalable to Any Length</h4>
+            <p>Each chunk is processed independently, so memory usage is bounded. A 2-hour meeting is no harder than a 10-second segment &mdash; just more chunks.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon blue">&#8734;</div>
+            <h4>Unlimited Speakers</h4>
+            <p>The clustering step has no fixed speaker limit. New speakers in new chunks simply produce new embedding vectors that form new clusters.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon purple">&#8776;</div>
+            <h4>Overlap Handling Preserved</h4>
+            <p>Within each chunk, the EEND model handles overlapping speech natively. The hybrid approach keeps this core advantage.</p>
+          </div>
+        </div>
+
+        <h4>Permutation Resolution</h4>
+        <p>
+          Since EEND is run independently on each chunk, the speaker label assignment (which output channel
+          maps to which speaker) is independent across chunks. Speaker A might be output 1 in chunk 1 but
+          output 2 in chunk 3. The vector clustering step resolves this cross-chunk permutation by matching
+          speaker embeddings, ensuring globally consistent speaker labels.
+        </p>
+
+        <h4>pyannote Implementation</h4>
+        <p>
+          The popular <strong>pyannote.audio</strong> framework implements an EEND-VC variant where the EEND
+          segmentation model only predicts speaker activity (not embeddings), and a separate pre-trained
+          speaker embedding extractor provides the vectors for clustering. This modular approach simplifies
+          training and leverages established, high-quality embedding models.
+        </p>
+      </section>
+
+      <!-- Section 8: Overlapping Speech -->
+      <section id="overlap">
+        <h2>Handling Overlapping Speech</h2>
+        <p>
+          The ability to handle overlapping speech is EEND's signature advantage over traditional
+          clustering-based methods. Here is exactly how and why it works.
+        </p>
+
+        <h3>The Multi-Label Formulation</h3>
+        <p>
+          Traditional clustering methods assign each frame to exactly one speaker (hard assignment).
+          This means overlapping speech &mdash; where two or more speakers talk simultaneously &mdash;
+          is fundamentally unrepresentable. Overlap detection modules can be bolted on after the fact,
+          but they are separate from the diarization system and add error.
+        </p>
+        <p>
+          EEND uses <strong>independent sigmoid outputs</strong> for each speaker at each frame. Unlike
+          softmax (which forces outputs to sum to 1), sigmoid allows each output to be independently
+          activated:
+        </p>
+
+        <div class="code-block">
+<span class="comment"># Traditional clustering: one speaker per frame (mutually exclusive)</span>
+frame_label = <span class="func">argmax</span>([p_speaker1, p_speaker2])  <span class="comment"># Only ONE speaker</span>
+
+<span class="comment"># EEND: independent probabilities per speaker (multi-label)</span>
+speaker1_active = <span class="func">sigmoid</span>(logit_1) > <span class="number">0.5</span>  <span class="comment"># Can be True</span>
+speaker2_active = <span class="func">sigmoid</span>(logit_2) > <span class="number">0.5</span>  <span class="comment"># Can ALSO be True simultaneously</span>
+        </div>
+
+        <h3>Learning Overlap Patterns</h3>
+        <p>
+          During training on data that contains natural overlapping speech, the network learns that certain
+          acoustic patterns (superimposed voices) should activate multiple output channels simultaneously.
+          The binary cross-entropy loss applied independently to each speaker channel naturally handles this:
+          for a frame where both speakers are active, both channels should output high probability, and the
+          loss penalizes anything else.
+        </p>
+
+        <div class="info-box concept">
+          <div class="info-box-title">With EDA Attractors</div>
+          <p>
+            In the EDA formulation, overlap handling is even more intuitive. When two speakers talk simultaneously,
+            the frame embedding <strong>e</strong><sub>t</sub> captures characteristics of both voices. The dot product
+            <strong>a</strong><sub>s</sub> &middot; <strong>e</strong><sub>t</sub> will be large for both matching
+            speaker attractors, naturally producing high activity for both speakers at that frame.
+          </p>
+        </div>
+
+        <h3>Overlap Detection Performance</h3>
+        <p>
+          In evaluations, EEND-based methods consistently outperform clustering-based methods specifically on
+          the overlap regions of recordings. The improvement is most dramatic on datasets with high overlap
+          ratios (such as meeting data), where EEND can reduce overlap-related DER components by 30-50%
+          compared to clustering with overlap detection post-processing.
+        </p>
+      </section>
+
+      <!-- Section 9: SSL Integration -->
+      <section id="ssl-integration">
+        <h2>Integration with Self-Supervised Models (WavLM)</h2>
+        <p>
+          Self-supervised learning (SSL) models like <strong>WavLM</strong>, <strong>wav2vec 2.0</strong>,
+          and <strong>HuBERT</strong> have revolutionized speech processing by learning rich, general-purpose
+          speech representations from massive unlabeled audio data. Integrating these representations into
+          EEND has produced significant improvements.
+        </p>
+
+        <h3>Architecture: WavLM + EEND</h3>
+        <p>
+          The integration replaces the traditional log-Mel filterbank front-end with WavLM features:
+        </p>
+
+        <div class="arch-flow">
+          <span class="arch-step">Raw Audio</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step highlight">WavLM (frozen or fine-tuned)</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Weighted Layer Sum</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Linear + LayerNorm</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step highlight">Conformer Encoder</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">EDA / Clustering</span>
+          <span class="arch-arrow">&#8594;</span>
+          <span class="arch-step">Diarization</span>
+        </div>
+
+        <p>
+          Key details of the integration:
+        </p>
+        <ul>
+          <li><strong>Weighted layer sum:</strong> WavLM outputs from each transformer layer are combined using
+            learnable weights per layer, allowing the model to select the most diarization-relevant representations
+            across different abstraction levels.</li>
+          <li><strong>Conformer encoder:</strong> A CNN-augmented Transformer that captures both local and global
+            temporal dependencies, often replacing the plain Transformer encoder in the diarization backbone.</li>
+          <li><strong>Optional fine-tuning:</strong> WavLM can be frozen (feature extraction only) or jointly
+            fine-tuned with the diarization model for further improvements.</li>
+        </ul>
+
+        <h3>Results</h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon cyan">&#9660;</div>
+            <h4>State-of-the-Art DER</h4>
+            <p>WavLM-based EEND achieves new SOTA on AMI and AISHELL-4 datasets, substantially outperforming pyannote baselines.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon green">&#9998;</div>
+            <h4>Data Efficiency</h4>
+            <p>With only 5% of training data (14.4 hours), WavLM-updated systems outperform baselines trained on the full dataset. SSL features provide powerful speaker representations with minimal supervision.</p>
+          </div>
+        </div>
+
+        <h4>DiariZen: EEND-VC with WavLM</h4>
+        <p>
+          The <strong>DiariZen</strong> system combines WavLM features with a Conformer-based EEND model
+          within the EEND-VC framework, achieving state-of-the-art diarization across multiple benchmarks.
+          This represents the current frontier of EEND performance, combining the best of self-supervised
+          representations, end-to-end neural diarization, and clustering-based scalability.
+        </p>
+      </section>
+
+      <!-- Section 10: Comparison Table -->
+      <section id="comparison">
+        <h2>Comparison of Diarization Approaches</h2>
+        <p>
+          The following table compares the major diarization paradigms across key dimensions. Each approach
+          has its niche, and the best choice depends on the specific application requirements.
+        </p>
+
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Clustering-Based<br/>(x-vector + AHC)</th>
+                <th>SA-EEND<br/>(with PIT)</th>
+                <th>EEND-EDA</th>
+                <th>EEND-VC<br/>(Hybrid)</th>
+                <th>BW-EDA-EEND<br/>(Streaming)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Overlap Handling</strong></td>
+                <td><span class="badge poor">Poor</span> Requires post-hoc OSD</td>
+                <td><span class="badge good">Native</span> Multi-label output</td>
+                <td><span class="badge good">Native</span> Via attractors</td>
+                <td><span class="badge good">Native</span> Within chunks</td>
+                <td><span class="badge good">Native</span> Within blocks</td>
+              </tr>
+              <tr>
+                <td><strong># Speakers</strong></td>
+                <td><span class="badge good">Unlimited</span></td>
+                <td><span class="badge poor">Fixed</span> (2-3, set at training)</td>
+                <td><span class="badge moderate">Variable</span> (autoregressive)</td>
+                <td><span class="badge good">Unlimited</span> (via clustering)</td>
+                <td><span class="badge moderate">Variable</span> (per block)</td>
+              </tr>
+              <tr>
+                <td><strong>Recording Length</strong></td>
+                <td><span class="badge good">Unlimited</span></td>
+                <td><span class="badge poor">Short</span> (~30s-2min)</td>
+                <td><span class="badge poor">Short</span> (~30s-2min)</td>
+                <td><span class="badge good">Unlimited</span> (chunked)</td>
+                <td><span class="badge good">Unlimited</span> (streaming)</td>
+              </tr>
+              <tr>
+                <td><strong>Online / Streaming</strong></td>
+                <td><span class="badge poor">No</span></td>
+                <td><span class="badge poor">No</span></td>
+                <td><span class="badge poor">No</span></td>
+                <td><span class="badge moderate">Partial</span></td>
+                <td><span class="badge good">Yes</span></td>
+              </tr>
+              <tr>
+                <td><strong>End-to-End Optimized</strong></td>
+                <td><span class="badge poor">No</span> Separate modules</td>
+                <td><span class="badge good">Yes</span></td>
+                <td><span class="badge good">Yes</span></td>
+                <td><span class="badge moderate">Partial</span></td>
+                <td><span class="badge good">Yes</span></td>
+              </tr>
+              <tr>
+                <td><strong>Training Data Needs</strong></td>
+                <td><span class="badge moderate">Moderate</span></td>
+                <td><span class="badge poor">Large</span> (with annotations)</td>
+                <td><span class="badge poor">Large</span> (with annotations)</td>
+                <td><span class="badge moderate">Moderate</span></td>
+                <td><span class="badge poor">Large</span></td>
+              </tr>
+              <tr>
+                <td><strong>Inference Speed</strong></td>
+                <td><span class="badge moderate">Moderate</span></td>
+                <td><span class="badge good">Fast</span></td>
+                <td><span class="badge good">Fast</span></td>
+                <td><span class="badge moderate">Moderate</span></td>
+                <td><span class="badge good">Fast</span> (linear time)</td>
+              </tr>
+              <tr>
+                <td><strong>Best DER (CALLHOME)</strong></td>
+                <td>~11-13%</td>
+                <td>~11%</td>
+                <td>~8-10%</td>
+                <td>~7-9%</td>
+                <td>~12% (online)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 11: Strengths & Weaknesses -->
+      <section id="strengths-weaknesses">
+        <h2>Strengths &amp; Weaknesses</h2>
+        <p>
+          Understanding when EEND excels and where it falls short helps practitioners choose the right
+          approach for their specific use case.
+        </p>
+
+        <div class="sw-grid">
+          <div class="sw-box strengths">
+            <h4>Strengths</h4>
+            <ul>
+              <li>Native overlapping speech handling &mdash; no separate OSD module needed</li>
+              <li>End-to-end optimization directly minimizes DER</li>
+              <li>Simpler deployment: single model replaces a multi-module pipeline</li>
+              <li>Lighter and faster inference than multi-stage clustering systems</li>
+              <li>Easily incorporates modern deep learning advances (Transformers, Conformers, SSL features)</li>
+              <li>Excels on conversational data with frequent turn-taking and overlap</li>
+              <li>Hybrid variants (EEND-VC) combine scalability with overlap handling</li>
+              <li>Streaming variants enable real-time applications</li>
+              <li>EDA/attractor mechanisms handle variable speaker counts</li>
+            </ul>
+          </div>
+          <div class="sw-box weaknesses">
+            <h4>Weaknesses</h4>
+            <ul>
+              <li>Pure EEND struggles with long recordings (&gt;10 min) due to quadratic attention</li>
+              <li>PIT-based training limits maximum speaker count (factorial complexity)</li>
+              <li>Requires large amounts of diarization-annotated training data</li>
+              <li>Performance degrades with many speakers (7+) without hybrid approaches</li>
+              <li>Domain mismatch: models trained on one dataset may not generalize well</li>
+              <li>Training is computationally expensive compared to clustering pipelines</li>
+              <li>Streaming variants introduce latency-accuracy tradeoffs</li>
+              <li>Less mature ecosystem compared to clustering-based methods</li>
+              <li>Speaker permutation issues in chunk boundaries (EEND-VC) require careful stitching</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-box tip">
+          <div class="info-box-title">Practical Guidance</div>
+          <p>
+            For most real-world applications in 2025, <strong>EEND-VC</strong> (or its pyannote implementation)
+            offers the best balance of accuracy, scalability, and overlap handling. For low-latency streaming
+            applications, <strong>LS-EEND</strong> is the current state of the art. Pure EEND or EEND-EDA
+            remains useful for short recordings (under 5 minutes) with 2-4 speakers, such as telephone
+            conversations.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 12: Evolution Timeline -->
+      <section id="evolution">
+        <h2>Evolution Timeline</h2>
+        <p>
+          EEND has evolved rapidly since its introduction. This timeline traces the major milestones in
+          the development of end-to-end neural diarization.
+        </p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2019 (Interspeech)</div>
+            <div class="timeline-title">BLSTM-EEND &mdash; Fujita et al.</div>
+            <div class="timeline-desc">First end-to-end neural diarization system. Used BLSTM with PIT. Demonstrated viability of the multi-label classification approach.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2019 (ASRU)</div>
+            <div class="timeline-title">SA-EEND &mdash; Self-Attention EEND</div>
+            <div class="timeline-desc">Replaced BLSTM with Transformer encoder. Self-attention captures global speaker characteristics, significantly improving accuracy on overlapping speech.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2020</div>
+            <div class="timeline-title">EEND Reformulated as Multi-Label Classification</div>
+            <div class="timeline-desc">Fujita et al. formalize EEND as a pure multi-label classification problem with rigorous mathematical framework and improved training procedures.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2021 (ICASSP)</div>
+            <div class="timeline-title">BW-EDA-EEND &mdash; Streaming EEND</div>
+            <div class="timeline-desc">Amazon's block-wise processing enables streaming diarization with variable speakers. Uses incremental Transformer with block-level recurrence for linear time complexity.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2021</div>
+            <div class="timeline-title">EEND-EDA &mdash; Encoder-Decoder Attractor</div>
+            <div class="timeline-desc">Horiguchi et al. introduce the EDA module for flexible speaker count handling. Autoregressive attractor generation with existence probability stopping criterion.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2021</div>
+            <div class="timeline-title">EEND-VC &mdash; Vector Clustering Hybrid</div>
+            <div class="timeline-desc">Kinoshita et al. combine local EEND segmentation with global vector clustering, enabling processing of long recordings with unlimited speakers.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2023-2024</div>
+            <div class="timeline-title">Conformer + WavLM Integration</div>
+            <div class="timeline-desc">Self-supervised features from WavLM combined with Conformer encoders achieve new SOTA. DiariZen system demonstrates the power of SSL + EEND-VC.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2024 (ICASSP)</div>
+            <div class="timeline-title">FS-EEND &mdash; Frame-wise Streaming</div>
+            <div class="timeline-desc">Non-autoregressive attractor extraction enables frame-synchronous online diarization with lower latency than block-wise approaches.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2025</div>
+            <div class="timeline-title">LS-EEND &amp; Progressive Training</div>
+            <div class="timeline-desc">Long-form streaming EEND with online attractor extraction. Progressive multi-stage curriculum training pushes limits of end-to-end diarization. SOTA online DER: 12.11% CALLHOME.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 13: Sources -->
+      <section id="sources">
+        <h2>Sources</h2>
+        <p>
+          Key papers, implementations, and resources referenced in this explainer.
+        </p>
+
+        <h3>Foundational Papers</h3>
+        <ul class="sources-list">
+          <li>
+            <a href="https://www.researchgate.net/publication/335829563_End-to-End_Neural_Speaker_Diarization_with_Permutation-Free_Objectives" target="_blank" rel="noopener">End-to-End Neural Speaker Diarization with Permutation-Free Objectives</a>
+            <div class="source-meta">Fujita, Kanda, Horiguchi, Nagamatsu, Watanabe &mdash; Interspeech 2019</div>
+          </li>
+          <li>
+            <a href="https://arxiv.org/abs/1909.06247" target="_blank" rel="noopener">End-to-End Neural Speaker Diarization with Self-Attention</a>
+            <div class="source-meta">Fujita, Kanda, Horiguchi, Xue, Nagamatsu, Watanabe &mdash; ASRU 2019</div>
+          </li>
+          <li>
+            <a href="https://arxiv.org/abs/2003.02966" target="_blank" rel="noopener">End-to-End Neural Diarization: Reformulating Speaker Diarization as Simple Multi-label Classification</a>
+            <div class="source-meta">Fujita, Kanda, Horiguchi, Nagamatsu, Watanabe &mdash; 2020</div>
+          </li>
+        </ul>
+
+        <h3>Attractor &amp; Variable Speaker Methods</h3>
+        <ul class="sources-list">
+          <li>
+            <a href="https://arxiv.org/abs/2106.10654" target="_blank" rel="noopener">Encoder-Decoder Based Attractors for End-to-End Neural Diarization</a>
+            <div class="source-meta">Horiguchi, Fujita, Watanabe, Xue, Nagamatsu &mdash; IEEE/ACM TASLP 2021</div>
+          </li>
+          <li>
+            <a href="https://ieeexplore.ieee.org/document/10389679" target="_blank" rel="noopener">Transformer Attractors for Robust and Efficient End-to-End Neural Diarization</a>
+            <div class="source-meta">IEEE SLT 2024</div>
+          </li>
+        </ul>
+
+        <h3>Streaming &amp; Hybrid Methods</h3>
+        <ul class="sources-list">
+          <li>
+            <a href="https://arxiv.org/abs/2011.02678" target="_blank" rel="noopener">BW-EDA-EEND: Streaming End-to-End Neural Speaker Diarization for a Variable Number of Speakers</a>
+            <div class="source-meta">Han, Fujita, Sell, et al. &mdash; ICASSP 2021 (Amazon Science)</div>
+          </li>
+          <li>
+            <a href="https://www.researchgate.net/publication/352171598_Integrating_End-to-End_Neural_and_Clustering-Based_Diarization_Getting_the_Best_of_Both_Worlds" target="_blank" rel="noopener">Integrating End-to-End Neural and Clustering-Based Diarization: Getting the Best of Both Worlds</a>
+            <div class="source-meta">Kinoshita, Delcroix, Araki &mdash; ICASSP 2021</div>
+          </li>
+          <li>
+            <a href="https://github.com/Audio-WestlakeU/FS-EEND" target="_blank" rel="noopener">FS-EEND: Frame-wise Streaming End-to-End Speaker Diarization</a>
+            <div class="source-meta">ICASSP 2024 &amp; LS-EEND: TASLP 2025</div>
+          </li>
+          <li>
+            <a href="https://arxiv.org/html/2410.06670v1" target="_blank" rel="noopener">LS-EEND: Long-Form Streaming End-to-End Neural Diarization with Online Attractor Extraction</a>
+            <div class="source-meta">TASLP 2025</div>
+          </li>
+        </ul>
+
+        <h3>SSL &amp; Self-Supervised Integration</h3>
+        <ul class="sources-list">
+          <li>
+            <a href="https://arxiv.org/abs/2409.09408" target="_blank" rel="noopener">Leveraging Self-Supervised Learning for Speaker Diarization</a>
+            <div class="source-meta">2024 &mdash; WavLM + Conformer EEND</div>
+          </li>
+          <li>
+            <a href="https://huggingface.co/BUT-FIT/diarizen-wavlm-large-s80-md" target="_blank" rel="noopener">DiariZen: WavLM-based EEND-VC Model</a>
+            <div class="source-meta">BUT-FIT &mdash; Hugging Face Model Hub</div>
+          </li>
+        </ul>
+
+        <h3>Surveys &amp; Implementations</h3>
+        <ul class="sources-list">
+          <li>
+            <a href="https://www.emergentmind.com/topics/end-to-end-neural-diarization-eend" target="_blank" rel="noopener">End-to-End Neural Diarization (EEND) &mdash; Topic Overview</a>
+            <div class="source-meta">Emergent Mind &mdash; Comprehensive topic tracker</div>
+          </li>
+          <li>
+            <a href="https://github.com/hitachi-speech/EEND" target="_blank" rel="noopener">Official EEND Implementation (Hitachi/NTT)</a>
+            <div class="source-meta">GitHub &mdash; Kaldi-based reference implementation</div>
+          </li>
+          <li>
+            <a href="https://github.com/Xflick/EEND_PyTorch" target="_blank" rel="noopener">EEND PyTorch Implementation</a>
+            <div class="source-meta">GitHub &mdash; Community PyTorch port</div>
+          </li>
+          <li>
+            <a href="https://github.com/nttcslab-sp/EEND-vector-clustering" target="_blank" rel="noopener">EEND-Vector Clustering Implementation</a>
+            <div class="source-meta">NTT CS Labs &mdash; Official EEND-VC code</div>
+          </li>
+          <li>
+            <a href="https://github.com/DongKeon/Awesome-Speaker-Diarization" target="_blank" rel="noopener">Awesome Speaker Diarization</a>
+            <div class="source-meta">GitHub &mdash; Curated list of diarization papers and resources</div>
+          </li>
+          <li>
+            <a href="https://arxiv.org/html/2509.14737" target="_blank" rel="noopener">Pushing the Limits of End-to-End Diarization</a>
+            <div class="source-meta">Interspeech 2025</div>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p>End-to-End Neural Diarization (EEND) Explainer &mdash; Generated March 2026</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mermaid initialization
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#ede9fe',
+        primaryBorderColor: '#7c3aed',
+        primaryTextColor: '#1E293B',
+        lineColor: '#7c3aed',
+        secondaryColor: '#fef3c7',
+        tertiaryColor: '#ecfdf5',
+        fontSize: '14px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 20,
+        htmlLabels: true
+      }
+    });
+
+    // Dark mode toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.getElementById('theme-icon').textContent = next === 'dark' ? '\u2600' : '\u263E';
+      localStorage.setItem('theme', next);
+
+      // Re-render mermaid for dark mode
+      if (next === 'dark') {
+        document.querySelectorAll('.mermaid svg').forEach(svg => {
+          svg.style.filter = 'invert(0.88) hue-rotate(180deg)';
+        });
+      } else {
+        document.querySelectorAll('.mermaid svg').forEach(svg => {
+          svg.style.filter = 'none';
+        });
+      }
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-icon').textContent = '\u2600';
+      }
+    })();
+
+    // Sidebar active state on scroll
+    (function() {
+      const sections = document.querySelectorAll('.main-content section[id]');
+      const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+      function updateActive() {
+        let current = '';
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 120) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    })();
+  </script>
+</body>
+</html>

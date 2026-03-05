@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I-Vector + PLDA for Speaker Identification</title>
+<meta name="description" content="A comprehensive technical explainer on I-Vector extraction via Total Variability Space and Probabilistic Linear Discriminant Analysis (PLDA) scoring for speaker identification and verification.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-code-text: #1e293b;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-border: #F59E0B;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #22C55E;
+  --sidebar-width: 280px;
+  --content-max-width: 900px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #1E1B4B;
+  --color-accent: #22D3EE;
+  --color-accent-light: #67E8F9;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-code-text: #e2e8f0;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-warning-bg: #451a03;
+  --color-warning-border: #D97706;
+  --color-success-bg: #052e16;
+  --color-success-border: #16A34A;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6, #7C3AED);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== Mobile menu toggle ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Dark mode toggle ===== */
+.theme-toggle {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Code ===== */
+code {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways .takeaways-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+
+.takeaways li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* ===== Info / Warning / Success Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+.warning-box {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.success-box {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* ===== Math blocks ===== */
+.math-block {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.math-block .math-label {
+  display: block;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  margin: 2rem 0;
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 12px;
+  background: var(--color-diagram-bg);
+  overflow: hidden;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container figcaption {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-diagram-border);
+  background: var(--color-bg-alt);
+}
+
+.diagram-container figcaption strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.diagram-container figcaption span {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+}
+
+.glossary-term .tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  width: 300px;
+  max-width: 90vw;
+  z-index: 200;
+  pointer-events: none;
+  transition: opacity 0.15s, visibility 0.15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.glossary-term .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+.glossary-term:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding: 1rem 0;
+  margin: 1.5rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0.55rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.timeline-year {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-text {
+  color: var(--color-text);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* ===== Pipeline Steps ===== */
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.pipeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.pipeline-step:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(124,58,237,0.1);
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.step-content h4 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.step-content p {
+  margin-bottom: 0;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+
+  .math-block {
+    font-size: 0.8rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2.5rem; }
+  .pipeline-step { flex-direction: column; gap: 0.5rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .menu-toggle, .theme-toggle { display: none !important; }
+  .main { margin-left: 0; }
+  .content { max-width: 100%; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile menu toggle -->
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">I-Vector + PLDA</div>
+      <div class="sidebar-subtitle">Speaker Identification Explainer</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-section">Overview</div>
+      <a href="#overview" class="sidebar-link">Introduction</a>
+      <a href="#historical-significance" class="sidebar-link">Historical Significance</a>
+      <a href="#pipeline-overview" class="sidebar-link">Complete Pipeline</a>
+
+      <div class="sidebar-nav-section">Front-End</div>
+      <a href="#feature-extraction" class="sidebar-link">Feature Extraction</a>
+      <a href="#ubm" class="sidebar-link">Universal Background Model</a>
+      <a href="#sufficient-statistics" class="sidebar-link">Sufficient Statistics</a>
+      <a href="#total-variability" class="sidebar-link">Total Variability Space</a>
+      <a href="#ivector-extraction" class="sidebar-link">I-Vector Extraction</a>
+
+      <div class="sidebar-nav-section">Back-End</div>
+      <a href="#lda" class="sidebar-link">LDA Reduction</a>
+      <a href="#channel-compensation" class="sidebar-link">Channel Compensation</a>
+      <a href="#length-normalization" class="sidebar-link">Length Normalization</a>
+      <a href="#plda" class="sidebar-link">PLDA Scoring</a>
+      <a href="#plda-math" class="sidebar-link sub">PLDA Mathematics</a>
+      <a href="#verification-score" class="sidebar-link sub">Verification Score</a>
+
+      <div class="sidebar-nav-section">Evaluation</div>
+      <a href="#diagram-extraction" class="sidebar-link">Extraction Diagram</a>
+      <a href="#diagram-plda" class="sidebar-link">PLDA Scoring Diagram</a>
+      <a href="#strengths-weaknesses" class="sidebar-link">Strengths & Weaknesses</a>
+      <a href="#modern-usage" class="sidebar-link">Modern Usage</a>
+      <a href="#sources" class="sidebar-link">Sources</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="theme-icon">&#9789;</span> Toggle dark mode
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <div class="content">
+
+      <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Back to Speaker Identification Overview</a>
+
+      <h1>I-Vector + PLDA for Speaker Identification</h1>
+      <p class="page-subtitle">
+        How Total Variability modeling and Probabilistic Linear Discriminant Analysis dominated speaker recognition for nearly a decade, and why they remain relevant today.
+      </p>
+
+      <!-- ======================================== -->
+      <h2 id="overview">Introduction</h2>
+
+      <p>
+        The <strong>i-vector/PLDA framework</strong> represents one of the most significant advances in automatic speaker recognition. Introduced around 2010, it fundamentally changed how speech systems represent and compare speakers by replacing large, high-dimensional
+        <span class="glossary-term">GMM supervectors<span class="tooltip">A GMM supervector is formed by concatenating all the mean vectors of a Gaussian Mixture Model's components. For a 2048-component GMM with 60-dimensional features, this yields a 122,880-dimensional vector.</span></span>
+        with compact, fixed-length vectors called <strong>i-vectors</strong> (identity vectors).
+      </p>
+
+      <p>
+        The core idea is elegant: any speech utterance, regardless of its duration, can be projected into a low-dimensional <strong>total variability space</strong> that captures both speaker characteristics and channel/session effects simultaneously. A downstream
+        <span class="glossary-term">PLDA<span class="tooltip">Probabilistic Linear Discriminant Analysis: a generative model that decomposes i-vectors into a speaker-specific component and a residual (session/channel) component, enabling principled likelihood-ratio scoring.</span></span>
+        classifier then disentangles speaker identity from nuisance variability to produce a verification score.
+      </p>
+
+      <div class="takeaways">
+        <span class="takeaways-title">Key Concepts at a Glance</span>
+        <ul>
+          <li><strong>I-vector:</strong> A fixed-length, low-dimensional (typically 400--600 dimensions) representation of a speech utterance in total variability space.</li>
+          <li><strong>UBM:</strong> A large Gaussian Mixture Model (1024--2048 components) trained on many speakers that serves as a universal acoustic reference.</li>
+          <li><strong>Total Variability Matrix (T):</strong> A rectangular projection matrix that maps from the high-dimensional supervector space to the low-dimensional i-vector space.</li>
+          <li><strong>PLDA:</strong> A probabilistic backend that models speaker and session factors as latent variables, enabling log-likelihood ratio scoring.</li>
+        </ul>
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="historical-significance">Historical Significance</h2>
+
+      <p>
+        The i-vector approach was introduced by Najim Dehak, Patrick Kenny, and colleagues in their landmark 2010 paper "Front-End Factor Analysis for Speaker Verification," published in <em>IEEE Transactions on Audio, Speech, and Language Processing</em>. It built upon earlier work in <strong>Joint Factor Analysis (JFA)</strong> by Patrick Kenny, which separately modeled speaker and channel subspaces. The key insight of i-vectors was that collapsing these into a single "total" variability space and deferring the separation to the backend (via PLDA or other classifiers) yielded better results with a simpler framework.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-year">2000</span>
+          <span class="timeline-text"><strong>GMM-UBM paradigm</strong> established by Reynolds, Quatieri & Dunn. Speaker models created via MAP adaptation of a Universal Background Model.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2005--2008</span>
+          <span class="timeline-text"><strong>Joint Factor Analysis (JFA)</strong> introduced by Kenny et al. Explicitly separates speaker and channel subspaces via eigenvoice and eigenchannel matrices.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2010--2011</span>
+          <span class="timeline-text"><strong>I-vectors introduced.</strong> Dehak et al. propose total variability space. Combined with cosine scoring and LDA/WCCN, it immediately sets new benchmarks on NIST SRE evaluations.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2011--2012</span>
+          <span class="timeline-text"><strong>PLDA adopted as backend.</strong> Garcia-Romero & Espy-Wilson and others demonstrate that Gaussian PLDA scoring substantially outperforms cosine distance, becoming the standard backend.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2012--2016</span>
+          <span class="timeline-text"><strong>I-vector/PLDA dominates.</strong> The framework becomes the de facto standard in both academic research and NIST Speaker Recognition Evaluations. Refinements include length normalization, score normalization, and DNN-based statistics extraction.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2017--2018</span>
+          <span class="timeline-text"><strong>X-vectors emerge.</strong> Snyder et al. at JHU/CLSP introduce x-vectors, deep neural network embeddings trained with a TDNN architecture. X-vectors with PLDA scoring begin outperforming i-vectors.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2019--Present</span>
+          <span class="timeline-text"><strong>Deep embedding era.</strong> ECAPA-TDNN, ResNet-based embeddings, and self-supervised models progressively replace i-vectors. PLDA remains widely used as a backend scorer even for neural embeddings.</span>
+        </div>
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="pipeline-overview">The Complete Pipeline: Audio to Verification Score</h2>
+
+      <p>
+        The i-vector/PLDA system follows a multi-stage pipeline. Each stage transforms the representation, progressively extracting and refining speaker-relevant information while suppressing nuisance factors.
+      </p>
+
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Audio Preprocessing</h4>
+            <p>Voice Activity Detection (VAD) removes silence. The audio signal is framed into 20--30ms overlapping windows.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Feature Extraction</h4>
+            <p>Extract MFCCs (13--20 coefficients), append deltas and double-deltas, apply cepstral mean and variance normalization (CMVN). Typical output: 60-dimensional feature vectors per frame.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Baum-Welch Statistics</h4>
+            <p>Align features against the pre-trained UBM to compute zeroth-order and first-order sufficient statistics (occupation counts and weighted feature sums per Gaussian component).</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>I-Vector Extraction</h4>
+            <p>Use the pre-trained Total Variability matrix <strong>T</strong> and the sufficient statistics to compute the posterior mean of the latent i-vector via linear algebra.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>Post-Processing</h4>
+            <p>Apply LDA for dimensionality reduction, WCCN or length normalization for channel compensation. The i-vector is now ready for scoring.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>PLDA Scoring</h4>
+            <p>Compare enrollment and test i-vectors by computing the log-likelihood ratio under the PLDA model: same-speaker hypothesis vs. different-speaker hypothesis.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <h4>Decision</h4>
+            <p>Apply a threshold to the score. Optionally apply score normalization (s-norm, z-norm, t-norm) before thresholding.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="feature-extraction">Stage 1: Acoustic Feature Extraction</h2>
+
+      <p>
+        The front-end begins with standard acoustic feature extraction. The speech signal is segmented into short frames (typically 25ms with 10ms hop) and transformed into spectral representations.
+      </p>
+
+      <h3>Mel-Frequency Cepstral Coefficients (MFCCs)</h3>
+
+      <p>
+        MFCCs remain the dominant feature type for i-vector systems. The extraction pipeline is:
+      </p>
+
+      <ol>
+        <li><strong>Pre-emphasis:</strong> Apply a first-order high-pass filter (coefficient ~0.97) to boost high frequencies.</li>
+        <li><strong>Windowing:</strong> Apply a Hamming window to each frame.</li>
+        <li><strong>FFT:</strong> Compute the magnitude spectrum via the Fast Fourier Transform.</li>
+        <li><strong>Mel filterbank:</strong> Apply 20--40 triangular filters spaced on the mel scale.</li>
+        <li><strong>Log compression:</strong> Take the logarithm of filter energies.</li>
+        <li><strong>DCT:</strong> Apply the Discrete Cosine Transform to obtain 13--20 cepstral coefficients.</li>
+        <li><strong>Deltas:</strong> Append first and second derivatives (delta and double-delta) to capture temporal dynamics.</li>
+      </ol>
+
+      <p>
+        The resulting feature vector is typically 60-dimensional (20 static + 20 delta + 20 double-delta). <strong>Cepstral Mean and Variance Normalization (CMVN)</strong> is applied per utterance (or over a sliding window) to reduce linear channel effects at the feature level.
+      </p>
+
+      <div class="info-box">
+        <strong>Why MFCCs?</strong> The mel scale approximates human auditory perception, and the cepstral transformation decorrelates filter energies. This makes MFCCs compact, approximately Gaussian-distributed (good for GMM modeling), and somewhat robust to linear channel distortion.
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="ubm">Stage 2: The Universal Background Model (UBM)</h2>
+
+      <p>
+        The <strong>Universal Background Model</strong> is a large
+        <span class="glossary-term">Gaussian Mixture Model<span class="tooltip">A GMM models the distribution of feature vectors as a weighted sum of multivariate Gaussian densities: p(x) = sum_c w_c * N(x | mu_c, Sigma_c). Each component c has weight w_c, mean mu_c, and covariance Sigma_c.</span></span>
+        (GMM) trained on a large, diverse corpus of speech from many speakers. It serves as a speaker-independent acoustic reference -- essentially a statistical model of "what speech from anyone sounds like."
+      </p>
+
+      <h3>UBM Architecture</h3>
+
+      <ul>
+        <li><strong>Number of components:</strong> Typically 1024 or 2048 Gaussian mixtures. More components provide finer acoustic resolution but require more training data and computation.</li>
+        <li><strong>Covariance type:</strong> Diagonal covariance matrices are standard (full covariance is computationally prohibitive at this scale).</li>
+        <li><strong>Feature dimensionality:</strong> Matches the acoustic features (e.g., 60-dimensional MFCCs).</li>
+        <li><strong>Training data:</strong> Hundreds to thousands of hours from diverse speakers, microphones, and channels.</li>
+      </ul>
+
+      <h3>UBM Training</h3>
+
+      <p>
+        The UBM is trained using the <strong>Expectation-Maximization (EM) algorithm</strong> to maximize the likelihood of the training data. Starting from a random or k-means initialization, EM iterates:
+      </p>
+
+      <ol>
+        <li><strong>E-step:</strong> Compute posterior responsibilities -- the probability that each Gaussian component generated each feature vector.</li>
+        <li><strong>M-step:</strong> Re-estimate the weights, means, and covariances of each component using the weighted data.</li>
+      </ol>
+
+      <p>
+        Typically 10--20 EM iterations are sufficient for convergence. The resulting UBM parameters are: weights <code>{w_c}</code>, means <code>{mu_c}</code>, and diagonal covariances <code>{Sigma_c}</code> for <code>c = 1, ..., C</code>.
+      </p>
+
+      <div class="takeaways">
+        <span class="takeaways-title">Role of the UBM</span>
+        <ul>
+          <li>Provides a universal acoustic space that partitions speech into C soft phonetic/acoustic clusters.</li>
+          <li>Serves as the alignment model for computing Baum-Welch statistics.</li>
+          <li>Defines the structure of the supervector space (the concatenation of all adapted means).</li>
+          <li>Acts as a prior for MAP adaptation and defines the origin of the total variability space.</li>
+        </ul>
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="sufficient-statistics">Stage 3: Baum-Welch Sufficient Statistics</h2>
+
+      <p>
+        Given a new utterance and the trained UBM, the next step computes the <strong>Baum-Welch sufficient statistics</strong>. These statistics summarize how the utterance's features distribute across the UBM components, forming the bridge between variable-length audio and the fixed-dimensional i-vector.
+      </p>
+
+      <h3>Computing Posterior Responsibilities</h3>
+
+      <p>
+        For each feature vector <code>x_t</code> (frame t of the utterance), compute the posterior probability that UBM component c generated it:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Posterior Responsibility (Soft Alignment)</span>
+        gamma_t(c) = [ w_c * N(x_t | mu_c, Sigma_c) ] / [ SUM_j w_j * N(x_t | mu_j, Sigma_j) ]
+      </div>
+
+      <p>
+        This is a standard GMM posterior computation. Each frame is "soft-assigned" to all C components with probabilities that sum to 1.
+      </p>
+
+      <h3>Zeroth-Order Statistics (Occupation Counts)</h3>
+
+      <div class="math-block">
+        <span class="math-label">Zeroth-Order Statistics</span>
+        N_c = SUM_t gamma_t(c)
+      </div>
+
+      <p>
+        <code>N_c</code> represents the effective number of frames assigned to component c. These are scalar values, one per Gaussian component. Collectively, they form a C-dimensional vector.
+      </p>
+
+      <h3>First-Order Statistics (Weighted Feature Sums)</h3>
+
+      <div class="math-block">
+        <span class="math-label">First-Order (Centralized) Statistics</span>
+        F_c = SUM_t gamma_t(c) * (x_t - mu_c)
+      </div>
+
+      <p>
+        <code>F_c</code> is the weighted sum of centered feature vectors for component c. Each <code>F_c</code> is a D-dimensional vector (where D is the feature dimension, e.g., 60). The centering by <code>mu_c</code> (the UBM mean) is crucial: it measures how the utterance's features deviate from the universal model.
+      </p>
+
+      <p>
+        The concatenation of all <code>F_c</code> vectors forms the <strong>centered first-order statistics supervector</strong> <code>F</code>, which has dimension <code>C x D</code> (e.g., 2048 x 60 = 122,880 dimensions). This supervector is the input to i-vector extraction.
+      </p>
+
+      <div class="info-box">
+        <strong>Intuition:</strong> The sufficient statistics capture "how does this utterance differ from the average speaker (UBM) in each acoustic region?" High N_c means the utterance has many frames in region c; the direction and magnitude of F_c tell us how those frames deviate from the UBM in that region.
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="total-variability">Stage 4: Total Variability Space</h2>
+
+      <p>
+        The <strong>total variability space</strong> is the core theoretical contribution of the i-vector framework. It posits that the speaker- and channel-dependent GMM supervector for any utterance can be modeled as:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Total Variability Model</span>
+        M = m + T * w
+      </div>
+
+      <p>Where:</p>
+      <ul>
+        <li><code>M</code> is the GMM supervector (dimension CD, e.g., 122,880) for the utterance.</li>
+        <li><code>m</code> is the UBM supervector (concatenation of all UBM means, same dimension CD).</li>
+        <li><code>T</code> is the <strong>Total Variability matrix</strong> of dimension <code>CD x R</code>, where R is the i-vector dimension (typically 400--600).</li>
+        <li><code>w</code> is the <strong>i-vector</strong>: a latent variable of dimension R, assumed to follow a standard normal prior <code>N(0, I)</code>.</li>
+      </ul>
+
+      <p>
+        The matrix <code>T</code> defines a low-rank subspace that captures the principal directions of variability in the supervector space. Unlike JFA, which explicitly separated speaker and channel subspaces, total variability deliberately mixes them, relying on the backend (PLDA) to perform the separation.
+      </p>
+
+      <h3>Training the T Matrix</h3>
+
+      <p>
+        The T matrix is estimated from a large training corpus using an EM algorithm. The training data consists of many utterances from many speakers. The algorithm iterates:
+      </p>
+
+      <ol>
+        <li><strong>E-step:</strong> For each training utterance, compute the posterior distribution of its i-vector <code>w</code> given the current T and the utterance's Baum-Welch statistics.</li>
+        <li><strong>M-step:</strong> Update T using the expected sufficient statistics of the i-vectors accumulated across all training utterances.</li>
+      </ol>
+
+      <div class="math-block">
+        <span class="math-label">E-step: I-vector Posterior</span>
+        E[w] = L^(-1) * T' * Sigma^(-1) * F<br>
+        where L = I + T' * Sigma^(-1) * N * T
+      </div>
+
+      <p>
+        Here, <code>N</code> is a diagonal matrix formed from the zeroth-order statistics, <code>Sigma</code> is the UBM covariance (block-diagonal), and <code>F</code> is the centered first-order statistics supervector. The posterior covariance is <code>L^(-1)</code>.
+      </p>
+
+      <p>
+        Typically, 5--10 EM iterations suffice to train T. The required training data should include many speakers with multiple sessions to capture both speaker and channel variability.
+      </p>
+
+      <div class="warning-box">
+        <strong>Computational note:</strong> While the supervector space may be 100,000+ dimensional, the actual matrix operations exploit the block-diagonal structure of the UBM covariance. The E-step reduces to solving an <code>R x R</code> linear system per utterance, where R is typically 400--600, making it computationally tractable.
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="ivector-extraction">Stage 5: I-Vector Extraction</h2>
+
+      <p>
+        Given a new utterance, i-vector extraction computes the <strong>posterior mean</strong> of the latent variable <code>w</code> under the total variability model. The procedure is:
+      </p>
+
+      <ol>
+        <li>Extract acoustic features and apply CMVN.</li>
+        <li>Compute Baum-Welch statistics <code>(N_c, F_c)</code> against the UBM.</li>
+        <li>Solve for the i-vector using the closed-form posterior mean:</li>
+      </ol>
+
+      <div class="math-block">
+        <span class="math-label">I-Vector Extraction Formula</span>
+        w = (I + T' * Sigma^(-1) * N(u) * T)^(-1) * T' * Sigma^(-1) * F(u)
+      </div>
+
+      <p>Where:</p>
+      <ul>
+        <li><code>I</code> is the R x R identity matrix (from the standard normal prior on w).</li>
+        <li><code>T'</code> is the transpose of the total variability matrix.</li>
+        <li><code>Sigma^(-1)</code> is the inverse of the UBM covariance (block-diagonal, easily invertible).</li>
+        <li><code>N(u)</code> is a <code>CD x CD</code> diagonal matrix with zeroth-order statistics repeated D times per component.</li>
+        <li><code>F(u)</code> is the centered first-order statistics supervector.</li>
+      </ul>
+
+      <p>
+        The result is a single vector <code>w</code> of dimension R (e.g., 400) that represents the entire utterance. This is the <strong>i-vector</strong>.
+      </p>
+
+      <div class="takeaways">
+        <span class="takeaways-title">I-Vector Properties</span>
+        <ul>
+          <li><strong>Fixed-length:</strong> Every utterance, regardless of duration, yields the same dimensionality.</li>
+          <li><strong>Contains both speaker and channel information:</strong> The total variability model does not separate them.</li>
+          <li><strong>Approximately Gaussian:</strong> The prior is standard normal, and the posterior is Gaussian. In practice, the empirical distribution of i-vectors is roughly Gaussian (after length normalization).</li>
+          <li><strong>Duration-dependent quality:</strong> Longer utterances produce more reliable i-vectors because the sufficient statistics are better estimated.</li>
+        </ul>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="lda">Stage 6: LDA Dimensionality Reduction</h2>
+
+      <p>
+        <strong>Linear Discriminant Analysis (LDA)</strong> is applied to the raw i-vectors to project them into a lower-dimensional subspace that maximizes between-speaker variance while minimizing within-speaker variance.
+      </p>
+
+      <h3>How LDA Works</h3>
+
+      <p>
+        Given labeled i-vectors from many speakers (multiple utterances per speaker), LDA computes:
+      </p>
+
+      <ul>
+        <li><strong>Between-class scatter matrix</strong> <code>S_B</code>: Measures how far apart different speakers' means are.</li>
+        <li><strong>Within-class scatter matrix</strong> <code>S_W</code>: Measures the spread of utterances from the same speaker.</li>
+      </ul>
+
+      <div class="math-block">
+        <span class="math-label">LDA Optimization</span>
+        A_LDA = argmax_A | A' * S_B * A | / | A' * S_W * A |
+      </div>
+
+      <p>
+        The solution is the top eigenvectors of <code>S_W^(-1) * S_B</code>. The i-vector is then projected: <code>w_lda = A_LDA' * (w - mean)</code>.
+      </p>
+
+      <p>
+        Typical LDA output dimensions range from 150 to 250 (down from 400--600 input dimensions). The dimensionality is bounded by the number of speakers minus one, but in practice a smaller value is chosen via cross-validation.
+      </p>
+
+      <div class="info-box">
+        <strong>Effect of LDA:</strong> By discarding dimensions that primarily capture within-speaker variability (channel effects, phonetic variation), LDA improves the signal-to-noise ratio for speaker discrimination. However, it assumes Gaussian distributions with shared covariance, which is only approximately true.
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="channel-compensation">Stage 7: Channel Compensation</h2>
+
+      <p>
+        Channel variability -- differences caused by microphones, codecs, acoustic environments, and transmission channels -- is a major source of error in speaker recognition. The i-vector framework employs several complementary compensation techniques.
+      </p>
+
+      <h3>Within-Class Covariance Normalization (WCCN)</h3>
+
+      <p>
+        WCCN whitens the i-vectors using the within-speaker covariance matrix, suppressing directions of high intra-speaker variability:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">WCCN Transformation</span>
+        w_wccn = B * w_lda<br><br>
+        where W = (1/S) * SUM_s (1/n_s) * SUM_j (w_sj - mean_s)(w_sj - mean_s)'<br>
+        and B * B' = W^(-1) &nbsp; (Cholesky decomposition)
+      </div>
+
+      <p>
+        WCCN is typically applied after LDA. Together, LDA + WCCN was the standard pre-processing pipeline for cosine distance scoring.
+      </p>
+
+      <h3>Nuisance Attribute Projection (NAP)</h3>
+
+      <p>
+        NAP removes a low-rank subspace estimated to capture nuisance variability. A projection matrix removes the top eigenvectors of the within-speaker covariance. NAP was more common in the GMM-supervector/SVM era but is occasionally applied to i-vectors as well.
+      </p>
+
+      <h3>Source-Normalized LDA (SN-LDA)</h3>
+
+      <p>
+        An extension of LDA that normalizes the within-class scatter for each source domain (e.g., telephone vs. microphone) before pooling, producing better performance in mismatched conditions.
+      </p>
+
+      <!-- ======================================== -->
+      <h2 id="length-normalization">Stage 8: Length Normalization</h2>
+
+      <p>
+        <strong>Length normalization</strong> is a deceptively simple but highly effective technique introduced by Garcia-Romero and Espy-Wilson (2011). Each i-vector is projected onto the unit hypersphere:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Length Normalization</span>
+        w_norm = w / ||w||
+      </div>
+
+      <p>
+        This addresses a key issue: the norms of i-vectors vary significantly across utterances and speakers, creating a non-Gaussian distribution that violates the assumptions of both cosine scoring and PLDA. After length normalization, the i-vectors become more Gaussianly distributed, which substantially improves PLDA performance.
+      </p>
+
+      <div class="takeaways">
+        <span class="takeaways-title">Why Length Normalization Matters</span>
+        <ul>
+          <li>Removes speaker-dependent "dilation" in the i-vector space that LDA/WCCN cannot compensate for.</li>
+          <li>Makes the Gaussianity assumption of PLDA more valid.</li>
+          <li>Consistently yields 10--20% relative improvement in verification performance.</li>
+          <li>Applied after LDA (if used) and before PLDA training and scoring.</li>
+        </ul>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="plda">Stage 9: PLDA Scoring</h2>
+
+      <p>
+        <strong>Probabilistic Linear Discriminant Analysis (PLDA)</strong> is the backend scoring model that transformed i-vector systems from good to dominant. Introduced to speaker recognition by Prince and Elder (2007) and refined for i-vectors by Kenny (2010) and Garcia-Romero and Espy-Wilson (2011), PLDA provides a principled probabilistic framework for comparing speaker representations.
+      </p>
+
+      <h3 id="plda-math">The PLDA Generative Model</h3>
+
+      <p>
+        PLDA models each i-vector as being generated from a combination of a speaker-specific latent variable and a residual (session/channel) term:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Gaussian PLDA Generative Model</span>
+        w_ij = mu + V * y_i + epsilon_ij<br><br>
+        y_i ~ N(0, I)&nbsp;&nbsp;&nbsp;&nbsp;(speaker factor)<br>
+        epsilon_ij ~ N(0, Lambda^(-1))&nbsp;&nbsp;&nbsp;&nbsp;(residual noise)
+      </div>
+
+      <p>Where:</p>
+      <ul>
+        <li><code>w_ij</code> is the (length-normalized) i-vector for the j-th utterance of speaker i.</li>
+        <li><code>mu</code> is the global mean of all i-vectors.</li>
+        <li><code>V</code> is the <strong>speaker subspace matrix</strong> (also called the eigenvoice matrix in PLDA). It maps from a latent speaker identity space to the i-vector space.</li>
+        <li><code>y_i</code> is the <strong>latent speaker identity variable</strong>. All utterances from the same speaker share the same <code>y_i</code>.</li>
+        <li><code>epsilon_ij</code> is the <strong>residual noise</strong>, capturing session and channel variability unique to each utterance.</li>
+        <li><code>Lambda</code> is the residual precision matrix.</li>
+      </ul>
+
+      <p>
+        In the widely-used <strong>simplified (two-covariance) PLDA</strong> model, the total covariance is decomposed as:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Covariance Decomposition</span>
+        Cov(w) = V * V' + Lambda^(-1)<br><br>
+        = (between-speaker covariance) + (within-speaker covariance)
+      </div>
+
+      <h3>PLDA Training</h3>
+
+      <p>
+        The PLDA parameters <code>(mu, V, Lambda)</code> are estimated via EM on labeled training data (i-vectors with speaker labels, multiple utterances per speaker):
+      </p>
+
+      <ol>
+        <li><strong>E-step:</strong> For each speaker, compute the posterior distribution of the latent variable <code>y_i</code> given all their i-vectors and current parameters.</li>
+        <li><strong>M-step:</strong> Update <code>mu</code>, <code>V</code>, and <code>Lambda</code> using the expected sufficient statistics.</li>
+      </ol>
+
+      <p>
+        Training typically requires data from several hundred speakers, each with at least 2--3 sessions, and converges in 10--20 EM iterations.
+      </p>
+
+      <h3 id="verification-score">The Verification Score: Log-Likelihood Ratio</h3>
+
+      <p>
+        For speaker verification, we have two i-vectors -- <code>w_enroll</code> (enrollment) and <code>w_test</code> (test) -- and must decide whether they belong to the same speaker. PLDA frames this as a hypothesis test:
+      </p>
+
+      <div class="info-box">
+        <strong>H_0 (Same speaker):</strong> Both i-vectors share the same latent speaker variable y.<br>
+        <strong>H_1 (Different speakers):</strong> Each i-vector has its own independent latent speaker variable (y_1 and y_2).
+      </div>
+
+      <p>
+        The verification score is the <strong>log-likelihood ratio</strong>:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">PLDA Log-Likelihood Ratio Score</span>
+        score(w_1, w_2) = log [ p(w_1, w_2 | H_0) / p(w_1, w_2 | H_1) ]<br><br>
+        = log [ p(w_1, w_2 | same speaker) / ( p(w_1 | speaker_1) * p(w_2 | speaker_2) ) ]
+      </div>
+
+      <p>
+        Because the PLDA model is Gaussian, both the numerator (joint likelihood under shared y) and denominator (product of marginal likelihoods) are multivariate Gaussians, and the log-likelihood ratio has a <strong>closed-form quadratic expression</strong>:
+      </p>
+
+      <div class="math-block">
+        <span class="math-label">Closed-Form Scoring (Simplified)</span>
+        score = w_1' * Q * w_1 + w_2' * Q * w_2 + w_1' * P * w_2 + const<br><br>
+        where Q and P are matrices derived from V and Lambda
+      </div>
+
+      <p>
+        The matrices Q and P are pre-computed once from the PLDA parameters, making scoring extremely efficient -- just two quadratic forms and a bilinear form per trial.
+      </p>
+
+      <div class="takeaways">
+        <span class="takeaways-title">Why PLDA Outperforms Cosine Scoring</span>
+        <ul>
+          <li><strong>Generative modeling:</strong> PLDA explicitly models how i-vectors are generated from speaker and session factors, providing a principled framework rather than an ad hoc distance metric.</li>
+          <li><strong>Integrated channel compensation:</strong> The residual term Lambda^(-1) absorbs within-speaker variability without requiring a separate WCCN step.</li>
+          <li><strong>Likelihood ratio interpretation:</strong> The score is a calibrated log-likelihood ratio, directly interpretable as evidence for same-speaker vs. different-speaker.</li>
+          <li><strong>Multi-session enrollment:</strong> PLDA naturally handles multiple enrollment utterances per speaker by combining their evidence through the posterior of y.</li>
+        </ul>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="diagram-extraction">Diagram: I-Vector Extraction Pipeline</h2>
+
+      <div class="diagram-container">
+        <figure>
+          <div class="mermaid">
+flowchart TB
+    subgraph FE["Feature Extraction"]
+        A["Raw Audio Signal"] --> B["VAD + Framing\n(25ms, 10ms hop)"]
+        B --> C["MFCC Extraction\n(13-20 static coefficients)"]
+        C --> D["Delta + Double-Delta\n(60-dim feature vectors)"]
+        D --> E["CMVN\n(per-utterance normalization)"]
+    end
+
+    subgraph UBM_S["UBM Alignment"]
+        E --> F["Compute Posteriors\ngamma_t(c) for each frame"]
+        F --> G["Zeroth-Order Stats\nN_c = SUM gamma_t(c)"]
+        F --> H["First-Order Stats\nF_c = SUM gamma_t(c)*(x_t - mu_c)"]
+    end
+
+    subgraph TV["Total Variability"]
+        G --> I["Form diagonal\nmatrix N(u)"]
+        H --> J["Form supervector\nF(u) (dim CD)"]
+        I --> K["Solve Linear System\nL = I + T'*Sigma^-1*N*T"]
+        J --> K
+        K --> L["I-Vector w\n(dim 400-600)"]
+    end
+
+    subgraph PP["Post-Processing"]
+        L --> M["LDA Projection\n(reduce to 150-250 dim)"]
+        M --> N["Length Normalization\nw / ||w||"]
+    end
+
+    N --> O["Processed I-Vector\nReady for PLDA Scoring"]
+
+    UBM_T["Pre-trained UBM\n(C=2048 Gaussians)"] -.-> F
+    T_MAT["Pre-trained T Matrix\n(dim CD x R)"] -.-> K
+
+    style FE fill:#EDE9FE,stroke:#7C3AED,stroke-width:2px,color:#1e293b
+    style UBM_S fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1e293b
+    style TV fill:#D1FAE5,stroke:#059669,stroke-width:2px,color:#1e293b
+    style PP fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1e293b
+    style O fill:#7C3AED,stroke:#5B21B6,stroke-width:2px,color:#ffffff
+    style UBM_T fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,stroke-dasharray:5,color:#1e293b
+    style T_MAT fill:#D1FAE5,stroke:#059669,stroke-width:1px,stroke-dasharray:5,color:#1e293b
+          </div>
+          <figcaption>
+            <strong>Figure 1: I-Vector Extraction Pipeline</strong><br>
+            <span>From raw audio to a compact fixed-length i-vector. The UBM and T matrix are pre-trained on a large development corpus. Dashed boxes represent pre-trained models used at inference time.</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ======================================== -->
+      <h2 id="diagram-plda">Diagram: PLDA Scoring Model</h2>
+
+      <div class="diagram-container">
+        <figure>
+          <div class="mermaid">
+flowchart TB
+    subgraph ENROLL["Enrollment"]
+        E1["Enrollment Audio"] --> E2["I-Vector\nExtraction"]
+        E2 --> E3["w_enroll\n(length-normalized)"]
+    end
+
+    subgraph TEST["Test / Probe"]
+        T1["Test Audio"] --> T2["I-Vector\nExtraction"]
+        T2 --> T3["w_test\n(length-normalized)"]
+    end
+
+    subgraph PLDA_MODEL["PLDA Generative Model"]
+        direction TB
+        MU["Global Mean mu"]
+        V["Speaker Subspace V"]
+        LAM["Residual Precision Lambda"]
+
+        MU --> GEN["w_ij = mu + V*y_i + epsilon_ij"]
+        V --> GEN
+        LAM --> GEN
+    end
+
+    subgraph SCORING["Hypothesis Testing"]
+        direction TB
+        H0["H0: Same Speaker\nw1, w2 share y"]
+        H1["H1: Different Speakers\nw1 has y1, w2 has y2"]
+
+        H0 --> LLR["Log-Likelihood Ratio\nscore = log p(w1,w2|H0) / p(w1,w2|H1)"]
+        H1 --> LLR
+    end
+
+    E3 --> SCORING
+    T3 --> SCORING
+    PLDA_MODEL -.-> SCORING
+
+    LLR --> DEC{"Score vs\nThreshold"}
+    DEC -->|score >= theta| ACCEPT["ACCEPT\n(Same Speaker)"]
+    DEC -->|score < theta| REJECT["REJECT\n(Different Speaker)"]
+
+    style ENROLL fill:#EDE9FE,stroke:#7C3AED,stroke-width:2px,color:#1e293b
+    style TEST fill:#EDE9FE,stroke:#7C3AED,stroke-width:2px,color:#1e293b
+    style PLDA_MODEL fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1e293b
+    style SCORING fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1e293b
+    style ACCEPT fill:#D1FAE5,stroke:#059669,stroke-width:2px,color:#1e293b
+    style REJECT fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#1e293b
+    style DEC fill:#F1F5F9,stroke:#64748B,stroke-width:2px,color:#1e293b
+          </div>
+          <figcaption>
+            <strong>Figure 2: PLDA Scoring Model</strong><br>
+            <span>The PLDA backend compares enrollment and test i-vectors by computing a log-likelihood ratio under two hypotheses: same speaker (shared latent variable) vs. different speakers (independent latent variables).</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="strengths-weaknesses">Strengths and Weaknesses</h2>
+
+      <h3>Strengths</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Strength</th>
+              <th>Explanation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Principled probabilistic framework</strong></td>
+              <td>Every component -- from UBM to T-matrix to PLDA -- has a generative probabilistic interpretation. This enables Bayesian reasoning, calibrated scores, and principled handling of uncertainty.</td>
+            </tr>
+            <tr>
+              <td><strong>Fixed-length representation</strong></td>
+              <td>Variable-length utterances are mapped to fixed-dimensional vectors, enabling efficient comparison and storage. Millions of comparisons per second are feasible.</td>
+            </tr>
+            <tr>
+              <td><strong>Well-understood mathematics</strong></td>
+              <td>The entire pipeline is based on well-studied techniques: GMMs, factor analysis, and LDA. This makes the system interpretable, debuggable, and amenable to theoretical analysis.</td>
+            </tr>
+            <tr>
+              <td><strong>Data-efficient</strong></td>
+              <td>Compared to deep neural network approaches, i-vector/PLDA systems can achieve competitive results with moderate amounts of training data (hundreds of speakers, not millions).</td>
+            </tr>
+            <tr>
+              <td><strong>Excellent channel compensation</strong></td>
+              <td>The combination of LDA, length normalization, and PLDA provides effective suppression of channel and session variability through multiple complementary mechanisms.</td>
+            </tr>
+            <tr>
+              <td><strong>Multi-session enrollment</strong></td>
+              <td>PLDA natively supports enrollment from multiple utterances by computing the posterior of the speaker latent variable given all available data, providing graceful improvement with more data.</td>
+            </tr>
+            <tr>
+              <td><strong>Calibrated likelihood ratios</strong></td>
+              <td>PLDA scores are log-likelihood ratios with a direct probabilistic interpretation, valuable in forensic applications where the strength of evidence must be quantified.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Weaknesses</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Weakness</th>
+              <th>Explanation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Linear modeling assumption</strong></td>
+              <td>The total variability model assumes a linear relationship between the supervector and the i-vector. Nonlinear speaker characteristics may be poorly captured.</td>
+            </tr>
+            <tr>
+              <td><strong>Gaussian assumptions</strong></td>
+              <td>Both the T-matrix extraction and PLDA assume Gaussian distributions. Real i-vector distributions are only approximately Gaussian (length normalization helps, but does not fully solve this).</td>
+            </tr>
+            <tr>
+              <td><strong>Sensitivity to short utterances</strong></td>
+              <td>With less than 10--15 seconds of speech, the Baum-Welch statistics are poorly estimated, leading to noisy i-vectors and degraded performance. This is a fundamental limitation of the generative framework.</td>
+            </tr>
+            <tr>
+              <td><strong>No end-to-end optimization</strong></td>
+              <td>Each stage is trained independently (UBM, T-matrix, LDA, PLDA). Unlike deep learning systems, there is no joint optimization of the entire pipeline toward the verification objective.</td>
+            </tr>
+            <tr>
+              <td><strong>Limited phonetic discrimination</strong></td>
+              <td>The UBM-based statistics aggregate over all acoustic content. The system cannot selectively attend to speaker-informative phonetic regions or suppress non-informative ones.</td>
+            </tr>
+            <tr>
+              <td><strong>Outperformed by deep embeddings</strong></td>
+              <td>Since ~2018, x-vectors and subsequent neural embeddings (ECAPA-TDNN, ResNet) have consistently outperformed i-vectors in benchmarks, particularly for short utterances, noisy conditions, and cross-domain scenarios.</td>
+            </tr>
+            <tr>
+              <td><strong>Complex multi-stage pipeline</strong></td>
+              <td>The system requires training and maintaining multiple separate models (UBM, T-matrix, LDA, PLDA), each with its own hyperparameters and data requirements.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="modern-usage">When I-Vector/PLDA Is Still Used Today</h2>
+
+      <p>
+        Although deep neural network embeddings have become the dominant paradigm since ~2018, the i-vector/PLDA framework retains important niches:
+      </p>
+
+      <h3>PLDA as a Universal Backend</h3>
+
+      <p>
+        Perhaps the most enduring legacy of the i-vector era is <strong>PLDA scoring itself</strong>. PLDA is routinely used as the backend scorer for modern neural embeddings (x-vectors, ECAPA-TDNN vectors, etc.). The generative model's ability to decompose speaker and session variability transfers well to any fixed-length embedding, regardless of how it was extracted. Most state-of-the-art speaker verification systems in 2024--2025 still use PLDA or its discriminatively-trained variants as the scoring backend.
+      </p>
+
+      <h3>Forensic Speaker Recognition</h3>
+
+      <p>
+        In forensic applications, the <strong>calibrated likelihood ratio</strong> provided by PLDA is not merely convenient -- it is often a legal requirement. Courts and forensic laboratories need to express the strength of voice evidence in terms of likelihood ratios. The i-vector/PLDA framework's fully generative, probabilistic architecture is well-suited to this requirement. Additionally, the well-understood mathematical foundations make it easier to explain and defend in legal proceedings compared to "black box" neural networks.
+      </p>
+
+      <h3>Resource-Constrained Environments</h3>
+
+      <p>
+        I-vector systems can be deployed without GPUs and with moderate memory requirements. For edge devices, embedded systems, or environments where deep learning inference is impractical, i-vector/PLDA remains a viable option that can run efficiently on CPUs.
+      </p>
+
+      <h3>Speaker Diarization</h3>
+
+      <p>
+        I-vectors continue to be used in <strong>speaker diarization</strong> (determining "who spoke when" in multi-speaker audio). Short-segment i-vectors combined with PLDA-based agglomerative clustering or spectral clustering remain competitive, particularly when integrated with newer approaches in hybrid systems.
+      </p>
+
+      <h3>Low-Resource Languages and Domains</h3>
+
+      <p>
+        When labeled training data is scarce (e.g., under-resourced languages or specialized acoustic domains), i-vector systems can be more data-efficient than deep learning alternatives that require large amounts of labeled data to train discriminative embeddings.
+      </p>
+
+      <div class="success-box">
+        <strong>Bottom line:</strong> While i-vector extraction has largely been replaced by neural network front-ends, PLDA scoring remains a cornerstone of modern speaker recognition. The framework's mathematical rigor, interpretability, and calibration properties ensure its continued relevance in forensics, research, and hybrid systems.
+      </div>
+
+      <hr>
+
+      <!-- ======================================== -->
+      <h2 id="sources">Sources and Further Reading</h2>
+
+      <h3>Foundational Papers</h3>
+      <ul>
+        <li>
+          <strong>Dehak, N., Kenny, P., Dehak, R., Dumouchel, P., & Ouellet, P. (2011).</strong>
+          "Front-End Factor Analysis for Speaker Verification."
+          <em>IEEE Transactions on Audio, Speech, and Language Processing</em>, 19(4), 788--798.
+          DOI: 10.1109/TASL.2010.2064307.
+          <a href="https://ieeexplore.ieee.org/document/5545402/" target="_blank" rel="noopener">IEEE Xplore</a> |
+          <a href="https://sls.csail.mit.edu/publications/2011/Dehak_IEEE_May2011.pdf" target="_blank" rel="noopener">PDF (MIT)</a>
+          <br><em>The landmark paper introducing i-vectors and the total variability space.</em>
+        </li>
+        <li>
+          <strong>Kenny, P. (2010).</strong>
+          "Bayesian Speaker Verification with Heavy-Tailed Priors."
+          <em>Proc. Odyssey Speaker and Language Recognition Workshop</em>.
+          <br><em>Introduced PLDA to the i-vector framework.</em>
+        </li>
+        <li>
+          <strong>Garcia-Romero, D. & Espy-Wilson, C.Y. (2011).</strong>
+          "Analysis of I-vector Length Normalization in Speaker Recognition Systems."
+          <em>Proc. Interspeech</em>.
+          <a href="https://www.researchgate.net/publication/221479907_Analysis_of_i-vector_Length_Normalization_in_Speaker_Recognition_Systems" target="_blank" rel="noopener">ResearchGate</a>
+          <br><em>Demonstrated the critical importance of length normalization for PLDA scoring.</em>
+        </li>
+        <li>
+          <strong>Prince, S.J.D. & Elder, J.H. (2007).</strong>
+          "Probabilistic Linear Discriminant Analysis for Inferences About Identity."
+          <em>Proc. IEEE International Conference on Computer Vision (ICCV)</em>.
+          <br><em>The original PLDA paper (from face recognition), later adapted for speaker recognition.</em>
+        </li>
+      </ul>
+
+      <h3>Speaker Recognition Evolution</h3>
+      <ul>
+        <li>
+          <strong>Reynolds, D.A., Quatieri, T.F., & Dunn, R.B. (2000).</strong>
+          "Speaker Verification Using Adapted Gaussian Mixture Models."
+          <em>Digital Signal Processing</em>, 10(1-3), 19--41.
+          <br><em>Established the GMM-UBM paradigm that i-vectors built upon.</em>
+        </li>
+        <li>
+          <strong>Snyder, D., Garcia-Romero, D., Sell, G., Povey, D., & Khudanpur, S. (2018).</strong>
+          "X-Vectors: Robust DNN Embeddings for Speaker Recognition."
+          <em>Proc. IEEE ICASSP</em>.
+          <a href="https://www.danielpovey.com/files/2018_icassp_xvectors.pdf" target="_blank" rel="noopener">PDF</a>
+          <br><em>The paper that introduced x-vectors, beginning the transition away from i-vectors.</em>
+        </li>
+        <li>
+          <strong>Bai, Z. & Zhang, X.-L. (2021).</strong>
+          "Speaker Recognition Based on Deep Learning: An Overview."
+          <em>Neural Networks</em>, 140, 65--99.
+          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0893608021000848" target="_blank" rel="noopener">ScienceDirect</a>
+          <br><em>Comprehensive review of the transition from i-vectors to deep embeddings.</em>
+        </li>
+        <li>
+          <strong>Khan, U.A. et al. (2024).</strong>
+          "Milestones in Speaker Recognition."
+          <em>Artificial Intelligence Review</em>.
+          <a href="https://link.springer.com/article/10.1007/s10462-023-10688-w" target="_blank" rel="noopener">Springer</a>
+          <br><em>Recent comprehensive survey covering the full history of speaker recognition.</em>
+        </li>
+      </ul>
+
+      <h3>Practical Implementations and Tutorials</h3>
+      <ul>
+        <li>
+          <strong>MathWorks.</strong>
+          "Speaker Verification Using i-vectors."
+          <a href="https://www.mathworks.com/help/audio/ug/speaker-verification-using-ivectors.html" target="_blank" rel="noopener">MATLAB Documentation</a>
+          <br><em>Step-by-step tutorial with code for building an i-vector/PLDA system.</em>
+        </li>
+        <li>
+          <strong>Kaldi Speech Recognition Toolkit.</strong>
+          SRE and VoxCeleb recipes.
+          <a href="https://github.com/kaldi-asr/kaldi" target="_blank" rel="noopener">GitHub</a>
+          <br><em>The de facto open-source implementation of i-vector and x-vector systems.</em>
+        </li>
+        <li>
+          <strong>Overview of Speaker Modeling and Its Applications (2024).</strong>
+          <a href="https://arxiv.org/html/2407.15188v1" target="_blank" rel="noopener">arXiv</a>
+          <br><em>Recent overview covering i-vectors, x-vectors, and modern speaker modeling approaches.</em>
+        </li>
+      </ul>
+
+      <h3>Channel Compensation</h3>
+      <ul>
+        <li>
+          <strong>Bousquet, P.-M. et al. (2014).</strong>
+          "I-vector Based Speaker Recognition Using Advanced Channel Compensation Techniques."
+          <em>Computer Speech & Language</em>.
+          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0885230813000296" target="_blank" rel="noopener">ScienceDirect</a>
+        </li>
+        <li>
+          <strong>Borgstrom, B.J. et al.</strong>
+          "Discriminative PLDA for Speaker Verification with X-vectors."
+          <a href="https://www.ll.mit.edu/sites/default/files/publication/doc/discriminative-plda-speaker-verification-borgstrom-126429.pdf" target="_blank" rel="noopener">MIT Lincoln Lab PDF</a>
+          <br><em>Discriminative training of PLDA for improved verification performance.</em>
+        </li>
+      </ul>
+
+      <h3>Forensic Applications</h3>
+      <ul>
+        <li>
+          <strong>"I-Vector PLDA"</strong> in <em>Handbook of Forensic Statistics</em>.
+          <a href="https://ebrary.net/202062/mathematics/vector_plda" target="_blank" rel="noopener">eBrary</a>
+          <br><em>Chapter on the forensic application of i-vector/PLDA for speaker comparison and likelihood ratio computation.</em>
+        </li>
+      </ul>
+
+      <hr>
+
+      <p style="font-size:0.82rem; color:var(--color-text-muted); text-align:center; margin-top:2rem;">
+        Last updated: March 2026. Content generated with AI assistance and verified against primary literature.
+      </p>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ===== Theme Toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateMermaidTheme(next);
+}
+
+function updateMermaidTheme(theme) {
+  const mermaidTheme = theme === 'dark' ? 'dark' : 'default';
+  // Re-initialize mermaid with new theme
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: mermaidTheme,
+      themeVariables: theme === 'dark' ? {
+        primaryColor: '#7C3AED',
+        primaryTextColor: '#F1F5F9',
+        primaryBorderColor: '#A78BFA',
+        lineColor: '#94A3B8',
+        secondaryColor: '#1E293B',
+        tertiaryColor: '#334155',
+        fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+      } : {
+        primaryColor: '#EDE9FE',
+        primaryTextColor: '#1E293B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#64748B',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#F1F5F9',
+        fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+      }
+    });
+    // Re-render all diagrams
+    document.querySelectorAll('.mermaid').forEach(el => {
+      const content = el.getAttribute('data-original') || el.textContent;
+      el.setAttribute('data-original', content);
+      el.removeAttribute('data-processed');
+      el.innerHTML = content;
+    });
+    mermaid.run();
+  }
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+// ===== Mermaid Init =====
+document.addEventListener('DOMContentLoaded', function() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#7C3AED',
+      primaryTextColor: '#F1F5F9',
+      primaryBorderColor: '#A78BFA',
+      lineColor: '#94A3B8',
+      secondaryColor: '#1E293B',
+      tertiaryColor: '#334155',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    } : {
+      primaryColor: '#EDE9FE',
+      primaryTextColor: '#1E293B',
+      primaryBorderColor: '#7C3AED',
+      lineColor: '#64748B',
+      secondaryColor: '#F8FAFC',
+      tertiaryColor: '#F1F5F9',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+});
+
+// ===== Sidebar Active Link Tracking =====
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('h2[id], h3[id]');
+  const navLinks = document.querySelectorAll('.sidebar-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector('.sidebar-link[href="#' + entry.target.id + '"]');
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, {
+    rootMargin: '-10% 0px -80% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(section => observer.observe(section));
+
+  // Close mobile sidebar on link click
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900) {
+        document.querySelector('.sidebar').classList.remove('open');
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

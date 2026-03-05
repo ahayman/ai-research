@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti-Spoofing &amp; Voice Liveness Detection for Speaker Identification</title>
+<meta name="description" content="Comprehensive explainer on anti-spoofing countermeasures and voice liveness detection techniques that protect automatic speaker verification systems from replay, TTS, voice conversion, and deepfake attacks.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #DC2626;
+  --color-primary-light: #EF4444;
+  --color-primary-dark: #B91C1C;
+  --color-primary-bg: #FEF2F2;
+  --color-secondary: #7C3AED;
+  --color-secondary-light: #A78BFA;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #DC2626;
+  --color-link-hover: #B91C1C;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #DC2626;
+  --color-takeaway-bg: #FEF2F2;
+  --color-warning-border: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-success-border: #059669;
+  --color-success-bg: #ECFDF5;
+  --color-info-border: #2563EB;
+  --color-info-bg: #EFF6FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #EF4444;
+  --color-primary-light: #F87171;
+  --color-primary-dark: #DC2626;
+  --color-primary-bg: #450a0a;
+  --color-secondary: #A78BFA;
+  --color-secondary-light: #C4B5FD;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #F87171;
+  --color-link-hover: #FCA5A5;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #EF4444;
+  --color-takeaway-bg: #450a0a;
+  --color-warning-border: #F59E0B;
+  --color-warning-bg: #451a03;
+  --color-success-border: #10B981;
+  --color-success-bg: #064e3b;
+  --color-info-border: #3B82F6;
+  --color-info-bg: #172554;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #B91C1C, #991B1B);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  background: var(--color-bg);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: var(--color-text);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: all var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+li > ul, li > ol { margin-top: 0.4rem; margin-bottom: 0; }
+
+/* ===== Key Takeaways / Callout Boxes ===== */
+.callout {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.callout-danger {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+}
+
+.callout-danger .callout-title { color: var(--color-primary); }
+
+.callout-warning {
+  border-left: 4px solid var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.callout-warning .callout-title { color: var(--color-warning-border); }
+
+.callout-success {
+  border-left: 4px solid var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout-success .callout-title { color: var(--color-success-border); }
+
+.callout-info {
+  border-left: 4px solid var(--color-info-border);
+  background: var(--color-info-bg);
+}
+
+.callout-info .callout-title { color: var(--color-info-border); }
+
+.callout ul { margin-bottom: 0; }
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) td {
+  background: var(--color-table-stripe);
+}
+
+tr:last-child td { border-bottom: none; }
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--color-code-bg);
+  padding: 1.25rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ===== Diagram Containers ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-caption {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Feature Comparison Cards ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.comparison-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.comparison-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comparison-card ul {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  margin: 2rem 0;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.75rem;
+  padding-left: 1.25rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2.35rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  background: var(--color-primary);
+  border: 3px solid var(--color-bg);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.timeline-year {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-bottom: 0.35rem;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== Metric badges ===== */
+.metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.metric-badge {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+}
+
+.metric-badge .metric-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.metric-badge .metric-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+/* ===== Strengths & Weaknesses ===== */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.sw-card {
+  border-radius: 8px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+}
+
+.sw-card.strengths {
+  background: var(--color-success-bg);
+  border-left: 4px solid var(--color-success-border);
+}
+
+.sw-card.weaknesses {
+  background: var(--color-takeaway-bg);
+  border-left: 4px solid var(--color-primary);
+}
+
+.sw-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.sw-card ul {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.page-footer a {
+  color: var(--color-text-secondary);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 3.5rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.05rem; }
+
+  .sw-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .sidebar-toggle, .theme-toggle { display: none !important; }
+  .main { margin-left: 0; }
+  .content { max-width: 100%; padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.sidebar').classList.toggle('open')">
+  &#9776;
+</button>
+
+<div class="layout">
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Anti-Spoofing &amp; Voice Liveness Detection</div>
+      <div class="sidebar-subtitle">Protecting Speaker Identification Systems</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-section">Overview</div>
+      <a href="#introduction" class="sidebar-link">Introduction</a>
+      <a href="#threat-landscape" class="sidebar-link">Threat Landscape</a>
+
+      <div class="sidebar-nav-section">Attack Types</div>
+      <a href="#attack-taxonomy" class="sidebar-link">Attack Taxonomy</a>
+      <a href="#replay-attacks" class="sidebar-link sub">Replay Attacks</a>
+      <a href="#tts-attacks" class="sidebar-link sub">Text-to-Speech</a>
+      <a href="#vc-attacks" class="sidebar-link sub">Voice Conversion</a>
+      <a href="#deepfake-attacks" class="sidebar-link sub">Deepfakes</a>
+
+      <div class="sidebar-nav-section">Evaluation</div>
+      <a href="#asvspoof" class="sidebar-link">ASVspoof Challenge Series</a>
+
+      <div class="sidebar-nav-section">Countermeasures</div>
+      <a href="#detection-pipeline" class="sidebar-link">Detection Pipeline</a>
+      <a href="#handcrafted-features" class="sidebar-link">Handcrafted Features</a>
+      <a href="#learned-features" class="sidebar-link">Learned Features</a>
+      <a href="#signal-detection" class="sidebar-link">Signal-Based Detection</a>
+      <a href="#nn-detectors" class="sidebar-link">Neural Network Detectors</a>
+
+      <div class="sidebar-nav-section">Liveness</div>
+      <a href="#liveness-detection" class="sidebar-link">Liveness Detection</a>
+      <a href="#challenge-response" class="sidebar-link sub">Challenge-Response</a>
+      <a href="#micro-tremor" class="sidebar-link sub">Micro-Tremor Analysis</a>
+      <a href="#pop-noise" class="sidebar-link sub">Pop Noise Detection</a>
+
+      <div class="sidebar-nav-section">Industry</div>
+      <a href="#commercial" class="sidebar-link">Commercial Solutions</a>
+      <a href="#integration" class="sidebar-link">ASV Integration</a>
+
+      <div class="sidebar-nav-section">Challenges</div>
+      <a href="#generalization" class="sidebar-link">Generalization Challenge</a>
+      <a href="#deepfake-arms-race" class="sidebar-link">Deepfake Arms Race</a>
+      <a href="#privacy-fairness" class="sidebar-link">Privacy &amp; Fairness</a>
+
+      <div class="sidebar-nav-section">Assessment</div>
+      <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+      <a href="#sources" class="sidebar-link">Sources</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="theme-icon">&#9789;</span> Toggle Dark Mode
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <div class="content">
+
+      <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Back to Voice &amp; Speaker Identification</a>
+
+      <h1>Anti-Spoofing &amp; Voice Liveness Detection</h1>
+      <p class="page-subtitle">
+        Automatic Speaker Verification (ASV) systems are increasingly deployed for identity authentication in banking, telecommunications, and security applications. However, they remain vulnerable to spoofing attacks -- from simple replay of recorded speech to sophisticated AI-generated deepfakes. Anti-spoofing countermeasures and voice liveness detection form the critical defense layer that determines whether a voice is genuine and live, or fabricated and fraudulent.
+      </p>
+
+      <div class="metric-row">
+        <div class="metric-badge">
+          <div class="metric-value">+1,300%</div>
+          <div class="metric-label">Deepfake fraud surge (2024)</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-value">99.2%</div>
+          <div class="metric-label">Best detection rate (Pindrop)</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-value">5</div>
+          <div class="metric-label">ASVspoof challenge editions</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-value">250+</div>
+          <div class="metric-label">Voice security patents (industry)</div>
+        </div>
+      </div>
+
+      <!-- ===== Section: Introduction ===== -->
+      <h2 id="introduction">Introduction</h2>
+
+      <p>
+        Speaker verification systems authenticate a person's identity by analyzing the unique characteristics of their voice -- pitch, timbre, cadence, and spectral patterns. While these systems have achieved high accuracy under controlled conditions, they operate on the fundamental assumption that the voice they receive is genuine. Spoofing attacks exploit this assumption by presenting the system with non-genuine speech that mimics a target speaker.
+      </p>
+
+      <p>
+        Anti-spoofing (also called <strong>countermeasure</strong> or <strong>presentation attack detection</strong>) is the discipline of detecting and rejecting such fraudulent inputs before they can fool the verification system. Voice liveness detection is a subset that specifically determines whether speech originates from a live human being rather than a recording, synthesizer, or loudspeaker.
+      </p>
+
+      <div class="callout callout-danger">
+        <div class="callout-title">Critical Security Gap</div>
+        <p>
+          Pindrop's 2025 Voice Intelligence &amp; Security Report revealed deepfake fraud attempts rose by more than 1,300% in 2024, jumping from an average of one per month to seven per day. In one high-profile case, a finance employee at Arup Engineering was deceived into transferring $25 million during a live video call with AI-generated fake executives.
+        </p>
+      </div>
+
+      <!-- ===== Section: Threat Landscape ===== -->
+      <h2 id="threat-landscape">The Threat Landscape</h2>
+
+      <p>
+        The threat model for speaker verification systems encompasses two principal attack vectors, defined by how the spoofed audio reaches the system:
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>Physical Access (PA)</h4>
+          <ul>
+            <li>Audio is presented via a <strong>loudspeaker</strong> in the physical environment</li>
+            <li>The system's microphone captures it like any other speech</li>
+            <li>Includes replay attacks, mimicry, and twin-speaker scenarios</li>
+            <li>Affected by room acoustics, speaker quality, and recording conditions</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>Logical Access (LA)</h4>
+          <ul>
+            <li>Spoofed audio is <strong>injected directly</strong> into the system's digital input</li>
+            <li>Bypasses the physical microphone entirely</li>
+            <li>Includes TTS synthesis, voice conversion, and adversarial examples</li>
+            <li>Eliminates recording artifacts that PA detection relies on</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>
+        Modern attacks increasingly blur this boundary. A deepfake voice can be played through a phone call (PA-style) or injected into a VoIP stream (LA-style), making robust detection across both vectors essential.
+      </p>
+
+      <!-- ===== Section: Attack Taxonomy ===== -->
+      <h2 id="attack-taxonomy">Attack Taxonomy</h2>
+
+      <p>
+        Spoofing attacks against speaker verification systems fall into four primary categories, each with distinct characteristics, complexity, and detection challenges.
+      </p>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+graph TD
+    ROOT["Spoofing Attacks<br/>Against ASV Systems"]
+
+    ROOT --> PA["Physical Access (PA)"]
+    ROOT --> LA["Logical Access (LA)"]
+
+    PA --> REPLAY["Replay Attack"]
+    PA --> MIMIC["Mimicry / Twins"]
+
+    LA --> TTS["Text-to-Speech<br/>(TTS)"]
+    LA --> VC["Voice Conversion<br/>(VC)"]
+    LA --> DF["Deepfake / Neural<br/>Speech Synthesis"]
+    LA --> ADV["Adversarial<br/>Examples"]
+
+    REPLAY --> R1["Pre-recorded audio<br/>played via speaker"]
+    MIMIC --> M1["Human imitator or<br/>identical twin voice"]
+
+    TTS --> T1["Parametric TTS"]
+    TTS --> T2["Neural TTS<br/>(Tacotron, VITS)"]
+    TTS --> T3["Zero-shot<br/>voice cloning"]
+
+    VC --> V1["Parallel VC<br/>(paired training)"]
+    VC --> V2["Non-parallel VC<br/>(CycleGAN, StarGAN)"]
+    VC --> V3["Any-to-any VC"]
+
+    DF --> D1["End-to-end neural<br/>codec models"]
+    DF --> D2["Diffusion-based<br/>synthesis"]
+
+    ADV --> A1["Imperceptible<br/>perturbations"]
+    ADV --> A2["Targeted evasion<br/>of CM systems"]
+
+    style ROOT fill:#991B1B,stroke:#991B1B,color:#fff
+    style PA fill:#D97706,stroke:#B45309,color:#fff
+    style LA fill:#7C3AED,stroke:#5B21B6,color:#fff
+    style REPLAY fill:#F59E0B,stroke:#D97706,color:#000
+    style MIMIC fill:#F59E0B,stroke:#D97706,color:#000
+    style TTS fill:#A78BFA,stroke:#7C3AED,color:#000
+    style VC fill:#A78BFA,stroke:#7C3AED,color:#000
+    style DF fill:#A78BFA,stroke:#7C3AED,color:#000
+    style ADV fill:#A78BFA,stroke:#7C3AED,color:#000
+        </div>
+        <div class="diagram-caption">Figure 1: Taxonomy of spoofing attacks against automatic speaker verification systems</div>
+      </div>
+
+      <!-- Replay Attacks -->
+      <h3 id="replay-attacks">Replay Attacks</h3>
+
+      <p>
+        Replay attacks are the most common and accessible form of spoofing. An attacker records the target speaker's voice (even from a phone call or public speech) and plays it back through a loudspeaker to the microphone of the verification system. No technical expertise in speech synthesis is required -- only a recording device and a speaker.
+      </p>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Why Replay Attacks Are Dangerous</div>
+        <ul>
+          <li><strong>Low barrier to entry:</strong> Any smartphone can record and replay audio</li>
+          <li><strong>Authentic voice characteristics:</strong> The speech genuinely belongs to the target speaker</li>
+          <li><strong>Difficult to distinguish:</strong> Only channel and environment artifacts differentiate replay from live speech</li>
+          <li><strong>Scalable:</strong> A single recording can be used for unlimited authentication attempts</li>
+        </ul>
+      </div>
+
+      <p>
+        Detection relies on identifying channel artifacts introduced by the recording-playback chain: microphone frequency response of the recording device, loudspeaker distortion, room reverberation, and the double passage through analog-to-digital conversion. However, high-quality recording equipment and speakers can minimize these artifacts to the point where detection becomes extremely challenging.
+      </p>
+
+      <!-- TTS Attacks -->
+      <h3 id="tts-attacks">Text-to-Speech Synthesis Attacks</h3>
+
+      <p>
+        Text-to-Speech (TTS) systems generate speech audio from text input, optionally conditioned on a target speaker's voice characteristics. Modern neural TTS systems such as Tacotron 2, VITS, and VALL-E can produce highly natural-sounding speech that closely mimics a specific individual.
+      </p>
+
+      <p>
+        The evolution of TTS has been dramatic:
+      </p>
+
+      <ul>
+        <li><strong>Parametric TTS (pre-2016):</strong> Based on vocoder models (e.g., STRAIGHT, WORLD). Produced intelligible but robotic-sounding speech with detectable artifacts.</li>
+        <li><strong>Neural TTS (2016-2022):</strong> Sequence-to-sequence models (Tacotron, WaveNet, WaveGlow) producing near-human-quality speech. Required minutes to hours of target speaker audio for fine-tuning.</li>
+        <li><strong>Zero-shot voice cloning (2023+):</strong> Models like VALL-E, XTTS, and Bark can clone a voice from as little as 3-10 seconds of reference audio, dramatically lowering the attack barrier.</li>
+      </ul>
+
+      <!-- Voice Conversion Attacks -->
+      <h3 id="vc-attacks">Voice Conversion Attacks</h3>
+
+      <p>
+        Voice conversion (VC) transforms the speech of a source speaker to sound like a target speaker while preserving the linguistic content. Unlike TTS, voice conversion operates on existing speech signals rather than generating from text, which can preserve natural prosody and speaking style.
+      </p>
+
+      <p>
+        Key VC approaches include:
+      </p>
+
+      <ul>
+        <li><strong>Parallel VC:</strong> Requires paired training data from source and target speakers. Uses statistical methods (GMM) or neural networks to learn a mapping function.</li>
+        <li><strong>Non-parallel VC:</strong> Uses unpaired data with techniques like CycleGAN-VC, StarGAN-VC, or AutoVC. Far more practical for attackers since no paired data is needed.</li>
+        <li><strong>Any-to-any VC:</strong> A single model converts any source speaker to any target speaker, requiring only a short enrollment utterance from the target.</li>
+      </ul>
+
+      <!-- Deepfake Attacks -->
+      <h3 id="deepfake-attacks">Deepfake Audio Attacks</h3>
+
+      <p>
+        Deepfake audio represents the frontier of spoofing technology, leveraging large generative models -- including diffusion models, neural audio codecs, and large language model-based architectures -- to produce speech that is increasingly indistinguishable from genuine human utterances.
+      </p>
+
+      <div class="callout callout-danger">
+        <div class="callout-title">The Deepfake Threshold</div>
+        <p>
+          As of late 2025, synthesized voice has crossed the "uncanny valley" -- synthetic speech is now indistinguishable from authentic recordings for ordinary listeners and, in some cases, even for institutional verification systems. Modern tools can inject emotion, stress, or urgency on command, creating dynamic clones capable of real-time conversational interaction.
+        </p>
+      </div>
+
+      <p>
+        Key deepfake technologies include:
+      </p>
+
+      <ul>
+        <li><strong>Neural codec models:</strong> Systems like EnCodec and SoundStorm represent speech as discrete tokens, enabling language-model-style generation of audio.</li>
+        <li><strong>Diffusion-based synthesis:</strong> Adapted from image generation, diffusion models progressively denoise audio to produce highly natural speech.</li>
+        <li><strong>Adversarial attacks:</strong> Imperceptible perturbations added to spoofed speech specifically designed to evade anti-spoofing countermeasures, first formally studied in ASVspoof 5.</li>
+      </ul>
+
+      <!-- ===== Section: ASVspoof ===== -->
+      <h2 id="asvspoof">The ASVspoof Challenge Series</h2>
+
+      <p>
+        The ASVspoof challenge series is the primary benchmark for anti-spoofing research, organized by a consortium including Japan Science and Technology Agency, the Academy of Finland, EURECOM, and the National Institute of Informatics. Over five editions, it has driven the field forward by providing standardized datasets, evaluation protocols, and metrics.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2015 -- ASVspoof 1.0</div>
+          <div class="timeline-title">Logical Access Only</div>
+          <div class="timeline-desc">
+            The inaugural challenge focused on detecting speech generated by 10 TTS and VC algorithms. Dataset: 3,750 genuine and 12,625 spoofed utterances. Established the Equal Error Rate (EER) as the primary metric. Demonstrated that simple classifiers with handcrafted features could detect known attacks, but generalization to unseen attacks remained poor.
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">2017 -- ASVspoof 2.0</div>
+          <div class="timeline-title">Physical Access Introduced</div>
+          <div class="timeline-desc">
+            First edition to address replay attacks with a dedicated Physical Access task. Used the RedDots replayed dataset with recordings captured in various acoustic environments. Revealed significant challenges in detecting high-quality replayed audio captured with professional equipment.
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">2019 -- ASVspoof 3.0</div>
+          <div class="timeline-title">Unified Evaluation with t-DCF</div>
+          <div class="timeline-desc">
+            First challenge to jointly evaluate both LA and PA tasks. Introduced the <strong>tandem decision cost function (t-DCF)</strong>, an ASV-centric metric that measures the impact of spoofing and countermeasures on the overall verification system. Attracted significant community participation and revealed that countermeasures effective for LA often failed on PA, and vice versa.
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">2021 -- ASVspoof 4.0</div>
+          <div class="timeline-title">Real-World Conditions</div>
+          <div class="timeline-desc">
+            Added real-world telephony artifacts -- encoding, compression, noise, and distortion -- to both genuine and spoofed recordings. Introduced the Speech Deepfake (DF) detection task for identifying spoofed speech outside of ASV-specific scenarios. Received 54 team submissions. Results showed countermeasures were robust to encoding effects (LA) but struggled with variations between simulated and real acoustic environments (PA).
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">2024 -- ASVspoof 5</div>
+          <div class="timeline-title">Crowdsourced Data, Deepfakes &amp; Adversarial Attacks at Scale</div>
+          <div class="timeline-desc">
+            A paradigm shift: built entirely on crowdsourced speech data from a large, diverse speaker population in varied acoustic conditions. Introduced <strong>adversarial attacks</strong> for the first time, where imperceptible perturbations are crafted to evade detection. Incorporated neural codec-based attacks and a new pipeline to address shortcut artifact biases. Received 53 team submissions. Track 1 (stand-alone CM) and Track 2 (SASV) evaluated separately. Despite lower-quality crowdsourced data, baseline detection performance was poor, though top submissions substantially outperformed baselines.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">ASVspoof Evolution</div>
+        <p>
+          The challenge has evolved from detecting legacy TTS/VC algorithms to encompassing state-of-the-art deepfake technology, adversarial attacks, and their impact on real-world ASV systems. Each edition has introduced progressively more realistic conditions, pushing countermeasure research toward practical deployment.
+        </p>
+      </div>
+
+      <!-- ===== Section: Detection Pipeline ===== -->
+      <h2 id="detection-pipeline">Spoofing Detection Pipeline</h2>
+
+      <p>
+        A typical anti-spoofing system processes incoming audio through a sequence of stages to produce a detection decision. The pipeline architecture varies between systems that use handcrafted features and those that learn representations end-to-end, but the conceptual flow is consistent.
+      </p>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+graph LR
+    A["Input<br/>Audio"] --> B["Pre-processing<br/>- Silence removal<br/>- Normalization<br/>- Framing"]
+    B --> C{"Feature<br/>Extraction"}
+    C -->|Handcrafted| D["LFCC / CQCC<br/>MFCC / Spectrogram"]
+    C -->|Learned| E["SincNet<br/>Raw Waveform<br/>SSL Embeddings"]
+    D --> F["Classification<br/>Backend"]
+    E --> F
+    F --> G{"Score<br/>Fusion"}
+    G --> H["CM Score"]
+    H --> I{"Decision<br/>Logic"}
+    J["ASV Score<br/>(Speaker Match)"] --> I
+    I --> K{{"Accept /<br/>Reject"}}
+
+    style A fill:#374151,stroke:#374151,color:#fff
+    style B fill:#6366F1,stroke:#4F46E5,color:#fff
+    style C fill:#D97706,stroke:#B45309,color:#fff
+    style D fill:#F59E0B,stroke:#D97706,color:#000
+    style E fill:#F59E0B,stroke:#D97706,color:#000
+    style F fill:#7C3AED,stroke:#5B21B6,color:#fff
+    style G fill:#7C3AED,stroke:#5B21B6,color:#fff
+    style H fill:#2563EB,stroke:#1D4ED8,color:#fff
+    style I fill:#DC2626,stroke:#B91C1C,color:#fff
+    style J fill:#374151,stroke:#374151,color:#fff
+    style K fill:#059669,stroke:#047857,color:#fff
+        </div>
+        <div class="diagram-caption">Figure 2: Spoofing countermeasure (CM) detection pipeline integrated with automatic speaker verification (ASV)</div>
+      </div>
+
+      <!-- ===== Section: Handcrafted Features ===== -->
+      <h2 id="handcrafted-features">Handcrafted Feature Approaches</h2>
+
+      <p>
+        Traditional anti-spoofing systems rely on manually designed acoustic features that capture spectral characteristics believed to differ between genuine and spoofed speech. These features condense spectral information into compact representations that are then classified by standard machine learning backends (GMMs, SVMs, or simple neural networks).
+      </p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Full Name</th>
+              <th>Key Properties</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>MFCC</code></td>
+              <td>Mel-Frequency Cepstral Coefficients</td>
+              <td>Perceptually motivated; captures vocal tract shape via mel-scale filterbank</td>
+              <td>General baseline; replay detection</td>
+            </tr>
+            <tr>
+              <td><code>LFCC</code></td>
+              <td>Linear Frequency Cepstral Coefficients</td>
+              <td>Linear-scale filterbank; preserves high-frequency detail lost by mel scaling</td>
+              <td>TTS/VC detection; ASVspoof baseline feature</td>
+            </tr>
+            <tr>
+              <td><code>CQCC</code></td>
+              <td>Constant-Q Cepstral Coefficients</td>
+              <td>Geometrically spaced frequency bins; high resolution at low frequencies</td>
+              <td>TTS artifacts; spectral discontinuities</td>
+            </tr>
+            <tr>
+              <td><code>IMFCC</code></td>
+              <td>Inverted MFCC</td>
+              <td>Emphasizes high-frequency regions (inverted mel scale)</td>
+              <td>Complementary to MFCC; captures sibilants</td>
+            </tr>
+            <tr>
+              <td><code>LPCC</code></td>
+              <td>Linear Prediction Cepstral Coefficients</td>
+              <td>Based on linear prediction model of vocal tract</td>
+              <td>Replay channel artifacts</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Limitations of Handcrafted Features</h3>
+
+      <p>
+        While handcrafted features performed well in early ASVspoof evaluations, several critical limitations emerged as attacks grew more sophisticated:
+      </p>
+
+      <ul>
+        <li><strong>Fixed representation:</strong> Designed for specific artifact types; cannot adapt to novel attack signatures.</li>
+        <li><strong>Domain sensitivity:</strong> Struggle to generalize across mismatched recording conditions, device variability, and noisy environments.</li>
+        <li><strong>Information bottleneck:</strong> Mel and linear filterbanks discard phase information and fine-grained spectral details that may carry spoofing cues.</li>
+        <li><strong>Replay vulnerability:</strong> Replay attack artifacts depend heavily on playback and recording hardware, and handcrafted features often fail to capture these variable distortions.</li>
+      </ul>
+
+      <!-- ===== Section: Learned Features ===== -->
+      <h2 id="learned-features">Learned Feature Approaches</h2>
+
+      <p>
+        The field has undergone a paradigm shift from handcrafted descriptors toward deep learning-based representations that learn discriminative features directly from data -- either from spectrograms or raw waveforms.
+      </p>
+
+      <h3>Self-Supervised Learning (SSL) Embeddings</h3>
+
+      <p>
+        Pre-trained models like <strong>wav2vec 2.0</strong>, <strong>HuBERT</strong>, and <strong>WavLM</strong> learn rich speech representations from large unlabeled corpora. When used as feature extractors for anti-spoofing, they provide:
+      </p>
+
+      <ul>
+        <li>High-dimensional embeddings capturing fine-grained acoustic patterns</li>
+        <li>Robustness to channel and environmental variation due to diverse pre-training data</li>
+        <li>Transfer learning benefits that reduce reliance on limited spoofing-specific training data</li>
+        <li>Significant performance improvements over handcrafted features, especially on unseen attack types</li>
+      </ul>
+
+      <h3>Sinc Convolution Front-Ends</h3>
+
+      <p>
+        The <strong>SincNet</strong> approach replaces fixed filterbanks with learnable sinc functions that parameterize bandpass filters. The network learns the low and high cutoff frequencies of each filter during training, effectively discovering the optimal frequency decomposition for the task. This approach:
+      </p>
+
+      <ul>
+        <li>Processes raw audio waveforms directly, bypassing handcrafted feature extraction</li>
+        <li>Learns task-specific frequency responses rather than relying on mel or linear scales</li>
+        <li>Requires fewer parameters than unconstrained learned filterbanks</li>
+        <li>Forms the front-end of both RawNet2 and AASIST architectures</li>
+      </ul>
+
+      <!-- ===== Section: Signal-Based Detection ===== -->
+      <h2 id="signal-detection">Signal-Based Detection</h2>
+
+      <p>
+        Signal-based detection exploits physical artifacts introduced by the spoofing process itself -- channel characteristics, microphone signatures, and environmental cues that differ between live speech and replayed or synthesized audio.
+      </p>
+
+      <h3>Channel Artifact Analysis</h3>
+
+      <p>
+        When speech is replayed through a loudspeaker and re-recorded by a microphone, the signal passes through a double analog-to-digital conversion chain. Each device in this chain imprints characteristic artifacts:
+      </p>
+
+      <ul>
+        <li><strong>Frequency response coloring:</strong> Every loudspeaker and microphone has a non-flat frequency response that introduces spectral shaping detectable through blind channel estimation.</li>
+        <li><strong>Reverberation fingerprints:</strong> Room impulse responses add reflections and decay patterns. Live speech in a room has a single-pass reverberation; replayed speech shows double reverberation (original room + replay environment).</li>
+        <li><strong>Nonlinear distortion:</strong> Speaker cone dynamics and amplifier clipping introduce harmonic distortion absent from direct-microphone speech.</li>
+        <li><strong>Bandwidth limitations:</strong> Most consumer speakers roll off below 80-100 Hz and above 15-18 kHz, creating detectable spectral boundaries.</li>
+      </ul>
+
+      <h3>Microphone Characteristic Detection</h3>
+
+      <p>
+        Each microphone model has a unique frequency response, noise floor, and transient behavior -- its "microphone signature." Anti-spoofing systems can exploit this in two ways:
+      </p>
+
+      <ul>
+        <li><strong>Enrollment consistency:</strong> If a user always authenticates with the same device, the system can verify that the microphone signature matches the enrolled profile.</li>
+        <li><strong>Replay detection:</strong> Replayed audio contains the microphone signature of the original recording device layered onto the capture device's signature, creating a detectable composite channel response.</li>
+      </ul>
+
+      <h3>Phase and Modulation Analysis</h3>
+
+      <p>
+        Phase-based features capture information discarded by magnitude-only spectral representations. Variable-frequency resolution analysis of both phase and magnitude spectra has proven effective for replay detection, as the phase spectrum is particularly sensitive to the time-domain distortions introduced by loudspeaker playback. Amplitude and frequency modulation features also capture subtle dynamic differences between live and replayed speech.
+      </p>
+
+      <!-- ===== Section: Neural Network Detectors ===== -->
+      <h2 id="nn-detectors">Neural Network Detectors</h2>
+
+      <p>
+        End-to-end neural networks that process raw waveforms or learned representations have achieved state-of-the-art performance on anti-spoofing benchmarks. Two architectures have been particularly influential.
+      </p>
+
+      <h3>RawNet2</h3>
+
+      <p>
+        <strong>RawNet2</strong> is an end-to-end deep neural network designed to process raw audio waveforms directly, eliminating the need for handcrafted feature extraction. Its architecture consists of:
+      </p>
+
+      <ul>
+        <li><strong>SincConv front-end:</strong> A sinc convolution layer that learns bandpass filter parameters (cutoff frequencies) directly from the raw waveform.</li>
+        <li><strong>Residual blocks:</strong> Six residual blocks with pre-activation (batch normalization, 2D convolution, SeLU activation, max pooling). The first two use 32 filters; the remaining four use 64 filters.</li>
+        <li><strong>GRU aggregation:</strong> A Gated Recurrent Unit layer that aggregates frame-level features into a single utterance-level embedding.</li>
+        <li><strong>Classification head:</strong> A fully connected layer producing a genuine/spoof score.</li>
+      </ul>
+
+      <p>
+        RawNet2 achieved competitive results on ASVspoof 2019 LA and served as the foundational encoder for more advanced architectures.
+      </p>
+
+      <h3>AASIST</h3>
+
+      <p>
+        <strong>AASIST (Audio Anti-Spoofing using Integrated Spectro-Temporal graph attention)</strong> is a breakthrough architecture that models both temporal and spectral patterns through graph-based attention mechanisms. Key innovations include:
+      </p>
+
+      <ul>
+        <li><strong>RawNet2-based encoder:</strong> Inherits the SincConv + residual block front-end from RawNet2 to process raw waveforms.</li>
+        <li><strong>Heterogeneous Stacking Graph Attention Layer (HS-GAL):</strong> Operates on two parallel graphs -- one modeling temporal dependencies and one modeling spectral dependencies -- then combines them through element-wise multiplication.</li>
+        <li><strong>Spectro-temporal integration:</strong> Unlike conventional approaches that process time and frequency independently, AASIST models their interaction, capturing artifacts that manifest in the joint spectro-temporal domain.</li>
+        <li><strong>Graph readout:</strong> A max-graph operation produces a compact output embedding for classification.</li>
+      </ul>
+
+      <div class="callout callout-success">
+        <div class="callout-title">AASIST Performance</div>
+        <p>
+          AASIST achieved state-of-the-art results on ASVspoof 2019 LA with an EER of 0.83%, substantially outperforming both handcrafted-feature baselines and earlier end-to-end systems. Its spectro-temporal graph attention mechanism has become a foundational building block for subsequent research.
+        </p>
+      </div>
+
+      <h3>Whisper-Based Detection</h3>
+
+      <p>
+        Recent work has explored using OpenAI's <strong>Whisper</strong> model as a feature extractor for deepfake detection. Pre-trained on 680,000 hours of multilingual speech, Whisper provides rich, robust representations. When combined with AASIST-style backends, Whisper+AASIST systems have shown strong performance on diverse deepfake datasets, benefiting from Whisper's extensive pre-training on real-world audio conditions.
+      </p>
+
+      <!-- ===== Section: Liveness Detection ===== -->
+      <h2 id="liveness-detection">Liveness Detection</h2>
+
+      <p>
+        Voice liveness detection specifically aims to determine whether speech comes from a live human being in real time, as opposed to any form of pre-recorded, synthesized, or manipulated audio. Four principal categories of liveness methods exist:
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>Challenge-Response</h4>
+          <ul>
+            <li>System prompts user to speak specific words or phrases</li>
+            <li>Verifies content matches the challenge</li>
+            <li>Difficult to defeat with pre-recordings</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>Acoustic Feature Analysis</h4>
+          <ul>
+            <li>Detects artifacts of playback or synthesis</li>
+            <li>Passive -- no user cooperation needed</li>
+            <li>Analyzes spectral, temporal, and phase features</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>Hardware-Based</h4>
+          <ul>
+            <li>Uses specialized sensors (bone conduction, ultrasonic)</li>
+            <li>Detects physiological signals of live speech</li>
+            <li>Requires specific device capabilities</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>Multi-Modal Biometric</h4>
+          <ul>
+            <li>Combines voice with face, lip movement, etc.</li>
+            <li>Cross-modal consistency check</li>
+            <li>Harder to spoof all modalities simultaneously</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 id="challenge-response">Challenge-Response Methods</h3>
+
+      <p>
+        Challenge-response is an <strong>active</strong> liveness detection method. The system presents the user with a randomly generated challenge -- typically a sequence of digits, words, or a sentence -- and verifies that the spoken response matches both the required content and the enrolled speaker's voice profile.
+      </p>
+
+      <p>
+        Strengths and limitations:
+      </p>
+
+      <ul>
+        <li><strong>Effective against replay:</strong> Pre-recorded audio cannot match unpredictable challenges.</li>
+        <li><strong>Defeats static TTS:</strong> Requires real-time generation of specific content.</li>
+        <li><strong>User friction:</strong> Adds time and cognitive load to the authentication process.</li>
+        <li><strong>Vulnerable to real-time synthesis:</strong> Advanced voice cloning systems with streaming capability can now generate challenge responses in real time with sub-second latency, eroding the effectiveness of this approach.</li>
+      </ul>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Real-Time Synthesis Threat</div>
+        <p>
+          Modern generative AI can produce voice clones that dynamically interact in real time, defeating systems that rely solely on challenge-response or liveness checks. The defense must now operate at the signal level, not just the content level.
+        </p>
+      </div>
+
+      <h3 id="micro-tremor">Micro-Tremor Analysis</h3>
+
+      <p>
+        Human vocal production involves involuntary micro-tremors -- subtle, quasi-periodic fluctuations in pitch and amplitude caused by the neurophysiological control of the laryngeal muscles. These micro-tremors occur at frequencies typically between 8-12 Hz and are a natural byproduct of the complex feedback loop between the brain and the vocal cords.
+      </p>
+
+      <p>
+        Detection approaches examine:
+      </p>
+
+      <ul>
+        <li><strong>Fundamental frequency (F0) jitter:</strong> Cycle-to-cycle variations in pitch period that are characteristic of live laryngeal vibration.</li>
+        <li><strong>Amplitude shimmer:</strong> Cycle-to-cycle amplitude variations caused by irregular vocal fold closure.</li>
+        <li><strong>Sub-harmonic modulation:</strong> Low-frequency modulation patterns in the speech signal that correlate with physiological tremor.</li>
+      </ul>
+
+      <p>
+        While TTS and VC systems can model average pitch and amplitude contours, replicating the stochastic, physiologically grounded micro-tremor patterns remains challenging for current synthesis technology. However, the signal-to-noise ratio of these features is low, requiring high-quality audio and careful analysis.
+      </p>
+
+      <h3 id="pop-noise">Pop Noise Detection</h3>
+
+      <p>
+        Pop noise (or plosive noise) is a low-frequency distortion caused by human breath reaching a closely placed microphone. When a person speaks directly into a microphone, certain phonemes (especially plosives like /p/, /b/, /t/) produce bursts of air that create characteristic low-frequency energy below 40 Hz.
+      </p>
+
+      <p>
+        This phenomenon serves as a liveness cue because:
+      </p>
+
+      <ul>
+        <li>Pop noise is generated by <strong>physical proximity</strong> between the speaker's mouth and the microphone.</li>
+        <li>Replayed audio from a loudspeaker does not produce the same breath-to-microphone interaction pattern.</li>
+        <li>TTS systems do not model breath dynamics at this level of physical fidelity.</li>
+      </ul>
+
+      <p>
+        The <strong>POCO dataset</strong> was specifically created to study pop noise as a liveness indicator. Research using Constant-Q Transform (CQT) for feature extraction and CNN classifiers achieved 96.95% accuracy on the ASVspoof 2017 dataset. Wavelet-based approaches (bump wavelets) have also shown effectiveness at capturing these ultra-low-frequency cues.
+      </p>
+
+      <h3>Bone Conduction and Throat Microphones</h3>
+
+      <p>
+        Hardware-based approaches use alternative sensors that capture signals unavailable to loudspeaker replay attacks:
+      </p>
+
+      <ul>
+        <li><strong>Throat microphones:</strong> Contact microphones placed on the neck capture vocal cord vibrations through tissue conduction. These signals are fundamentally different from air-conducted speech and cannot be replicated by a loudspeaker.</li>
+        <li><strong>BoneAuth:</strong> A wearable liveness detection system that continuously matches air conduction (AC) and bone conduction (BC) voice signals, exploiting the physical consistency between the two channels that only exists for live speech.</li>
+        <li><strong>Ultrasonic sensing:</strong> Active acoustic sensing using ultrasound to detect the presence and motion of a human face and articulators during speech.</li>
+      </ul>
+
+      <!-- ===== Section: Commercial Solutions ===== -->
+      <h2 id="commercial">Commercial Solutions</h2>
+
+      <p>
+        Several companies have developed production-grade anti-spoofing and liveness detection systems deployed across banking, telecommunications, and identity verification applications.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>Pindrop</h4>
+          <ul>
+            <li><strong>Deep Voice Engine:</strong> Analyzes 250+ vocal characteristics using ML/AI algorithms for caller authentication</li>
+            <li><strong>Pulse Inspect:</strong> Detects AI-generated speech in any audio file with 99% accuracy (launched 2024)</li>
+            <li>99.2% deepfake detection success rate</li>
+            <li>Top performer in multiple ASVspoof challenges</li>
+            <li>250 voice security patents including 11 on deepfake detection</li>
+            <li>Deployed in major banks and call centers worldwide</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>Veridas Voice Shield</h4>
+          <ul>
+            <li>AI-driven plug-and-play liveness detection</li>
+            <li>Requires only <strong>3 seconds</strong> of audio</li>
+            <li>Language and text independent</li>
+            <li>Detects: replayed, manipulated, synthesized, and deepfake voices</li>
+            <li><strong>Only company</strong> with iBeta PAD Level 1 and Level 2 certifications for voice anti-spoofing (active and passive, native and web)</li>
+            <li>Can process millions of calls within milliseconds</li>
+          </ul>
+        </div>
+        <div class="comparison-card">
+          <h4>IDLive Voice (ID R&amp;D / Mitek)</h4>
+          <ul>
+            <li>Passive, real-time liveness detection during normal conversation</li>
+            <li>No user cooperation or specific phrases required</li>
+            <li>Identifies synthesized voice "within milliseconds"</li>
+            <li>Multi-technique approach: speech feature extraction, GMM, factor analysis, and deep CNNs</li>
+            <li>Available via Microsoft Azure Marketplace</li>
+            <li>Acquired by Mitek Systems for integrated identity platform</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Pindrop</th>
+              <th>Veridas Voice Shield</th>
+              <th>IDLive Voice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Detection Type</td>
+              <td>Active + Passive</td>
+              <td>Active + Passive</td>
+              <td>Passive only</td>
+            </tr>
+            <tr>
+              <td>Min Audio Required</td>
+              <td>~5 seconds</td>
+              <td>3 seconds</td>
+              <td>~3 seconds</td>
+            </tr>
+            <tr>
+              <td>Language Dependent</td>
+              <td>No</td>
+              <td>No</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>Deepfake Detection</td>
+              <td>Yes (99.2%)</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>ISO/iBeta Certified</td>
+              <td>--</td>
+              <td>PAD Level 1 &amp; 2</td>
+              <td>--</td>
+            </tr>
+            <tr>
+              <td>Deployment</td>
+              <td>Cloud / On-prem</td>
+              <td>Cloud / On-prem</td>
+              <td>Cloud (Azure)</td>
+            </tr>
+            <tr>
+              <td>Primary Market</td>
+              <td>Contact centers, banking</td>
+              <td>Banking, telco, government</td>
+              <td>Identity verification</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== Section: Integration ===== -->
+      <h2 id="integration">Integration with Speaker Verification</h2>
+
+      <p>
+        Anti-spoofing countermeasures and speaker verification have historically been developed as separate subsystems. However, optimal security requires tight integration -- a system must simultaneously answer two questions: <em>"Is this the claimed speaker?"</em> and <em>"Is this genuine speech?"</em>
+      </p>
+
+      <h3>Integration Architectures</h3>
+
+      <h4>Cascaded (Sequential)</h4>
+      <p>
+        The countermeasure (CM) system first classifies the input as genuine or spoofed. Only genuine-classified inputs are passed to the ASV system for speaker verification. Simple to implement but error-prone: a false rejection by the CM blocks legitimate users; a false acceptance passes spoofed audio to the ASV.
+      </p>
+
+      <h4>Score Fusion (Parallel)</h4>
+      <p>
+        Both CM and ASV systems operate independently and produce separate scores. A fusion module (weighted sum, logistic regression, or neural network) combines these scores into a final accept/reject decision. This approach, evaluated using the <strong>tandem detection cost function (t-DCF)</strong>, allows both systems to contribute to the final decision.
+      </p>
+
+      <h4>End-to-End Joint (SASV)</h4>
+      <p>
+        The <strong>Spoofing-Aware Speaker Verification (SASV)</strong> paradigm, formalized by the SASV 2022 challenge, targets development of integrated, jointly optimized solutions. Approaches include:
+      </p>
+
+      <ul>
+        <li><strong>Embedding fusion:</strong> Concatenating CM and ASV embeddings before a joint classifier.</li>
+        <li><strong>SA-SASV:</strong> End-to-end spoof-aggregated speaker verification that learns a unified embedding space where genuine target speech, genuine non-target speech, and spoofed speech occupy distinct regions.</li>
+        <li><strong>Shared encoders:</strong> A single neural network backbone that jointly learns speaker-discriminative and spoof-discriminative features.</li>
+      </ul>
+
+      <h3>Evaluation Metrics</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Measures</th>
+              <th>Used In</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>EER</code></td>
+              <td>Equal Error Rate -- point where false accept = false reject for CM alone</td>
+              <td>ASVspoof (CM evaluation)</td>
+            </tr>
+            <tr>
+              <td><code>t-DCF</code></td>
+              <td>Tandem Detection Cost Function -- cost of errors in combined CM + ASV</td>
+              <td>ASVspoof 2019, 2021</td>
+            </tr>
+            <tr>
+              <td><code>a-DCF</code></td>
+              <td>Architecture-agnostic Detection Cost -- evaluates integration without assuming a specific architecture</td>
+              <td>ASVspoof 5</td>
+            </tr>
+            <tr>
+              <td><code>SASV-EER</code></td>
+              <td>Joint EER for spoofing-aware speaker verification</td>
+              <td>SASV 2022 challenge</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== Section: Generalization ===== -->
+      <h2 id="generalization">The Generalization Challenge</h2>
+
+      <p>
+        The single most critical open problem in anti-spoofing research is <strong>generalization to unseen attacks</strong>. A system trained to detect specific TTS or VC algorithms may fail completely when confronted with a novel synthesis method not represented in the training data.
+      </p>
+
+      <h3>Dimensions of Generalization Failure</h3>
+
+      <ul>
+        <li><strong>Unseen attack algorithms:</strong> New TTS, VC, or deepfake models produce different artifact signatures. A system that learns to detect specific artifacts (e.g., WaveNet glitches) cannot detect artifacts from a different architecture (e.g., diffusion models).</li>
+        <li><strong>Channel mismatch:</strong> Models trained on high-quality studio recordings degrade when deployed on telephone networks, VoIP, or compressed audio streams. Telephony codecs strip high-frequency detail that detection algorithms rely on.</li>
+        <li><strong>Device variability:</strong> Different microphones, speakers, and acoustic environments create domain shifts between training and deployment conditions.</li>
+        <li><strong>Adversarial evasion:</strong> As introduced in ASVspoof 5, attackers can craft imperceptible perturbations specifically designed to evade known countermeasure architectures.</li>
+      </ul>
+
+      <h3>Approaches to Improving Generalization</h3>
+
+      <ul>
+        <li><strong>One-class learning:</strong> Train only on genuine speech, learning a compact representation of "real" voice. Anything that deviates sufficiently is classified as spoofed, regardless of the attack type.</li>
+        <li><strong>Domain adaptation:</strong> Learn domain-invariant features that are consistent between source (training) and target (deployment) domains, compensating for the impact of domain shift.</li>
+        <li><strong>Data augmentation:</strong> Apply codec simulation, room impulse responses, noise injection, and other transformations during training to improve robustness to real-world conditions.</li>
+        <li><strong>Channel-robust training:</strong> Strategies that explicitly expose models to diverse channel conditions during training to prevent overfitting to specific acoustic environments.</li>
+        <li><strong>SSL pre-training:</strong> Self-supervised models trained on massive diverse audio corpora provide representations that generalize better than task-specific features.</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <div class="callout-title">The Generalization Gap</div>
+        <p>
+          Research consistently shows that systems achieving near-perfect EER on known attacks (e.g., 0.5% on ASVspoof 2019 LA) can exhibit EER exceeding 20-30% on unseen attacks or mismatched conditions. Closing this gap remains the field's central research challenge.
+        </p>
+      </div>
+
+      <!-- ===== Section: Deepfake Arms Race ===== -->
+      <h2 id="deepfake-arms-race">The Deepfake Arms Race</h2>
+
+      <p>
+        The relationship between voice synthesis and voice anti-spoofing has become an adversarial arms race, with each advance in generation technology demanding new detection capabilities.
+      </p>
+
+      <h3>The Current State (2025-2026)</h3>
+
+      <ul>
+        <li><strong>Generation outpacing detection:</strong> Deepfake creation tools improve faster than detection models. Each new generation reduces the detectable "fingerprints" in synthesized audio, leaving detection in a constant race to catch up.</li>
+        <li><strong>Democratization of attacks:</strong> Open-source voice cloning tools (e.g., Coqui TTS, Bark, OpenVoice) have made high-quality voice synthesis accessible to anyone with basic technical skills and a few seconds of target audio.</li>
+        <li><strong>Real-time synthesis:</strong> Low-latency voice cloning enables live conversational deepfakes, defeating traditional challenge-response and turn-based liveness checks.</li>
+        <li><strong>Codec compression:</strong> Most real-world audio passes through VoIP codecs that strip the high-frequency spectral details detection algorithms rely on, significantly reducing accuracy.</li>
+        <li><strong>Deepfake fraud explosion:</strong> A 162% growth in deepfake-related fraud expected by end of 2025, with a 173% increase in synthetic voice use in Q4 2024 compared to Q1.</li>
+      </ul>
+
+      <h3>Defense Strategies</h3>
+
+      <ul>
+        <li><strong>Multi-layered detection:</strong> Combining signal-level analysis, behavioral biometrics, liveness detection, and contextual risk scoring rather than relying on any single technique.</li>
+        <li><strong>Continuous authentication:</strong> Monitoring the voice signal throughout a conversation rather than only at an initial checkpoint, detecting mid-call switches to deepfake audio.</li>
+        <li><strong>Audio watermarking:</strong> Embedding imperceptible watermarks in legitimate audio streams that are absent or damaged in synthesized audio (e.g., Resemble AI's approach).</li>
+        <li><strong>Provenance verification:</strong> Using cryptographic signing (C2PA standard) to establish a chain of custody for audio recordings from capture to verification.</li>
+        <li><strong>Adversarial training:</strong> Training detectors against adversarial examples to improve robustness to intentional evasion attempts.</li>
+      </ul>
+
+      <div class="callout callout-danger">
+        <div class="callout-title">2026 Outlook</div>
+        <p>
+          Researchers predict 2026 will be the year ordinary people are routinely fooled by deepfake voices. Voice cloning has crossed the "indistinguishable threshold," and an "AI vs. AI" arms race is accelerating where every defensive tool faces a generative counterpart designed to evade it. The consensus is that the only viable path forward is a layered, adaptive security strategy rather than reliance on any single detection technique.
+        </p>
+      </div>
+
+      <!-- ===== Section: Privacy & Fairness ===== -->
+      <h2 id="privacy-fairness">Privacy &amp; Fairness Considerations</h2>
+
+      <p>
+        The deployment of voice anti-spoofing systems raises important ethical, legal, and fairness considerations that must be addressed alongside technical performance.
+      </p>
+
+      <h3>Privacy and Data Protection</h3>
+
+      <ul>
+        <li><strong>Biometric data sensitivity:</strong> Voice prints are biometric identifiers subject to stringent regulations. GDPR (Europe) requires explicit consent and transparency for biometric processing. CCPA (California) provides opt-out rights. HIPAA (US healthcare) mandates safeguards for voice-based health information.</li>
+        <li><strong>Template storage:</strong> Voice biometric templates stored on servers represent high-value targets. Compromised voiceprints cannot be changed like passwords.</li>
+        <li><strong>Voice profiling risks:</strong> Anti-spoofing systems analyze detailed vocal characteristics that may inadvertently reveal health conditions, emotional states, age, gender, ethnicity, or other sensitive attributes.</li>
+        <li><strong>Consent and transparency:</strong> Users must understand what voice data is collected, how it is processed, how long it is retained, and whether it is shared with third parties.</li>
+      </ul>
+
+      <h3>Bias and Fairness</h3>
+
+      <ul>
+        <li><strong>Demographic bias:</strong> Studies have revealed notable discrepancies in speaker identification and anti-spoofing accuracy based on race, gender, age, and accent. Systems trained predominantly on one demographic group may perform poorly on others.</li>
+        <li><strong>Training data imbalance:</strong> Unbalanced databases regarding gender, language, or race lead to AI models that perform unevenly across populations. Heterogeneous training data is essential.</li>
+        <li><strong>Accessibility:</strong> Users with speech impediments, neurological conditions, or atypical vocal characteristics may trigger higher false rejection rates, effectively being denied service by the anti-spoofing system.</li>
+        <li><strong>Socioeconomic impact:</strong> Higher false rejection rates for certain populations can create barriers to banking, government services, and other applications that rely on voice authentication.</li>
+      </ul>
+
+      <h3>Regulatory Landscape</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Regulation</th>
+              <th>Region</th>
+              <th>Key Requirements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GDPR</td>
+              <td>European Union</td>
+              <td>Explicit consent for biometric processing; data minimization; right to erasure; DPIA required</td>
+            </tr>
+            <tr>
+              <td>CCPA / CPRA</td>
+              <td>California, USA</td>
+              <td>Opt-out rights for biometric data sale; disclosure of collection purposes</td>
+            </tr>
+            <tr>
+              <td>BIPA</td>
+              <td>Illinois, USA</td>
+              <td>Written consent before collection; private right of action for violations</td>
+            </tr>
+            <tr>
+              <td>EU AI Act</td>
+              <td>European Union</td>
+              <td>Remote biometric identification classified as high-risk; requires conformity assessment</td>
+            </tr>
+            <tr>
+              <td>ISO 30107</td>
+              <td>International</td>
+              <td>Presentation Attack Detection testing standard (iBeta Level 1 &amp; 2 certification)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== Section: Strengths & Weaknesses ===== -->
+      <h2 id="strengths-weaknesses">Strengths &amp; Weaknesses</h2>
+
+      <div class="sw-grid">
+        <div class="sw-card strengths">
+          <h4>Strengths</h4>
+          <ul>
+            <li><strong>Maturing research ecosystem:</strong> Five editions of ASVspoof have built standardized benchmarks, datasets, and metrics that accelerate progress.</li>
+            <li><strong>High detection rates on known attacks:</strong> State-of-the-art systems achieve EER below 1% on established attack types in controlled conditions.</li>
+            <li><strong>End-to-end learning:</strong> Architectures like AASIST learn directly from raw audio, discovering discriminative patterns humans cannot design manually.</li>
+            <li><strong>Multi-layered defense:</strong> Combining signal analysis, liveness detection, and behavioral biometrics creates defense-in-depth.</li>
+            <li><strong>Commercial deployment:</strong> Production systems from Pindrop, Veridas, and ID R&amp;D demonstrate practical viability with real-time performance.</li>
+            <li><strong>ISO standardization:</strong> PAD testing standards (ISO 30107) enable objective evaluation and certification of commercial systems.</li>
+            <li><strong>Hardware-based liveness:</strong> Physiological signals (bone conduction, pop noise, micro-tremor) provide fundamental cues that synthesis cannot easily replicate.</li>
+            <li><strong>SSL representations:</strong> Pre-trained models like wav2vec 2.0 provide robust, generalizable features that transfer well to anti-spoofing tasks.</li>
+          </ul>
+        </div>
+        <div class="sw-card weaknesses">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li><strong>Generalization gap:</strong> Systems effective on known attacks often fail catastrophically on novel, unseen attack algorithms.</li>
+            <li><strong>Arms race dynamics:</strong> Generation technology advances faster than detection, with each new synthesis method reducing detectable artifacts.</li>
+            <li><strong>Real-world degradation:</strong> VoIP codecs, background noise, and channel variability significantly reduce detection accuracy compared to lab conditions.</li>
+            <li><strong>Adversarial vulnerability:</strong> Imperceptible perturbations can be crafted to evade specific countermeasure architectures.</li>
+            <li><strong>Demographic bias:</strong> Performance disparities across gender, accent, age, and ethnicity raise fairness concerns in deployed systems.</li>
+            <li><strong>Privacy tension:</strong> Detailed voice analysis for security conflicts with data minimization principles and biometric privacy regulations.</li>
+            <li><strong>Latency constraints:</strong> Real-time detection in telephone and VoIP applications limits the complexity of models that can be deployed.</li>
+            <li><strong>Challenge-response erosion:</strong> Real-time voice cloning with sub-second latency defeats traditional liveness mechanisms based on unpredictable prompts.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== Section: Sources ===== -->
+      <h2 id="sources">Sources &amp; Further Reading</h2>
+
+      <h3>ASVspoof Challenge Series</h3>
+      <ul>
+        <li><a href="https://www.asvspoof.org/" target="_blank">ASVspoof Official Website</a> -- Challenge series homepage with datasets and evaluation protocols</li>
+        <li><a href="https://arxiv.org/abs/2408.08739" target="_blank">ASVspoof 5: Crowdsourced Speech Data, Deepfakes, and Adversarial Attacks at Scale</a> -- Wang et al., 2024</li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/S0885230825000506" target="_blank">ASVspoof 5: Design, Collection and Validation of Resources</a> -- Computer Speech &amp; Language, 2025</li>
+        <li><a href="https://datashare.ed.ac.uk/handle/10283/3336" target="_blank">ASVspoof 2019 Database</a> -- Edinburgh DataShare</li>
+        <li><a href="https://labsites.rochester.edu/air/projects/asvspoof.html" target="_blank">University of Rochester - Speaker Verification Anti-Spoofing Project</a></li>
+      </ul>
+
+      <h3>Neural Network Architectures</h3>
+      <ul>
+        <li><a href="https://www.eurecom.fr/publication/6696/download/sec-publi-6696.pdf" target="_blank">AASIST: Audio Anti-Spoofing using Integrated Spectro-Temporal Graph Attention</a> -- Jung et al., EURECOM</li>
+        <li><a href="https://arxiv.org/abs/2011.01108" target="_blank">End-to-end Anti-Spoofing with RawNet2</a> -- Tak et al., 2021</li>
+        <li><a href="https://github.com/Jungjee/RawNet" target="_blank">RawNet Official Repository (GitHub)</a> -- RawNet, RawNet2, and RawNet3 implementations</li>
+        <li><a href="https://arxiv.org/html/2402.17127v1" target="_blank">Enhancing Voice Spoofing Detection Models with wav2vec 2.0</a> -- 2024</li>
+      </ul>
+
+      <h3>Surveys and Reviews</h3>
+      <ul>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11991371/" target="_blank">Audio Deepfake Detection: What Has Been Achieved and What Lies Ahead</a> -- PMC, 2024</li>
+        <li><a href="https://arxiv.org/html/2508.16843v1" target="_blank">A Survey of Threats Against Voice Authentication and Anti-Spoofing Systems</a> -- arXiv, 2025</li>
+        <li><a href="https://par.nsf.gov/servlets/purl/10427026" target="_blank">Battling Voice Spoofing: A Review, Comparative Analysis, and Countermeasures</a> -- NSF PAR</li>
+        <li><a href="https://antispoofing.org/voice-liveness-detection-systems-challenges-and-solutions/" target="_blank">Voice Liveness Detection: Methods Overview</a> -- Antispoofing Wiki</li>
+        <li><a href="https://antispoofing.org/voice-antispoofing-contests/" target="_blank">Voice Antispoofing Contests</a> -- Antispoofing Wiki</li>
+      </ul>
+
+      <h3>Liveness Detection</h3>
+      <ul>
+        <li><a href="https://www.researchgate.net/publication/279449066" target="_blank">Voice Liveness Detection Algorithms Based on Pop Noise</a> -- Shiota et al.</li>
+        <li><a href="https://spliew.github.io/publication/2020-1-poco" target="_blank">POCO: A Voice Spoofing and Liveness Detection Corpus Based on Pop Noise</a> -- Liew et al., 2020</li>
+        <li><a href="https://hal.science/hal-03690065/document" target="_blank">Voice Liveness Detection using Bump Wavelet with CNN</a></li>
+        <li><a href="https://ieeexplore.ieee.org/document/8060607/" target="_blank">Robust Voice Liveness Detection and Speaker Verification Using Throat Microphones</a> -- IEEE, 2017</li>
+      </ul>
+
+      <h3>SASV Integration</h3>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2203.14732" target="_blank">SASV 2022: The First Spoofing-Aware Speaker Verification Challenge</a> -- Jung et al.</li>
+        <li><a href="https://sasv-challenge.github.io/" target="_blank">SASV Challenge Official Website</a></li>
+        <li><a href="https://arxiv.org/html/2412.17133" target="_blank">Tandem Spoofing-Robust Automatic Speaker Verification</a> -- 2024</li>
+      </ul>
+
+      <h3>Commercial Solutions</h3>
+      <ul>
+        <li><a href="https://www.pindrop.com/research/report/voice-intelligence-security-report/" target="_blank">Pindrop 2025 Voice Intelligence &amp; Security Report</a></li>
+        <li><a href="https://www.pindrop.com/capability/voice/deep-voice/" target="_blank">Pindrop Deep Voice Technology</a></li>
+        <li><a href="https://veridas.com/en/voice-shield/" target="_blank">Veridas Voice Shield</a></li>
+        <li><a href="https://www.miteksystems.com/products/voice-liveness-detection" target="_blank">IDLive Voice -- Mitek Systems</a></li>
+        <li><a href="https://www.idrnd.ai/voice-anti-spoofing/" target="_blank">ID R&amp;D Voice Anti-Spoofing</a></li>
+      </ul>
+
+      <h3>Deepfake Arms Race</h3>
+      <ul>
+        <li><a href="https://www.securityweek.com/deepfakes-and-the-ai-battle-between-generation-and-detection/" target="_blank">The AI Arms Race: Deepfake Generation vs. Detection</a> -- SecurityWeek</li>
+        <li><a href="https://fortune.com/2025/12/27/2026-deepfakes-outlook-forecast/" target="_blank">2026 Will Be the Year You Get Fooled by a Deepfake</a> -- Fortune</li>
+        <li><a href="https://www.prnewswire.com/news-releases/pindrops-2025-voice-intelligence--security-report-reveals-1-300-surge-in-deepfake-fraud-302479482.html" target="_blank">Pindrop's 2025 Report Reveals +1,300% Surge in Deepfake Fraud</a></li>
+        <li><a href="https://arxiv.org/html/2510.06544" target="_blank">Benchmarking Fake Voice Detection in the Fake Voice Generation Arms Race</a> -- 2025</li>
+      </ul>
+
+      <h3>Signal-Based Detection</h3>
+      <ul>
+        <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0885230820300942" target="_blank">Replay Attack Detection Using Variable-Frequency Resolution Phase and Magnitude Features</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0885230820300966" target="_blank">Blind Channel Response Estimation for Replay Attack Detection</a></li>
+        <li><a href="https://www.nature.com/articles/s41598-025-04808-5" target="_blank">DeepLASD Countermeasure for Logical Access Audio Spoofing</a> -- Scientific Reports, 2025</li>
+      </ul>
+
+      <!-- Footer -->
+      <div class="page-footer">
+        <p>
+          <a href="../voice-speaker-identification/index.html">&#8592; Back to Voice &amp; Speaker Identification</a>
+        </p>
+        <p style="margin-top: 0.75rem;">
+          Last updated: March 2026. Content synthesized from academic papers, challenge proceedings, industry reports, and commercial documentation. All claims are based on published research and publicly available information.
+        </p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ===== Theme Toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+  // Re-initialize mermaid for theme change
+  reinitMermaid(next);
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.querySelector('.theme-icon');
+  if (icon) {
+    icon.textContent = theme === 'dark' ? '\u2600' : '\u263D';
+  }
+}
+
+function reinitMermaid(theme) {
+  const mermaidTheme = theme === 'dark' ? 'dark' : 'default';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: mermaidTheme,
+    securityLevel: 'loose',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach(function(el, i) {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', el.textContent);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeIcon('dark');
+  }
+})();
+
+// ===== Mermaid Initialization =====
+document.addEventListener('DOMContentLoaded', function() {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: theme,
+    securityLevel: 'loose',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+});
+
+// ===== Active Sidebar Link Tracking =====
+document.addEventListener('DOMContentLoaded', function() {
+  const links = document.querySelectorAll('.sidebar-link');
+  const sections = [];
+
+  links.forEach(function(link) {
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const target = document.getElementById(href.substring(1));
+      if (target) {
+        sections.push({ link: link, target: target });
+      }
+    }
+  });
+
+  function updateActive() {
+    let current = null;
+    const scrollPos = window.scrollY + 100;
+
+    for (let i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].target.offsetTop <= scrollPos) {
+        current = sections[i];
+        break;
+      }
+    }
+
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (current) {
+      current.link.classList.add('active');
+    }
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+});
+
+// ===== Close sidebar on mobile when link is clicked =====
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

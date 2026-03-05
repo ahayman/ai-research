@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edge / On-Device Speaker Identification - Complete Technical Guide</title>
+<meta name="description" content="Comprehensive technical guide to edge and on-device speaker identification: model compression, MFCC+CNN on ESP32, Picovoice Eagle, Sensory TrulyHandsFree, TFLite/ONNX deployment, firmware integration, and privacy-preserving approaches.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #0d9488;
+  --color-primary-light: #2dd4bf;
+  --color-primary-dark: #0f766e;
+  --color-primary-bg: #e6faf8;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #515154;
+  --color-text-muted: #86868b;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f7;
+  --color-bg-sidebar: #fbfbfd;
+  --color-border: #d2d2d7;
+  --color-border-light: #e8e8ed;
+  --color-heading: #1d1d1f;
+  --color-link: #0d9488;
+  --color-link-hover: #0f766e;
+  --color-code-bg: #f5f5f7;
+  --color-code-text: #1d1d1f;
+  --color-code-keyword: #ad3da4;
+  --color-code-string: #d12f1b;
+  --color-code-type: #0b4f79;
+  --color-code-comment: #707f8c;
+  --color-code-func: #326d74;
+  --color-code-property: #4b21b0;
+  --color-table-stripe: #f5f5f7;
+  --color-table-header: #e8e8ed;
+  --color-callout-border: #0d9488;
+  --color-callout-bg: #e6faf8;
+  --color-warning-border: #ff9f0a;
+  --color-warning-bg: #fff8e6;
+  --color-success-border: #30d158;
+  --color-success-bg: #e8fce8;
+  --color-danger-border: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #d2d2d7;
+  --color-scrollbar: #c7c7cc;
+  --color-scrollbar-hover: #86868b;
+  --color-badge-bg: #e8e8ed;
+  --color-badge-text: #515154;
+  --sidebar-width: 280px;
+  --content-max-width: 860px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+  --font-heading: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+[data-theme="dark"] {
+  --color-primary: #2dd4bf;
+  --color-primary-light: #5eead4;
+  --color-primary-dark: #14b8a6;
+  --color-primary-bg: #0a2725;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #a1a1a6;
+  --color-text-muted: #6e6e73;
+  --color-bg: #1d1d1f;
+  --color-bg-alt: #2c2c2e;
+  --color-bg-sidebar: #242426;
+  --color-border: #424245;
+  --color-border-light: #38383a;
+  --color-heading: #f5f5f7;
+  --color-link: #2dd4bf;
+  --color-link-hover: #5eead4;
+  --color-code-bg: #2c2c2e;
+  --color-code-text: #f5f5f7;
+  --color-code-keyword: #ff7ab2;
+  --color-code-string: #ff8170;
+  --color-code-type: #6bdfff;
+  --color-code-comment: #7f8c8d;
+  --color-code-func: #78c2b3;
+  --color-code-property: #b281eb;
+  --color-table-stripe: #2c2c2e;
+  --color-table-header: #38383a;
+  --color-callout-border: #2dd4bf;
+  --color-callout-bg: #0a2725;
+  --color-warning-border: #ff9f0a;
+  --color-warning-bg: #332b00;
+  --color-success-border: #30d158;
+  --color-success-bg: #0a3315;
+  --color-danger-border: #ef4444;
+  --color-danger-bg: #3b1010;
+  --color-diagram-bg: #2c2c2e;
+  --color-diagram-border: #424245;
+  --color-scrollbar: #48484a;
+  --color-scrollbar-hover: #636366;
+  --color-badge-bg: #38383a;
+  --color-badge-text: #a1a1a6;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 0;
+  z-index: 100;
+  transition: transform 0.3s ease, background var(--transition);
+}
+
+.sidebar-header {
+  padding: 0 1.25rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.sidebar-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-link);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-header .back-link:hover {
+  color: var(--color-link-hover);
+}
+
+.sidebar-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+.sidebar-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0 0.75rem;
+}
+
+.sidebar nav li {
+  margin-bottom: 1px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar nav a:hover {
+  background: var(--color-border-light);
+  color: var(--color-heading);
+}
+
+.sidebar nav a.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar nav .nav-group-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  padding: 0.75rem 0.5rem 0.35rem;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.content-wrapper {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Top Bar ===== */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.6rem 2rem;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(12px);
+  transition: background var(--transition);
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--color-text);
+}
+
+.menu-toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.breadcrumb a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Hero Section ===== */
+.page-hero {
+  padding: 2rem 0 2.5rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 2.5rem;
+}
+
+.page-hero h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  color: var(--color-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.page-hero .lead {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.page-hero .meta-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--color-badge-bg);
+  color: var(--color-badge-text);
+}
+
+.badge.primary {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+/* ===== Typography ===== */
+.content-wrapper h2 {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 750;
+  color: var(--color-heading);
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border-light);
+  letter-spacing: -0.01em;
+}
+
+.content-wrapper h3 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 2rem 0 0.75rem;
+}
+
+.content-wrapper h4 {
+  font-family: var(--font-heading);
+  font-size: 1.02rem;
+  font-weight: 650;
+  color: var(--color-heading);
+  margin: 1.5rem 0 0.5rem;
+}
+
+.content-wrapper p {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.content-wrapper ul, .content-wrapper ol {
+  margin: 0.5rem 0 1rem 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+.content-wrapper li {
+  margin-bottom: 0.4rem;
+}
+
+.content-wrapper strong {
+  color: var(--color-heading);
+  font-weight: 600;
+}
+
+.content-wrapper a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.content-wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Code Blocks ===== */
+.code-block {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  margin: 1rem 0 1.5rem;
+  overflow: hidden;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: var(--color-table-header);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.code-block pre {
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--color-code-text);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-code-text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.kw { color: var(--color-code-keyword); }
+.str { color: var(--color-code-string); }
+.typ { color: var(--color-code-type); }
+.cmt { color: var(--color-code-comment); }
+.fn { color: var(--color-code-func); }
+.prop { color: var(--color-code-property); }
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.65rem 1rem;
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+tr:nth-child(even) td {
+  background: var(--color-table-stripe);
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.callout.warning {
+  border-left-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.callout.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout.danger {
+  border-left-color: var(--color-danger-border);
+  background: var(--color-danger-bg);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+  color: var(--color-heading);
+}
+
+.callout p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.25rem 0 1.75rem;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Feature Cards ===== */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.feature-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  transition: border-color var(--transition);
+}
+
+.feature-card:hover {
+  border-color: var(--color-primary);
+}
+
+.feature-card .icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  color: var(--color-heading);
+}
+
+.feature-card p {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== Comparison Cards ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.comparison-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+}
+
+.comparison-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+}
+
+.comparison-card.strengths {
+  border-left: 4px solid var(--color-success-border);
+}
+
+.comparison-card.weaknesses {
+  border-left: 4px solid var(--color-danger-border);
+}
+
+.comparison-card ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.comparison-card li {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Metric Cards ===== */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.metric-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+
+.metric-value {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ===== Sources ===== */
+.sources-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+}
+
+.sources-section h2 {
+  border-bottom: none;
+  margin-top: 0;
+}
+
+.source-list {
+  list-style: none;
+  margin-left: 0;
+  padding: 0;
+}
+
+.source-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.85rem;
+}
+
+.source-list li:last-child {
+  border-bottom: none;
+}
+
+.source-list a {
+  color: var(--color-link);
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.source-list a:hover {
+  text-decoration: underline;
+}
+
+.source-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: var(--color-badge-bg);
+  color: var(--color-badge-text);
+  margin-right: 0.4rem;
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  margin-top: 3rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ===== Mobile Overlay ===== */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 90;
+}
+
+/* ===== Scrollbar ===== */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 3px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.open {
+    display: block;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .top-bar {
+    margin-left: 0;
+  }
+  .menu-toggle {
+    display: block;
+  }
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .content-wrapper {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="../voice-speaker-identification/index.html" class="back-link">&#8592; Speaker ID Approaches</a>
+    <h2>Edge / On-Device Speaker Identification</h2>
+    <div class="subtitle">Technical Reference Guide</div>
+  </div>
+  <nav>
+    <ul>
+      <li class="nav-group-title">Overview</li>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#why-on-device">Why On-Device Matters</a></li>
+      <li><a href="#key-metrics">Key Performance Metrics</a></li>
+
+      <li class="nav-group-title">Core Technology</li>
+      <li><a href="#deployment-pipeline">Edge Deployment Pipeline</a></li>
+      <li><a href="#model-compression">Model Compression Techniques</a></li>
+      <li><a href="#mfcc-cnn-esp32">MFCC + CNN on ESP32</a></li>
+
+      <li class="nav-group-title">Platforms & SDKs</li>
+      <li><a href="#picovoice">Picovoice Eagle</a></li>
+      <li><a href="#sensory">Sensory TrulyHandsFree</a></li>
+      <li><a href="#tflite-onnx">TFLite & ONNX Deployment</a></li>
+
+      <li class="nav-group-title">Integration</li>
+      <li><a href="#firmware-integration">Firmware Integration</a></li>
+      <li><a href="#wake-word-speaker-id">Wake Word + Speaker ID</a></li>
+      <li><a href="#power-battery">Power & Battery</a></li>
+
+      <li class="nav-group-title">Privacy & Applications</li>
+      <li><a href="#privacy">Privacy-Preserving Approaches</a></li>
+      <li><a href="#applications">Applications</a></li>
+      <li><a href="#strengths-weaknesses">Strengths & Weaknesses</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <span class="breadcrumb">
+      <a href="../voice-speaker-identification/index.html">Speaker ID</a> &rsaquo; Edge / On-Device
+    </span>
+  </div>
+  <div class="top-bar-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="theme-icon">&#9790;</span> <span class="theme-label">Dark</span>
+    </button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+  <div class="content-wrapper">
+
+    <!-- Hero -->
+    <header class="page-hero" id="introduction">
+      <h1>Edge / On-Device Speaker Identification</h1>
+      <p class="lead">Running speaker identification models directly on microcontrollers and edge devices eliminates cloud dependency, slashes latency to milliseconds, and keeps biometric voice data entirely private. This guide covers the full stack from model compression to firmware deployment.</p>
+      <div class="meta-badges">
+        <span class="badge primary">TinyML</span>
+        <span class="badge primary">Edge AI</span>
+        <span class="badge">ESP32</span>
+        <span class="badge">TFLite Micro</span>
+        <span class="badge">ONNX Runtime</span>
+        <span class="badge">Privacy-First</span>
+      </div>
+    </header>
+
+    <!-- Why On-Device Matters -->
+    <section id="why-on-device">
+      <h2>Why On-Device Speaker ID Matters</h2>
+      <p>Traditional speaker identification systems rely on cloud-based inference: audio is captured, streamed to a server, processed, and results are returned. This architecture introduces latency, requires persistent connectivity, and raises significant privacy concerns since raw voice data leaves the device. Edge deployment inverts this model entirely.</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">&#128274;</div>
+          <h4>Privacy by Design</h4>
+          <p>Voice data never leaves the device. No cloud transmission means no data breaches, eavesdropping, or regulatory exposure. Intrinsically compliant with GDPR, HIPAA, and emerging privacy regulations.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#9889;</div>
+          <h4>Ultra-Low Latency</h4>
+          <p>On-device inference eliminates network round-trip time. Typical edge inference completes in 1-5 ms, compared to 100-500 ms for cloud pipelines. Critical for real-time applications like voice-activated controls.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128268;</div>
+          <h4>Offline Capability</h4>
+          <p>Edge models function without any network connection. Essential for automotive environments, remote IoT installations, and scenarios where connectivity is intermittent or unavailable.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128176;</div>
+          <h4>Reduced Operational Cost</h4>
+          <p>No cloud compute charges, no bandwidth costs for streaming audio, and no server infrastructure to maintain. Once deployed, the per-inference cost is effectively zero.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">The Privacy Imperative</div>
+        <p>Speech signals contain rich biometric information beyond identity: gender, accent, emotional state, health indicators, and environmental context. On-device processing ensures none of this sensitive data is exposed to third-party servers or potential interception.</p>
+      </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section id="key-metrics">
+      <h2>Key Performance Metrics</h2>
+      <p>These benchmarks represent the state of the art for on-device speaker identification as of 2025-2026, drawn from published research and commercial platform specifications.</p>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-value">98.6%</div>
+          <div class="metric-label">TinyCNN on ESP32 Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">1.56 ms</div>
+          <div class="metric-label">Inference Time Per Prediction</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">22.98 KB</div>
+          <div class="metric-label">Quantized Model Size</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">48.8 mW</div>
+          <div class="metric-label">ESP32 Power at 10 MHz</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">75+ hrs</div>
+          <div class="metric-label">Battery Life (1000 mAh)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">73%</div>
+          <div class="metric-label">Model Size Reduction via Quantization</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Edge Deployment Pipeline -->
+    <section id="deployment-pipeline">
+      <h2>Edge Deployment Pipeline</h2>
+      <p>The on-device speaker identification pipeline transforms raw audio into an identity decision entirely within the constraints of a microcontroller. Each stage is optimized for minimal memory and compute overhead.</p>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+flowchart LR
+    A["&#127908; Microphone\n(I2S/PDM)"] --> B["&#127925; Audio\nCapture\n(DMA Buffer)"]
+    B --> C["&#128200; Preprocessing\n(VAD + Windowing)"]
+    C --> D["&#127911; Feature\nExtraction\n(MFCC / Mel Spectrogram)"]
+    D --> E["&#129504; Neural Network\nInference\n(CNN / TDNN)"]
+    E --> F["&#128202; Embedding\nComparison\n(Cosine Similarity)"]
+    F --> G{"Threshold\nCheck"}
+    G -->|"Match"| H["&#9989; Speaker\nIdentified"]
+    G -->|"No Match"| I["&#10060; Unknown\nSpeaker"]
+
+    style A fill:#0d9488,stroke:#0f766e,color:#fff
+    style B fill:#0e7490,stroke:#0c6478,color:#fff
+    style C fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style D fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style E fill:#dc2626,stroke:#b91c1c,color:#fff
+    style F fill:#d97706,stroke:#b45309,color:#fff
+    style G fill:#4b5563,stroke:#374151,color:#fff
+    style H fill:#059669,stroke:#047857,color:#fff
+    style I fill:#dc2626,stroke:#b91c1c,color:#fff
+        </div>
+        <div class="diagram-caption">Figure 1: End-to-end edge speaker identification pipeline from microphone input to identity decision</div>
+      </div>
+
+      <h3>Pipeline Stages in Detail</h3>
+
+      <h4>1. Audio Capture</h4>
+      <p>Raw audio is captured via an I2S (Inter-IC Sound) or PDM (Pulse Density Modulation) digital microphone connected to the MCU. DMA (Direct Memory Access) transfers audio samples to a ring buffer without CPU involvement, keeping power consumption minimal. The INMP441 I2S MEMS microphone is a common choice for ESP32-based systems.</p>
+
+      <h4>2. Preprocessing</h4>
+      <p>Voice Activity Detection (VAD) identifies speech segments and discards silence, reducing unnecessary computation. The audio signal is then segmented into overlapping windows (typically 1-second frames with 500 ms overlap) and a pre-emphasis filter is applied to boost high-frequency components.</p>
+
+      <h4>3. Feature Extraction</h4>
+      <p>Mel-Frequency Cepstral Coefficients (MFCCs) are the dominant feature representation for on-device speaker identification. The extraction pipeline applies a Short-Time Fourier Transform (STFT), maps the power spectrum onto the Mel scale (which approximates human auditory perception), and takes the discrete cosine transform (DCT) of the log-mel energies. Typically 13-40 MFCC coefficients are extracted per frame, producing a compact 2D feature map suitable for CNN input.</p>
+
+      <h4>4. Inference</h4>
+      <p>The feature map is fed into a quantized convolutional neural network (CNN) running under TensorFlow Lite Micro or an equivalent lightweight runtime. The model produces a speaker embedding vector (typically 64-256 dimensions) that encodes the unique vocal characteristics of the speaker.</p>
+
+      <h4>5. Decision</h4>
+      <p>The embedding is compared against enrolled speaker profiles using cosine similarity or Euclidean distance. If the similarity score exceeds a configurable threshold, the speaker is identified. The threshold balances the false acceptance rate (FAR) against the false rejection rate (FRR).</p>
+    </section>
+
+    <!-- Model Compression Techniques -->
+    <section id="model-compression">
+      <h2>Model Compression Techniques</h2>
+      <p>Deploying speaker identification on microcontrollers with as little as 256 KB of SRAM and 1-4 MB of flash requires aggressive model compression. Three primary techniques -- quantization, pruning, and knowledge distillation -- are combined to achieve 10-100x size reduction while maintaining 90-98% of original accuracy.</p>
+
+      <div class="diagram-container">
+        <div class="mermaid">
+flowchart TB
+    A["&#129504; Full-Precision Teacher Model\n(FP32 &bull; 10-50 MB)"] --> B["Knowledge\nDistillation"]
+    A --> C["Structured\nPruning"]
+    A --> D["Post-Training\nQuantization"]
+
+    B --> E["&#127891; Student Model\n(Compact Architecture)"]
+    C --> F["&#9986; Pruned Model\n(Sparse Weights)"]
+    D --> G["&#128290; Quantized Model\n(INT8 Weights)"]
+
+    E --> H["Combined\nCompression Pipeline"]
+    F --> H
+    G --> H
+
+    H --> I["&#128190; Edge-Ready Model\n(INT8 &bull; 20-100 KB &bull; TFLite)"]
+
+    style A fill:#6366f1,stroke:#4f46e5,color:#fff
+    style B fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style C fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style D fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style E fill:#3b82f6,stroke:#2563eb,color:#fff
+    style F fill:#3b82f6,stroke:#2563eb,color:#fff
+    style G fill:#3b82f6,stroke:#2563eb,color:#fff
+    style H fill:#f59e0b,stroke:#d97706,color:#fff
+    style I fill:#059669,stroke:#047857,color:#fff
+        </div>
+        <div class="diagram-caption">Figure 2: Model compression pipeline combining distillation, pruning, and quantization for edge deployment</div>
+      </div>
+
+      <h3>Quantization</h3>
+      <p>Quantization reduces the numerical precision of model weights and activations, typically converting 32-bit floating-point (FP32) values to 8-bit integers (INT8). This yields a 4x reduction in model size and enables hardware-accelerated integer arithmetic on microcontrollers that lack floating-point units.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Quantization Type</th>
+              <th>Precision</th>
+              <th>Size Reduction</th>
+              <th>Accuracy Impact</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Post-Training (PTQ)</strong></td>
+              <td>INT8</td>
+              <td>4x</td>
+              <td>0.5-2% drop</td>
+              <td>Quick deployment, no retraining needed</td>
+            </tr>
+            <tr>
+              <td><strong>Quantization-Aware Training (QAT)</strong></td>
+              <td>INT8</td>
+              <td>4x</td>
+              <td>&lt;0.5% drop</td>
+              <td>Best accuracy with INT8 constraints</td>
+            </tr>
+            <tr>
+              <td><strong>Dynamic Quantization</strong></td>
+              <td>INT8 activations</td>
+              <td>2-4x</td>
+              <td>Minimal</td>
+              <td>Inference-only, weights pre-quantized</td>
+            </tr>
+            <tr>
+              <td><strong>Mixed Precision</strong></td>
+              <td>FP16 + INT8</td>
+              <td>2-4x</td>
+              <td>Minimal</td>
+              <td>Balancing speed and accuracy</td>
+            </tr>
+            <tr>
+              <td><strong>Binary/Ternary</strong></td>
+              <td>1-2 bit</td>
+              <td>16-32x</td>
+              <td>5-15% drop</td>
+              <td>Ultra-constrained environments</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Pruning</h3>
+      <p>Pruning removes unnecessary neural network connections based on weight magnitude or gradient-based importance metrics. Unstructured pruning zeros out individual weights (achieving 60-90% sparsity), while structured pruning removes entire filters or channels, which is more hardware-friendly as it directly reduces computation without requiring sparse tensor support.</p>
+
+      <div class="callout">
+        <div class="callout-title">Pruning for Speaker ID</div>
+        <p>For speaker identification CNNs, structured pruning of convolutional filters is preferred because the resulting dense model can be run efficiently on standard MCU hardware. Research shows that 50-70% of CNN filters can be removed from speaker embedding networks with less than 1% accuracy degradation.</p>
+      </div>
+
+      <h3>Knowledge Distillation</h3>
+      <p>Knowledge distillation trains a small "student" model to replicate the behavior of a large "teacher" model. The student learns not just from hard labels but from the teacher's soft probability distributions, which encode inter-class relationships (e.g., the similarity between different speakers' vocal patterns). This allows compact architectures to achieve accuracy closer to their larger counterparts.</p>
+
+      <h4>Distillation for Speaker Embeddings</h4>
+      <p>For speaker verification, a large ResNet-based model trained on thousands of speakers serves as the teacher. The student (a lightweight CNN or TDNN with 10-100x fewer parameters) is trained to produce embeddings that match the teacher's cosine similarity structure. The student can then be quantized and deployed on-device while maintaining the discriminative power of the teacher's representation space.</p>
+
+      <h3>Combined Pipeline Results</h3>
+      <p>When pruning, distillation, and quantization are combined sequentially, the results are dramatic:</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Model Size</th>
+              <th>Accuracy</th>
+              <th>Inference Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Original (FP32)</td>
+              <td>12 MB</td>
+              <td>99.2%</td>
+              <td>~200 ms (server)</td>
+            </tr>
+            <tr>
+              <td>After Distillation</td>
+              <td>1.2 MB</td>
+              <td>97.8%</td>
+              <td>~40 ms</td>
+            </tr>
+            <tr>
+              <td>After Pruning (60%)</td>
+              <td>500 KB</td>
+              <td>97.1%</td>
+              <td>~20 ms</td>
+            </tr>
+            <tr>
+              <td>After INT8 Quantization</td>
+              <td>125 KB</td>
+              <td>96.5%</td>
+              <td>~5 ms (MCU)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MFCC + CNN on ESP32 -->
+    <section id="mfcc-cnn-esp32">
+      <h2>MFCC + CNN on ESP32 Microcontrollers</h2>
+      <p>The ESP32 family of microcontrollers from Espressif Systems has become a leading platform for on-device speaker identification research and deployment. With dual-core processors running at up to 240 MHz, 520 KB SRAM, and built-in I2S interfaces, the ESP32 provides sufficient compute for real-time speaker identification.</p>
+
+      <h3>TinyCNN Architecture</h3>
+      <p>The TinyCNN model, published in 2024 research, demonstrates a quantized CNN deployed on the ESP32-DevKitC achieving <strong>98.58% accuracy</strong> for speaker identification. The architecture uses 2D convolutions on MFCC feature maps with the following design principles:</p>
+
+      <ul>
+        <li><strong>Input:</strong> 13-coefficient MFCC feature maps extracted from 1-second audio windows with 500 ms overlap</li>
+        <li><strong>Architecture:</strong> 3-4 convolutional layers with batch normalization and ReLU activation, followed by global average pooling and a dense classification head</li>
+        <li><strong>Quantization:</strong> Full INT8 post-training quantization via TensorFlow Lite converter, achieving 73% smaller model size and 53% faster inference</li>
+        <li><strong>Deployment:</strong> Model converted to C array and compiled into Arduino-compatible firmware</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>MFCC Feature Extraction Parameters</span>
+        </div>
+<pre><code><span class="cmt">// Typical MFCC extraction configuration for ESP32 speaker ID</span>
+<span class="kw">#define</span> SAMPLE_RATE       <span class="str">16000</span>   <span class="cmt">// 16 kHz audio sampling</span>
+<span class="kw">#define</span> FRAME_LENGTH_MS   <span class="str">25</span>      <span class="cmt">// 25 ms per frame</span>
+<span class="kw">#define</span> FRAME_STRIDE_MS   <span class="str">10</span>      <span class="cmt">// 10 ms stride (overlap)</span>
+<span class="kw">#define</span> NUM_MFCC_COEFFS   <span class="str">13</span>      <span class="cmt">// 13 MFCC coefficients</span>
+<span class="kw">#define</span> NUM_MEL_BINS      <span class="str">40</span>      <span class="cmt">// 40 Mel filter banks</span>
+<span class="kw">#define</span> FFT_SIZE          <span class="str">512</span>     <span class="cmt">// 512-point FFT</span>
+<span class="kw">#define</span> WINDOW_SECONDS    <span class="str">1.0f</span>    <span class="cmt">// 1-second analysis window</span>
+<span class="kw">#define</span> WINDOW_OVERLAP    <span class="str">0.5f</span>    <span class="cmt">// 500 ms overlap</span></code></pre>
+      </div>
+
+      <h3>ESP32 Hardware Considerations</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ESP32 Variant</th>
+              <th>CPU</th>
+              <th>SRAM</th>
+              <th>Flash</th>
+              <th>I2S</th>
+              <th>Suitability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ESP32</strong> (classic)</td>
+              <td>Dual Xtensa 240 MHz</td>
+              <td>520 KB</td>
+              <td>4-16 MB</td>
+              <td>2 channels</td>
+              <td>Full speaker ID pipeline</td>
+            </tr>
+            <tr>
+              <td><strong>ESP32-S3</strong></td>
+              <td>Dual Xtensa 240 MHz + AI</td>
+              <td>512 KB + 8 MB PSRAM</td>
+              <td>4-16 MB</td>
+              <td>2 channels</td>
+              <td>Best for AI workloads (vector instructions)</td>
+            </tr>
+            <tr>
+              <td><strong>ESP32-C3</strong></td>
+              <td>Single RISC-V 160 MHz</td>
+              <td>400 KB</td>
+              <td>4 MB</td>
+              <td>1 channel</td>
+              <td>Simple speaker verification</td>
+            </tr>
+            <tr>
+              <td><strong>ESP32-C6</strong></td>
+              <td>Single RISC-V 160 MHz</td>
+              <td>512 KB</td>
+              <td>4 MB</td>
+              <td>1 channel</td>
+              <td>Low-power IoT with WiFi 6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-title">ESP32-S3 Recommendation</div>
+        <p>The ESP32-S3 is the preferred variant for speaker identification due to its vector instruction extensions (for accelerating MAC operations in CNN inference), 8 MB PSRAM for larger models or multi-speaker enrollment databases, and improved I2S peripheral support.</p>
+      </div>
+
+      <h3>Research Results Summary</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Study / Implementation</th>
+              <th>Platform</th>
+              <th>Accuracy</th>
+              <th>Model Size</th>
+              <th>Inference Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>TinyCNN (2024)</td>
+              <td>ESP32-DevKitC</td>
+              <td>98.58%</td>
+              <td>22.98 KB</td>
+              <td>1.56 ms</td>
+            </tr>
+            <tr>
+              <td>MFCC-CNN Voice Recognition</td>
+              <td>ESP32</td>
+              <td>96%</td>
+              <td>~50 KB</td>
+              <td>~5 ms</td>
+            </tr>
+            <tr>
+              <td>Lightweight Voice Auth (IoT)</td>
+              <td>ESP32</td>
+              <td>91.4%</td>
+              <td>~100 KB</td>
+              <td>~10 ms</td>
+            </tr>
+            <tr>
+              <td>Neural Network + TFLite</td>
+              <td>ESP32-DevKitC</td>
+              <td>93%+</td>
+              <td>~80 KB</td>
+              <td>~8 ms</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Picovoice Eagle -->
+    <section id="picovoice">
+      <h2>Picovoice Eagle Platform</h2>
+      <p>Picovoice's Eagle is a commercial on-device speaker recognition SDK designed for production deployment. It provides both speaker verification (1:1 matching) and speaker identification (1:N matching) capabilities entirely on-device.</p>
+
+      <h3>Core Capabilities</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">&#127760;</div>
+          <h4>Cross-Platform</h4>
+          <p>Runs on Linux, macOS, Windows, Android, iOS, web browsers, and embedded platforms including Raspberry Pi. Single API across all targets.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#127463;</div>
+          <h4>Language Agnostic</h4>
+          <p>Text-independent and language-agnostic. Identifies enrolled speakers across any language without requiring language-specific models or passphrases.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128274;</div>
+          <h4>Privacy Compliant</h4>
+          <p>All processing on-device. No voice data leaves the device. Intrinsically GDPR and HIPAA compliant. No cloud dependency.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#9889;</div>
+          <h4>Real-Time Performance</h4>
+          <p>Engineered for speed with zero network latency. Streaming speaker recognition with low compute and memory footprint.</p>
+        </div>
+      </div>
+
+      <h3>Integration Example</h3>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>Python - Picovoice Eagle Speaker Identification</span>
+        </div>
+<pre><code><span class="kw">import</span> pveagle
+
+<span class="cmt"># Initialize the profiler for enrollment</span>
+profiler = pveagle.<span class="fn">create_profiler</span>(
+    access_key=<span class="str">"YOUR_ACCESS_KEY"</span>
+)
+
+<span class="cmt"># Enroll speakers by providing audio samples</span>
+<span class="cmt"># Eagle extracts a compact speaker profile</span>
+enroll_percentage, feedback = profiler.<span class="fn">enroll</span>(audio_pcm)
+
+<span class="cmt"># When enrollment is complete, export the profile</span>
+speaker_profile = profiler.<span class="fn">export</span>()
+
+<span class="cmt"># Initialize the recognizer for real-time identification</span>
+recognizer = pveagle.<span class="fn">create_recognizer</span>(
+    access_key=<span class="str">"YOUR_ACCESS_KEY"</span>,
+    speaker_profiles=[speaker_profile_1, speaker_profile_2]
+)
+
+<span class="cmt"># Process audio frames for speaker identification</span>
+scores = recognizer.<span class="fn">process</span>(audio_frame)
+<span class="cmt"># scores: list of similarity scores for each enrolled speaker</span></code></pre>
+      </div>
+
+      <h3>Picovoice Ecosystem</h3>
+      <p>Eagle integrates with Picovoice's broader on-device voice AI suite:</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Engine</th>
+              <th>Function</th>
+              <th>Integration with Eagle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Porcupine</strong></td>
+              <td>Wake word detection</td>
+              <td>Trigger speaker ID after wake word</td>
+            </tr>
+            <tr>
+              <td><strong>Cheetah / Leopard</strong></td>
+              <td>Speech-to-text</td>
+              <td>Transcribe speech after verifying speaker</td>
+            </tr>
+            <tr>
+              <td><strong>Rhino</strong></td>
+              <td>Speech-to-intent</td>
+              <td>Execute commands only from authorized speakers</td>
+            </tr>
+            <tr>
+              <td><strong>Falcon</strong></td>
+              <td>Speaker diarization</td>
+              <td>Track multiple speakers in conversations</td>
+            </tr>
+            <tr>
+              <td><strong>Orca</strong></td>
+              <td>Text-to-speech</td>
+              <td>Respond with personalized voice output</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sensory TrulyHandsFree -->
+    <section id="sensory">
+      <h2>Sensory TrulyHandsFree SDK</h2>
+      <p>Sensory, founded in 1994, is a pioneer in embedded voice AI. Their TrulyHandsFree SDK provides always-on wake word detection, speech recognition, and speaker verification running entirely on-device with ultra-low power consumption.</p>
+
+      <h3>TrulySecure Speaker Verification</h3>
+      <p>Sensory's speaker verification component, branded TrulySecure, is designed for embedded biometric authentication:</p>
+
+      <ul>
+        <li><strong>96% correct user recognition</strong> with as few as 4 wake word repetitions (~20 seconds of enrollment)</li>
+        <li><strong>99.99% imposter rejection rate</strong> for preventing unauthorized access</li>
+        <li>Adaptive learning that improves accuracy over time as the user interacts with the device</li>
+        <li>Support for multiple enrolled users with automatic profile switching</li>
+        <li>Combined voice + face biometric fusion for higher security applications</li>
+      </ul>
+
+      <h3>SDK v7.6.0 Features (October 2025)</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">&#127897;</div>
+          <h4>High-Res Voice Front-End</h4>
+          <p>New audio processing pipeline with improved noise robustness and far-field performance for voice recognition and authentication.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128100;</div>
+          <h4>Personalized Wake Words</h4>
+          <p>User-defined wake words with built-in speaker verification. Only the enrolled user can activate the device with their chosen phrase.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128267;</div>
+          <h4>Ultra-Low Power</h4>
+          <p>Embedded processing with minimal power draw. Suitable for always-listening battery-powered devices and wearables.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128736;</div>
+          <h4>Hardware Partnerships</h4>
+          <p>Certified integrations with STMicroelectronics, Qualcomm, NXP, and other silicon vendors for optimized deployment on their MCUs.</p>
+        </div>
+      </div>
+
+      <h3>Smart Wake Word Architecture</h3>
+      <p>Sensory's "smart wake word" technology combines multiple processing stages for optimal responsiveness and accuracy:</p>
+      <ol>
+        <li><strong>Low-power wake word listening</strong> -- always-on keyword detection running at minimal power</li>
+        <li><strong>On-device validation</strong> -- secondary model confirms the wake word with higher accuracy</li>
+        <li><strong>Optional biometric check</strong> -- speaker verification confirms the identity of the speaker</li>
+        <li><strong>Cloud/LLM confirmation</strong> (optional) -- for complex queries that exceed on-device capability</li>
+      </ol>
+
+      <div class="callout">
+        <div class="callout-title">Platform Availability</div>
+        <p>TrulyHandsFree SDK v7.6.0 is available for Windows, macOS, Android, iOS, and embedded Linux platforms. Sensory also provides hardware-optimized libraries for ARM Cortex-M, Cortex-A, and DSP architectures through partnerships with chip vendors.</p>
+      </div>
+    </section>
+
+    <!-- TFLite and ONNX Deployment -->
+    <section id="tflite-onnx">
+      <h2>TensorFlow Lite & ONNX Deployment</h2>
+      <p>Open-source inference runtimes provide framework-agnostic deployment paths for custom speaker identification models. TensorFlow Lite (TFLite) and ONNX Runtime are the two dominant options, each with distinct strengths.</p>
+
+      <h3>TensorFlow Lite for Microcontrollers (TFLite Micro)</h3>
+      <p>TFLite Micro is Google's purpose-built inference engine for microcontrollers. It is a separate implementation from mobile TFLite, designed for systems with as little as 16 KB of memory.</p>
+
+      <ul>
+        <li><strong>Model format:</strong> <code>.tflite</code> FlatBuffer files converted to C arrays and compiled into firmware</li>
+        <li><strong>Memory model:</strong> Static "arena" buffer allocated at startup holds all tensors and intermediate data</li>
+        <li><strong>Operators:</strong> Supports a subset of TensorFlow ops optimized for integer arithmetic (Conv2D, DepthwiseConv2D, FullyConnected, Softmax, etc.)</li>
+        <li><strong>Quantization:</strong> INT8 quantization is the standard path, with 4x memory reduction and hardware-accelerated inference on Cortex-M and RISC-V cores</li>
+        <li><strong>Platforms:</strong> Arduino, ESP-IDF, Zephyr RTOS, Mbed OS, bare-metal ARM Cortex-M</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>C++ - TFLite Micro Inference Setup</span>
+        </div>
+<pre><code><span class="kw">#include</span> <span class="str">"tensorflow/lite/micro/micro_interpreter.h"</span>
+<span class="kw">#include</span> <span class="str">"tensorflow/lite/micro/micro_mutable_op_resolver.h"</span>
+<span class="kw">#include</span> <span class="str">"speaker_id_model.h"</span>  <span class="cmt">// Model as C array</span>
+
+<span class="cmt">// Allocate arena for tensors (adjust based on model)</span>
+<span class="kw">constexpr</span> <span class="typ">int</span> kArenaSize = <span class="str">48</span> * <span class="str">1024</span>;  <span class="cmt">// 48 KB</span>
+<span class="typ">uint8_t</span> tensor_arena[kArenaSize];
+
+<span class="cmt">// Register only the operators your model uses</span>
+<span class="typ">tflite::MicroMutableOpResolver</span>&lt;<span class="str">6</span>&gt; resolver;
+resolver.<span class="fn">AddConv2D</span>();
+resolver.<span class="fn">AddReshape</span>();
+resolver.<span class="fn">AddFullyConnected</span>();
+resolver.<span class="fn">AddSoftmax</span>();
+resolver.<span class="fn">AddMean</span>();        <span class="cmt">// Global average pooling</span>
+resolver.<span class="fn">AddQuantize</span>();
+
+<span class="cmt">// Load model and create interpreter</span>
+<span class="kw">const</span> <span class="typ">tflite::Model</span>* model = <span class="typ">tflite</span>::<span class="fn">GetModel</span>(speaker_id_model_data);
+<span class="typ">tflite::MicroInterpreter</span> interpreter(
+    model, resolver, tensor_arena, kArenaSize);
+interpreter.<span class="fn">AllocateTensors</span>();
+
+<span class="cmt">// Fill input tensor with MFCC features</span>
+<span class="typ">TfLiteTensor</span>* input = interpreter.<span class="fn">input</span>(<span class="str">0</span>);
+<span class="fn">memcpy</span>(input-&gt;data.int8, mfcc_features, input-&gt;bytes);
+
+<span class="cmt">// Run inference</span>
+interpreter.<span class="fn">Invoke</span>();
+
+<span class="cmt">// Read speaker embedding from output</span>
+<span class="typ">TfLiteTensor</span>* output = interpreter.<span class="fn">output</span>(<span class="str">0</span>);
+<span class="cmt">// Compare embedding against enrolled profiles...</span></code></pre>
+      </div>
+
+      <h3>ONNX Runtime</h3>
+      <p>ONNX Runtime (ORT) provides cross-framework model deployment using the Open Neural Network Exchange format. For edge devices, ONNX Runtime Mobile offers a trimmed-down runtime under 1 MB.</p>
+
+      <ul>
+        <li><strong>Model format:</strong> <code>.onnx</code> graph files, portable across PyTorch, TensorFlow, Scikit-learn, and more</li>
+        <li><strong>Breadth:</strong> One inference API works across Android, iOS, Windows, Linux, and embedded Linux</li>
+        <li><strong>Quantization:</strong> Supports INT8, FP16, and mixed precision with built-in quantization tools</li>
+        <li><strong>Execution Providers:</strong> Hardware-specific backends for CUDA, CoreML, NNAPI, QNN, and ARM CPU</li>
+        <li><strong>Best for:</strong> Embedded Linux boards (Raspberry Pi, Jetson Nano), mobile applications, multi-framework teams</li>
+      </ul>
+
+      <h3>TFLite vs ONNX Runtime Comparison</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>TFLite Micro</th>
+              <th>ONNX Runtime Mobile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Target Hardware</strong></td>
+              <td>Bare-metal MCUs (Cortex-M, RISC-V, ESP32)</td>
+              <td>Embedded Linux, mobile, desktop</td>
+            </tr>
+            <tr>
+              <td><strong>Minimum RAM</strong></td>
+              <td>~16 KB</td>
+              <td>~1 MB</td>
+            </tr>
+            <tr>
+              <td><strong>Runtime Size</strong></td>
+              <td>~20-100 KB (compiled)</td>
+              <td>~1 MB (mobile variant)</td>
+            </tr>
+            <tr>
+              <td><strong>OS Requirement</strong></td>
+              <td>None (bare-metal supported)</td>
+              <td>Linux, Android, iOS, Windows</td>
+            </tr>
+            <tr>
+              <td><strong>Framework Support</strong></td>
+              <td>TensorFlow/Keras only</td>
+              <td>PyTorch, TF, Scikit-learn, XGBoost</td>
+            </tr>
+            <tr>
+              <td><strong>Quantization</strong></td>
+              <td>INT8 primary</td>
+              <td>INT8, FP16, mixed</td>
+            </tr>
+            <tr>
+              <td><strong>Dynamic Shapes</strong></td>
+              <td>No (static tensors)</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Choosing Between Runtimes</div>
+        <p><strong>Use TFLite Micro</strong> when targeting bare-metal microcontrollers (ESP32, STM32, nRF52) without an operating system. <strong>Use ONNX Runtime Mobile</strong> when deploying on embedded Linux boards, mobile devices, or when your model was trained in PyTorch.</p>
+      </div>
+    </section>
+
+    <!-- Firmware Integration -->
+    <section id="firmware-integration">
+      <h2>Firmware Integration Patterns</h2>
+      <p>Integrating speaker identification into firmware requires careful orchestration of audio capture, feature extraction, and inference within the constraints of an RTOS or bare-metal scheduler. The following patterns are used in production embedded voice systems.</p>
+
+      <h3>Architecture Pattern: Dual-Core Pipeline (ESP32)</h3>
+      <p>On dual-core MCUs like the ESP32, the audio pipeline and inference engine are typically split across cores:</p>
+
+      <ul>
+        <li><strong>Core 0:</strong> Audio capture (I2S DMA), ring buffer management, VAD, and MFCC feature extraction</li>
+        <li><strong>Core 1:</strong> CNN inference using TFLite Micro, embedding comparison, and application logic</li>
+        <li><strong>Inter-core communication:</strong> A FreeRTOS queue or shared memory buffer passes completed MFCC feature frames from Core 0 to Core 1</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>C - ESP-IDF Dual-Core Pipeline Skeleton</span>
+        </div>
+<pre><code><span class="cmt">// Core 0: Audio capture and feature extraction task</span>
+<span class="kw">void</span> <span class="fn">audio_task</span>(<span class="kw">void</span>* params) {
+    <span class="typ">i2s_config_t</span> i2s_cfg = {
+        .mode = I2S_MODE_MASTER | I2S_MODE_RX,
+        .sample_rate = <span class="str">16000</span>,
+        .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
+        .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT,
+    };
+    <span class="fn">i2s_driver_install</span>(I2S_NUM_0, &amp;i2s_cfg, <span class="str">0</span>, NULL);
+
+    <span class="kw">while</span> (<span class="str">true</span>) {
+        <span class="cmt">// Read audio samples via DMA</span>
+        <span class="fn">i2s_read</span>(I2S_NUM_0, audio_buf, BUF_SIZE, &amp;bytes_read, portMAX_DELAY);
+
+        <span class="cmt">// Voice Activity Detection</span>
+        <span class="kw">if</span> (<span class="fn">vad_detect</span>(audio_buf, bytes_read)) {
+            <span class="cmt">// Extract MFCC features</span>
+            <span class="fn">extract_mfcc</span>(audio_buf, mfcc_frame);
+
+            <span class="cmt">// Send features to inference core via queue</span>
+            <span class="fn">xQueueSend</span>(feature_queue, &amp;mfcc_frame, portMAX_DELAY);
+        }
+    }
+}
+
+<span class="cmt">// Core 1: Inference and decision task</span>
+<span class="kw">void</span> <span class="fn">inference_task</span>(<span class="kw">void</span>* params) {
+    <span class="fn">setup_tflite_interpreter</span>();
+
+    <span class="kw">while</span> (<span class="str">true</span>) {
+        <span class="typ">mfcc_frame_t</span> frame;
+        <span class="kw">if</span> (<span class="fn">xQueueReceive</span>(feature_queue, &amp;frame, portMAX_DELAY)) {
+            <span class="cmt">// Run speaker ID inference</span>
+            <span class="typ">float</span>* embedding = <span class="fn">run_inference</span>(&amp;frame);
+
+            <span class="cmt">// Compare against enrolled profiles</span>
+            <span class="typ">int</span> speaker_id = <span class="fn">find_closest_speaker</span>(
+                embedding, enrolled_profiles, num_speakers, threshold
+            );
+
+            <span class="kw">if</span> (speaker_id >= <span class="str">0</span>) {
+                <span class="fn">handle_identified_speaker</span>(speaker_id);
+            }
+        }
+    }
+}
+
+<span class="cmt">// Pin tasks to separate cores</span>
+<span class="fn">xTaskCreatePinnedToCore</span>(audio_task, <span class="str">"audio"</span>, <span class="str">4096</span>, NULL, <span class="str">5</span>, NULL, <span class="str">0</span>);
+<span class="fn">xTaskCreatePinnedToCore</span>(inference_task, <span class="str">"infer"</span>, <span class="str">8192</span>, NULL, <span class="str">4</span>, NULL, <span class="str">1</span>);</code></pre>
+      </div>
+
+      <h3>Memory Management Strategies</h3>
+      <ul>
+        <li><strong>Static allocation:</strong> Pre-allocate all buffers at compile time. TFLite Micro's arena pattern supports this. Avoids heap fragmentation.</li>
+        <li><strong>Double buffering:</strong> While one audio buffer is being processed for MFCC extraction, DMA fills the next buffer. Ensures zero audio loss.</li>
+        <li><strong>Model in flash:</strong> Store the TFLite model in flash memory (XIP / memory-mapped) rather than copying to RAM. Only the arena and intermediate tensors consume SRAM.</li>
+        <li><strong>Enrollment in NVS:</strong> Store enrolled speaker profiles in non-volatile storage (NVS or SPIFFS) so they persist across reboots.</li>
+      </ul>
+
+      <h3>Over-the-Air (OTA) Model Updates</h3>
+      <p>The model binary can be stored in a dedicated flash partition and updated independently of the main firmware via OTA. This allows improving the speaker ID model without a full firmware reflash:</p>
+      <ul>
+        <li>ESP-IDF supports dual OTA partitions for rollback-safe updates</li>
+        <li>Model versions can be tracked separately from firmware versions</li>
+        <li>New enrolled speaker profiles can be pushed via BLE or WiFi without model replacement</li>
+      </ul>
+    </section>
+
+    <!-- Wake Word + Speaker ID -->
+    <section id="wake-word-speaker-id">
+      <h2>Wake Word + Speaker Verification Combined</h2>
+      <p>The most practical on-device voice authentication combines two complementary capabilities: <strong>wake word detection</strong> (what was said) and <strong>speaker verification</strong> (who said it). Together, they enable personalized voice activation that is both secure and natural.</p>
+
+      <h3>Two-Stage Authentication Flow</h3>
+      <ol>
+        <li><strong>Stage 1 -- Wake Word Detection:</strong> A lightweight keyword-spotting model runs continuously in ultra-low-power mode, listening for a trigger phrase (e.g., "Hey Device"). This model draws as little as 100-500 uW.</li>
+        <li><strong>Stage 2 -- Speaker Verification:</strong> Upon wake word detection, a more powerful speaker verification model activates to confirm the speaker's identity using the same utterance or a brief follow-up phrase. This stage draws 1-50 mW for the few hundred milliseconds of verification.</li>
+      </ol>
+
+      <div class="callout success">
+        <div class="callout-title">Combined Security Benefits</div>
+        <p>The two-stage approach provides defense in depth: an attacker must both know the wake word <em>and</em> match the enrolled speaker's vocal characteristics. When combined with liveness detection (anti-spoofing), this creates a robust biometric lock that is difficult to bypass with recordings or voice synthesis.</p>
+      </div>
+
+      <h3>Implementation with Picovoice</h3>
+      <p>Picovoice's Porcupine (wake word) + Eagle (speaker recognition) provides a turnkey combined pipeline. Custom wake words can be created via the Picovoice Console and paired with Voice ID so that only enrolled users can trigger the device with their personalized activation phrase.</p>
+
+      <h3>Implementation with Sensory</h3>
+      <p>Sensory's approach bundles wake word detection and speaker verification in a single processing pass. Their "personalized wake word" feature allows users to define their own activation phrase while simultaneously creating a speaker profile from the enrollment repetitions. Version 7.6.0 improved accuracy for this combined enrollment to require only 4 repetitions (~20 seconds).</p>
+
+      <h3>Use Case: Profile Switching</h3>
+      <p>In multi-user environments like smart speakers or shared vehicles, combined wake-word + speaker-ID enables automatic profile switching:</p>
+      <ul>
+        <li>Different family members say the wake word, and the device loads their preferences, playlists, calendar, and access permissions</li>
+        <li>In automotive settings, the driver's profile loads seat position, climate settings, and navigation favorites</li>
+        <li>Parental controls activate automatically when a child's voice is detected</li>
+      </ul>
+    </section>
+
+    <!-- Power and Battery -->
+    <section id="power-battery">
+      <h2>Power Consumption & Battery Considerations</h2>
+      <p>Power efficiency is the defining constraint for edge speaker identification, especially in always-listening battery-powered devices. The system must balance three power states: idle listening, active processing, and deep sleep.</p>
+
+      <h3>Power Budget Breakdown</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Component / State</th>
+              <th>Power Draw</th>
+              <th>Duration</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>I2S Microphone (always-on)</strong></td>
+              <td>0.5-1.5 mW</td>
+              <td>Continuous</td>
+              <td>MEMS mic + I2S interface</td>
+            </tr>
+            <tr>
+              <td><strong>VAD (low-power mode)</strong></td>
+              <td>0.1-1 mW</td>
+              <td>Continuous</td>
+              <td>Dedicated DSP or TinyML VAD</td>
+            </tr>
+            <tr>
+              <td><strong>Wake Word Detection</strong></td>
+              <td>1-5 mW</td>
+              <td>Continuous</td>
+              <td>Keyword spotting model</td>
+            </tr>
+            <tr>
+              <td><strong>MFCC Extraction</strong></td>
+              <td>10-30 mW</td>
+              <td>~100 ms per frame</td>
+              <td>FFT + Mel filtering + DCT</td>
+            </tr>
+            <tr>
+              <td><strong>CNN Inference</strong></td>
+              <td>30-80 mW</td>
+              <td>1-10 ms per inference</td>
+              <td>Depends on model size and clock speed</td>
+            </tr>
+            <tr>
+              <td><strong>Full Pipeline (ESP32, 10 MHz)</strong></td>
+              <td>48.8 mW</td>
+              <td>Per identification cycle</td>
+              <td>Published research measurement</td>
+            </tr>
+            <tr>
+              <td><strong>Deep Sleep (MCU)</strong></td>
+              <td>5-25 uW</td>
+              <td>Between events</td>
+              <td>External wake source needed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Battery Life Estimates</h3>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-value">75+ hrs</div>
+          <div class="metric-label">1000 mAh, continuous speaker ID</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">6-12 mo</div>
+          <div class="metric-label">Coin cell, wake-word-only mode</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">2-4 weeks</div>
+          <div class="metric-label">500 mAh wearable, periodic ID</div>
+        </div>
+      </div>
+
+      <h3>Power Optimization Strategies</h3>
+      <ul>
+        <li><strong>Tiered processing:</strong> Run a tiny VAD model at sub-mW power, only activating the full speaker ID pipeline when speech is detected. This reduces average power by 10-100x compared to continuous inference.</li>
+        <li><strong>Clock scaling:</strong> Reduce MCU clock frequency during inference. The ESP32 at 10 MHz draws far less than at 240 MHz, though inference takes longer. Find the optimal clock/latency trade-off for your application.</li>
+        <li><strong>Duty cycling:</strong> For non-continuous monitoring, sample audio periodically (e.g., 1 second every 10 seconds) and run speaker ID only on captured segments.</li>
+        <li><strong>Hardware acceleration:</strong> Use MCUs with dedicated neural network accelerators (ESP32-S3 vector extensions, Arm Ethos-U55, NXP eIQ) to complete inference faster and return to sleep sooner.</li>
+        <li><strong>Microphone power gating:</strong> Physically power down the microphone during deep sleep. Use a separate ultra-low-power acoustic sensor or accelerometer as a coarse voice activity trigger.</li>
+      </ul>
+
+      <div class="callout warning">
+        <div class="callout-title">Always-On vs. Triggered Operation</div>
+        <p>Always-listening speaker ID on battery power remains challenging. A 1000 mAh battery lasts ~75 hours under continuous operation -- roughly 3 days. For wearables and IoT sensors that need weeks or months of battery life, triggered operation (wake on sound event, then verify) is essential.</p>
+      </div>
+    </section>
+
+    <!-- Privacy-Preserving Approaches -->
+    <section id="privacy">
+      <h2>Privacy-Preserving Approaches</h2>
+      <p>On-device processing is itself a major privacy feature, but additional techniques can further protect user voice data during model training, enrollment, and cross-device coordination.</p>
+
+      <h3>Federated Learning</h3>
+      <p>Federated learning enables improving speaker identification models across many devices without centralizing voice data. Research from Apple and others has demonstrated this approach for on-device speaker verification:</p>
+
+      <ul>
+        <li><strong>Local training:</strong> Each device trains or fine-tunes the speaker model on its local voice data</li>
+        <li><strong>Weight aggregation:</strong> Only model weight updates (gradients) are sent to a central aggregator -- never raw audio</li>
+        <li><strong>Global model improvement:</strong> The aggregator combines updates from thousands of devices to improve the shared model, which is then pushed back to all devices</li>
+        <li><strong>Differential privacy:</strong> Noise is added to gradient updates before transmission, providing mathematical guarantees that individual voice data cannot be reconstructed</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">Apple's Research</div>
+        <p>Apple published research on "Improving On-Device Speaker Verification Using Federated Learning with Privacy," demonstrating that federated training with differential privacy can match centralized training quality while keeping all voice recordings on user devices. The approach combines different federated learning mechanisms with auxiliary classification models that predict vocal characteristics without accessing raw speech.</p>
+      </div>
+
+      <h3>Template Protection</h3>
+      <p>Speaker embeddings (voiceprints) stored on-device should be protected against extraction:</p>
+
+      <ul>
+        <li><strong>Cancelable biometrics:</strong> Apply a user-specific, revocable transformation to embeddings before storage. If compromised, generate a new transformation.</li>
+        <li><strong>Secure enclave storage:</strong> Store enrollment profiles in hardware-protected secure elements (ARM TrustZone, Apple Secure Enclave) inaccessible to application code.</li>
+        <li><strong>Homomorphic comparison:</strong> Compare encrypted embeddings without ever decrypting them, preventing exposure even if the comparison process is compromised.</li>
+        <li><strong>On-device enrollment only:</strong> Speaker profiles are never transmitted off-device. Enrollment happens locally, and profiles are bound to the hardware.</li>
+      </ul>
+
+      <h3>Anti-Spoofing</h3>
+      <p>On-device systems must guard against replay attacks and voice synthesis:</p>
+      <ul>
+        <li><strong>Liveness detection:</strong> Analyze acoustic properties that distinguish live speech from recordings (room acoustics, microphone channel effects, breath patterns)</li>
+        <li><strong>Challenge-response:</strong> Ask the user to speak a random phrase that could not have been pre-recorded</li>
+        <li><strong>Multi-modal fusion:</strong> Combine voice biometrics with other on-device sensors (proximity, face recognition, motion) for higher confidence</li>
+      </ul>
+    </section>
+
+    <!-- Applications -->
+    <section id="applications">
+      <h2>Applications</h2>
+      <p>Edge speaker identification enables a range of applications where privacy, latency, or offline capability are critical requirements.</p>
+
+      <h3>Smart Home</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Personalized Assistants</h4>
+          <p>Smart speakers recognize household members and deliver personalized responses: individual calendars, music preferences, shopping lists, and content recommendations.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Access Control</h4>
+          <p>Voice-activated door locks and security systems that respond only to authorized household members. No cloud dependency means operation during internet outages.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Parental Controls</h4>
+          <p>Automatic content filtering and purchase restrictions when children are detected. Device settings adjust based on who is speaking without explicit mode switching.</p>
+        </div>
+      </div>
+
+      <h3>IoT & Industrial</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Operator Authentication</h4>
+          <p>Industrial machinery requires voice-verified operator identity before executing dangerous commands. Works in noisy environments without connectivity.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Building Management</h4>
+          <p>HVAC, lighting, and access systems adjust to individual preferences when specific occupants are identified by voice in conference rooms and offices.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Remote Monitoring</h4>
+          <p>IoT sensors in remote locations (agricultural, environmental) with voice-authenticated configuration and status queries via local speaker ID.</p>
+        </div>
+      </div>
+
+      <h3>Wearables</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Smart Earbuds</h4>
+          <p>Earbuds that unlock features or switch profiles based on the wearer's voice. Call screening that routes only identified callers to the user.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Smartwatches</h4>
+          <p>Voice-authenticated payment authorization and health data access. Tiny model footprint compatible with watch-class processors.</p>
+        </div>
+        <div class="feature-card">
+          <h4>AR/XR Glasses</h4>
+          <p>Personalized voice activation for smart glasses. Only the wearer can issue commands, preventing bystander interference.</p>
+        </div>
+      </div>
+
+      <h3>Automotive</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Driver Recognition</h4>
+          <p>Automatic seat, mirror, climate, and infotainment preferences loaded when the driver is identified by voice. Works without cellular connectivity.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Passenger Isolation</h4>
+          <p>Commands processed only from the driver's seat zone. Prevents passengers from overriding navigation or vehicle controls.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Fleet Management</h4>
+          <p>Commercial vehicles log which authorized driver is operating the vehicle. Voice-based check-in replaces key cards or passwords.</p>
+        </div>
+      </div>
+
+      <h3>Additional Domains</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Healthcare</h4>
+          <p>Voice-authenticated access to medical records on bedside devices. Patient identification in care facilities without physical tokens.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Education</h4>
+          <p>Attendance verification via voice in classrooms. Personalized learning device profiles for shared school tablets.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Accessibility</h4>
+          <p>Voice-authenticated device control for users with mobility impairments. Hands-free, eyes-free secure access.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strengths and Weaknesses -->
+    <section id="strengths-weaknesses">
+      <h2>Strengths & Weaknesses</h2>
+      <p>Edge speaker identification offers compelling advantages but comes with inherent trade-offs compared to cloud-based systems.</p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card strengths">
+          <h4>Strengths</h4>
+          <ul>
+            <li><strong>Privacy:</strong> Voice data never leaves the device. No eavesdropping risk, no data breaches, inherently GDPR/HIPAA compliant.</li>
+            <li><strong>Latency:</strong> Sub-10ms inference eliminates network round-trips. Real-time responsiveness for interactive applications.</li>
+            <li><strong>Offline operation:</strong> Functions without internet connectivity. Critical for automotive, remote IoT, and disaster scenarios.</li>
+            <li><strong>Zero recurring cost:</strong> No cloud compute or bandwidth charges per inference. Scales linearly with device count at no marginal cost.</li>
+            <li><strong>Reliability:</strong> No dependency on server uptime, network stability, or third-party API availability.</li>
+            <li><strong>Deterministic performance:</strong> Inference time is consistent and predictable, unlike cloud services that vary with load.</li>
+            <li><strong>Proven accuracy:</strong> State-of-the-art models achieve 93-98%+ accuracy on resource-constrained hardware.</li>
+            <li><strong>Mature ecosystem:</strong> TFLite Micro, ONNX Runtime, Picovoice, Sensory, and Edge Impulse provide production-ready toolchains.</li>
+          </ul>
+        </div>
+        <div class="comparison-card weaknesses">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li><strong>Model capacity:</strong> Compressed models have fewer parameters than cloud models. Maximum speaker pool typically limited to tens or low hundreds of enrolled profiles.</li>
+            <li><strong>Accuracy ceiling:</strong> Despite impressive results, edge models trail cloud models (which can be 10-100x larger) by 1-5% in challenging conditions.</li>
+            <li><strong>Environmental sensitivity:</strong> Edge models have less capacity to handle diverse noise conditions, reverberation, and far-field audio than larger cloud models.</li>
+            <li><strong>Update complexity:</strong> Updating models requires OTA firmware updates or model partition management, more complex than cloud-side model swaps.</li>
+            <li><strong>Enrollment limitations:</strong> On-device enrollment requires the user to provide voice samples locally. Cannot enroll remotely or from historical recordings stored elsewhere.</li>
+            <li><strong>Power constraints:</strong> Always-on listening drains batteries. Continuous operation on small batteries (coin cells, wearables) remains impractical.</li>
+            <li><strong>Hardware fragmentation:</strong> Different MCUs require different optimization paths. A model tuned for ESP32-S3 may not run efficiently on STM32 or nRF52.</li>
+            <li><strong>Anti-spoofing difficulty:</strong> Edge devices have limited compute for sophisticated liveness detection. More vulnerable to replay attacks than cloud systems with deeper analysis.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>When to Choose Edge vs. Cloud</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Criterion</th>
+              <th>Choose Edge</th>
+              <th>Choose Cloud</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Privacy requirements</strong></td>
+              <td>Strict (GDPR, healthcare, finance)</td>
+              <td>Standard (user consent obtained)</td>
+            </tr>
+            <tr>
+              <td><strong>Connectivity</strong></td>
+              <td>Intermittent or unavailable</td>
+              <td>Reliable broadband</td>
+            </tr>
+            <tr>
+              <td><strong>Speaker pool size</strong></td>
+              <td>&lt;100 enrolled speakers</td>
+              <td>Thousands+ speakers</td>
+            </tr>
+            <tr>
+              <td><strong>Latency requirement</strong></td>
+              <td>&lt;50 ms (real-time)</td>
+              <td>100-500 ms acceptable</td>
+            </tr>
+            <tr>
+              <td><strong>Device volume</strong></td>
+              <td>High (per-unit cost matters)</td>
+              <td>Low (cloud cost manageable)</td>
+            </tr>
+            <tr>
+              <td><strong>Noise conditions</strong></td>
+              <td>Controlled (near-field, quiet)</td>
+              <td>Challenging (far-field, noisy)</td>
+            </tr>
+            <tr>
+              <td><strong>Model update frequency</strong></td>
+              <td>Infrequent (stable models)</td>
+              <td>Frequent (rapid iteration)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="sources-section">
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.researchgate.net/publication/380900571_TinyCNN_An_Embedded_CNN_Model_for_Speaker_Identification_Using_ESP32" target="_blank">TinyCNN: An Embedded CNN Model for Speaker Identification Using ESP32</a> -- ResearchGate, 2024
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://ieeexplore.ieee.org/document/10317720/" target="_blank">On-Device MFCC-CNN Voice Recognition System with ESP-32 and Web-Based Application</a> -- IEEE Xplore, 2023
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.researchgate.net/publication/394438174_Deployment_of_Speaker_Identification_System_onto_ESP32-DevKitC_Microcontroller_Using_Neural_Network_and_TensorFlow_Lite" target="_blank">Deployment of Speaker Identification System onto ESP32-DevKitC Using Neural Network and TensorFlow Lite</a> -- ResearchGate, 2024
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.ijraset.com/best-journal/lightweight-voice-authentication-for-iot-devices-using-mfcc-and-cnn-on-edge-hardware" target="_blank">Lightweight Voice Authentication for IoT Devices Using MFCC and CNN on Edge Hardware</a> -- IJRASET, May 2025
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.sciencedirect.com/science/article/abs/pii/S1746809425014247" target="_blank">A Lightweight Meta-Learning-Based Open-Set Speaker Identification System</a> -- ScienceDirect, 2025
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://arxiv.org/abs/2008.02651" target="_blank">Improving On-Device Speaker Verification Using Federated Learning with Privacy</a> -- arXiv (Apple Research), 2020
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://ieeexplore.ieee.org/document/9592761/" target="_blank">Federated Learning for Privacy-Preserving Speaker Recognition</a> -- IEEE, 2021
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://arxiv.org/abs/2106.14681" target="_blank">PQK: Model Compression via Pruning, Quantization, and Knowledge Distillation</a> -- arXiv, 2021
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://arxiv.org/html/2409.02134v1" target="_blank">Edge AI: Evaluation of Model Compression Techniques for Convolutional Neural Networks</a> -- arXiv, 2024
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2025.1518965/full" target="_blank">A Survey of Model Compression Techniques: Past, Present, and Future</a> -- Frontiers, 2025
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://arxiv.org/html/2407.18985v1" target="_blank">Implementation and Applications of Wake Words Integrated with Speaker Recognition: A Case Study</a> -- arXiv, 2024
+        </li>
+        <li>
+          <span class="source-tag">Research</span>
+          <a href="https://www.researchgate.net/publication/389622139_TinySV_Speaker_Verification_in_TinyML_with_On-device_Learning" target="_blank">TinySV: Speaker Verification in TinyML with On-device Learning</a> -- ResearchGate, 2025
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://picovoice.ai/platform/eagle/" target="_blank">Eagle Speaker Recognition -- Picovoice</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://picovoice.ai/blog/speaker-recognition-for-developers/" target="_blank">Eagle: Speaker Recognition and Identification for Developers -- Picovoice</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://picovoice.ai/blog/year-in-review/" target="_blank">Picovoice 2025 Year in Review: On-Device Voice AI Platform Updates</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://picovoice.ai/blog/custom-wake-words-with-voice-id/" target="_blank">Custom Wake Words with Voice ID: A Guide for Personalized Voice Activation in 2026 -- Picovoice</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://www.sensory.com/new-voice-sdk-delivers-privacy-accuracy-low-power/" target="_blank">Sensory's New Voice SDK Delivers Privacy, Accuracy, and Low Power for Edge Devices</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://www.sensory.com/sensory-releases-embedded-speaker-verification-sdk-enables-devices-to-switch-user-profiles-based-on-whos-talking/" target="_blank">Sensory Releases Embedded Speaker Verification SDK</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://sensory.com/wake-word-technology-llm-devices-sensory/" target="_blank">Smart Wake Word Technology for LLM Devices -- Sensory</a>
+        </li>
+        <li>
+          <span class="source-tag">Platform</span>
+          <a href="https://www.renesas.com/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ra-partners/aizip-speaker-id" target="_blank">Aizip Speaker ID on Renesas RA MCUs</a>
+        </li>
+        <li>
+          <span class="source-tag">Framework</span>
+          <a href="https://github.com/tensorflow/tflite-micro/blob/main/tensorflow/lite/micro/examples/micro_speech/README.md" target="_blank">TFLite Micro: Micro Speech Example</a> -- GitHub
+        </li>
+        <li>
+          <span class="source-tag">Framework</span>
+          <a href="https://deepwiki.com/espressif/esp-tflite-micro/6-example-applications" target="_blank">ESP-TFLite-Micro Example Applications</a> -- DeepWiki
+        </li>
+        <li>
+          <span class="source-tag">Framework</span>
+          <a href="https://www.aimtechnolabs.com/blogs/tensorflow-lite-vs-onnx-runtime-edge-ai" target="_blank">TensorFlow Lite vs. ONNX Runtime: Choosing an Engine for Your Edge AI Project</a>
+        </li>
+        <li>
+          <span class="source-tag">Framework</span>
+          <a href="https://siliconlabs.github.io/mltk/mltk/tutorials/onnx_to_tflite.html" target="_blank">ONNX to TF-Lite Model Conversion -- Silicon Labs MLTK</a>
+        </li>
+        <li>
+          <span class="source-tag">Industry</span>
+          <a href="https://tensorblue.com/blog/ai-model-compression-pruning-quantization-knowledge-distillation-2025" target="_blank">AI Model Compression 2025: Pruning, Quantization &amp; Distillation -- TensorBlue</a>
+        </li>
+        <li>
+          <span class="source-tag">Industry</span>
+          <a href="https://promwad.com/news/ai-model-compression-real-time-devices-2025" target="_blank">AI Model Compression: Pruning and Quantization Strategies for Real-Time Devices -- Promwad</a>
+        </li>
+        <li>
+          <span class="source-tag">Industry</span>
+          <a href="https://www.edn.com/ai-in-2026-enabling-smarter-more-responsive-systems-at-the-edge/" target="_blank">AI in 2026: Enabling Smarter, More Responsive Systems at the Edge -- EDN</a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <p>Edge / On-Device Speaker Identification -- Technical Reference Guide</p>
+      <p>Last updated: March 2026</p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+// ===== Mermaid Initialization =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  themeVariables: {
+    fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+    fontSize: '13px'
+  }
+});
+
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+const themeLabel = themeToggle.querySelector('.theme-label');
+
+function setTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeIcon.textContent = dark ? '\u2600' : '\u263E';
+  themeLabel.textContent = dark ? 'Light' : 'Dark';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+
+  // Re-render mermaid diagrams for the new theme
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: dark ? 'dark' : 'default',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    themeVariables: {
+      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+      fontSize: '13px'
+    }
+  });
+
+  document.querySelectorAll('.mermaid').forEach(el => {
+    const svgEl = el.querySelector('svg');
+    if (svgEl) {
+      el.removeAttribute('data-processed');
+      el.innerHTML = el.getAttribute('data-original') || el.innerHTML;
+    }
+  });
+
+  // Small delay for DOM update then re-render
+  setTimeout(() => {
+    document.querySelectorAll('.mermaid:not([data-processed])').forEach(el => {
+      if (!el.querySelector('svg')) {
+        mermaid.run({ nodes: [el] });
+      }
+    });
+  }, 100);
+}
+
+// Store original mermaid source for re-rendering
+document.querySelectorAll('.mermaid').forEach(el => {
+  el.setAttribute('data-original', el.innerHTML);
+});
+
+// Check saved preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  setTheme(true);
+} else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  setTheme(true);
+}
+
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  setTheme(!isDark);
+});
+
+// ===== Mobile Sidebar Toggle =====
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('open');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+});
+
+// ===== Active Sidebar Link Tracking =====
+const sections = document.querySelectorAll('section[id], header[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+const observerOptions = {
+  root: null,
+  rootMargin: '-20% 0px -70% 0px',
+  threshold: 0
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
+
+// Close mobile sidebar on nav click
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

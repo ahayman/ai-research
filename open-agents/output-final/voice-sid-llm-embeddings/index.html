@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM-Based Voice Embeddings for Speaker Identification</title>
+<meta name="description" content="Deep dive into LLM-derived speaker embeddings: Qwen3-TTS ECAPA-TDNN extraction, 1024/2048-dim vectors, x_vector_only_mode, and next-gen multimodal approaches to speaker identification.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #7C3AED;
+  --color-primary-light: #A78BFA;
+  --color-primary-dark: #5B21B6;
+  --color-primary-bg: #F5F3FF;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #7C3AED;
+  --color-link-hover: #5B21B6;
+  --color-code-bg: #f1f5f9;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-takeaway-border: #7C3AED;
+  --color-takeaway-bg: #F5F3FF;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-tooltip-bg: #1e293b;
+  --color-tooltip-text: #f8fafc;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --color-success: #059669;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEF2F2;
+  --color-info: #0891B2;
+  --color-info-bg: #ECFEFF;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #A78BFA;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #7C3AED;
+  --color-primary-bg: #1E1338;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #A78BFA;
+  --color-link-hover: #C4B5FD;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #A78BFA;
+  --color-takeaway-bg: #1E1338;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #22D3EE;
+  --color-info-bg: #164E63;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== Mobile Menu Toggle ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+  transition: transform var(--transition);
+}
+
+.menu-toggle:hover { transform: scale(1.05); }
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-toggle-track {
+  width: 36px;
+  height: 20px;
+  background: var(--color-border);
+  border-radius: 10px;
+  position: relative;
+  transition: background var(--transition);
+}
+
+.theme-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform var(--transition);
+}
+
+[data-theme="dark"] .theme-toggle-track {
+  background: var(--color-primary);
+}
+
+[data-theme="dark"] .theme-toggle-track::after {
+  transform: translateX(16px);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border: 1px solid transparent;
+}
+
+.badge.green { background: var(--color-success-bg); color: var(--color-success); }
+.badge.amber { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge.blue { background: var(--color-info-bg); color: var(--color-info); }
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways .takeaways-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+.takeaways li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box strong { color: var(--color-heading); }
+
+.info-box.success {
+  border-color: var(--color-success);
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.info-box.warning {
+  border-color: var(--color-warning);
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.info-box.danger {
+  border-color: var(--color-danger);
+  border-left: 4px solid var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+.info-box.info {
+  border-color: var(--color-info);
+  border-left: 4px solid var(--color-info);
+  background: var(--color-info-bg);
+}
+
+/* ===== Code Blocks ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] code {
+  color: var(--color-primary-light);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead { background: var(--color-table-header); }
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--color-border);
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+  vertical-align: top;
+}
+
+tr:nth-child(even) { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Stat Cards ===== */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: box-shadow var(--transition);
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.35rem;
+  line-height: 1.3;
+}
+
+/* ===== Feature Comparison Grid ===== */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.feature-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.feature-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-heading);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card ul {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ===== Strengths/Weaknesses ===== */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.sw-card {
+  border-radius: 10px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+}
+
+.sw-card.strengths {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+}
+
+.sw-card.weaknesses {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+.sw-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.sw-card.strengths .sw-card-title { color: var(--color-success); }
+.sw-card.weaknesses .sw-card-title { color: var(--color-danger); }
+
+.sw-card ul { margin-bottom: 0; font-size: 0.92rem; }
+.sw-card li { margin-bottom: 0.5rem; }
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  margin: 2rem 0;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.55rem;
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+}
+
+.timeline-date {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.15rem;
+}
+
+.timeline-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.timeline-desc {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Sources ===== */
+.sources-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sources-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.88rem;
+}
+
+.sources-list li:last-child { border-bottom: none; }
+
+.sources-list a {
+  word-break: break-word;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: block; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .sw-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Mermaid Dark Mode ===== */
+[data-theme="dark"] .mermaid {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">LLM-Based Voice Embeddings</div>
+      <div class="sidebar-subtitle">Speaker Identification with Next-Gen Models</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-section">Overview</div>
+      <a href="#introduction" class="sidebar-link">Introduction</a>
+      <a href="#convergence" class="sidebar-link">LLM + Voice Biometrics Convergence</a>
+
+      <div class="sidebar-nav-section">Architecture</div>
+      <a href="#qwen3-ecosystem" class="sidebar-link">Qwen3-TTS Ecosystem</a>
+      <a href="#ecapa-tdnn" class="sidebar-link">ECAPA-TDNN at Scale</a>
+      <a href="#embedding-dimensions" class="sidebar-link">Embedding Dimensions</a>
+      <a href="#extraction-pipeline" class="sidebar-link">Extraction Pipeline</a>
+
+      <div class="sidebar-nav-section">Capabilities</div>
+      <a href="#performance" class="sidebar-link">Latency &amp; Enrollment</a>
+      <a href="#x-vector-mode" class="sidebar-link">x_vector_only_mode</a>
+      <a href="#cloning-to-sid" class="sidebar-link">Cloning &rarr; Identification</a>
+
+      <div class="sidebar-nav-section">Analysis</div>
+      <a href="#comparison" class="sidebar-link">Traditional vs. LLM Embeddings</a>
+      <a href="#licensing" class="sidebar-link">Licensing &amp; Open Source</a>
+      <a href="#future" class="sidebar-link">Future Directions</a>
+      <a href="#strengths-weaknesses" class="sidebar-link">Strengths &amp; Weaknesses</a>
+
+      <div class="sidebar-nav-section">Reference</div>
+      <a href="#sources" class="sidebar-link">Sources</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="theme-toggle-track"></div>
+        <span>Dark mode</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <div class="content">
+
+      <a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Voice &amp; Speaker Identification Dashboard</a>
+
+      <h1>LLM-Based Voice Embeddings for Speaker Identification</h1>
+      <p class="subtitle">How large language model ecosystems -- particularly Qwen3-TTS -- are producing speaker embeddings that rival or surpass dedicated speaker verification systems, and what this means for the future of voice biometrics.</p>
+
+      <div class="meta-badges">
+        <span class="badge">ECAPA-TDNN</span>
+        <span class="badge green">Apache 2.0</span>
+        <span class="badge blue">1024-dim / 2048-dim</span>
+        <span class="badge amber">97ms First Packet</span>
+        <span class="badge">Jan 2026</span>
+      </div>
+
+      <!-- ==================== INTRODUCTION ==================== -->
+      <section id="introduction">
+        <h2>Introduction</h2>
+        <p>Speaker identification has traditionally been the domain of purpose-built models -- small, specialized networks trained exclusively on discriminating between voices. But the rise of large language models (LLMs) into the speech domain has created an unexpected convergence: the speaker encoders trained <em>inside</em> voice-generation systems have become powerful enough to serve as standalone identification engines.</p>
+
+        <p>The most significant example of this trend is <strong>Qwen3-TTS</strong>, released by Alibaba's Qwen team in January 2026. Trained on over 5 million hours of multilingual speech data, Qwen3-TTS includes an ECAPA-TDNN speaker encoder that produces high-dimensional voice embeddings. These embeddings, originally designed to condition text-to-speech generation on a target speaker's voice, turn out to be excellent feature vectors for speaker identification, verification, and diarization.</p>
+
+        <p>This page provides a comprehensive technical explanation of how LLM-derived speaker embeddings work, with a focus on the Qwen3-TTS ecosystem, and explores the broader trajectory of multimodal LLMs for speaker tasks.</p>
+
+        <div class="takeaways">
+          <span class="takeaways-title">Key Takeaways</span>
+          <ul>
+            <li>Voice generation models (TTS) contain speaker encoders that can be extracted and repurposed for speaker identification.</li>
+            <li>Qwen3-TTS's ECAPA-TDNN encoder produces 1024-dim (0.6B) and 2048-dim (1.7B) speaker embeddings with forensic-grade discrimination.</li>
+            <li>The <code>x_vector_only_mode</code> flag allows pure speaker identification without any text transcription.</li>
+            <li>97ms first-packet latency and 3-second enrollment make these embeddings viable for real-time biometric applications.</li>
+            <li>All Qwen3-TTS models are released under Apache 2.0, enabling unrestricted commercial deployment.</li>
+          </ul>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== CONVERGENCE ==================== -->
+      <section id="convergence">
+        <h2>The Convergence of LLMs and Voice Biometrics</h2>
+
+        <p>For years, speaker identification and speech generation existed as separate research tracks. Speaker verification systems (like x-vectors and d-vectors) focused on producing compact, discriminative representations of who is speaking. Text-to-speech systems focused on generating natural-sounding audio from text. These two disciplines shared some underlying signal processing, but their models, datasets, and objectives were largely distinct.</p>
+
+        <p>The LLM revolution has collapsed this separation. Modern voice generation systems -- particularly those built on transformer architectures -- need to solve speaker identification <em>as a subproblem</em> in order to clone voices. To generate speech that sounds like a specific person, a TTS model must first understand what makes that person's voice unique. This understanding takes the form of a <strong>speaker embedding</strong>: a dense vector that captures the acoustic signature of a voice.</p>
+
+        <h3>Why TTS Speaker Encoders Excel at Identification</h3>
+        <p>The speaker encoders inside TTS models are trained on objectives that are inherently well-aligned with speaker identification:</p>
+        <ul>
+          <li><strong>Massive data scale</strong> -- Qwen3-TTS was trained on 5+ million hours of speech across 10 languages, far exceeding the datasets available to most dedicated speaker verification models (e.g., VoxCeleb at ~2,000 hours).</li>
+          <li><strong>Rich conditioning signal</strong> -- The encoder must produce embeddings that capture not just coarse speaker identity but fine-grained vocal characteristics (timbre, prosody, accent, background noise profile) to enable high-fidelity cloning.</li>
+          <li><strong>End-to-end gradient flow</strong> -- The speaker encoder is jointly trained with the generation model, receiving gradients that push it toward maximally informative representations.</li>
+          <li><strong>Zero-shot generalization</strong> -- The encoder must handle unseen speakers from just a few seconds of audio, exactly the capability needed for open-set speaker identification.</li>
+        </ul>
+
+        <div class="info-box info">
+          <strong>The Dual-Use Insight:</strong> Any model that can clone your voice already has a speaker embedding that uniquely identifies you. The same vector that tells a TTS decoder "sound like this person" can tell a verification system "this audio belongs to that person."
+        </div>
+
+        <h3>Historical Context</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">2018</div>
+            <div class="timeline-title">x-vectors (Snyder et al.)</div>
+            <div class="timeline-desc">TDNN-based speaker embeddings become the standard, replacing i-vectors. Typical dimension: 512.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2020</div>
+            <div class="timeline-title">ECAPA-TDNN (Desplanques et al.)</div>
+            <div class="timeline-desc">Emphasized Channel Attention, Propagation, and Aggregation modules push speaker verification to new state-of-the-art. EER = 0.86% on VoxCeleb1-O.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2024</div>
+            <div class="timeline-title">ECAPA-TDNN Forensic Validation</div>
+            <div class="timeline-desc">Published validation of ECAPA-TDNN for forensic automatic speaker recognition under casework conditions. C_llr pooled = 0.089, EER = 2.0%.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">Jan 2026</div>
+            <div class="timeline-title">Qwen3-TTS Release</div>
+            <div class="timeline-desc">Alibaba releases 0.6B and 1.7B TTS models with extractable ECAPA-TDNN speaker encoders under Apache 2.0. Voice cloning from 3 seconds of audio.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">Jan 2026</div>
+            <div class="timeline-title">NVIDIA PersonaPlex</div>
+            <div class="timeline-desc">7B full-duplex conversational model using audio embeddings for voice persona control, accepted at ICASSP 2026.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2025-2026</div>
+            <div class="timeline-title">SpeakerLM (AAAI 2026)</div>
+            <div class="timeline-desc">First end-to-end multimodal LLM for joint speaker diarization and recognition, built on Qwen2.5-7B.</div>
+          </div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== QWEN3 ECOSYSTEM ==================== -->
+      <section id="qwen3-ecosystem">
+        <h2>Qwen3-TTS Ecosystem and Speaker Encoder Extraction</h2>
+
+        <p>Qwen3-TTS is an open-source text-to-speech model family developed by Alibaba Cloud's Qwen team. It represents one of the most capable open TTS systems available, covering 10 languages with voice cloning, voice design, and controllable generation capabilities. Critically for our purposes, the speaker encoder component can be extracted and used independently.</p>
+
+        <h3>Model Family</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-title">Qwen3-TTS-12Hz-0.6B</div>
+            <p>Lightweight variant. 600 million parameters, 2.52 GB storage. Produces <strong>1024-dimensional</strong> speaker embeddings. Optimized for edge deployment and efficiency-sensitive applications.</p>
+            <ul>
+              <li>Base (general TTS + clone)</li>
+              <li>CustomVoice (preset voices)</li>
+              <li>VoiceDesign (new voice creation)</li>
+            </ul>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">Qwen3-TTS-12Hz-1.7B</div>
+            <p>Full-scale variant. 1.7 billion parameters, 4.54 GB storage. Produces <strong>2048-dimensional</strong> speaker embeddings. Instruction-following voice control capabilities.</p>
+            <ul>
+              <li>Base (general TTS + clone)</li>
+              <li>CustomVoice (+ instruction control)</li>
+              <li>VoiceDesign (new voice creation)</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Architecture Components</h3>
+        <p>Qwen3-TTS decomposes into three extractable weight sets:</p>
+        <ol>
+          <li><strong>Talker</strong> -- 28 transformer layers with Qwen2 architecture. This is the core language model that converts text tokens and speaker embeddings into speech codes.</li>
+          <li><strong>Code Predictor</strong> -- 5 transformer layers with per-codebook heads. Predicts discrete audio codes for the vocoder.</li>
+          <li><strong>Speaker Encoder</strong> -- ECAPA-TDNN x-vector extractor. This is the component we extract for speaker identification.</li>
+        </ol>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph "Qwen3-TTS Full Pipeline"
+        A["Reference Audio<br/>(3+ seconds)"] --> B["Speaker Encoder<br/>(ECAPA-TDNN)"]
+        B --> C["Speaker Embedding<br/>(1024-dim or 2048-dim)"]
+        D["Input Text"] --> E["Text Tokenizer"]
+        E --> F["Token IDs"]
+        F --> G["Talker Transformer<br/>(28 layers, Qwen2 arch)"]
+        C --> G
+        G --> H["Speech Codes<br/>(N frames x 16 codebooks)"]
+        H --> I["Code Predictor<br/>(5 layers)"]
+        I --> J["Vocoder Decoder"]
+        J --> K["Generated Speech"]
+    end
+
+    subgraph "Extracted for SID"
+        B2["Speaker Encoder<br/>(standalone)"] --> C2["Speaker Embedding"]
+        C2 --> L["Cosine Similarity /<br/>PLDA Scoring"]
+        L --> M["Speaker Identity"]
+    end
+
+    style B fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style B2 fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style C fill:#A78BFA,color:#fff,stroke:#7C3AED
+    style C2 fill:#A78BFA,color:#fff,stroke:#7C3AED
+    style G fill:#2563EB,color:#fff,stroke:#1D4ED8
+    style K fill:#059669,color:#fff,stroke:#047857
+    style M fill:#059669,color:#fff,stroke:#047857
+          </div>
+          <div class="diagram-caption">Figure 1: Qwen3-TTS full pipeline (top) and extracted speaker encoder for identification (bottom). The ECAPA-TDNN encoder operates independently of the generation pathway.</div>
+        </div>
+
+        <h3>Extracting the Speaker Encoder</h3>
+        <p>The speaker encoder weights can be extracted from the full Qwen3-TTS checkpoint and used as a standalone model. The extraction process separates the ECAPA-TDNN weights from the Talker transformer and Code Predictor components.</p>
+
+        <pre><code># Extract speaker embedding from reference audio
+python examples/extract_speaker.py \
+    --ref_audio voice.wav \
+    --output speaker.pt
+
+# The output is a compact file:
+# 0.6B model: ~2KB (1024-dim bf16 vector)
+# 1.7B model: ~4KB (2048-dim bf16 vector)
+
+# Generate speech using the extracted embedding
+python examples/generate_with_embedding.py \
+    --speaker speaker.pt \
+    --text "Hello, this is a test."</code></pre>
+
+        <div class="info-box">
+          <strong>Embedding as a Biometric:</strong> The extracted <code>.pt</code> file is effectively a voiceprint. It can be stored, compared against other embeddings using cosine similarity, and used for speaker identification without retaining any of the original audio.
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== ECAPA-TDNN ==================== -->
+      <section id="ecapa-tdnn">
+        <h2>ECAPA-TDNN at Forensic Grade</h2>
+
+        <p>ECAPA-TDNN (Emphasized Channel Attention, Propagation and Aggregation in TDNN) is the speaker encoder architecture used inside Qwen3-TTS. Originally proposed by Desplanques et al. in 2020, it has become the de facto standard for speaker embedding extraction, consistently outperforming earlier x-vector architectures on benchmark tasks.</p>
+
+        <h3>Architecture Deep Dive</h3>
+        <p>ECAPA-TDNN builds upon the traditional TDNN (Time Delay Neural Network) x-vector pipeline with four critical enhancements:</p>
+
+        <h4>1. SE-Res2Net Modules</h4>
+        <p>The frame-level layers are restructured into a cascade of SE-Res2Net modules. These modules combine two powerful mechanisms:</p>
+        <ul>
+          <li><strong>Res2Net-style multi-scale convolutions</strong> -- Hierarchical temporal convolutions at multiple resolutions, capturing both fine-grained phonetic detail and broad prosodic patterns.</li>
+          <li><strong>Squeeze-and-Excitation (SE) blocks</strong> -- Channel-wise recalibration that models interdependencies between feature channels. The SE block expands temporal context by rescaling channels according to global properties of the recording.</li>
+        </ul>
+
+        <h4>2. Multi-Layer Feature Aggregation (MFA)</h4>
+        <p>Rather than using only the output of the final frame-level layer (as in standard x-vectors), ECAPA-TDNN concatenates the outputs of all SE-Res2Net blocks along the channel axis. This propagates hierarchical features from multiple levels of abstraction into the pooling layer.</p>
+
+        <h4>3. Attentive Statistical Pooling (ASP)</h4>
+        <p>Standard x-vectors use statistics pooling that gives equal weight to all frames and channels. ECAPA-TDNN replaces this with channel-dependent frame attention: each channel learns to attend to different subsets of frames, enabling the network to focus on the most speaker-discriminative temporal regions.</p>
+
+        <h4>4. 1D-Conv Skip Connections</h4>
+        <p>Residual connections between SE-Res2Net blocks use 1D convolutions to handle channel dimension mismatches, improving gradient flow through the deep network.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph "ECAPA-TDNN Speaker Encoder"
+        IN["Input Mel-Spectrogram"] --> CONV1["1D Conv Layer<br/>(initial frame processing)"]
+        CONV1 --> SER1["SE-Res2Net Block 1<br/>(dilation=2)"]
+        SER1 --> SER2["SE-Res2Net Block 2<br/>(dilation=3)"]
+        SER2 --> SER3["SE-Res2Net Block 3<br/>(dilation=4)"]
+
+        SER1 --> MFA["Multi-Layer Feature<br/>Aggregation (MFA)"]
+        SER2 --> MFA
+        SER3 --> MFA
+
+        MFA --> CONV2["1D Conv<br/>(channel fusion)"]
+        CONV2 --> ASP["Attentive Statistical<br/>Pooling (ASP)"]
+        ASP --> FC["Fully Connected Layer"]
+        FC --> EMB["Speaker Embedding<br/>(1024-dim or 2048-dim)"]
+    end
+
+    subgraph "SE-Res2Net Block Detail"
+        direction TB
+        BIN["Block Input"] --> RS["Res2Net Split<br/>(multi-scale paths)"]
+        RS --> S1["Scale 1<br/>Conv k=3"]
+        RS --> S2["Scale 2<br/>Conv k=3"]
+        RS --> S3["Scale 3<br/>Conv k=3"]
+        RS --> S4["Scale 4<br/>Conv k=3"]
+        S1 --> CAT["Concatenate"]
+        S2 --> CAT
+        S3 --> CAT
+        S4 --> CAT
+        CAT --> SE["Squeeze-and-Excitation<br/>(channel recalibration)"]
+        SE --> SKIP["+ Skip Connection"]
+        BIN --> SKIP
+        SKIP --> BOUT["Block Output"]
+    end
+
+    style EMB fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style ASP fill:#2563EB,color:#fff,stroke:#1D4ED8
+    style MFA fill:#0891B2,color:#fff,stroke:#0E7490
+    style SE fill:#D97706,color:#fff,stroke:#B45309
+          </div>
+          <div class="diagram-caption">Figure 2: ECAPA-TDNN architecture as implemented in the Qwen3-TTS speaker encoder. Multi-layer feature aggregation and attentive statistical pooling are the key differentiators from standard x-vectors.</div>
+        </div>
+
+        <h3>Scaling to 0.6B and 1.7B Parameters</h3>
+        <p>Qwen3-TTS scales the ECAPA-TDNN architecture in two configurations. While the exact architectural choices are proprietary to Alibaba, the parameter counts of 0.6B and 1.7B for the full TTS models correspond to speaker encoder capacities that produce 1024-dimensional and 2048-dimensional embeddings respectively. The larger model captures finer vocal nuances and achieves higher speaker similarity scores in ablation studies.</p>
+
+        <h3>Forensic Validation</h3>
+        <p>The ECAPA-TDNN architecture (independent of its use in Qwen3-TTS) has been formally validated for forensic automatic speaker recognition (FASR) under real casework conditions. Published results from the forensic_eval_01 evaluation campaign demonstrate:</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">0.089</div>
+            <div class="stat-label">C_llr (pooled)<br/>Log-likelihood-ratio cost</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">2.0%</div>
+            <div class="stat-label">Equal Error Rate<br/>Forensic conditions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0.86%</div>
+            <div class="stat-label">EER on VoxCeleb1-O<br/>Research benchmark</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0 dB</div>
+            <div class="stat-label">Noise Robustness<br/>Maintains accuracy at SNR 0dB</div>
+          </div>
+        </div>
+
+        <div class="info-box success">
+          <strong>Forensic Grade:</strong> The ECAPA-TDNN architecture meets the requirements for forensic automatic speaker recognition, outperforming both research baselines and commercial systems in true casework conditions with adaptive embedding normalization.
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== EMBEDDING DIMENSIONS ==================== -->
+      <section id="embedding-dimensions">
+        <h2>1024-dim and 2048-dim Speaker Embeddings</h2>
+
+        <p>Qwen3-TTS produces speaker embeddings at two dimensionalities, corresponding to its two model sizes. Understanding the tradeoffs between these dimensions is important for system design.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>0.6B Model (1024-dim)</th>
+                <th>1.7B Model (2048-dim)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Embedding Dimension</strong></td>
+                <td>1024</td>
+                <td>2048</td>
+              </tr>
+              <tr>
+                <td><strong>File Size (bf16)</strong></td>
+                <td>~2 KB</td>
+                <td>~4 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Prefill Tokens</strong></td>
+                <td>~5 tokens</td>
+                <td>~10 tokens</td>
+              </tr>
+              <tr>
+                <td><strong>Model Storage</strong></td>
+                <td>2.52 GB</td>
+                <td>4.54 GB</td>
+              </tr>
+              <tr>
+                <td><strong>Speaker Discrimination</strong></td>
+                <td>High</td>
+                <td>Very High (finer vocal nuances)</td>
+              </tr>
+              <tr>
+                <td><strong>Instruction Control</strong></td>
+                <td>Not available</td>
+                <td>Natural language voice control</td>
+              </tr>
+              <tr>
+                <td><strong>Best For</strong></td>
+                <td>Edge, mobile, batch processing</td>
+                <td>Max accuracy, fine discrimination</td>
+              </tr>
+              <tr>
+                <td><strong>Languages</strong></td>
+                <td colspan="2">Chinese, English, Japanese, Korean, German, French, Russian, Portuguese, Spanish, Italian</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Why Higher Dimensions Help</h3>
+        <p>Speaker identity is a high-dimensional signal. Vocal characteristics include fundamental frequency patterns, formant distributions, spectral tilt, breathiness, nasality, speech rate, prosodic contours, and many more micro-features. A 2048-dimensional embedding has roughly twice the capacity to represent these orthogonal characteristics compared to 1024 dimensions.</p>
+
+        <p>In practice, the 2048-dim embeddings from the 1.7B model show measurably higher speaker similarity scores in voice cloning tasks, which directly translates to better discrimination for identification. The additional capacity is particularly valuable for:</p>
+        <ul>
+          <li>Distinguishing voices with similar acoustic profiles (e.g., family members)</li>
+          <li>Maintaining identity across recording conditions (noise, channel, distance)</li>
+          <li>Cross-lingual speaker identification (same speaker in different languages)</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ==================== EXTRACTION PIPELINE ==================== -->
+      <section id="extraction-pipeline">
+        <h2>The Extraction Pipeline</h2>
+
+        <p>The process of going from raw audio to a usable speaker embedding involves several steps within the ECAPA-TDNN encoder.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+flowchart LR
+    subgraph "LLM Speech Ecosystem"
+        A["Qwen3-TTS<br/>(Full Model)"] --> B["Weight<br/>Extraction"]
+        C["Qwen3-ASR<br/>(1.7B)"] --> D["Feature<br/>Sharing"]
+        E["Qwen3-Omni<br/>(Multimodal)"] --> F["Audio<br/>Encoder"]
+    end
+
+    subgraph "Speaker Embedding Extraction"
+        B --> G["ECAPA-TDNN<br/>Encoder"]
+        H["Raw Audio<br/>(3+ sec)"] --> I["Mel-Spectrogram<br/>Extraction"]
+        I --> G
+        G --> J["Frame-Level<br/>Features"]
+        J --> K["Attentive<br/>Pooling"]
+        K --> L["Speaker<br/>Embedding"]
+    end
+
+    subgraph "Applications"
+        L --> M["Speaker<br/>Verification"]
+        L --> N["Speaker<br/>Identification"]
+        L --> O["Speaker<br/>Diarization"]
+        L --> P["Voice<br/>Cloning"]
+    end
+
+    style A fill:#7C3AED,color:#fff
+    style C fill:#2563EB,color:#fff
+    style E fill:#0891B2,color:#fff
+    style G fill:#7C3AED,color:#fff
+    style L fill:#A78BFA,color:#fff
+    style M fill:#059669,color:#fff
+    style N fill:#059669,color:#fff
+    style O fill:#059669,color:#fff
+    style P fill:#D97706,color:#fff
+          </div>
+          <div class="diagram-caption">Figure 3: LLM speech ecosystem feeding into speaker embedding extraction. The Qwen3 model family (TTS, ASR, Omni) shares architectural patterns that enable speaker embedding capabilities.</div>
+        </div>
+
+        <h3>Step-by-Step Process</h3>
+        <ol>
+          <li><strong>Audio Preprocessing</strong> -- Raw audio is resampled to the model's expected sample rate and converted to a mel-spectrogram representation.</li>
+          <li><strong>Frame-Level Processing</strong> -- The mel-spectrogram passes through the initial convolution layer and the cascade of SE-Res2Net blocks, producing frame-level features at multiple temporal resolutions.</li>
+          <li><strong>Multi-Layer Aggregation</strong> -- Outputs from all SE-Res2Net blocks are concatenated along the channel dimension and fused through a 1D convolution layer.</li>
+          <li><strong>Attentive Pooling</strong> -- The Attentive Statistical Pooling layer computes channel-dependent frame attention, producing weighted mean and standard deviation statistics that collapse variable-length input into a fixed-length vector.</li>
+          <li><strong>Embedding Projection</strong> -- A final fully connected layer maps the pooled statistics to the target embedding dimension (1024 or 2048).</li>
+          <li><strong>Normalization</strong> -- The output embedding is L2-normalized for cosine similarity comparisons.</li>
+        </ol>
+      </section>
+
+      <hr>
+
+      <!-- ==================== PERFORMANCE ==================== -->
+      <section id="performance">
+        <h2>97ms Latency and 3-Second Enrollment</h2>
+
+        <p>Two performance characteristics make Qwen3-TTS's speaker encoder particularly compelling for real-time biometric applications:</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">97ms</div>
+            <div class="stat-label">First-packet latency<br/>Below the 100ms threshold</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">3 sec</div>
+            <div class="stat-label">Minimum enrollment audio<br/>Zero-shot voice capture</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">~4 KB</div>
+            <div class="stat-label">Embedding file size<br/>(2048-dim, bf16)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Languages supported<br/>Cross-lingual identification</div>
+          </div>
+        </div>
+
+        <h3>97ms First-Packet Latency</h3>
+        <p>Qwen3-TTS breaks the 100ms barrier for first-packet latency, placing it well within the requirements for real-time voice interaction. For speaker identification specifically, the embedding extraction step is even faster -- the speaker encoder is a fraction of the full TTS pipeline, and embedding computation does not require autoregressive generation.</p>
+
+        <p>For context, voice AI research identifies key latency thresholds:</p>
+        <ul>
+          <li><strong>&lt; 100ms</strong> -- Imperceptible delay. Suitable for live authentication gates.</li>
+          <li><strong>100-300ms</strong> -- Acceptable for real-time conversational systems.</li>
+          <li><strong>300-500ms</strong> -- Noticeable but tolerable for non-interactive verification.</li>
+          <li><strong>&gt; 500ms</strong> -- Perceived as laggy. Unsuitable for real-time applications.</li>
+        </ul>
+
+        <h3>3-Second Zero-Shot Enrollment</h3>
+        <p>The speaker encoder can produce a usable voiceprint from as little as 3 seconds of reference audio. This is a zero-shot capability -- no fine-tuning or training is required. The encoder extracts sufficient speaker characteristics from this short sample to enable both voice cloning and speaker identification.</p>
+
+        <div class="info-box warning">
+          <strong>Accuracy vs. Duration Tradeoff:</strong> While 3 seconds is sufficient for a baseline enrollment, longer reference audio (10-30 seconds) improves embedding quality. Community testing reports speaker similarity scores of approximately 0.75 with minimal reference audio, improving to 0.89 when an accurate transcript is also provided alongside the audio.
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== X-VECTOR MODE ==================== -->
+      <section id="x-vector-mode">
+        <h2>x_vector_only_mode for Pure Identification</h2>
+
+        <p>Qwen3-TTS provides a dedicated mode for extracting speaker embeddings without any text processing. When <code>x_vector_only_mode=True</code> is set, the system bypasses the text tokenizer and talker transformer entirely, using only the ECAPA-TDNN speaker encoder.</p>
+
+        <h3>How It Works</h3>
+        <pre><code># Python: Extract embedding in x_vector_only_mode
+from qwen3_tts import Qwen3TTS
+
+model = Qwen3TTS.from_pretrained("Qwen/Qwen3-TTS-12Hz-1.7B-Base")
+
+# x_vector_only_mode: only speaker embedding is extracted
+# ref_text is NOT required
+embedding = model.extract_speaker_embedding(
+    ref_audio="enrollment.wav",
+    x_vector_only_mode=True
+)
+
+# Save embedding for later comparison
+torch.save(embedding, "speaker_voiceprint.pt")
+
+# Rust equivalent (passing None for ref_text activates x_vector_only mode)
+# let prompt = model.create_voice_clone_prompt(&ref_audio, None)?;</code></pre>
+
+        <h3>Advantages of x_vector_only_mode</h3>
+        <ul>
+          <li><strong>No text dependency</strong> -- Reference text is not required, eliminating the need for transcription or ASR.</li>
+          <li><strong>No accent bleed</strong> -- Without text conditioning, the embedding captures pure vocal identity without language-specific artifacts.</li>
+          <li><strong>Faster inference</strong> -- Skips the transformer and code prediction stages entirely.</li>
+          <li><strong>Reusable embeddings</strong> -- The extracted embedding can be stored and compared against new audio samples without re-running the full model.</li>
+          <li><strong>Minimal storage</strong> -- A 2048-dim bf16 embedding is approximately 4 KB, enabling enrollment databases with millions of voices on modest hardware.</li>
+        </ul>
+
+        <h3>Tradeoffs</h3>
+        <p>When used for voice cloning (rather than identification), x_vector_only_mode produces slightly lower speaker similarity compared to providing both reference audio and accurate transcript. However, for pure speaker identification and verification tasks, x_vector_only_mode is the preferred approach, as it extracts the most language-independent representation of the speaker's vocal identity.</p>
+
+        <div class="info-box">
+          <strong>Storage Calculation:</strong> A database of 1 million enrolled speakers at 2048-dim bf16 requires approximately 4 GB of storage -- easily fitting in memory on a standard server for real-time nearest-neighbor search.
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== CLONING TO SID ==================== -->
+      <section id="cloning-to-sid">
+        <h2>Voice Cloning Connection to Speaker Identification</h2>
+
+        <p>The relationship between voice cloning and speaker identification is not merely coincidental -- it is architecturally fundamental. The speaker encoder in a voice cloning system must solve what is essentially an identification problem: "What makes this voice unique?"</p>
+
+        <h3>The Shared Embedding Space</h3>
+        <p>In Qwen3-TTS, the same embedding vector serves both purposes:</p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-title">For Voice Cloning</div>
+            <p>The embedding conditions the Talker transformer to generate speech that matches the target speaker's vocal characteristics. The embedding tells the decoder: "The output should have this timbre, this prosody, this accent."</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">For Speaker Identification</div>
+            <p>The embedding serves as a voiceprint for comparison. Cosine similarity between two embeddings reveals whether they represent the same speaker. High similarity = same person; low similarity = different people.</p>
+          </div>
+        </div>
+
+        <h3>Why Cloning Models Make Better Identifiers</h3>
+        <p>Traditional speaker verification models are trained with contrastive or metric learning objectives -- they learn to push embeddings of different speakers apart and pull embeddings of the same speaker together. This is effective but relies on limited supervised data.</p>
+
+        <p>Voice cloning models are trained with a much richer signal: the reconstruction loss from generating speech. If the speaker embedding fails to capture a crucial vocal characteristic, the generated speech will sound wrong -- and the model receives a strong gradient signal to fix the embedding. This means cloning models are implicitly trained on an exhaustive set of speaker-discriminative features, not just those sufficient for binary same/different decisions.</p>
+
+        <h3>Dual-Use Implications</h3>
+
+        <div class="info-box warning">
+          <strong>Security Consideration:</strong> The same technology that enables 3-second voice cloning also enables 3-second speaker identification. Any voice sample used for cloning automatically creates a biometric voiceprint. Organizations deploying voice cloning systems should implement clear data governance policies around the storage and use of speaker embeddings.
+        </div>
+
+        <p>The dual-use nature of these embeddings has implications for both security and privacy:</p>
+        <ul>
+          <li><strong>Anti-spoofing:</strong> The same embeddings can be used to detect synthetic speech by comparing against known voiceprints of legitimate users.</li>
+          <li><strong>Consent management:</strong> Speaker embeddings are biometric data and may be subject to GDPR, BIPA, and similar regulations.</li>
+          <li><strong>Re-identification risk:</strong> Even anonymized voice data can potentially be re-identified using embedding comparison.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ==================== COMPARISON ==================== -->
+      <section id="comparison">
+        <h2>Comparison with Traditional Speaker Embeddings</h2>
+
+        <p>To understand the significance of LLM-derived speaker embeddings, it is helpful to compare them against the traditional approaches they are beginning to supersede.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>i-vectors</th>
+                <th>x-vectors (TDNN)</th>
+                <th>d-vectors (GE2E)</th>
+                <th>ECAPA-TDNN (Standalone)</th>
+                <th>Qwen3-TTS ECAPA-TDNN</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Era</strong></td>
+                <td>2011-2017</td>
+                <td>2018-2020</td>
+                <td>2018-2020</td>
+                <td>2020-present</td>
+                <td>2026-present</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Dimension</strong></td>
+                <td>400-600</td>
+                <td>512</td>
+                <td>256</td>
+                <td>192-512</td>
+                <td>1024 / 2048</td>
+              </tr>
+              <tr>
+                <td><strong>Training Data</strong></td>
+                <td>~1K hrs</td>
+                <td>~2K hrs</td>
+                <td>~1K hrs</td>
+                <td>~5K hrs</td>
+                <td>5M+ hrs</td>
+              </tr>
+              <tr>
+                <td><strong>Training Objective</strong></td>
+                <td>Generative (GMM-UBM)</td>
+                <td>Speaker classification</td>
+                <td>Contrastive (GE2E)</td>
+                <td>Speaker classification</td>
+                <td>TTS reconstruction + speaker classification</td>
+              </tr>
+              <tr>
+                <td><strong>Min Enrollment</strong></td>
+                <td>10-30 sec</td>
+                <td>5-10 sec</td>
+                <td>3-10 sec</td>
+                <td>3-5 sec</td>
+                <td>3 sec</td>
+              </tr>
+              <tr>
+                <td><strong>Noise Robustness</strong></td>
+                <td>Low</td>
+                <td>Low</td>
+                <td>Medium</td>
+                <td>High</td>
+                <td>Very High</td>
+              </tr>
+              <tr>
+                <td><strong>Cross-Lingual</strong></td>
+                <td>Poor</td>
+                <td>Limited</td>
+                <td>Limited</td>
+                <td>Moderate</td>
+                <td>Strong (10 languages)</td>
+              </tr>
+              <tr>
+                <td><strong>Open Source</strong></td>
+                <td>Kaldi recipes</td>
+                <td>Kaldi/SpeechBrain</td>
+                <td>Resemblyzer</td>
+                <td>SpeechBrain/3D-Speaker</td>
+                <td>Apache 2.0 (full weights)</td>
+              </tr>
+              <tr>
+                <td><strong>Dual-Use for TTS</strong></td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes (limited)</td>
+                <td>No</td>
+                <td>Yes (full voice cloning)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Key Differentiators</h3>
+
+        <p><strong>Data advantage.</strong> The most significant difference is training data scale. Traditional speaker verification models are trained on thousands of hours of labeled speech. Qwen3-TTS's speaker encoder benefits from being trained on millions of hours as part of a much larger TTS objective. This thousand-fold increase in data exposure produces embeddings that generalize better across accents, recording conditions, and languages.</p>
+
+        <p><strong>Richer training signal.</strong> Standard speaker embeddings are trained with classification or contrastive losses, which optimize for same/different decisions. The Qwen3-TTS encoder receives reconstruction gradients from the TTS objective, which requires capturing every perceptually relevant aspect of the speaker's voice -- not just those sufficient for binary discrimination.</p>
+
+        <p><strong>Higher dimensionality.</strong> At 2048 dimensions, Qwen3-TTS embeddings have 4x the capacity of typical x-vectors (512-dim). This is not merely more numbers -- it reflects genuinely richer representations enabled by the larger model and more diverse training data.</p>
+      </section>
+
+      <hr>
+
+      <!-- ==================== LICENSING ==================== -->
+      <section id="licensing">
+        <h2>Apache 2.0 Licensing and Open-Source Availability</h2>
+
+        <p>All Qwen3-TTS models are released under the <strong>Apache 2.0 license</strong>, one of the most permissive open-source licenses available. This has significant implications for the speaker identification ecosystem.</p>
+
+        <h3>What Apache 2.0 Permits</h3>
+        <ul>
+          <li><strong>Commercial use</strong> -- Companies can deploy the speaker encoder in commercial products without licensing fees or royalty obligations.</li>
+          <li><strong>Modification</strong> -- The model weights can be fine-tuned, distilled, or otherwise adapted for specific use cases.</li>
+          <li><strong>Distribution</strong> -- Modified versions can be redistributed, enabling an ecosystem of derived models.</li>
+          <li><strong>Patent grant</strong> -- Apache 2.0 includes an explicit patent grant, providing legal certainty around the underlying algorithms.</li>
+          <li><strong>No copyleft</strong> -- Unlike GPL-family licenses, Apache 2.0 does not require derivative works to be open-source.</li>
+        </ul>
+
+        <h3>Available Model Weights</h3>
+        <p>All model weights are publicly available on Hugging Face:</p>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Parameters</th>
+                <th>Size</th>
+                <th>Hugging Face ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0.6B Base</td>
+                <td>600M</td>
+                <td>2.52 GB</td>
+                <td><code>Qwen/Qwen3-TTS-12Hz-0.6B-Base</code></td>
+              </tr>
+              <tr>
+                <td>1.7B Base</td>
+                <td>1.7B</td>
+                <td>4.54 GB</td>
+                <td><code>Qwen/Qwen3-TTS-12Hz-1.7B-Base</code></td>
+              </tr>
+              <tr>
+                <td>1.7B CustomVoice</td>
+                <td>1.7B</td>
+                <td>4.54 GB</td>
+                <td><code>Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box success">
+          <strong>Ecosystem Impact:</strong> Apache 2.0 licensing means that the speaker encoder can be extracted, packaged as a standalone model, and deployed in speaker identification systems without any encumbrance. This is already happening -- community collections like <code>marksverdhei/qwen3-voice-embedding</code> on Hugging Face provide pre-extracted speaker encoder weights.
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== FUTURE ==================== -->
+      <section id="future">
+        <h2>Future Directions: Multimodal LLMs for Speaker Tasks</h2>
+
+        <p>The convergence of LLMs and speaker identification is still in its early stages. Several research directions point to even deeper integration in the near future.</p>
+
+        <h3>SpeakerLM: End-to-End Speaker Diarization and Recognition</h3>
+        <p><strong>SpeakerLM</strong>, accepted at AAAI 2026, represents the first end-to-end multimodal LLM for joint speaker diarization and recognition (SDR). Built on Qwen2.5-7B-Instruct with a SenseVoice-large audio encoder, SpeakerLM answers the question "who spoke when and what" directly from audio, without cascaded pipelines.</p>
+
+        <p>Traditional SDR systems combine separate modules for diarization and ASR, suffering from error propagation and difficulty handling overlapping speech. SpeakerLM addresses these limitations through joint optimization and a flexible speaker registration mechanism that handles diverse real-world scenarios including unregistered and over-registered speakers.</p>
+
+        <h3>NVIDIA PersonaPlex: Voice Persona Control</h3>
+        <p>NVIDIA's PersonaPlex (January 2026, ICASSP 2026) introduces a 7-billion-parameter full-duplex conversational model that uses audio embeddings for voice persona control. Built on the Moshi architecture, PersonaPlex combines a Mimi speech encoder (ConvNet + Transformer) with the Helium language model, enabling real-time voice conditioning that maintains consistent speaker identity throughout conversations.</p>
+
+        <p>PersonaPlex uses WavLM TDNN embeddings for speaker similarity measurement, achieving scores of 0.650 on voice prompt reproduction. While designed primarily for voice generation, its architecture demonstrates how speaker embeddings can be natively integrated into conversational AI systems.</p>
+
+        <h3>Emerging Research Directions</h3>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-title">Unified Audio-Language Models</div>
+            <p>Models like Qwen3-Omni process text, audio, images, and video within a single architecture. Their audio encoders inherently capture speaker identity, suggesting that general-purpose multimodal LLMs may eventually subsume dedicated speaker verification systems.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">Speech-to-Speech with SID</div>
+            <p>Full-duplex speech-to-speech models need to track speaker identity to maintain coherent conversations. This creates demand for inline speaker identification that runs within the generation pipeline rather than as a separate system.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">Cross-Modal Speaker Identity</div>
+            <p>Future systems may link speaker embeddings with face embeddings, writing style features, and behavioral patterns, creating unified identity representations that work across modalities.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">Instruction-Controlled Identification</div>
+            <p>The 1.7B CustomVoice model already follows natural language instructions about voice characteristics. Future systems may accept instructions like "identify the speaker with the deep voice and British accent" for interactive diarization.</p>
+          </div>
+        </div>
+
+        <h3>The Trajectory</h3>
+        <p>The overall trajectory is clear: speaker identification is becoming a built-in capability of general-purpose audio LLMs rather than a standalone task requiring dedicated models. As these models grow in capability and efficiency, the distinction between "voice generation model" and "speaker identification system" will continue to blur.</p>
+      </section>
+
+      <hr>
+
+      <!-- ==================== STRENGTHS & WEAKNESSES ==================== -->
+      <section id="strengths-weaknesses">
+        <h2>Strengths and Weaknesses</h2>
+
+        <div class="sw-grid">
+          <div class="sw-card strengths">
+            <div class="sw-card-title">Strengths</div>
+            <ul>
+              <li><strong>Massive training data</strong> -- 5M+ hours of multilingual speech provides unmatched generalization across accents, recording conditions, and languages.</li>
+              <li><strong>High-dimensional embeddings</strong> -- 2048-dim vectors capture fine-grained vocal characteristics that lower-dimensional systems miss.</li>
+              <li><strong>Apache 2.0 license</strong> -- Fully open weights with no commercial restrictions, enabling broad ecosystem adoption.</li>
+              <li><strong>Sub-100ms latency</strong> -- 97ms first-packet latency enables real-time biometric applications.</li>
+              <li><strong>3-second enrollment</strong> -- Zero-shot capability with minimal audio, no training required.</li>
+              <li><strong>Dual-use architecture</strong> -- Same embeddings power both voice cloning and identification, reducing system complexity.</li>
+              <li><strong>Forensic-grade accuracy</strong> -- ECAPA-TDNN architecture validated for casework conditions with EER as low as 0.86%.</li>
+              <li><strong>10-language support</strong> -- Cross-lingual identification out of the box.</li>
+              <li><strong>Active ecosystem</strong> -- Community extractors, Rust ports, and standalone embedding packages already available.</li>
+            </ul>
+          </div>
+          <div class="sw-card weaknesses">
+            <div class="sw-card-title">Weaknesses</div>
+            <ul>
+              <li><strong>Model size</strong> -- Even the 0.6B model requires 2.52 GB, which is large for embedded or edge devices compared to dedicated speaker encoders (~50-100 MB).</li>
+              <li><strong>GPU dependency</strong> -- Efficient inference requires GPU acceleration; CPU-only deployment is slow.</li>
+              <li><strong>No anti-spoofing</strong> -- The encoder does not inherently detect synthetic or replayed speech; separate spoofing countermeasures are needed.</li>
+              <li><strong>Embedding quality degrades without transcript</strong> -- In x_vector_only_mode, speaker similarity drops from ~0.89 to ~0.75 compared to transcript-assisted extraction.</li>
+              <li><strong>New and less battle-tested</strong> -- Released January 2026, the system lacks years of production deployment experience that traditional systems have.</li>
+              <li><strong>Dual-use privacy risk</strong> -- The same technology that enables convenient enrollment also enables non-consensual voiceprint extraction from any 3-second audio clip.</li>
+              <li><strong>No formal NIST SRE evaluation</strong> -- Unlike established systems, the Qwen3-TTS encoder has not been benchmarked in formal speaker recognition evaluations.</li>
+              <li><strong>Opaque training data</strong> -- The exact composition of the 5M+ hour training dataset is not fully disclosed, raising questions about bias and coverage gaps.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ==================== SOURCES ==================== -->
+      <section id="sources">
+        <h2>Sources</h2>
+
+        <ul class="sources-list">
+          <li>
+            <strong>Qwen3-TTS GitHub Repository</strong><br>
+            <a href="https://github.com/QwenLM/Qwen3-TTS" target="_blank" rel="noopener">github.com/QwenLM/Qwen3-TTS</a> -- Official repository with model documentation, architecture details, and extraction examples.
+          </li>
+          <li>
+            <strong>Qwen3-TTS Blog Announcement</strong><br>
+            <a href="https://qwen.ai/blog?id=qwen3tts-0115" target="_blank" rel="noopener">qwen.ai/blog -- Qwen3-TTS Family Open Source Announcement</a> -- Release post covering voice design, cloning, and generation capabilities.
+          </li>
+          <li>
+            <strong>Qwen3-TTS-12Hz-1.7B-CustomVoice (Hugging Face)</strong><br>
+            <a href="https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice" target="_blank" rel="noopener">huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice</a> -- Model card with technical specifications and usage instructions.
+          </li>
+          <li>
+            <strong>Qwen3 Voice Embedding Collection (marksverdhei)</strong><br>
+            <a href="https://huggingface.co/collections/marksverdhei/qwen3-voice-embedding" target="_blank" rel="noopener">huggingface.co/collections/marksverdhei/qwen3-voice-embedding</a> -- Community collection of extracted speaker encoder weights.
+          </li>
+          <li>
+            <strong>ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification</strong><br>
+            <a href="https://arxiv.org/abs/2005.07143" target="_blank" rel="noopener">arxiv.org/abs/2005.07143</a> -- Desplanques et al., 2020. Original ECAPA-TDNN paper.
+          </li>
+          <li>
+            <strong>Validation of an ECAPA-TDNN System for Forensic Automatic Speaker Recognition</strong><br>
+            <a href="https://www.sciencedirect.com/science/article/pii/S0167639324000177" target="_blank" rel="noopener">ScienceDirect -- Speech Communication, 2024</a> -- Forensic validation under casework conditions.
+          </li>
+          <li>
+            <strong>ECAPA-TDNN for Multi-speaker Text-to-speech Synthesis</strong><br>
+            <a href="https://arxiv.org/abs/2203.10473" target="_blank" rel="noopener">arxiv.org/abs/2203.10473</a> -- Application of ECAPA-TDNN speaker embeddings in TTS.
+          </li>
+          <li>
+            <strong>An Exploration of ECAPA-TDNN and x-vector Speaker Representations in Zero-shot Multi-speaker TTS</strong><br>
+            <a href="https://arxiv.org/abs/2506.20190" target="_blank" rel="noopener">arxiv.org/abs/2506.20190</a> -- Comparative study of speaker representations for TTS.
+          </li>
+          <li>
+            <strong>SpeakerLM: End-to-End Versatile Speaker Diarization and Recognition with Multimodal Large Language Models</strong><br>
+            <a href="https://arxiv.org/abs/2508.06372" target="_blank" rel="noopener">arxiv.org/abs/2508.06372</a> -- AAAI 2026 paper on unified speaker diarization and recognition.
+          </li>
+          <li>
+            <strong>NVIDIA PersonaPlex</strong><br>
+            <a href="https://research.nvidia.com/labs/adlr/personaplex/" target="_blank" rel="noopener">research.nvidia.com/labs/adlr/personaplex</a> -- Full-duplex conversational AI with voice persona control.
+          </li>
+          <li>
+            <strong>NVIDIA PersonaPlex (Hugging Face)</strong><br>
+            <a href="https://huggingface.co/nvidia/personaplex-7b-v1" target="_blank" rel="noopener">huggingface.co/nvidia/personaplex-7b-v1</a> -- Model card with architecture and voice embedding details.
+          </li>
+          <li>
+            <strong>Qwen3-TTS Complete 2026 Guide (DEV Community)</strong><br>
+            <a href="https://dev.to/czmilo/qwen3-tts-the-complete-2026-guide-to-open-source-voice-cloning-and-ai-speech-generation-1in6" target="_blank" rel="noopener">dev.to -- Complete 2026 Guide</a> -- Community guide covering voice cloning, speaker embeddings, and practical usage.
+          </li>
+          <li>
+            <strong>Qwen3-TTS Open Source: Streaming Voice Cloning in 3 Seconds (COEY)</strong><br>
+            <a href="https://coey.com/resources/blog/2026/01/25/qwen3-tts-open-source-streaming-voice-cloning-in-3-seconds/" target="_blank" rel="noopener">coey.com -- Streaming Voice Cloning</a> -- Technical overview of 3-second enrollment capabilities.
+          </li>
+          <li>
+            <strong>qwen3-tts.cpp (C++ Implementation)</strong><br>
+            <a href="https://github.com/predict-woo/qwen3-tts.cpp" target="_blank" rel="noopener">github.com/predict-woo/qwen3-tts.cpp</a> -- C++ port with weight extraction documentation.
+          </li>
+          <li>
+            <strong>Qwen3 TTS: From Zero to Voice Cloning</strong><br>
+            <a href="https://atalupadhyay.wordpress.com/2026/01/29/qwen3-tts-from-zero-to-voice-cloning/" target="_blank" rel="noopener">atalupadhyay.wordpress.com -- Voice Cloning Guide</a> -- Practical walkthrough of voice cloning setup and speaker embedding extraction.
+          </li>
+          <li>
+            <strong>Voice Cloning: Comprehensive Survey (2025)</strong><br>
+            <a href="https://arxiv.org/abs/2505.00579" target="_blank" rel="noopener">arxiv.org/abs/2505.00579</a> -- Survey of voice cloning approaches and speaker embedding methods.
+          </li>
+          <li>
+            <strong>SpeechBrain ECAPA-TDNN Documentation</strong><br>
+            <a href="https://speechbrain.readthedocs.io/en/latest/API/speechbrain.lobes.models.ECAPA_TDNN.html" target="_blank" rel="noopener">speechbrain.readthedocs.io -- ECAPA-TDNN API</a> -- Reference implementation and API documentation.
+          </li>
+          <li>
+            <strong>A Comparative Study of x-vector and ECAPA-TDNN Models (Interspeech 2024)</strong><br>
+            <a href="https://www.isca-archive.org/interspeech_2024/loweimi24_interspeech.pdf" target="_blank" rel="noopener">ISCA Archive -- Interspeech 2024</a> -- Formal comparison of x-vector and ECAPA-TDNN speaker representations.
+          </li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <p style="text-align: center; color: var(--color-text-muted); font-size: 0.85rem; margin-top: 2rem;">
+        Last updated: March 2026. Content generated from research synthesis.
+      </p>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- Mobile Menu Toggle -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">&#9776;</button>
+
+<script>
+// ===== Theme Toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+// ===== Mobile Sidebar =====
+document.getElementById('menuToggle').addEventListener('click', function() {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Close sidebar on link click (mobile)
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+
+// ===== Active Sidebar Link =====
+(function() {
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(function(section) {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    links.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+})();
+
+// ===== Mermaid Init =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  securityLevel: 'loose'
+});
+</script>
+
+</body>
+</html>

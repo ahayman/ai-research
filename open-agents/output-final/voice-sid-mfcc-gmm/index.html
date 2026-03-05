@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MFCC + GMM for Speaker Identification</title>
+<meta name="description" content="A comprehensive technical explainer on using Mel-Frequency Cepstral Coefficients (MFCC) with Gaussian Mixture Models (GMM) for speaker identification, including UBM adaptation, Python code examples, and comparison with modern approaches.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs" type="module"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #6366f1;
+  --color-primary-light: #818cf8;
+  --color-primary-dark: #4f46e5;
+  --color-primary-bg: #eef2ff;
+  --color-accent: #06b6d4;
+  --color-accent-bg: #ecfeff;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-bg-sidebar: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-link: #6366f1;
+  --color-link-hover: #4f46e5;
+  --color-code-bg: #f1f5f9;
+  --color-code-text: #334155;
+  --color-table-stripe: #f8fafc;
+  --color-table-header: #f1f5f9;
+  --color-callout-border: #6366f1;
+  --color-callout-bg: #eef2ff;
+  --color-warning-border: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-success-border: #10b981;
+  --color-success-bg: #ecfdf5;
+  --color-diagram-bg: #ffffff;
+  --color-diagram-border: #e2e8f0;
+  --color-scrollbar: #cbd5e1;
+  --color-scrollbar-hover: #94a3b8;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.75;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #818cf8;
+  --color-primary-light: #a5b4fc;
+  --color-primary-dark: #6366f1;
+  --color-primary-bg: #1e1b4b;
+  --color-accent: #22d3ee;
+  --color-accent-bg: #164e63;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #a5b4fc;
+  --color-link-hover: #c7d2fe;
+  --color-code-bg: #1e293b;
+  --color-code-text: #e2e8f0;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-callout-border: #818cf8;
+  --color-callout-bg: #1e1b4b;
+  --color-warning-border: #fbbf24;
+  --color-warning-bg: #451a03;
+  --color-success-border: #34d399;
+  --color-success-bg: #064e3b;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-header h2 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.5;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  border-left-color: var(--color-primary);
+}
+
+.sidebar-nav .nav-section {
+  padding: 0.5rem 1.5rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 3rem 4rem;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  font-size: 1.15rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 2rem 0 0.75rem;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 1.5rem 0 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+strong {
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+ul, ol {
+  margin: 0.5rem 0 1rem 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  line-height: 1.55;
+  position: relative;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--color-code-text);
+}
+
+.code-label {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* ===== Callout Boxes ===== */
+.callout {
+  border-left: 4px solid var(--color-callout-border);
+  background: var(--color-callout-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.25rem 0;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+}
+
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+.callout.warning {
+  border-left-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+}
+
+.callout.warning .callout-title {
+  color: var(--color-warning-border);
+}
+
+.callout.success {
+  border-left-color: var(--color-success-border);
+  background: var(--color-success-bg);
+}
+
+.callout.success .callout-title {
+  color: var(--color-success-border);
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) td {
+  background: var(--color-table-stripe);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Diagram Container ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.25rem 0 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container .caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* ===== Math / Formula ===== */
+.formula {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-align: center;
+  overflow-x: auto;
+  color: var(--color-code-text);
+}
+
+.formula .label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* ===== Pipeline Steps ===== */
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.pipeline-step {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.pipeline-step .step-number {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-step .step-title {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.pipeline-step .step-desc {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* ===== Comparison Cards ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.comparison-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.comparison-card h4 {
+  margin-top: 0;
+  color: var(--color-primary);
+  font-size: 1rem;
+}
+
+.comparison-card ul {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ===== Strengths / Weaknesses ===== */
+.pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.pros, .cons {
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.pros {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+}
+
+.cons {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+}
+
+.pros h4, .cons h4 {
+  margin-top: 0;
+  font-size: 0.95rem;
+}
+
+.pros h4 { color: var(--color-success-border); }
+.cons h4 { color: var(--color-warning-border); }
+
+.pros ul, .cons ul {
+  font-size: 0.9rem;
+}
+
+/* ===== Sources ===== */
+.sources {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sources h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.sources ol {
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.sources a {
+  word-break: break-all;
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+
+  .pros-cons {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pipeline-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Mermaid Overrides ===== */
+.mermaid {
+  text-align: center;
+}
+
+[data-theme="dark"] .mermaid {
+  filter: none;
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>MFCC + GMM</h2>
+    <div class="subtitle">Speaker Identification</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Overview</div>
+    <a href="#introduction">Introduction</a>
+    <a href="#overview">System Overview</a>
+    <a href="#pipeline">Full Pipeline</a>
+
+    <div class="nav-section">Feature Extraction</div>
+    <a href="#mfcc">MFCC Explained</a>
+    <a href="#preemphasis">Pre-emphasis</a>
+    <a href="#framing-windowing">Framing & Windowing</a>
+    <a href="#fft">FFT</a>
+    <a href="#mel-filterbank">Mel Filterbank</a>
+    <a href="#log-dct">Log & DCT</a>
+    <a href="#deltas">Delta Features</a>
+
+    <div class="nav-section">Speaker Modeling</div>
+    <a href="#gmm">Gaussian Mixture Models</a>
+    <a href="#ubm">Universal Background Model</a>
+    <a href="#map-adaptation">MAP Adaptation</a>
+    <a href="#scoring">Scoring & Decisions</a>
+
+    <div class="nav-section">Practice</div>
+    <a href="#code-examples">Code Examples</a>
+    <a href="#strengths-weaknesses">Strengths & Weaknesses</a>
+    <a href="#comparison">Modern Comparison</a>
+    <a href="#when-to-use">When to Use Today</a>
+
+    <div class="nav-section">Reference</div>
+    <a href="#sources">Sources</a>
+  </nav>
+  <div class="sidebar-footer">
+    <span style="font-size:0.75rem;color:var(--color-text-muted)">Theme</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon">&#9790;</span> Dark
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Mobile Menu Toggle ===== -->
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../voice-speaker-identification/index.html" class="back-link">&larr; Back to Speaker Identification Overview</a>
+
+<h1>MFCC + GMM for Speaker Identification</h1>
+<p class="page-subtitle">A complete technical guide to the classical approach that dominated speaker recognition for over a decade -- from audio signal processing through Mel-Frequency Cepstral Coefficients to Gaussian Mixture Model classification.</p>
+
+<!-- ===== INTRODUCTION ===== -->
+<section id="introduction">
+<h2>Introduction</h2>
+<p>Before deep learning transformed the field, the combination of <strong>Mel-Frequency Cepstral Coefficients (MFCCs)</strong> for feature extraction and <strong>Gaussian Mixture Models (GMMs)</strong> for statistical modeling was the dominant approach for speaker identification and verification. This paradigm, refined through the late 1990s and 2000s, remains one of the most well-understood and well-documented techniques in speech processing.</p>
+
+<p>The fundamental insight is elegant: every person's vocal tract has a unique physical shape that imparts a characteristic spectral signature onto the sounds they produce. MFCCs capture this spectral signature in a compact, perceptually-motivated representation. GMMs then model the statistical distribution of these features across a speaker's utterances, creating a probabilistic "voiceprint."</p>
+
+<div class="callout">
+  <div class="callout-title">Key Insight</div>
+  <p>The MFCC+GMM approach works because <strong>MFCCs capture vocal tract shape</strong> (which is unique to each speaker) and <strong>GMMs model the probability distribution</strong> of these shapes across all the different sounds a speaker makes. Together, they create a statistical fingerprint of a speaker's voice.</p>
+</div>
+
+<p>The approach involves two main phases:</p>
+<ol>
+  <li><strong>Feature Extraction</strong> -- Transform raw audio into a sequence of compact MFCC feature vectors that capture the spectral envelope of the speech signal.</li>
+  <li><strong>Statistical Modeling</strong> -- Train a Gaussian Mixture Model for each speaker that captures the distribution of their MFCC features, then compare test utterances against enrolled speaker models to determine identity.</li>
+</ol>
+</section>
+
+<!-- ===== SYSTEM OVERVIEW ===== -->
+<section id="overview">
+<h2>System Overview</h2>
+
+<p>A speaker identification system answers the question: <em>"Given an audio sample, which enrolled speaker produced it?"</em> This is a 1-of-N classification problem. The MFCC+GMM approach decomposes it into a pipeline of signal processing and statistical modeling stages.</p>
+
+<div class="diagram-container">
+  <pre class="mermaid">
+graph LR
+    A["Audio Input<br/>(WAV/PCM)"] --> B["Pre-processing<br/>& MFCC Extraction"]
+    B --> C["Feature Vectors<br/>(13-40 dim per frame)"]
+    C --> D{"Speaker<br/>Models (GMMs)"}
+    D --> E["Log-Likelihood<br/>Scoring"]
+    E --> F["Speaker ID<br/>Decision"]
+
+    style A fill:#6366f1,color:#fff,stroke:#4f46e5
+    style B fill:#818cf8,color:#fff,stroke:#6366f1
+    style C fill:#a5b4fc,color:#1e1b4b,stroke:#818cf8
+    style D fill:#06b6d4,color:#fff,stroke:#0891b2
+    style E fill:#14b8a6,color:#fff,stroke:#0d9488
+    style F fill:#10b981,color:#fff,stroke:#059669
+  </pre>
+  <div class="caption">Figure 1: High-level MFCC+GMM speaker identification pipeline</div>
+</div>
+
+<p>The system operates in two modes:</p>
+<ul>
+  <li><strong>Enrollment (Training)</strong> -- Audio samples from known speakers are processed to extract MFCC features, which are then used to train a dedicated GMM for each speaker.</li>
+  <li><strong>Recognition (Testing)</strong> -- A new audio sample is processed into MFCCs, scored against each enrolled GMM, and the speaker whose model produces the highest likelihood is selected as the identified speaker.</li>
+</ul>
+</section>
+
+<!-- ===== FULL PIPELINE ===== -->
+<section id="pipeline">
+<h2>Full Pipeline</h2>
+
+<p>From raw audio to speaker match, the complete pipeline involves these stages:</p>
+
+<div class="pipeline-steps">
+  <div class="pipeline-step">
+    <div class="step-number">1</div>
+    <div class="step-title">Pre-emphasis</div>
+    <div class="step-desc">Boost high frequencies to flatten spectrum</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">2</div>
+    <div class="step-title">Framing</div>
+    <div class="step-desc">Split into 20-30ms overlapping frames</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">3</div>
+    <div class="step-title">Windowing</div>
+    <div class="step-desc">Apply Hamming window to each frame</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">4</div>
+    <div class="step-title">FFT</div>
+    <div class="step-desc">Convert to frequency domain</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">5</div>
+    <div class="step-title">Mel Filterbank</div>
+    <div class="step-desc">Apply triangular mel-spaced filters</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">6</div>
+    <div class="step-title">Log</div>
+    <div class="step-desc">Logarithm of filter energies</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">7</div>
+    <div class="step-title">DCT</div>
+    <div class="step-desc">Discrete Cosine Transform to cepstral domain</div>
+  </div>
+  <div class="pipeline-step">
+    <div class="step-number">8</div>
+    <div class="step-title">GMM Scoring</div>
+    <div class="step-desc">Evaluate likelihood against speaker models</div>
+  </div>
+</div>
+
+<div class="diagram-container">
+  <pre class="mermaid">
+graph TD
+    subgraph FE["MFCC Feature Extraction"]
+        A1["Raw Audio Signal"] --> A2["Pre-emphasis Filter<br/>y(t) = x(t) - 0.97x(t-1)"]
+        A2 --> A3["Frame Blocking<br/>25ms frames, 10ms hop"]
+        A3 --> A4["Hamming Window<br/>w(n) = 0.54 - 0.46 cos(2 pi n/N)"]
+        A4 --> A5["FFT<br/>N-point DFT"]
+        A5 --> A6["Power Spectrum<br/>|X(k)|^2 / N"]
+        A6 --> A7["Mel Filterbank<br/>26-40 triangular filters"]
+        A7 --> A8["Log Compression<br/>log(filter energies)"]
+        A8 --> A9["DCT<br/>Decorrelation"]
+        A9 --> A10["MFCCs<br/>13 coefficients per frame"]
+    end
+
+    subgraph DL["Dynamic Features"]
+        A10 --> B1["Delta MFCCs<br/>1st derivative"]
+        B1 --> B2["Delta-Delta MFCCs<br/>2nd derivative"]
+        A10 --> B3["39-dim feature vector"]
+        B1 --> B3
+        B2 --> B3
+    end
+
+    subgraph GM["GMM Speaker Modeling"]
+        B3 --> C1["GMM Training / Scoring<br/>K Gaussian components"]
+        C1 --> C2["Speaker Identity"]
+    end
+
+    style FE fill:transparent,stroke:#6366f1,stroke-width:2
+    style DL fill:transparent,stroke:#06b6d4,stroke-width:2
+    style GM fill:transparent,stroke:#10b981,stroke-width:2
+  </pre>
+  <div class="caption">Figure 2: Detailed MFCC extraction pipeline from audio signal to speaker identity</div>
+</div>
+</section>
+
+<!-- ===== MFCC EXPLAINED ===== -->
+<section id="mfcc">
+<h2>MFCC: Mel-Frequency Cepstral Coefficients</h2>
+
+<p>MFCCs are the most widely used features in speech and speaker recognition. They provide a compact representation of the short-term power spectrum of a sound, designed to approximate the way the human auditory system perceives frequencies.</p>
+
+<p>The name breaks down as follows:</p>
+<ul>
+  <li><strong>Mel-Frequency</strong> -- The frequency axis is warped according to the <em>mel scale</em>, which models human perception of pitch (we hear differences in low frequencies more acutely than high frequencies).</li>
+  <li><strong>Cepstral</strong> -- The coefficients are derived from the <em>cepstrum</em> (an anagram of "spectrum"), which is the inverse Fourier transform of the log spectrum. It separates the excitation source (vocal cords) from the vocal tract filter.</li>
+  <li><strong>Coefficients</strong> -- Typically 12-13 scalar values per frame, forming a compact feature vector.</li>
+</ul>
+
+<h3>The Mel Scale</h3>
+
+<p>The mel scale is a perceptual scale of pitches where equal distances correspond to equal perceived differences in pitch. Below ~1000 Hz the relationship is approximately linear; above ~1000 Hz it becomes approximately logarithmic.</p>
+
+<div class="formula">
+  <span class="label">Hz to Mel Conversion (O'Shaughnessy, 1987)</span>
+  m = 2595 &times; log<sub>10</sub>(1 + f / 700)
+</div>
+
+<div class="formula">
+  <span class="label">Equivalent Natural Logarithm Form</span>
+  m = 1127 &times; ln(1 + f / 700)
+</div>
+
+<p>For example, 1000 Hz maps to ~1000 mels (by design), but 2000 Hz maps to ~1500 mels, and 4000 Hz maps to ~2146 mels. This compression of higher frequencies reflects the decreasing frequency resolution of the human cochlea at higher pitches.</p>
+</section>
+
+<!-- ===== PRE-EMPHASIS ===== -->
+<section id="preemphasis">
+<h2>Step 1: Pre-emphasis</h2>
+
+<p>Speech signals naturally have more energy at lower frequencies (the spectral tilt caused by the glottal source). Pre-emphasis applies a simple first-order high-pass filter to flatten the spectrum and boost higher frequency components that carry important speaker-discriminative information.</p>
+
+<div class="formula">
+  <span class="label">Pre-emphasis Filter</span>
+  y(t) = x(t) - &alpha; &middot; x(t - 1), &nbsp;&nbsp; where &alpha; &asymp; 0.95 - 0.97
+</div>
+
+<p>Pre-emphasis serves three purposes:</p>
+<ul>
+  <li><strong>Balances the spectrum</strong> -- Equalizes the energy across frequency bands, improving the signal-to-noise ratio of high-frequency formants.</li>
+  <li><strong>Avoids numerical issues</strong> -- Prevents the FFT from being dominated by low-frequency energy, which could cause numerical instability.</li>
+  <li><strong>Matches perception</strong> -- The human ear is more sensitive to changes in higher frequencies when they carry similar energy to lower ones.</li>
+</ul>
+</section>
+
+<!-- ===== FRAMING & WINDOWING ===== -->
+<section id="framing-windowing">
+<h2>Step 2-3: Framing & Windowing</h2>
+
+<h3>Framing</h3>
+<p>Speech is a non-stationary signal, but over sufficiently short time intervals (20-30ms), it can be treated as quasi-stationary. Framing divides the continuous audio stream into overlapping short segments:</p>
+<ul>
+  <li><strong>Frame length</strong>: Typically 20-25ms (e.g., 400 samples at 16 kHz sampling rate)</li>
+  <li><strong>Frame hop / stride</strong>: Typically 10ms (50% overlap), ensuring smooth transitions between adjacent frames</li>
+  <li>A 1-second utterance at 16 kHz with 25ms frames and 10ms hop produces approximately 98 frames</li>
+</ul>
+
+<h3>Windowing</h3>
+<p>Each frame is multiplied by a window function to reduce spectral leakage caused by the discontinuities at frame boundaries. The <strong>Hamming window</strong> is the standard choice:</p>
+
+<div class="formula">
+  <span class="label">Hamming Window</span>
+  w(n) = 0.54 - 0.46 &middot; cos(2&pi;n / (N - 1)), &nbsp;&nbsp; 0 &le; n &le; N - 1
+</div>
+
+<p>The window tapers the signal to near-zero at both edges, producing a cleaner frequency representation. Without windowing, the abrupt start and end of each frame would introduce artificial high-frequency components (spectral leakage) in the FFT output.</p>
+</section>
+
+<!-- ===== FFT ===== -->
+<section id="fft">
+<h2>Step 4: Fast Fourier Transform</h2>
+
+<p>The FFT converts each windowed frame from the time domain to the frequency domain, revealing the energy distribution across different frequencies. For speaker recognition, we are interested in the <strong>power spectrum</strong>:</p>
+
+<div class="formula">
+  <span class="label">Power Spectrum</span>
+  P(k) = |X(k)|<sup>2</sup> / N
+</div>
+
+<p>where X(k) is the complex-valued DFT output and N is the FFT size (typically 512 or 1024 points, zero-padded as needed).</p>
+
+<p>The power spectrum tells us <em>how much energy</em> exists at each frequency, which directly reflects the resonant properties (formants) of the vocal tract. These formant frequencies are a primary cue for distinguishing between speakers.</p>
+
+<div class="callout">
+  <div class="callout-title">Why Power Spectrum?</div>
+  <p>We discard the phase information because phase is sensitive to the exact timing of the signal but carries little information about the speaker's vocal tract shape. The magnitude (or power) spectrum captures the resonant structure we need.</p>
+</div>
+</section>
+
+<!-- ===== MEL FILTERBANK ===== -->
+<section id="mel-filterbank">
+<h2>Step 5: Mel Filterbank</h2>
+
+<p>The mel filterbank is a set of 26-40 overlapping triangular bandpass filters spaced according to the mel scale. Each filter collects energy from a region of the power spectrum, mimicking the frequency analysis performed by the human cochlea.</p>
+
+<h3>How the Filterbank Works</h3>
+<ol>
+  <li><strong>Choose frequency range</strong> -- Typically 0 Hz (or 20 Hz) to the Nyquist frequency (e.g., 8000 Hz for 16 kHz audio).</li>
+  <li><strong>Convert bounds to mel scale</strong> -- Apply the mel formula to the low and high frequency boundaries.</li>
+  <li><strong>Create equally-spaced points on mel scale</strong> -- Distribute filter center frequencies linearly in mel space (which translates to logarithmic spacing in Hz for higher frequencies).</li>
+  <li><strong>Convert back to Hz</strong> -- Map the mel-spaced center frequencies back to Hz for constructing the actual filters.</li>
+  <li><strong>Build triangular filters</strong> -- Each filter is a triangle centered on its designated frequency, rising from the center of the previous filter to 1.0 and falling back to zero at the center of the next filter.</li>
+  <li><strong>Apply filters to power spectrum</strong> -- Multiply each filter by the power spectrum and sum the products, yielding one energy value per filter.</li>
+</ol>
+
+<p>The result is a vector of 26-40 mel-band energies per frame, which compresses the high-dimensional FFT output into a perceptually meaningful representation with higher resolution at lower frequencies (where formant differences between speakers are most pronounced).</p>
+
+<div class="callout">
+  <div class="callout-title">Why Triangular Filters?</div>
+  <p>Triangular filters provide smooth overlapping coverage of the spectrum while being computationally simple. The overlap ensures that energy near filter boundaries contributes to adjacent bands, avoiding artifacts. The mel spacing concentrates more filters in the lower frequency region (below ~1000 Hz), where the ear has finer frequency discrimination.</p>
+</div>
+</section>
+
+<!-- ===== LOG & DCT ===== -->
+<section id="log-dct">
+<h2>Steps 6-7: Log Compression & DCT</h2>
+
+<h3>Logarithmic Compression</h3>
+<p>The log of each filterbank energy is taken for two reasons:</p>
+<ul>
+  <li><strong>Perceptual motivation</strong> -- Human loudness perception follows a roughly logarithmic relationship (a 10x increase in sound power is perceived as roughly 2x louder). Taking the log mimics this compressive nonlinearity.</li>
+  <li><strong>Mathematical convenience</strong> -- The log converts the multiplicative relationship between the vocal tract filter and the excitation source into an additive one, making it easier to separate them.</li>
+</ul>
+
+<h3>Discrete Cosine Transform (DCT)</h3>
+<p>The DCT is applied to the log mel-filter energies to produce the final MFCC feature vector. This step serves multiple purposes:</p>
+
+<ul>
+  <li><strong>Decorrelation</strong> -- Mel filterbank outputs are highly correlated because of the overlapping filters. The DCT decorrelates them, allowing diagonal-covariance GMMs to work effectively (which is much more computationally efficient than full-covariance).</li>
+  <li><strong>Compaction</strong> -- Most of the useful information is concentrated in the first few DCT coefficients (typically 12-13 out of 26-40). Higher-order coefficients capture fine spectral detail that is less relevant for speaker identity.</li>
+  <li><strong>Source-filter separation</strong> -- In the cepstral domain, the slowly varying vocal tract response (captured by lower cepstral coefficients) is separated from the rapidly varying excitation (captured by higher coefficients). Discarding higher coefficients effectively isolates the vocal tract information.</li>
+</ul>
+
+<div class="callout">
+  <div class="callout-title">Why "Cepstral"?</div>
+  <p>The cepstrum is defined as the inverse Fourier transform of the log magnitude spectrum. The DCT applied to log mel-filter energies is an approximation of this. The name "cepstrum" was coined by Bogert, Healy, and Tukey in 1963 as a playful anagram of "spectrum." Similarly, the independent variable of the cepstrum is called "quefrency" (an anagram of "frequency").</p>
+</div>
+
+<p>The typical output is <strong>13 MFCCs per frame</strong> (including the 0th coefficient, which represents the overall energy level of the frame). Some systems discard coefficient 0 and use only coefficients 1-12.</p>
+</section>
+
+<!-- ===== DELTA FEATURES ===== -->
+<section id="deltas">
+<h2>Dynamic Features: Deltas & Delta-Deltas</h2>
+
+<p>Static MFCCs capture the spectral shape at a single point in time, but speech is inherently dynamic. <strong>Delta (velocity)</strong> and <strong>delta-delta (acceleration)</strong> coefficients capture how the MFCCs change over time, providing crucial temporal context.</p>
+
+<div class="formula">
+  <span class="label">Delta Coefficient Computation</span>
+  &Delta;c(t) = (&Sigma;<sub>n=1..N</sub> n &middot; (c(t+n) - c(t-n))) / (2 &middot; &Sigma;<sub>n=1..N</sub> n<sup>2</sup>)
+</div>
+
+<p>where c(t) is the MFCC at frame t, and N is typically 2 (using a window of 2 frames on each side).</p>
+
+<p>The complete feature vector per frame typically consists of:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Dimensions</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Static MFCCs</td>
+      <td>13</td>
+      <td>Spectral envelope shape at current frame</td>
+    </tr>
+    <tr>
+      <td>Delta MFCCs</td>
+      <td>13</td>
+      <td>Rate of change of spectral shape (velocity)</td>
+    </tr>
+    <tr>
+      <td>Delta-delta MFCCs</td>
+      <td>13</td>
+      <td>Acceleration of spectral change</td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td><strong>39</strong></td>
+      <td><strong>Complete feature vector per frame</strong></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Some systems use 20 MFCCs + 20 deltas = 40 dimensions, or include log-energy as an additional feature. The exact configuration is a design choice that depends on the application and available training data.</p>
+</section>
+
+<!-- ===== GMM ===== -->
+<section id="gmm">
+<h2>Gaussian Mixture Models for Speaker Modeling</h2>
+
+<p>A <strong>Gaussian Mixture Model (GMM)</strong> is a probabilistic model that represents a probability distribution as a weighted sum of multiple Gaussian (normal) distributions. For speaker identification, each speaker's MFCC feature distribution is modeled by their own GMM.</p>
+
+<h3>Mathematical Formulation</h3>
+
+<p>For a D-dimensional feature vector <strong>x</strong>, the GMM probability density is:</p>
+
+<div class="formula">
+  <span class="label">GMM Probability Density</span>
+  p(<strong>x</strong> | &lambda;) = &Sigma;<sub>k=1..K</sub> w<sub>k</sub> &middot; N(<strong>x</strong> | &mu;<sub>k</sub>, &Sigma;<sub>k</sub>)
+</div>
+
+<p>where:</p>
+<ul>
+  <li><strong>K</strong> = number of Gaussian components (typically 16-2048)</li>
+  <li><strong>w<sub>k</sub></strong> = weight of the k-th component (w<sub>k</sub> &ge; 0, &Sigma;w<sub>k</sub> = 1)</li>
+  <li><strong>&mu;<sub>k</sub></strong> = mean vector of the k-th component (D-dimensional)</li>
+  <li><strong>&Sigma;<sub>k</sub></strong> = covariance matrix of the k-th component (D &times; D, typically diagonal)</li>
+  <li><strong>&lambda;</strong> = {w<sub>k</sub>, &mu;<sub>k</sub>, &Sigma;<sub>k</sub>} for k = 1..K (the complete model parameters)</li>
+</ul>
+
+<p>Each Gaussian component is a standard multivariate normal:</p>
+
+<div class="formula">
+  <span class="label">Multivariate Gaussian</span>
+  N(<strong>x</strong> | &mu;, &Sigma;) = (2&pi;)<sup>-D/2</sup> |&Sigma;|<sup>-1/2</sup> exp(-&frac12;(<strong>x</strong> - &mu;)<sup>T</sup> &Sigma;<sup>-1</sup> (<strong>x</strong> - &mu;))
+</div>
+
+<h3>Why GMMs Work for Speakers</h3>
+
+<p>The key insight is that a speaker produces many different sounds (vowels, consonants, silences), and each type of sound corresponds to a different region in MFCC feature space. A GMM with multiple components can capture this multi-modal distribution:</p>
+
+<ul>
+  <li>One Gaussian component might model the speaker's vowel /a/ sounds</li>
+  <li>Another might model their /s/ sounds</li>
+  <li>Another captures their nasal consonants</li>
+  <li>And so on across all the sounds they produce</li>
+</ul>
+
+<p>The mixture weights reflect how often the speaker produces each type of sound, and the means and covariances capture the specific spectral characteristics of how <em>this speaker</em> produces each sound -- which differs subtly from how other speakers produce the same sounds.</p>
+
+<div class="diagram-container">
+  <pre class="mermaid">
+graph TD
+    subgraph SP["Speaker S GMM Model"]
+        direction LR
+        G1["Gaussian 1<br/>w=0.15<br/>(vowels)"]
+        G2["Gaussian 2<br/>w=0.12<br/>(fricatives)"]
+        G3["Gaussian 3<br/>w=0.18<br/>(nasals)"]
+        G4["..."]
+        GK["Gaussian K<br/>w=0.08<br/>(silence)"]
+    end
+
+    X["Feature Vector x<br/>(39-dim MFCC)"] --> SP
+    SP --> L["p(x|lambda_s) = Sum of<br/>weighted Gaussian<br/>probabilities"]
+    L --> D["Compare across<br/>all speakers"]
+
+    style SP fill:transparent,stroke:#6366f1,stroke-width:2
+    style X fill:#818cf8,color:#fff,stroke:#6366f1
+    style L fill:#06b6d4,color:#fff,stroke:#0891b2
+    style D fill:#10b981,color:#fff,stroke:#059669
+  </pre>
+  <div class="caption">Figure 3: GMM speaker model -- each component captures a different acoustic class</div>
+</div>
+
+<h3>Training with EM Algorithm</h3>
+
+<p>GMM parameters are estimated using the <strong>Expectation-Maximization (EM) algorithm</strong>, an iterative procedure that maximizes the likelihood of the training data:</p>
+
+<ol>
+  <li><strong>Initialize</strong> -- Set initial parameter values (typically using k-means clustering or random initialization).</li>
+  <li><strong>E-step (Expectation)</strong> -- For each training vector, compute the posterior probability (responsibility) of each Gaussian component having generated that vector.</li>
+  <li><strong>M-step (Maximization)</strong> -- Update the weights, means, and covariances to maximize the expected log-likelihood, using the responsibilities computed in the E-step.</li>
+  <li><strong>Repeat</strong> -- Iterate E and M steps until convergence (likelihood improvement falls below a threshold).</li>
+</ol>
+
+<div class="callout warning">
+  <div class="callout-title">Practical Consideration</div>
+  <p>Diagonal covariance matrices are almost universally used instead of full covariance matrices. This reduces the number of parameters from O(D<sup>2</sup>) to O(D) per component, requires less training data, and is computationally much faster. To compensate for the loss of expressiveness, more mixture components are used (e.g., 256-2048 instead of 16-64).</p>
+</div>
+</section>
+
+<!-- ===== UBM ===== -->
+<section id="ubm">
+<h2>Universal Background Model (UBM)</h2>
+
+<p>The <strong>Universal Background Model</strong> is one of the most important innovations in GMM-based speaker recognition. Introduced by Reynolds, Quatieri, and Dunn (2000), the UBM addresses a critical challenge: <em>how do you train a robust speaker model when you have very limited enrollment data?</em></p>
+
+<h3>The Problem</h3>
+<p>Training a GMM with 512-2048 components requires substantial training data. In practice, you may have only 30 seconds to 2 minutes of speech from each enrolled speaker. Training a GMM from scratch on such limited data produces unreliable, overfit models.</p>
+
+<h3>The Solution</h3>
+<p>The UBM approach works in two stages:</p>
+
+<ol>
+  <li><strong>Train a UBM</strong> -- Pool speech data from a large, diverse population of speakers (hundreds to thousands) and train a high-order GMM (typically 512-2048 components). This UBM captures the general characteristics of speech, independent of any particular speaker.</li>
+  <li><strong>Adapt to target speakers</strong> -- For each enrolled speaker, adapt the UBM parameters using Maximum A Posteriori (MAP) estimation with that speaker's enrollment data. Components that have sufficient speaker data are moved toward the speaker; components with little data remain close to the UBM.</li>
+</ol>
+
+<div class="callout success">
+  <div class="callout-title">Why UBM Works</div>
+  <p>The UBM provides a strong prior on what speech "looks like" in general. Adaptation then captures only the <em>deviations</em> from this prior that characterize the specific speaker. This is vastly more data-efficient than training from scratch, because the system only needs to learn what is <em>different</em> about the speaker, not everything about speech from the ground up.</p>
+</div>
+
+<h3>UBM as Background Hypothesis</h3>
+<p>In speaker <em>verification</em> (accepting or rejecting a claimed identity), the UBM also serves as the alternative hypothesis in a likelihood ratio test. The verification score is computed as:</p>
+
+<div class="formula">
+  <span class="label">Log-Likelihood Ratio for Verification</span>
+  score = log p(X | &lambda;<sub>speaker</sub>) - log p(X | &lambda;<sub>UBM</sub>)
+</div>
+
+<p>If this score exceeds a threshold, the speaker's identity claim is accepted. The UBM score acts as a normalizing baseline, accounting for the general likelihood of the speech regardless of speaker identity.</p>
+</section>
+
+<!-- ===== MAP ADAPTATION ===== -->
+<section id="map-adaptation">
+<h2>MAP Adaptation</h2>
+
+<p><strong>Maximum A Posteriori (MAP) adaptation</strong> is the technique used to derive a speaker-specific GMM from the UBM. It is a Bayesian adaptation method that balances the prior knowledge encoded in the UBM with the new evidence from the speaker's enrollment data.</p>
+
+<h3>Adaptation Procedure</h3>
+
+<p>MAP adaptation is a two-step process, similar to one iteration of the EM algorithm:</p>
+
+<h4>Step 1: Compute Sufficient Statistics</h4>
+<p>For each mixture component k in the UBM, compute the zeroth, first, and second-order statistics from the speaker's enrollment data X = {x<sub>1</sub>, ..., x<sub>T</sub>}:</p>
+
+<div class="formula">
+  <span class="label">Sufficient Statistics</span>
+  n<sub>k</sub> = &Sigma;<sub>t</sub> p(k | x<sub>t</sub>, &lambda;<sub>UBM</sub>) &nbsp;&nbsp; (zeroth order -- effective count)<br>
+  E<sub>k</sub>(x) = (1/n<sub>k</sub>) &Sigma;<sub>t</sub> p(k | x<sub>t</sub>, &lambda;<sub>UBM</sub>) &middot; x<sub>t</sub> &nbsp;&nbsp; (first order -- weighted mean)
+</div>
+
+<h4>Step 2: Adapt Parameters</h4>
+<p>The adapted mean for each component is a weighted combination of the UBM mean and the speaker-specific mean:</p>
+
+<div class="formula">
+  <span class="label">MAP-Adapted Mean</span>
+  &mu;<sub>k</sub><sup>(MAP)</sup> = &alpha;<sub>k</sub> &middot; E<sub>k</sub>(x) + (1 - &alpha;<sub>k</sub>) &middot; &mu;<sub>k</sub><sup>(UBM)</sup>
+</div>
+
+<p>where the adaptation coefficient &alpha;<sub>k</sub> is:</p>
+
+<div class="formula">
+  <span class="label">Adaptation Coefficient</span>
+  &alpha;<sub>k</sub> = n<sub>k</sub> / (n<sub>k</sub> + r)
+</div>
+
+<p>where <strong>r</strong> is the <strong>relevance factor</strong> (typically r = 16), which controls the balance between the prior (UBM) and the new data:</p>
+
+<ul>
+  <li>When n<sub>k</sub> is large (many frames assigned to component k), &alpha;<sub>k</sub> &rarr; 1, and the adapted mean is dominated by the speaker's data.</li>
+  <li>When n<sub>k</sub> is small (few frames assigned to component k), &alpha;<sub>k</sub> &rarr; 0, and the adapted mean stays close to the UBM mean.</li>
+</ul>
+
+<div class="callout">
+  <div class="callout-title">Mean-Only Adaptation</div>
+  <p>In practice, <strong>only the means are adapted</strong>, not the weights or covariances. Research has shown that adapting the covariances does not significantly improve performance and can even hurt it when enrollment data is limited. The means carry the most speaker-discriminative information because they shift the centers of each Gaussian component to match the speaker's unique formant positions.</p>
+</div>
+</section>
+
+<!-- ===== SCORING ===== -->
+<section id="scoring">
+<h2>Scoring & Decision Making</h2>
+
+<h3>Speaker Identification Scoring</h3>
+<p>For speaker identification (determining <em>who</em> is speaking from a set of N enrolled speakers), the test utterance is scored against all enrolled models:</p>
+
+<div class="formula">
+  <span class="label">Speaker Identification Decision</span>
+  S* = argmax<sub>s &isin; {1..N}</sub> log p(X | &lambda;<sub>s</sub>)
+</div>
+
+<p>where X = {x<sub>1</sub>, ..., x<sub>T</sub>} is the sequence of feature vectors from the test utterance. The log-likelihood of the entire utterance under speaker model &lambda;<sub>s</sub> is computed as:</p>
+
+<div class="formula">
+  <span class="label">Utterance Log-Likelihood</span>
+  log p(X | &lambda;<sub>s</sub>) = &Sigma;<sub>t=1..T</sub> log p(x<sub>t</sub> | &lambda;<sub>s</sub>)
+</div>
+
+<p>This assumes frame independence (a standard simplifying assumption). The speaker whose model assigns the highest total log-likelihood to the test utterance is selected as the identified speaker.</p>
+
+<h3>Speaker Verification Scoring</h3>
+<p>For verification (confirming a claimed identity), the score is a log-likelihood ratio:</p>
+
+<div class="formula">
+  <span class="label">Verification Score</span>
+  LLR(X) = (1/T) &Sigma;<sub>t=1..T</sub> [log p(x<sub>t</sub> | &lambda;<sub>claimed</sub>) - log p(x<sub>t</sub> | &lambda;<sub>UBM</sub>)]
+</div>
+
+<p>The per-frame normalization (dividing by T) makes the score comparable across utterances of different lengths. If LLR(X) exceeds a decision threshold &theta;, the claim is accepted; otherwise it is rejected.</p>
+
+<h3>Score Normalization</h3>
+<p>Raw log-likelihood ratios can be miscalibrated across different speakers and sessions. Common normalization techniques include:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Z-norm</strong> (Zero normalization)</td>
+      <td>Normalize scores using statistics from impostor scores computed offline during enrollment.</td>
+    </tr>
+    <tr>
+      <td><strong>T-norm</strong> (Test normalization)</td>
+      <td>Normalize scores using statistics from scoring the test utterance against a cohort of impostor models.</td>
+    </tr>
+    <tr>
+      <td><strong>ZT-norm</strong></td>
+      <td>Apply both Z-norm and T-norm sequentially for improved calibration.</td>
+    </tr>
+    <tr>
+      <td><strong>S-norm</strong> (Symmetric normalization)</td>
+      <td>Average of Z-norm and T-norm scores, providing symmetric treatment of enrollment and test.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== CODE EXAMPLES ===== -->
+<section id="code-examples">
+<h2>Code Examples</h2>
+
+<p>Below are practical Python implementations using <code>librosa</code> for MFCC extraction and <code>scikit-learn</code> for GMM modeling.</p>
+
+<h3>MFCC Feature Extraction</h3>
+
+<pre><code><span class="code-label">Python</span>
+import numpy as np
+import librosa
+
+def extract_mfcc_features(audio_path, n_mfcc=13, n_fft=512,
+                          hop_length=160, win_length=400,
+                          sr=16000, include_deltas=True):
+    """
+    Extract MFCC features from an audio file.
+
+    Parameters
+    ----------
+    audio_path : str
+        Path to audio file (WAV, FLAC, etc.)
+    n_mfcc : int
+        Number of MFCC coefficients (default: 13)
+    n_fft : int
+        FFT window size (default: 512)
+    hop_length : int
+        Hop length in samples (default: 160 = 10ms at 16kHz)
+    win_length : int
+        Window length in samples (default: 400 = 25ms at 16kHz)
+    sr : int
+        Target sampling rate (default: 16000)
+    include_deltas : bool
+        Whether to include delta and delta-delta features
+
+    Returns
+    -------
+    features : np.ndarray
+        Feature matrix of shape (n_frames, n_features)
+    """
+    # Load and resample audio
+    y, _ = librosa.load(audio_path, sr=sr)
+
+    # Pre-emphasis filter
+    y = np.append(y[0], y[1:] - 0.97 * y[:-1])
+
+    # Extract MFCCs
+    mfccs = librosa.feature.mfcc(
+        y=y, sr=sr, n_mfcc=n_mfcc,
+        n_fft=n_fft, hop_length=hop_length,
+        win_length=win_length, window='hamming',
+        n_mels=26  # number of mel filterbank channels
+    )
+
+    if include_deltas:
+        # Compute delta (velocity) coefficients
+        delta = librosa.feature.delta(mfccs, order=1)
+        # Compute delta-delta (acceleration) coefficients
+        delta2 = librosa.feature.delta(mfccs, order=2)
+        # Stack: 13 MFCC + 13 delta + 13 delta-delta = 39 features
+        features = np.vstack([mfccs, delta, delta2])
+    else:
+        features = mfccs
+
+    # Transpose to (n_frames, n_features) format
+    return features.T
+</code></pre>
+
+<h3>GMM Speaker Model Training</h3>
+
+<pre><code><span class="code-label">Python</span>
+from sklearn.mixture import GaussianMixture
+import os
+import pickle
+
+def train_speaker_model(audio_paths, n_components=64,
+                        covariance_type='diag', max_iter=200):
+    """
+    Train a GMM speaker model from one or more audio files.
+
+    Parameters
+    ----------
+    audio_paths : list of str
+        Paths to training audio files for one speaker
+    n_components : int
+        Number of Gaussian mixture components
+    covariance_type : str
+        Type of covariance ('diag' recommended)
+    max_iter : int
+        Maximum EM iterations
+
+    Returns
+    -------
+    gmm : GaussianMixture
+        Trained GMM model for this speaker
+    """
+    # Extract features from all training utterances
+    all_features = []
+    for path in audio_paths:
+        features = extract_mfcc_features(path)
+        all_features.append(features)
+
+    # Concatenate all frames
+    X = np.vstack(all_features)
+
+    # Train GMM using EM algorithm
+    gmm = GaussianMixture(
+        n_components=n_components,
+        covariance_type=covariance_type,
+        max_iter=max_iter,
+        n_init=3,           # multiple initializations
+        random_state=42
+    )
+    gmm.fit(X)
+
+    return gmm
+
+
+def enroll_speakers(speaker_data, model_dir='models/'):
+    """
+    Enroll all speakers by training their GMMs.
+
+    Parameters
+    ----------
+    speaker_data : dict
+        {speaker_id: [list of audio file paths]}
+    model_dir : str
+        Directory to save trained models
+
+    Returns
+    -------
+    models : dict
+        {speaker_id: trained GMM model}
+    """
+    os.makedirs(model_dir, exist_ok=True)
+    models = {}
+
+    for speaker_id, audio_files in speaker_data.items():
+        print(f"Training model for speaker: {speaker_id}")
+        gmm = train_speaker_model(audio_files)
+        models[speaker_id] = gmm
+
+        # Save model to disk
+        model_path = os.path.join(model_dir, f"{speaker_id}.pkl")
+        with open(model_path, 'wb') as f:
+            pickle.dump(gmm, f)
+
+    return models
+</code></pre>
+
+<h3>Speaker Identification</h3>
+
+<pre><code><span class="code-label">Python</span>
+def identify_speaker(test_audio, models):
+    """
+    Identify which enrolled speaker produced the test audio.
+
+    Parameters
+    ----------
+    test_audio : str
+        Path to test audio file
+    models : dict
+        {speaker_id: trained GMM model}
+
+    Returns
+    -------
+    identified_speaker : str
+        ID of the identified speaker
+    scores : dict
+        {speaker_id: log-likelihood score}
+    """
+    # Extract features from test utterance
+    features = extract_mfcc_features(test_audio)
+
+    # Score against all enrolled models
+    scores = {}
+    for speaker_id, gmm in models.items():
+        # Compute average log-likelihood per frame
+        log_likelihood = gmm.score(features)
+        scores[speaker_id] = log_likelihood
+
+    # Select speaker with highest score
+    identified_speaker = max(scores, key=scores.get)
+
+    return identified_speaker, scores
+
+
+def verify_speaker(test_audio, claimed_id, models, threshold=0.0):
+    """
+    Verify if test audio matches the claimed speaker identity.
+
+    Parameters
+    ----------
+    test_audio : str
+        Path to test audio file
+    claimed_id : str
+        Claimed speaker identity
+    models : dict
+        Must include claimed speaker model and 'UBM' key
+    threshold : float
+        Decision threshold for log-likelihood ratio
+
+    Returns
+    -------
+    accepted : bool
+        Whether the identity claim is accepted
+    llr : float
+        Log-likelihood ratio score
+    """
+    features = extract_mfcc_features(test_audio)
+
+    # Score against claimed speaker model
+    speaker_score = models[claimed_id].score(features)
+    # Score against UBM (background model)
+    ubm_score = models['UBM'].score(features)
+
+    # Log-likelihood ratio
+    llr = speaker_score - ubm_score
+
+    return llr > threshold, llr
+</code></pre>
+
+<h3>Complete Pipeline Example</h3>
+
+<pre><code><span class="code-label">Python</span>
+# =============================================================
+# Complete MFCC+GMM Speaker Identification Pipeline
+# =============================================================
+
+# 1. Organize training data
+speaker_data = {
+    'alice': ['data/alice/train_01.wav', 'data/alice/train_02.wav'],
+    'bob':   ['data/bob/train_01.wav',   'data/bob/train_02.wav'],
+    'carol': ['data/carol/train_01.wav', 'data/carol/train_02.wav'],
+}
+
+# 2. Enroll speakers (train GMMs)
+models = enroll_speakers(speaker_data)
+
+# 3. Identify an unknown speaker
+test_file = 'data/test/unknown_speaker.wav'
+speaker_id, scores = identify_speaker(test_file, models)
+
+print(f"Identified speaker: {speaker_id}")
+print("Scores per speaker:")
+for sid, score in sorted(scores.items(), key=lambda x: -x[1]):
+    print(f"  {sid}: {score:.2f}")
+
+# 4. Verify a claimed identity
+accepted, llr = verify_speaker(
+    'data/test/claim_alice.wav',
+    claimed_id='alice',
+    models=models,
+    threshold=-5.0
+)
+print(f"\nVerification: {'ACCEPTED' if accepted else 'REJECTED'} (LLR={llr:.2f})")
+</code></pre>
+
+<h3>Training a UBM with MAP Adaptation</h3>
+
+<pre><code><span class="code-label">Python</span>
+def train_ubm(background_audio_paths, n_components=256,
+              covariance_type='diag', max_iter=200):
+    """
+    Train a Universal Background Model from a large pool of speakers.
+
+    Parameters
+    ----------
+    background_audio_paths : list of str
+        Audio files from many diverse speakers
+    n_components : int
+        Number of GMM components (256-2048)
+
+    Returns
+    -------
+    ubm : GaussianMixture
+        Trained UBM
+    """
+    all_features = []
+    for path in background_audio_paths:
+        features = extract_mfcc_features(path)
+        all_features.append(features)
+
+    X = np.vstack(all_features)
+    print(f"Training UBM on {X.shape[0]} frames "
+          f"from {len(background_audio_paths)} utterances")
+
+    ubm = GaussianMixture(
+        n_components=n_components,
+        covariance_type=covariance_type,
+        max_iter=max_iter,
+        n_init=3,
+        random_state=42
+    )
+    ubm.fit(X)
+    return ubm
+
+
+def map_adapt(ubm, speaker_features, relevance_factor=16.0):
+    """
+    Adapt UBM to create a speaker-specific model using MAP adaptation.
+
+    Only adapts the means (standard practice).
+
+    Parameters
+    ----------
+    ubm : GaussianMixture
+        Trained Universal Background Model
+    speaker_features : np.ndarray
+        MFCC features from speaker enrollment data
+    relevance_factor : float
+        Controls adaptation strength (default: 16)
+
+    Returns
+    -------
+    speaker_gmm : GaussianMixture
+        MAP-adapted speaker model
+    """
+    import copy
+    speaker_gmm = copy.deepcopy(ubm)
+
+    # E-step: compute posterior responsibilities
+    # p(k | x_t) for each frame t and component k
+    posteriors = ubm.predict_proba(speaker_features)
+
+    # Sufficient statistics per component
+    n_k = posteriors.sum(axis=0)  # zeroth-order (effective count)
+
+    for k in range(ubm.n_components):
+        if n_k[k] < 1e-6:
+            continue  # skip components with no data
+
+        # First-order: weighted mean of speaker data
+        weighted_sum = (posteriors[:, k:k+1] * speaker_features).sum(axis=0)
+        speaker_mean = weighted_sum / n_k[k]
+
+        # Adaptation coefficient
+        alpha_k = n_k[k] / (n_k[k] + relevance_factor)
+
+        # MAP-adapted mean
+        speaker_gmm.means_[k] = (
+            alpha_k * speaker_mean +
+            (1 - alpha_k) * ubm.means_[k]
+        )
+
+    return speaker_gmm
+
+
+# Usage:
+# ubm = train_ubm(all_background_audio_files, n_components=256)
+# speaker_features = extract_mfcc_features('data/alice/enroll.wav')
+# alice_model = map_adapt(ubm, speaker_features)
+</code></pre>
+</section>
+
+<!-- ===== STRENGTHS & WEAKNESSES ===== -->
+<section id="strengths-weaknesses">
+<h2>Strengths & Weaknesses</h2>
+
+<div class="pros-cons">
+  <div class="pros">
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Well-understood theory</strong> -- Decades of research and mathematical rigor behind every design choice</li>
+      <li><strong>Interpretable</strong> -- Each GMM component maps to an identifiable acoustic class; model parameters have clear meaning</li>
+      <li><strong>Low computational cost</strong> -- Training and inference are fast compared to deep learning (no GPU required)</li>
+      <li><strong>Works with limited data</strong> -- UBM + MAP adaptation enables effective enrollment with as little as 10-30 seconds of speech</li>
+      <li><strong>No labeled data needed</strong> -- Training is unsupervised (EM algorithm); no phonetic transcriptions required</li>
+      <li><strong>Text-independent</strong> -- Works regardless of what the speaker says</li>
+      <li><strong>Mature tooling</strong> -- Widely implemented in standard libraries (sklearn, Kaldi, MATLAB)</li>
+      <li><strong>Deterministic features</strong> -- MFCC extraction is fully deterministic and reproducible</li>
+      <li><strong>Noise tolerance</strong> -- GMMs handle moderate noise reasonably well due to their probabilistic nature</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>Weaknesses</h4>
+    <ul>
+      <li><strong>Channel mismatch</strong> -- Performance degrades when training and test conditions differ (different microphones, phones, rooms)</li>
+      <li><strong>No temporal modeling</strong> -- Treats frames as independent (bag-of-frames), ignoring speaking patterns and prosody</li>
+      <li><strong>Limited discriminative power</strong> -- Generative model that maximizes likelihood rather than directly maximizing classification accuracy</li>
+      <li><strong>Scalability issues</strong> -- Scoring against every enrolled model is O(N); large populations become slow</li>
+      <li><strong>Fixed features</strong> -- MFCCs are hand-designed, not learned from data; may miss important discriminative patterns</li>
+      <li><strong>Session variability</strong> -- Struggles with intra-speaker variation across recording sessions</li>
+      <li><strong>Short utterances</strong> -- Performance drops significantly with very short test utterances (under 5 seconds)</li>
+      <li><strong>Similar speakers</strong> -- Can struggle to distinguish speakers with similar vocal characteristics</li>
+      <li><strong>Not state-of-the-art</strong> -- Significantly outperformed by modern neural approaches on standard benchmarks</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== COMPARISON ===== -->
+<section id="comparison">
+<h2>Comparison with Modern Approaches</h2>
+
+<p>The field of speaker recognition has evolved considerably since the GMM-UBM era. Here is how MFCC+GMM compares to its successors:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Era</th>
+      <th>Features</th>
+      <th>Model</th>
+      <th>Key Innovation</th>
+      <th>Relative EER</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>MFCC + GMM-UBM</strong></td>
+      <td>1995-2010</td>
+      <td>MFCC (hand-crafted)</td>
+      <td>GMM with UBM + MAP</td>
+      <td>Universal background model, MAP adaptation</td>
+      <td>Baseline</td>
+    </tr>
+    <tr>
+      <td><strong>i-vector + PLDA</strong></td>
+      <td>2010-2017</td>
+      <td>MFCC</td>
+      <td>Total variability + PLDA</td>
+      <td>Fixed-length utterance representation, channel compensation</td>
+      <td>~50% lower</td>
+    </tr>
+    <tr>
+      <td><strong>x-vector (TDNN)</strong></td>
+      <td>2017-2020</td>
+      <td>Filterbank / MFCC</td>
+      <td>DNN embedding + PLDA</td>
+      <td>Learned frame-level features, statistics pooling</td>
+      <td>~70% lower</td>
+    </tr>
+    <tr>
+      <td><strong>ECAPA-TDNN</strong></td>
+      <td>2020-present</td>
+      <td>Filterbank</td>
+      <td>Enhanced TDNN + attention</td>
+      <td>Channel attention, multi-scale aggregation, SE blocks</td>
+      <td>~80% lower</td>
+    </tr>
+    <tr>
+      <td><strong>ResNet / wav2vec 2.0</strong></td>
+      <td>2021-present</td>
+      <td>Raw audio / learned</td>
+      <td>Self-supervised + fine-tune</td>
+      <td>Self-supervised pre-training, end-to-end learning</td>
+      <td>~85% lower</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Evolution Timeline</h3>
+
+<div class="comparison-grid">
+  <div class="comparison-card">
+    <h4>i-vectors (2010)</h4>
+    <p>Built on top of GMM-UBM. Instead of using the adapted GMM directly, the <strong>total variability space</strong> projects the GMM supervector into a low-dimensional (typically 400-600 dim) fixed-length representation. This i-vector is then scored using cosine distance or PLDA (Probabilistic Linear Discriminant Analysis).</p>
+    <ul>
+      <li>Better channel compensation via LDA/WCCN</li>
+      <li>Still uses MFCC features</li>
+      <li>Still requires UBM training</li>
+    </ul>
+  </div>
+  <div class="comparison-card">
+    <h4>x-vectors (2017)</h4>
+    <p>Replaced GMM-based feature aggregation with a <strong>Time Delay Neural Network (TDNN)</strong> that learns frame-level representations and aggregates them via statistics pooling. Trained discriminatively on speaker classification, producing fixed-length <strong>speaker embeddings</strong>.</p>
+    <ul>
+      <li>End-to-end learned features</li>
+      <li>Better with large training datasets</li>
+      <li>More robust to domain mismatch</li>
+    </ul>
+  </div>
+  <div class="comparison-card">
+    <h4>ECAPA-TDNN (2020)</h4>
+    <p>Enhanced x-vector architecture with <strong>squeeze-excitation blocks</strong>, <strong>multi-scale feature aggregation</strong>, and <strong>channel-dependent attention</strong>. Currently among the top-performing open-source models.</p>
+    <ul>
+      <li>State-of-the-art on VoxCeleb benchmarks</li>
+      <li>~1.7% EER on VoxCeleb1-O</li>
+      <li>Widely available (SpeechBrain, NVIDIA NeMo)</li>
+    </ul>
+  </div>
+  <div class="comparison-card">
+    <h4>Self-Supervised (2022+)</h4>
+    <p>Models like <strong>wav2vec 2.0</strong>, <strong>HuBERT</strong>, and <strong>WavLM</strong> learn general audio representations from unlabeled data, then fine-tune for speaker recognition. Approaches state-of-the-art with less labeled data.</p>
+    <ul>
+      <li>Minimal labeled data needed</li>
+      <li>Transfer learning from pre-trained models</li>
+      <li>Works directly on raw waveforms</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== WHEN TO USE ===== -->
+<section id="when-to-use">
+<h2>When to Use MFCC+GMM Today</h2>
+
+<p>Despite being surpassed by deep learning methods on benchmarks, MFCC+GMM remains a valid choice in several scenarios:</p>
+
+<div class="callout success">
+  <div class="callout-title">Good Fit</div>
+  <ul>
+    <li><strong>Educational purposes</strong> -- Perfect for learning the fundamentals of speaker recognition, signal processing, and statistical modeling. Every component is explainable and inspectable.</li>
+    <li><strong>Resource-constrained environments</strong> -- Embedded systems, IoT devices, or edge deployments where GPU compute and model size are prohibitive. A GMM with 64 components requires only kilobytes of storage.</li>
+    <li><strong>Small speaker populations</strong> -- When identifying among 5-50 speakers in a controlled environment, GMM-UBM achieves practical accuracy levels.</li>
+    <li><strong>Rapid prototyping</strong> -- Get a working speaker ID system running in hours, not days. Useful for proof-of-concept demonstrations.</li>
+    <li><strong>Controlled acoustic conditions</strong> -- When recording conditions are consistent (same microphone, same room), channel mismatch is minimized and GMM-UBM performs well.</li>
+    <li><strong>Privacy-sensitive applications</strong> -- On-device processing with no need to send audio to a cloud API. The model is compact and fully self-contained.</li>
+    <li><strong>Baseline systems</strong> -- As a reference baseline against which to measure the improvement of more complex approaches.</li>
+  </ul>
+</div>
+
+<div class="callout warning">
+  <div class="callout-title">Poor Fit</div>
+  <ul>
+    <li><strong>Large-scale deployment</strong> -- Identifying among thousands of speakers in diverse acoustic conditions. Use x-vector or ECAPA-TDNN instead.</li>
+    <li><strong>Cross-channel scenarios</strong> -- When training data comes from different microphones/channels than test data. Deep learning models with domain adaptation handle this far better.</li>
+    <li><strong>Short utterance verification</strong> -- For utterances under 3-5 seconds, neural embeddings significantly outperform GMMs.</li>
+    <li><strong>State-of-the-art accuracy requirements</strong> -- Any application requiring minimum EER. ECAPA-TDNN and its successors are the clear choice.</li>
+    <li><strong>Adversarial conditions</strong> -- Spoofing detection and robustness to adversarial attacks require modern deep learning approaches.</li>
+  </ul>
+</div>
+
+<h3>Decision Framework</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>MFCC+GMM</th>
+      <th>x-vector / ECAPA-TDNN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Compute requirements</td>
+      <td>CPU only, minimal RAM</td>
+      <td>GPU for training, CPU possible for inference</td>
+    </tr>
+    <tr>
+      <td>Training data needed</td>
+      <td>Minutes per speaker + UBM data</td>
+      <td>Thousands of speakers for embedding network</td>
+    </tr>
+    <tr>
+      <td>Model size</td>
+      <td>KB to low MB</td>
+      <td>Tens to hundreds of MB</td>
+    </tr>
+    <tr>
+      <td>Accuracy (clean conditions)</td>
+      <td>Good (~95%+ for small sets)</td>
+      <td>Excellent (~99%+)</td>
+    </tr>
+    <tr>
+      <td>Robustness to noise</td>
+      <td>Moderate</td>
+      <td>Good to excellent</td>
+    </tr>
+    <tr>
+      <td>Interpretability</td>
+      <td>High</td>
+      <td>Low (black box embeddings)</td>
+    </tr>
+    <tr>
+      <td>Implementation complexity</td>
+      <td>Low (sklearn + librosa)</td>
+      <td>Moderate to high (PyTorch / SpeechBrain)</td>
+    </tr>
+    <tr>
+      <td>Enrollment speed</td>
+      <td>Seconds</td>
+      <td>Seconds (inference) but training takes hours/days</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== SOURCES ===== -->
+<section id="sources">
+<h2>Sources & References</h2>
+
+<div class="sources">
+  <h3>Key Papers & Resources</h3>
+  <ol>
+    <li>Reynolds, D. A., Quatieri, T. F., & Dunn, R. B. (2000). <em>"Speaker Verification Using Adapted Gaussian Mixture Models."</em> Digital Signal Processing, 10(1-3), 19-41. <a href="https://people.irisa.fr/Guillaume.Gravier/ADM/articles2020/reynolds-00.pdf" target="_blank">PDF</a> -- The foundational GMM-UBM paper.</li>
+    <li><a href="https://en.wikipedia.org/wiki/Mel-frequency_cepstrum" target="_blank">Mel-frequency cepstrum</a> -- Wikipedia overview of MFCCs and the mel-frequency cepstral representation.</li>
+    <li><a href="http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/" target="_blank">Mel Frequency Cepstral Coefficient (MFCC) tutorial</a> -- Practical Cryptography guide with step-by-step MFCC computation.</li>
+    <li><a href="https://maelfabien.github.io/machinelearning/Speech1/" target="_blank">Speaker Verification using Gaussian Mixture Model (GMM-UBM)</a> -- Mael Fabien's detailed tutorial on the GMM-UBM system.</li>
+    <li><a href="https://www.mathworks.com/help/audio/ug/speaker-verification-using-gaussian-mixture-model.html" target="_blank">Speaker Verification Using Gaussian Mixture Model</a> -- MATLAB & Simulink documentation with implementation guidance.</li>
+    <li><a href="https://ieeexplore.ieee.org/document/5713236/" target="_blank">A Study on Universal Background Model Training in Speaker Verification</a> -- IEEE study on UBM training strategies and their impact on verification performance.</li>
+    <li><a href="https://www.geeksforgeeks.org/nlp/mel-frequency-cepstral-coefficients-mfcc-for-speech-recognition/" target="_blank">MFCCs for Speech Recognition</a> -- GeeksforGeeks tutorial on MFCC extraction for speech applications.</li>
+    <li><a href="https://en.wikipedia.org/wiki/Mel_scale" target="_blank">Mel scale</a> -- Wikipedia reference on the mel perceptual frequency scale.</li>
+    <li><a href="https://librosa.org/doc/main/generated/librosa.feature.mfcc.html" target="_blank">librosa.feature.mfcc</a> -- Official librosa documentation for MFCC extraction in Python.</li>
+    <li><a href="https://appliedmachinelearning.blog/2017/11/14/spoken-speaker-identification-based-on-gaussian-mixture-models-python-implementation/" target="_blank">Spoken Speaker Identification based on Gaussian Mixture Models</a> -- Python implementation walkthrough.</li>
+    <li><a href="https://www.mdpi.com/2076-3417/14/4/1329" target="_blank">Comparison of Modern Deep Learning Models for Speaker Verification</a> -- 2024 comparative study of ECAPA-TDNN, TitaNet, and other modern models.</li>
+    <li><a href="https://www.mathworks.com/help/audio/ug/speaker-verification-using-ivectors.html" target="_blank">Speaker Verification Using i-vectors</a> -- MATLAB tutorial on i-vector systems, the successor to GMM-UBM.</li>
+    <li><a href="https://github.com/zhenghuatan/GMM-UBM_MAP_SV" target="_blank">GMM-UBM_MAP_SV</a> -- Python implementation of GMM-UBM with MAP adaptation for speaker verification.</li>
+    <li><a href="https://medium.com/@derutycsl/intuitive-understanding-of-mfccs-836d36a1f779" target="_blank">Intuitive Understanding of MFCCs</a> -- Emmanuel Deruty's accessible explanation of MFCC features.</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="page-footer">
+  <p>MFCC + GMM Speaker Identification Explainer &middot; Generated March 2026</p>
+  <p style="margin-top:0.5rem"><a href="../voice-speaker-identification/index.html">&larr; Back to Speaker Identification Overview</a></p>
+</div>
+
+</div>
+</main>
+</div>
+
+<!-- ===== JavaScript ===== -->
+<script>
+// ===== Dark Mode Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+function setTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  themeToggle.innerHTML = theme === 'dark'
+    ? '<span class="toggle-icon">&#9788;</span> Light'
+    : '<span class="toggle-icon">&#9790;</span> Dark';
+}
+
+// Check saved preference or system preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  setTheme(savedTheme);
+} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  setTheme('dark');
+}
+
+themeToggle.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// ===== Mobile Menu =====
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar when clicking a link on mobile
+sidebar.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+  if (window.innerWidth <= 900 &&
+      !sidebar.contains(e.target) &&
+      !menuToggle.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
+
+// ===== Active Sidebar Link (Scroll Spy) =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
+
+function updateActiveLink() {
+  let currentSection = '';
+  const scrollPos = window.scrollY + 100;
+
+  sections.forEach(section => {
+    if (section.offsetTop <= scrollPos) {
+      currentSection = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + currentSection) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+updateActiveLink();
+
+// ===== Initialize Mermaid =====
+document.addEventListener('DOMContentLoaded', () => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: isDark ? 'dark' : 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  }
+});
+
+// Re-initialize mermaid on theme change
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.attributeName === 'data-theme') {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      if (typeof mermaid !== 'undefined') {
+        // Re-render mermaid diagrams with new theme
+        document.querySelectorAll('.mermaid').forEach(el => {
+          const content = el.getAttribute('data-original') || el.textContent;
+          if (!el.getAttribute('data-original')) {
+            el.setAttribute('data-original', el.textContent);
+          }
+          el.removeAttribute('data-processed');
+          el.innerHTML = content;
+        });
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose'
+        });
+        mermaid.run();
+      }
+    }
+  });
+});
+observer.observe(html, { attributes: true });
+</script>
+</body>
+</html>
