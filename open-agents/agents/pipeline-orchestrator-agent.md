@@ -38,17 +38,57 @@ Activate this agent when:
    - Quality check: Sufficient sources? Data visualization opportunities?
    - Proceed or request additional research
 
-4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+4. **Stage 1.5 - Research Validation & Review Loop** (optional): If validation is enabled, run the validation-review cycle:
+
+   **a) Validation**: Invoke Research Validator Agent:
    - Pass only the research notes path (`output-drafts/{topic}-research.md`)
    - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
    - Monitor for completion
    - Verify validation report at `output-drafts/{topic}-validation.md`
    - Quality check: All major claims assessed? Verdicts assigned?
-   - Note the overall reliability rating
-   - Pass validation report path to all downstream agents
+
+   **b) Review & Opportunities (PIPELINE BREAKPOINT)**: Analyze validation results and pause for user input:
+   - Read the validation report
+   - Extract the Research Opportunities section
+   - Present to the user:
+     1. **Validation summary**: Confirmed/uncertain/invalid counts, overall reliability
+     2. **Key findings**: Major corrections, systemic issues
+     3. **Research opportunities**: Numbered list with priority, description, and expected impact for each
+   - Ask the user to:
+     - Approve specific opportunities (by number) for supplemental research
+     - Skip all opportunities and continue the pipeline
+     - Add custom research directions not identified by the validator
+   - **Wait for user response before proceeding**
+
+   **c) Supplemental Research Cycle** (if user approves opportunities):
+   - For each approved opportunity, invoke the Research Agent with a targeted scope:
+     - Pass only the specific questions/angles to investigate (from the opportunity description and suggested queries)
+     - Do NOT pass the original research context—this is targeted follow-up, not a redo
+     - Save supplemental research to `output-drafts/{topic}-research-supplement-{N}.md` (where N is the cycle number: 1, 2, 3...)
+   - After supplemental research completes, invoke the Research Validator Agent again:
+     - Pass only the supplement file path
+     - Save supplemental validation to `output-drafts/{topic}-validation-supplement-{N}.md`
+   - Return to step (b): present new findings and any new opportunities to the user
+   - This cycle repeats until the user says to continue
+
+   **d) Research Catalog**: After the validation loop completes, update the tracking document with a Research Catalog listing all files:
+   ```
+   ## Research Catalog
+   All research and validation files for downstream agents to consume:
+   ### Research Files
+   - `output-drafts/{topic}-research.md` (original)
+   - `output-drafts/{topic}-research-supplement-1.md` (cycle 1)
+   - `output-drafts/{topic}-research-supplement-2.md` (cycle 2)
+   ### Validation Files
+   - `output-drafts/{topic}-validation.md` (original)
+   - `output-drafts/{topic}-validation-supplement-1.md` (cycle 1)
+   - `output-drafts/{topic}-validation-supplement-2.md` (cycle 2)
+   ```
+   - Pass the tracking document path to all downstream agents so they can find all input files
 
 5. **Stage 2 - Article Writing**: Invoke Article Writer Agent:
-   - Pass research notes location
+   - Pass the tracking document path so the agent can read the Research Catalog and find all research/validation files
+   - If no validation was run, pass the research notes location directly
    - Monitor for completion
    - Verify article created at `output-drafts/{topic}-article.md`
    - Quality check: Appropriate length? Proper structure?
@@ -119,15 +159,37 @@ status: "in_progress|completed|failed"
 - **Viz Opportunities**: {count}
 - **Notes**: {any issues or observations}
 
-### Stage 1.5: Research Validation (Optional)
+### Stage 1.5: Research Validation & Review (Optional)
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
-- **Started**: {timestamp}
-- **Completed**: {timestamp}
-- **Output**: `output-drafts/{topic}-validation.md`
+- **Validation Cycles**: {count}
+
+#### Cycle 0 (Initial Validation)
+- **Validation Output**: `output-drafts/{topic}-validation.md`
 - **Claims Validated**: {count}
 - **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
 - **Overall Reliability**: {high|moderate|low}
-- **Notes**: {any issues or observations}
+- **Opportunities Identified**: {count}
+- **Opportunities Approved**: {list of approved items}
+- **User Decision**: {continue / research items X,Y,Z / add custom: "..."}
+
+#### Cycle 1 (Supplemental)
+- **Research Output**: `output-drafts/{topic}-research-supplement-1.md`
+- **Validation Output**: `output-drafts/{topic}-validation-supplement-1.md`
+- **New Claims Validated**: {count}
+- **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
+- **Further Opportunities**: {count}
+- **User Decision**: {continue / research more}
+
+{...additional cycles as needed...}
+
+### Research Catalog
+All research and validation files for downstream agents:
+#### Research Files
+- `output-drafts/{topic}-research.md` (original)
+{- `output-drafts/{topic}-research-supplement-N.md` for each cycle}
+#### Validation Files
+- `output-drafts/{topic}-validation.md` (original)
+{- `output-drafts/{topic}-validation-supplement-N.md` for each cycle}
 
 ### Stage 2: Article Writing
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Failed
@@ -174,6 +236,8 @@ status: "in_progress|completed|failed"
 |-------|------|------|--------|
 | Research | `output-drafts/{topic}-research.md` | {size} | ✅ |
 | Validation | `output-drafts/{topic}-validation.md` | {size} | ✅/⏭️ |
+| Supplement 1 | `output-drafts/{topic}-research-supplement-1.md` | {size} | ✅/⏭️ |
+| Supplement 1 Validation | `output-drafts/{topic}-validation-supplement-1.md` | {size} | ✅/⏭️ |
 | Article | `output-drafts/{topic}-article.md` | {size} | ✅ |
 | Validated Article | `output-refined/{topic}-article.md` | {size} | ✅ |
 | Visualizations | `output-refined/{topic}-viz/` | {count} files | ✅ |

@@ -69,6 +69,19 @@ Activate this agent when:
    - The current state of scientific/expert consensus
    - Whether the topic is actively debated
 
+7. **Research Opportunities**: Based on validation findings, identify targeted follow-up research that could strengthen the overall body of knowledge:
+   - **Uncertain claims that could be resolved**: Where deeper or more targeted research might move a claim from uncertain to confirmed/invalid
+   - **Invalid claims needing replacement data**: Where the corrected information needs better sourcing or more detail
+   - **Gaps discovered during validation**: Topics or angles the validator encountered that the original research missed entirely
+   - **Outdated data needing refresh**: Statistics or claims where newer data likely exists but wasn't in the original research
+   - **Conflicting evidence needing resolution**: Areas where the validator found contradictory sources and deeper investigation could clarify
+
+   For each opportunity, provide:
+   - A clear description of what to research
+   - Why this research is needed (which validation finding drives it)
+   - Priority: **high** (would significantly change conclusions), **medium** (would improve confidence), **low** (nice to have)
+   - Suggested search queries or angles of investigation
+
 ## Output Format
 
 ```markdown
@@ -83,6 +96,7 @@ claims_confirmed: {number}
 claims_uncertain: {number}
 claims_invalid: {number}
 overall_reliability: "{high|moderate|low}"
+research_opportunities: {number}
 ---
 
 # Research Validation Report: {Topic}
@@ -144,6 +158,28 @@ overall_reliability: "{high|moderate|low}"
 - **Primary source check**: {Was the original source found? Does it say what was claimed?}
 - **Recency**: {Is the data current or outdated?}
 - **Context**: {Any important context missing from how it was presented?}
+
+...
+
+---
+
+## Research Opportunities
+
+Based on validation findings, the following targeted research could strengthen the overall body of knowledge:
+
+### Opportunity 1: {What to research}
+- **Priority**: HIGH / MEDIUM / LOW
+- **Driven by**: {Which validation finding—e.g., "Claim 2 rated UNCERTAIN (4/10)"}
+- **Why**: {What this research would resolve or improve}
+- **Suggested queries**: "{query 1}", "{query 2}"
+- **Expected impact**: {What would change if this research succeeds}
+
+### Opportunity 2: {What to research}
+- **Priority**: HIGH / MEDIUM / LOW
+- **Driven by**: {Which validation finding}
+- **Why**: {What this research would resolve}
+- **Suggested queries**: "{query 1}", "{query 2}"
+- **Expected impact**: {What would change}
 
 ...
 
@@ -246,5 +282,6 @@ After completing validation:
 1. Report validation results summary (confirmed/uncertain/invalid counts)
 2. Highlight any major corrections needed
 3. Note overall reliability rating
-4. The validation report is now available for downstream agents at the output location
-5. Downstream agents (Article Writer, Explanation Writer, Data Dashboard) should read the validation report and incorporate validity indicators into their output
+4. List research opportunities identified, with priorities
+5. The validation report is now available for the pipeline orchestrator's Review & Opportunities stage
+6. The pipeline will pause for user review before continuing to downstream agents

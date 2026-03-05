@@ -43,17 +43,36 @@ Activate this agent when:
      - Sources properly cited?
    - Proceed or request additional research
 
-4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+4. **Stage 1.5 - Research Validation & Review Loop** (optional): If validation is enabled, run the validation-review cycle:
+
+   **a) Validation**: Invoke Research Validator Agent:
    - Pass only the research notes path (`output-drafts/{topic}-research.md`)
    - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
    - Monitor for completion
    - Verify validation report at `output-drafts/{topic}-validation.md`
-   - Quality check: All major claims assessed? Verdicts assigned?
-   - Note the overall reliability rating
-   - Pass validation report path to the Data Dashboard Agent
+
+   **b) Review & Opportunities (PIPELINE BREAKPOINT)**: Analyze validation results and pause for user input:
+   - Read the validation report
+   - Extract the Research Opportunities section
+   - Present to the user:
+     1. **Validation summary**: Confirmed/uncertain/invalid counts, overall reliability
+     2. **Key findings**: Major corrections, systemic issues
+     3. **Research opportunities**: Numbered list with priority, description, and expected impact
+   - Ask the user to approve specific opportunities, skip all and continue, or add custom directions
+   - **Wait for user response before proceeding**
+
+   **c) Supplemental Research Cycle** (if user approves opportunities):
+   - For each approved opportunity, invoke the Research Agent with targeted scope
+   - Save to `output-drafts/{topic}-research-supplement-{N}.md`
+   - Re-validate: save to `output-drafts/{topic}-validation-supplement-{N}.md`
+   - Return to step (b) with new findings
+   - Repeat until user says to continue
+
+   **d) Research Catalog**: Update tracking document with all research and validation files for downstream agents
 
 5. **Stage 2 - Dashboard Generation**: Invoke Data Dashboard Agent:
-   - Pass research notes location
+   - Pass the tracking document path so the agent can read the Research Catalog and find all research/validation files
+   - If no validation was run, pass the research notes location directly
    - Monitor for completion
    - Verify dashboard at `output-final/{topic}-dashboard/index.html`
    - Quality check:
@@ -107,15 +126,32 @@ status: "in_progress|completed|failed"
 - **Sources Found**: {count}
 - **Notes**: {any issues or observations}
 
-### Stage 1.5: Research Validation (Optional)
+### Stage 1.5: Research Validation & Review (Optional)
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
-- **Started**: {timestamp}
-- **Completed**: {timestamp}
-- **Output**: `output-drafts/{topic}-validation.md`
+- **Validation Cycles**: {count}
+
+#### Cycle 0 (Initial Validation)
+- **Validation Output**: `output-drafts/{topic}-validation.md`
 - **Claims Validated**: {count}
 - **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
 - **Overall Reliability**: {high|moderate|low}
-- **Notes**: {any issues or observations}
+- **Opportunities Identified**: {count}
+- **Opportunities Approved**: {list}
+- **User Decision**: {continue / research items X,Y,Z}
+
+#### Cycle N (Supplemental)
+- **Research Output**: `output-drafts/{topic}-research-supplement-N.md`
+- **Validation Output**: `output-drafts/{topic}-validation-supplement-N.md`
+- **User Decision**: {continue / research more}
+
+### Research Catalog
+All research and validation files for downstream agents:
+#### Research Files
+- `output-drafts/{topic}-research.md` (original)
+{- `output-drafts/{topic}-research-supplement-N.md` for each cycle}
+#### Validation Files
+- `output-drafts/{topic}-validation.md` (original)
+{- `output-drafts/{topic}-validation-supplement-N.md` for each cycle}
 
 ### Stage 2: Dashboard Generation
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Failed

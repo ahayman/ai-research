@@ -17,13 +17,19 @@ Activate this agent when:
 
 ## Core Behaviors
 
-1. **Research Ingestion**: Process concept research notes:
-   - Read concept research from `output-drafts/{topic}-concept-research.md`
+1. **Research Ingestion**: Process all concept research inputs:
+   - **If a pipeline tracking document is provided**, read its Research Catalog section to find all research and validation files. Read every file listed:
+     - Original research: `output-drafts/{topic}-concept-research.md`
+     - Supplement files: `output-drafts/{topic}-concept-research-supplement-{N}.md` (if any)
+     - Original validation: `output-drafts/{topic}-validation.md` (if any)
+     - Supplement validations: `output-drafts/{topic}-validation-supplement-{N}.md` (if any)
+   - **If no tracking document**, read from `output-drafts/{topic}-concept-research.md` directly and check for `output-drafts/{topic}-validation.md`
+   - Merge findings from all research files (supplements add to and may correct the original)
+   - Merge findings from all validation files (supplement validations may upgrade uncertain claims to confirmed)
    - Identify all components and relationships
    - Review diagram specifications
    - Note terminology and definitions
    - Understand the target complexity level
-   - **Check for validation report**: If `output-drafts/{topic}-validation.md` exists, read it and integrate validity ratings into the explanation (see Validation Integration below)
 
 2. **Audience Calibration**: Determine appropriate depth:
    - **Beginner**: No assumed knowledge, define all terms, use analogies

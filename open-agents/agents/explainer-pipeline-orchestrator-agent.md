@@ -57,14 +57,32 @@ The following phrases should route to this pipeline:
    - Quality check: Components identified? Relationships mapped? Diagram specs?
    - Count diagram opportunities
 
-4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+4. **Stage 1.5 - Research Validation & Review Loop** (optional): If validation is enabled, run the validation-review cycle:
+
+   **a) Validation**: Invoke Research Validator Agent:
    - Pass only the concept research notes path (`output-drafts/{topic}-concept-research.md`)
    - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
    - Monitor for completion
    - Verify validation report at `output-drafts/{topic}-validation.md`
-   - Quality check: All major claims assessed? Verdicts assigned?
-   - Note the overall reliability rating
-   - Pass validation report path to downstream agents (Explanation Writer, Explainer Webpage Generator)
+
+   **b) Review & Opportunities (PIPELINE BREAKPOINT)**: Analyze validation results and pause for user input:
+   - Read the validation report
+   - Extract the Research Opportunities section
+   - Present to the user:
+     1. **Validation summary**: Confirmed/uncertain/invalid counts, overall reliability
+     2. **Key findings**: Major corrections, systemic issues
+     3. **Research opportunities**: Numbered list with priority, description, and expected impact
+   - Ask the user to approve specific opportunities, skip all and continue, or add custom directions
+   - **Wait for user response before proceeding**
+
+   **c) Supplemental Research Cycle** (if user approves opportunities):
+   - For each approved opportunity, invoke the Concept Research Agent with targeted scope
+   - Save to `output-drafts/{topic}-concept-research-supplement-{N}.md`
+   - Re-validate: save to `output-drafts/{topic}-validation-supplement-{N}.md`
+   - Return to step (b) with new findings
+   - Repeat until user says to continue
+
+   **d) Research Catalog**: Update tracking document with all research and validation files for downstream agents
 
 5. **Stage 2 - Diagram Generation**: Invoke Diagram Generator Agent:
    - Pass concept research location
@@ -75,7 +93,8 @@ The following phrases should route to this pipeline:
    - Quality check: Clear? Accurate? Well-labeled?
 
 6. **Stage 3 - Explanation Writing**: Invoke Explanation Writer Agent:
-   - Pass concept research location
+   - Pass the tracking document path so the agent can read the Research Catalog and find all research/validation files
+   - If no validation was run, pass the concept research location directly
    - Note available diagrams
    - Monitor for completion
    - Verify explanation at `output-drafts/{topic}-explanation.md`
@@ -151,15 +170,32 @@ status: "in_progress|completed|failed"
 - **Diagram Opportunities**: {count}
 - **Notes**: {any observations}
 
-### Stage 1.5: Research Validation (Optional)
+### Stage 1.5: Research Validation & Review (Optional)
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
-- **Started**: {timestamp}
-- **Completed**: {timestamp}
-- **Output**: `output-drafts/{topic}-validation.md`
+- **Validation Cycles**: {count}
+
+#### Cycle 0 (Initial Validation)
+- **Validation Output**: `output-drafts/{topic}-validation.md`
 - **Claims Validated**: {count}
 - **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
 - **Overall Reliability**: {high|moderate|low}
-- **Notes**: {any observations}
+- **Opportunities Identified**: {count}
+- **Opportunities Approved**: {list}
+- **User Decision**: {continue / research items X,Y,Z}
+
+#### Cycle N (Supplemental)
+- **Research Output**: `output-drafts/{topic}-concept-research-supplement-N.md`
+- **Validation Output**: `output-drafts/{topic}-validation-supplement-N.md`
+- **User Decision**: {continue / research more}
+
+### Research Catalog
+All research and validation files for downstream agents:
+#### Research Files
+- `output-drafts/{topic}-concept-research.md` (original)
+{- `output-drafts/{topic}-concept-research-supplement-N.md` for each cycle}
+#### Validation Files
+- `output-drafts/{topic}-validation.md` (original)
+{- `output-drafts/{topic}-validation-supplement-N.md` for each cycle}
 
 ### Stage 2: Diagram Generation
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Failed

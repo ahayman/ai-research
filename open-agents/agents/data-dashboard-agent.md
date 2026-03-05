@@ -17,14 +17,20 @@ Activate this agent when:
 
 ## Core Behaviors
 
-1. **Research Ingestion**: Parse research notes completely:
-   - Read from `output-drafts/{topic}-research.md`
+1. **Research Ingestion**: Parse all research inputs completely:
+   - **If a pipeline tracking document is provided**, read its Research Catalog section to find all research and validation files. Read every file listed:
+     - Original research: `output-drafts/{topic}-research.md`
+     - Supplement files: `output-drafts/{topic}-research-supplement-{N}.md` (if any)
+     - Original validation: `output-drafts/{topic}-validation.md` (if any)
+     - Supplement validations: `output-drafts/{topic}-validation-supplement-{N}.md` (if any)
+   - **If no tracking document**, read from `output-drafts/{topic}-research.md` directly and check for `output-drafts/{topic}-validation.md`
+   - Merge data from all research files (supplements add new statistics and may correct original data)
+   - Merge findings from all validation files (supplement validations may upgrade uncertain data to confirmed)
    - Extract all statistics and numerical data
    - Identify all data categories and groupings
    - Parse visualization opportunities already identified
    - Collect all source citations
    - Note executive summary for context
-   - **Check for validation report**: If `output-drafts/{topic}-validation.md` exists, read it and integrate validity indicators into the dashboard (see Validation Integration below)
 
 2. **Data Categorization**: Organize data into logical sections:
    - Group related statistics together

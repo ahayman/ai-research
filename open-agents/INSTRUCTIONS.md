@@ -36,41 +36,48 @@ This agent system transforms topics into comprehensive, interactive web experien
 
 ### Article Pipeline (Full)
 ```
-┌─────────────────┐    ┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
-│ Research Agent  │-──▶│ Validator Agent  │────▶│ Article Writer   │────▶│ Image Validator   │
-│ (web research)  │    │ (optional)       │     │ (markdown draft) │     │ (verify URLs)     │
-└─────────────────┘    └─────────────────┘     └──────────────────┘     └───────────────────┘
-                                                                                 │
-                        ┌──────────────────┐                                     │
-                        │ Data Viz Agent   │◀────────────────────────────────────┤
-                        │ (charts/graphs)  │                                     │
-                        └──────────────────┘                                     │
-                                │                                                │
-                                ▼                                                ▼
+                       ┌──────────────────────────────────────────────┐
+                       │        Validation & Review Loop              │
+                       │        (optional, repeatable)                │
+┌─────────────────┐    │  ┌─────────────┐   ┌──────────────────┐     │    ┌──────────────────┐
+│ Research Agent  │-──▶│  │  Validator   │──▶│ Review & Approve │──┐  │───▶│ Article Writer   │
+│ (web research)  │    │  │  Agent       │   │ (user breakpoint)│  │  │    │ (markdown draft) │
+└─────────────────┘    │  └─────────────┘   └──────────────────┘  │  │    └──────────────────┘
+                       │         ▲            │ approve more?     │  │             │
+                       │         │            ▼                   │  │             ▼
+                       │  ┌──────┴────────────────────────┐       │  │    ┌───────────────────┐
+                       │  │ Supplemental Research + Valid. │◀──────┘  │    │ Image Validator   │
+                       │  └───────────────────────────────┘          │    └───────────────────┘
+                       └──────────────────────────────────────────────┘             │
+                        ┌──────────────────┐                                       │
+                        │ Data Viz Agent   │◀──────────────────────────────────────┤
+                        │ (charts/graphs)  │                                       │
+                        └──────────────────┘                                       │
+                                │                                                  ▼
                         ┌─────────────────────────────────────────┐
                         │        Webpage Generator Agent          │
                         │  (interactive HTML with all assets)     │
                         └─────────────────────────────────────────┘
 ```
-When validation is requested (user says "validate", "verify", "double-check", etc.), the Research Validator Agent runs after research and before downstream stages. It does NOT inherit the researcher's context.
+When validation is requested (user says "validate", "verify", "double-check", etc.), the pipeline enters a validation-review loop after research. The validator runs independently, identifies research opportunities, and the pipeline **pauses for user approval** before continuing. Users can approve supplemental research rounds or proceed to downstream stages.
 
 ### Data Dashboard Pipeline (Streamlined)
 ```
-┌─────────────────┐    ┌─────────────────┐     ┌─────────────────────────────────────────┐
-│ Research Agent  │-──▶│ Validator Agent  │────▶│       Data Dashboard Agent              │
-│ (web research)  │    │ (optional)       │     │  (interactive data display webpage)     │
-└─────────────────┘    └─────────────────┘     └─────────────────────────────────────────┘
+┌─────────────────┐    ┌─────────────────────────────┐     ┌──────────────────────────────┐
+│ Research Agent  │-──▶│ Validation & Review Loop    │────▶│    Data Dashboard Agent      │
+│ (web research)  │    │ (optional, user breakpoint) │     │ (interactive data display)   │
+└─────────────────┘    └─────────────────────────────┘     └──────────────────────────────┘
 ```
 Use this pipeline when you want to display all research data interactively without writing a narrative article.
 
 ### Explainer Pipeline (Documentation)
 ```
-┌───────────────────────┐    ┌─────────────────┐     ┌───────────────────────┐
-│ Concept Research      │-──▶│ Validator Agent  │────▶│ Diagram Generator     │
-│ (structure/mechanism) │    │ (optional)       │     │ (UML/flowcharts)      │
-└───────────────────────┘    └─────────────────┘     └───────────────────────┘
-                                                               │
-         ┌────────────────────────────────────────────────────┘
+┌───────────────────────┐    ┌─────────────────────────────┐     ┌───────────────────────┐
+│ Concept Research      │-──▶│ Validation & Review Loop    │────▶│ Diagram Generator     │
+│ (structure/mechanism) │    │ (optional, user breakpoint) │     │ (UML/flowcharts)      │
+└───────────────────────┘    └─────────────────────────────┘     └───────────────────────┘
+                                                                           │
+         ┌────────────────────────────────────────────────────────────────┘
          ▼
 ┌───────────────────────┐     ┌───────────────────────┐
 │ Explanation Writer    │────▶│ Explainer Webpage     │
@@ -150,6 +157,8 @@ open-agents/
 ### Article Pipeline Outputs
 - **Research notes**: `output-drafts/{topic}-research.md`
 - **Validation report**: `output-drafts/{topic}-validation.md` (optional, when validation requested)
+- **Supplemental research**: `output-drafts/{topic}-research-supplement-{N}.md` (optional, from validation review cycles)
+- **Supplemental validation**: `output-drafts/{topic}-validation-supplement-{N}.md` (optional, from validation review cycles)
 - **Article drafts**: `output-drafts/{topic}-article.md`
 - **Pipeline tracking**: `output-drafts/{topic}-pipeline.md` or `output-drafts/{topic}-dashboard-pipeline.md`
 - **Validated articles**: `output-refined/{topic}-article.md`
@@ -160,6 +169,8 @@ open-agents/
 ### Explainer Pipeline Outputs
 - **Concept research**: `output-drafts/{topic}-concept-research.md`
 - **Validation report**: `output-drafts/{topic}-validation.md` (optional, when validation requested)
+- **Supplemental research**: `output-drafts/{topic}-concept-research-supplement-{N}.md` (optional, from validation review cycles)
+- **Supplemental validation**: `output-drafts/{topic}-validation-supplement-{N}.md` (optional, from validation review cycles)
 - **Explanation drafts**: `output-drafts/{topic}-explanation.md`
 - **Pipeline tracking**: `output-drafts/{topic}-explainer-pipeline.md`
 - **Diagrams**: `output-refined/{topic}-diagrams/` (folder with Mermaid/SVG files)
