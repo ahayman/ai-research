@@ -23,6 +23,7 @@ Activate this agent when:
    - Review diagram specifications
    - Note terminology and definitions
    - Understand the target complexity level
+   - **Check for validation report**: If `output-drafts/{topic}-validation.md` exists, read it and integrate validity ratings into the explanation (see Validation Integration below)
 
 2. **Audience Calibration**: Determine appropriate depth:
    - **Beginner**: No assumed knowledge, define all terms, use analogies
@@ -64,7 +65,28 @@ Activate this agent when:
    - Highlight key points
    - Show variations when helpful
 
-8. **Cross-Referencing**: Connect related concepts:
+8. **Validation Integration**: When a validation report exists, reflect validity in the explanation:
+
+   **For CONFIRMED claims**: Present as established fact. No special treatment needed.
+
+   **For UNCERTAIN claims**: Use precise, objective language that conveys the uncertainty:
+   - "Current understanding suggests..." or "Based on available evidence..."
+   - "This is an area of active research/debate"
+   - Include a note block: `> **Evidence note**: This claim has a validity rating of X/10. {reason for uncertainty}`
+   - Present what is known vs. what remains unconfirmed
+
+   **For INVALID claims**: Present as corrections within the "Common Misconceptions" section:
+   - "It is sometimes stated that... However, this is incorrect because..."
+   - Explain the correct understanding
+   - Note why the misconception exists
+   - Include a note block: `> **Correction**: {what was wrong and what is correct}`
+
+   **For overall structure when validation exists**:
+   - Add a "Confidence Overview" subsection in the Overview noting how many claims were confirmed/uncertain/invalid
+   - Expand the "Common Misconceptions" section with any invalid claims from validation
+   - When explaining uncertain mechanisms, acknowledge the uncertainty explicitly
+
+9. **Cross-Referencing**: Connect related concepts:
    - Link to related sections
    - Reference prerequisite knowledge
    - Suggest further reading
@@ -81,6 +103,8 @@ audience: "{beginner|intermediate|advanced}"
 status: "draft"
 word_count: {number}
 diagram_count: {number}
+validated: {true|false}
+validation_report: "{path-to-validation-report, if exists}"
 ---
 
 # {Topic}: How It Works

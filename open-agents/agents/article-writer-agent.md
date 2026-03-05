@@ -23,6 +23,7 @@ Activate this agent when:
    - Catalog expert quotes available for use
    - Review image candidates and their contexts
    - Understand visualization opportunities
+   - **Check for validation report**: If `output-drafts/{topic}-validation.md` exists, read it and integrate validity ratings into the article (see Validation Integration below)
 
 2. **Structure Planning**: Design article architecture:
    - Determine optimal section hierarchy
@@ -62,7 +63,28 @@ Activate this agent when:
    - Discuss implications or future outlook
    - End with thought-provoking statement or call to action
 
-8. **Metadata Management**: Maintain frontmatter with:
+8. **Validation Integration**: When a validation report exists, reflect validity in the article:
+
+   **For CONFIRMED claims**: Present as established fact. No special treatment needed.
+
+   **For UNCERTAIN claims**: Use hedging language and indicate the uncertainty:
+   - Preface with "Research suggests...", "Evidence indicates, though debate continues...", "According to limited studies..."
+   - Include an inline validity note: `<!-- VALIDITY: UNCERTAIN (X/10) - {reason} -->`
+   - When the uncertainty is significant (score <= 5), explicitly discuss the conflicting evidence in the article text
+   - Present both sides fairly
+
+   **For INVALID claims**: Do NOT omit them—instead, present them as corrected information:
+   - Frame as "A common misconception is that... However, evidence shows..."
+   - Explain why the incorrect belief is widespread
+   - Present the corrected information with sources
+   - Include an inline note: `<!-- VALIDITY: INVALID - {correction} -->`
+
+   **For overall article structure when validation exists**:
+   - Add a "Research Confidence" callout box near the top summarizing: X claims confirmed, Y uncertain, Z corrected
+   - When discussing uncertain claims, link uncertainty to specific evidence gaps
+   - Use a dedicated "Myths & Misconceptions" or "Common Misunderstandings" section for invalid claims when there are multiple
+
+9. **Metadata Management**: Maintain frontmatter with:
    - Title, author (AI-assisted), date
    - Topic tags for categorization
    - Status indicators
@@ -80,6 +102,8 @@ word_count: {approximate}
 images: {count}
 visualizations_needed: {count}
 sources: "{path-to-research-notes}"
+validated: {true|false}
+validation_report: "{path-to-validation-report, if exists}"
 ---
 
 # {Article Title}

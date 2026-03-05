@@ -18,6 +18,7 @@ This agent system transforms topics into comprehensive, interactive web experien
 | [Data Visualization Agent](agents/data-visualization-agent.md) | Create charts, graphs, and visual data | "create chart", "visualize data", "make graph" |
 | [Data Dashboard Agent](agents/data-dashboard-agent.md) | Transform research data into interactive dashboard | "data dashboard", "display data", "visualize research" |
 | [Webpage Generator Agent](agents/webpage-generator-agent.md) | Convert markdown to interactive HTML | "create webpage", "generate html", "make interactive" |
+| [Research Validator Agent](agents/research-validator-agent.md) | Independently verify research conclusions | "validate research", "double-check", "verify", "corroborate", "substantiate", "fact-check" |
 | [Pipeline Orchestrator Agent](agents/pipeline-orchestrator-agent.md) | Run full research-to-webpage pipeline | "full pipeline", "complete workflow", "research and build" |
 | [Research-Dashboard Pipeline Agent](agents/research-dashboard-pipeline-agent.md) | Research topic and create data dashboard | "research dashboard", "data on [topic]", "research and display data" |
 
@@ -35,40 +36,41 @@ This agent system transforms topics into comprehensive, interactive web experien
 
 ### Article Pipeline (Full)
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
-│ Research Agent  │────▶│ Article Writer   │────▶│ Image Validator   │
-│ (web research)  │     │ (markdown draft) │     │ (verify URLs)     │
-└─────────────────┘     └──────────────────┘     └───────────────────┘
-                                                          │
-                        ┌──────────────────┐              │
-                        │ Data Viz Agent   │◀─────────────┤
-                        │ (charts/graphs)  │              │
-                        └──────────────────┘              │
-                                │                         │
-                                ▼                         ▼
+┌─────────────────┐    ┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
+│ Research Agent  │-──▶│ Validator Agent  │────▶│ Article Writer   │────▶│ Image Validator   │
+│ (web research)  │    │ (optional)       │     │ (markdown draft) │     │ (verify URLs)     │
+└─────────────────┘    └─────────────────┘     └──────────────────┘     └───────────────────┘
+                                                                                 │
+                        ┌──────────────────┐                                     │
+                        │ Data Viz Agent   │◀────────────────────────────────────┤
+                        │ (charts/graphs)  │                                     │
+                        └──────────────────┘                                     │
+                                │                                                │
+                                ▼                                                ▼
                         ┌─────────────────────────────────────────┐
                         │        Webpage Generator Agent          │
                         │  (interactive HTML with all assets)     │
                         └─────────────────────────────────────────┘
 ```
+When validation is requested (user says "validate", "verify", "double-check", etc.), the Research Validator Agent runs after research and before downstream stages. It does NOT inherit the researcher's context.
 
 ### Data Dashboard Pipeline (Streamlined)
 ```
-┌─────────────────┐     ┌─────────────────────────────────────────┐
-│ Research Agent  │────▶│       Data Dashboard Agent              │
-│ (web research)  │     │  (interactive data display webpage)     │
-└─────────────────┘     └─────────────────────────────────────────┘
+┌─────────────────┐    ┌─────────────────┐     ┌─────────────────────────────────────────┐
+│ Research Agent  │-──▶│ Validator Agent  │────▶│       Data Dashboard Agent              │
+│ (web research)  │    │ (optional)       │     │  (interactive data display webpage)     │
+└─────────────────┘    └─────────────────┘     └─────────────────────────────────────────┘
 ```
 Use this pipeline when you want to display all research data interactively without writing a narrative article.
 
 ### Explainer Pipeline (Documentation)
 ```
-┌───────────────────────┐     ┌───────────────────────┐
-│ Concept Research      │────▶│ Diagram Generator     │
-│ (structure/mechanism) │     │ (UML/flowcharts)      │
-└───────────────────────┘     └───────────────────────┘
-                                        │
-         ┌──────────────────────────────┘
+┌───────────────────────┐    ┌─────────────────┐     ┌───────────────────────┐
+│ Concept Research      │-──▶│ Validator Agent  │────▶│ Diagram Generator     │
+│ (structure/mechanism) │    │ (optional)       │     │ (UML/flowcharts)      │
+└───────────────────────┘    └─────────────────┘     └───────────────────────┘
+                                                               │
+         ┌────────────────────────────────────────────────────┘
          ▼
 ┌───────────────────────┐     ┌───────────────────────┐
 │ Explanation Writer    │────▶│ Explainer Webpage     │
@@ -89,15 +91,18 @@ When a user request arrives, determine the appropriate agent using these rules:
 4. **Documentation Writing**: If concept research exists and user wants written explanation, use **Explanation Writer Agent**
 5. **Explainer Page Only**: If explanation and diagrams exist, use **Explainer Webpage Generator Agent**
 
+### Research Validation (Check Before Routing to Pipeline)
+6. **Research Validation**: If user asks to "validate", "double-check", "substantiate", "verify", "corroborate", or "fact-check" research, add the **Research Validator Agent** as a step after research in whichever pipeline is used. The validator runs independently of the researcher's context.
+
 ### Article Pipeline
-6. **Full Article Pipeline**: If user wants comprehensive research AND a narrative webpage, use **Pipeline Orchestrator Agent**
-7. **Data Dashboard Pipeline**: If user wants research data displayed interactively (not as an article), use **Research-Dashboard Pipeline Agent**
-8. **Research Only**: If user wants information gathering (not explanation), use **Research Agent**
-9. **Content Writing**: If research exists and user wants article, use **Article Writer Agent**
-10. **Data Dashboard Only**: If research exists and user wants data display (not article), use **Data Dashboard Agent**
-11. **Image Issues**: If article exists with broken images, use **Image Validator Agent**
-12. **Data Visualization**: If article needs charts or data is provided, use **Data Visualization Agent**
-13. **HTML Generation**: If markdown article is complete, use **Webpage Generator Agent**
+7. **Full Article Pipeline**: If user wants comprehensive research AND a narrative webpage, use **Pipeline Orchestrator Agent**
+8. **Data Dashboard Pipeline**: If user wants research data displayed interactively (not as an article), use **Research-Dashboard Pipeline Agent**
+9. **Research Only**: If user wants information gathering (not explanation), use **Research Agent**
+10. **Content Writing**: If research exists and user wants article, use **Article Writer Agent**
+11. **Data Dashboard Only**: If research exists and user wants data display (not article), use **Data Dashboard Agent**
+12. **Image Issues**: If article exists with broken images, use **Image Validator Agent**
+13. **Data Visualization**: If article needs charts or data is provided, use **Data Visualization Agent**
+14. **HTML Generation**: If markdown article is complete, use **Webpage Generator Agent**
 
 ### Key Distinction: Explainer vs Article
 
@@ -108,6 +113,7 @@ When a user request arrives, determine the appropriate agent using these rules:
 | "help me understand", "clarify" | Explainer Pipeline |
 | "research and create webpage" | Article Pipeline |
 | "write article about", "investigate" | Article Pipeline |
+| "validate", "double-check", "verify", "corroborate" | Add Research Validator to pipeline |
 | "find information about" | Research Agent |
 
 ## Folder Structure
@@ -125,6 +131,7 @@ open-agents/
 │   ├── webpage-generator-agent.md
 │   ├── pipeline-orchestrator-agent.md
 │   ├── research-dashboard-pipeline-agent.md
+│   ├── research-validator-agent.md
 │   ├── # Explainer Pipeline Agents
 │   ├── concept-research-agent.md
 │   ├── diagram-generator-agent.md
@@ -142,6 +149,7 @@ open-agents/
 
 ### Article Pipeline Outputs
 - **Research notes**: `output-drafts/{topic}-research.md`
+- **Validation report**: `output-drafts/{topic}-validation.md` (optional, when validation requested)
 - **Article drafts**: `output-drafts/{topic}-article.md`
 - **Pipeline tracking**: `output-drafts/{topic}-pipeline.md` or `output-drafts/{topic}-dashboard-pipeline.md`
 - **Validated articles**: `output-refined/{topic}-article.md`
@@ -151,6 +159,7 @@ open-agents/
 
 ### Explainer Pipeline Outputs
 - **Concept research**: `output-drafts/{topic}-concept-research.md`
+- **Validation report**: `output-drafts/{topic}-validation.md` (optional, when validation requested)
 - **Explanation drafts**: `output-drafts/{topic}-explanation.md`
 - **Pipeline tracking**: `output-drafts/{topic}-explainer-pipeline.md`
 - **Diagrams**: `output-refined/{topic}-diagrams/` (folder with Mermaid/SVG files)

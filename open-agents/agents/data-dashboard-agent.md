@@ -24,6 +24,7 @@ Activate this agent when:
    - Parse visualization opportunities already identified
    - Collect all source citations
    - Note executive summary for context
+   - **Check for validation report**: If `output-drafts/{topic}-validation.md` exists, read it and integrate validity indicators into the dashboard (see Validation Integration below)
 
 2. **Data Categorization**: Organize data into logical sections:
    - Group related statistics together
@@ -64,7 +65,26 @@ Activate this agent when:
    - Dark mode support
    - Print-friendly option
 
-7. **Source Attribution**: Ensure all data is traceable:
+7. **Validation Integration**: When a validation report exists, display validity status visually:
+
+   **Visual Indicators**:
+   - **Confirmed data**: Display normally with a subtle green checkmark or "Verified" badge
+   - **Uncertain data**: Display with an amber/yellow indicator showing the validity score (e.g., "Confidence: 6/10"), plus a tooltip explaining the uncertainty
+   - **Invalid data**: Display with a red strikethrough style and a correction callout showing what the correct data is and why the original was wrong
+
+   **Dashboard additions when validation exists**:
+   - Add a "Data Confidence Overview" section at the top (after hero stats) showing the breakdown of confirmed/uncertain/invalid statistics
+   - Each stat card should include a small confidence indicator (color-coded dot or badge)
+   - Invalid statistics get a prominent correction card explaining the misconception and the reality
+   - Add CSS classes: `.validity-confirmed`, `.validity-uncertain`, `.validity-invalid` for styling
+   - Tooltips on uncertain/invalid items should explain the validator's findings
+
+   **Color coding**:
+   - Confirmed: `--color-validity-confirmed: #10B981` (green)
+   - Uncertain: `--color-validity-uncertain: #F59E0B` (amber)
+   - Invalid: `--color-validity-invalid: #EF4444` (red)
+
+8. **Source Attribution**: Ensure all data is traceable:
    - Link each statistic to its source
    - Hover states show full citation
    - Dedicated sources section

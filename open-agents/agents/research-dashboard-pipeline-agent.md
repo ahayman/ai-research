@@ -23,6 +23,7 @@ Activate this agent when:
    - Determine scope (comprehensive vs. focused)
    - Generate topic slug for file naming
    - Note any specific statistics or comparisons requested
+   - **Detect validation request**: If the user asks to "validate", "double-check", "substantiate", "verify", "corroborate", or "fact-check" the research, enable the validation stage
 
 2. **Pipeline Planning**: Prepare execution plan:
    - Confirm Research Agent and Data Dashboard Agent are available
@@ -42,7 +43,16 @@ Activate this agent when:
      - Sources properly cited?
    - Proceed or request additional research
 
-4. **Stage 2 - Dashboard Generation**: Invoke Data Dashboard Agent:
+4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+   - Pass only the research notes path (`output-drafts/{topic}-research.md`)
+   - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
+   - Monitor for completion
+   - Verify validation report at `output-drafts/{topic}-validation.md`
+   - Quality check: All major claims assessed? Verdicts assigned?
+   - Note the overall reliability rating
+   - Pass validation report path to the Data Dashboard Agent
+
+5. **Stage 2 - Dashboard Generation**: Invoke Data Dashboard Agent:
    - Pass research notes location
    - Monitor for completion
    - Verify dashboard at `output-final/{topic}-dashboard/index.html`
@@ -52,13 +62,13 @@ Activate this agent when:
      - Sources attributed?
      - Interactive features working?
 
-5. **Quality Assurance**: Final verification:
+6. **Quality Assurance**: Final verification:
    - Verify all files exist
    - Check file sizes are reasonable
    - Confirm all charts render
    - Validate source links
 
-6. **Completion Report**: Summarize results:
+7. **Completion Report**: Summarize results:
    - Report output locations
    - Summarize data coverage (statistics count, categories, visualizations)
    - Note any data gaps
@@ -97,6 +107,16 @@ status: "in_progress|completed|failed"
 - **Sources Found**: {count}
 - **Notes**: {any issues or observations}
 
+### Stage 1.5: Research Validation (Optional)
+- **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
+- **Started**: {timestamp}
+- **Completed**: {timestamp}
+- **Output**: `output-drafts/{topic}-validation.md`
+- **Claims Validated**: {count}
+- **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
+- **Overall Reliability**: {high|moderate|low}
+- **Notes**: {any issues or observations}
+
 ### Stage 2: Dashboard Generation
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Failed
 - **Started**: {timestamp}
@@ -113,6 +133,7 @@ status: "in_progress|completed|failed"
 | Stage | File | Status |
 |-------|------|--------|
 | Research | `output-drafts/{topic}-research.md` | ✅ |
+| Validation | `output-drafts/{topic}-validation.md` | ✅/⏭️ |
 | Dashboard | `output-final/{topic}-dashboard/index.html` | ✅ |
 
 ### Data Coverage
@@ -149,7 +170,7 @@ Open directly in a browser or deploy to any static hosting service.
 
 | Aspect | Research-to-Dashboard | Full Article Pipeline |
 |--------|----------------------|----------------------|
-| Stages | 2 (Research → Dashboard) | 5 (Research → Article → Images → Viz → Webpage) |
+| Stages | 2-3 (Research → [Validation] → Dashboard) | 5-6 (Research → [Validation] → Article → Images → Viz → Webpage) |
 | Output | Interactive data display | Narrative article |
 | Focus | Statistics & exploration | Storytelling & reading |
 | Time | Faster | More comprehensive |

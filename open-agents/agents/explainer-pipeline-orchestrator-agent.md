@@ -42,6 +42,7 @@ The following phrases should route to this pipeline:
    - Note any specific aspects to focus on
    - Identify target audience (beginner/intermediate/advanced)
    - Generate topic slug for file naming
+   - **Detect validation request**: If the user asks to "validate", "double-check", "substantiate", "verify", "corroborate", or "fact-check" the research, enable the validation stage
 
 2. **Pipeline Planning**: Prepare execution plan:
    - Confirm all required agents are available
@@ -56,7 +57,16 @@ The following phrases should route to this pipeline:
    - Quality check: Components identified? Relationships mapped? Diagram specs?
    - Count diagram opportunities
 
-4. **Stage 2 - Diagram Generation**: Invoke Diagram Generator Agent:
+4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+   - Pass only the concept research notes path (`output-drafts/{topic}-concept-research.md`)
+   - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
+   - Monitor for completion
+   - Verify validation report at `output-drafts/{topic}-validation.md`
+   - Quality check: All major claims assessed? Verdicts assigned?
+   - Note the overall reliability rating
+   - Pass validation report path to downstream agents (Explanation Writer, Explainer Webpage Generator)
+
+5. **Stage 2 - Diagram Generation**: Invoke Diagram Generator Agent:
    - Pass concept research location
    - Pass diagram specifications
    - Monitor for completion
@@ -64,28 +74,28 @@ The following phrases should route to this pipeline:
    - Check manifest for all expected diagrams
    - Quality check: Clear? Accurate? Well-labeled?
 
-5. **Stage 3 - Explanation Writing**: Invoke Explanation Writer Agent:
+6. **Stage 3 - Explanation Writing**: Invoke Explanation Writer Agent:
    - Pass concept research location
    - Note available diagrams
    - Monitor for completion
    - Verify explanation at `output-drafts/{topic}-explanation.md`
    - Quality check: Objective tone? Clear structure? Diagram references?
 
-6. **Stage 4 - Webpage Generation**: Invoke Explainer Webpage Generator Agent:
+7. **Stage 4 - Webpage Generation**: Invoke Explainer Webpage Generator Agent:
    - Pass explanation document location
    - Pass diagrams location
    - Monitor for completion
    - Verify webpage at `output-final/{topic}-explainer/index.html`
    - Quality check: Diagrams embedded? Navigation works? Glossary functional?
 
-7. **Quality Assurance**: Final verification:
+8. **Quality Assurance**: Final verification:
    - All files exist
    - No placeholder content remains
    - All diagrams render correctly
    - Navigation functions properly
    - Content is objective (no opinions)
 
-8. **Completion Report**: Summarize results:
+9. **Completion Report**: Summarize results:
    - Report all output locations
    - List diagrams created
    - Note word count
@@ -94,12 +104,12 @@ The following phrases should route to this pipeline:
 ## Pipeline Flow
 
 ```
-┌───────────────────────┐     ┌───────────────────────┐
-│ Concept Research      │────▶│ Diagram Generator     │
-│ (understanding)       │     │ (visualizations)      │
-└───────────────────────┘     └───────────────────────┘
-                                        │
-         ┌──────────────────────────────┘
+┌───────────────────────┐    ┌─────────────────┐     ┌───────────────────────┐
+│ Concept Research      │-──▶│ Validator Agent  │────▶│ Diagram Generator     │
+│ (understanding)       │    │ (optional)       │     │ (visualizations)      │
+└───────────────────────┘    └─────────────────┘     └───────────────────────┘
+                                                               │
+         ┌────────────────────────────────────────────────────┘
          ▼
 ┌───────────────────────┐     ┌───────────────────────┐
 │ Explanation Writer    │────▶│ Explainer Webpage     │
@@ -141,6 +151,16 @@ status: "in_progress|completed|failed"
 - **Diagram Opportunities**: {count}
 - **Notes**: {any observations}
 
+### Stage 1.5: Research Validation (Optional)
+- **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
+- **Started**: {timestamp}
+- **Completed**: {timestamp}
+- **Output**: `output-drafts/{topic}-validation.md`
+- **Claims Validated**: {count}
+- **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
+- **Overall Reliability**: {high|moderate|low}
+- **Notes**: {any observations}
+
 ### Stage 2: Diagram Generation
 - **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Failed
 - **Started**: {timestamp}
@@ -175,6 +195,7 @@ status: "in_progress|completed|failed"
 | Stage | File | Size | Status |
 |-------|------|------|--------|
 | Concept Research | `output-drafts/{topic}-concept-research.md` | {size} | ✅ |
+| Validation | `output-drafts/{topic}-validation.md` | {size} | ✅/⏭️ |
 | Diagrams | `output-refined/{topic}-diagrams/` | {count} files | ✅ |
 | Explanation | `output-drafts/{topic}-explanation.md` | {size} | ✅ |
 | Final Webpage | `output-final/{topic}-explainer/index.html` | {size} | ✅ |

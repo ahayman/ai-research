@@ -12,10 +12,18 @@ This project uses the Open Agent System to transform research topics into compre
 > "Describe the architecture of [system]"
 > "Help me understand [topic]"
 
+### With Research Validation (add to any pipeline)
+> "Research [topic] and validate the findings"
+> "Double-check research on [topic] and create a webpage"
+> "Verify and explain how [concept] works"
+
+Adding "validate", "double-check", "substantiate", "verify", "corroborate", or "fact-check" to any request enables the Research Validator Agent, which independently verifies research conclusions before downstream agents use them.
+
 ### Individual Agents
 
 **Article Pipeline:**
 > "Research [topic]" - Research only
+> "Validate research" - Independently verify research conclusions
 > "Write article from research" - Article creation
 > "Validate images" - Check/fix image URLs
 > "Create visualizations" - Generate charts

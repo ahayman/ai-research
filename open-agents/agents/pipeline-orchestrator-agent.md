@@ -23,6 +23,7 @@ Activate this agent when:
    - Determine desired depth (quick overview vs. comprehensive)
    - Check for any special requirements
    - Generate topic slug for file naming
+   - **Detect validation request**: If the user asks to "validate", "double-check", "substantiate", "verify", "corroborate", or "fact-check" the research, enable the validation stage
 
 2. **Pipeline Planning**: Prepare execution plan:
    - Confirm all required agents are available
@@ -37,7 +38,16 @@ Activate this agent when:
    - Quality check: Sufficient sources? Data visualization opportunities?
    - Proceed or request additional research
 
-4. **Stage 2 - Article Writing**: Invoke Article Writer Agent:
+4. **Stage 1.5 - Research Validation** (optional): If validation is enabled, invoke Research Validator Agent:
+   - Pass only the research notes path (`output-drafts/{topic}-research.md`)
+   - **Do NOT pass the researcher's context, sources, or reasoning**—the validator must work independently
+   - Monitor for completion
+   - Verify validation report at `output-drafts/{topic}-validation.md`
+   - Quality check: All major claims assessed? Verdicts assigned?
+   - Note the overall reliability rating
+   - Pass validation report path to all downstream agents
+
+5. **Stage 2 - Article Writing**: Invoke Article Writer Agent:
    - Pass research notes location
    - Monitor for completion
    - Verify article created at `output-drafts/{topic}-article.md`
@@ -45,33 +55,33 @@ Activate this agent when:
    - Note images needing validation
    - Note visualization placeholders
 
-5. **Stage 3 - Image Validation**: Invoke Image Validator Agent:
+6. **Stage 3 - Image Validation**: Invoke Image Validator Agent:
    - Pass article location
    - Monitor for completion
    - Verify validated article at `output-refined/{topic}-article.md`
    - Check validation report
    - Flag any unresolved image issues
 
-6. **Stage 4 - Data Visualization**: Invoke Data Visualization Agent:
+7. **Stage 4 - Data Visualization**: Invoke Data Visualization Agent:
    - Pass refined article location
    - Monitor for completion
    - Verify visualizations at `output-refined/{topic}-viz/`
    - Check manifest for all expected visualizations
    - Verify article updated with visualization references
 
-7. **Stage 5 - Webpage Generation**: Invoke Webpage Generator Agent:
+8. **Stage 5 - Webpage Generation**: Invoke Webpage Generator Agent:
    - Pass refined article and visualization assets
    - Monitor for completion
    - Verify final webpage at `output-final/{topic}/index.html`
    - Test all interactive features mentioned
 
-8. **Quality Assurance**: Final checks:
+9. **Quality Assurance**: Final checks:
    - Verify all files exist
    - Check file sizes are reasonable
    - Confirm no placeholder content remains
    - Validate internal links
 
-9. **Completion Report**: Summarize results:
+10. **Completion Report**: Summarize results:
    - Report location of all outputs
    - Summarize statistics (word count, images, visualizations)
    - Note any issues encountered
@@ -107,6 +117,16 @@ status: "in_progress|completed|failed"
 - **Output**: `output-drafts/{topic}-research.md`
 - **Sources Found**: {count}
 - **Viz Opportunities**: {count}
+- **Notes**: {any issues or observations}
+
+### Stage 1.5: Research Validation (Optional)
+- **Status**: ⏳ Pending | 🔄 In Progress | ✅ Complete | ⏭️ Skipped
+- **Started**: {timestamp}
+- **Completed**: {timestamp}
+- **Output**: `output-drafts/{topic}-validation.md`
+- **Claims Validated**: {count}
+- **Confirmed/Uncertain/Invalid**: {X}/{Y}/{Z}
+- **Overall Reliability**: {high|moderate|low}
 - **Notes**: {any issues or observations}
 
 ### Stage 2: Article Writing
@@ -153,6 +173,7 @@ status: "in_progress|completed|failed"
 | Stage | File | Size | Status |
 |-------|------|------|--------|
 | Research | `output-drafts/{topic}-research.md` | {size} | ✅ |
+| Validation | `output-drafts/{topic}-validation.md` | {size} | ✅/⏭️ |
 | Article | `output-drafts/{topic}-article.md` | {size} | ✅ |
 | Validated Article | `output-refined/{topic}-article.md` | {size} | ✅ |
 | Visualizations | `output-refined/{topic}-viz/` | {count} files | ✅ |
@@ -213,6 +234,7 @@ To deploy:
 ### Skip Options
 
 User can request to skip stages:
+- `--validate`: Enable research validation stage
 - `--skip-images`: Skip image validation
 - `--skip-viz`: Skip data visualization
 - `--research-only`: Stop after research
