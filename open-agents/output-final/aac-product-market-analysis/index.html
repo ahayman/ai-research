@@ -539,6 +539,89 @@
       color: #fff;
     }
 
+    /* Condition Filter */
+    .condition-filter-wrap {
+      margin-bottom: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .condition-filter-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-light);
+      margin-bottom: 0.5rem;
+    }
+    .condition-filter-bar {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .condition-btn {
+      padding: 0.35rem 0.75rem;
+      border-radius: 99px;
+      border: 1.5px solid var(--color-border);
+      background: var(--color-bg-card);
+      color: var(--color-text-light);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .condition-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .condition-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+    .condition-banner {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--color-text);
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .condition-banner.visible { display: flex; }
+    .condition-banner strong { color: var(--color-primary); }
+    .condition-banner-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--color-text-light);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0 0.25rem;
+    }
+    .condition-score-badge {
+      display: none;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+      background: rgba(99,102,241,0.1);
+      color: var(--color-primary);
+      margin-left: 0.5rem;
+    }
+    .condition-active .condition-score-badge { display: inline-block; }
+    .heatmap-table th.domain-header.domain-highlight {
+      background: rgba(99,102,241,0.1);
+      border-radius: 6px 6px 0 0;
+    }
+    .heatmap-table .domain-highlight-col {
+      box-shadow: inset 0 0 0 2px rgba(99,102,241,0.25);
+    }
+    .condition-table-highlight { background: rgba(99,102,241,0.06) !important; }
+    .condition-table-dim td { opacity: 0.4; }
+
     /* Risk badges */
     .risk-critical { background: #DC2626; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
     .risk-high { background: #F97316; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
@@ -801,6 +884,30 @@
           <h2 class="section-title">Product-Domain Coverage Heat Map</h2>
           <p class="section-subtitle">14 products vs. 7 taxonomy domains. Hover cells for details, click products for profiles. Ratings incorporate validation corrections. Note: Motor Speech Bypass (D2.1) scored Strong+ for all products and is merged into the D2 Expressive column.</p>
         </div>
+      </div>
+
+      <div class="condition-filter-wrap" id="conditionFilterWrap">
+        <div class="condition-filter-label">Filter by Condition</div>
+        <div class="condition-filter-bar" id="conditionFilter">
+          <button class="condition-btn active" data-condition="all">All Conditions</button>
+          <button class="condition-btn" data-condition="ASD">ASD</button>
+          <button class="condition-btn" data-condition="Cerebral Palsy">Cerebral Palsy</button>
+          <button class="condition-btn" data-condition="Down Syndrome">Down Syndrome</button>
+          <button class="condition-btn" data-condition="CAS">CAS / Apraxia</button>
+          <button class="condition-btn" data-condition="Aphasia">Aphasia</button>
+          <button class="condition-btn" data-condition="TBI">TBI</button>
+          <button class="condition-btn" data-condition="ALS">ALS / MND</button>
+          <button class="condition-btn" data-condition="Parkinsons">Parkinson's</button>
+          <button class="condition-btn" data-condition="MS">MS</button>
+          <button class="condition-btn" data-condition="Dementia">Dementia</button>
+          <button class="condition-btn" data-condition="Locked-in">Locked-in</button>
+          <button class="condition-btn" data-condition="Rett">Rett Syndrome</button>
+        </div>
+      </div>
+
+      <div class="condition-banner" id="conditionBanner">
+        <span id="conditionBannerText"></span>
+        <button class="condition-banner-close" onclick="clearConditionFilter()" title="Clear filter">&times;</button>
       </div>
 
       <div class="card">
@@ -1977,6 +2084,150 @@
       }
     ];
 
+    // ========== CONDITION WEIGHTS ==========
+    // Severity from taxonomy: P(primary)=3, M(moderate)=2, m(mild)=1, --=0
+    const CONDITION_WEIGHTS = {
+      'ASD':            { receptive: 1, expressive: 1, emotion: 1.5, pragmatic: 3, physical: 1, cognitive: 1, psychosocial: 2, rate: 2 },
+      'Cerebral Palsy': { receptive: 1, expressive: 3, emotion: 1, pragmatic: 1, physical: 3, cognitive: 1, psychosocial: 2, rate: 3 },
+      'Down Syndrome':  { receptive: 2, expressive: 2, emotion: 1, pragmatic: 1, physical: 2, cognitive: 2, psychosocial: 1, rate: 2 },
+      'CAS':            { receptive: 0.5, expressive: 3, emotion: 1, pragmatic: 1, physical: 0.5, cognitive: 0.5, psychosocial: 2, rate: 2 },
+      'Aphasia':        { receptive: 3, expressive: 3, emotion: 2, pragmatic: 1, physical: 2, cognitive: 1, psychosocial: 3, rate: 2 },
+      'TBI':            { receptive: 2, expressive: 2, emotion: 1, pragmatic: 3, physical: 2, cognitive: 3, psychosocial: 2, rate: 2 },
+      'ALS':            { receptive: 0.5, expressive: 3, emotion: 2, pragmatic: 0.5, physical: 3, cognitive: 1, psychosocial: 3, rate: 3 },
+      'Parkinsons':     { receptive: 1, expressive: 3, emotion: 2, pragmatic: 1, physical: 2, cognitive: 2, psychosocial: 2, rate: 2 },
+      'MS':             { receptive: 1, expressive: 2, emotion: 1, pragmatic: 1, physical: 2, cognitive: 2, psychosocial: 2, rate: 2 },
+      'Dementia':       { receptive: 3, expressive: 2, emotion: 1, pragmatic: 2, physical: 1, cognitive: 3, psychosocial: 2, rate: 2 },
+      'Locked-in':      { receptive: 0.5, expressive: 3, emotion: 2, pragmatic: 0.5, physical: 3, cognitive: 0.5, psychosocial: 3, rate: 3 },
+      'Rett':           { receptive: 0.5, expressive: 3, emotion: 1, pragmatic: 0.5, physical: 3, cognitive: 1, psychosocial: 2, rate: 3 }
+    };
+
+    const CONDITION_LABELS = {
+      'ASD': 'Autism Spectrum Disorder',
+      'Cerebral Palsy': 'Cerebral Palsy',
+      'Down Syndrome': 'Down Syndrome',
+      'CAS': 'Childhood Apraxia of Speech',
+      'Aphasia': 'Aphasia (Post-Stroke)',
+      'TBI': 'Traumatic Brain Injury',
+      'ALS': 'ALS / Motor Neuron Disease',
+      'Parkinsons': "Parkinson's Disease",
+      'MS': 'Multiple Sclerosis',
+      'Dementia': 'Dementia / Alzheimer\'s',
+      'Locked-in': 'Locked-in Syndrome',
+      'Rett': 'Rett Syndrome'
+    };
+
+    // Condition table search terms (matching td text in the Effectiveness by Condition table)
+    const CONDITION_TABLE_TERMS = {
+      'ASD': ['ASD'],
+      'Cerebral Palsy': ['Cerebral Palsy'],
+      'Down Syndrome': ['Down Syndrome'],
+      'CAS': ['CAS', 'Apraxia'],
+      'Aphasia': ['Aphasia'],
+      'TBI': ['TBI'],
+      'ALS': ['ALS'],
+      'Parkinsons': ["Parkinson"],
+      'MS': ['MS'],
+      'Dementia': ['Dementia'],
+      'Locked-in': ['Locked-in'],
+      'Rett': ['Rett']
+    };
+
+    let activeCondition = null;
+
+    function computeConditionScore(product, weights) {
+      let score = 0, totalWeight = 0;
+      DOMAINS.forEach(d => {
+        const w = weights[d.key] || 0;
+        score += product.ratings[d.key] * w;
+        totalWeight += w;
+      });
+      return totalWeight > 0 ? score / totalWeight : 0;
+    }
+
+    function applyConditionFilter(conditionKey) {
+      activeCondition = conditionKey === 'all' ? null : conditionKey;
+
+      // Update buttons
+      document.querySelectorAll('#conditionFilter .condition-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-condition') === conditionKey);
+      });
+
+      // Banner
+      const banner = document.getElementById('conditionBanner');
+      if (activeCondition) {
+        const weights = CONDITION_WEIGHTS[activeCondition];
+        const topDomains = DOMAINS.filter(d => weights[d.key] >= 2).map(d => d.label).join(', ');
+        document.getElementById('conditionBannerText').innerHTML =
+          '<strong>' + CONDITION_LABELS[activeCondition] + '</strong> — Key domains: ' + topDomains +
+          '. Products sorted by weighted relevance score. <a href="../aac-market-asd/" style="color:var(--color-primary);' + (activeCondition === 'ASD' ? '' : 'display:none;') + '">View full ASD analysis &rarr;</a>';
+        banner.classList.add('visible');
+      } else {
+        banner.classList.remove('visible');
+      }
+
+      // Rebuild heatmap with sorting
+      buildHeatmap();
+
+      // Rebuild product cards
+      buildProductCards();
+
+      // Highlight domain columns in heatmap
+      highlightDomainColumns();
+
+      // Filter condition table
+      filterConditionTable();
+    }
+
+    function highlightDomainColumns() {
+      // Highlight header columns
+      document.querySelectorAll('.domain-header').forEach((th, i) => {
+        th.classList.remove('domain-highlight');
+        if (activeCondition) {
+          const weights = CONDITION_WEIGHTS[activeCondition];
+          const domainKey = DOMAINS[i].key;
+          if (weights[domainKey] >= 2) {
+            th.classList.add('domain-highlight');
+          }
+        }
+      });
+
+      // Highlight cells in relevant columns
+      document.querySelectorAll('.heatmap-cell').forEach(td => {
+        td.classList.remove('domain-highlight-col');
+        if (activeCondition) {
+          const di = parseInt(td.getAttribute('data-domain'));
+          const weights = CONDITION_WEIGHTS[activeCondition];
+          const domainKey = DOMAINS[di].key;
+          if (weights[domainKey] >= 2) {
+            td.classList.add('domain-highlight-col');
+          }
+        }
+      });
+    }
+
+    function filterConditionTable() {
+      const table = document.getElementById('conditionTable');
+      if (!table) return;
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        row.classList.remove('condition-table-highlight', 'condition-table-dim');
+        if (activeCondition) {
+          const cellText = row.querySelector('td').textContent;
+          const terms = CONDITION_TABLE_TERMS[activeCondition] || [];
+          const matches = terms.some(t => cellText.includes(t));
+          if (matches) {
+            row.classList.add('condition-table-highlight');
+          } else {
+            row.classList.add('condition-table-dim');
+          }
+        }
+      });
+    }
+
+    function clearConditionFilter() {
+      applyConditionFilter('all');
+    }
+
     // ========== HEAT MAP ==========
     function getRatingLabel(val) {
       if (val >= 4) return 'Strongest';
@@ -1996,11 +2247,27 @@
     function buildHeatmap() {
       const tbody = document.getElementById('heatmapBody');
       tbody.innerHTML = '';
-      PRODUCTS.forEach((p, pi) => {
+
+      // Build sorted product indices
+      let productOrder = PRODUCTS.map((p, i) => i);
+      if (activeCondition) {
+        const weights = CONDITION_WEIGHTS[activeCondition];
+        productOrder.sort((a, b) => {
+          return computeConditionScore(PRODUCTS[b], weights) - computeConditionScore(PRODUCTS[a], weights);
+        });
+      }
+
+      productOrder.forEach((pi, rank) => {
+        const p = PRODUCTS[pi];
         const tr = document.createElement('tr');
         const thName = document.createElement('th');
         thName.className = 'product-name';
-        thName.textContent = p.name;
+        if (activeCondition) {
+          const score = computeConditionScore(p, CONDITION_WEIGHTS[activeCondition]);
+          thName.innerHTML = '<span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:var(--color-primary);color:#fff;font-size:0.65rem;font-weight:800;text-align:center;line-height:20px;margin-right:0.4rem;">' + (rank + 1) + '</span>' + p.name + ' <span style="font-size:0.7rem;color:var(--color-primary);font-weight:700;">' + score.toFixed(1) + '</span>';
+        } else {
+          thName.textContent = p.name;
+        }
         tr.appendChild(thName);
         DOMAINS.forEach((d, di) => {
           const td = document.createElement('td');
@@ -2058,10 +2325,22 @@
     function buildProductCards() {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
-      PRODUCTS.forEach((p, i) => {
+
+      // Build sorted indices
+      let productOrder = PRODUCTS.map((p, i) => i);
+      if (activeCondition) {
+        const weights = CONDITION_WEIGHTS[activeCondition];
+        productOrder.sort((a, b) => {
+          return computeConditionScore(PRODUCTS[b], weights) - computeConditionScore(PRODUCTS[a], weights);
+        });
+      }
+
+      productOrder.forEach((i, rank) => {
+        const p = PRODUCTS[i];
         const card = document.createElement('div');
-        card.className = 'product-card';
+        card.className = 'product-card' + (activeCondition ? ' condition-active' : '');
         card.setAttribute('data-tags', p.tags.join(' '));
+        card.setAttribute('data-product-index', i);
 
         // Domain pips
         let pips = '';
@@ -2070,7 +2349,8 @@
           let cls = 'weak';
           if (val >= 3) cls = 'strong';
           else if (val >= 2) cls = 'moderate';
-          pips += '<div class="domain-pip ' + cls + '" style="background:' + d.color + ';" title="' + d.label + ': ' + getRatingLabel(val) + '"></div>';
+          const highlight = activeCondition && CONDITION_WEIGHTS[activeCondition][d.key] >= 2;
+          pips += '<div class="domain-pip ' + cls + '" style="background:' + d.color + ';' + (highlight ? 'box-shadow:0 0 0 2px var(--color-primary);' : '') + '" title="' + d.label + ': ' + getRatingLabel(val) + '"></div>';
         });
 
         // Platform badges
@@ -2078,6 +2358,13 @@
         p.platforms.forEach(pl => {
           badges += '<span class="product-badge badge-platform">' + pl + '</span>';
         });
+
+        // Condition score badge
+        let condBadge = '';
+        if (activeCondition) {
+          const score = computeConditionScore(p, CONDITION_WEIGHTS[activeCondition]);
+          condBadge = '<span class="condition-score-badge" style="display:inline-block;">' + score.toFixed(1) + ' / 4.0</span>';
+        }
 
         // Strengths
         let strengthsHtml = '';
@@ -2090,7 +2377,7 @@
         card.innerHTML =
           '<div class="product-card-header" onclick="this.parentElement.classList.toggle(\'expanded\')" aria-expanded="false">' +
             '<div style="flex:1;">' +
-              '<div class="product-name">' + p.name + '</div>' +
+              '<div class="product-name">' + p.name + condBadge + '</div>' +
               '<div class="product-company">' + p.company + '</div>' +
               '<div class="product-meta">' + badges + '</div>' +
               '<div class="domain-coverage-bar">' + pips + '</div>' +
@@ -2110,7 +2397,7 @@
     }
     buildProductCards();
 
-    // Product Filter
+    // Product Filter (platform)
     document.getElementById('productFilter').addEventListener('click', function(e) {
       if (!e.target.classList.contains('filter-btn')) return;
       this.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -2125,6 +2412,26 @@
         }
       });
     });
+
+    // Condition Filter
+    document.getElementById('conditionFilter').addEventListener('click', function(e) {
+      if (!e.target.classList.contains('condition-btn')) return;
+      const condition = e.target.getAttribute('data-condition');
+      applyConditionFilter(condition);
+    });
+
+    // URL parameter support: ?condition=ASD
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const condParam = params.get('condition');
+      if (condParam && CONDITION_WEIGHTS[condParam]) {
+        applyConditionFilter(condParam);
+        // Scroll to heatmap after a short delay
+        setTimeout(function() {
+          document.getElementById('heatmap').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    })();
 
     // ========== CHARTS ==========
     let charts = {};
