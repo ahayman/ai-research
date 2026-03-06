@@ -24,7 +24,6 @@ echo ""
 
 # --- output-final HTML pages ---
 
-# Hub page
 FINAL_DIRS=(
   # Hub
   "aac-research-hub"
@@ -71,17 +70,100 @@ FINAL_DIRS=(
   # Phase 3: Opportunity Analysis
   "aac-opportunity-analysis"
   "aac-patents-landscape-dashboard"
+
+  # Phase 4: ASD-Focused Analysis
+  "aac-market-asd"
 )
 
 # --- output-drafts markdown files ---
 
 DRAFT_FILES=(
+  # Phase 1: Communication Struggles
   "aac-communication-struggles-research.md"
+
+  # Phase 2: Product & Market Analysis (core)
   "aac-product-market-analysis-research.md"
   "aac-product-market-analysis-validation.md"
+  "aac-proloquo-product-analysis-research.md"
+  "aac-product-market-proloquo-validation.md"
+  "aac-product-market-analysis-validation-app2speak.md"
+
+  # Phase 2: Supplement 1 — Additional Products
+  "aac-product-market-analysis-supplement-1.md"
+  "aac-product-market-analysis-validation-supplement-1.md"
+
+  # Phase 2: Supplement 2 — Ecosystem, LLM & Emotion
+  "aac-supplement-2-ecosystem-llm-emotion-summary.md"
+  "aac-supplement-2-asd-targeted-research.md"
+  "aac-ecosystem-infrastructure-market-research.md"
+  "aac-ecosystem-llm-emotion-intersection-research.md"
+  "aac-small-open-source-ecosystem-llm-emotion-research.md"
+  "aac-tdsnap-grid-ecosystem-llm-emotion-research.md"
+  "aac-school-ecosystem-infrastructure-asd-research.md"
+  "aac-school-ecosystem-infrastructure-asd-validation.md"
+  "aac-asd-llm-communication-grant-research.md"
+  "aac-emotional-tone-detection-adaptation-research.md"
+  "aac-emotional-tone-detection-asd-specific-research.md"
+  "aac-emotional-tone-detection-validation.md"
+  "assistiveware-ecosystem-llm-emotion-research.md"
+  "prc-saltillo-ecosystem-llm-emotion-research.md"
+  "spoken-fluent-aac-ai-ecosystem-research.md"
+  "llm-aac-market-landscape-research.md"
+
+  # Phase 2: Supplement 3 — Voice Customization
+  "aac-supplement-3-voice-customization-summary.md"
+  "aac-voice-customization-assistiveware-research.md"
+  "aac-voice-customization-prc-saltillo-research.md"
+  "aac-voice-customization-tobii-dynavox-research.md"
+  "aac-voice-customization-spoken-fluent-research.md"
+  "aac-voice-customization-small-opensource-research.md"
+  "aac-voice-customization-app-validation.md"
+  "aac-voice-customization-market-validation.md"
+  "aac-voice-customization-asd-validation.md"
+  "aac-voice-cloning-market-landscape-research.md"
+  "aac-voice-identity-ownership-research.md"
+  "aac-voice-customization-taxonomy-intersection-research.md"
+  "aac-voice-customization-asd-opportunities-research.md"
+  "aac-voice-customization-asd-school-research.md"
+
+  # Phase 2: Competitive Analysis
+  "aac-applications-competitive-analysis-research.md"
+
+  # Phase 2: Deep-Dive Research & Articles
+  "proloquo2go-aac-deep-dive-research.md"
+  "proloquo2go-aac-deep-dive-article.md"
+  "proloquo-next-gen-aac-deep-dive-research.md"
+  "proloquo-next-gen-aac-deep-dive-article.md"
+  "touchchat-hd-wordpower-aac-deep-dive-research.md"
+  "touchchat-hd-wordpower-aac-deep-dive-article.md"
+  "lamp-words-for-life-aac-deep-dive-research.md"
+  "lamp-words-for-life-aac-deep-dive-article.md"
+  "td-snap-tobii-dynavox-aac-deep-dive-research.md"
+  "td-snap-tobii-dynavox-aac-deep-dive-article.md"
+  "grid-smartbox-aac-deep-dive-research.md"
+  "grid-smartbox-aac-deep-dive-article.md"
+  "avaz-aac-deep-dive-research.md"
+  "avaz-aac-deep-dive-article.md"
+  "spoken-aac-deep-dive-research.md"
+  "spoken-aac-deep-dive-article.md"
+  "fluent-aac-deep-dive-research.md"
+  "fluent-aac-deep-dive-article.md"
+  "app2speak-aac-deep-dive-research.md"
+  "app2speak-aac-deep-dive-article.md"
+  "cboard-aac-deep-dive-research.md"
+  "cboard-aac-deep-dive-article.md"
+  "coughdrop-aac-deep-dive-research.md"
+  "coughdrop-aac-deep-dive-article.md"
+  "weave-chat-aac-deep-dive-research.md"
+  "weave-chat-aac-deep-dive-article.md"
+  "openaac-sweet-suite-deep-dive-research.md"
+  "openaac-sweet-suite-deep-dive-article.md"
+
+  # Phase 3: Opportunity Analysis
   "aac-opportunity-analysis-research.md"
   "aac-opportunity-analysis-validation.md"
-  "aac-applications-competitive-analysis-research.md"
+
+  # Phase 3: Patents Research
   "aac-patents-tobii-eyetracking-research.md"
   "aac-patents-symbols-picture-communication-research.md"
   "aac-patents-prc-saltillo-lamp-research.md"
@@ -134,7 +216,3 @@ echo ""
 echo "Done! Copied $copied items. $skipped missing."
 echo ""
 echo "Entry point: open-agents/output-final/aac-research-hub/index.html"
-echo ""
-echo "Note: The conditions-overview page has a 'Back to Research Hub' link"
-echo "pointing to ../index.html (the main site index). This link will be"
-echo "broken unless you create an index.html at open-agents/output-final/."
