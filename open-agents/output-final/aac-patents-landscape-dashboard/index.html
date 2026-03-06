@@ -30,12 +30,39 @@
     --cyan: #06b6d4;
     --cyan-bg: rgba(6,182,212,.12);
   }
+  [data-theme="light"] {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #e9ebf0;
+    --border: #d1d5e0;
+    --text: #1a1d27;
+    --text-muted: #5b5f73;
+    --accent: #6366f1;
+    --accent-light: #4f46e5;
+    --red: #dc2626;
+    --red-bg: rgba(220,38,38,.1);
+    --orange: #d97706;
+    --orange-bg: rgba(217,119,6,.1);
+    --yellow: #ca8a04;
+    --yellow-bg: rgba(202,138,4,.1);
+    --green: #16a34a;
+    --green-bg: rgba(22,163,74,.1);
+    --blue: #2563eb;
+    --blue-bg: rgba(37,99,235,.1);
+    --purple: #9333ea;
+    --purple-bg: rgba(147,51,234,.1);
+    --cyan: #0891b2;
+    --cyan-bg: rgba(8,145,178,.1);
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
   a { color:var(--accent-light); text-decoration:none; }
   a:hover { text-decoration:underline; }
 
-  .header { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%); padding:2rem; border-bottom:1px solid var(--border); }
+  .theme-toggle { position:absolute; top:1.5rem; right:1.5rem; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:.4rem .75rem; cursor:pointer; color:var(--text); font-size:.88rem; display:flex; align-items:center; gap:.4rem; transition:all .2s; z-index:10; }
+  .theme-toggle:hover { background:var(--surface); border-color:var(--accent); }
+  .header { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%); padding:2rem; border-bottom:1px solid var(--border); position:relative; }
+  [data-theme="light"] .header { background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 50%,#e0e7ff 100%); }
   .header h1 { font-size:1.8rem; margin-bottom:.3rem; }
   .header p { color:var(--text-muted); font-size:.95rem; }
   .header .meta { display:flex; gap:1.5rem; margin-top:.75rem; flex-wrap:wrap; }
@@ -155,6 +182,7 @@
 <body>
 
 <div class="header">
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"><span id="themeIcon">☀️</span> <span id="themeLabel">Light</span></button>
   <h1>AAC Patent Landscape Dashboard</h1>
   <p>Comprehensive patent intelligence for Augmentative and Alternative Communication (AAC) market entry</p>
   <div class="meta">
@@ -974,21 +1002,48 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
   });
 });
 
+// Theme toggle
+let chartInstances = [];
+function getThemeColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return { muted: isDark ? '#8b8fa8' : '#5b5f73', grid: isDark ? '#2d3148' : '#d1d5e0' };
+}
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  document.getElementById('themeIcon').textContent = isLight ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = isLight ? 'Light' : 'Dark';
+  localStorage.setItem('aac-patent-theme', isLight ? 'dark' : 'light');
+  chartInstances.forEach(c => c.destroy());
+  chartInstances = [];
+  initCharts();
+}
+(function applyStoredTheme() {
+  const stored = localStorage.getItem('aac-patent-theme');
+  if (stored === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('themeIcon').textContent = '🌙';
+    document.getElementById('themeLabel').textContent = 'Dark';
+  }
+})();
+
 // Charts
 function initCharts() {
-  const chartOpts = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b8fa8',font:{size:11}}}}};
+  const tc = getThemeColors();
+  const chartOpts = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc.muted,font:{size:11}}}}};
 
   // Category chart
   const catCounts = {};
   patents.forEach(p => { catCounts[p.catLabel] = (catCounts[p.catLabel]||0) + 1; });
-  new Chart(document.getElementById('chartCategory'), {
+  chartInstances.push(new Chart(document.getElementById('chartCategory'), {
     type:'doughnut',
     data:{
       labels:Object.keys(catCounts),
       datasets:[{data:Object.values(catCounts),backgroundColor:['#06b6d4','#a855f7','#3b82f6','#f59e0b','#c084fc','#4ade80','#fb7185','#fbbf24','#60a5fa']}]
     },
     options:chartOpts
-  });
+  }));
 
   // Owner chart
   const ownerCounts = {};
@@ -997,38 +1052,38 @@ function initCharts() {
     ownerCounts[key] = (ownerCounts[key]||0) + 1;
   });
   const sortedOwners = Object.entries(ownerCounts).sort((a,b) => b[1]-a[1]);
-  new Chart(document.getElementById('chartOwner'), {
+  chartInstances.push(new Chart(document.getElementById('chartOwner'), {
     type:'bar',
     data:{
       labels:sortedOwners.map(e=>e[0]),
       datasets:[{label:'Patents',data:sortedOwners.map(e=>e[1]),backgroundColor:'#6366f1'}]
     },
-    options:{...chartOpts,indexAxis:'y',plugins:{...chartOpts.plugins,legend:{display:false}},scales:{x:{ticks:{color:'#8b8fa8'},grid:{color:'#2d3148'}},y:{ticks:{color:'#8b8fa8'},grid:{display:false}}}}
-  });
+    options:{...chartOpts,indexAxis:'y',plugins:{...chartOpts.plugins,legend:{display:false}},scales:{x:{ticks:{color:tc.muted},grid:{color:tc.grid}},y:{ticks:{color:tc.muted},grid:{display:false}}}}
+  }));
 
   // Risk chart
   const riskCounts = {HIGH:0,MEDIUM:0,LOW:0};
   patents.forEach(p => riskCounts[p.risk]++);
-  new Chart(document.getElementById('chartRisk'), {
+  chartInstances.push(new Chart(document.getElementById('chartRisk'), {
     type:'doughnut',
     data:{
       labels:['HIGH','MEDIUM','LOW'],
       datasets:[{data:[riskCounts.HIGH,riskCounts.MEDIUM,riskCounts.LOW],backgroundColor:['#ef4444','#f59e0b','#22c55e']}]
     },
     options:chartOpts
-  });
+  }));
 
   // Status chart
   const statusCounts = {};
   patents.forEach(p => { statusCounts[p.status] = (statusCounts[p.status]||0) + 1; });
-  new Chart(document.getElementById('chartStatus'), {
+  chartInstances.push(new Chart(document.getElementById('chartStatus'), {
     type:'doughnut',
     data:{
       labels:Object.keys(statusCounts),
       datasets:[{data:Object.values(statusCounts),backgroundColor:['#22c55e','#ef4444','#eab308','#6b7280']}]
     },
     options:chartOpts
-  });
+  }));
 }
 
 // Init
