@@ -454,6 +454,39 @@
       transform: scale(1.05);
     }
 
+    .reload-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 7.5rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.625rem 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.8125rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      transition: all 0.2s;
+      color: var(--color-text);
+    }
+
+    .reload-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .reload-btn:active #reload-icon {
+      display: inline-block;
+      animation: spin 0.5s ease;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* Mobile Sidebar Toggle */
     .sidebar-toggle {
       display: none;
@@ -1450,12 +1483,44 @@
     </main>
   </div>
 
+  <button class="reload-btn" onclick="hardReload()" title="Force reload (clears cache)">
+    <span id="reload-icon">&#x21bb;</span>
+    <span>Reload</span>
+  </button>
+
   <button class="theme-toggle" onclick="toggleTheme()">
     <span id="theme-icon">🌙</span>
     <span id="theme-text">Dark</span>
   </button>
 
   <script>
+    // Hard reload: clear all caches then reload
+    async function hardReload() {
+      const icon = document.getElementById('reload-icon');
+      icon.style.animation = 'spin 0.6s ease';
+      try {
+        // Clear Cache API entries (service worker caches)
+        if ('caches' in window) {
+          const names = await caches.keys();
+          await Promise.all(names.map(n => caches.delete(n)));
+        }
+        // Unregister any service workers
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+      } catch (e) {
+        // Ignore cache API errors on older browsers
+      }
+      // Cache-busting reload: fetch with no-cache headers then replace
+      window.location.href = window.location.pathname + '?_cb=' + Date.now();
+    }
+
+    // Strip cache-buster param after load so URL stays clean
+    if (window.location.search.includes('_cb=')) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+
     // Category filtering
     function filterCategory(category) {
       // Update active sidebar link
