@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Apple Platform Integration & On-Device Deployment for Audio Emotion Detection — Core ML, AVAudioEngine, Sound Analysis, Neural Engine optimization, and practical Swift implementation">
+  <title>Apple Platform Integration & On-Device Deployment | Audio Emotion Detection Deep Dive</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #EEF2FF;
+      --color-primary-dark: #4338CA;
+      --color-accent: #8B5CF6;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+      --color-info: #3B82F6;
+      --color-text: #1F2937;
+      --color-text-light: #6B7280;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9FAFB;
+      --color-bg-card: #FFFFFF;
+      --color-bg-code: #F3F4F6;
+      --color-border: #E5E7EB;
+      --color-border-light: #F3F4F6;
+      --color-sidebar-bg: #FAFAFE;
+      --color-sidebar-active: #EEF2FF;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --sidebar-width: 280px;
+    }
+    [data-theme="dark"] {
+      --color-primary: #818CF8;
+      --color-primary-light: #1E1B4B;
+      --color-primary-dark: #A5B4FC;
+      --color-accent: #A78BFA;
+      --color-text: #F9FAFB;
+      --color-text-light: #D1D5DB;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-code: #1E293B;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+      --color-sidebar-bg: #0F172A;
+      --color-sidebar-active: #1E1B4B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
+
+    /* Top navigation bar */
+    .top-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.75rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .back-to-hub {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex; align-items: center; gap: 0.375rem;
+      transition: gap 0.15s;
+    }
+    .back-to-hub:hover { gap: 0.625rem; }
+    .nav-title {
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+      display: none;
+    }
+    @media (min-width: 768px) { .nav-title { display: block; } }
+
+    /* Layout */
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--color-sidebar-bg);
+      border-right: 1px solid var(--color-border);
+      position: sticky; top: 52px;
+      height: calc(100vh - 52px);
+      overflow-y: auto;
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+    .sidebar-header {
+      padding: 0 1.25rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 0.75rem;
+    }
+    .sidebar-header .category-num {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sidebar-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      line-height: 1.3;
+    }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a {
+      display: block;
+      padding: 0.5rem 1.25rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .sidebar-nav li a:hover,
+    .sidebar-nav li a.active {
+      color: var(--color-primary);
+      background: var(--color-sidebar-active);
+      border-left-color: var(--color-primary);
+    }
+    .sidebar-nav li.nav-group > a {
+      font-weight: 600;
+      color: var(--color-text);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 1rem;
+      cursor: default;
+    }
+    .sidebar-nav li.nav-group > a:hover {
+      background: transparent;
+      border-left-color: transparent;
+      color: var(--color-text);
+    }
+    .mobile-menu-btn {
+      display: none;
+      position: fixed; bottom: 1rem; left: 1rem;
+      z-index: 200;
+      background: var(--color-primary);
+      color: white;
+      border: none; border-radius: 50%;
+      width: 48px; height: 48px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 149;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+      padding: 2rem 2.5rem 4rem;
+    }
+
+    /* Hero header */
+    .page-hero {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .page-hero .badge-row {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .badge {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-purple { background: #EDE9FE; color: #6D28D9; }
+    .badge-blue { background: #DBEAFE; color: #1D4ED8; }
+    .badge-green { background: #D1FAE5; color: #065F46; }
+    [data-theme="dark"] .badge-purple { background: #2E1065; color: #C4B5FD; }
+    [data-theme="dark"] .badge-blue { background: #1E3A5F; color: #93C5FD; }
+    [data-theme="dark"] .badge-green { background: #064E3B; color: #6EE7B7; }
+    .page-hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-hero .subtitle {
+      font-size: 1.125rem;
+      color: var(--color-text-light);
+      max-width: 640px;
+    }
+
+    /* Section styles */
+    .section { margin-bottom: 3rem; }
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-primary-light);
+    }
+    .section h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--color-text);
+    }
+    .section h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--color-text-light);
+    }
+    .section p {
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+      color: var(--color-text);
+    }
+    .section ul, .section ol {
+      margin: 0 0 1rem 1.25rem;
+      font-size: 0.9375rem;
+    }
+    .section li { margin-bottom: 0.375rem; }
+
+    /* Info/warning/tip boxes */
+    .callout {
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-sm);
+      margin: 1.25rem 0;
+      font-size: 0.875rem;
+      border-left: 4px solid;
+    }
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .callout-info {
+      background: #EFF6FF;
+      border-color: var(--color-info);
+    }
+    .callout-info .callout-title { color: var(--color-info); }
+    .callout-warning {
+      background: #FFFBEB;
+      border-color: var(--color-warning);
+    }
+    .callout-warning .callout-title { color: #B45309; }
+    .callout-tip {
+      background: #F0FDF4;
+      border-color: var(--color-success);
+    }
+    .callout-tip .callout-title { color: #047857; }
+    .callout-danger {
+      background: #FEF2F2;
+      border-color: var(--color-danger);
+    }
+    .callout-danger .callout-title { color: var(--color-danger); }
+    [data-theme="dark"] .callout-info { background: #172554; }
+    [data-theme="dark"] .callout-warning { background: #422006; }
+    [data-theme="dark"] .callout-tip { background: #052E16; }
+    [data-theme="dark"] .callout-danger { background: #450A0A; }
+
+    /* Code blocks */
+    pre {
+      background: var(--color-bg-code);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+    }
+    :not(pre) > code {
+      background: var(--color-bg-code);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--color-border);
+      font-size: 0.8125em;
+      color: #C026D3;
+    }
+    [data-theme="dark"] :not(pre) > code { color: #E879F9; }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--color-border);
+      padding: 0.375rem 1rem;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-light);
+      margin-bottom: -1px;
+    }
+    .code-header + pre {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      margin-top: 0;
+    }
+    .swift-kw { color: #AF52DE; }
+    .swift-type { color: #0A84FF; }
+    .swift-str { color: #FF375F; }
+    .swift-num { color: #FF9F0A; }
+    .swift-cmt { color: #98989D; font-style: italic; }
+    .swift-fn { color: #30D158; }
+    .swift-prop { color: var(--color-text); }
+    [data-theme="dark"] .swift-kw { color: #BF5AF2; }
+    [data-theme="dark"] .swift-type { color: #64D2FF; }
+    [data-theme="dark"] .swift-str { color: #FF6482; }
+    [data-theme="dark"] .swift-fn { color: #30D158; }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1rem 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+    th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--color-border-light);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--color-bg-alt); }
+
+    /* Diagrams */
+    .diagram-container {
+      margin: 1.5rem 0;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+    .diagram-container .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-text-lighter);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* Glossary tooltips */
+    .glossary-term {
+      border-bottom: 1px dashed var(--color-primary);
+      cursor: help;
+      position: relative;
+    }
+    .glossary-term:hover::after {
+      content: attr(data-definition);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-text);
+      color: var(--color-bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      width: max-content;
+      max-width: 280px;
+      z-index: 50;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+    }
+    .glossary-term:hover::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-text);
+      z-index: 50;
+    }
+
+    /* Category navigation */
+    .category-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      margin-top: 3rem;
+      border-top: 2px solid var(--color-border);
+      gap: 1rem;
+    }
+    .prev-category, .next-category {
+      display: flex; align-items: center; gap: 0.5rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      transition: all 0.15s;
+    }
+    .prev-category:hover, .next-category:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 1rem; right: 1rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.625rem 0.875rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      color: var(--color-text);
+      font-size: 0.875rem;
+      z-index: 200;
+    }
+
+    /* Metric cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    .metric-card {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+
+    /* Step indicators */
+    .steps { margin: 1rem 0; }
+    .step {
+      display: flex; gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-left: 0.25rem;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .step-content { flex: 1; }
+    .step-content h4 { margin-top: 0; font-size: 0.9375rem; }
+
+    /* Two column cards */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .col-card {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+    }
+    .col-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.9375rem;
+    }
+    .col-card p, .col-card ul {
+      font-size: 0.8125rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh;
+        z-index: 150;
+        transform: translateX(-100%);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+      .main-content { padding: 1.5rem 1.25rem 4rem; }
+    }
+    @media (max-width: 640px) {
+      .page-hero h1 { font-size: 1.5rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <a href="../index.html" class="back-to-hub">&larr; Back to Audio Emotion &amp; Tone Detection Deep Dive</a>
+    <span class="nav-title">Category 8 of 8</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">Dark Mode</button>
+  </nav>
+
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="category-num">Category 8 of 8</span>
+        <h2>Apple Platform Integration &amp; On-Device Deployment</h2>
+      </div>
+      <ul class="sidebar-nav">
+        <li class="nav-group"><a>Overview</a></li>
+        <li><a href="#overview">Why On-Device?</a></li>
+        <li><a href="#architecture">System Architecture</a></li>
+        <li class="nav-group"><a>Apple Frameworks</a></li>
+        <li><a href="#coreml">Core ML</a></li>
+        <li><a href="#sound-analysis">Sound Analysis</a></li>
+        <li><a href="#createml">Create ML</a></li>
+        <li><a href="#avfoundation">AVAudioEngine</a></li>
+        <li><a href="#ane">Neural Engine (ANE)</a></li>
+        <li class="nav-group"><a>Model Pipeline</a></li>
+        <li><a href="#conversion">PyTorch to Core ML</a></li>
+        <li><a href="#compression">Model Compression</a></li>
+        <li><a href="#realtime">Real-Time Processing</a></li>
+        <li class="nav-group"><a>Ecosystem</a></li>
+        <li><a href="#whisperkit">WhisperKit</a></li>
+        <li><a href="#fluidaudio">FluidAudio</a></li>
+        <li><a href="#foundation-models">Foundation Models</a></li>
+        <li><a href="#executorch">ExecuTorch</a></li>
+        <li class="nav-group"><a>Practical Guide</a></li>
+        <li><a href="#swift-implementation">Swift Implementation</a></li>
+        <li><a href="#decision-guide">Decision Guide</a></li>
+        <li><a href="#privacy">Privacy &amp; Compliance</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+      </ul>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Open navigation">&#9776;</button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="page-hero">
+        <div class="badge-row">
+          <span class="badge badge-purple">Category 8</span>
+          <span class="badge badge-blue">Deployment</span>
+          <span class="badge badge-green">Swift</span>
+        </div>
+        <h1>Apple Platform Integration &amp; On-Device Deployment</h1>
+        <p class="subtitle">How to deploy emotion and tone detection in a Swift-based iOS/macOS app &mdash; from model conversion through real-time inference on the Apple Neural Engine.</p>
+      </header>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value">&lt;50ms</div>
+          <div class="metric-label">On-Device Latency</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">5&ndash;30 MB</div>
+          <div class="metric-label">Compressed Model Size</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">38 TOPS</div>
+          <div class="metric-label">M4 Neural Engine</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">100%</div>
+          <div class="metric-label">Audio Stays On-Device</div>
+        </div>
+      </div>
+
+      <!-- Section: Overview -->
+      <section class="section" id="overview">
+        <h2>Why On-Device Emotion Detection?</h2>
+        <p>Shipping emotion detection directly on the user's iPhone or Mac eliminates network latency, removes cloud API costs, and keeps sensitive audio data entirely on the device. For a transcription app, this means you can annotate each utterance with an emotion score in real time, without ever sending a single audio frame to a server.</p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Key Advantage</div>
+          On-device processing means raw audio never leaves the device. This dramatically simplifies GDPR, HIPAA, and EU AI Act compliance for emotion-related features.
+        </div>
+
+        <p>Apple's stack provides every piece you need: <strong>AVAudioEngine</strong> captures microphone audio, <strong>Core ML</strong> runs your emotion model on the <span class="glossary-term" data-definition="Apple Neural Engine — a dedicated hardware accelerator for ML inference, found in A11+ and M1+ chips. Delivers high throughput at low power.">Neural Engine</span>, <strong>Sound Analysis</strong> offers a turnkey classifier pipeline, and the <strong>Foundation Models</strong> framework gives you an on-device LLM for text-based emotion analysis of your transcriptions.</p>
+
+        <p>This page is organized as a practical build guide. We start with the full system architecture, walk through each Apple framework, cover model conversion and compression, and finish with complete Swift code you can adapt for your own app.</p>
+      </section>
+
+      <!-- Section: Architecture Diagram -->
+      <section class="section" id="architecture">
+        <h2>System Architecture</h2>
+        <p>The diagram below shows the complete data flow for real-time emotion detection in an iOS/macOS app, from microphone input through to UI display.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph Audio["AVAudioEngine Layer"]
+        MIC["Microphone Input<br/>(44.1 kHz stereo)"] --> INPUT["inputNode"]
+        INPUT --> MIXER["AVAudioMixerNode<br/>(resample to 16 kHz mono)"]
+        MIXER --> TAP["installTap<br/>bufferSize: 4096"]
+    end
+
+    subgraph Processing["Processing Queue (background)"]
+        TAP --> BUF["Buffer Accumulator<br/>(collect 1-3 sec windows)"]
+        BUF --> FEAT["Feature Extraction<br/>(Mel Spectrogram / MFCC)"]
+        FEAT --> NORM["Normalize &amp; Format<br/>(MLMultiArray)"]
+    end
+
+    subgraph ML["ML Inference Queue"]
+        NORM --> MODEL["Core ML Emotion Model<br/>(runs on ANE)"]
+        MODEL --> SCORES["Emotion Scores<br/>{angry: 0.1, happy: 0.7, ...}"]
+        SCORES --> SMOOTH["Temporal Smoothing<br/>(exponential moving avg)"]
+    end
+
+    subgraph UI["Main Thread"]
+        SMOOTH --> VM["EmotionViewModel<br/>(@Published)"]
+        VM --> VIEW["SwiftUI View<br/>(emotion labels, charts)"]
+    end
+
+    style Audio fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style Processing fill:#F0FDF4,stroke:#10B981,color:#1F2937
+    style ML fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style UI fill:#FDF2F8,stroke:#EC4899,color:#1F2937
+          </div>
+          <div class="diagram-caption">Fig 1. Complete iOS emotion detection pipeline &mdash; audio capture through UI display</div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">Critical Threading Rule</div>
+          Never run Core ML inference on the audio render thread. The audio tap callback must return within microseconds. Copy the buffer and dispatch to a background queue immediately.
+        </div>
+      </section>
+
+      <!-- Section: Core ML -->
+      <section class="section" id="coreml">
+        <h2>Core ML</h2>
+        <p><span class="glossary-term" data-definition="Apple's on-device machine learning framework. Automatically dispatches models to the best hardware (ANE, GPU, or CPU) and provides a Swift-native inference API.">Core ML</span> is the inference engine at the center of Apple's ML stack. It loads a compiled model, optimally dispatches operations to the Neural Engine, GPU, or CPU, and returns predictions through a Swift-native API.</p>
+
+        <h3>Model Formats</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Format</th><th>Extension</th><th>Spec</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Neural Network</td><td><code>.mlmodel</code></td><td>Protobuf-based, fixed layer graph</td><td>Legacy (maintained)</td></tr>
+              <tr><td>ML Program</td><td><code>.mlpackage</code></td><td>Typed, programmatic execution</td><td>Recommended for all new models</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Always target <code>.mlpackage</code> (ML Program) for new work. It gets all new features, supports modern operators needed by transformer-based emotion models, and plays well with the Neural Engine.</p>
+
+        <h3>Inference API</h3>
+        <p>Core ML provides both synchronous and async prediction APIs. The async variant (introduced at WWDC 2023) is thread-safe and integrates with Swift concurrency.</p>
+
+        <div class="code-header"><span>Swift</span><span>Core ML Async Prediction</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">CoreML</span>
+
+<span class="swift-kw">class</span> <span class="swift-type">EmotionPredictor</span> {
+    <span class="swift-kw">private let</span> model: <span class="swift-type">MLModel</span>
+
+    <span class="swift-kw">init</span>() <span class="swift-kw">throws</span> {
+        <span class="swift-kw">let</span> config = <span class="swift-type">MLModelConfiguration</span>()
+        config.<span class="swift-prop">computeUnits</span> = .<span class="swift-prop">all</span>  <span class="swift-cmt">// Let Core ML pick best hardware</span>
+        <span class="swift-kw">self</span>.model = <span class="swift-kw">try</span> <span class="swift-type">EmotionClassifier</span>(configuration: config).<span class="swift-prop">model</span>
+    }
+
+    <span class="swift-kw">func</span> <span class="swift-fn">predict</span>(features: <span class="swift-type">MLMultiArray</span>) <span class="swift-kw">async throws</span> -> [<span class="swift-type">String</span>: <span class="swift-type">Double</span>] {
+        <span class="swift-kw">let</span> input = <span class="swift-kw">try</span> <span class="swift-type">MLDictionaryFeatureProvider</span>(
+            dictionary: [<span class="swift-str">"audio_features"</span>: <span class="swift-type">MLFeatureValue</span>(multiArray: features)]
+        )
+
+        <span class="swift-cmt">// Async prediction — thread-safe, supports cancellation</span>
+        <span class="swift-kw">let</span> result = <span class="swift-kw">try await</span> model.<span class="swift-fn">prediction</span>(from: input)
+
+        <span class="swift-cmt">// Extract emotion probabilities</span>
+        <span class="swift-kw">guard let</span> probs = result.<span class="swift-fn">featureValue</span>(
+            for: <span class="swift-str">"emotionProbabilities"</span>
+        )?.<span class="swift-prop">dictionaryValue</span> <span class="swift-kw">as?</span> [<span class="swift-type">String</span>: <span class="swift-type">NSNumber</span>] <span class="swift-kw">else</span> {
+            <span class="swift-kw">throw</span> <span class="swift-type">EmotionError</span>.<span class="swift-prop">invalidOutput</span>
+        }
+
+        <span class="swift-kw">return</span> probs.<span class="swift-fn">mapValues</span> { $0.<span class="swift-prop">doubleValue</span> }
+    }
+}</code></pre>
+
+        <h3>Input Types for Audio</h3>
+        <p>Audio emotion models typically accept one of these input formats:</p>
+        <ul>
+          <li><strong>MLMultiArray</strong> &mdash; raw tensor data (mel spectrogram, MFCC features). Shape might be <code>[1, 128, 64]</code> for a 128-bin mel spectrogram with 64 time frames.</li>
+          <li><strong>MLShapedArray</strong> &mdash; ergonomic Swift wrapper over MLMultiArray with typed subscripts. Fully interconvertible.</li>
+          <li><strong>SoundAnalysisPreprocessing</strong> &mdash; built-in Core ML layer that takes raw audio samples and outputs mel spectrograms directly inside the model (no external feature extraction needed).</li>
+        </ul>
+      </section>
+
+      <!-- Section: Sound Analysis -->
+      <section class="section" id="sound-analysis">
+        <h2>Sound Analysis Framework</h2>
+        <p>Apple's <span class="glossary-term" data-definition="Apple framework for classifying sounds from audio streams or files. Includes a built-in classifier with 300+ categories and supports custom Core ML models.">Sound Analysis</span> framework provides a high-level pipeline for audio classification. It handles windowing, buffering, and result delivery — you just provide a model and audio stream.</p>
+
+        <h3>Built-in vs. Custom Classifiers</h3>
+        <div class="two-col">
+          <div class="col-card">
+            <h4>Built-in Classifier</h4>
+            <ul>
+              <li>300+ sound categories pre-trained</li>
+              <li>Includes: speech, laughter, crying, shouting, sighing</li>
+              <li>Window: 0.5s &ndash; 15s (recommended &ge; 1s)</li>
+              <li>Zero model size — built into OS</li>
+              <li>Good starting point for coarse emotion cues</li>
+            </ul>
+          </div>
+          <div class="col-card">
+            <h4>Custom Classifier</h4>
+            <ul>
+              <li>Your Core ML model for fine-grained emotions</li>
+              <li>Trained on emotion-labeled speech data</li>
+              <li>Plug-and-play with Sound Analysis pipeline</li>
+              <li>Full control over categories and accuracy</li>
+              <li>Can run alongside built-in classifier</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Real-Time Stream Analysis</h3>
+        <div class="code-header"><span>Swift</span><span>Sound Analysis with Custom Model</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">SoundAnalysis</span>
+<span class="swift-kw">import</span> <span class="swift-type">AVFoundation</span>
+
+<span class="swift-kw">class</span> <span class="swift-type">EmotionSoundAnalyzer</span>: <span class="swift-type">NSObject</span>, <span class="swift-type">SNResultsObserving</span> {
+    <span class="swift-kw">private let</span> engine = <span class="swift-type">AVAudioEngine</span>()
+    <span class="swift-kw">private var</span> analyzer: <span class="swift-type">SNAudioStreamAnalyzer</span>?
+
+    <span class="swift-kw">func</span> <span class="swift-fn">startAnalysis</span>() <span class="swift-kw">throws</span> {
+        <span class="swift-kw">let</span> inputNode = engine.<span class="swift-prop">inputNode</span>
+        <span class="swift-kw">let</span> recordingFormat = inputNode.<span class="swift-fn">outputFormat</span>(forBus: <span class="swift-num">0</span>)
+
+        <span class="swift-cmt">// Create stream analyzer matching the audio format</span>
+        analyzer = <span class="swift-type">SNAudioStreamAnalyzer</span>(format: recordingFormat)
+
+        <span class="swift-cmt">// Load your custom emotion Core ML model</span>
+        <span class="swift-kw">let</span> emotionModel = <span class="swift-kw">try</span> <span class="swift-type">EmotionClassifier</span>(configuration: <span class="swift-type">MLModelConfiguration</span>()).<span class="swift-prop">model</span>
+        <span class="swift-kw">let</span> request = <span class="swift-kw">try</span> <span class="swift-type">SNClassifySoundRequest</span>(mlModel: emotionModel)
+        request.<span class="swift-prop">windowDuration</span> = <span class="swift-type">CMTimeMakeWithSeconds</span>(<span class="swift-num">1.5</span>, preferredTimescale: <span class="swift-num">48_000</span>)
+        request.<span class="swift-prop">overlapFactor</span> = <span class="swift-num">0.5</span>
+
+        <span class="swift-kw">try</span> analyzer?.<span class="swift-fn">add</span>(request, withObserver: <span class="swift-kw">self</span>)
+
+        <span class="swift-cmt">// Install tap and feed buffers to analyzer</span>
+        inputNode.<span class="swift-fn">installTap</span>(onBus: <span class="swift-num">0</span>, bufferSize: <span class="swift-num">8192</span>, format: recordingFormat) {
+            [<span class="swift-kw">weak self</span>] buffer, time <span class="swift-kw">in</span>
+            <span class="swift-kw">self</span>?.analyzer?.<span class="swift-fn">analyze</span>(buffer, atAudioFramePosition: time.<span class="swift-prop">sampleTime</span>)
+        }
+
+        <span class="swift-kw">try</span> engine.<span class="swift-fn">start</span>()
+    }
+
+    <span class="swift-cmt">// Called when classification results are ready</span>
+    <span class="swift-kw">func</span> <span class="swift-fn">request</span>(_ request: <span class="swift-type">SNRequest</span>, didProduce result: <span class="swift-type">SNResult</span>) {
+        <span class="swift-kw">guard let</span> classification = result <span class="swift-kw">as?</span> <span class="swift-type">SNClassificationResult</span> <span class="swift-kw">else</span> { <span class="swift-kw">return</span> }
+
+        <span class="swift-kw">let</span> emotions = classification.<span class="swift-prop">classifications</span>.<span class="swift-fn">map</span> {
+            (<span class="swift-prop">label</span>: $0.<span class="swift-prop">identifier</span>, <span class="swift-prop">confidence</span>: $0.<span class="swift-prop">confidence</span>)
+        }
+
+        <span class="swift-cmt">// Dispatch to main thread for UI update</span>
+        <span class="swift-type">DispatchQueue</span>.<span class="swift-prop">main</span>.<span class="swift-fn">async</span> {
+            <span class="swift-kw">self</span>.<span class="swift-fn">updateUI</span>(with: emotions)
+        }
+    }
+
+    <span class="swift-kw">func</span> <span class="swift-fn">request</span>(_ request: <span class="swift-type">SNRequest</span>, didFailWithError error: <span class="swift-type">Error</span>) {
+        <span class="swift-fn">print</span>(<span class="swift-str">"Analysis error: </span>\(error)<span class="swift-str">"</span>)
+    }
+}</code></pre>
+      </section>
+
+      <!-- Section: Create ML -->
+      <section class="section" id="createml">
+        <h2>Create ML: Training Your Own Emotion Classifier</h2>
+        <p><span class="glossary-term" data-definition="Apple's no-code/low-code ML training tool. MLSoundClassifier lets you train an audio classifier by dragging labeled audio folders into the app.">Create ML</span>'s <code>MLSoundClassifier</code> is the fastest way to train a custom emotion model that runs natively on Apple devices.</p>
+
+        <h3>Training Steps</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Organize Audio Data</h4>
+              <p>Create folders by emotion label: <code>angry/</code>, <code>happy/</code>, <code>sad/</code>, <code>neutral/</code>, <code>fearful/</code>. Place 50+ clips per category, 3&ndash;10 seconds each, at 16 kHz.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Open Create ML &amp; Select Sound Classification</h4>
+              <p>In Xcode, go to <em>Xcode &rarr; Open Developer Tool &rarr; Create ML</em>. Choose the Sound Classification template.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Train</h4>
+              <p>Drag your training folder in and click Train. Create ML handles all audio preprocessing (spectral feature extraction) and uses transfer learning from Apple's audio backbone.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Evaluate &amp; Export</h4>
+              <p>Review accuracy on the validation set. If acceptable, drag the model out of Create ML and drop it into your Xcode project. It becomes a <code>.mlmodel</code> that Xcode auto-compiles.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-title">Tip: Data Augmentation</div>
+          Augment your dataset with pitch shifting (&plusmn;2 semitones), time stretching (0.9x&ndash;1.1x), and background noise addition. This dramatically improves generalization for emotion recognition.
+        </div>
+      </section>
+
+      <!-- Section: AVAudioEngine -->
+      <section class="section" id="avfoundation">
+        <h2>AVAudioEngine: Real-Time Audio Capture</h2>
+        <p><span class="glossary-term" data-definition="Apple's high-level audio processing graph. Connects nodes (input, mixer, effects, output) to capture, process, and route audio with low latency.">AVAudioEngine</span> is the gateway to the microphone. It provides a node graph where you can capture, resample, and tap audio buffers for ML processing.</p>
+
+        <h3>Format Conversion</h3>
+        <p>The microphone input node always outputs at the hardware's native format (typically 44.1 or 48 kHz, stereo, float32). Most emotion models expect 16 kHz mono. You must resample:</p>
+
+        <div class="code-header"><span>Swift</span><span>AVAudioEngine Setup with Resampling</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">AVFoundation</span>
+
+<span class="swift-kw">class</span> <span class="swift-type">AudioCapture</span> {
+    <span class="swift-kw">private let</span> engine = <span class="swift-type">AVAudioEngine</span>()
+    <span class="swift-kw">private let</span> processingQueue = <span class="swift-type">DispatchQueue</span>(
+        label: <span class="swift-str">"com.app.audioProcessing"</span>,
+        qos: .<span class="swift-prop">userInitiated</span>
+    )
+
+    <span class="swift-cmt">// Target format for emotion model</span>
+    <span class="swift-kw">private let</span> targetFormat = <span class="swift-type">AVAudioFormat</span>(
+        commonFormat: .<span class="swift-prop">pcmFormatFloat32</span>,
+        sampleRate: <span class="swift-num">16000</span>,
+        channels: <span class="swift-num">1</span>,
+        interleaved: <span class="swift-kw">false</span>
+    )!
+
+    <span class="swift-kw">func</span> <span class="swift-fn">startCapture</span>(onBuffer: @<span class="swift-kw">escaping</span> (<span class="swift-type">AVAudioPCMBuffer</span>) -> <span class="swift-type">Void</span>) <span class="swift-kw">throws</span> {
+        <span class="swift-kw">let</span> inputNode = engine.<span class="swift-prop">inputNode</span>
+        <span class="swift-kw">let</span> hwFormat = inputNode.<span class="swift-fn">outputFormat</span>(forBus: <span class="swift-num">0</span>)
+
+        <span class="swift-cmt">// Insert a mixer node for format conversion</span>
+        <span class="swift-kw">let</span> mixer = <span class="swift-type">AVAudioMixerNode</span>()
+        engine.<span class="swift-fn">attach</span>(mixer)
+        engine.<span class="swift-fn">connect</span>(inputNode, to: mixer, format: hwFormat)
+
+        <span class="swift-cmt">// Tap the mixer at our target format (16 kHz mono)</span>
+        mixer.<span class="swift-fn">installTap</span>(
+            onBus: <span class="swift-num">0</span>,
+            bufferSize: <span class="swift-num">4096</span>,  <span class="swift-cmt">// ~256 ms at 16 kHz</span>
+            format: targetFormat
+        ) { [<span class="swift-kw">weak self</span>] buffer, time <span class="swift-kw">in</span>
+            <span class="swift-cmt">// Immediately dispatch off the audio thread</span>
+            <span class="swift-kw">self</span>?.processingQueue.<span class="swift-fn">async</span> {
+                onBuffer(buffer)
+            }
+        }
+
+        engine.<span class="swift-fn">prepare</span>()
+        <span class="swift-kw">try</span> engine.<span class="swift-fn">start</span>()
+    }
+
+    <span class="swift-kw">func</span> <span class="swift-fn">stopCapture</span>() {
+        engine.<span class="swift-prop">inputNode</span>.<span class="swift-fn">removeTap</span>(onBus: <span class="swift-num">0</span>)
+        engine.<span class="swift-fn">stop</span>()
+    }
+}</code></pre>
+
+        <h3>Buffer Size Trade-offs</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Buffer Size</th><th>Duration (16 kHz)</th><th>Latency</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1024</td><td>64 ms</td><td>Very low</td><td>Sub-word responsiveness</td></tr>
+              <tr><td>4096</td><td>256 ms</td><td>Low</td><td>Good default for emotion</td></tr>
+              <tr><td>8192</td><td>512 ms</td><td>Moderate</td><td>Efficient batch processing</td></tr>
+              <tr><td>16384</td><td>1.02 s</td><td>Higher</td><td>Single-shot classification</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>For emotion detection, accumulate multiple buffers to form 1.5&ndash;3 second analysis windows with 50% overlap. This balances temporal resolution with classification accuracy.</p>
+      </section>
+
+      <!-- Section: ANE -->
+      <section class="section" id="ane">
+        <h2>Apple Neural Engine (ANE)</h2>
+        <p>The <span class="glossary-term" data-definition="Neural Processing Unit (NPU) in Apple Silicon. Accelerates matrix multiplications and convolutions at high throughput and low power. M4 delivers 38 TOPS.">Apple Neural Engine</span> is a dedicated ML accelerator in every modern Apple chip. When Core ML routes your emotion model to the ANE, you get fast inference at minimal battery cost &mdash; ideal for continuous real-time analysis.</p>
+
+        <h3>ANE-Friendly Operations</h3>
+        <div class="two-col">
+          <div class="col-card">
+            <h4>Runs Well on ANE</h4>
+            <ul>
+              <li>Convolutions (1D, 2D, depthwise)</li>
+              <li>Matrix multiplications</li>
+              <li>ReLU, GELU, sigmoid, tanh</li>
+              <li>Batch norm, layer norm</li>
+              <li>Pooling (avg, max)</li>
+              <li>Softmax, element-wise ops</li>
+              <li>Transformer attention (ML Programs)</li>
+            </ul>
+          </div>
+          <div class="col-card">
+            <h4>Falls Back to CPU/GPU</h4>
+            <ul>
+              <li>Custom layers (no public ANE API)</li>
+              <li>Some broadcastable layer types</li>
+              <li>Dynamic tensor shapes</li>
+              <li>Very large models (&gt;500 MB)</li>
+              <li>Exotic/unusual operators</li>
+              <li>Complex control flow</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>ANE Optimization Checklist</h3>
+        <ol>
+          <li><strong>Use static shapes</strong> &mdash; fix your input dimensions (e.g., <code>[1, 128, 64]</code> for mel spectrogram)</li>
+          <li><strong>Target ML Program format</strong> &mdash; convert with <code>convert_to="mlprogram"</code></li>
+          <li><strong>Apply palettized weights</strong> (4&ndash;8 bit) &mdash; reduces memory bandwidth on ANE</li>
+          <li><strong>Replace unsupported layers</strong> &mdash; model surgery to swap broadcastable ops for ANE-friendly equivalents</li>
+          <li><strong>Profile with Instruments</strong> &mdash; Core ML Instrument shows exactly which compute unit each operation uses</li>
+          <li><strong>Split if needed</strong> &mdash; first part on ANE, last few layers on CPU if they contain unsupported ops</li>
+        </ol>
+
+        <h3>ANE Throughput by Chip</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Chip</th><th>TOPS</th><th>Typical Emotion Model Inference</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A14 (iPhone 12)</td><td>11</td><td>5&ndash;15 ms</td></tr>
+              <tr><td>A15 (iPhone 13/14)</td><td>15.8</td><td>3&ndash;10 ms</td></tr>
+              <tr><td>A17 Pro (iPhone 15 Pro)</td><td>35</td><td>1&ndash;5 ms</td></tr>
+              <tr><td>M1</td><td>11</td><td>3&ndash;10 ms</td></tr>
+              <tr><td>M4</td><td>38</td><td>1&ndash;4 ms</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: Conversion Pipeline -->
+      <section class="section" id="conversion">
+        <h2>PyTorch to Core ML Conversion</h2>
+        <p>If you have a PyTorch emotion model (e.g., fine-tuned wav2vec2, HuBERT, or a custom CNN), here is the full pipeline to get it running on-device.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph LR
+    A["PyTorch Model<br/>(trained on emotion data)"] --> B["TorchScript<br/>(torch.jit.trace)"]
+    B --> C["coremltools.convert()<br/>(specify input shapes)"]
+    C --> D[".mlpackage<br/>(ML Program)"]
+    D --> E["Quantize / Compress<br/>(ct.optimize)"]
+    E --> F["Xcode Integration<br/>(drag & drop)"]
+    F --> G["On-Device Inference<br/>(ANE / GPU / CPU)"]
+
+    style A fill:#FEE2E2,stroke:#EF4444,color:#1F2937
+    style B fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style C fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style D fill:#EDE9FE,stroke:#8B5CF6,color:#1F2937
+    style E fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style F fill:#F3F4F6,stroke:#6B7280,color:#1F2937
+    style G fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+          </div>
+          <div class="diagram-caption">Fig 2. PyTorch to Core ML conversion pipeline</div>
+        </div>
+
+        <h3>Conversion Code</h3>
+        <div class="code-header"><span>Python</span><span>coremltools Conversion</span></div>
+<pre><code><span class="swift-kw">import</span> coremltools <span class="swift-kw">as</span> ct
+<span class="swift-kw">import</span> torch
+
+<span class="swift-cmt"># 1. Load your trained PyTorch emotion model</span>
+model = EmotionCNN()
+model.load_state_dict(torch.load(<span class="swift-str">"emotion_model.pt"</span>))
+model.eval()
+
+<span class="swift-cmt"># 2. Trace with representative input</span>
+<span class="swift-cmt">#    Shape: [batch, mel_bins, time_frames]</span>
+example_input = torch.randn(<span class="swift-num">1</span>, <span class="swift-num">128</span>, <span class="swift-num">64</span>)
+traced = torch.jit.trace(model, example_input)
+
+<span class="swift-cmt"># 3. Convert to Core ML ML Program</span>
+mlmodel = ct.convert(
+    traced,
+    inputs=[ct.TensorType(
+        name=<span class="swift-str">"audio_features"</span>,
+        shape=(<span class="swift-num">1</span>, <span class="swift-num">128</span>, <span class="swift-num">64</span>),
+        dtype=ct.converters.mil.mil.types.fp32
+    )],
+    outputs=[ct.TensorType(name=<span class="swift-str">"emotionProbabilities"</span>)],
+    convert_to=<span class="swift-str">"mlprogram"</span>,
+    minimum_deployment_target=ct.target.iOS17,
+)
+
+<span class="swift-cmt"># 4. Add metadata</span>
+mlmodel.author = <span class="swift-str">"Your App"</span>
+mlmodel.short_description = <span class="swift-str">"Speech emotion classifier (7 emotions)"</span>
+mlmodel.input_description[<span class="swift-str">"audio_features"</span>] = <span class="swift-str">"128-bin mel spectrogram, 64 time frames (~2 sec)"</span>
+
+<span class="swift-cmt"># 5. Save</span>
+mlmodel.save(<span class="swift-str">"EmotionClassifier.mlpackage"</span>)
+</code></pre>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">Conversion Gotcha</div>
+          Wav2vec2 and HuBERT models use dynamic shapes and complex attention patterns. You may need to fix sequence lengths, replace unsupported ops, or use <code>torch.onnx.export</code> as an intermediate step. Test thoroughly — verify Core ML output matches PyTorch output within acceptable tolerance.
+        </div>
+      </section>
+
+      <!-- Section: Model Compression -->
+      <section class="section" id="compression">
+        <h2>Model Compression for Mobile</h2>
+        <p>A full wav2vec2-base model is ~360 MB &mdash; too large for most mobile apps. Compression techniques can reduce this 10&ndash;40x while retaining 90%+ accuracy.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Technique</th><th>Size Reduction</th><th>Accuracy Impact</th><th>Speed Impact</th><th>Tool</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Float16</td><td>2x</td><td>Negligible</td><td>Neutral to faster</td><td><code>ct.optimize.coreml</code></td></tr>
+              <tr><td>Int8 PTQ</td><td>4x</td><td>Low&ndash;moderate</td><td>Faster on ANE</td><td><code>ct.optimize.coreml</code></td></tr>
+              <tr><td>Int8 QAT</td><td>4x</td><td>Minimal</td><td>Faster on ANE</td><td><code>ct.optimize.torch</code></td></tr>
+              <tr><td>Palettization (4-bit)</td><td>~8x</td><td>Low</td><td>Lower memory bandwidth</td><td><code>ct.optimize.coreml</code></td></tr>
+              <tr><td>Pruning (50%)</td><td>~2x</td><td>Low</td><td>Faster if structured</td><td><code>ct.optimize.torch</code></td></tr>
+              <tr><td>Knowledge Distillation</td><td>10&ndash;50x</td><td>Moderate</td><td>Much faster (smaller model)</td><td>PyTorch training</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Recommended Compression Pipeline</h3>
+        <div class="diagram-container">
+          <div class="mermaid">
+graph LR
+    A["Full Model<br/>FP32 ~360 MB"] --> B["Float16<br/>~180 MB"]
+    B --> C["Int8 QAT<br/>~90 MB"]
+    C --> D["Palettize 4-bit<br/>~45 MB"]
+    D --> E["Prune 50%<br/>~25 MB"]
+    E --> F["Final Model<br/>~25 MB"]
+
+    A2["OR: Distillation"] --> F2["Student Model<br/>~5-15 MB"]
+
+    style A fill:#FEE2E2,stroke:#EF4444,color:#1F2937
+    style B fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style C fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style D fill:#EDE9FE,stroke:#8B5CF6,color:#1F2937
+    style E fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style F fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style A2 fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style F2 fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+          </div>
+          <div class="diagram-caption">Fig 3. Model compression pipeline &mdash; progressive and distillation approaches</div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-title">Best Practice</div>
+          Always start with Float16 &mdash; it costs nothing in accuracy and halves model size. For emotion models, 4-bit palettization + 8-bit quantization typically achieves 85&ndash;95% of the original accuracy at a fraction of the size.
+        </div>
+      </section>
+
+      <!-- Section: Real-Time Processing -->
+      <section class="section" id="realtime">
+        <h2>Real-Time Processing Architecture</h2>
+        <p>Getting smooth, real-time emotion detection requires careful thread management. The audio hardware thread has strict deadlines — you cannot block it with ML inference.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TB
+    subgraph AT["Audio Thread (real-time)"]
+        direction LR
+        A1["installTap callback"] --> A2["Copy buffer pointer"]
+        A2 --> A3["Dispatch to queue"]
+    end
+
+    subgraph PQ["Processing Queue (.userInitiated)"]
+        direction LR
+        B1["Receive buffer"] --> B2["Accumulate frames<br/>(ring buffer)"]
+        B2 --> B3["Window ready?"]
+        B3 -->|Yes| B4["Extract features<br/>(mel spectrogram)"]
+        B3 -->|No| B5["Wait for more"]
+        B4 --> B6["Create MLMultiArray"]
+    end
+
+    subgraph MQ["ML Queue (.userInitiated)"]
+        direction LR
+        C1["Receive features"] --> C2["Core ML prediction<br/>(async)"]
+        C2 --> C3["Post-process<br/>(smooth scores)"]
+    end
+
+    subgraph MT["Main Thread"]
+        direction LR
+        D1["Update ViewModel"] --> D2["SwiftUI re-render"]
+    end
+
+    AT --> PQ
+    PQ --> MQ
+    MQ --> MT
+
+    style AT fill:#FEE2E2,stroke:#EF4444,color:#1F2937
+    style PQ fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style MQ fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style MT fill:#D1FAE5,stroke:#10B981,color:#1F2937
+          </div>
+          <div class="diagram-caption">Fig 4. Four-thread architecture for real-time audio emotion detection</div>
+        </div>
+
+        <h3>Latency Budget</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Stage</th><th>Time Budget</th><th>Constraint</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Audio tap callback</td><td>&lt; 1 ms</td><td>Must not block audio thread</td></tr>
+              <tr><td>Buffer accumulation</td><td>1,500 ms</td><td>Analysis window length</td></tr>
+              <tr><td>Feature extraction</td><td>5&ndash;20 ms</td><td>Mel spectrogram computation</td></tr>
+              <tr><td>Core ML inference</td><td>1&ndash;50 ms</td><td>Model size dependent</td></tr>
+              <tr><td>Post-processing</td><td>&lt; 1 ms</td><td>Smoothing, thresholding</td></tr>
+              <tr><td><strong>Total pipeline</strong></td><td><strong>~1.5&ndash;1.6 s</strong></td><td>Dominated by analysis window</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The bottleneck is the analysis window, not the computation. With 50% overlap and a 1.5-second window, you get a new emotion reading every 750 ms &mdash; smooth enough for real-time display alongside transcription.</p>
+      </section>
+
+      <!-- Section: WhisperKit -->
+      <section class="section" id="whisperkit">
+        <h2>WhisperKit</h2>
+        <p><span class="glossary-term" data-definition="A pure Swift package by Argmax that runs OpenAI's Whisper speech recognition model natively on Apple devices using Core ML and the Apple Neural Engine.">WhisperKit</span> brings OpenAI Whisper to Apple devices with native ANE acceleration. For a transcription app, it is the primary on-device ASR solution.</p>
+
+        <h3>Architecture</h3>
+        <ul>
+          <li>Pure Swift, distributed as a Swift Package</li>
+          <li>Audio Encoder reimplemented for streaming inference on ANE</li>
+          <li>Text Decoder works with partial audio for real-time output</li>
+          <li>Whisper Large v3 Turbo (1B params) fits on-device</li>
+          <li>Pre-converted Core ML models on HuggingFace (<code>argmaxinc/whisperkit-coreml</code>)</li>
+        </ul>
+
+        <h3>Adding Emotion Detection</h3>
+        <p>WhisperKit's encoder produces rich audio representations that already capture prosodic and tonal information. You can add an emotion classification head:</p>
+        <ol>
+          <li><strong>Extract encoder features</strong> &mdash; take the output of Whisper's audio encoder (before the decoder)</li>
+          <li><strong>Add a classification head</strong> &mdash; a small MLP or attention pooling layer + linear classifier</li>
+          <li><strong>Fine-tune on emotion data</strong> &mdash; freeze the encoder, train only the head on labeled emotion data</li>
+          <li><strong>Export both models</strong> &mdash; shared encoder feeds both decoder (transcription) and emotion head</li>
+        </ol>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Trade-off</div>
+          Sharing the Whisper encoder between transcription and emotion detection saves memory and compute, but couples the two tasks. A separate lightweight emotion model (5&ndash;15 MB) running independently may be simpler to maintain and update.
+        </div>
+      </section>
+
+      <!-- Section: FluidAudio -->
+      <section class="section" id="fluidaudio">
+        <h2>FluidAudio</h2>
+        <p><span class="glossary-term" data-definition="A Swift SDK by FluidInference for fully local audio AI. Provides ASR (Parakeet), VAD (Silero), and speaker diarization (Pyannote), all running on the Apple Neural Engine.">FluidAudio</span> is a Swift SDK for local audio AI. All inference runs on the ANE, minimizing CPU/GPU usage &mdash; ideal for background processing alongside your emotion detection pipeline.</p>
+
+        <h3>Capabilities</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Feature</th><th>Model</th><th>Use for Emotion Pipeline</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Transcription</td><td>Parakeet TDT v3 (0.6B)</td><td>Text for multimodal emotion analysis</td></tr>
+              <tr><td>Voice Activity Detection</td><td>Silero VAD</td><td>Segment speech regions for analysis</td></tr>
+              <tr><td>Speaker Diarization</td><td>Pyannote</td><td>Per-speaker emotion tracking</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Requirements: macOS 14.0+ / iOS 17.0+ on Apple Silicon. Models are MIT/Apache 2.0 licensed and available on HuggingFace.</p>
+
+        <p>FluidAudio's VAD is especially useful: it tells you exactly when someone is speaking, so you only run the emotion model on speech segments rather than silence, saving significant compute.</p>
+      </section>
+
+      <!-- Section: Foundation Models -->
+      <section class="section" id="foundation-models">
+        <h2>Apple Foundation Models Framework</h2>
+        <p>Introduced at WWDC 2025, the <span class="glossary-term" data-definition="Apple's on-device LLM framework. Provides free, private access to Apple's foundation language model directly in your app, with guided generation, tool calling, and LoRA adapter support.">Foundation Models</span> framework gives you an on-device LLM for free &mdash; no API key, no internet required. It runs on the Neural Engine and is optimized for Apple Silicon.</p>
+
+        <h3>Emotion Analysis from Transcribed Text</h3>
+        <p>While your Core ML model detects emotion from audio acoustics (prosody, pitch, energy), the Foundation Models framework can analyze the <em>semantic content</em> of your transcription for a complementary text-based emotion signal.</p>
+
+        <div class="code-header"><span>Swift</span><span>Foundation Models Emotion Analysis</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">FoundationModels</span>
+
+<span class="swift-cmt">// Define structured output</span>
+<span class="swift-kw">struct</span> <span class="swift-type">EmotionAnalysis</span>: <span class="swift-type">Generable</span> {
+    <span class="swift-kw">var</span> primaryEmotion: <span class="swift-type">String</span>
+    <span class="swift-kw">var</span> confidence: <span class="swift-type">Double</span>
+    <span class="swift-kw">var</span> valence: <span class="swift-type">Double</span>     <span class="swift-cmt">// -1 (negative) to 1 (positive)</span>
+    <span class="swift-kw">var</span> arousal: <span class="swift-type">Double</span>     <span class="swift-cmt">// 0 (calm) to 1 (excited)</span>
+}
+
+<span class="swift-kw">func</span> <span class="swift-fn">analyzeTextEmotion</span>(transcript: <span class="swift-type">String</span>) <span class="swift-kw">async throws</span> -> <span class="swift-type">EmotionAnalysis</span> {
+    <span class="swift-kw">let</span> session = <span class="swift-type">LanguageModelSession</span>(
+        instructions: <span class="swift-str">"""
+        Analyze the emotional content of the given speech transcript.
+        Classify the primary emotion and estimate valence/arousal scores.
+        """</span>
+    )
+
+    <span class="swift-kw">let</span> result = <span class="swift-kw">try await</span> session.<span class="swift-fn">respond</span>(
+        to: transcript,
+        generating: <span class="swift-type">EmotionAnalysis</span>.<span class="swift-kw">self</span>
+    )
+    <span class="swift-kw">return</span> result
+}</code></pre>
+
+        <h3>Multimodal Fusion</h3>
+        <p>Combine the acoustic emotion score (from Core ML) with the semantic emotion score (from Foundation Models) for a more robust result:</p>
+
+        <div class="code-header"><span>Swift</span><span>Combining Audio + Text Emotion</span></div>
+<pre><code><span class="swift-kw">struct</span> <span class="swift-type">FusedEmotion</span> {
+    <span class="swift-kw">let</span> acoustic: [<span class="swift-type">String</span>: <span class="swift-type">Double</span>]  <span class="swift-cmt">// from Core ML audio model</span>
+    <span class="swift-kw">let</span> semantic: <span class="swift-type">EmotionAnalysis</span>     <span class="swift-cmt">// from Foundation Models</span>
+
+    <span class="swift-kw">var</span> finalEmotion: <span class="swift-type">String</span> {
+        <span class="swift-cmt">// Weight acoustic features higher (0.6) as they capture</span>
+        <span class="swift-cmt">// tone/prosody that text alone misses</span>
+        <span class="swift-kw">let</span> acousticWeight = <span class="swift-num">0.6</span>
+        <span class="swift-kw">let</span> semanticWeight = <span class="swift-num">0.4</span>
+
+        <span class="swift-cmt">// Combine scores (simplified — real impl uses full probability distributions)</span>
+        <span class="swift-kw">var</span> combined = acoustic.<span class="swift-fn">mapValues</span> { $0 * acousticWeight }
+        combined[semantic.primaryEmotion, <span class="swift-kw">default</span>: <span class="swift-num">0</span>] += semantic.confidence * semanticWeight
+
+        <span class="swift-kw">return</span> combined.<span class="swift-fn">max</span>(by: { $0.value &lt; $1.value })!.<span class="swift-prop">key</span>
+    }
+}</code></pre>
+      </section>
+
+      <!-- Section: ExecuTorch -->
+      <section class="section" id="executorch">
+        <h2>ExecuTorch</h2>
+        <p><span class="glossary-term" data-definition="PyTorch's official on-device inference framework. Provides a 50 KB runtime with 12+ hardware backends including Core ML for ANE access on Apple platforms.">ExecuTorch</span> is PyTorch's unified solution for on-device AI. It exports <code>.pte</code> files that run through a 50 KB runtime, with a Core ML delegate for ANE access on Apple hardware.</p>
+
+        <h3>Core ML Direct vs. ExecuTorch</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Aspect</th><th>Core ML (coremltools)</th><th>ExecuTorch</th><th>Cloud API</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Model Format</td><td><code>.mlpackage</code></td><td><code>.pte</code></td><td>N/A (server-side)</td></tr>
+              <tr><td>ANE Access</td><td>Direct, first-class</td><td>Via Core ML delegate</td><td>N/A</td></tr>
+              <tr><td>Latency</td><td>1&ndash;50 ms</td><td>2&ndash;60 ms</td><td>200&ndash;2000 ms</td></tr>
+              <tr><td>Cross-Platform</td><td>Apple only</td><td>iOS, Android, embedded</td><td>Any</td></tr>
+              <tr><td>Optimization</td><td>Apple-specific (best for Apple)</td><td>Generic + backends</td><td>Server-grade GPUs</td></tr>
+              <tr><td>Privacy</td><td>100% on-device</td><td>100% on-device</td><td>Audio sent to server</td></tr>
+              <tr><td>Cost</td><td>Free</td><td>Free</td><td>Per-API-call pricing</td></tr>
+              <tr><td>Accuracy (emotion)</td><td>Good (compressed model)</td><td>Good (compressed model)</td><td>Best (large models)</td></tr>
+              <tr><td>Best For</td><td>Apple-focused apps</td><td>Cross-platform apps</td><td>Max accuracy, batch jobs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Recommendation</div>
+          If you are building exclusively for Apple platforms, use Core ML directly (via coremltools) for the best optimization and ANE utilization. Use ExecuTorch if you need the same model on Android as well.
+        </div>
+      </section>
+
+      <!-- Section: Complete Swift Implementation -->
+      <section class="section" id="swift-implementation">
+        <h2>Complete Swift Implementation</h2>
+        <p>Here is a production-ready architecture that ties everything together: audio capture, feature extraction, Core ML inference, and optional Foundation Models text analysis.</p>
+
+        <h3>EmotionDetectionManager</h3>
+        <div class="code-header"><span>Swift</span><span>EmotionDetectionManager.swift</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">AVFoundation</span>
+<span class="swift-kw">import</span> <span class="swift-type">CoreML</span>
+<span class="swift-kw">import</span> <span class="swift-type">Accelerate</span>
+
+<span class="swift-cmt">/// Manages the complete audio emotion detection pipeline.</span>
+<span class="swift-cmt">/// Audio capture → Feature extraction → Core ML inference → Results</span>
+@<span class="swift-type">MainActor</span>
+<span class="swift-kw">final class</span> <span class="swift-type">EmotionDetectionManager</span>: <span class="swift-type">ObservableObject</span> {
+
+    <span class="swift-cmt">// MARK: - Published State</span>
+    @<span class="swift-type">Published</span> <span class="swift-kw">var</span> currentEmotions: [<span class="swift-type">String</span>: <span class="swift-type">Double</span>] = [:]
+    @<span class="swift-type">Published</span> <span class="swift-kw">var</span> dominantEmotion: <span class="swift-type">String</span> = <span class="swift-str">"neutral"</span>
+    @<span class="swift-type">Published</span> <span class="swift-kw">var</span> isAnalyzing: <span class="swift-type">Bool</span> = <span class="swift-kw">false</span>
+
+    <span class="swift-cmt">// MARK: - Audio Engine</span>
+    <span class="swift-kw">private let</span> engine = <span class="swift-type">AVAudioEngine</span>()
+    <span class="swift-kw">private let</span> mixer = <span class="swift-type">AVAudioMixerNode</span>()
+
+    <span class="swift-cmt">// MARK: - Processing</span>
+    <span class="swift-kw">private let</span> processingQueue = <span class="swift-type">DispatchQueue</span>(
+        label: <span class="swift-str">"emotion.processing"</span>, qos: .<span class="swift-prop">userInitiated</span>
+    )
+    <span class="swift-kw">private let</span> mlQueue = <span class="swift-type">DispatchQueue</span>(
+        label: <span class="swift-str">"emotion.ml"</span>, qos: .<span class="swift-prop">userInitiated</span>
+    )
+
+    <span class="swift-cmt">// MARK: - Model</span>
+    <span class="swift-kw">private var</span> emotionModel: <span class="swift-type">MLModel</span>?
+    <span class="swift-kw">private let</span> sampleRate: <span class="swift-type">Double</span> = <span class="swift-num">16000</span>
+    <span class="swift-kw">private let</span> windowDuration: <span class="swift-type">Double</span> = <span class="swift-num">2.0</span>   <span class="swift-cmt">// seconds</span>
+    <span class="swift-kw">private let</span> hopDuration: <span class="swift-type">Double</span> = <span class="swift-num">1.0</span>      <span class="swift-cmt">// 50% overlap</span>
+    <span class="swift-kw">private var</span> audioBuffer: [<span class="swift-type">Float</span>] = []
+    <span class="swift-kw">private let</span> windowSize: <span class="swift-type">Int</span>  <span class="swift-cmt">// sampleRate * windowDuration</span>
+
+    <span class="swift-cmt">// MARK: - Mel Spectrogram Parameters</span>
+    <span class="swift-kw">private let</span> fftSize = <span class="swift-num">512</span>
+    <span class="swift-kw">private let</span> hopLength = <span class="swift-num">256</span>
+    <span class="swift-kw">private let</span> melBins = <span class="swift-num">128</span>
+
+    <span class="swift-kw">init</span>() {
+        windowSize = <span class="swift-type">Int</span>(sampleRate * windowDuration)
+        loadModel()
+    }
+
+    <span class="swift-kw">private func</span> <span class="swift-fn">loadModel</span>() {
+        <span class="swift-kw">do</span> {
+            <span class="swift-kw">let</span> config = <span class="swift-type">MLModelConfiguration</span>()
+            config.<span class="swift-prop">computeUnits</span> = .<span class="swift-prop">all</span>
+            emotionModel = <span class="swift-kw">try</span> <span class="swift-type">EmotionClassifier</span>(configuration: config).<span class="swift-prop">model</span>
+        } <span class="swift-kw">catch</span> {
+            <span class="swift-fn">print</span>(<span class="swift-str">"Failed to load emotion model: </span>\(error)<span class="swift-str">"</span>)
+        }
+    }
+
+    <span class="swift-cmt">// MARK: - Start / Stop</span>
+
+    <span class="swift-kw">func</span> <span class="swift-fn">start</span>() <span class="swift-kw">throws</span> {
+        <span class="swift-kw">let</span> inputNode = engine.<span class="swift-prop">inputNode</span>
+        <span class="swift-kw">let</span> hwFormat = inputNode.<span class="swift-fn">outputFormat</span>(forBus: <span class="swift-num">0</span>)
+
+        engine.<span class="swift-fn">attach</span>(mixer)
+        engine.<span class="swift-fn">connect</span>(inputNode, to: mixer, format: hwFormat)
+
+        <span class="swift-kw">let</span> targetFormat = <span class="swift-type">AVAudioFormat</span>(
+            commonFormat: .<span class="swift-prop">pcmFormatFloat32</span>,
+            sampleRate: sampleRate,
+            channels: <span class="swift-num">1</span>,
+            interleaved: <span class="swift-kw">false</span>
+        )!
+
+        mixer.<span class="swift-fn">installTap</span>(
+            onBus: <span class="swift-num">0</span>, bufferSize: <span class="swift-num">4096</span>, format: targetFormat
+        ) { [<span class="swift-kw">weak self</span>] buffer, _ <span class="swift-kw">in</span>
+            <span class="swift-kw">self</span>?.processingQueue.<span class="swift-fn">async</span> {
+                <span class="swift-kw">self</span>?.<span class="swift-fn">handleAudioBuffer</span>(buffer)
+            }
+        }
+
+        engine.<span class="swift-fn">prepare</span>()
+        <span class="swift-kw">try</span> engine.<span class="swift-fn">start</span>()
+        isAnalyzing = <span class="swift-kw">true</span>
+    }
+
+    <span class="swift-kw">func</span> <span class="swift-fn">stop</span>() {
+        mixer.<span class="swift-fn">removeTap</span>(onBus: <span class="swift-num">0</span>)
+        engine.<span class="swift-fn">stop</span>()
+        isAnalyzing = <span class="swift-kw">false</span>
+        audioBuffer.removeAll()
+    }
+
+    <span class="swift-cmt">// MARK: - Buffer Processing</span>
+
+    <span class="swift-kw">private func</span> <span class="swift-fn">handleAudioBuffer</span>(_ buffer: <span class="swift-type">AVAudioPCMBuffer</span>) {
+        <span class="swift-kw">guard let</span> channelData = buffer.<span class="swift-prop">floatChannelData</span>?[<span class="swift-num">0</span>] <span class="swift-kw">else</span> { <span class="swift-kw">return</span> }
+        <span class="swift-kw">let</span> frameCount = <span class="swift-type">Int</span>(buffer.<span class="swift-prop">frameLength</span>)
+
+        <span class="swift-cmt">// Accumulate samples</span>
+        audioBuffer.<span class="swift-fn">append</span>(contentsOf:
+            <span class="swift-type">UnsafeBufferPointer</span>(start: channelData, count: frameCount)
+        )
+
+        <span class="swift-cmt">// Process when we have enough for a window</span>
+        <span class="swift-kw">while</span> audioBuffer.<span class="swift-prop">count</span> >= windowSize {
+            <span class="swift-kw">let</span> window = <span class="swift-type">Array</span>(audioBuffer.<span class="swift-fn">prefix</span>(windowSize))
+            <span class="swift-kw">let</span> hopSamples = <span class="swift-type">Int</span>(sampleRate * hopDuration)
+            audioBuffer.<span class="swift-fn">removeFirst</span>(hopSamples) <span class="swift-cmt">// slide window</span>
+
+            mlQueue.<span class="swift-fn">async</span> { [<span class="swift-kw">weak self</span>] <span class="swift-kw">in</span>
+                <span class="swift-kw">self</span>?.<span class="swift-fn">runInference</span>(on: window)
+            }
+        }
+    }
+
+    <span class="swift-cmt">// MARK: - ML Inference</span>
+
+    <span class="swift-kw">private func</span> <span class="swift-fn">runInference</span>(on samples: [<span class="swift-type">Float</span>]) {
+        <span class="swift-kw">guard let</span> model = emotionModel <span class="swift-kw">else</span> { <span class="swift-kw">return</span> }
+
+        <span class="swift-kw">do</span> {
+            <span class="swift-cmt">// Compute mel spectrogram using Accelerate</span>
+            <span class="swift-kw">let</span> melSpec = <span class="swift-fn">computeMelSpectrogram</span>(samples)
+
+            <span class="swift-cmt">// Create MLMultiArray [1, melBins, timeFrames]</span>
+            <span class="swift-kw">let</span> timeFrames = melSpec.<span class="swift-prop">count</span> / melBins
+            <span class="swift-kw">let</span> input = <span class="swift-kw">try</span> <span class="swift-type">MLMultiArray</span>(
+                shape: [<span class="swift-num">1</span>, melBins, timeFrames] <span class="swift-kw">as</span> [<span class="swift-type">NSNumber</span>],
+                dataType: .<span class="swift-prop">float32</span>
+            )
+            <span class="swift-kw">for</span> i <span class="swift-kw">in</span> <span class="swift-num">0</span>..&lt;melSpec.<span class="swift-prop">count</span> {
+                input[i] = <span class="swift-type">NSNumber</span>(value: melSpec[i])
+            }
+
+            <span class="swift-kw">let</span> featureProvider = <span class="swift-kw">try</span> <span class="swift-type">MLDictionaryFeatureProvider</span>(
+                dictionary: [<span class="swift-str">"audio_features"</span>: <span class="swift-type">MLFeatureValue</span>(multiArray: input)]
+            )
+
+            <span class="swift-kw">let</span> result = <span class="swift-kw">try</span> model.<span class="swift-fn">prediction</span>(from: featureProvider)
+
+            <span class="swift-kw">if let</span> probs = result.<span class="swift-fn">featureValue</span>(
+                for: <span class="swift-str">"emotionProbabilities"</span>
+            )?.<span class="swift-prop">dictionaryValue</span> <span class="swift-kw">as?</span> [<span class="swift-type">String</span>: <span class="swift-type">NSNumber</span>] {
+                <span class="swift-kw">let</span> emotions = probs.<span class="swift-fn">mapValues</span> { $0.<span class="swift-prop">doubleValue</span> }
+
+                <span class="swift-type">DispatchQueue</span>.<span class="swift-prop">main</span>.<span class="swift-fn">async</span> { [<span class="swift-kw">weak self</span>] <span class="swift-kw">in</span>
+                    <span class="swift-kw">self</span>?.<span class="swift-prop">currentEmotions</span> = emotions
+                    <span class="swift-kw">self</span>?.<span class="swift-prop">dominantEmotion</span> = emotions
+                        .<span class="swift-fn">max</span>(by: { $0.value &lt; $1.value })?.<span class="swift-prop">key</span> ?? <span class="swift-str">"neutral"</span>
+                }
+            }
+        } <span class="swift-kw">catch</span> {
+            <span class="swift-fn">print</span>(<span class="swift-str">"Inference error: </span>\(error)<span class="swift-str">"</span>)
+        }
+    }
+
+    <span class="swift-cmt">// MARK: - Feature Extraction (simplified)</span>
+
+    <span class="swift-kw">private func</span> <span class="swift-fn">computeMelSpectrogram</span>(_ samples: [<span class="swift-type">Float</span>]) -> [<span class="swift-type">Float</span>] {
+        <span class="swift-cmt">// Use Accelerate's vDSP for FFT and mel filterbank</span>
+        <span class="swift-cmt">// This is a simplified placeholder — production code would use</span>
+        <span class="swift-cmt">// vDSP.FFT, apply Hann window, mel filterbank matrix multiply</span>
+        <span class="swift-kw">var</span> result = [<span class="swift-type">Float</span>](repeating: <span class="swift-num">0</span>, count: melBins * <span class="swift-num">64</span>)
+        <span class="swift-cmt">// ... Accelerate-based mel spectrogram computation ...</span>
+        <span class="swift-kw">return</span> result
+    }
+}</code></pre>
+
+        <h3>SwiftUI View</h3>
+        <div class="code-header"><span>Swift</span><span>EmotionView.swift</span></div>
+<pre><code><span class="swift-kw">import</span> <span class="swift-type">SwiftUI</span>
+
+<span class="swift-kw">struct</span> <span class="swift-type">EmotionView</span>: <span class="swift-type">View</span> {
+    @<span class="swift-type">StateObject</span> <span class="swift-kw">private var</span> manager = <span class="swift-type">EmotionDetectionManager</span>()
+
+    <span class="swift-kw">var</span> body: <span class="swift-kw">some</span> <span class="swift-type">View</span> {
+        <span class="swift-type">VStack</span>(spacing: <span class="swift-num">20</span>) {
+            <span class="swift-type">Text</span>(manager.<span class="swift-prop">dominantEmotion</span>.<span class="swift-fn">capitalized</span>)
+                .<span class="swift-fn">font</span>(.<span class="swift-prop">largeTitle</span>.<span class="swift-fn">bold</span>())
+
+            <span class="swift-cmt">// Emotion probability bars</span>
+            <span class="swift-type">ForEach</span>(
+                manager.<span class="swift-prop">currentEmotions</span>.<span class="swift-fn">sorted</span>(by: { $0.value > $1.value }),
+                id: \.<span class="swift-prop">key</span>
+            ) { emotion, score <span class="swift-kw">in</span>
+                <span class="swift-type">HStack</span> {
+                    <span class="swift-type">Text</span>(emotion.<span class="swift-fn">capitalized</span>)
+                        .<span class="swift-fn">frame</span>(width: <span class="swift-num">80</span>, alignment: .<span class="swift-prop">leading</span>)
+                        .<span class="swift-fn">font</span>(.<span class="swift-prop">caption</span>)
+                    <span class="swift-type">ProgressView</span>(value: score)
+                        .<span class="swift-fn">tint</span>(.<span class="swift-prop">indigo</span>)
+                    <span class="swift-type">Text</span>(<span class="swift-type">String</span>(format: <span class="swift-str">"%.0f%%"</span>, score * <span class="swift-num">100</span>))
+                        .<span class="swift-fn">font</span>(.<span class="swift-prop">caption</span>.<span class="swift-fn">monospacedDigit</span>())
+                        .<span class="swift-fn">frame</span>(width: <span class="swift-num">40</span>)
+                }
+            }
+
+            <span class="swift-type">Button</span>(manager.<span class="swift-prop">isAnalyzing</span> ? <span class="swift-str">"Stop"</span> : <span class="swift-str">"Start"</span>) {
+                <span class="swift-kw">if</span> manager.<span class="swift-prop">isAnalyzing</span> {
+                    manager.<span class="swift-fn">stop</span>()
+                } <span class="swift-kw">else</span> {
+                    <span class="swift-kw">try</span>? manager.<span class="swift-fn">start</span>()
+                }
+            }
+            .<span class="swift-fn">buttonStyle</span>(.<span class="swift-prop">borderedProminent</span>)
+        }
+        .<span class="swift-fn">padding</span>()
+    }
+}</code></pre>
+      </section>
+
+      <!-- Section: Decision Guide -->
+      <section class="section" id="decision-guide">
+        <h2>Decision Guide: Choosing Your Approach</h2>
+        <p>The right architecture depends on your constraints. Use this decision guide to pick the best approach for your transcription app.</p>
+
+        <div class="diagram-container">
+          <div class="mermaid">
+graph TD
+    START["Need emotion detection?"] --> Q1{"Real-time<br/>required?"}
+    Q1 -->|Yes| Q2{"Apple-only<br/>app?"}
+    Q1 -->|No| CLOUD["Cloud API<br/>(Hume, Google, etc.)"]
+
+    Q2 -->|Yes| Q3{"Have training<br/>data?"}
+    Q2 -->|No| EXEC["ExecuTorch<br/>(cross-platform)"]
+
+    Q3 -->|Yes, labeled audio| Q4{"Need &gt;85%<br/>accuracy?"}
+    Q3 -->|No| CREATEML["Create ML +<br/>Sound Analysis<br/>(built-in classifier)"]
+
+    Q4 -->|Yes| CUSTOM["Custom PyTorch model<br/>→ coremltools → Core ML<br/>(+ Foundation Models for text)"]
+    Q4 -->|Good enough| CREATEML
+
+    CLOUD --> HYBRID{"Want privacy<br/>+ accuracy?"}
+    HYBRID -->|Yes| BOTH["Hybrid: On-device real-time<br/>+ Cloud for deep analysis"]
+    HYBRID -->|No| CLOUD2["Cloud-only"]
+
+    style START fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style CUSTOM fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style CREATEML fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style EXEC fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style CLOUD fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style CLOUD2 fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style BOTH fill:#EDE9FE,stroke:#8B5CF6,color:#1F2937
+          </div>
+          <div class="diagram-caption">Fig 5. Decision guide for choosing on-device vs. cloud vs. hybrid emotion detection</div>
+        </div>
+
+        <h3>Recommended Architecture for a Swift Transcription App</h3>
+        <div class="callout callout-tip">
+          <div class="callout-title">Our Recommendation</div>
+          <ol style="margin-top:0.5rem">
+            <li><strong>Primary</strong>: On-device Core ML model (distilled or Create ML-trained) for real-time acoustic emotion detection during transcription</li>
+            <li><strong>Enhancement</strong>: Apple Foundation Models framework for semantic emotion analysis of transcribed text — free, private, no API key</li>
+            <li><strong>Preprocessing</strong>: FluidAudio or custom VAD to segment speech and identify speakers</li>
+            <li><strong>Optional</strong>: Cloud API (Hume AI) for detailed post-hoc analysis of completed recordings, with user consent</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Section: Privacy -->
+      <section class="section" id="privacy">
+        <h2>Privacy &amp; Compliance</h2>
+        <p>On-device emotion detection is a significant privacy advantage. Here is how it maps to major regulatory frameworks.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Regulation</th><th>On-Device Impact</th><th>Cloud Impact</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>GDPR</strong></td>
+                <td>No cross-border transfer. No data processor agreements needed. Minimal breach surface.</td>
+                <td>Requires DPA with cloud provider. Cross-border transfer rules apply. Must handle data deletion requests.</td>
+              </tr>
+              <tr>
+                <td><strong>EU AI Act</strong></td>
+                <td>Fewer restrictions for on-device processing. Emotion recognition banned in workplaces/schools regardless.</td>
+                <td>Higher scrutiny. Must demonstrate compliance for high-risk classification.</td>
+              </tr>
+              <tr>
+                <td><strong>HIPAA</strong></td>
+                <td>No PHI transmitted. Simplifies compliance for health-adjacent apps.</td>
+                <td>Requires BAA with cloud provider. Encryption in transit mandatory.</td>
+              </tr>
+              <tr>
+                <td><strong>User Trust</strong></td>
+                <td>"Your audio never leaves your device" — clear, verifiable privacy promise.</td>
+                <td>Must explain what data is sent, stored, and for how long.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-danger">
+          <div class="callout-title">Important: EU AI Act</div>
+          The EU AI Act bans emotion recognition in workplace and educational settings regardless of whether processing is on-device or cloud. If your app could be used in these contexts, consult legal counsel on compliance.
+        </div>
+      </section>
+
+      <!-- Section: Glossary -->
+      <section class="section" id="glossary">
+        <h2>Glossary</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Term</th><th>Definition</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>ANE</strong></td><td>Apple Neural Engine — dedicated ML accelerator in Apple Silicon chips (A11+, M1+)</td></tr>
+              <tr><td><strong>Core ML</strong></td><td>Apple's on-device ML framework. Dispatches models to ANE, GPU, or CPU automatically</td></tr>
+              <tr><td><strong>MLMultiArray</strong></td><td>Core ML's tensor type for passing numeric data (audio features, spectrograms) to models</td></tr>
+              <tr><td><strong>ML Program</strong></td><td>Modern Core ML model format (.mlpackage) with typed execution and full operator support</td></tr>
+              <tr><td><strong>coremltools</strong></td><td>Python library for converting PyTorch/TensorFlow models to Core ML format</td></tr>
+              <tr><td><strong>Sound Analysis</strong></td><td>Apple framework for classifying sounds from audio streams using Core ML models</td></tr>
+              <tr><td><strong>AVAudioEngine</strong></td><td>Apple's audio processing graph for capture, mixing, effects, and real-time processing</td></tr>
+              <tr><td><strong>installTap</strong></td><td>AVAudioEngine method to capture audio buffers from a node for processing</td></tr>
+              <tr><td><strong>Mel Spectrogram</strong></td><td>Time-frequency representation of audio using the mel scale, mimicking human hearing</td></tr>
+              <tr><td><strong>MFCC</strong></td><td>Mel-Frequency Cepstral Coefficients — compact audio features derived from mel spectrograms</td></tr>
+              <tr><td><strong>Palettization</strong></td><td>Weight compression using lookup tables. Maps many weight values to a small set of representatives</td></tr>
+              <tr><td><strong>PTQ</strong></td><td>Post-Training Quantization — compress weights after training without retraining</td></tr>
+              <tr><td><strong>QAT</strong></td><td>Quantization-Aware Training — simulate quantization during training for better accuracy</td></tr>
+              <tr><td><strong>Knowledge Distillation</strong></td><td>Training a small "student" model to mimic a large "teacher" model's outputs</td></tr>
+              <tr><td><strong>WhisperKit</strong></td><td>Pure Swift package by Argmax for on-device Whisper speech recognition on Apple Silicon</td></tr>
+              <tr><td><strong>FluidAudio</strong></td><td>Swift SDK for local ASR, VAD, and speaker diarization on Apple Neural Engine</td></tr>
+              <tr><td><strong>ExecuTorch</strong></td><td>PyTorch's on-device inference framework with Core ML backend for Apple platforms</td></tr>
+              <tr><td><strong>Foundation Models</strong></td><td>Apple's on-device LLM framework (WWDC 2025) for text generation/classification</td></tr>
+              <tr><td><strong>TOPS</strong></td><td>Trillion Operations Per Second — measure of Neural Engine throughput</td></tr>
+              <tr><td><strong>VAD</strong></td><td>Voice Activity Detection — identifies when speech is present in audio</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Bottom Navigation -->
+      <nav class="category-nav">
+        <a href="../multimodal-fusion-llm/index.html" class="prev-category">&larr; Multimodal Fusion &amp; LLM Integration</a>
+      </nav>
+
+    </main>
+  </div>
+
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" style="display:none;">Dark</button>
+
+  <script>
+    // Mermaid init
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      themeVariables: {
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontSize: '13px'
+      },
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+    });
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.querySelectorAll('.theme-toggle').forEach(btn => {
+        btn.textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+      });
+      // Re-render mermaid for theme
+      document.querySelectorAll('.mermaid').forEach(el => {
+        el.removeAttribute('data-processed');
+      });
+      mermaid.init(undefined, '.mermaid');
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.querySelectorAll('.theme-toggle').forEach(btn => {
+          btn.textContent = 'Light Mode';
+        });
+      }
+    })();
+
+    // Sidebar toggle (mobile)
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    // Active sidebar link tracking
+    const sections = document.querySelectorAll('.section[id]');
+    const navLinks = document.querySelectorAll('.sidebar-nav li a[href^="#"]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.remove('active'));
+          const active = document.querySelector(
+            `.sidebar-nav a[href="#${entry.target.id}"]`
+          );
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Close sidebar on link click (mobile)
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) closeSidebar();
+      });
+    });
+  </script>
+</body>
+</html>

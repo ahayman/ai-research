@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Multimodal Fusion & LLM Integration - How to combine audio emotion signals with LLM text analysis for enriched transcription. Practical architectures, prompt templates, and fusion strategies.">
+  <title>Multimodal Fusion & LLM Integration | Audio Emotion Deep Dive</title>
+
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #EEF2FF;
+      --color-primary-dark: #4338CA;
+      --color-primary-alpha: rgba(99,102,241,0.1);
+      --color-accent: #EC4899;
+      --color-accent-light: #FDF2F8;
+      --color-success: #10B981;
+      --color-success-light: #D1FAE5;
+      --color-warning: #F59E0B;
+      --color-warning-light: #FEF3C7;
+      --color-info: #3B82F6;
+      --color-info-light: #DBEAFE;
+      --color-danger: #EF4444;
+      --color-danger-light: #FEE2E2;
+      --color-text: #1F2937;
+      --color-text-light: #6B7280;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9FAFB;
+      --color-bg-card: #FFFFFF;
+      --color-bg-code: #F3F4F6;
+      --color-border: #E5E7EB;
+      --color-border-light: #F3F4F6;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 4px;
+      --sidebar-width: 280px;
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #818CF8;
+      --color-primary-light: #1E1B4B;
+      --color-primary-dark: #A5B4FC;
+      --color-primary-alpha: rgba(129,140,248,0.15);
+      --color-accent: #F472B6;
+      --color-accent-light: #3B1A3B;
+      --color-success: #34D399;
+      --color-success-light: #064E3B;
+      --color-warning: #FBBF24;
+      --color-warning-light: #78350F;
+      --color-info: #60A5FA;
+      --color-info-light: #1E3A5F;
+      --color-danger: #F87171;
+      --color-danger-light: #7F1D1D;
+      --color-text: #F9FAFB;
+      --color-text-light: #D1D5DB;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-code: #0F172A;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ===== TOP NAV ===== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .back-to-hub {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: opacity 0.15s;
+    }
+
+    .back-to-hub:hover { opacity: 0.7; }
+
+    .top-nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+    .theme-toggle {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.375rem 0.75rem;
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: 0.8125rem;
+      transition: all 0.15s;
+    }
+
+    .theme-toggle:hover { border-color: var(--color-primary); }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.375rem 0.625rem;
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: 1.125rem;
+    }
+
+    /* ===== LAYOUT ===== */
+    .layout {
+      display: flex;
+      margin-top: 56px;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: var(--sidebar-width);
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      background: var(--color-bg-alt);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+    .sidebar-section {
+      padding: 0 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sidebar-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-lighter);
+      padding: 0 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 0.4rem 0.75rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: var(--radius-xs);
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+
+    .sidebar-link:hover {
+      background: var(--color-primary-alpha);
+      color: var(--color-primary);
+    }
+
+    .sidebar-link.active {
+      background: var(--color-primary-alpha);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .sidebar-link.sub {
+      padding-left: 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      max-width: 100%;
+    }
+
+    .content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* ===== HERO HEADER ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #6366F1, #7C3AED, #EC4899);
+      color: white;
+      padding: 3rem 2rem 2.5rem;
+      margin-left: var(--sidebar-width);
+    }
+
+    .page-hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .page-hero .category-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero .subtitle {
+      font-size: 1.0625rem;
+      opacity: 0.9;
+      max-width: 640px;
+      line-height: 1.6;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-meta-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .hero-meta-label {
+      font-size: 0.6875rem;
+      opacity: 0.75;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    .content h2 {
+      font-size: 1.625rem;
+      font-weight: 700;
+      margin: 3rem 0 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .content h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+      color: var(--color-text);
+    }
+
+    .content h4 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--color-text);
+    }
+
+    .content p {
+      margin-bottom: 1rem;
+      color: var(--color-text);
+      font-size: 0.9375rem;
+    }
+
+    .content ul, .content ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .content li {
+      margin-bottom: 0.375rem;
+      font-size: 0.9375rem;
+      color: var(--color-text);
+    }
+
+    .content strong { font-weight: 600; }
+
+    .content a {
+      color: var(--color-primary);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .content a:hover { border-bottom-color: var(--color-primary); }
+
+    /* ===== CALLOUT BOXES ===== */
+    .callout {
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-sm);
+      margin: 1.5rem 0;
+      font-size: 0.9375rem;
+      border-left: 4px solid;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .callout p { margin-bottom: 0.5rem; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    .callout-practical {
+      background: var(--color-success-light);
+      border-color: var(--color-success);
+    }
+    .callout-practical .callout-title { color: var(--color-success); }
+
+    .callout-info {
+      background: var(--color-info-light);
+      border-color: var(--color-info);
+    }
+    .callout-info .callout-title { color: var(--color-info); }
+
+    .callout-warning {
+      background: var(--color-warning-light);
+      border-color: var(--color-warning);
+    }
+    .callout-warning .callout-title { color: var(--color-warning); }
+
+    .callout-key {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+    }
+    .callout-key .callout-title { color: var(--color-primary); }
+
+    .callout-highlight {
+      background: var(--color-accent-light);
+      border-color: var(--color-accent);
+    }
+    .callout-highlight .callout-title { color: var(--color-accent); }
+
+    /* ===== CODE BLOCKS ===== */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--color-bg-code);
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-xs);
+      color: var(--color-accent);
+    }
+
+    pre {
+      background: var(--color-bg-code);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--color-text);
+    }
+
+    .prompt-block {
+      background: linear-gradient(135deg, var(--color-bg-code), var(--color-primary-light));
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+      position: relative;
+    }
+
+    .prompt-block::before {
+      content: 'PROMPT TEMPLATE';
+      position: absolute;
+      top: -0.625rem;
+      left: 1rem;
+      background: var(--color-primary);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.125rem 0.5rem;
+      border-radius: 99px;
+    }
+
+    .prompt-block pre {
+      background: transparent;
+      border: none;
+      padding: 0.5rem 0 0;
+      margin: 0;
+    }
+
+    /* ===== TABLES ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+
+    thead { background: var(--color-bg-alt); }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-light);
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border-light);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: var(--color-primary-alpha); }
+
+    .badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+
+    .badge-green { background: var(--color-success-light); color: var(--color-success); }
+    .badge-blue { background: var(--color-info-light); color: var(--color-info); }
+    .badge-yellow { background: var(--color-warning-light); color: var(--color-warning); }
+    .badge-red { background: var(--color-danger-light); color: var(--color-danger); }
+    .badge-purple { background: var(--color-primary-light); color: var(--color-primary); }
+
+    /* ===== DIAGRAMS ===== */
+    .diagram-container {
+      margin: 1.5rem 0;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .diagram-header {
+      padding: 0.75rem 1.25rem;
+      background: var(--color-bg-alt);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .diagram-body {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    .diagram-body .mermaid {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .diagram-caption {
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--color-border-light);
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      font-style: italic;
+    }
+
+    /* ===== COMPARISON CARDS ===== */
+    .strategy-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .strategy-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .strategy-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .strategy-card.early::before { background: var(--color-info); }
+    .strategy-card.late::before { background: var(--color-success); }
+    .strategy-card.hybrid::before { background: var(--color-primary); }
+
+    .strategy-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .strategy-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    .strategy-card p {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .strategy-card .pros-cons {
+      font-size: 0.75rem;
+    }
+
+    .strategy-card .pros-cons dt {
+      font-weight: 600;
+      margin-top: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .strategy-card .pros-cons dd {
+      color: var(--color-text-light);
+      margin-left: 0;
+    }
+
+    /* ===== ARCHITECTURE STEP CARDS ===== */
+    .arch-steps {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .arch-step {
+      display: flex;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s;
+    }
+
+    .arch-step:hover { border-color: var(--color-primary); }
+
+    .arch-step-num {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .arch-step-content h4 {
+      margin: 0 0 0.25rem;
+      font-size: 0.9375rem;
+    }
+
+    .arch-step-content p {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      margin: 0;
+    }
+
+    /* ===== GLOSSARY TOOLTIPS ===== */
+    .glossary-term {
+      border-bottom: 1px dashed var(--color-primary);
+      cursor: help;
+      position: relative;
+    }
+
+    .glossary-term .tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      color: var(--color-text);
+      width: 280px;
+      box-shadow: var(--shadow-lg);
+      z-index: 200;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .glossary-term .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-border);
+    }
+
+    .glossary-term:hover .tooltip { display: block; }
+
+    /* ===== BOTTOM NAV ===== */
+    .category-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      gap: 1rem;
+    }
+
+    .category-nav a {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: all 0.15s;
+      max-width: 48%;
+    }
+
+    .category-nav a:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .prev-category { align-items: flex-start; }
+    .next-category { align-items: flex-end; margin-left: auto; }
+
+    .category-nav .nav-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-lighter);
+      margin-bottom: 0.25rem;
+    }
+
+    .category-nav .nav-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    /* ===== FOOTER ===== */
+    .page-footer {
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--color-text-lighter);
+    }
+
+    /* ===== MODEL CARD ===== */
+    .model-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+
+    .model-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-alt);
+      border-bottom: 1px solid var(--color-border);
+      cursor: pointer;
+    }
+
+    .model-card-header h4 {
+      margin: 0;
+      font-size: 0.9375rem;
+    }
+
+    .model-card-body {
+      padding: 1.25rem;
+    }
+
+    .model-card-body p {
+      font-size: 0.875rem;
+    }
+
+    .model-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .page-hero {
+        margin-left: 0;
+      }
+
+      .page-footer {
+        margin-left: 0;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-hero {
+        padding: 2rem 1.25rem;
+      }
+
+      .page-hero h1 {
+        font-size: 1.625rem;
+      }
+
+      .content {
+        padding: 1.5rem 1.25rem 3rem;
+      }
+
+      .content h2 {
+        font-size: 1.375rem;
+      }
+
+      .strategy-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .category-nav {
+        flex-direction: column;
+      }
+
+      .category-nav a {
+        max-width: 100%;
+      }
+
+      .hero-meta {
+        gap: 1.25rem;
+      }
+
+      .table-wrapper {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ===== SCROLL PROGRESS ===== */
+    .progress-bar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      height: 2px;
+      background: var(--color-primary);
+      z-index: 101;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== SECTION ANCHOR ===== */
+    .section-anchor {
+      color: var(--color-text-lighter);
+      text-decoration: none;
+      margin-left: 0.375rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+      font-size: 0.875em;
+    }
+
+    h2:hover .section-anchor,
+    h3:hover .section-anchor { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <a href="../index.html" class="back-to-hub">&larr; Back to Audio Emotion &amp; Tone Detection Deep Dive</a>
+  <div class="top-nav-actions">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">Light / Dark</button>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle navigation">&#9776;</button>
+  </div>
+</nav>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a href="#introduction" class="sidebar-link">Introduction</a>
+      <a href="#why-multimodal" class="sidebar-link">Why Multimodal?</a>
+      <a href="#key-takeaway" class="sidebar-link">Key Takeaway for Your App</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Fusion Strategies</div>
+      <a href="#fusion-strategies" class="sidebar-link">Strategy Overview</a>
+      <a href="#early-fusion" class="sidebar-link sub">Early Fusion</a>
+      <a href="#late-fusion" class="sidebar-link sub">Late Fusion</a>
+      <a href="#hybrid-fusion" class="sidebar-link sub">Hybrid Fusion</a>
+      <a href="#fusion-comparison" class="sidebar-link sub">Comparison Table</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Key Models</div>
+      <a href="#key-models" class="sidebar-link">Research Models</a>
+      <a href="#memocmt" class="sidebar-link sub">MemoCMT</a>
+      <a href="#wavfusion" class="sidebar-link sub">WavFusion</a>
+      <a href="#emotion-llama" class="sidebar-link sub">Emotion-LLaMA</a>
+      <a href="#egmf" class="sidebar-link sub">EGMF Framework</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">LLM Integration</div>
+      <a href="#llm-approaches" class="sidebar-link">LLM-Based Approaches</a>
+      <a href="#speechcuellm" class="sidebar-link sub">SpeechCueLLM</a>
+      <a href="#feature-to-text" class="sidebar-link sub">Feature-to-Text</a>
+      <a href="#emojudge" class="sidebar-link sub">EmoJudge</a>
+      <a href="#vowelprompt" class="sidebar-link sub">VowelPrompt</a>
+      <a href="#open-vocabulary" class="sidebar-link sub">Open-Vocabulary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Practical Guide</div>
+      <a href="#app-architecture" class="sidebar-link">App Architecture</a>
+      <a href="#pipeline-design" class="sidebar-link sub">Pipeline Design</a>
+      <a href="#temporal-alignment" class="sidebar-link sub">Temporal Alignment</a>
+      <a href="#production-apis" class="sidebar-link sub">Production APIs</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Prompt Engineering</div>
+      <a href="#prompt-engineering" class="sidebar-link">Prompt Templates</a>
+      <a href="#basic-template" class="sidebar-link sub">Basic Template</a>
+      <a href="#enriched-template" class="sidebar-link sub">Enriched Template</a>
+      <a href="#structured-output" class="sidebar-link sub">Structured Output</a>
+      <a href="#prompt-strategies" class="sidebar-link sub">Advanced Strategies</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <a href="#cross-modal-attention" class="sidebar-link">Cross-Modal Attention</a>
+      <a href="#performance" class="sidebar-link">Performance Benchmarks</a>
+      <a href="#implementation-roadmap" class="sidebar-link">Implementation Roadmap</a>
+      <a href="#glossary" class="sidebar-link">Glossary</a>
+      <a href="#sources" class="sidebar-link">Sources</a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main">
+
+    <!-- Page Hero -->
+    <header class="page-hero">
+      <div class="page-hero-inner">
+        <div class="category-badge">Category 7 of 8</div>
+        <h1>Multimodal Fusion &amp; LLM Integration</h1>
+        <p class="subtitle">How to combine audio-based emotion signals with LLM text analysis to create emotion-enriched transcriptions. The most directly relevant architecture for transcription apps.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <span class="hero-meta-value">2&ndash;23%</span>
+            <span class="hero-meta-label">Accuracy gain over unimodal</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-value">93%+</span>
+            <span class="hero-meta-label">Feature-to-text accuracy</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-value">3</span>
+            <span class="hero-meta-label">Fusion strategy types</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-value">Zero</span>
+            <span class="hero-meta-label">LLM architecture changes needed</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ==================== INTRODUCTION ==================== -->
+      <h2 id="introduction">Introduction <a href="#introduction" class="section-anchor">#</a></h2>
+
+      <p>If you are building a transcription app that already has access to both the audio stream and the resulting text, you are in an ideal position to add emotion and tone awareness. Multimodal fusion is the practice of combining signals from multiple modalities&mdash;in this case, <strong>audio features</strong> (pitch, energy, speaking rate) and <strong>text content</strong> (word choice, syntax, semantics)&mdash;to produce a richer, more accurate understanding of the speaker's emotional state.</p>
+
+      <p>This page covers the full landscape: from academic fusion architectures to practical prompt engineering patterns you can implement today. The field has advanced rapidly in 2024&ndash;2025, with LLM-based approaches making it possible to achieve strong multimodal emotion recognition <em>without modifying the LLM architecture at all</em>&mdash;just through clever prompt construction.</p>
+
+      <div class="callout callout-highlight">
+        <div class="callout-title">Why this matters for your transcription app</div>
+        <p>A transcription app naturally sits at the intersection of audio and text. You already have both modalities. The question is not <em>whether</em> to combine them, but <em>how</em>. This page gives you the practical blueprints to do exactly that, from the simplest approach (inject audio feature descriptions into LLM prompts) to the most sophisticated (train cross-modal transformers).</p>
+      </div>
+
+      <!-- WHY MULTIMODAL -->
+      <h2 id="why-multimodal">Why Multimodal Beats Single-Modality <a href="#why-multimodal" class="section-anchor">#</a></h2>
+
+      <p>Research consistently demonstrates that combining audio and text modalities significantly outperforms either modality alone. The improvements range from <strong>2% to 23%</strong> depending on the specific task, dataset, and fusion strategy used.</p>
+
+      <p>Consider the sentence <em>"That's just great."</em> Text-only analysis might classify this as positive. But the audio might reveal a flat, low-energy delivery with falling intonation&mdash;classic sarcasm indicators. Only a multimodal system catches this discrepancy.</p>
+
+      <div class="strategy-cards">
+        <div class="strategy-card early">
+          <h4>Text Alone</h4>
+          <p>Captures <strong>what</strong> is said. Misses tone, sarcasm, hesitation, emphasis. Good baseline but blind to paralinguistic cues.</p>
+          <dl class="pros-cons">
+            <dt>Accuracy range</dt>
+            <dd>60&ndash;78% on emotional text benchmarks</dd>
+          </dl>
+        </div>
+        <div class="strategy-card late">
+          <h4>Audio Alone</h4>
+          <p>Captures <strong>how</strong> it's said. Misses semantic context. Can confuse excitement with anger (similar acoustic profiles).</p>
+          <dl class="pros-cons">
+            <dt>Accuracy range</dt>
+            <dd>65&ndash;80% on speech emotion benchmarks</dd>
+          </dl>
+        </div>
+        <div class="strategy-card hybrid">
+          <h4>Audio + Text Combined</h4>
+          <p>Captures <strong>both dimensions</strong>. Resolves ambiguity through complementary signals. Handles sarcasm, irony, and mixed emotions.</p>
+          <dl class="pros-cons">
+            <dt>Accuracy range</dt>
+            <dd>78&ndash;93%+ on multimodal benchmarks</dd>
+          </dl>
+        </div>
+      </div>
+
+      <p>The largest gains come when modalities provide <strong>complementary</strong> information. Audio adds the most value when text is emotionally ambiguous, and text adds the most value when audio quality is poor or the speaker is monotone.</p>
+
+      <!-- KEY TAKEAWAY -->
+      <h2 id="key-takeaway">Key Takeaway: The Three-Tier Approach <a href="#key-takeaway" class="section-anchor">#</a></h2>
+
+      <div class="callout callout-practical">
+        <div class="callout-title">Practical recommendation</div>
+        <p>For a transcription app, you don't need to implement complex neural fusion from day one. Here is a phased approach, from simplest to most sophisticated:</p>
+      </div>
+
+      <div class="arch-steps">
+        <div class="arch-step">
+          <div class="arch-step-num">1</div>
+          <div class="arch-step-content">
+            <h4>Tier 1: LLM Prompt Injection (Days to implement)</h4>
+            <p>Extract basic audio features (pitch, energy, speaking rate) per utterance. Convert them to natural language descriptions. Inject into LLM prompts alongside the transcribed text. This is the SpeechCueLLM approach and requires zero model training.</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">2</div>
+          <div class="arch-step-content">
+            <h4>Tier 2: Parallel Classification + LLM Fusion (Weeks to implement)</h4>
+            <p>Run a dedicated audio emotion classifier (e.g., emotion2vec or a fine-tuned HuBERT model) in parallel with text transcription. Feed both the emotion predictions and the text to an LLM for post-hoc fusion and refinement&mdash;the EmoJudge approach.</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">3</div>
+          <div class="arch-step-content">
+            <h4>Tier 3: Trained Cross-Modal Transformer (Months to implement)</h4>
+            <p>Build a MemoCMT/WavFusion-style architecture with cross-modal attention between audio and text encoders. Highest accuracy but requires training data, GPU resources, and ML engineering expertise.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ==================== FUSION STRATEGIES ==================== -->
+      <h2 id="fusion-strategies">Fusion Strategy Deep Dive <a href="#fusion-strategies" class="section-anchor">#</a></h2>
+
+      <p>There are three fundamental approaches to combining audio and text signals. Understanding their trade-offs is essential to choosing the right one for your system's constraints.</p>
+
+      <!-- Diagram: Fusion Strategies Comparison -->
+      <div class="diagram-container">
+        <div class="diagram-header">Fusion Architecture Comparison: Early vs Late vs Hybrid</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph TB
+    subgraph EF["<b>Early Fusion</b> (Feature-Level)"]
+        direction TB
+        A1["Audio Features<br/>(MFCCs, pitch, energy)"] --> C1["Concatenated<br/>Feature Vector"]
+        A2["Text Embeddings<br/>(BERT, RoBERTa)"] --> C1
+        C1 --> M1["Single Unified<br/>Classifier"]
+        M1 --> O1["Emotion<br/>Prediction"]
+    end
+
+    subgraph LF["<b>Late Fusion</b> (Decision-Level)"]
+        direction TB
+        B1["Audio Features"] --> M2["Audio<br/>Classifier"]
+        B2["Text Embeddings"] --> M3["Text<br/>Classifier"]
+        M2 --> F2["Voting /<br/>Weighted Average"]
+        M3 --> F2
+        F2 --> O2["Emotion<br/>Prediction"]
+    end
+
+    subgraph HF["<b>Hybrid Fusion</b> (Multi-Stage)"]
+        direction TB
+        D1["Audio Encoder<br/>(HuBERT)"] --> CA["Cross-Modal<br/>Attention"]
+        D2["Text Encoder<br/>(BERT)"] --> CA
+        CA --> DG["Dynamic<br/>Gating"]
+        D1 --> DG
+        D2 --> DG
+        DG --> O3["Emotion<br/>Prediction"]
+    end
+
+    style EF fill:transparent,stroke:#3B82F6,stroke-width:2px
+    style LF fill:transparent,stroke:#10B981,stroke-width:2px
+    style HF fill:transparent,stroke:#6366F1,stroke-width:2px
+    style O1 fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style O2 fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style O3 fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">Early fusion combines raw features before classification. Late fusion merges independent predictions. Hybrid fusion allows modalities to interact at multiple stages through attention mechanisms.</div>
+      </div>
+
+      <h3 id="early-fusion">Early Fusion (Feature-Level) <a href="#early-fusion" class="section-anchor">#</a></h3>
+
+      <p>Early fusion concatenates features from both modalities into a single vector before any classification happens. Audio features (MFCCs, pitch contours, energy) are combined with text embeddings (from BERT, RoBERTa, or similar) and fed to a unified classifier.</p>
+
+      <ul>
+        <li><strong>When to use:</strong> When you have well-aligned, time-synchronized audio and text data and want to capture fine-grained cross-modal interactions.</li>
+        <li><strong>Pros:</strong> Can learn subtle interactions between how something sounds and what words are used. Single model to optimize.</li>
+        <li><strong>Cons:</strong> Struggles with heterogeneous feature distributions (audio features and text embeddings live in very different spaces). Requires careful temporal alignment. Fails gracefully is difficult&mdash;needs both modalities present.</li>
+        <li><strong>Practical complexity:</strong> Moderate. Requires feature engineering and alignment.</li>
+      </ul>
+
+      <h3 id="late-fusion">Late Fusion (Decision-Level) <a href="#late-fusion" class="section-anchor">#</a></h3>
+
+      <p>Late fusion runs separate models for each modality and combines their predictions. An audio emotion classifier produces one prediction; a text sentiment model produces another; they are merged via voting, averaging, or a learned weighting function.</p>
+
+      <ul>
+        <li><strong>When to use:</strong> Production systems, rapid prototyping, or when you want modularity and graceful degradation (system still works if one modality is unavailable).</li>
+        <li><strong>Pros:</strong> Each model can be optimized independently. Easy to add/remove modalities. Robust to missing data. Simplest to implement and debug.</li>
+        <li><strong>Cons:</strong> Misses cross-modal dependencies. Cannot capture cases where the <em>combination</em> of audio and text conveys meaning that neither conveys alone (e.g., sarcasm).</li>
+        <li><strong>Practical complexity:</strong> Low. Just run two models and combine outputs.</li>
+        <li><strong>Example:</strong> EmoJudge uses late fusion with logistic regression, then refines with an LLM post-hoc step.</li>
+      </ul>
+
+      <h3 id="hybrid-fusion">Hybrid Fusion (Multi-Stage Interaction) <a href="#hybrid-fusion" class="section-anchor">#</a></h3>
+
+      <p>Hybrid fusion allows modalities to interact at intermediate stages through mechanisms like <span class="glossary-term">cross-modal attention<span class="tooltip">A mechanism where features from one modality (e.g., audio) serve as queries to attend to features from another modality (e.g., text), learning which aspects of each modality are most relevant to the other.</span></span>, adaptive weighting, and dynamic gating. This captures both local and global cross-modal dependencies.</p>
+
+      <ul>
+        <li><strong>When to use:</strong> When maximum accuracy matters and you have the engineering resources to train and maintain a custom model.</li>
+        <li><strong>Pros:</strong> Highest accuracy. Captures nuanced interactions between modalities. Can learn modality-specific and shared representations simultaneously.</li>
+        <li><strong>Cons:</strong> Most complex to implement. Requires training data and compute. Harder to debug and interpret.</li>
+        <li><strong>Examples:</strong> MemoCMT (cross-modal transformer), WavFusion (gated cross-modal attention), EGMF (expert-guided with dynamic gating).</li>
+      </ul>
+
+      <!-- Fusion Comparison Table -->
+      <h3 id="fusion-comparison">Fusion Strategy Comparison <a href="#fusion-comparison" class="section-anchor">#</a></h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Accuracy</th>
+              <th>Complexity</th>
+              <th>Latency</th>
+              <th>Modularity</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Early Fusion</strong></td>
+              <td><span class="badge badge-yellow">Medium-High</span></td>
+              <td><span class="badge badge-yellow">Medium</span></td>
+              <td><span class="badge badge-green">Low</span><br/>Single forward pass</td>
+              <td><span class="badge badge-red">Low</span><br/>Both modalities required</td>
+              <td>Well-aligned audio + text with strong cross-modal patterns</td>
+            </tr>
+            <tr>
+              <td><strong>Late Fusion</strong></td>
+              <td><span class="badge badge-yellow">Medium</span></td>
+              <td><span class="badge badge-green">Low</span></td>
+              <td><span class="badge badge-yellow">Medium</span><br/>Parallel model runs</td>
+              <td><span class="badge badge-green">High</span><br/>Independent models</td>
+              <td>Production systems, modular architectures, graceful degradation</td>
+            </tr>
+            <tr>
+              <td><strong>Hybrid Fusion</strong></td>
+              <td><span class="badge badge-green">Highest</span></td>
+              <td><span class="badge badge-red">High</span></td>
+              <td><span class="badge badge-red">Higher</span><br/>Multi-stage processing</td>
+              <td><span class="badge badge-yellow">Medium</span><br/>Interleaved processing</td>
+              <td>Research-grade accuracy, nuanced emotion detection</td>
+            </tr>
+            <tr>
+              <td><strong>LLM Prompt Injection</strong></td>
+              <td><span class="badge badge-yellow">Medium-High</span></td>
+              <td><span class="badge badge-green">Very Low</span></td>
+              <td><span class="badge badge-yellow">Medium</span><br/>LLM inference time</td>
+              <td><span class="badge badge-green">Very High</span><br/>No model changes</td>
+              <td>Rapid implementation, existing LLM infrastructure</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <!-- ==================== KEY MODELS ==================== -->
+      <h2 id="key-models">Key Research Models <a href="#key-models" class="section-anchor">#</a></h2>
+
+      <p>The following models represent the state of the art in multimodal emotion recognition. Understanding their architectures will inform your design decisions, even if you don't implement them directly.</p>
+
+      <!-- MemoCMT -->
+      <h3 id="memocmt">MemoCMT: Cross-Modal Transformer <a href="#memocmt" class="section-anchor">#</a></h3>
+
+      <div class="model-card">
+        <div class="model-card-header">
+          <h4>MemoCMT &mdash; Scientific Reports (Nature), February 2025</h4>
+          <span class="badge badge-green">Open Source</span>
+        </div>
+        <div class="model-card-body">
+          <div class="model-meta">
+            <span class="badge badge-purple">HuBERT (audio)</span>
+            <span class="badge badge-blue">BERT (text)</span>
+            <span class="badge badge-green">81.33% UW-Acc IEMOCAP</span>
+            <span class="badge badge-green">91.93% UW-Acc ESD</span>
+          </div>
+          <p>MemoCMT uses a <strong>cross-modal transformer</strong> (CMT) to fuse audio and text representations. HuBERT extracts audio features while BERT processes text. The CMT applies cross-attention to align and integrate both modalities, then uses aggregation techniques (CLS, MEAN, MIN, MAX) to produce a final representation.</p>
+          <p>The MIN aggregation variant achieves the highest accuracy, improving over unimodal baselines by <strong>5.70&ndash;17.83%</strong>. The model is <a href="https://github.com/tpnam0901/MemoCMT" target="_blank">open source on GitHub</a>.</p>
+          <p><strong>Key insight:</strong> Cross-modal attention lets the model learn <em>which parts of the audio are most relevant to which parts of the text</em>&mdash;for instance, a rising pitch on a specific word can change its emotional interpretation.</p>
+        </div>
+      </div>
+
+      <!-- WavFusion -->
+      <h3 id="wavfusion">WavFusion: Gated Cross-Modal Attention <a href="#wavfusion" class="section-anchor">#</a></h3>
+
+      <div class="model-card">
+        <div class="model-card-header">
+          <h4>WavFusion &mdash; Published December 2024</h4>
+          <span class="badge badge-blue">SOTA on IEMOCAP &amp; MELD</span>
+        </div>
+        <div class="model-card-body">
+          <div class="model-meta">
+            <span class="badge badge-purple">wav2vec 2.0 (audio)</span>
+            <span class="badge badge-blue">RoBERTa (text)</span>
+          </div>
+          <p>WavFusion builds on wav2vec 2.0 for audio and RoBERTa for text. Its key innovation is a <strong>gated cross-modal attention mechanism</strong> that uses parallel cross-attention pathways followed by a dynamic gating network.</p>
+          <p>The gate performs <em>context-aware, channel-wise filtering</em>: it adaptively suppresses irrelevant information from one modality while amplifying salient signals from the other. This prevents the common problem of one modality dominating or introducing noise.</p>
+          <p><strong>Key insight:</strong> Not all audio features are equally useful at all times. The gating mechanism learns to trust audio signals more when audio quality is high and the text is ambiguous, and vice versa.</p>
+        </div>
+      </div>
+
+      <!-- Emotion-LLaMA -->
+      <h3 id="emotion-llama">Emotion-LLaMA: LLM-Native Emotion <a href="#emotion-llama" class="section-anchor">#</a></h3>
+
+      <div class="model-card">
+        <div class="model-card-header">
+          <h4>Emotion-LLaMA &mdash; NeurIPS 2024</h4>
+          <span class="badge badge-purple">Trimodal LLM</span>
+        </div>
+        <div class="model-card-body">
+          <div class="model-meta">
+            <span class="badge badge-purple">HuBERT (audio)</span>
+            <span class="badge badge-blue">EVA + MAE + VideoMAE (visual)</span>
+            <span class="badge badge-green">LLaMA2-chat 7B</span>
+          </div>
+          <p>Emotion-LLaMA represents the frontier of LLM-native multimodal emotion recognition. It processes audio (via HuBERT), visual (via EVA/MAE/VideoMAE), and text inputs, projecting all features into a shared 4096-dimensional space before feeding them to a LLaMA2-chat model.</p>
+          <p>The model uses <strong>LoRA</strong> for parameter-efficient tuning and performs <strong>multi-task learning</strong>: simultaneously recognizing emotions and generating emotional reasoning (explaining <em>why</em> it classified a given emotion).</p>
+          <p><strong>Key insight:</strong> By embedding emotion features directly into the LLM's token space, the model can both classify emotions and generate natural language explanations&mdash;moving beyond simple labels to nuanced descriptions.</p>
+        </div>
+      </div>
+
+      <!-- EGMF -->
+      <h3 id="egmf">EGMF: Expert-Guided Multimodal Fusion <a href="#egmf" class="section-anchor">#</a></h3>
+
+      <div class="model-card">
+        <div class="model-card-header">
+          <h4>EGMF Framework &mdash; Published January 2025</h4>
+          <span class="badge badge-yellow">Cross-Lingual</span>
+        </div>
+        <div class="model-card-body">
+          <div class="model-meta">
+            <span class="badge badge-purple">3 Expert Networks</span>
+            <span class="badge badge-blue">Hierarchical Dynamic Gating</span>
+            <span class="badge badge-green">LLM Integration via LoRA</span>
+          </div>
+          <p>EGMF introduces <strong>three specialized expert networks</strong>, each handling a different aspect of emotional signals:</p>
+          <ol>
+            <li><strong>Fine-grained local expert:</strong> Captures subtle emotional nuances within short segments (a tremor in the voice, a particular word emphasis).</li>
+            <li><strong>Semantic correlation expert:</strong> Models cross-modal relationships (how word choice interacts with vocal delivery).</li>
+            <li><strong>Global context expert:</strong> Handles long-range dependencies (emotional arc across a conversation).</li>
+          </ol>
+          <p>These experts are adaptively integrated through <strong>hierarchical dynamic gating</strong>. The fused representations are then injected into an LLM via pseudo token injection and prompt-based conditioning, enabling both classification and open-vocabulary emotion generation through a single framework.</p>
+          <p><strong>Key insight:</strong> Different emotional signals operate at different scales (word-level, utterance-level, conversation-level). Separating experts by scale then adaptively combining them outperforms one-size-fits-all approaches.</p>
+        </div>
+      </div>
+
+
+      <!-- ==================== LLM APPROACHES ==================== -->
+      <h2 id="llm-approaches">LLM-Based Approaches <a href="#llm-approaches" class="section-anchor">#</a></h2>
+
+      <p>These approaches are the most directly applicable for a transcription app, because they leverage <strong>existing LLM infrastructure</strong> without requiring custom model training. The core insight: convert audio features into text descriptions and let the LLM reason over the combined textual representation.</p>
+
+      <!-- Diagram: LLM-Based Pipeline -->
+      <div class="diagram-container">
+        <div class="diagram-header">Transcription App Multimodal Pipeline</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph LR
+    MIC["Microphone<br/>Audio Stream"] --> ASR["ASR Engine<br/>(Whisper / Deepgram)"]
+    MIC --> AFE["Audio Feature<br/>Extraction"]
+
+    ASR --> TXT["Transcribed<br/>Text"]
+    AFE --> FEAT["Pitch, Energy,<br/>Rate, Pauses"]
+
+    FEAT --> CONV["Feature-to-Text<br/>Converter"]
+    CONV --> DESC["Natural Language<br/>Audio Description"]
+
+    TXT --> PROMPT["LLM Prompt<br/>Constructor"]
+    DESC --> PROMPT
+
+    PROMPT --> LLM["LLM<br/>(GPT-4 / Claude)"]
+    LLM --> OUT["Emotion-Enriched<br/>Transcription"]
+
+    style MIC fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style ASR fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style AFE fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style CONV fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style PROMPT fill:#FDF2F8,stroke:#EC4899,color:#1F2937
+    style LLM fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style OUT fill:#D1FAE5,stroke:#10B981,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">The practical pipeline for a transcription app: audio stream is processed in parallel for transcription and feature extraction. Features are converted to natural language and combined with text in an LLM prompt.</div>
+      </div>
+
+      <!-- SpeechCueLLM -->
+      <h3 id="speechcuellm">SpeechCueLLM: Audio Features as Text Prompts <a href="#speechcuellm" class="section-anchor">#</a></h3>
+
+      <p><a href="https://arxiv.org/abs/2407.21315" target="_blank">SpeechCueLLM</a> is the approach most directly applicable to a transcription app. It translates audio characteristics into natural language descriptions and includes them in the LLM prompt, enabling multimodal analysis <strong>without any architectural changes to the LLM</strong>.</p>
+
+      <h4>How It Works</h4>
+      <ol>
+        <li>Extract five key audio features: <strong>average volume, volume variation, average pitch, pitch variation, speaking rate</strong></li>
+        <li>Convert each to a natural language description (e.g., "Speaker has above-average pitch with high variation")</li>
+        <li>Construct a four-part prompt: Instruction + Context + Speech Descriptions + Question</li>
+        <li>Feed to any LLM (no fine-tuning required, though fine-tuning improves results)</li>
+      </ol>
+
+      <div class="callout callout-practical">
+        <div class="callout-title">Why this matters for your app</div>
+        <p>SpeechCueLLM is the lowest-friction path to multimodal emotion detection. If your transcription app already calls an LLM for any post-processing (summarization, formatting, etc.), you can add emotion awareness by simply enriching your prompts with audio feature descriptions. The marginal engineering effort is minimal.</p>
+      </div>
+
+      <p>On IEMOCAP and MELD benchmarks, SpeechCueLLM outperforms models that require structural modifications to the LLM, demonstrating that clever prompt engineering can rival architectural changes.</p>
+
+      <!-- Feature-to-Text -->
+      <h3 id="feature-to-text">Feature-to-Text Conversion: The distilRoBERTa Approach <a href="#feature-to-text" class="section-anchor">#</a></h3>
+
+      <p>This approach takes the SpeechCueLLM idea further: instead of just describing audio features in prompts, it uses <strong>rule-based systems to convert all non-verbal audio cues into structured text</strong>, then fine-tunes a language model (distilRoBERTa) on the combined textual representation.</p>
+
+      <h4>Features Converted to Text</h4>
+      <ul>
+        <li><strong>Loudness:</strong> "Speaker volume is 85th percentile, with sudden increase at segment 3"</li>
+        <li><strong>Spectral flux:</strong> "High spectral variability indicating emotional instability"</li>
+        <li><strong>MFCCs:</strong> "Vocal tract configuration suggests tension in the upper register"</li>
+        <li><strong>Pitch stability:</strong> "Pitch varies by &plusmn;40Hz around 220Hz baseline"</li>
+        <li><strong>Emphasis patterns:</strong> "Stress on words 2 and 5 of the utterance"</li>
+      </ul>
+
+      <p>This approach achieved <strong>93.18% accuracy on RAVDESS</strong> and <strong>93.69% on BAUM-1</strong>, performing on par with state-of-the-art multimodal architectures that use dedicated audio encoders.</p>
+
+      <div class="callout callout-key">
+        <div class="callout-title">Key insight</div>
+        <p>The textualization principle is powerful: <em>any modality can be converted to text for LLM consumption</em>. This means you can leverage the full reasoning capabilities of LLMs without building custom multimodal architectures. The rule-based conversion acts as a bridge between the audio world and the text world.</p>
+      </div>
+
+      <!-- EmoJudge -->
+      <h3 id="emojudge">EmoJudge: LLM Post-Hoc Refinement <a href="#emojudge" class="section-anchor">#</a></h3>
+
+      <p><a href="https://www.isca-archive.org/interspeech_2025/singh25b_interspeech.html" target="_blank">EmoJudge</a>, presented at Interspeech 2025, takes a different angle: instead of fusing modalities at the input level, it runs <strong>independent audio and text classifiers first</strong>, then uses an LLM to adjudicate when predictions conflict.</p>
+
+      <h4>Architecture</h4>
+      <ul>
+        <li><strong>Audio path:</strong> WavLM-Large + attentive pooling + residual networks</li>
+        <li><strong>Text path:</strong> RoBERTa-Large for linguistic analysis</li>
+        <li><strong>Late fusion:</strong> Logistic regression combines initial predictions</li>
+        <li><strong>LLM refinement:</strong> Transcripts + speaker indicators + audio descriptions are fed to an LLM for post-hoc correction of conflicting predictions</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <div class="callout-title">When to use EmoJudge-style refinement</div>
+        <p>This approach is ideal when you already have separate audio and text emotion classifiers and want to add a "smart arbitrator" that resolves disagreements. The LLM acts as a judge, considering the full context (transcript, speaker identity, audio characteristics) to make a final determination.</p>
+      </div>
+
+      <!-- VowelPrompt -->
+      <h3 id="vowelprompt">VowelPrompt: Linguistically-Grounded Prosody <a href="#vowelprompt" class="section-anchor">#</a></h3>
+
+      <p><a href="https://arxiv.org/abs/2602.06270" target="_blank">VowelPrompt</a> (2025) takes a more linguistically grounded approach. Instead of extracting generic audio features, it focuses specifically on <strong>vowel-level prosodic cues</strong>&mdash;the sounds that carry the most emotional information in speech.</p>
+
+      <ul>
+        <li>Extracts pitch, energy, and duration descriptors from <strong>time-aligned vowel segments</strong></li>
+        <li>Converts prosodic features to natural language descriptions</li>
+        <li>Uses a two-stage adaptation: supervised fine-tuning (SFT) + reinforcement learning with verifiable reward (RLVR)</li>
+        <li>Outperforms SOTA methods across zero-shot, fine-tuned, cross-domain, and cross-linguistic conditions</li>
+        <li>Generates <strong>interpretable explanations</strong> grounded in both semantics and prosody</li>
+      </ul>
+
+      <p>The key linguistic insight: vowels function as the primary carriers of intonation contours and emotional coloring. They have sustained voicing and spectral stability, making them ideal targets for prosodic analysis.</p>
+
+      <!-- Open Vocabulary -->
+      <h3 id="open-vocabulary">Open-Vocabulary Emotion Recognition <a href="#open-vocabulary" class="section-anchor">#</a></h3>
+
+      <p>Traditional emotion recognition classifies into fixed categories (happy, sad, angry, neutral, etc.). <strong>Open-vocabulary emotion recognition</strong> treats the task as generative: produce flexible, descriptive natural language that captures the full spectrum of emotional states.</p>
+
+      <p>The MER2025 challenge (theme: "When Affective Computing Meets Large Language Models") is driving this shift. Instead of classifying "angry," the system might output:</p>
+
+      <pre><code>"The speaker exhibits controlled frustration&mdash;careful word choice suggests they are
+trying to remain professional, but elevated pitch and compressed dynamic range
+on key words reveal underlying irritation. The emotion is layered: frustrated
+on the surface, with a deeper sense of disappointment."</code></pre>
+
+      <div class="callout callout-practical">
+        <div class="callout-title">For your transcription app</div>
+        <p>Open-vocabulary emotion recognition is a natural fit. Instead of appending a simple emotion label to each transcription segment, you can generate nuanced emotional context that actually helps the reader understand the speaker's state. LLMs are inherently suited to this generative approach.</p>
+      </div>
+
+
+      <!-- ==================== PRACTICAL ARCHITECTURE ==================== -->
+      <h2 id="app-architecture">Practical Architecture for Transcription Apps <a href="#app-architecture" class="section-anchor">#</a></h2>
+
+      <p>This section provides concrete implementation guidance for adding multimodal emotion detection to a transcription application.</p>
+
+      <!-- Diagram: Full System Architecture -->
+      <h3 id="pipeline-design">Complete System Architecture <a href="#pipeline-design" class="section-anchor">#</a></h3>
+
+      <div class="diagram-container">
+        <div class="diagram-header">Complete System: Audio Capture to Emotion-Enriched Transcription</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph TB
+    subgraph INPUT["Audio Input"]
+        MIC["Microphone /<br/>Audio File"]
+    end
+
+    subgraph PARALLEL["Parallel Processing"]
+        direction TB
+        subgraph ASR_PATH["Transcription Path"]
+            VAD["Voice Activity<br/>Detection (VAD)"]
+            ASR["ASR Engine<br/>Whisper / Deepgram"]
+            DIAR["Speaker<br/>Diarization"]
+            TXT["Timestamped<br/>Text + Speaker IDs"]
+        end
+
+        subgraph AUDIO_PATH["Audio Analysis Path"]
+            CHUNK["Segment by<br/>Utterance"]
+            F0["Pitch (F0)<br/>Extraction"]
+            RMS["Energy / RMS<br/>Extraction"]
+            RATE["Speaking Rate<br/>Calculation"]
+            QUAL["Voice Quality<br/>(optional)"]
+            SER["SER Model<br/>(optional)"]
+        end
+    end
+
+    subgraph ALIGN["Temporal Alignment"]
+        SYNC["Align Audio Features<br/>with Text Timestamps"]
+    end
+
+    subgraph FUSION["LLM Fusion Layer"]
+        FTT["Feature-to-Text<br/>Conversion"]
+        PROMPT["Prompt<br/>Assembly"]
+        LLM["LLM Analysis<br/>(GPT-4 / Claude)"]
+    end
+
+    subgraph OUTPUT["Output"]
+        RICH["Emotion-Enriched<br/>Transcription"]
+        META["Segment-Level<br/>Emotion Metadata"]
+        SUMM["Conversation<br/>Emotion Summary"]
+    end
+
+    MIC --> VAD --> ASR --> DIAR --> TXT
+    MIC --> CHUNK --> F0 & RMS & RATE & QUAL
+    CHUNK --> SER
+
+    TXT --> SYNC
+    F0 & RMS & RATE --> SYNC
+
+    SYNC --> FTT --> PROMPT
+    TXT --> PROMPT
+    SER -.->|"optional"| PROMPT
+    PROMPT --> LLM
+
+    LLM --> RICH & META & SUMM
+
+    style INPUT fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style PARALLEL fill:transparent,stroke:#3B82F6,stroke-width:1px
+    style ASR_PATH fill:transparent,stroke:#3B82F6,stroke-dasharray:4
+    style AUDIO_PATH fill:transparent,stroke:#EC4899,stroke-dasharray:4
+    style ALIGN fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style FUSION fill:#FDF2F8,stroke:#EC4899,color:#1F2937
+    style OUTPUT fill:#D1FAE5,stroke:#10B981,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">The two-path architecture: transcription and audio analysis run in parallel, then converge at the temporal alignment stage before being fused via LLM prompt construction.</div>
+      </div>
+
+      <h4>Processing Pipeline Breakdown</h4>
+
+      <div class="arch-steps">
+        <div class="arch-step">
+          <div class="arch-step-num">1</div>
+          <div class="arch-step-content">
+            <h4>Audio Input &amp; Segmentation</h4>
+            <p>Capture audio stream from microphone or load from file. Use Voice Activity Detection (VAD) to identify speech segments and silence. Segment audio by utterance boundaries (natural pauses &gt;300ms).</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">2</div>
+          <div class="arch-step-content">
+            <h4>Parallel Processing (Transcription + Audio Analysis)</h4>
+            <p>Run ASR (Whisper, Deepgram) to get timestamped text with word-level alignments. Simultaneously extract audio features per utterance: fundamental frequency (F0), RMS energy, speaking rate (words/second), pause duration. Optionally run a lightweight SER model for initial emotion predictions.</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">3</div>
+          <div class="arch-step-content">
+            <h4>Temporal Alignment</h4>
+            <p>Use ASR-provided timestamps to align audio features with text segments. Compute per-segment statistics: mean pitch, pitch range, mean energy, energy variation, words per second. Calculate relative metrics: compare each segment to the speaker's running average.</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">4</div>
+          <div class="arch-step-content">
+            <h4>Feature-to-Text Conversion</h4>
+            <p>Convert numeric audio features to natural language descriptions using rule-based templates. Example: pitch=280Hz, speaker_avg=200Hz, variation=high becomes "Speaker's pitch is significantly elevated (+40% above their baseline) with high variability, suggesting emotional arousal."</p>
+          </div>
+        </div>
+        <div class="arch-step">
+          <div class="arch-step-num">5</div>
+          <div class="arch-step-content">
+            <h4>LLM Fusion &amp; Output</h4>
+            <p>Assemble prompt with system instructions, transcribed text, and audio feature descriptions. Send to LLM (GPT-4, Claude). Parse structured output: per-segment emotion labels, confidence scores, and natural language emotional context. Optionally generate a conversation-level emotion summary.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temporal Alignment -->
+      <h3 id="temporal-alignment">Temporal Alignment Strategies <a href="#temporal-alignment" class="section-anchor">#</a></h3>
+
+      <p>Aligning audio features with text segments is critical for accurate fusion. Here are the practical options, from simplest to most precise:</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Granularity</th>
+              <th>Complexity</th>
+              <th>Accuracy</th>
+              <th>Requirements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Utterance-level</strong></td>
+              <td>Sentence / turn</td>
+              <td><span class="badge badge-green">Low</span></td>
+              <td><span class="badge badge-yellow">Good</span></td>
+              <td>VAD + utterance boundary detection</td>
+            </tr>
+            <tr>
+              <td><strong>Word-level (ASR timestamps)</strong></td>
+              <td>Per word</td>
+              <td><span class="badge badge-yellow">Medium</span></td>
+              <td><span class="badge badge-green">High</span></td>
+              <td>ASR with word-level timestamps (Whisper, Deepgram)</td>
+            </tr>
+            <tr>
+              <td><strong>Forced alignment</strong></td>
+              <td>Per phoneme</td>
+              <td><span class="badge badge-red">High</span></td>
+              <td><span class="badge badge-green">Highest</span></td>
+              <td>Forced alignment tool (Montreal, gentle)</td>
+            </tr>
+            <tr>
+              <td><strong>Sliding window</strong></td>
+              <td>Fixed time window</td>
+              <td><span class="badge badge-green">Low</span></td>
+              <td><span class="badge badge-yellow">Moderate</span></td>
+              <td>None (just divide audio into equal segments)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-practical">
+        <div class="callout-title">Recommendation</div>
+        <p>For most transcription apps, <strong>utterance-level alignment</strong> is the best starting point. Most ASR engines already provide sentence-level timestamps, and emotion features aggregated over a full utterance are sufficient for meaningful analysis. Move to word-level alignment only if you need to identify exactly which words triggered an emotional shift.</p>
+      </div>
+
+      <!-- Production APIs -->
+      <h3 id="production-apis">Production APIs with Built-In Fusion <a href="#production-apis" class="section-anchor">#</a></h3>
+
+      <p>Several commercial APIs already combine transcription with sentiment/emotion analysis, giving you a head start:</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Transcription</th>
+              <th>Emotion/Sentiment</th>
+              <th>Fusion Type</th>
+              <th>Deployment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong><a href="https://developers.deepgram.com/docs/sentiment-analysis" target="_blank">Deepgram</a></strong></td>
+              <td>Real-time + batch</td>
+              <td>Per-segment sentiment + score</td>
+              <td>Text-based (post-transcription)</td>
+              <td>Cloud API</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://www.assemblyai.com/docs/speech-understanding/sentiment-analysis" target="_blank">AssemblyAI</a></strong></td>
+              <td>Real-time + batch</td>
+              <td>Per-sentence sentiment + confidence</td>
+              <td>Text-based (post-transcription)</td>
+              <td>Cloud API</td>
+            </tr>
+            <tr>
+              <td><strong>Speechmatics</strong></td>
+              <td>Real-time + batch</td>
+              <td>Sentiment analysis</td>
+              <td>Text-based (post-transcription)</td>
+              <td>Cloud, on-premise, edge</td>
+            </tr>
+            <tr>
+              <td><strong>AWS (Amazon Transcribe + SageMaker)</strong></td>
+              <td>Kinesis streaming</td>
+              <td>Custom models via SageMaker</td>
+              <td>Custom (audio + text)</td>
+              <td>Cloud (AWS ecosystem)</td>
+            </tr>
+            <tr>
+              <td><strong>Hume AI</strong></td>
+              <td>Via integration</td>
+              <td>Expressive voice analysis</td>
+              <td>Audio-native emotion</td>
+              <td>Cloud API</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Important limitation</div>
+        <p>Most current production APIs analyze sentiment from the <em>text</em> only, after transcription. They do not analyze the audio signal for paralinguistic emotion cues. To get true multimodal fusion, you will likely need to add your own audio feature extraction layer and combine it with the API's text analysis.</p>
+      </div>
+
+
+      <!-- ==================== PROMPT ENGINEERING ==================== -->
+      <h2 id="prompt-engineering">Prompt Engineering for Emotion-Aware LLMs <a href="#prompt-engineering" class="section-anchor">#</a></h2>
+
+      <p>This is the most immediately actionable section. These prompt templates let you add multimodal emotion awareness to any LLM-powered transcription pipeline.</p>
+
+      <!-- Diagram: Prompt Engineering Flow -->
+      <div class="diagram-container">
+        <div class="diagram-header">LLM Prompt Engineering Flow for Emotion Analysis</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph LR
+    subgraph INPUTS["Input Assembly"]
+        SYS["System Prompt<br/>(Role + Instructions)"]
+        CTX["Conversation Context<br/>(Previous segments)"]
+        TXT["Current Text<br/>(Transcription)"]
+        AUD["Audio Description<br/>(Features as text)"]
+        SPK["Speaker Profile<br/>(Baseline + ID)"]
+    end
+
+    subgraph PROMPT["Prompt Construction"]
+        ASM["Template<br/>Assembly"]
+    end
+
+    subgraph LLM["LLM Processing"]
+        REASON["Emotion<br/>Reasoning"]
+    end
+
+    subgraph OUTPUT["Structured Output"]
+        EMO["Emotion Labels<br/>+ Confidence"]
+        DESC["Natural Language<br/>Description"]
+        SHIFT["Emotion Shift<br/>Detection"]
+        JSON["JSON Response<br/>Format"]
+    end
+
+    SYS --> ASM
+    CTX --> ASM
+    TXT --> ASM
+    AUD --> ASM
+    SPK --> ASM
+    ASM --> REASON
+    REASON --> EMO & DESC & SHIFT
+    EMO --> JSON
+    DESC --> JSON
+    SHIFT --> JSON
+
+    style INPUTS fill:transparent,stroke:#3B82F6,stroke-width:1px
+    style PROMPT fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style LLM fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style OUTPUT fill:#D1FAE5,stroke:#10B981,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">Five input components are assembled into a structured prompt. The LLM reasons about the combined signals and returns a structured JSON response with emotion labels, descriptions, and shift detection.</div>
+      </div>
+
+      <!-- Basic Template -->
+      <h3 id="basic-template">Template 1: Basic Emotion-Aware Analysis <a href="#basic-template" class="section-anchor">#</a></h3>
+
+      <p>The simplest approach&mdash;add audio feature descriptions directly to your existing LLM prompt. No special infrastructure required.</p>
+
+      <div class="prompt-block">
+        <pre><code>System: You are an expert in multimodal emotion and tone analysis.
+You analyze both the content of speech (text) and how it was spoken
+(vocal characteristics) to determine the speaker's emotional state.
+
+User:
+Analyze the following transcription segment for emotional tone.
+
+## Transcribed Text
+"{transcribed_text}"
+
+## Vocal Characteristics
+- Pitch: {pitch_mean}Hz (speaker average: {speaker_avg_pitch}Hz,
+  {pitch_deviation}% {above/below} baseline)
+- Pitch variability: {pitch_std} ({low/medium/high})
+- Volume: {rms_db}dB (speaker average: {speaker_avg_rms}dB,
+  {volume_deviation}% {above/below} baseline)
+- Speaking rate: {words_per_second} words/sec
+  (speaker average: {speaker_avg_rate})
+- Pauses: {pause_count} pauses, longest {max_pause_ms}ms
+
+## Analysis Request
+Based on both the text content and vocal characteristics:
+1. What is the primary emotion? (single word)
+2. What is the confidence level? (0.0-1.0)
+3. Are there secondary emotions present?
+4. Brief description of the emotional state (1-2 sentences)</code></pre>
+      </div>
+
+      <!-- Enriched Template -->
+      <h3 id="enriched-template">Template 2: Enriched Context with Speaker Tracking <a href="#enriched-template" class="section-anchor">#</a></h3>
+
+      <p>A more sophisticated template that maintains conversational context and per-speaker baselines. This is the approach modeled after SpeechCueLLM's four-component structure.</p>
+
+      <div class="prompt-block">
+        <pre><code>System: You are an expert in emotion and sentiment detection
+specializing in multimodal analysis of speech. You consider both
+what speakers say (text) and how they say it (vocal features) to
+produce nuanced emotional assessments.
+
+Your analysis should:
+- Use relative comparisons (e.g., "louder than their baseline")
+  rather than absolute values
+- Note when audio and text signals disagree (potential sarcasm,
+  emotional masking, or social performance)
+- Track emotional trajectory across the conversation
+- Distinguish between expressed emotion and likely felt emotion
+
+User:
+## Conversation Context
+Previous emotional trajectory: {emotion_history}
+Conversation topic: {topic_if_known}
+
+## Speaker Profiles
+Speaker A baseline: pitch ~{a_pitch}Hz, energy ~{a_rms}dB,
+  rate ~{a_rate} wps
+Speaker B baseline: pitch ~{b_pitch}Hz, energy ~{b_rms}dB,
+  rate ~{b_rate} wps
+
+## Current Segment (Segment {n})
+Speaker: {speaker_id}
+Text: "{transcribed_text}"
+Vocal features:
+  - Pitch: {pitch_deviation}% {above/below} their baseline,
+    variability: {pitch_var_level}
+  - Volume: {volume_deviation}% {above/below} their baseline,
+    with {volume_pattern} pattern
+  - Rate: {rate_deviation}% {faster/slower} than their baseline
+  - Voice quality: {quality_notes}
+
+## Previous Segments (for context)
+[{segment_n-2}]: Speaker {id}: "{text}" [emotion: {prev_emotion}]
+[{segment_n-1}]: Speaker {id}: "{text}" [emotion: {prev_emotion}]
+
+Respond in JSON format.</code></pre>
+      </div>
+
+      <!-- Structured Output -->
+      <h3 id="structured-output">Structured JSON Output Format <a href="#structured-output" class="section-anchor">#</a></h3>
+
+      <p>Request structured output for programmatic consumption. Here is the recommended schema:</p>
+
+      <pre><code>{
+  "segment_id": 14,
+  "speaker": "Speaker A",
+  "text": "I really don't think this is going to work out.",
+  "analysis": {
+    "primary_emotion": {
+      "label": "frustration",
+      "confidence": 0.82,
+      "source": "both"
+    },
+    "secondary_emotions": [
+      { "label": "resignation", "confidence": 0.45, "source": "audio" },
+      { "label": "disappointment", "confidence": 0.38, "source": "text" }
+    ],
+    "intensity": 0.71,
+    "valence": -0.65,
+    "arousal": 0.55,
+    "text_audio_agreement": "aligned",
+    "description": "Speaker expresses frustration through both negative
+      word choice and elevated pitch (+25% above baseline). Decreasing
+      energy toward the end of the utterance suggests resignation.
+      The text and audio signals are aligned in conveying dissatisfaction."
+  },
+  "emotional_shift": {
+    "detected": true,
+    "from": "neutral",
+    "to": "frustrated",
+    "trigger_words": ["don't think", "work out"],
+    "trigger_audio": "pitch spike at 'don't think'"
+  },
+  "flags": ["potential_conversation_turning_point"]
+}</code></pre>
+
+      <!-- Prompt Strategies -->
+      <h3 id="prompt-strategies">Advanced Prompt Strategies <a href="#prompt-strategies" class="section-anchor">#</a></h3>
+
+      <h4>1. Relative vs. Absolute Audio Features</h4>
+      <p>Always provide audio features <strong>relative to the speaker's baseline</strong>. "Pitch is 250Hz" is meaningless without context. "Pitch is 25% above this speaker's average" is immediately informative. Maintain running averages per speaker and compute deviations for each segment.</p>
+
+      <h4>2. Audio-Text Disagreement Detection</h4>
+      <p>Explicitly instruct the LLM to flag when audio and text signals conflict. This is where the most interesting emotional insights lie: sarcasm (positive words + negative audio), emotional masking (calm text + agitated audio), and social performance (enthusiastic text + flat audio).</p>
+
+      <h4>3. Emotional Arc Tracking</h4>
+      <p>Include the emotional history of the conversation in the prompt. This allows the LLM to detect trends (escalating frustration, gradual warming) and identify turning points. A sudden emotional shift is more significant if it breaks a pattern.</p>
+
+      <h4>4. Chain-of-Thought for Emotion</h4>
+      <p>For more accurate analysis, ask the LLM to reason step by step:</p>
+
+      <div class="prompt-block">
+        <pre><code>Think through the emotion analysis step by step:
+
+Step 1: What emotion does the TEXT content suggest? Why?
+Step 2: What emotion do the VOCAL features suggest? Why?
+Step 3: Do they agree or disagree? If they disagree, what
+  might explain the discrepancy?
+Step 4: Considering the conversation context, what is the most
+  likely true emotional state?
+Step 5: Assign your final labels and confidence scores.</code></pre>
+      </div>
+
+      <h4>5. Batch Processing for Efficiency</h4>
+      <p>Rather than analyzing one segment at a time, batch multiple segments in a single prompt. This reduces LLM calls and provides natural context. Process 5&ndash;10 segments at once for optimal balance of context and latency.</p>
+
+
+      <!-- ==================== CROSS-MODAL ATTENTION ==================== -->
+      <h2 id="cross-modal-attention">Cross-Modal Attention Mechanisms <a href="#cross-modal-attention" class="section-anchor">#</a></h2>
+
+      <p>For those interested in building more sophisticated fusion systems (Tier 3), understanding cross-modal attention is essential. This is the mechanism that enables models like MemoCMT and WavFusion to learn which parts of the audio are most relevant to which parts of the text.</p>
+
+      <!-- Diagram: Cross-Modal Attention -->
+      <div class="diagram-container">
+        <div class="diagram-header">Cross-Modal Attention Mechanism</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph TB
+    subgraph AUDIO["Audio Encoder Output"]
+        A1["a1: 'I'<br/>(low pitch)"]
+        A2["a2: 'really'<br/>(pitch spike)"]
+        A3["a3: 'don't'<br/>(emphasis)"]
+        A4["a4: 'think'<br/>(falling)"]
+    end
+
+    subgraph TEXT["Text Encoder Output"]
+        T1["t1: 'I'"]
+        T2["t2: 'really'"]
+        T3["t3: 'don't'"]
+        T4["t4: 'think'"]
+    end
+
+    subgraph CMA["Cross-Modal Attention"]
+        Q["Queries<br/>(from text)"]
+        K["Keys<br/>(from audio)"]
+        V["Values<br/>(from audio)"]
+        ATT["Attention<br/>Weights"]
+        OUT["Fused<br/>Representation"]
+    end
+
+    T1 & T2 & T3 & T4 --> Q
+    A1 & A2 & A3 & A4 --> K
+    A1 & A2 & A3 & A4 --> V
+    Q --> ATT
+    K --> ATT
+    ATT --> OUT
+    V --> OUT
+
+    style AUDIO fill:transparent,stroke:#EC4899,stroke-width:1px
+    style TEXT fill:transparent,stroke:#3B82F6,stroke-width:1px
+    style CMA fill:transparent,stroke:#6366F1,stroke-width:2px
+    style ATT fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style OUT fill:#D1FAE5,stroke:#10B981,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">Text tokens serve as queries, attending to audio features (keys/values). The attention weights learn which audio moments are most relevant to each text token. For instance, the pitch spike on "really" and the emphasis on "don't" receive high attention weights.</div>
+      </div>
+
+      <h3>How Cross-Modal Attention Works</h3>
+
+      <ol>
+        <li><strong>Queries from text:</strong> Each text token's embedding becomes a query vector, representing "what emotional information am I looking for?"</li>
+        <li><strong>Keys &amp; Values from audio:</strong> Each audio frame's features become key-value pairs, representing "what emotional information do I carry?"</li>
+        <li><strong>Attention weights:</strong> The dot product of queries and keys produces weights that indicate which audio frames are most relevant to each text token.</li>
+        <li><strong>Weighted sum:</strong> Audio values are weighted and summed to produce a fused representation for each text token, enriched with the most relevant audio information.</li>
+      </ol>
+
+      <h3>Dynamic Modality Weighting</h3>
+
+      <p>Advanced systems like WavFusion add a <strong>gating mechanism</strong> on top of cross-modal attention. A Modality Importance Estimator predicts dynamic, instance-level confidence weights for each modality at each timestep. This allows the system to:</p>
+
+      <ul>
+        <li>Trust audio more when it carries strong emotional signals (crying, laughing, shouting)</li>
+        <li>Trust text more when audio quality is poor or the speaker is monotone</li>
+        <li>Suppress noisy or unreliable signals automatically</li>
+        <li>Adapt per-utterance rather than using fixed weights</li>
+      </ul>
+
+
+      <!-- ==================== PERFORMANCE ==================== -->
+      <h2 id="performance">Performance Benchmarks <a href="#performance" class="section-anchor">#</a></h2>
+
+      <p>The following table summarizes key performance results from the research literature, showing the accuracy gains from multimodal fusion over unimodal approaches.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Model / Approach</th>
+              <th>Modalities</th>
+              <th>Benchmark</th>
+              <th>Accuracy</th>
+              <th>vs. Audio Only</th>
+              <th>vs. Text Only</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MemoCMT</strong></td>
+              <td>Audio + Text</td>
+              <td>IEMOCAP</td>
+              <td>81.33% (UW)</td>
+              <td>+5.7&ndash;17.8%</td>
+              <td>+6.6&ndash;23.1%</td>
+            </tr>
+            <tr>
+              <td><strong>MemoCMT</strong></td>
+              <td>Audio + Text</td>
+              <td>ESD</td>
+              <td>91.93% (UW)</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>WavFusion</strong></td>
+              <td>Audio + Text</td>
+              <td>IEMOCAP / MELD</td>
+              <td>SOTA</td>
+              <td>Significant</td>
+              <td>Significant</td>
+            </tr>
+            <tr>
+              <td><strong>Emotion-LLaMA</strong></td>
+              <td>Audio + Visual + Text</td>
+              <td>MER2023-SEMI</td>
+              <td>0.9036 F1</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>distilRoBERTa (Feature-to-Text)</strong></td>
+              <td>Audio (as text) + Text</td>
+              <td>RAVDESS</td>
+              <td>93.18%</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>distilRoBERTa (Feature-to-Text)</strong></td>
+              <td>Audio (as text) + Text</td>
+              <td>BAUM-1</td>
+              <td>93.69%</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>SpeechCueLLM</strong></td>
+              <td>Audio (as text) + Text</td>
+              <td>IEMOCAP / MELD</td>
+              <td>Outperforms structural modifications</td>
+              <td>Significant</td>
+              <td>Significant</td>
+            </tr>
+            <tr>
+              <td><strong>VowelPrompt</strong></td>
+              <td>Prosody (as text) + Text</td>
+              <td>Multiple (cross-domain)</td>
+              <td>SOTA across conditions</td>
+              <td>Significant</td>
+              <td>Significant</td>
+            </tr>
+            <tr>
+              <td><strong>General multimodal (survey)</strong></td>
+              <td>Audio + Text</td>
+              <td>Various</td>
+              <td>&mdash;</td>
+              <td>+8.3&ndash;12.7%</td>
+              <td>+2.9%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Reading the benchmarks</div>
+        <p><strong>IEMOCAP</strong> is the most widely used benchmark for speech emotion recognition (interactive dyadic conversations). <strong>MELD</strong> contains multi-party dialogue from TV shows. <strong>RAVDESS</strong> and <strong>BAUM-1</strong> use acted emotional speech. Real-world performance typically trails benchmark scores by 10&ndash;15 percentage points due to noise, speaker variability, and domain mismatch.</p>
+      </div>
+
+
+      <!-- ==================== IMPLEMENTATION ROADMAP ==================== -->
+      <h2 id="implementation-roadmap">Implementation Roadmap <a href="#implementation-roadmap" class="section-anchor">#</a></h2>
+
+      <p>A phased approach to adding multimodal emotion detection to your transcription app, starting with the highest-value, lowest-effort changes.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>What to Build</th>
+              <th>Effort</th>
+              <th>Expected Benefit</th>
+              <th>Dependencies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Phase 1</strong><br/><span class="badge badge-green">Start here</span></td>
+              <td>Extract 3 basic audio features per utterance (pitch, energy, speaking rate). Add natural language descriptions to existing LLM prompts.</td>
+              <td>1&ndash;3 days</td>
+              <td>Basic emotion awareness. Catches obvious cases (anger, excitement, sadness).</td>
+              <td>Audio feature extraction library (librosa, essentia, or vDSP on Apple)</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 2</strong></td>
+              <td>Maintain per-speaker baselines. Use relative deviations in prompts. Add conversation context tracking.</td>
+              <td>1 week</td>
+              <td>More nuanced analysis. Catches speaker-specific emotional shifts. Reduces false positives.</td>
+              <td>Speaker diarization, session state management</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 3</strong></td>
+              <td>Add structured JSON output. Build UI for emotion timeline. Display emotion metadata alongside transcription.</td>
+              <td>2&ndash;3 weeks</td>
+              <td>User-facing emotion insights. Conversation emotion arcs. Meeting tone analysis.</td>
+              <td>Frontend development, JSON schema validation</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 4</strong></td>
+              <td>Add dedicated SER model (emotion2vec or fine-tuned HuBERT). Use LLM as EmoJudge-style arbitrator.</td>
+              <td>1&ndash;2 months</td>
+              <td>Significantly improved accuracy. Better handling of ambiguous cases.</td>
+              <td>ML model deployment, model serving infrastructure</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 5</strong></td>
+              <td>Explore on-device CoreML models for real-time audio emotion. Cross-modal attention fusion.</td>
+              <td>2&ndash;4 months</td>
+              <td>Real-time emotion overlay. Lowest latency. Privacy-preserving (on-device).</td>
+              <td>CoreML expertise, training data, Apple Neural Engine</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Diagram: Implementation Roadmap -->
+      <div class="diagram-container">
+        <div class="diagram-header">Implementation Phases: Effort vs. Capability</div>
+        <div class="diagram-body">
+          <div class="mermaid">
+graph LR
+    P1["Phase 1<br/>Prompt Injection<br/><i>Days</i>"] --> P2["Phase 2<br/>Speaker Baselines<br/><i>1 Week</i>"]
+    P2 --> P3["Phase 3<br/>UI + Structured Output<br/><i>2-3 Weeks</i>"]
+    P3 --> P4["Phase 4<br/>Dedicated SER Model<br/><i>1-2 Months</i>"]
+    P4 --> P5["Phase 5<br/>On-Device CoreML<br/><i>2-4 Months</i>"]
+
+    style P1 fill:#D1FAE5,stroke:#10B981,color:#1F2937
+    style P2 fill:#DBEAFE,stroke:#3B82F6,color:#1F2937
+    style P3 fill:#EEF2FF,stroke:#6366F1,color:#1F2937
+    style P4 fill:#FEF3C7,stroke:#F59E0B,color:#1F2937
+    style P5 fill:#FDF2F8,stroke:#EC4899,color:#1F2937
+          </div>
+        </div>
+        <div class="diagram-caption">Each phase builds on the previous one. Phase 1 alone provides meaningful value. Phases 4-5 are optional optimizations for production-grade systems.</div>
+      </div>
+
+
+      <!-- ==================== GLOSSARY ==================== -->
+      <h2 id="glossary">Glossary <a href="#glossary" class="section-anchor">#</a></h2>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th>Definition</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>ASR</strong></td><td>Automatic Speech Recognition. Converting spoken audio into text (e.g., Whisper, Deepgram).</td></tr>
+            <tr><td><strong>Cross-modal attention</strong></td><td>Mechanism where features from one modality (e.g., audio) attend to features from another modality (e.g., text) to learn relevant correspondences.</td></tr>
+            <tr><td><strong>Diarization</strong></td><td>Speaker diarization identifies "who spoke when" in a multi-speaker audio stream.</td></tr>
+            <tr><td><strong>Early fusion</strong></td><td>Combining raw features from multiple modalities before classification into a single feature vector.</td></tr>
+            <tr><td><strong>F0 / Fundamental frequency</strong></td><td>The lowest frequency of a periodic waveform. In speech, perceived as pitch. Measured in Hertz (Hz).</td></tr>
+            <tr><td><strong>Feature-to-text</strong></td><td>Converting numeric audio features into natural language descriptions for LLM consumption.</td></tr>
+            <tr><td><strong>HuBERT</strong></td><td>Hidden-Unit BERT. A self-supervised speech representation model used as an audio encoder in many SER systems.</td></tr>
+            <tr><td><strong>Hybrid fusion</strong></td><td>Combining early and late fusion with intermediate cross-modal interactions at multiple processing stages.</td></tr>
+            <tr><td><strong>Late fusion</strong></td><td>Running separate classifiers per modality and combining their predictions through voting or learned weighting.</td></tr>
+            <tr><td><strong>LoRA</strong></td><td>Low-Rank Adaptation. A parameter-efficient fine-tuning method that trains small adapter matrices instead of all model parameters.</td></tr>
+            <tr><td><strong>MFCCs</strong></td><td>Mel-Frequency Cepstral Coefficients. Features representing the short-term power spectrum of audio, widely used in speech processing.</td></tr>
+            <tr><td><strong>Multimodal fusion</strong></td><td>Combining information from multiple sensory modalities (e.g., audio + text) to improve analysis accuracy.</td></tr>
+            <tr><td><strong>OV-MER</strong></td><td>Open-Vocabulary Multimodal Emotion Recognition. Generating free-text emotion descriptions instead of classifying into fixed categories.</td></tr>
+            <tr><td><strong>RMS</strong></td><td>Root Mean Square. A measure of the average power/loudness of an audio signal.</td></tr>
+            <tr><td><strong>SER</strong></td><td>Speech Emotion Recognition. The task of detecting emotional states from spoken audio.</td></tr>
+            <tr><td><strong>VAD</strong></td><td>Voice Activity Detection. Identifying which parts of an audio stream contain speech vs. silence.</td></tr>
+            <tr><td><strong>wav2vec 2.0</strong></td><td>A self-supervised speech representation model by Meta. Learns speech representations from unlabeled audio.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <!-- ==================== SOURCES ==================== -->
+      <h2 id="sources">Sources &amp; Further Reading <a href="#sources" class="section-anchor">#</a></h2>
+
+      <h3>Research Papers</h3>
+      <ul>
+        <li><a href="https://www.nature.com/articles/s41598-025-89202-x" target="_blank">MemoCMT: Multimodal emotion recognition using cross-modal transformer-based feature fusion</a> &mdash; Scientific Reports (Nature), February 2025</li>
+        <li><a href="https://arxiv.org/abs/2412.05558" target="_blank">WavFusion: Towards wav2vec 2.0 Multimodal Speech Emotion Recognition</a> &mdash; December 2024</li>
+        <li><a href="https://www.isca-archive.org/interspeech_2025/singh25b_interspeech.html" target="_blank">EmoJudge: LLM Based Post-Hoc Refinement for Multimodal Speech Emotion Recognition</a> &mdash; Interspeech 2025</li>
+        <li><a href="https://arxiv.org/abs/2601.07565" target="_blank">EGMF: A Unified Framework for Emotion Recognition via Expert-Guided Multimodal Fusion with LLMs</a> &mdash; January 2025</li>
+        <li><a href="https://arxiv.org/abs/2407.21315" target="_blank">Beyond Silent Letters: Amplifying LLMs in Emotion Recognition with Vocal Nuances (SpeechCueLLM)</a> &mdash; July 2024</li>
+        <li><a href="https://arxiv.org/abs/2406.11161" target="_blank">Emotion-LLaMA: Multimodal Emotion Recognition and Reasoning with Instruction Tuning</a> &mdash; NeurIPS 2024</li>
+        <li><a href="https://arxiv.org/abs/2602.06270" target="_blank">VowelPrompt: Hearing Speech Emotions from Text via Vowel-level Prosodic Augmentation</a> &mdash; February 2026</li>
+        <li><a href="https://arxiv.org/abs/2410.01495" target="_blank">OV-MER: Towards Open-Vocabulary Multimodal Emotion Recognition</a> &mdash; October 2024</li>
+        <li><a href="https://arxiv.org/abs/2504.19423" target="_blank">MER 2025: When Affective Computing Meets Large Language Models</a> &mdash; April 2025</li>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292624/" target="_blank">A Comprehensive Review of Multimodal Emotion Recognition</a> &mdash; PMC, 2025</li>
+        <li><a href="https://ieeexplore.ieee.org/document/10591796/" target="_blank">Multimodal Emotion Recognition Using Feature Fusion: An LLM-Based Approach (distilRoBERTa)</a> &mdash; IEEE, 2024</li>
+      </ul>
+
+      <h3>Production APIs &amp; Tools</h3>
+      <ul>
+        <li><a href="https://developers.deepgram.com/docs/sentiment-analysis" target="_blank">Deepgram Sentiment Analysis API</a></li>
+        <li><a href="https://www.assemblyai.com/docs/speech-understanding/sentiment-analysis" target="_blank">AssemblyAI Sentiment Analysis</a></li>
+        <li><a href="https://github.com/tpnam0901/MemoCMT" target="_blank">MemoCMT &mdash; Open Source Implementation (GitHub)</a></li>
+        <li><a href="https://github.com/ZebangCheng/Emotion-LLaMA" target="_blank">Emotion-LLaMA &mdash; Open Source (GitHub)</a></li>
+      </ul>
+
+      <h3>Practical Guides</h3>
+      <ul>
+        <li><a href="https://www.smashingmagazine.com/2023/09/generating-real-time-audio-sentiment-analysis-ai/" target="_blank">Generating Real-Time Audio Sentiment Analysis With AI</a> &mdash; Smashing Magazine</li>
+        <li><a href="https://aws.amazon.com/blogs/machine-learning/sentiment-analysis-with-text-and-audio-using-aws-generative-ai-services-approaches-challenges-and-solutions/" target="_blank">Sentiment Analysis with Text and Audio Using AWS</a></li>
+        <li><a href="https://medium.com/@ashwinthandu03/llms-meet-audio-teaching-ai-to-hear-emotion-not-just-read-it-ab25a06c7b0f" target="_blank">LLMs Meet Audio: Teaching AI to Hear Emotion, Not Just Read It</a></li>
+      </ul>
+
+
+      <!-- ==================== BOTTOM NAVIGATION ==================== -->
+      <nav class="category-nav">
+        <a href="../open-source-toolkits/index.html" class="prev-category">
+          <span class="nav-label">Previous</span>
+          <span class="nav-title">&larr; Open-Source Toolkits &amp; Libraries</span>
+        </a>
+        <a href="../apple-platform-integration/index.html" class="next-category">
+          <span class="nav-label">Next</span>
+          <span class="nav-title">Apple Platform Integration &rarr;</span>
+        </a>
+      </nav>
+
+    </div><!-- /.content -->
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <p>Audio Emotion &amp; Tone Detection Deep Dive &mdash; Category 7: Multimodal Fusion &amp; LLM Integration</p>
+      <p>Research compiled March 2026. Sources include peer-reviewed publications from Nature, IEEE, NeurIPS, and Interspeech.</p>
+    </footer>
+
+  </div><!-- /.main -->
+
+</div><!-- /.layout -->
+
+<!-- Mermaid.js -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<script>
+  // ===== MERMAID INIT =====
+  function initMermaid() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis',
+        padding: 15
+      },
+      themeVariables: isDark ? {
+        primaryColor: '#312E81',
+        primaryTextColor: '#F9FAFB',
+        primaryBorderColor: '#818CF8',
+        lineColor: '#818CF8',
+        secondaryColor: '#1E293B',
+        tertiaryColor: '#1E293B',
+        background: '#0F172A',
+        mainBkg: '#1E293B',
+        nodeBorder: '#818CF8',
+        clusterBkg: '#1E293B',
+        clusterBorder: '#334155',
+        titleColor: '#F9FAFB',
+        edgeLabelBackground: '#1E293B'
+      } : {}
+    });
+
+    document.querySelectorAll('.mermaid').forEach((el, i) => {
+      const id = 'mermaid-' + i + '-' + Date.now();
+      const graphDef = el.textContent;
+      el.textContent = '';
+      el.removeAttribute('data-processed');
+      try {
+        mermaid.render(id, graphDef).then(({svg}) => {
+          el.innerHTML = svg;
+        }).catch(err => {
+          console.warn('Mermaid render error:', err);
+          el.innerHTML = '<p style="color:var(--color-text-light);font-style:italic;">Diagram could not be rendered. Please refresh the page.</p>';
+        });
+      } catch(e) {
+        console.warn('Mermaid error:', e);
+      }
+    });
+  }
+
+  // Init on load
+  document.addEventListener('DOMContentLoaded', initMermaid);
+
+  // ===== THEME TOGGLE =====
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    initMermaid();
+  }
+
+  // Restore saved theme
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+
+  // ===== SIDEBAR TOGGLE (MOBILE) =====
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  // Close sidebar when clicking a link (mobile)
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    });
+  });
+
+  // ===== SCROLL PROGRESS BAR =====
+  window.addEventListener('scroll', () => {
+    const winH = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = (window.scrollY / winH) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+  });
+
+  // ===== ACTIVE SIDEBAR LINK =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px' });
+
+  document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+    observer.observe(heading);
+  });
+</script>
+
+</body>
+</html>

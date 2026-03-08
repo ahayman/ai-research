@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open-Source Toolkits &amp; Libraries | Audio Emotion &amp; Tone Detection</title>
+<meta name="description" content="Comprehensive guide to open-source toolkits and libraries for building speech emotion recognition systems, including openSMILE, librosa, SpeechBrain, and standard datasets.">
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #6366F1;
+  --color-primary-light: #818CF8;
+  --color-primary-dark: #4338CA;
+  --color-primary-bg: #EEF2FF;
+  --color-accent: #10B981;
+  --color-accent-bg: #ECFDF5;
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-danger: #EF4444;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #6366F1;
+  --color-link-hover: #4338CA;
+  --color-code-bg: #F1F5F9;
+  --color-code-text: #BE185D;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #6366F1;
+  --color-takeaway-bg: #EEF2FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-badge-green: #DCFCE7;
+  --color-badge-green-text: #166534;
+  --color-badge-blue: #DBEAFE;
+  --color-badge-blue-text: #1E40AF;
+  --color-badge-amber: #FEF3C7;
+  --color-badge-amber-text: #92400E;
+  --color-badge-purple: #F3E8FF;
+  --color-badge-purple-text: #6B21A8;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #818CF8;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #6366F1;
+  --color-primary-bg: #1E1B4B;
+  --color-accent: #34D399;
+  --color-accent-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #A5B4FC;
+  --color-link-hover: #C7D2FE;
+  --color-code-bg: #1E293B;
+  --color-code-text: #F472B6;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #818CF8;
+  --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-badge-green: #064E3B;
+  --color-badge-green-text: #6EE7B7;
+  --color-badge-blue: #1E3A5F;
+  --color-badge-blue-text: #93C5FD;
+  --color-badge-amber: #451A03;
+  --color-badge-amber-text: #FCD34D;
+  --color-badge-purple: #2E1065;
+  --color-badge-purple-text: #C4B5FD;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #6366F1, #4338CA);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Back to Hub ===== */
+.back-to-hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: all var(--transition);
+  background: var(--color-primary-bg);
+}
+
+.back-to-hub:hover {
+  background: var(--color-primary);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.page-subtitle {
+  font-size: 1.05rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+
+p { margin-bottom: 1rem; }
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+li > ul, li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+/* ===== Code Blocks ===== */
+.code-block {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  position: relative;
+}
+
+.code-block .code-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.2rem 0.75rem;
+  border-radius: 0 8px 0 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-sans);
+}
+
+.code-block pre {
+  margin: 0;
+  white-space: pre;
+  font-family: inherit;
+}
+
+.code-comment { color: var(--color-text-muted); }
+.code-keyword { color: var(--color-primary); font-weight: 600; }
+.code-string { color: var(--color-accent); }
+
+/* ===== Key Takeaways Box ===== */
+.takeaways {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.takeaways strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.takeaways ul { margin-bottom: 0; }
+
+.takeaways li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* ===== Info Boxes ===== */
+.info-box {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box.ios-callout {
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-accent-bg);
+}
+
+.info-box.warning {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.info-box strong {
+  color: var(--color-heading);
+}
+
+.info-box-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+thead {
+  background: var(--color-table-header);
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-table-stripe);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-green { background: var(--color-badge-green); color: var(--color-badge-green-text); }
+.badge-blue { background: var(--color-badge-blue); color: var(--color-badge-blue-text); }
+.badge-amber { background: var(--color-badge-amber); color: var(--color-badge-amber-text); }
+.badge-purple { background: var(--color-badge-purple); color: var(--color-badge-purple-text); }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  margin: 2rem 0;
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 12px;
+  background: var(--color-diagram-bg);
+  overflow: hidden;
+}
+
+.diagram-container figure {
+  padding: 1.5rem;
+  margin: 0;
+}
+
+.diagram-container figcaption {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-diagram-border);
+  background: var(--color-bg-alt);
+}
+
+.diagram-container figcaption strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  margin-bottom: 0.25rem;
+}
+
+.diagram-container figcaption span {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* ===== Toolkit Cards ===== */
+.toolkit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.toolkit-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: all var(--transition);
+}
+
+.toolkit-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.toolkit-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.toolkit-card-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-heading);
+}
+
+.toolkit-card-lang {
+  font-size: 0.75rem;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.toolkit-card p {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.toolkit-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.toolkit-card-tags .tag {
+  font-size: 0.72rem;
+  padding: 0.15em 0.45em;
+  border-radius: 3px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+}
+
+.glossary-term .tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  width: 300px;
+  max-width: 90vw;
+  z-index: 200;
+  pointer-events: none;
+  transition: opacity 0.15s, visibility 0.15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.glossary-term .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+.glossary-term:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+
+.category-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all var(--transition);
+  background: var(--color-bg-alt);
+}
+
+.category-nav a:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  text-decoration: none;
+}
+
+.category-nav .next-category { margin-left: auto; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+  z-index: 90;
+  font-size: 1.2rem;
+}
+
+.back-to-top.visible { opacity: 1; visibility: visible; }
+.back-to-top:hover { transform: scale(1.1); }
+
+/* ===== Dark Mode Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 90;
+  transition: all var(--transition);
+  color: var(--color-text);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* ===== Mobile Sidebar Toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+/* ===== Step Indicators ===== */
+.steps {
+  counter-reset: step-counter;
+  margin: 1.5rem 0;
+}
+
+.step {
+  counter-increment: step-counter;
+  padding: 1rem 1.25rem 1rem 3.5rem;
+  position: relative;
+  margin-bottom: 1rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.step::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.step strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-heading);
+}
+
+.step p { margin-bottom: 0; font-size: 0.92rem; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .sidebar-toggle { display: block; }
+  .main { margin-left: 0; }
+  .content { padding-top: 3.5rem; }
+}
+
+@media (max-width: 768px) {
+  .content { padding: 3.5rem 1.25rem 3rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.05rem; }
+  .toolkit-grid { grid-template-columns: 1fr; }
+  .category-nav { flex-direction: column; }
+  .category-nav a { width: 100%; justify-content: center; }
+  .theme-toggle { right: 4rem; bottom: 1.25rem; }
+  .back-to-top { bottom: 1.25rem; right: 1.25rem; }
+  .diagram-container figure { padding: 1rem; }
+  .code-block { padding: 1rem; font-size: 0.8rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .sidebar-toggle, .sidebar-overlay, .theme-toggle, .back-to-top { display: none !important; }
+  .main { margin-left: 0; }
+  .content { max-width: 100%; padding: 0; }
+  h2 { break-after: avoid; }
+  .diagram-container { break-inside: avoid; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Sidebar Toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">&#9776;</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+
+<!-- Sidebar Navigation -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Open-Source Toolkits &amp; Libraries</div>
+    <div class="sidebar-subtitle">Audio Emotion &amp; Tone Detection</div>
+  </div>
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a class="sidebar-link" href="#overview">Toolkit Landscape</a>
+    <a class="sidebar-link" href="#ecosystem-map">Ecosystem Map</a>
+
+    <div class="sidebar-nav-section">Feature Extraction</div>
+    <a class="sidebar-link" href="#opensmile">openSMILE</a>
+    <a class="sidebar-link sub" href="#opensmile-pipeline">Feature Pipeline</a>
+    <a class="sidebar-link sub" href="#opensmile-ios">iOS Integration</a>
+    <a class="sidebar-link" href="#librosa">librosa</a>
+    <a class="sidebar-link" href="#pyaudioanalysis">pyAudioAnalysis</a>
+    <a class="sidebar-link" href="#torchaudio">TorchAudio</a>
+    <a class="sidebar-link" href="#senselab">senselab</a>
+
+    <div class="sidebar-nav-section">Deep Learning</div>
+    <a class="sidebar-link" href="#speechbrain">SpeechBrain</a>
+    <a class="sidebar-link sub" href="#speechbrain-training">Training Workflow</a>
+    <a class="sidebar-link" href="#emotion2vec">emotion2vec</a>
+    <a class="sidebar-link" href="#huggingface">HuggingFace Hub</a>
+    <a class="sidebar-link" href="#kaldi-espnet">Kaldi &amp; ESPnet</a>
+
+    <div class="sidebar-nav-section">Datasets</div>
+    <a class="sidebar-link" href="#datasets">Standard Datasets</a>
+    <a class="sidebar-link sub" href="#dataset-selection">Selection Guide</a>
+
+    <div class="sidebar-nav-section">Comparison</div>
+    <a class="sidebar-link" href="#toolkit-comparison">Toolkit Comparison</a>
+    <a class="sidebar-link" href="#dataset-comparison">Dataset Comparison</a>
+
+    <div class="sidebar-nav-section">Practical Guide</div>
+    <a class="sidebar-link" href="#architecture">System Architecture</a>
+    <a class="sidebar-link" href="#getting-started">Getting Started</a>
+    <a class="sidebar-link" href="#glossary">Glossary</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<div class="main">
+<div class="content">
+
+<a href="../index.html" class="back-to-hub">&larr; Back to Audio Emotion &amp; Tone Detection Deep Dive</a>
+
+<h1>Open-Source Toolkits &amp; Libraries</h1>
+<p class="page-subtitle">The software building blocks for custom speech emotion recognition solutions &mdash; from feature extraction to deep learning frameworks, pre-trained models, and standard benchmark datasets.</p>
+
+<!-- ============================================================ -->
+<!-- SECTION: Overview -->
+<!-- ============================================================ -->
+<h2 id="overview">Toolkit Landscape Overview</h2>
+
+<p>Building a speech emotion recognition (SER) system from scratch no longer requires starting from zero. A rich ecosystem of open-source tools covers every stage of the pipeline: extracting acoustic features from raw audio, training machine learning models, leveraging pre-trained deep learning weights, and evaluating against standardized benchmarks. These tools range from lightweight Python libraries to enterprise-grade C++ toolkits that can run on mobile devices.</p>
+
+<div class="takeaways">
+  <strong>Key Takeaways</strong>
+  <ul>
+    <li><strong>openSMILE</strong> is the gold standard for handcrafted acoustic features, with native C++ that compiles for iOS/Android</li>
+    <li><strong>librosa</strong> is the most accessible entry point for Python-based audio feature extraction</li>
+    <li><strong>SpeechBrain</strong> provides production-ready emotion recognition recipes with pre-trained wav2vec2 models</li>
+    <li><strong>emotion2vec</strong> (ACL 2024) achieves state-of-the-art results with self-supervised emotion-specific representations</li>
+    <li><strong>IEMOCAP</strong> remains the benchmark dataset, but open alternatives like RAVDESS, CREMA-D, and EmoDB are more accessible</li>
+    <li>For an <strong>iOS pipeline</strong>, the recommended path is openSMILE C++ on-device feature extraction combined with a Core ML classifier</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- DIAGRAM 1: Ecosystem Map -->
+<!-- ============================================================ -->
+<h2 id="ecosystem-map">Toolkit Ecosystem Map</h2>
+
+<p>The open-source SER ecosystem can be organized by where each tool fits in the processing pipeline. Some tools (like openSMILE and librosa) focus purely on feature extraction, while others (like SpeechBrain) provide end-to-end training and inference capabilities.</p>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph TB
+    subgraph INPUT["Raw Audio Input"]
+        A["WAV / MP3 / Streaming Audio"]
+    end
+
+    subgraph FEATURES["Feature Extraction Layer"]
+        direction LR
+        B1["<b>openSMILE</b><br/>C++ core<br/>eGeMAPS, ComParE<br/>iOS/Android native"]
+        B2["<b>librosa</b><br/>Python<br/>MFCC, Mel Spec<br/>Chroma, ZCR"]
+        B3["<b>TorchAudio</b><br/>PyTorch<br/>Differentiable transforms<br/>Kaldi compat"]
+        B4["<b>pyAudioAnalysis</b><br/>Python<br/>68 features<br/>Built-in classifiers"]
+        B5["<b>senselab</b><br/>Python<br/>Multi-backend<br/>Unified API"]
+    end
+
+    subgraph MODELS["Model Training &amp; Inference"]
+        direction LR
+        C1["<b>SpeechBrain</b><br/>PyTorch toolkit<br/>Recipes, YAML config<br/>wav2vec2 fine-tuning"]
+        C2["<b>emotion2vec</b><br/>Self-supervised<br/>Universal emotion repr<br/>SOTA on IEMOCAP"]
+        C3["<b>HuggingFace Hub</b><br/>Pre-trained models<br/>Inference API<br/>Model cards"]
+        C4["<b>Kaldi / ESPnet</b><br/>Speech processing<br/>Feature pipelines<br/>Custom extension"]
+    end
+
+    subgraph EVAL["Evaluation &amp; Benchmarks"]
+        D1["IEMOCAP"]
+        D2["RAVDESS"]
+        D3["CREMA-D"]
+        D4["MELD"]
+        D5["EmoDB"]
+    end
+
+    A --> B1
+    A --> B2
+    A --> B3
+    A --> B4
+    A --> B5
+    B1 --> C1
+    B2 --> C1
+    B3 --> C1
+    B3 --> C2
+    B5 --> C1
+    B1 --> C4
+    C1 --> C3
+    C2 --> C3
+    C1 --> D1
+    C1 --> D2
+    C2 --> D1
+    C3 --> D3
+    C3 --> D4
+    C1 --> D5
+
+    style INPUT fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E293B
+    style FEATURES fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style MODELS fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#1E293B
+    style EVAL fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Diagram 1: Open-Source SER Toolkit Ecosystem</strong>
+    <span>How tools connect across the pipeline, from raw audio through feature extraction, model training, and benchmark evaluation. Green = feature extraction, yellow = model training, purple = evaluation datasets.</span>
+  </figcaption>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: Feature Extraction Toolkits -->
+<!-- ============================================================ -->
+<h2 id="opensmile">openSMILE</h2>
+
+<p><strong>openSMILE</strong> (open Speech and Music Interpretation by Large-space Extraction) is the most widely used toolkit for extracting handcrafted acoustic features from speech. Developed by audEERING GmbH and originally created at TU Munich, it has become the de facto standard in the Computational Paralinguistics research community.</p>
+
+<h3>Architecture</h3>
+<p>Written entirely in C++, openSMILE uses a modular, component-based architecture built around three core systems:</p>
+<ul>
+  <li><strong>Component Framework</strong> &mdash; A plugin system where processing modules (sources, transforms, sinks) are dynamically configured</li>
+  <li><strong>Data Memory System</strong> &mdash; Shared memory levels that allow zero-copy data exchange between components</li>
+  <li><strong>Configuration Engine</strong> &mdash; <code>.conf</code> files that define the entire processing pipeline declaratively</li>
+</ul>
+
+<h3>Feature Sets</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Feature Set</th><th>Features</th><th>LLDs</th><th>Use Case</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>ComParE 2016</strong></td>
+      <td>6,373</td>
+      <td>65</td>
+      <td>INTERSPEECH challenges, maximum coverage</td>
+      <td>Large feature vector; often used with feature selection</td>
+    </tr>
+    <tr>
+      <td><strong>eGeMAPSv02</strong></td>
+      <td>88</td>
+      <td>25</td>
+      <td>Standardized affect recognition, production systems</td>
+      <td>Minimalistic, expert-designed; recommended starting point</td>
+    </tr>
+    <tr>
+      <td><strong>GeMAPS v01a/v01b</strong></td>
+      <td>62</td>
+      <td>18</td>
+      <td>Legacy compatibility</td>
+      <td>Predecessor to eGeMAPS; fewer spectral features</td>
+    </tr>
+    <tr>
+      <td><strong>IS09 Emotion</strong></td>
+      <td>384</td>
+      <td>32</td>
+      <td>Emotion classification baselines</td>
+      <td>INTERSPEECH 2009 Emotion Challenge set</td>
+    </tr>
+    <tr>
+      <td><strong>IS10&ndash;IS13</strong></td>
+      <td>1,582&ndash;6,373</td>
+      <td>32&ndash;65</td>
+      <td>Paralinguistic challenges (speaker state, traits)</td>
+      <td>Progressively larger; IS13 = ComParE baseline</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The <strong>eGeMAPSv02</strong> set is the recommended starting point for most SER applications. It captures frequency parameters (F0, formants F1&ndash;F3), energy and amplitude measures, spectral features (alpha ratio, Hammarberg index, spectral slopes), and temporal features &mdash; all shown to be relevant for emotion detection in peer-reviewed research.</p>
+
+<!-- DIAGRAM 2: openSMILE Feature Pipeline -->
+<h3 id="opensmile-pipeline">Feature Extraction Pipeline</h3>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph LR
+    subgraph CONFIG["Configuration (.conf)"]
+        CF["eGeMAPSv02.conf<br/>ComParE_2016.conf<br/>IS09_emotion.conf"]
+    end
+
+    subgraph PIPE["openSMILE Processing Pipeline"]
+        direction LR
+        A["Audio Source<br/><i>WAV, raw PCM,<br/>streaming buffer</i>"] --> B["Framer<br/><i>20-60ms windows<br/>10ms hop size</i>"]
+        B --> C["LLD Extraction<br/><i>F0, energy, MFCC,<br/>formants, jitter,<br/>shimmer, spectral</i>"]
+        C --> D["Delta &amp; Acceleration<br/><i>First &amp; second<br/>derivatives</i>"]
+        D --> E["Functionals<br/><i>Mean, std, percentiles<br/>regression, peaks</i>"]
+    end
+
+    subgraph OUT["Output"]
+        E --> F["Feature Vector<br/><i>pandas DataFrame<br/>CSV / ARFF / HTK</i>"]
+    end
+
+    CF -.->|"defines"| PIPE
+
+    style CONFIG fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    style PIPE fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E293B
+    style OUT fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Diagram 2: openSMILE Feature Extraction Pipeline</strong>
+    <span>Audio flows through configurable processing stages. The configuration file selects which LLDs to compute and which statistical functionals to apply over the utterance.</span>
+  </figcaption>
+</div>
+
+<h3>Python Wrapper</h3>
+<p>The <code>opensmile</code> Python package wraps the C++ core, providing a clean API that returns <span class="glossary-term">pandas DataFrames<span class="tooltip">A two-dimensional, tabular data structure in Python's pandas library. Each column is a feature, each row is an observation (one per audio file for functionals-level extraction).</span></span>:</p>
+
+<div class="code-block">
+  <span class="code-label">Python</span>
+  <pre><span class="code-keyword">import</span> opensmile
+
+<span class="code-comment"># Initialize with eGeMAPSv02 feature set</span>
+smile = opensmile.Smile(
+    feature_set=opensmile.FeatureSet.eGeMAPSv02,
+    feature_level=opensmile.FeatureLevel.Functionals,
+)
+
+<span class="code-comment"># Extract features from a file → pandas DataFrame (1 x 88)</span>
+features = smile.process_file(<span class="code-string">"speech.wav"</span>)
+
+<span class="code-comment"># Or from raw numpy array</span>
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+features = smile.process_signal(signal_array, sampling_rate=<span class="code-string">16000</span>)
+
+<span class="code-comment"># Extract Low-Level Descriptors (frame-by-frame)</span>
+smile_lld = opensmile.Smile(
+    feature_set=opensmile.FeatureSet.eGeMAPSv02,
+    feature_level=opensmile.FeatureLevel.LowLevelDescriptors,
+)
+lld_features = smile_lld.process_file(<span class="code-string">"speech.wav"</span>)
+<span class="code-comment"># → DataFrame with one row per frame (25 LLD features)</span></pre>
+</div>
+
+<h3 id="opensmile-ios">iOS / Mobile Integration</h3>
+
+<div class="info-box ios-callout">
+  <div class="info-box-title">iOS Pipeline: openSMILE as On-Device Feature Extractor</div>
+  <p>openSMILE v3.0+ includes <strong>native iOS support</strong> via CMake. The C++ core compiles into a static library that can be linked to an Xcode project. The slim C API enables real-time feature extraction from the device microphone without network round-trips.</p>
+  <ul>
+    <li><strong>Build</strong>: CMake cross-compilation targeting iOS arm64. Produces a <code>.a</code> static library.</li>
+    <li><strong>Integration</strong>: Call via Objective-C++ bridge or Swift C interop. Pass audio buffers from <code>AVAudioEngine</code>.</li>
+    <li><strong>Feature Set</strong>: eGeMAPSv02 (88 features per utterance) is small enough for real-time mobile processing.</li>
+    <li><strong>Classifier</strong>: Feed extracted features into a Core ML model (converted from scikit-learn SVM/MLP or PyTorch).</li>
+    <li><strong>Android</strong>: Similar path via NDK/JNI. Pre-built Android integration included in v3.0+.</li>
+  </ul>
+</div>
+
+<hr>
+
+<!-- ===== librosa ===== -->
+<h2 id="librosa">librosa</h2>
+
+<p><strong>librosa</strong> is the most popular Python library for audio and music signal analysis. Its flat, well-documented API makes it the typical entry point for researchers building their first SER system. Current stable version is 0.11.0.</p>
+
+<h3>Key Features for SER</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Feature</th><th>Function</th><th>Output Shape</th><th>SER Relevance</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="glossary-term">MFCC<span class="tooltip">Mel-Frequency Cepstral Coefficients. Represent the short-term power spectrum of audio on a perceptual (mel) scale. The most widely used features in speech processing.</span></span></td>
+      <td><code>librosa.feature.mfcc()</code></td>
+      <td>(n_mfcc, T)</td>
+      <td>Primary feature; captures vocal tract shape</td>
+    </tr>
+    <tr>
+      <td>Mel Spectrogram</td>
+      <td><code>librosa.feature.melspectrogram()</code></td>
+      <td>(n_mels, T)</td>
+      <td>CNN input for deep learning approaches</td>
+    </tr>
+    <tr>
+      <td>Chromagram</td>
+      <td><code>librosa.feature.chroma_stft()</code></td>
+      <td>(12, T)</td>
+      <td>Pitch class; useful for tonal emotion cues</td>
+    </tr>
+    <tr>
+      <td>Spectral Contrast</td>
+      <td><code>librosa.feature.spectral_contrast()</code></td>
+      <td>(n_bands+1, T)</td>
+      <td>Distinguishes harmonic vs. noisy regions</td>
+    </tr>
+    <tr>
+      <td>Zero Crossing Rate</td>
+      <td><code>librosa.feature.zero_crossing_rate()</code></td>
+      <td>(1, T)</td>
+      <td>Correlates with noisiness and high-frequency content</td>
+    </tr>
+    <tr>
+      <td>RMS Energy</td>
+      <td><code>librosa.feature.rms()</code></td>
+      <td>(1, T)</td>
+      <td>Loudness proxy; arousal indicator</td>
+    </tr>
+    <tr>
+      <td>Tonnetz</td>
+      <td><code>librosa.feature.tonnetz()</code></td>
+      <td>(6, T)</td>
+      <td>Tonal centroid features</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="code-block">
+  <span class="code-label">Python</span>
+  <pre><span class="code-keyword">import</span> librosa
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-comment"># Load audio (resampled to 22050 Hz by default)</span>
+y, sr = librosa.load(<span class="code-string">"speech.wav"</span>, sr=<span class="code-string">16000</span>)
+
+<span class="code-comment"># Extract features</span>
+mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=<span class="code-string">13</span>)      <span class="code-comment"># (13, T)</span>
+mel = librosa.feature.melspectrogram(y=y, sr=sr)           <span class="code-comment"># (128, T)</span>
+chroma = librosa.feature.chroma_stft(y=y, sr=sr)           <span class="code-comment"># (12, T)</span>
+
+<span class="code-comment"># Aggregate over time for utterance-level features</span>
+features = np.hstack([
+    np.mean(mfcc, axis=<span class="code-string">1</span>), np.std(mfcc, axis=<span class="code-string">1</span>),
+    np.mean(mel, axis=<span class="code-string">1</span>),
+    np.mean(chroma, axis=<span class="code-string">1</span>),
+])</pre>
+</div>
+
+<div class="info-box">
+  <div class="info-box-title">librosa vs. openSMILE</div>
+  <p>librosa gives you raw, frame-level features and full control over aggregation. openSMILE provides expert-designed feature sets with built-in statistical functionals. For research flexibility, use librosa. For proven, standardized feature sets (especially in production), use openSMILE.</p>
+</div>
+
+<hr>
+
+<!-- ===== pyAudioAnalysis ===== -->
+<h2 id="pyaudioanalysis">pyAudioAnalysis</h2>
+
+<p><strong>pyAudioAnalysis</strong> is a Python library that bundles feature extraction with built-in classification, regression, and segmentation. It provides an all-in-one solution for audio analysis tasks.</p>
+
+<ul>
+  <li><strong>68 short-term features</strong>: MFCCs (13), chroma (12), spectral (centroid, spread, entropy, flux, rolloff), energy, ZCR, and more</li>
+  <li><strong>Built-in classifiers</strong>: SVM, kNN, Random Forest, Gradient Boosting, and Extra Trees</li>
+  <li><strong>Regression mode</strong>: Predict continuous values like arousal and valence scores instead of discrete emotion categories</li>
+  <li><strong>Segmentation</strong>: Speaker diarization, silence removal, audio event detection</li>
+  <li><strong>Visualization</strong>: Feature distribution plots, spectrograms, and audio thumbnailing</li>
+</ul>
+
+<p>pyAudioAnalysis is best suited for rapid prototyping and small-scale projects. For production systems or cutting-edge accuracy, SpeechBrain or emotion2vec are better choices.</p>
+
+<hr>
+
+<!-- ===== TorchAudio ===== -->
+<h2 id="torchaudio">TorchAudio</h2>
+
+<p><strong>TorchAudio</strong> is part of the PyTorch ecosystem and provides differentiable audio transforms that integrate directly into neural network training loops.</p>
+
+<ul>
+  <li><strong>Differentiable transforms</strong>: Spectrogram, MelSpectrogram, MFCC, AmplitudeToDB &mdash; all as PyTorch modules</li>
+  <li><strong>Pre-trained model pipelines</strong>: Wav2Vec2, HuBERT, WavLM bundles via <code>torchaudio.pipelines</code></li>
+  <li><strong>Audio I/O</strong>: Load and save WAV, FLAC, MP3, OGG with resampling</li>
+  <li><strong>Effects</strong>: Sox-based audio effects for augmentation (pitch shift, tempo change, noise addition)</li>
+  <li><strong>Kaldi compatibility</strong>: Fbank, MFCC functions matching Kaldi's output for reproducibility</li>
+</ul>
+
+<p>TorchAudio is the natural choice when building custom PyTorch models for SER, as feature extraction becomes part of the differentiable computation graph.</p>
+
+<hr>
+
+<!-- ===== senselab ===== -->
+<h2 id="senselab">senselab</h2>
+
+<p><strong>senselab</strong> (from the Sensein group at MIT) is a unified Python package for biometric analysis that aggregates multiple feature extraction backends into a single API.</p>
+
+<h3>Multi-Backend Architecture</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Backend</th><th>Features</th><th>Strengths</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenSMILE</td>
+      <td>eGeMAPS, ComParE acoustic features</td>
+      <td>Standardized paralinguistic features</td>
+    </tr>
+    <tr>
+      <td>Praat / Parselmouth</td>
+      <td>Pitch, jitter, shimmer, formants, HNR</td>
+      <td>Clinically validated voice quality measures</td>
+    </tr>
+    <tr>
+      <td>torchaudio</td>
+      <td>Spectrogram, mel, MFCC, pitch</td>
+      <td>GPU-accelerated spectral features</td>
+    </tr>
+    <tr>
+      <td>torchaudio-SQUIM</td>
+      <td>STOI, PESQ, SI-SDR</td>
+      <td>Objective audio quality metrics</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Each backend can be toggled independently, and outputs are merged per audio file. This is especially useful for clinical speech analysis applications where you need features from multiple domains (phonation, articulation, prosody, spectral) in one unified feature vector.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: Deep Learning Toolkits -->
+<!-- ============================================================ -->
+<h2 id="speechbrain">SpeechBrain</h2>
+
+<p><strong>SpeechBrain</strong> is an open-source, all-in-one conversational AI toolkit built on PyTorch. Version 1.0 (released January 2024) provides production-ready recipes for speech recognition, speaker identification, speech enhancement, and &mdash; critically for our purposes &mdash; <strong>emotion recognition</strong>.</p>
+
+<h3>Emotion Recognition Architecture</h3>
+<p>SpeechBrain's emotion recognition recipe uses a <span class="glossary-term">wav2vec2<span class="tooltip">A self-supervised speech representation model from Meta (Facebook AI). Pre-trained on large amounts of unlabeled audio, it learns general-purpose speech representations that can be fine-tuned for downstream tasks like emotion recognition.</span></span> encoder fine-tuned on IEMOCAP:</p>
+<ul>
+  <li><strong>Encoder</strong>: wav2vec2-base (12 transformer layers, 768-dim hidden) pre-trained on LibriSpeech</li>
+  <li><strong>Pooling</strong>: Attentive statistical pooling (learns which frames matter most for the emotion)</li>
+  <li><strong>Loss</strong>: Additive Margin Softmax (AAM-Softmax) for better class separation</li>
+  <li><strong>Output</strong>: 4 emotions &mdash; angry, happy (merged with excited), sad, neutral</li>
+</ul>
+
+<!-- DIAGRAM 3: SpeechBrain Training Workflow -->
+<h3 id="speechbrain-training">Training Workflow</h3>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph TB
+    subgraph DATA["1. Data Preparation"]
+        A1["IEMOCAP Raw Data<br/><i>12 hours, 10k utterances</i>"] --> A2["Data Manifest<br/><i>JSON: paths, labels,<br/>durations, splits</i>"]
+    end
+
+    subgraph CONFIG["2. Hyperparameter Config"]
+        B1["train_with_wav2vec2.yaml<br/><i>Model architecture<br/>Optimizer (Adam, lr=1e-4)<br/>Scheduler (ReduceOnPlateau)<br/>Batch size, epochs</i>"]
+    end
+
+    subgraph TRAIN["3. Training Loop"]
+        C1["Load wav2vec2-base<br/><i>from HuggingFace</i>"] --> C2["Fine-tune Encoder<br/><i>Unfreeze top layers</i>"]
+        C2 --> C3["Attentive Pooling<br/><i>Utterance-level repr</i>"]
+        C3 --> C4["Classification Head<br/><i>Linear + Softmax</i>"]
+        C4 --> C5["AAM-Softmax Loss<br/><i>Margin-based training</i>"]
+        C5 -->|"backprop"| C2
+    end
+
+    subgraph EVAL["4. Evaluation"]
+        D1["Test Split<br/><i>Session 5 (leave-one-out)</i>"] --> D2["Per-class Accuracy<br/><i>UA (unweighted) &amp; WA</i>"]
+        D2 --> D3["Export to HuggingFace<br/><i>Model card + weights</i>"]
+    end
+
+    A2 --> C1
+    B1 -.->|"configures"| TRAIN
+    C5 --> D1
+
+    style DATA fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style CONFIG fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    style TRAIN fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E293B
+    style EVAL fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#1E293B
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Diagram 3: SpeechBrain Emotion Recognition Training Workflow</strong>
+    <span>From raw IEMOCAP data through YAML-configured training to a published HuggingFace model. The pipeline handles data preparation, model architecture, loss computation, and evaluation automatically.</span>
+  </figcaption>
+</div>
+
+<div class="code-block">
+  <span class="code-label">Bash</span>
+  <pre><span class="code-comment"># Clone SpeechBrain and train emotion recognition from scratch</span>
+git clone https://github.com/speechbrain/speechbrain
+cd speechbrain/recipes/IEMOCAP/emotion_recognition
+
+<span class="code-comment"># Train with wav2vec2 backbone</span>
+python train_with_wav2vec2.py hparams/train_with_wav2vec2.yaml \
+    --data_folder=/path/to/IEMOCAP \
+    --output_folder=results/wav2vec2
+
+<span class="code-comment"># Inference with pre-trained model</span>
+python -c "
+from speechbrain.pretrained.interfaces import foreign_class
+classifier = foreign_class(
+    source='speechbrain/emotion-recognition-wav2vec2-IEMOCAP',
+    pymodule_file='custom_interface.py',
+    classname='CustomEncoderWav2vec2Classifier'
+)
+out_prob, score, index, text_lab = classifier.classify_file('test.wav')
+print(f'Emotion: {text_lab}')  # e.g., ['ang']
+"</pre>
+</div>
+
+<h3>Other SpeechBrain SER Models</h3>
+<ul>
+  <li><strong>Emotion Diarization</strong> (<code>speechbrain/emotion-diarization-wavlm-large</code>) &mdash; WavLM-based model that assigns emotion labels over time segments, not just per utterance</li>
+  <li><strong>Custom encoder support</strong> &mdash; Plug any HuggingFace transformer (Whisper, HuBERT, WavLM) as the encoder backbone</li>
+  <li><strong>OpenVINO export</strong> &mdash; SpeechBrain models can be exported via ONNX for optimized inference on Intel hardware</li>
+</ul>
+
+<hr>
+
+<!-- ===== emotion2vec ===== -->
+<h2 id="emotion2vec">emotion2vec</h2>
+
+<p><strong>emotion2vec</strong> (ACL 2024 Findings) is the first universal speech emotion representation model. Rather than training a classifier directly, it learns emotion-specific representations through self-supervised pre-training, which can then be transferred to any downstream emotion task.</p>
+
+<h3>How It Works</h3>
+<ul>
+  <li><strong>Pre-training</strong>: Online distillation on 262 hours of open-source emotion data, with combined utterance-level and frame-level objectives</li>
+  <li><strong>Transfer</strong>: Extract embeddings from the last layer (50Hz frame rate, stored as <code>.npy</code>), then train a simple linear classifier</li>
+  <li><strong>Performance</strong>: State-of-the-art on IEMOCAP with just a linear probe &mdash; no fine-tuning needed</li>
+  <li><strong>Cross-lingual</strong>: Tested on 10+ languages (English, Mandarin, French, German, Italian, etc.)</li>
+  <li><strong>Multi-task</strong>: Works for speech emotion, song emotion, emotion in conversation, and sentiment analysis</li>
+</ul>
+
+<h3>Model Variants</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Variant</th><th>Parameters</th><th>IEMOCAP UA</th><th>Use Case</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Emotion2Vec-S</td><td>~30M</td><td>~67%</td><td>Resource-constrained, mobile</td></tr>
+    <tr><td>Emotion2Vec-base</td><td>~95M</td><td>~70%</td><td>General purpose</td></tr>
+    <tr><td>Emotion2Vec-large</td><td>~300M</td><td>~73%</td><td>Maximum accuracy</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="info-box">
+  <div class="info-box-title">emotion2vec vs. Fine-tuned wav2vec2</div>
+  <p>emotion2vec achieves competitive or better results than wav2vec2 fine-tuned specifically on emotion data, while being more generalizable across languages and emotion tasks. The key difference: emotion2vec is <em>pre-trained on emotion-relevant data</em> specifically, while wav2vec2 is pre-trained on general speech and must be fine-tuned.</p>
+</div>
+
+<hr>
+
+<!-- ===== HuggingFace ===== -->
+<h2 id="huggingface">HuggingFace Audio Models Hub</h2>
+
+<p>The HuggingFace Model Hub hosts dozens of pre-trained SER models, each with a model card documenting its architecture, training data, performance, and usage instructions. This is the fastest path from zero to a working emotion classifier.</p>
+
+<h3>Notable Pre-trained SER Models</h3>
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Model</th><th>Base Architecture</th><th>Training Data</th><th>Emotions</th><th>Output Type</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>speechbrain/emotion-recognition-wav2vec2-IEMOCAP</code></td>
+      <td>wav2vec2-base</td>
+      <td>IEMOCAP</td>
+      <td>4 (ang, hap, sad, neu)</td>
+      <td>Categorical</td>
+    </tr>
+    <tr>
+      <td><code>ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition</code></td>
+      <td>XLSR-53 (large)</td>
+      <td>Multi-dataset</td>
+      <td>7</td>
+      <td>Categorical</td>
+    </tr>
+    <tr>
+      <td><code>r-f/wav2vec-english-speech-emotion-recognition</code></td>
+      <td>XLSR-53 (large)</td>
+      <td>SAVEE + RAVDESS + TESS</td>
+      <td>7 (anger&ndash;surprise)</td>
+      <td>Categorical</td>
+    </tr>
+    <tr>
+      <td><code>audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim</code></td>
+      <td>wav2vec2-large-robust</td>
+      <td>MSP-Podcast</td>
+      <td>3 dimensions</td>
+      <td>Arousal, dominance, valence</td>
+    </tr>
+    <tr>
+      <td><code>superb/wav2vec2-base-superb-er</code></td>
+      <td>wav2vec2-base</td>
+      <td>IEMOCAP (SUPERB)</td>
+      <td>4</td>
+      <td>Categorical</td>
+    </tr>
+    <tr>
+      <td><code>ASLP-lab/Emotion2Vec-S</code></td>
+      <td>emotion2vec (small)</td>
+      <td>262h emotion data</td>
+      <td>Universal repr</td>
+      <td>Embeddings (linear probe)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ===== Kaldi & ESPnet ===== -->
+<h2 id="kaldi-espnet">Kaldi &amp; ESPnet</h2>
+
+<p><strong>Kaldi</strong> is a C++-based speech processing toolkit that has been a cornerstone of ASR research. While it does not have dedicated SER recipes, its feature extraction capabilities (MFCC, PLP, filter banks) are widely used as inputs to custom SER models. Kaldi is largely being superseded by end-to-end approaches but remains relevant for its robust, battle-tested feature extraction.</p>
+
+<p><strong>ESPnet</strong> is an end-to-end speech processing toolkit covering ASR, TTS, speech translation, enhancement, and diarization. Like Kaldi, it does not include native SER recipes, but its training infrastructure (PyTorch-based, with recipe system) can be adapted for SER by implementing custom data loaders and model architectures.</p>
+
+<div class="info-box warning">
+  <div class="info-box-title">When to use Kaldi/ESPnet for SER</div>
+  <p>Only consider these toolkits if you need (a) Kaldi-compatible feature extraction for reproducibility with prior work, or (b) to embed SER within a larger speech processing pipeline (e.g., combining ASR transcription with emotion detection). For pure SER, SpeechBrain or emotion2vec are more direct paths.</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: Datasets -->
+<!-- ============================================================ -->
+<h2 id="datasets">Standard Benchmark Datasets</h2>
+
+<p>Choosing the right dataset is as important as choosing the right model. SER datasets vary enormously in size, recording conditions, emotion categories, language, and licensing. Here is a detailed look at the seven most widely used datasets.</p>
+
+<h3>IEMOCAP</h3>
+<p>The <strong>Interactive Emotional Dyadic Motion Capture Database</strong> from USC SAIL is the most cited SER dataset. Ten actors (5 male, 5 female) perform scripted and improvised dialogues in dyadic sessions. Approximately 12 hours of data with ~10,039 utterances annotated for 9 emotion categories plus continuous dimensions (valence, activation, dominance). The standard benchmark protocol uses four merged classes (angry, happy+excited, sad, neutral) and leave-one-session-out cross-validation.</p>
+<p><strong>Access</strong>: Restricted license; apply via <a href="https://sail.usc.edu/iemocap/" target="_blank">sail.usc.edu/iemocap</a>. Approval typically takes days to weeks.</p>
+
+<h3>RAVDESS</h3>
+<p>The <strong>Ryerson Audio-Visual Database of Emotional Speech and Song</strong> contains 7,356 files from 24 professional actors (12M/12F). Speech utterances cover 8 emotions (calm, happy, sad, angry, fearful, surprise, disgust, neutral) at two intensity levels (normal and strong). Audio is high-quality studio recordings.</p>
+<p><strong>Access</strong>: <span class="badge badge-green">Open</span> CC BY-NC-SA 4.0. Available on Zenodo and Kaggle.</p>
+
+<h3>MELD</h3>
+<p>The <strong>Multimodal EmotionLines Dataset</strong> contains 13,708 utterances from 1,433 dialogues sourced from the TV series <em>Friends</em>. Unique among SER datasets for its multi-party conversational context, with 7 emotion labels plus 3-class sentiment annotation. Includes audio, video, and text transcriptions.</p>
+<p><strong>Access</strong>: <span class="badge badge-green">Open</span> GPL-3.0. Available on GitHub.</p>
+
+<h3>CMU-MOSEI</h3>
+<p><strong>CMU Multimodal Opinion Sentiment and Emotion Intensity</strong> is the largest multimodal emotion dataset, with 23,500+ utterances (65+ hours) from 1,000+ YouTube speakers across 250 topics. Annotations include 6 discrete emotions plus continuous dimensions. Gender-balanced and "in-the-wild" (non-acted).</p>
+<p><strong>Access</strong>: <span class="badge badge-blue">Research</span> Available via CMU MultimodalSDK on GitHub.</p>
+
+<h3>CREMA-D</h3>
+<p>The <strong>Crowd-sourced Emotional Multimodal Actors Dataset</strong> features 7,442 utterances from 91 actors (48M/43F) spanning diverse ethnicities and ages (20&ndash;74). Six emotions at four intensity levels. The diversity of speakers makes it particularly valuable for training robust models.</p>
+<p><strong>Access</strong>: <span class="badge badge-green">Open</span> Research-friendly license. Available on GitHub.</p>
+
+<h3>EmoDB</h3>
+<p>The <strong>Berlin Database of Emotional Speech</strong> contains ~535 utterances from 10 German-language actors recorded in an anechoic chamber. Seven emotions: anger, boredom, disgust, fear/anxiety, happiness, sadness, neutral. Small but very high quality, extensively validated through perception tests.</p>
+<p><strong>Access</strong>: <span class="badge badge-green">Open</span> CC0-1.0 (public domain). Also available via the <code>audb</code> Python library.</p>
+
+<h3>SAVEE</h3>
+<p>The <strong>Surrey Audio-Visual Expressed Emotion</strong> database contains 480 utterances from 4 male British English actors. Seven emotions (anger, disgust, fear, happiness, sadness, surprise, neutral). Small but useful for initial experiments and combined with other datasets.</p>
+<p><strong>Access</strong>: <span class="badge badge-blue">Research</span> Available from the University of Surrey.</p>
+
+<!-- DIAGRAM 4: Dataset Selection Guide -->
+<h3 id="dataset-selection">Dataset Selection Guide</h3>
+
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph TD
+    START["What are you building?"] --> Q1{"Need conversational<br/>context?"}
+    Q1 -->|"Yes"| MELD["<b>MELD</b><br/>Multi-party dialogue<br/>13.7k utterances"]
+    Q1 -->|"No"| Q2{"Need in-the-wild<br/>(non-acted) data?"}
+    Q2 -->|"Yes"| MOSEI["<b>CMU-MOSEI</b><br/>YouTube speakers<br/>23.5k utterances"]
+    Q2 -->|"No"| Q3{"Need largest<br/>acted dataset?"}
+    Q3 -->|"Yes"| Q4{"Can get<br/>academic license?"}
+    Q4 -->|"Yes"| IEMOCAP["<b>IEMOCAP</b><br/>Gold standard<br/>10k utterances"]
+    Q4 -->|"No"| CREMAD["<b>CREMA-D</b><br/>Most diverse speakers<br/>7.4k utterances"]
+    Q3 -->|"No"| Q5{"Need quick start<br/>(open, small)?"}
+    Q5 -->|"Yes"| Q6{"English?"}
+    Q6 -->|"Yes"| RAVDESS["<b>RAVDESS</b><br/>High quality, open<br/>1.4k utterances"]
+    Q6 -->|"German"| EMODB["<b>EmoDB</b><br/>Public domain<br/>535 utterances"]
+    Q5 -->|"No"| COMBINE["<b>Combine datasets</b><br/>RAVDESS + CREMA-D<br/>+ SAVEE + TESS"]
+
+    style START fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E293B
+    style IEMOCAP fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#1E293B
+    style MELD fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    style MOSEI fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    style RAVDESS fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style EMODB fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style CREMAD fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style COMBINE fill:#DBEAFE,stroke:#3B82F6,stroke-width:2px,color:#1E293B
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Diagram 4: SER Dataset Selection Decision Tree</strong>
+    <span>Navigate your requirements to find the right dataset. Green nodes = freely available, yellow = restricted license, purple = specialized use cases, blue = combined approach.</span>
+  </figcaption>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: Comparison Tables -->
+<!-- ============================================================ -->
+<h2 id="toolkit-comparison">Toolkit Comparison</h2>
+
+<p>The following table compares all major open-source toolkits across dimensions that matter for building a production SER system.</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Toolkit</th>
+      <th>Language</th>
+      <th>Primary Features</th>
+      <th>iOS Compat</th>
+      <th>Ease of Use</th>
+      <th>Maintenance</th>
+      <th>Best For</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>openSMILE</strong></td>
+      <td>C++ (Python wrapper)</td>
+      <td>Handcrafted (eGeMAPS, ComParE)</td>
+      <td><span class="badge badge-green">Native</span></td>
+      <td><span class="badge badge-green">High</span></td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>Production feature extraction, mobile</td>
+    </tr>
+    <tr>
+      <td><strong>librosa</strong></td>
+      <td>Python</td>
+      <td>MFCC, mel spec, chroma, ZCR</td>
+      <td><span class="badge badge-amber">None</span></td>
+      <td><span class="badge badge-green">High</span></td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>Research prototyping, learning</td>
+    </tr>
+    <tr>
+      <td><strong>SpeechBrain</strong></td>
+      <td>Python (PyTorch)</td>
+      <td>End-to-end models, recipes</td>
+      <td><span class="badge badge-amber">Export</span></td>
+      <td><span class="badge badge-blue">Medium</span></td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>Training custom models, research</td>
+    </tr>
+    <tr>
+      <td><strong>emotion2vec</strong></td>
+      <td>Python (PyTorch)</td>
+      <td>Self-supervised emotion repr</td>
+      <td><span class="badge badge-amber">Export</span></td>
+      <td><span class="badge badge-blue">Medium</span></td>
+      <td><span class="badge badge-blue">Moderate</span></td>
+      <td>SOTA accuracy, cross-lingual</td>
+    </tr>
+    <tr>
+      <td><strong>pyAudioAnalysis</strong></td>
+      <td>Python</td>
+      <td>68 features + built-in classifiers</td>
+      <td><span class="badge badge-amber">None</span></td>
+      <td><span class="badge badge-green">High</span></td>
+      <td><span class="badge badge-amber">Low</span></td>
+      <td>Quick prototyping, all-in-one</td>
+    </tr>
+    <tr>
+      <td><strong>TorchAudio</strong></td>
+      <td>Python (PyTorch)</td>
+      <td>Differentiable transforms, pipelines</td>
+      <td><span class="badge badge-amber">Export</span></td>
+      <td><span class="badge badge-blue">Medium</span></td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>Custom PyTorch models, GPU training</td>
+    </tr>
+    <tr>
+      <td><strong>senselab</strong></td>
+      <td>Python</td>
+      <td>Multi-backend unified features</td>
+      <td><span class="badge badge-amber">None</span></td>
+      <td><span class="badge badge-blue">Medium</span></td>
+      <td><span class="badge badge-blue">Moderate</span></td>
+      <td>Clinical speech analysis, research</td>
+    </tr>
+    <tr>
+      <td><strong>HuggingFace</strong></td>
+      <td>Python</td>
+      <td>Pre-trained model hosting &amp; inference</td>
+      <td><span class="badge badge-amber">Export</span></td>
+      <td><span class="badge badge-green">High</span></td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>Rapid inference, model sharing</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>iOS Compatibility Key</strong>: <span class="badge badge-green">Native</span> = compiles and runs directly on iOS. <span class="badge badge-amber">Export</span> = model can be exported to Core ML or ONNX for on-device inference. <span class="badge badge-amber">None</span> = Python-only, requires server-side deployment.</p>
+
+<hr>
+
+<!-- ===== Dataset Comparison ===== -->
+<h2 id="dataset-comparison">Dataset Comparison</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Dataset</th>
+      <th>Utterances</th>
+      <th>Hours</th>
+      <th>Speakers</th>
+      <th>Emotions</th>
+      <th>Language</th>
+      <th>Modalities</th>
+      <th>Type</th>
+      <th>License</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>IEMOCAP</strong></td>
+      <td>10,039</td>
+      <td>~12</td>
+      <td>10</td>
+      <td>9 (usually 4)</td>
+      <td>English</td>
+      <td>A, V, Mo, T</td>
+      <td>Acted + improv</td>
+      <td><span class="badge badge-amber">Restricted</span></td>
+    </tr>
+    <tr>
+      <td><strong>RAVDESS</strong></td>
+      <td>1,440</td>
+      <td>~1</td>
+      <td>24</td>
+      <td>8</td>
+      <td>English (NA)</td>
+      <td>A, V</td>
+      <td>Acted</td>
+      <td><span class="badge badge-green">CC BY-NC-SA</span></td>
+    </tr>
+    <tr>
+      <td><strong>MELD</strong></td>
+      <td>13,708</td>
+      <td>~10</td>
+      <td>Multi</td>
+      <td>7 + sentiment</td>
+      <td>English</td>
+      <td>A, V, T</td>
+      <td>TV dialogue</td>
+      <td><span class="badge badge-green">GPL-3.0</span></td>
+    </tr>
+    <tr>
+      <td><strong>CMU-MOSEI</strong></td>
+      <td>23,500+</td>
+      <td>65+</td>
+      <td>1,000+</td>
+      <td>6 + continuous</td>
+      <td>English</td>
+      <td>A, V, T</td>
+      <td>In-the-wild</td>
+      <td><span class="badge badge-blue">Research</span></td>
+    </tr>
+    <tr>
+      <td><strong>CREMA-D</strong></td>
+      <td>7,442</td>
+      <td>~6</td>
+      <td>91</td>
+      <td>6 x 4 intensity</td>
+      <td>English</td>
+      <td>A, V</td>
+      <td>Acted</td>
+      <td><span class="badge badge-green">Open</span></td>
+    </tr>
+    <tr>
+      <td><strong>EmoDB</strong></td>
+      <td>~535</td>
+      <td>&lt;1</td>
+      <td>10</td>
+      <td>7</td>
+      <td>German</td>
+      <td>A</td>
+      <td>Acted</td>
+      <td><span class="badge badge-green">CC0 (Public)</span></td>
+    </tr>
+    <tr>
+      <td><strong>SAVEE</strong></td>
+      <td>480</td>
+      <td>&lt;1</td>
+      <td>4</td>
+      <td>7</td>
+      <td>English (UK)</td>
+      <td>A, V</td>
+      <td>Acted</td>
+      <td><span class="badge badge-blue">Research</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>Modality Key</strong>: A = Audio, V = Video, Mo = Motion capture, T = Text transcription.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: System Architecture -->
+<!-- ============================================================ -->
+<h2 id="architecture">End-to-End Custom SER System Architecture</h2>
+
+<p>Combining the tools described above, here is a reference architecture for building a complete SER system from open-source components. This architecture supports both a server-side training pipeline and an on-device inference path for iOS.</p>
+
+<!-- DIAGRAM 5: End-to-End Architecture -->
+<div class="diagram-container">
+  <figure>
+    <div class="mermaid">
+graph TB
+    subgraph COLLECT["Data Collection &amp; Preparation"]
+        A1["Download Datasets<br/><i>IEMOCAP, RAVDESS,<br/>CREMA-D, EmoDB</i>"] --> A2["Preprocessing<br/><i>Resample to 16kHz<br/>Trim silence<br/>Normalize volume</i>"]
+        A2 --> A3["Split: Train / Val / Test<br/><i>Speaker-independent<br/>stratified by emotion</i>"]
+    end
+
+    subgraph FEATURES["Feature Extraction (Choose One Path)"]
+        direction TB
+        P1["<b>Path A: Handcrafted</b><br/>openSMILE eGeMAPSv02<br/><i>88 features per utterance</i>"]
+        P2["<b>Path B: Learned</b><br/>wav2vec2 / emotion2vec<br/><i>768-dim embeddings</i>"]
+        P3["<b>Path C: Spectral</b><br/>librosa mel spectrogram<br/><i>(128, T) 2D images</i>"]
+    end
+
+    subgraph TRAIN["Model Training"]
+        direction TB
+        M1["<b>Path A Classifier</b><br/>SVM / MLP / XGBoost<br/><i>scikit-learn</i>"]
+        M2["<b>Path B Fine-tuning</b><br/>SpeechBrain recipe<br/><i>Attentive pooling + linear</i>"]
+        M3["<b>Path C Deep Learning</b><br/>CNN / LSTM / Transformer<br/><i>PyTorch + TorchAudio</i>"]
+    end
+
+    subgraph DEPLOY["Deployment"]
+        direction TB
+        D1["<b>iOS On-Device</b><br/>openSMILE C++ +<br/>Core ML classifier"]
+        D2["<b>Server API</b><br/>FastAPI + HuggingFace<br/>model inference"]
+        D3["<b>Edge / Embedded</b><br/>ONNX Runtime<br/>TF Lite"]
+    end
+
+    A3 --> P1
+    A3 --> P2
+    A3 --> P3
+    P1 --> M1
+    P2 --> M2
+    P3 --> M3
+    M1 --> D1
+    M1 --> D2
+    M2 --> D2
+    M2 --> D3
+    M3 --> D2
+    M3 --> D3
+    M1 -->|"sklearn→CoreML"| D1
+    M2 -->|"PyTorch→ONNX→CoreML"| D1
+
+    style COLLECT fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#1E293B
+    style FEATURES fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E293B
+    style TRAIN fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#1E293B
+    style DEPLOY fill:#F3E8FF,stroke:#8B5CF6,stroke-width:2px,color:#1E293B
+    </div>
+  </figure>
+  <figcaption>
+    <strong>Diagram 5: End-to-End Open-Source SER System Architecture</strong>
+    <span>Three parallel paths from feature extraction through model training to deployment. Path A (handcrafted features) is simplest and best for iOS. Path B (learned representations) offers highest accuracy. Path C (spectral images) enables CNN-based approaches.</span>
+  </figcaption>
+</div>
+
+<div class="info-box ios-callout">
+  <div class="info-box-title">Recommended iOS Pipeline</div>
+  <p>For real-time emotion detection on iOS, the recommended approach combines <strong>Path A</strong> for feature extraction with a lightweight classifier:</p>
+  <ol>
+    <li><strong>Capture audio</strong> via <code>AVAudioEngine</code> (16kHz, mono PCM)</li>
+    <li><strong>Extract features</strong> using openSMILE C++ (compiled for iOS arm64) with eGeMAPSv02 configuration &mdash; yields 88 features per utterance</li>
+    <li><strong>Classify</strong> using a Core ML model (converted from a scikit-learn SVM or MLP trained on the 88 features)</li>
+    <li><strong>Result</strong>: Real-time emotion labels with sub-100ms latency, no network dependency</li>
+  </ol>
+  <p>For higher accuracy at the cost of model size, export a fine-tuned wav2vec2 model to Core ML (the base model is ~360MB, which may require distillation for mobile).</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: Getting Started -->
+<!-- ============================================================ -->
+<h2 id="getting-started">Getting Started Guide</h2>
+
+<p>Here are three concrete approaches for building your first SER system, ordered from simplest to most powerful.</p>
+
+<h3>Approach A: Traditional Features + ML Classifier</h3>
+<p>The fastest path to a working system. Use openSMILE or librosa for feature extraction and scikit-learn for classification. This approach produces lightweight models that can run on mobile devices.</p>
+
+<div class="steps">
+  <div class="step">
+    <strong>Install dependencies</strong>
+    <p><code>pip install opensmile librosa scikit-learn pandas</code></p>
+  </div>
+  <div class="step">
+    <strong>Download a dataset</strong>
+    <p>Start with RAVDESS (open access, 1,440 utterances, 8 emotions). Download from Kaggle or Zenodo.</p>
+  </div>
+  <div class="step">
+    <strong>Extract features</strong>
+    <p>Use openSMILE eGeMAPSv02 (88 features) or librosa MFCCs (13-40 coefficients). Aggregate frame-level features into utterance-level statistics.</p>
+  </div>
+  <div class="step">
+    <strong>Train a classifier</strong>
+    <p>Start with SVM (RBF kernel) or MLP. Use 5-fold cross-validation with speaker-independent splits. Expect ~60-70% accuracy on RAVDESS with 8 emotions.</p>
+  </div>
+  <div class="step">
+    <strong>Evaluate</strong>
+    <p>Report unweighted accuracy (UA), weighted accuracy (WA), and per-class F1 scores. Confusion matrices reveal which emotions are hardest to distinguish.</p>
+  </div>
+</div>
+
+<div class="code-block">
+  <span class="code-label">Python</span>
+  <pre><span class="code-keyword">import</span> opensmile
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">from</span> sklearn.svm <span class="code-keyword">import</span> SVC
+<span class="code-keyword">from</span> sklearn.model_selection <span class="code-keyword">import</span> cross_val_score
+<span class="code-keyword">from</span> pathlib <span class="code-keyword">import</span> Path
+
+<span class="code-comment"># 1. Extract features from all audio files</span>
+smile = opensmile.Smile(
+    feature_set=opensmile.FeatureSet.eGeMAPSv02,
+    feature_level=opensmile.FeatureLevel.Functionals,
+)
+
+features_list = []
+labels = []
+<span class="code-keyword">for</span> wav_path <span class="code-keyword">in</span> Path(<span class="code-string">"ravdess/"</span>).glob(<span class="code-string">"**/*.wav"</span>):
+    feat = smile.process_file(str(wav_path))
+    features_list.append(feat)
+    <span class="code-comment"># Parse emotion label from RAVDESS filename</span>
+    emotion_code = wav_path.stem.split(<span class="code-string">"-"</span>)[2]
+    labels.append(emotion_code)
+
+X = pd.concat(features_list).values
+y = labels
+
+<span class="code-comment"># 2. Train and evaluate</span>
+clf = SVC(kernel=<span class="code-string">"rbf"</span>, C=<span class="code-string">1.0</span>, gamma=<span class="code-string">"scale"</span>)
+scores = cross_val_score(clf, X, y, cv=<span class="code-string">5</span>, scoring=<span class="code-string">"accuracy"</span>)
+print(f<span class="code-string">"Accuracy: {scores.mean():.2f} +/- {scores.std():.2f}"</span>)</pre>
+</div>
+
+<h3>Approach B: Pre-trained Model Inference</h3>
+<p>The fastest path to high accuracy. Use a pre-trained model from HuggingFace and run inference without any training.</p>
+
+<div class="code-block">
+  <span class="code-label">Python</span>
+  <pre><span class="code-comment"># Using SpeechBrain's pre-trained wav2vec2 model</span>
+<span class="code-keyword">from</span> speechbrain.pretrained.interfaces <span class="code-keyword">import</span> foreign_class
+
+classifier = foreign_class(
+    source=<span class="code-string">"speechbrain/emotion-recognition-wav2vec2-IEMOCAP"</span>,
+    pymodule_file=<span class="code-string">"custom_interface.py"</span>,
+    classname=<span class="code-string">"CustomEncoderWav2vec2Classifier"</span>,
+)
+
+out_prob, score, index, text_lab = classifier.classify_file(<span class="code-string">"test.wav"</span>)
+print(f<span class="code-string">"Predicted emotion: {text_lab}"</span>)
+print(f<span class="code-string">"Confidence: {score:.3f}"</span>)</pre>
+</div>
+
+<h3>Approach C: Fine-tune Your Own Model</h3>
+<p>The path to maximum accuracy. Fine-tune a foundation model on your target dataset using SpeechBrain.</p>
+
+<div class="code-block">
+  <span class="code-label">Bash</span>
+  <pre><span class="code-comment"># Clone SpeechBrain</span>
+git clone https://github.com/speechbrain/speechbrain
+cd speechbrain
+
+<span class="code-comment"># Install</span>
+pip install -e .
+
+<span class="code-comment"># Navigate to IEMOCAP emotion recognition recipe</span>
+cd recipes/IEMOCAP/emotion_recognition
+
+<span class="code-comment"># Train (requires IEMOCAP data)</span>
+python train_with_wav2vec2.py hparams/train_with_wav2vec2.yaml \
+    --data_folder=/path/to/IEMOCAP \
+    --output_folder=results/my_model
+
+<span class="code-comment"># The trained model will be saved in results/my_model/</span>
+<span class="code-comment"># Upload to HuggingFace Hub for sharing</span></pre>
+</div>
+
+<div class="takeaways">
+  <strong>Which Approach Should You Choose?</strong>
+  <ul>
+    <li><strong>Approach A</strong> if you need a small, interpretable model that runs on mobile/edge devices</li>
+    <li><strong>Approach B</strong> if you need results quickly and your audio is similar to the training data (English, acted)</li>
+    <li><strong>Approach C</strong> if you have domain-specific data and need maximum accuracy for a particular use case</li>
+  </ul>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION: Glossary -->
+<!-- ============================================================ -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr><th>Term</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>SER</strong></td><td>Speech Emotion Recognition &mdash; the task of identifying emotions from speech audio signals.</td></tr>
+    <tr><td><strong>LLD</strong></td><td>Low-Level Descriptor &mdash; frame-level acoustic features (F0, energy, spectral shape) computed on short windowed segments.</td></tr>
+    <tr><td><strong>Functionals</strong></td><td>Statistical summaries (mean, standard deviation, percentiles, regression coefficients) computed over LLDs across an entire utterance.</td></tr>
+    <tr><td><strong>MFCC</strong></td><td>Mel-Frequency Cepstral Coefficients &mdash; features that represent the short-term power spectrum on a perceptually motivated mel scale.</td></tr>
+    <tr><td><strong>Mel Spectrogram</strong></td><td>A time-frequency representation where frequency bins are spaced according to the mel scale, mimicking human auditory perception.</td></tr>
+    <tr><td><strong>eGeMAPSv02</strong></td><td>Extended Geneva Minimalistic Acoustic Parameter Set v02 &mdash; a standardized set of 88 acoustic features designed for affective computing.</td></tr>
+    <tr><td><strong>ComParE</strong></td><td>Computational Paralinguistics Challenge feature set &mdash; a comprehensive set of 6,373 features used as the baseline in INTERSPEECH challenges.</td></tr>
+    <tr><td><strong>wav2vec2</strong></td><td>A self-supervised speech representation model from Meta AI, pre-trained on unlabeled audio to learn general speech representations.</td></tr>
+    <tr><td><strong>emotion2vec</strong></td><td>A self-supervised model pre-trained specifically on emotional speech data, yielding universal emotion representations.</td></tr>
+    <tr><td><strong>Attentive Pooling</strong></td><td>A mechanism that learns to weight different frames differently when aggregating frame-level features into an utterance-level representation.</td></tr>
+    <tr><td><strong>Core ML</strong></td><td>Apple's framework for deploying machine learning models on iOS, macOS, watchOS, and tvOS devices.</td></tr>
+    <tr><td><strong>UA (Unweighted Accuracy)</strong></td><td>The average of per-class accuracy scores, treating all classes equally regardless of their frequency in the dataset.</td></tr>
+    <tr><td><strong>Arousal</strong></td><td>A continuous dimension of emotion representing the level of activation or excitement (calm to excited).</td></tr>
+    <tr><td><strong>Valence</strong></td><td>A continuous dimension of emotion representing positivity or negativity (unpleasant to pleasant).</td></tr>
+    <tr><td><strong>Dominance</strong></td><td>A continuous dimension of emotion representing the degree of control or power felt by the speaker.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- Category Navigation -->
+<!-- ============================================================ -->
+<nav class="category-nav">
+  <a href="../commercial-api-services/index.html" class="prev-category">&larr; Commercial API Services</a>
+  <a href="../multimodal-fusion-llm/index.html" class="next-category">Multimodal Fusion &amp; LLM Integration &rarr;</a>
+</nav>
+
+</div><!-- /.content -->
+</div><!-- /.main -->
+</div><!-- /.layout -->
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<!-- Dark Mode Toggle -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <span id="themeIcon">&#9790;</span> <span id="themeLabel">Dark</span>
+</button>
+
+<!-- Mermaid.js -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+// Initialize Mermaid
+function initMermaid() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'default',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis',
+    },
+    themeVariables: isDark ? {
+      primaryColor: '#312E81',
+      primaryTextColor: '#E2E8F0',
+      primaryBorderColor: '#818CF8',
+      lineColor: '#64748B',
+      secondaryColor: '#1E293B',
+      tertiaryColor: '#1E293B',
+      background: '#1E293B',
+      mainBkg: '#1E293B',
+      nodeBorder: '#475569',
+      clusterBkg: '#0F172A',
+      clusterBorder: '#475569',
+      titleColor: '#F1F5F9',
+      edgeLabelBackground: '#1E293B',
+    } : {
+      primaryColor: '#EEF2FF',
+      primaryTextColor: '#1E293B',
+      primaryBorderColor: '#6366F1',
+      lineColor: '#94A3B8',
+      secondaryColor: '#F8FAFC',
+      tertiaryColor: '#F8FAFC',
+    },
+  });
+
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const graphDef = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', graphDef);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = graphDef;
+  });
+  mermaid.run();
+}
+
+// Theme Toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeUI(next);
+  initMermaid();
+}
+
+function updateThemeUI(theme) {
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  if (theme === 'dark') {
+    icon.textContent = '\u2600';
+    label.textContent = 'Light';
+  } else {
+    icon.textContent = '\u263E';
+    label.textContent = 'Dark';
+  }
+}
+
+// Sidebar Toggle (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
+// Active sidebar link tracking
+function updateActiveSidebarLink() {
+  const links = document.querySelectorAll('.sidebar-link');
+  const sections = [];
+  links.forEach(link => {
+    const id = link.getAttribute('href')?.replace('#', '');
+    if (id) {
+      const section = document.getElementById(id);
+      if (section) sections.push({ link, section });
+    }
+  });
+
+  let current = sections[0]?.link;
+  const scrollPos = window.scrollY + 120;
+
+  for (const { link, section } of sections) {
+    if (section.offsetTop <= scrollPos) {
+      current = link;
+    }
+  }
+
+  links.forEach(l => l.classList.remove('active'));
+  if (current) current.classList.add('active');
+}
+
+// Back to Top visibility
+function updateBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (window.scrollY > 400) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+}
+
+// Close sidebar on link click (mobile)
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('open');
+    }
+  });
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  // Load saved theme
+  const saved = localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeUI(saved);
+
+  // Initialize Mermaid
+  initMermaid();
+
+  // Scroll listeners
+  window.addEventListener('scroll', () => {
+    updateActiveSidebarLink();
+    updateBackToTop();
+  }, { passive: true });
+
+  updateActiveSidebarLink();
+});
+</script>
+</body>
+</html>

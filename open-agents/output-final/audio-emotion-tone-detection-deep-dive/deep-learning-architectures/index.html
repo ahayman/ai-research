@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning Architectures for Speech Emotion Recognition</title>
+<meta name="description" content="Comprehensive technical explainer of deep learning architectures for speech emotion recognition: CNNs, LSTMs, Transformers, hybrid models, attention mechanisms, training strategies, and mobile deployment for Core ML on iOS.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #E85D26;
+  --color-primary-light: #F09060;
+  --color-primary-dark: #C44A1A;
+  --color-primary-bg: #FFF5F0;
+  --color-accent: #2563EB;
+  --color-accent-light: #60A5FA;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #E85D26;
+  --color-link-hover: #C44A1A;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #E85D26;
+  --color-takeaway-bg: #FFF5F0;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 290px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #F09060;
+  --color-primary-light: #F5B090;
+  --color-primary-dark: #E85D26;
+  --color-primary-bg: #2A1510;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #F09060;
+  --color-link-hover: #F5B090;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #F09060;
+  --color-takeaway-bg: #2A1510;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A5F;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #C44A1A 0%, #E85D26 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .sidebar-header {
+  background: linear-gradient(135deg, #8B3310 0%, #C44A1A 100%);
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+
+.sidebar-back:hover {
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-controls {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+h1 .subtitle {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+  position: relative;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2:first-child { margin-top: 0; }
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.75rem;
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
+li > ul, li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] code {
+  color: var(--color-primary-light);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: var(--color-table-header);
+  font-weight: 600;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) td {
+  background: var(--color-table-stripe);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* ===== Takeaway Boxes ===== */
+.takeaway {
+  border-left: 4px solid var(--color-takeaway-border);
+  background: var(--color-takeaway-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+}
+
+.takeaway-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+}
+
+.takeaway p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Info/Warning/Tip boxes ===== */
+.callout {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+  font-size: 0.92rem;
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+.callout-info {
+  background: var(--color-info-bg);
+  border-color: var(--color-info);
+}
+
+.callout-warning {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning);
+}
+
+.callout-success {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+}
+
+.callout-danger {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+.callout-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+.callout-info .callout-label { color: var(--color-info); }
+.callout-warning .callout-label { color: var(--color-warning); }
+.callout-success .callout-label { color: var(--color-success); }
+.callout-danger .callout-label { color: var(--color-danger); }
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1.5px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+  font-weight: 500;
+}
+
+.glossary-term::after {
+  content: attr(data-definition);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.4;
+  width: max-content;
+  max-width: 300px;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.glossary-term:hover::after {
+  opacity: 1;
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+
+.category-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all var(--transition);
+  max-width: 48%;
+}
+
+.category-nav a:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.prev-category { margin-right: auto; }
+.next-category { margin-left: auto; text-align: right; }
+
+/* ===== Architecture Cards ===== */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.arch-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all var(--transition);
+}
+
+.arch-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.arch-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.arch-card-icon {
+  font-size: 1.5rem;
+}
+
+.arch-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-heading);
+}
+
+.arch-card p {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.arch-card .stat {
+  display: inline-block;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-right: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+/* ===== Pipeline Steps ===== */
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.pipeline-step {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.pipeline-step.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.pipeline-arrow {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ===== Comparison Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-high { background: var(--color-success-bg); color: var(--color-success); }
+.badge-medium { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge-low { background: var(--color-danger-bg); color: var(--color-danger); }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 3.5rem 1.25rem 3rem;
+  }
+
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+
+  .category-nav {
+    flex-direction: column;
+  }
+
+  .category-nav a {
+    max-width: 100%;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .arch-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 3.5rem 1rem 2.5rem;
+  }
+
+  .table-wrapper {
+    font-size: 0.82rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.65rem;
+  }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .menu-toggle, .theme-toggle, .category-nav { display: none; }
+  .main { margin-left: 0; }
+  .content { max-width: 100%; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="layout">
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Deep Learning Architectures</div>
+    <div class="sidebar-subtitle">Speech Emotion Recognition</div>
+  </div>
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#introduction" class="sidebar-link">Introduction</a>
+    <a href="#landscape" class="sidebar-link">Architecture Landscape</a>
+
+    <div class="sidebar-nav-section">Core Architectures</div>
+    <a href="#cnn" class="sidebar-link">CNNs on Spectrograms</a>
+    <a href="#cnn-1d-vs-2d" class="sidebar-link sub">1D vs 2D Convolutions</a>
+    <a href="#cnn-design" class="sidebar-link sub">Architecture Designs</a>
+    <a href="#rnn" class="sidebar-link">RNNs, LSTMs &amp; GRUs</a>
+    <a href="#rnn-variants" class="sidebar-link sub">Variants &amp; Bidirectional</a>
+    <a href="#attention" class="sidebar-link">Attention Mechanisms</a>
+    <a href="#transformers" class="sidebar-link">Transformer Architectures</a>
+    <a href="#ast" class="sidebar-link sub">Audio Spectrogram Transformer</a>
+
+    <div class="sidebar-nav-section">Advanced</div>
+    <a href="#hybrid" class="sidebar-link">Hybrid Architectures</a>
+    <a href="#cnn-lstm" class="sidebar-link sub">CNN-LSTM</a>
+    <a href="#cnn-transformer" class="sidebar-link sub">CNN-Transformer</a>
+    <a href="#e2e-vs-features" class="sidebar-link">End-to-End vs Features</a>
+    <a href="#raw-waveform" class="sidebar-link sub">Raw Waveform Models</a>
+
+    <div class="sidebar-nav-section">Training</div>
+    <a href="#augmentation" class="sidebar-link">Data Augmentation</a>
+    <a href="#loss-functions" class="sidebar-link">Loss Functions</a>
+    <a href="#training-strategies" class="sidebar-link">Training Strategies</a>
+
+    <div class="sidebar-nav-section">Benchmarks &amp; Deploy</div>
+    <a href="#benchmarks" class="sidebar-link">Benchmark Results</a>
+    <a href="#comparison" class="sidebar-link">Architecture Comparison</a>
+    <a href="#deployment" class="sidebar-link">Mobile &amp; Core ML</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" class="back-to-hub" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;font-weight:600;color:var(--color-primary);margin-bottom:1.5rem;">&larr; Back to Audio Emotion &amp; Tone Detection Deep Dive</a>
+
+<h1>Deep Learning Architectures for Speech Emotion Recognition
+  <span class="subtitle">Category 3 of 8 &mdash; Neural networks that superseded traditional ML for emotion classification</span>
+</h1>
+
+<p>Deep learning has fundamentally transformed speech emotion recognition (SER) over the past decade, moving from hand-crafted feature pipelines to architectures that can learn emotional representations directly from audio signals. This explainer covers every major architecture family&mdash;from convolutional networks on spectrograms to attention-based transformers&mdash;with a practical focus on models suitable for <strong>Core ML conversion</strong> and <strong>real-time iOS deployment</strong>.</p>
+
+<!-- ===== INTRODUCTION ===== -->
+<h2 id="introduction">Why Deep Learning for Emotion?</h2>
+
+<p>Traditional machine learning for SER relied on expert-designed features (MFCCs, pitch contours, jitter, shimmer) fed into classifiers like SVMs or Random Forests. While effective, these pipelines had a ceiling: the features were designed for <em>speech</em> in general, not for <em>emotion</em> specifically. Deep learning breaks through this ceiling by learning task-specific representations at multiple levels of abstraction.</p>
+
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-icon">&#127912;</div>
+      <div class="arch-card-title">CNNs</div>
+    </div>
+    <p>Treat spectrograms as images. Excel at extracting spatial patterns in frequency-time space.</p>
+    <span class="stat">Spatial</span>
+    <span class="stat">Local patterns</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-icon">&#128260;</div>
+      <div class="arch-card-title">RNN / LSTM / GRU</div>
+    </div>
+    <p>Process sequences frame-by-frame. Capture how emotions evolve over an utterance.</p>
+    <span class="stat">Temporal</span>
+    <span class="stat">Sequential</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-icon">&#128269;</div>
+      <div class="arch-card-title">Attention</div>
+    </div>
+    <p>Weigh the importance of every time step. Focus on emotionally salient segments.</p>
+    <span class="stat">Selective</span>
+    <span class="stat">Global context</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-icon">&#9889;</div>
+      <div class="arch-card-title">Transformers</div>
+    </div>
+    <p>Purely attention-based. Model long-range dependencies without recurrence.</p>
+    <span class="stat">Parallel</span>
+    <span class="stat">Scalable</span>
+  </div>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Key Insight</div>
+  <p>Modern state-of-the-art systems rarely use a single architecture in isolation. The best results come from <strong>hybrid models</strong> that combine spatial extraction (CNN) with temporal modeling (LSTM) and selective focusing (attention), or from <strong>pretrained foundation models</strong> (wav2vec 2.0, HuBERT) fine-tuned for emotion.</p>
+</div>
+
+<!-- ===== LANDSCAPE ===== -->
+<h2 id="landscape">Architecture Landscape Overview</h2>
+
+<div class="diagram-container">
+  <div class="diagram-title">Evolution of Deep Learning Architectures for SER</div>
+  <div class="mermaid">
+graph LR
+    A["Raw Audio<br/>Waveform"] --> B["Feature<br/>Extraction"]
+    A --> C["End-to-End<br/>Models"]
+
+    B --> D["Spectrograms<br/>(Mel, MFCC)"]
+    D --> E["CNN<br/>(2D Conv)"]
+    D --> F["ViT / AST<br/>(Patches)"]
+
+    B --> G["1D Features<br/>(MFCC vectors)"]
+    G --> H["CNN-1D"]
+    G --> I["LSTM / GRU"]
+
+    C --> J["SincNet<br/>(Learnable Filters)"]
+    C --> K["wav2vec 2.0<br/>(Self-Supervised)"]
+
+    E --> L["Hybrid<br/>CNN-LSTM"]
+    I --> L
+    F --> M["Transformer<br/>+ Attention"]
+    H --> L
+
+    L --> N["Emotion<br/>Classification"]
+    M --> N
+    J --> N
+    K --> N
+
+    style A fill:#fee2e2,stroke:#dc2626,color:#333
+    style N fill:#d1fae5,stroke:#059669,color:#333
+    style L fill:#dbeafe,stroke:#2563eb,color:#333
+    style M fill:#dbeafe,stroke:#2563eb,color:#333
+    style K fill:#fef3c7,stroke:#d97706,color:#333
+  </div>
+</div>
+
+<!-- ===== CNN SECTION ===== -->
+<h2 id="cnn">Convolutional Neural Networks on Spectrograms</h2>
+
+<p>CNNs were the first deep learning architecture to achieve breakthrough results in SER by treating <span class="glossary-term" data-definition="A visual representation of the spectrum of frequencies in a signal as they vary with time. Mel spectrograms use a perceptually motivated frequency scale.">mel-spectrograms</span> as images. The key insight: emotional information is encoded in characteristic frequency-time patterns that convolutions can detect automatically.</p>
+
+<h3 id="cnn-1d-vs-2d">1D vs 2D Convolutions</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>CNN-1D</th>
+      <th>CNN-2D</th>
+      <th>CNN-3D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Input</strong></td>
+      <td>1D feature vectors (MFCCs per frame)</td>
+      <td>2D spectrograms (time x frequency)</td>
+      <td>3D volumes (multi-channel spectrograms)</td>
+    </tr>
+    <tr>
+      <td><strong>What it captures</strong></td>
+      <td>Temporal patterns across feature frames</td>
+      <td>Joint time-frequency patterns</td>
+      <td>Cross-channel + time-frequency patterns</td>
+    </tr>
+    <tr>
+      <td><strong>Typical layers</strong></td>
+      <td>3 conv layers + MaxPool1D + Dropout</td>
+      <td>4 conv layers + MaxPool2D + Dropout</td>
+      <td>3-4 conv layers + MaxPool3D</td>
+    </tr>
+    <tr>
+      <td><strong>Parameters</strong></td>
+      <td><span class="badge badge-low">Low (~50K-200K)</span></td>
+      <td><span class="badge badge-medium">Medium (~500K-2M)</span></td>
+      <td><span class="badge badge-high">High (~2M-10M)</span></td>
+    </tr>
+    <tr>
+      <td><strong>Best for</strong></td>
+      <td>Low-latency, edge devices</td>
+      <td>General-purpose SER</td>
+      <td>Multi-view or multimodal inputs</td>
+    </tr>
+    <tr>
+      <td><strong>Core ML suitability</strong></td>
+      <td><span class="badge badge-high">Excellent</span></td>
+      <td><span class="badge badge-high">Excellent</span></td>
+      <td><span class="badge badge-medium">Good</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="diagram-container">
+  <div class="diagram-title">CNN Architecture for Spectrogram-Based Emotion Recognition</div>
+  <div class="mermaid">
+graph TB
+    subgraph Input["Input Processing"]
+        A["Raw Audio<br/>16kHz"] --> B["Mel Spectrogram<br/>128 bands x T frames"]
+        B --> C["Normalize &<br/>Resize to 64x64"]
+    end
+
+    subgraph CNN2D["2D CNN Feature Extractor"]
+        C --> D["Conv2D 32 filters<br/>3x3, ReLU"]
+        D --> E["MaxPool2D 2x2<br/>+ BatchNorm"]
+        E --> F["Conv2D 64 filters<br/>3x3, ReLU"]
+        F --> G["MaxPool2D 2x2<br/>+ Dropout 0.25"]
+        G --> H["Conv2D 128 filters<br/>3x3, ReLU"]
+        H --> I["MaxPool2D 2x2<br/>+ BatchNorm"]
+        I --> J["Conv2D 256 filters<br/>3x3, ReLU"]
+        J --> K["Global Avg Pool<br/>+ Dropout 0.5"]
+    end
+
+    subgraph Classifier["Classification Head"]
+        K --> L["Dense 256<br/>ReLU"]
+        L --> M["Dense 128<br/>ReLU"]
+        M --> N["Dense 7<br/>Softmax"]
+    end
+
+    N --> O["Emotion Label:<br/>angry, happy, sad,<br/>neutral, fear,<br/>disgust, surprise"]
+
+    style Input fill:#fff5f0,stroke:#e85d26,color:#333
+    style CNN2D fill:#dbeafe,stroke:#2563eb,color:#333
+    style Classifier fill:#d1fae5,stroke:#059669,color:#333
+    style O fill:#fef3c7,stroke:#d97706,color:#333
+  </div>
+</div>
+
+<h3 id="cnn-design">Architecture Design Patterns</h3>
+
+<p>Several proven CNN design patterns have been adapted from computer vision to SER:</p>
+
+<ul>
+  <li><strong>VGG-style</strong>: Deep stacks of small 3x3 filters. Simple, effective, but parameter-heavy. Used in early SER work.</li>
+  <li><strong>ResNet-style</strong>: Skip connections prevent vanishing gradients in deeper networks. ResNet-50 commonly used as a pretrained feature extractor.</li>
+  <li><strong>Xception</strong>: Depthwise separable convolutions reduce parameters while maintaining performance. Achieves <strong>95.46% weighted accuracy on RAVDESS</strong> when pretrained and fine-tuned.</li>
+  <li><strong>EfficientNet</strong>: Compound scaling of depth, width, and resolution. Good accuracy-to-parameter ratio for mobile deployment.</li>
+  <li><strong>Combined CNN-1D + CNN-2D</strong> (2024): Parallel paths processing spectral features (1D) and spectrogram images (2D), concatenated before an MLP head. Leverages both representations simultaneously.</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-label">Core ML Note</div>
+  <p>Standard 2D CNNs convert seamlessly to Core ML via <code>coremltools</code>. For iOS deployment, prefer architectures using standard operations (Conv2D, BatchNorm, ReLU, MaxPool) and avoid custom layers. EfficientNet and MobileNet variants are specifically optimized for the Apple Neural Engine.</p>
+</div>
+
+<!-- ===== RNN SECTION ===== -->
+<h2 id="rnn">Recurrent Neural Networks: LSTMs &amp; GRUs</h2>
+
+<p>While CNNs excel at extracting local spatial patterns, they struggle to capture how emotions <em>unfold</em> over time. A speaker's voice might start calm and gradually intensify in anger, or waver between sadness and neutral. <span class="glossary-term" data-definition="A class of neural networks where connections between nodes form a directed cycle, allowing the network to maintain a hidden state that captures information from previous time steps.">Recurrent neural networks</span> (RNNs) are designed specifically for this sequential modeling.</p>
+
+<h3 id="rnn-variants">Variants and Their Capabilities</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Architecture</th>
+      <th>Gates</th>
+      <th>Parameters</th>
+      <th>Strength</th>
+      <th>Weakness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Vanilla RNN</strong></td>
+      <td>None (simple tanh)</td>
+      <td><span class="badge badge-low">Fewest</span></td>
+      <td>Simple, fast</td>
+      <td>Vanishing gradients; cannot learn long dependencies</td>
+    </tr>
+    <tr>
+      <td><strong>LSTM</strong></td>
+      <td>Forget, Input, Output</td>
+      <td><span class="badge badge-medium">4x RNN</span></td>
+      <td>Long-term memory; standard for sequential emotion</td>
+      <td>Slower training; more parameters</td>
+    </tr>
+    <tr>
+      <td><strong>GRU</strong></td>
+      <td>Update, Reset</td>
+      <td><span class="badge badge-medium">3x RNN</span></td>
+      <td>Similar to LSTM with fewer parameters</td>
+      <td>Slightly less expressive on very long sequences</td>
+    </tr>
+    <tr>
+      <td><strong>BiLSTM</strong></td>
+      <td>Forget, Input, Output (x2)</td>
+      <td><span class="badge badge-high">8x RNN</span></td>
+      <td>Captures both past and future context</td>
+      <td>Cannot run in true real-time (needs full utterance)</td>
+    </tr>
+    <tr>
+      <td><strong>BiGRU</strong></td>
+      <td>Update, Reset (x2)</td>
+      <td><span class="badge badge-medium">6x RNN</span></td>
+      <td>Bidirectional with fewer params than BiLSTM</td>
+      <td>Same real-time limitation as BiLSTM</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="diagram-container">
+  <div class="diagram-title">LSTM / GRU Temporal Emotion Processing Pipeline</div>
+  <div class="mermaid">
+graph LR
+    subgraph Preprocessing["Feature Extraction"]
+        A["Audio Stream"] --> B["Frame Segmentation<br/>25ms windows,<br/>10ms hop"]
+        B --> C["Extract MFCCs<br/>per frame<br/>(20 coefficients)"]
+    end
+
+    subgraph Recurrent["Bidirectional LSTM Stack"]
+        C --> D["BiLSTM Layer 1<br/>128 units"]
+        D --> E["Dropout 0.3"]
+        E --> F["BiLSTM Layer 2<br/>128 units"]
+        F --> G["Dropout 0.3"]
+        G --> H["BiLSTM Layer 3<br/>64 units"]
+    end
+
+    subgraph Attention["Temporal Attention"]
+        H --> I["Attention Weights<br/>per time step"]
+        I --> J["Weighted Sum<br/>(Context Vector)"]
+    end
+
+    subgraph Output["Classification"]
+        J --> K["Dense 128, ReLU"]
+        K --> L["Dense 7, Softmax"]
+        L --> M["Emotion"]
+    end
+
+    style Preprocessing fill:#fff5f0,stroke:#e85d26,color:#333
+    style Recurrent fill:#dbeafe,stroke:#2563eb,color:#333
+    style Attention fill:#fef3c7,stroke:#d97706,color:#333
+    style Output fill:#d1fae5,stroke:#059669,color:#333
+  </div>
+</div>
+
+<p>A typical SER LSTM pipeline segments audio into overlapping frames (25ms windows with 10ms hop), extracts features per frame, then feeds the sequence to stacked LSTM layers. The final hidden state (or an attention-weighted combination of all states) feeds a classification head.</p>
+
+<div class="takeaway">
+  <div class="takeaway-title">Performance Highlight</div>
+  <p>An ensemble combining CNN-LSTM and CNN-GRU achieved <strong>98.69% accuracy</strong> with an SVM meta-learner on benchmark datasets (2024). However, single-model LSTM baselines typically reach 75-85% on challenging datasets like IEMOCAP, making them a strong but not sufficient standalone architecture.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-label">Real-Time Constraint</div>
+  <p><strong>Bidirectional</strong> models (BiLSTM, BiGRU) require the complete utterance before producing output, adding latency. For true real-time iOS applications, prefer <strong>unidirectional</strong> LSTMs or streaming transformer architectures. Core ML supports LSTM layers natively, but bidirectional variants need the full sequence at inference time.</p>
+</div>
+
+<!-- ===== ATTENTION SECTION ===== -->
+<h2 id="attention">Attention Mechanisms for Speech Emotion</h2>
+
+<p>Not every frame of speech is equally emotional. A 3-second utterance might contain one intensely expressive syllable surrounded by neutral filler. <span class="glossary-term" data-definition="A mechanism that computes a weighted combination of input elements, allowing the model to focus on the most relevant parts of the input for a given task.">Attention mechanisms</span> allow models to learn <em>where</em> to focus, dramatically improving emotion recognition on longer utterances.</p>
+
+<h3>Types of Attention in SER</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Attention Type</th>
+      <th>Mechanism</th>
+      <th>SER Application</th>
+      <th>Computational Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Temporal Attention</strong></td>
+      <td>Learns weights over time steps; focuses on key frames</td>
+      <td>Post-LSTM: weight which time steps matter most for emotion</td>
+      <td><span class="badge badge-low">Low</span></td>
+    </tr>
+    <tr>
+      <td><strong>Channel Attention (SE)</strong></td>
+      <td>Squeeze-and-Excitation: recalibrates feature channel importance</td>
+      <td>Post-CNN: emphasize frequency bands carrying emotional info</td>
+      <td><span class="badge badge-low">Low</span></td>
+    </tr>
+    <tr>
+      <td><strong>Self-Attention</strong></td>
+      <td>Each position attends to all other positions via Q/K/V projections</td>
+      <td>Full-utterance modeling without recurrence (Transformer core)</td>
+      <td><span class="badge badge-high">O(n&sup2;)</span></td>
+    </tr>
+    <tr>
+      <td><strong>Multi-Head Attention</strong></td>
+      <td>Parallel self-attention with different learned projections</td>
+      <td>Simultaneously attend to pitch, energy, and rhythm patterns</td>
+      <td><span class="badge badge-high">O(n&sup2; &times; h)</span></td>
+    </tr>
+    <tr>
+      <td><strong>Cross-Attention</strong></td>
+      <td>Query from one modality, keys/values from another</td>
+      <td>Multimodal: align audio emotion cues with text semantics</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Local Attention</strong></td>
+      <td>Attention restricted to a local window around each position</td>
+      <td>Phoneme-level emotion cues within a sliding window</td>
+      <td><span class="badge badge-low">O(n &times; w)</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="diagram-container">
+  <div class="diagram-title">Attention Mechanism for Speech Emotion - Self-Attention Detail</div>
+  <div class="mermaid">
+graph TB
+    subgraph Input["Input Sequence (T frames)"]
+        I1["Frame 1<br/>(neutral)"]
+        I2["Frame 2<br/>(neutral)"]
+        I3["Frame 3<br/>(ANGRY peak)"]
+        I4["Frame 4<br/>(transition)"]
+        I5["Frame 5<br/>(neutral)"]
+    end
+
+    subgraph QKV["Query-Key-Value Projections"]
+        I1 --> Q["Queries (Q)<br/>W_Q * X"]
+        I2 --> Q
+        I3 --> Q
+        I4 --> Q
+        I5 --> Q
+
+        I1 --> K["Keys (K)<br/>W_K * X"]
+        I2 --> K
+        I3 --> K
+        I4 --> K
+        I5 --> K
+
+        I1 --> V["Values (V)<br/>W_V * X"]
+        I2 --> V
+        I3 --> V
+        I4 --> V
+        I5 --> V
+    end
+
+    subgraph Compute["Attention Computation"]
+        Q --> S["Score = Q * K^T<br/>/ sqrt(d_k)"]
+        K --> S
+        S --> W["Softmax Weights<br/>[0.05, 0.05, 0.70, 0.15, 0.05]"]
+        W --> O["Output = W * V<br/>(Weighted Sum)"]
+        V --> O
+    end
+
+    O --> R["Context Vector<br/>Emphasizes Frame 3"]
+
+    style Input fill:#fff5f0,stroke:#e85d26,color:#333
+    style QKV fill:#dbeafe,stroke:#2563eb,color:#333
+    style Compute fill:#fef3c7,stroke:#d97706,color:#333
+    style R fill:#d1fae5,stroke:#059669,color:#333
+  </div>
+</div>
+
+<p>The diagram illustrates how self-attention naturally assigns high weight (0.70) to the emotionally salient Frame 3 (angry peak) while assigning low weights to neutral frames. This behavior emerges from training&mdash;the model learns which acoustic patterns correlate with emotional content and allocates attention accordingly.</p>
+
+<div class="callout callout-success">
+  <div class="callout-label">Practical Impact</div>
+  <p>Adding a single temporal attention layer after an LSTM stack improved accuracy on the RAVDESS dataset to <strong>84%</strong>, outperforming equivalent models without attention. The attention weights also provide <strong>interpretability</strong>&mdash;you can visualize exactly which parts of the speech the model considers emotionally relevant.</p>
+</div>
+
+<!-- ===== TRANSFORMER SECTION ===== -->
+<h2 id="transformers">Transformer Architectures for Audio</h2>
+
+<p>Transformers have become the dominant architecture in NLP, and their success has rapidly transferred to audio. By replacing recurrence with <span class="glossary-term" data-definition="A technique where each element of a sequence computes attention weights over all other elements, enabling direct modeling of relationships between any two positions regardless of distance.">self-attention</span>, transformers enable fully parallel processing and excel at capturing long-range dependencies.</p>
+
+<h3 id="ast">Audio Spectrogram Transformer (AST)</h3>
+
+<p>The Audio Spectrogram Transformer (AST) was the first <strong>convolution-free, purely attention-based</strong> model for audio classification. Its approach is elegantly simple: treat the spectrogram as an image and apply a Vision Transformer (ViT).</p>
+
+<h4>AST Architecture Details</h4>
+<ul>
+  <li><strong>Input</strong>: Log mel-spectrogram (128 frequency bands)</li>
+  <li><strong>Patch embedding</strong>: Split into 16x16 patches with slight overlap in time and frequency</li>
+  <li><strong>Positional encoding</strong>: Learned position embeddings for each patch</li>
+  <li><strong>Transformer encoder</strong>: 12 layers, 12 attention heads, hidden_size=768, intermediate_size=3072</li>
+  <li><strong>Classification</strong>: [CLS] token pooling through MLP head</li>
+  <li><strong>Pretraining</strong>: Initialized from ImageNet-pretrained ViT (DeiT), then fine-tuned on audio</li>
+</ul>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Parameters</th>
+      <th>AudioSet mAP</th>
+      <th>ESC-50</th>
+      <th>Speech Cmds V2</th>
+      <th>Training</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>AST</strong></td>
+      <td>~87M</td>
+      <td>0.485</td>
+      <td>95.6%</td>
+      <td>98.1%</td>
+      <td>Multi-GPU, days</td>
+    </tr>
+    <tr>
+      <td><strong>PaSST</strong></td>
+      <td>~86M</td>
+      <td>0.476</td>
+      <td>96.8%</td>
+      <td>&mdash;</td>
+      <td>Single GPU, &lt;2 days</td>
+    </tr>
+    <tr>
+      <td><strong>ElasticAST</strong> (2024)</td>
+      <td>~87M</td>
+      <td>0.486</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>Variable-length support</td>
+    </tr>
+    <tr>
+      <td><strong>FAST</strong> (2025)</td>
+      <td>~25M</td>
+      <td>0.471</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>Efficient distilled AST</td>
+    </tr>
+    <tr>
+      <td><strong>Lightweight ViT (SER)</strong></td>
+      <td>~12M</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>TESS/EMO-DB optimized</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4>PaSST: Patchout faSt Spectrogram Transformer</h4>
+<p>PaSST improves on AST with two key innovations:</p>
+<ol>
+  <li><strong>Patchout</strong>: Randomly drops patches during training (similar to dropout for patches), acting as a regularizer that speeds training by 2-3x and improves generalization.</li>
+  <li><strong>Separate time/frequency positional encodings</strong>: Unlike AST's single position embedding, PaSST uses independent embeddings for the time and frequency axes, providing better structure-aware representations.</li>
+</ol>
+
+<div class="callout callout-warning">
+  <div class="callout-label">Core ML Consideration</div>
+  <p>Full-size AST/PaSST models (~87M parameters) are too large for real-time on-device inference on most iOS devices. For mobile deployment, consider: (1) <strong>FAST</strong> (~25M params, distilled AST), (2) <strong>Lightweight ViT</strong> (~12M params), or (3) <strong>knowledge distillation</strong> from a large AST teacher to a smaller student model. Core ML supports standard transformer operations (self-attention, layer norm, GELU) but the Apple Neural Engine works best with fixed-length inputs.</p>
+</div>
+
+<!-- ===== HYBRID SECTION ===== -->
+<h2 id="hybrid">Hybrid Architectures</h2>
+
+<p>Hybrid architectures combine the strengths of multiple architecture families. This approach has consistently produced the best results in SER, because different components capture complementary aspects of emotional speech.</p>
+
+<h3 id="cnn-lstm">CNN-LSTM: The Workhorse Hybrid</h3>
+
+<p>The CNN-LSTM hybrid is the most widely used architecture in SER research and production. The division of labor is natural:</p>
+
+<ul>
+  <li><strong>CNN front-end</strong>: Extracts spatial features from spectrograms&mdash;pitch patterns, formant structures, spectral energy distributions</li>
+  <li><strong>LSTM back-end</strong>: Models temporal dynamics&mdash;how those features change over the course of the utterance</li>
+  <li><strong>Attention (optional)</strong>: Focuses the final representation on emotionally salient time steps</li>
+</ul>
+
+<div class="diagram-container">
+  <div class="diagram-title">Hybrid CNN-LSTM Architecture for Speech Emotion Recognition</div>
+  <div class="mermaid">
+graph TB
+    subgraph Input["Audio Input"]
+        A["Raw Audio<br/>Waveform"]
+        A --> B["Mel Spectrogram<br/>128 x T"]
+    end
+
+    subgraph SpatialCNN["Spatial Feature Extraction (CNN)"]
+        B --> C1["Time-Distributed<br/>Conv2D Block 1<br/>32 filters, 3x3"]
+        C1 --> C2["Conv2D Block 2<br/>64 filters, 3x3<br/>+ BatchNorm + Pool"]
+        C2 --> C3["Conv2D Block 3<br/>128 filters, 3x3<br/>+ BatchNorm + Pool"]
+        C3 --> C4["Conv2D Block 4<br/>256 filters, 3x3<br/>+ GlobalAvgPool"]
+    end
+
+    subgraph Temporal["Temporal Modeling (LSTM)"]
+        C4 --> D1["Reshape to<br/>Sequence"]
+        D1 --> D2["LSTM Layer 1<br/>256 units"]
+        D2 --> D3["Dropout 0.3"]
+        D3 --> D4["LSTM Layer 2<br/>128 units"]
+        D4 --> D5["Dropout 0.3"]
+        D5 --> D6["LSTM Layer 3<br/>64 units"]
+    end
+
+    subgraph AttnHead["Attention + Classification"]
+        D6 --> E1["Temporal<br/>Attention Layer"]
+        E1 --> E2["Context Vector"]
+        E2 --> F1["Dense 128<br/>ReLU + Dropout"]
+        F1 --> F2["Dense 7<br/>Softmax"]
+    end
+
+    F2 --> G["Predicted Emotion"]
+
+    style Input fill:#fff5f0,stroke:#e85d26,color:#333
+    style SpatialCNN fill:#dbeafe,stroke:#2563eb,color:#333
+    style Temporal fill:#e0e7ff,stroke:#4f46e5,color:#333
+    style AttnHead fill:#d1fae5,stroke:#059669,color:#333
+    style G fill:#fef3c7,stroke:#d97706,color:#333
+  </div>
+</div>
+
+<h4>Time-Distributed CNN-LSTM</h4>
+<p>A particularly effective variant applies CNN feature extraction independently to each time window of the spectrogram (time-distributed), then feeds the resulting sequence of feature vectors to the LSTM. This approach achieved <strong>84% accuracy on RAVDESS</strong>, superior to many SOTA models at the time of publication (2024).</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Hybrid Variant</th>
+      <th>Architecture</th>
+      <th>Dataset</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CNN-LSTM baseline</td>
+      <td>4 conv + 3 LSTM layers</td>
+      <td>CREMA-D</td>
+      <td>61.07%</td>
+    </tr>
+    <tr>
+      <td>CNN-LSTM + Attention</td>
+      <td>Time-distributed CNN + LSTM + attention</td>
+      <td>RAVDESS</td>
+      <td>84.00%</td>
+    </tr>
+    <tr>
+      <td>CNN-GRU ensemble</td>
+      <td>CNN + GRU with SVM meta-learner</td>
+      <td>Multi-dataset</td>
+      <td>97.74%</td>
+    </tr>
+    <tr>
+      <td>1D-CNN-LSTM-GRU ensemble</td>
+      <td>1D-CNN + LSTM + GRU + augmentation</td>
+      <td>Multi-dataset</td>
+      <td>98.69%</td>
+    </tr>
+    <tr>
+      <td>Hybrid deep learning (2025)</td>
+      <td>Novel feature engineering + CNN-LSTM</td>
+      <td>5 datasets</td>
+      <td>93.76% overall</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="cnn-transformer">CNN-Transformer Hybrids</h3>
+
+<p>A more recent trend replaces the LSTM with a Transformer encoder while keeping the CNN front-end:</p>
+
+<ul>
+  <li><strong>CNN-Transformer</strong>: CNN reduces the sequence length (via pooling) before the Transformer, making self-attention computationally feasible. Achieves <strong>89.33% on RAVDESS</strong> with augmentation.</li>
+  <li><strong>Transformer + CNN + LSTM ensemble</strong>: Each component specializes on different feature aspects, combined via ensemble voting or learned fusion.</li>
+  <li><strong>Hybrid-Module Transformer</strong>: Combines HuBERT (self-supervised pretrained), LSTM, and ResNet-50 features in a unified transformer framework.</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-label">Combination Strategies</div>
+  <p>Three proven ways to combine architectures: <strong>(A) Averaging</strong>&mdash;average predictions from parallel models; <strong>(B) Parallel merging</strong>&mdash;concatenate features from parallel branches before a shared classifier; <strong>(C) Sequential integration</strong>&mdash;chain architectures (CNN output feeds LSTM, which feeds Transformer). Strategy (C) with CNN-LSTM generally provides the best single-model performance.</p>
+</div>
+
+<!-- ===== END-TO-END vs FEATURES ===== -->
+<h2 id="e2e-vs-features">End-to-End vs Feature-Based Approaches</h2>
+
+<p>A fundamental design choice in SER is whether to use hand-crafted features or let the model learn features directly from audio.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">End-to-End vs Feature-Based Approach Comparison</div>
+  <div class="mermaid">
+graph TB
+    subgraph FeatureBased["Feature-Based Pipeline"]
+        FA["Raw Audio"] --> FB["Hand-Crafted<br/>Feature Extraction"]
+        FB --> FC["20 MFCCs<br/>+ 20 Delta<br/>+ 20 Delta-Delta<br/>+ 20 Std Dev"]
+        FC --> FD["Feature<br/>Normalization"]
+        FD --> FE["Classifier<br/>(CNN / LSTM / SVM)"]
+        FE --> FF["Emotion"]
+    end
+
+    subgraph EndToEnd["End-to-End Pipeline"]
+        EA["Raw Audio<br/>Waveform"] --> EB["Learned Filters<br/>(SincNet / Conv1D)"]
+        EB --> EC["Automatic Feature<br/>Hierarchy"]
+        EC --> ED["Encoder<br/>(Deep Network)"]
+        ED --> EE["Classification<br/>Head"]
+        EE --> EF["Emotion"]
+    end
+
+    subgraph Foundation["Foundation Model Pipeline"]
+        GA["Raw Audio"] --> GB["Pretrained Encoder<br/>(wav2vec 2.0 /<br/>HuBERT)"]
+        GB --> GC["Frozen or<br/>Fine-Tuned<br/>Representations"]
+        GC --> GD["Simple Classifier<br/>(Linear / MLP)"]
+        GD --> GE["Emotion"]
+    end
+
+    style FeatureBased fill:#fff5f0,stroke:#e85d26,color:#333
+    style EndToEnd fill:#dbeafe,stroke:#2563eb,color:#333
+    style Foundation fill:#d1fae5,stroke:#059669,color:#333
+  </div>
+</div>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Feature-Based</th>
+      <th>End-to-End</th>
+      <th>Foundation Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Input</strong></td>
+      <td>MFCCs, pitch, energy, formants</td>
+      <td>Raw waveform or spectrogram</td>
+      <td>Raw waveform</td>
+    </tr>
+    <tr>
+      <td><strong>Feature learning</strong></td>
+      <td>Manual / domain expert</td>
+      <td>Fully automatic</td>
+      <td>Self-supervised pretraining</td>
+    </tr>
+    <tr>
+      <td><strong>Data needed</strong></td>
+      <td><span class="badge badge-low">Low (100s-1Ks)</span></td>
+      <td><span class="badge badge-high">High (10Ks+)</span></td>
+      <td><span class="badge badge-low">Low for fine-tuning</span></td>
+    </tr>
+    <tr>
+      <td><strong>Model size</strong></td>
+      <td>Small (0.1-5M params)</td>
+      <td>Medium (1-20M params)</td>
+      <td>Large (95-300M params)</td>
+    </tr>
+    <tr>
+      <td><strong>Interpretability</strong></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-low">Low</span></td>
+    </tr>
+    <tr>
+      <td><strong>Best accuracy</strong></td>
+      <td>~85-93% (benchmark dependent)</td>
+      <td>~80-90%</td>
+      <td>~88-96%</td>
+    </tr>
+    <tr>
+      <td><strong>Core ML suitability</strong></td>
+      <td><span class="badge badge-high">Excellent</span></td>
+      <td><span class="badge badge-high">Good</span></td>
+      <td><span class="badge badge-medium">Needs compression</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="raw-waveform">Raw Waveform Models</h3>
+
+<p>Raw waveform models skip the spectrogram computation entirely, learning directly from the audio signal:</p>
+
+<h4>SincNet</h4>
+<p><span class="glossary-term" data-definition="A neural network architecture that replaces the first convolutional layer with parameterized sinc functions, implementing learnable bandpass filters directly on raw audio waveforms.">SincNet</span> uses learnable bandpass filters (parameterized sinc functions) as its first layer, directly processing raw waveforms. It offers faster convergence than standard 1D CNNs and greater computational efficiency due to filter symmetry. The sinc-convolution layer can be followed by DNN or LSTM layers for classification.</p>
+
+<h4>Wav2Vec 2.0 for SER</h4>
+<p>Wav2Vec 2.0 is a <span class="glossary-term" data-definition="A training paradigm where a model learns representations from unlabeled data by solving a pretext task (e.g., predicting masked portions of the input), then fine-tunes on labeled data for the target task.">self-supervised</span> transformer model pretrained on large amounts of unlabeled speech. Its contextual representations significantly outperform traditional features:</p>
+<ul>
+  <li>Cross-language transfer capability (pretrained on English, fine-tuned on other languages)</li>
+  <li>Captures both acoustic and linguistic information from raw waveforms</li>
+  <li>Can be used as a frozen feature extractor with a simple classifier, or fully fine-tuned</li>
+  <li>With fine-tuning: achieves competitive results even with limited labeled emotion data</li>
+</ul>
+
+<div class="takeaway">
+  <div class="takeaway-title">Practical Recommendation</div>
+  <p>For iOS deployment with Core ML, the optimal approach in 2025 is: <strong>use a compressed pretrained feature extractor</strong> (distilled wav2vec2 or HuBERT-small) <strong>with a lightweight classification head</strong> (MLP or small CNN). This combines the powerful learned representations with an inference-friendly architecture. Alternatively, a <strong>CNN-LSTM hybrid</strong> trained from scratch on spectrograms remains the most straightforward Core ML conversion path.</p>
+</div>
+
+<!-- ===== AUGMENTATION SECTION ===== -->
+<h2 id="augmentation">Data Augmentation for Speech Emotion</h2>
+
+<p>Emotional speech datasets are notoriously small (RAVDESS: 1,440 files; IEMOCAP: ~10K utterances; CREMA-D: 7,442 clips) compared to datasets in computer vision or NLP. Data augmentation is essential to prevent overfitting and improve generalization.</p>
+
+<h3>Audio-Level Augmentation</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Technique</th>
+      <th>Description</th>
+      <th>Parameters</th>
+      <th>Effectiveness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Reverberation (RIR)</strong></td>
+      <td>Apply room impulse responses to simulate different acoustic environments</td>
+      <td>Various room types, RT60 values</td>
+      <td><span class="badge badge-high">Highest</span></td>
+    </tr>
+    <tr>
+      <td><strong>Pitch Shifting</strong></td>
+      <td>Shift pitch without changing duration</td>
+      <td>&plusmn;2 to &plusmn;4 semitones</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    <tr>
+      <td><strong>Time Stretching</strong></td>
+      <td>Change speed without altering pitch</td>
+      <td>0.8x to 1.2x speed factor</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Noise Injection</strong></td>
+      <td>Add Gaussian or environmental noise</td>
+      <td>SNR 5-20 dB</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Time Shifting</strong></td>
+      <td>Random shift of audio start point</td>
+      <td>&plusmn;100-500 ms</td>
+      <td><span class="badge badge-low">Low-Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>TTS Synthesis</strong></td>
+      <td>Generate emotional speech via text-to-speech</td>
+      <td>Emotion-conditioned TTS model</td>
+      <td><span class="badge badge-high">High (2024)</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Spectrogram-Level Augmentation</h3>
+
+<ul>
+  <li><strong>SpecAugment</strong>: Applies frequency masking (zero out random frequency bands) and time masking (zero out random time steps) directly on the mel-spectrogram. Originally developed for ASR, highly effective for SER when combined with CNN-based models.</li>
+  <li><strong>Spectrogram shifting</strong>: Translate the spectrogram along time or frequency axis.</li>
+  <li><strong>Mixup</strong>: Blend two spectrograms with interpolated labels. Creates virtual training samples in the feature space.</li>
+</ul>
+
+<div class="callout callout-success">
+  <div class="callout-label">Multi-Level Strategy (2024)</div>
+  <p>The most effective augmentation approach combines <strong>pitch shifting + time stretching + SpecAugment</strong> within a CNN-LSTM framework with temporal attention. This multi-level strategy applies augmentation at both the audio and spectrogram levels, providing complementary regularization effects and significantly improving cross-corpus generalization.</p>
+</div>
+
+<!-- ===== LOSS FUNCTIONS ===== -->
+<h2 id="loss-functions">Loss Functions</h2>
+
+<p>The choice of loss function has a substantial impact on SER performance, particularly given the class imbalance common in emotion datasets (neutral samples typically dominate).</p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Loss Function</th>
+      <th>Formula Intuition</th>
+      <th>Best For</th>
+      <th>Key Advantage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Cross-Entropy</strong></td>
+      <td>Standard log-probability of correct class</td>
+      <td>Balanced datasets, baseline experiments</td>
+      <td>Simple, well-understood, stable training</td>
+    </tr>
+    <tr>
+      <td><strong>Weighted Cross-Entropy</strong></td>
+      <td>Cross-entropy with class weights inversely proportional to frequency</td>
+      <td>Imbalanced datasets</td>
+      <td>Easy to implement, addresses frequency imbalance</td>
+    </tr>
+    <tr>
+      <td><strong>Focal Loss</strong></td>
+      <td>Down-weights easy examples, focuses on hard ones: (1-p)<sup>&gamma;</sup> * CE</td>
+      <td>Hard-to-classify emotions (e.g., fear vs surprise)</td>
+      <td>Automatically focuses training on difficult samples</td>
+    </tr>
+    <tr>
+      <td><strong>Triplet Loss</strong></td>
+      <td>Minimize distance to same-class embeddings, maximize to different-class</td>
+      <td>Embedding learning, few-shot SER</td>
+      <td>Learns discriminative feature space</td>
+    </tr>
+    <tr>
+      <td><strong>Contrastive Loss</strong></td>
+      <td>Pull same-class pairs together, push different-class pairs apart</td>
+      <td>Representation learning for SER</td>
+      <td>Intra-class compactness + inter-class separability</td>
+    </tr>
+    <tr>
+      <td><strong>SWFC Loss</strong></td>
+      <td>Sample Weighted Focal Contrastive: combines focal + contrastive</td>
+      <td>Class imbalance + semantic confusion</td>
+      <td>Handles both frequency and difficulty imbalance</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Loss Function Selection Guide</div>
+  <p><strong>Start with cross-entropy</strong> as a baseline. If you observe poor performance on minority emotion classes, switch to <strong>focal loss</strong> (&gamma;=2 is a good default). For learning transferable emotion embeddings (useful for few-shot or cross-corpus scenarios), combine a classification loss with <strong>triplet or contrastive loss</strong> as a regularizer. The SWFC loss from 2024 represents the state of the art for addressing both class imbalance and semantic confusion simultaneously.</p>
+</div>
+
+<!-- ===== TRAINING STRATEGIES ===== -->
+<h2 id="training-strategies">Training Strategies</h2>
+
+<h3>Transfer Learning</h3>
+<p>Transfer learning is now the default approach for SER, given the limited size of emotion-labeled datasets:</p>
+<ul>
+  <li><strong>ImageNet &rarr; Spectrogram CNN</strong>: Pretrained VGG/ResNet/EfficientNet on ImageNet, fine-tuned on spectrograms. Surprisingly effective despite domain mismatch.</li>
+  <li><strong>AudioSet &rarr; SER</strong>: Models pretrained on AudioSet (large-scale audio classification) transfer well to emotion tasks.</li>
+  <li><strong>SSL Speech Models &rarr; SER</strong>: wav2vec 2.0, HuBERT, WavLM pretrained on unlabeled speech, then fine-tuned for emotion. This is the current best approach.</li>
+</ul>
+
+<h3>Parameter-Efficient Fine-Tuning (PEFT)</h3>
+<p>Full fine-tuning of large pretrained models (95M+ parameters) risks overfitting on small emotion datasets. PEFT methods freeze most parameters and only train small adapter modules:</p>
+<ul>
+  <li><strong>LoRA</strong>: Low-rank adaptation matrices inserted into attention layers. Trains &lt;5% of parameters.</li>
+  <li><strong>Adapters</strong>: Small bottleneck modules between transformer layers.</li>
+  <li><strong>Prefix tuning</strong>: Learnable prefix tokens prepended to each layer's input.</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-label">Key Finding (2024)</div>
+  <p>PEFT methods <strong>surpass full fine-tuning</strong> for SER with a significant reduction (95%+) in trainable parameters. This makes them ideal for on-device fine-tuning scenarios where computational resources are limited. A two-stage adaptation strategy (pretrain on acted emotion data, then adapt to natural speech) further improves cross-domain performance.</p>
+</div>
+
+<h3>Multi-Task Learning (MTL)</h3>
+<p>Training a model to simultaneously predict multiple related tasks improves emotion recognition by learning more robust representations:</p>
+<ol>
+  <li><strong>Primary task</strong>: Emotion recognition</li>
+  <li><strong>Auxiliary tasks</strong>: Gender recognition, speaker verification, automatic speech recognition, arousal/valence regression</li>
+</ol>
+<p>The shared encoder learns features useful for all tasks, acting as an implicit regularizer that prevents overfitting to emotion labels alone.</p>
+
+<h3>Cross-Corpus Domain Adaptation</h3>
+<p>Models trained on one emotion dataset often fail on others due to differences in recording conditions, speaker demographics, emotion taxonomies, and acted vs. natural speech. Domain adaptation techniques address this:</p>
+<ul>
+  <li>Global domain alignment (match feature distributions across datasets)</li>
+  <li>Subdomain adaptation (align distributions per emotion class)</li>
+  <li>Wav2Vec 2.0 as a universal feature space that reduces variability across corpora and languages</li>
+</ul>
+
+<!-- ===== BENCHMARKS ===== -->
+<h2 id="benchmarks">Benchmark Results (2024-2025)</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Architecture Type</th>
+      <th>RAVDESS</th>
+      <th>CREMA-D</th>
+      <th>IEMOCAP</th>
+      <th>TESS</th>
+      <th>EMO-DB</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Hybrid DL (2025)</strong></td>
+      <td>CNN-LSTM + novel features</td>
+      <td>97.83%</td>
+      <td>95.10%</td>
+      <td>&mdash;</td>
+      <td>100%</td>
+      <td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>Ensemble CNN-LSTM-GRU</strong></td>
+      <td>Ensemble hybrid</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>CNN-LSTM-DNN</strong></td>
+      <td>Hybrid + attention</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>96.21%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>Xception (pretrained)</strong></td>
+      <td>CNN transfer learning</td>
+      <td>95.46%</td>
+      <td>90.47%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>AST</strong></td>
+      <td>Pure transformer</td>
+      <td>88.17%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>98.17%</td>
+      <td>75.42%</td>
+    </tr>
+    <tr>
+      <td><strong>CNN-Transformer + Aug</strong></td>
+      <td>Hybrid + augmentation</td>
+      <td>89.33%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>TD-CNN-LSTM + Attn</strong></td>
+      <td>Time-distributed hybrid</td>
+      <td>84.00%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>Lightweight Ensemble</strong></td>
+      <td>Lightweight CNN ensemble</td>
+      <td>87.51%</td>
+      <td>82.95%</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>Feature Fusion (SSL)</strong></td>
+      <td>wav2vec2 + classifier</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>77.62% UA</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-label">Interpreting Benchmarks</div>
+  <p>Accuracy numbers across papers are <strong>not directly comparable</strong>. Results vary based on: (1) train/test split methodology (speaker-dependent vs speaker-independent), (2) number of emotion classes (4 vs 7 vs 8), (3) evaluation metric (weighted accuracy vs unweighted accuracy vs F1), and (4) data augmentation used. TESS accuracies of 100% reflect dataset simplicity more than model capability. <strong>IEMOCAP with speaker-independent splits</strong> is considered the most challenging and realistic benchmark.</p>
+</div>
+
+<!-- ===== COMPARISON TABLE ===== -->
+<h2 id="comparison">Architecture Comparison Matrix</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>CNN</th>
+      <th>LSTM/GRU</th>
+      <th>Transformer</th>
+      <th>CNN-LSTM Hybrid</th>
+      <th>Foundation Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Best accuracy</strong></td>
+      <td>85-95%</td>
+      <td>75-90%</td>
+      <td>88-98%</td>
+      <td>84-98%</td>
+      <td>88-96%</td>
+    </tr>
+    <tr>
+      <td><strong>Parameters</strong></td>
+      <td>0.5-5M</td>
+      <td>0.3-3M</td>
+      <td>12-87M</td>
+      <td>1-10M</td>
+      <td>95-300M</td>
+    </tr>
+    <tr>
+      <td><strong>Training data needed</strong></td>
+      <td>Medium</td>
+      <td>Medium</td>
+      <td>Large</td>
+      <td>Medium</td>
+      <td>Low (fine-tune)</td>
+    </tr>
+    <tr>
+      <td><strong>Inference speed</strong></td>
+      <td><span class="badge badge-high">Fast</span></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-low">Slow</span></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-low">Slow</span></td>
+    </tr>
+    <tr>
+      <td><strong>Temporal modeling</strong></td>
+      <td><span class="badge badge-low">Weak</span></td>
+      <td><span class="badge badge-high">Strong</span></td>
+      <td><span class="badge badge-high">Strong</span></td>
+      <td><span class="badge badge-high">Strong</span></td>
+      <td><span class="badge badge-high">Strong</span></td>
+    </tr>
+    <tr>
+      <td><strong>Spatial features</strong></td>
+      <td><span class="badge badge-high">Strong</span></td>
+      <td><span class="badge badge-low">Weak</span></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-high">Strong</span></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Real-time capable</strong></td>
+      <td>Yes</td>
+      <td>Yes (unidirectional)</td>
+      <td>With optimization</td>
+      <td>Yes (with streaming)</td>
+      <td>Needs compression</td>
+    </tr>
+    <tr>
+      <td><strong>Core ML conversion</strong></td>
+      <td><span class="badge badge-high">Trivial</span></td>
+      <td><span class="badge badge-high">Easy</span></td>
+      <td><span class="badge badge-medium">Moderate</span></td>
+      <td><span class="badge badge-high">Easy</span></td>
+      <td><span class="badge badge-low">Complex</span></td>
+    </tr>
+    <tr>
+      <td><strong>Recommended use case</strong></td>
+      <td>Fast classification, edge devices</td>
+      <td>Temporal emotion tracking</td>
+      <td>Maximum accuracy (cloud)</td>
+      <td>Best balance of accuracy &amp; efficiency</td>
+      <td>Transfer to new domains/languages</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Architecture Selection Guide</div>
+  <p><strong>For iOS / Core ML deployment</strong>: Start with a CNN-LSTM hybrid (1-5M parameters). It offers the best accuracy-to-complexity ratio and converts cleanly to Core ML. For higher accuracy, use a distilled foundation model (wav2vec2-small at ~25M params) with INT8 quantization.<br><br>
+  <strong>For cloud/server deployment</strong>: Use a full-size foundation model (HuBERT-large, 300M+ params) fine-tuned with PEFT. Maximum accuracy, no size constraints.<br><br>
+  <strong>For real-time streaming</strong>: Use a 1D-CNN or unidirectional LSTM. Avoid bidirectional models and large transformers unless the full utterance is available.</p>
+</div>
+
+<!-- ===== DEPLOYMENT ===== -->
+<h2 id="deployment">Mobile Deployment &amp; Core ML</h2>
+
+<p>Deploying SER models on iOS requires careful optimization to meet the constraints of mobile hardware while maintaining acceptable accuracy and latency.</p>
+
+<h3>Inference Latency Targets</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Average Latency</th>
+      <th>Target</th>
+      <th>Latency Breakdown</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NVIDIA Jetson Xavier NX</td>
+      <td>187 ms</td>
+      <td>&lt;200 ms</td>
+      <td>Feature: 45%, Fusion: 30%, Classification: 25%</td>
+    </tr>
+    <tr>
+      <td>Raspberry Pi 4</td>
+      <td>298 ms</td>
+      <td>&lt;500 ms</td>
+      <td>Feature extraction dominates</td>
+    </tr>
+    <tr>
+      <td>iPhone 15 (A17 Pro, Neural Engine)</td>
+      <td>~20-80 ms*</td>
+      <td>&lt;100 ms</td>
+      <td>Neural Engine accelerated</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p style="font-size: 0.85rem; color: var(--color-text-muted);">*Estimated for optimized Core ML models. Actual latency depends on model architecture and quantization.</p>
+
+<h3>Core ML Conversion Pipeline</h3>
+
+<div class="pipeline">
+  <span class="pipeline-step">PyTorch Model</span>
+  <span class="pipeline-arrow">&rarr;</span>
+  <span class="pipeline-step">ONNX Export</span>
+  <span class="pipeline-arrow">&rarr;</span>
+  <span class="pipeline-step">coremltools Convert</span>
+  <span class="pipeline-arrow">&rarr;</span>
+  <span class="pipeline-step active">Core ML (.mlmodel)</span>
+  <span class="pipeline-arrow">&rarr;</span>
+  <span class="pipeline-step">Quantize (FP16/INT8)</span>
+  <span class="pipeline-arrow">&rarr;</span>
+  <span class="pipeline-step active">Deploy on iOS</span>
+</div>
+
+<h3>Model Compression Techniques</h3>
+
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-title">Quantization</div>
+    </div>
+    <p>Reduce weight precision from FP32 to FP16 or INT8. Achieves 2-4x size reduction with &lt;1% accuracy loss. Core ML supports post-training quantization and palettization.</p>
+    <span class="stat">2-4x smaller</span>
+    <span class="stat">&lt;1% loss</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-title">Pruning</div>
+    </div>
+    <p>Remove redundant weights or entire filters. Structured pruning removes whole channels, maintaining hardware-friendly dense operations on Neural Engine.</p>
+    <span class="stat">50-90% sparse</span>
+    <span class="stat">Structured preferred</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-title">Knowledge Distillation</div>
+    </div>
+    <p>Train a small student model to mimic a large teacher. An AST teacher (87M) can distill to a FAST student (25M) or a tiny CNN (1M) with minimal accuracy loss.</p>
+    <span class="stat">3-10x smaller</span>
+    <span class="stat">1-3% loss</span>
+  </div>
+  <div class="arch-card">
+    <div class="arch-card-header">
+      <div class="arch-card-title">Low-Rank Factorization</div>
+    </div>
+    <p>Decompose weight matrices into products of smaller matrices. Particularly effective for reducing the size of dense layers and attention projections.</p>
+    <span class="stat">2-5x smaller</span>
+    <span class="stat">Attention layers</span>
+  </div>
+</div>
+
+<div class="callout callout-success">
+  <div class="callout-label">Recommended iOS Architecture</div>
+  <p>For real-time speech emotion recognition on iOS, deploy a <strong>quantized CNN-LSTM hybrid</strong> (INT8, ~1-2M parameters) taking mel-spectrogram input. Process audio in 1-2 second windows. Feature extraction via Apple's Accelerate framework (vDSP for FFT), classification via Core ML on the Neural Engine. Expected latency: <strong>20-50ms per window</strong> on iPhone 13+. This architecture avoids bidirectional dependencies, supports streaming, and converts cleanly via <code>coremltools</code>.</p>
+</div>
+
+<!-- ===== GLOSSARY ===== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th>Term</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>AST</strong></td>
+      <td>Audio Spectrogram Transformer. A convolution-free model that applies Vision Transformer architecture to audio by treating spectrograms as images.</td>
+    </tr>
+    <tr>
+      <td><strong>Attention</strong></td>
+      <td>A mechanism that computes weighted combinations of input elements, allowing models to focus on the most relevant parts for a given task.</td>
+    </tr>
+    <tr>
+      <td><strong>BiLSTM</strong></td>
+      <td>Bidirectional Long Short-Term Memory. Processes sequences both forward and backward to capture context from both directions.</td>
+    </tr>
+    <tr>
+      <td><strong>Core ML</strong></td>
+      <td>Apple's framework for running machine learning models on iOS, macOS, and other Apple platforms, leveraging the Neural Engine for acceleration.</td>
+    </tr>
+    <tr>
+      <td><strong>Contrastive Loss</strong></td>
+      <td>A loss function that pulls representations of same-class samples together while pushing different-class samples apart in embedding space.</td>
+    </tr>
+    <tr>
+      <td><strong>CREMA-D</strong></td>
+      <td>Crowd-Sourced Emotional Multimodal Actors Dataset. 7,442 clips from 91 actors expressing 6 emotions.</td>
+    </tr>
+    <tr>
+      <td><strong>Focal Loss</strong></td>
+      <td>A modified cross-entropy loss that down-weights easy examples and focuses training on hard, misclassified samples. Useful for class imbalance.</td>
+    </tr>
+    <tr>
+      <td><strong>GRU</strong></td>
+      <td>Gated Recurrent Unit. A simplified variant of LSTM with update and reset gates, offering comparable performance with fewer parameters.</td>
+    </tr>
+    <tr>
+      <td><strong>HuBERT</strong></td>
+      <td>Hidden-Unit BERT. A self-supervised speech representation model trained on masked prediction of discrete acoustic units.</td>
+    </tr>
+    <tr>
+      <td><strong>IEMOCAP</strong></td>
+      <td>Interactive Emotional Dyadic Motion Capture. ~10K utterances from 10 actors in scripted and improvised sessions. The gold-standard SER benchmark.</td>
+    </tr>
+    <tr>
+      <td><strong>Knowledge Distillation</strong></td>
+      <td>Training a small (student) model to mimic the outputs or intermediate representations of a larger (teacher) model.</td>
+    </tr>
+    <tr>
+      <td><strong>LoRA</strong></td>
+      <td>Low-Rank Adaptation. A PEFT technique that adds small trainable low-rank matrices to frozen pretrained layers.</td>
+    </tr>
+    <tr>
+      <td><strong>LSTM</strong></td>
+      <td>Long Short-Term Memory. An RNN variant with forget, input, and output gates that can learn long-range dependencies.</td>
+    </tr>
+    <tr>
+      <td><strong>Mel Spectrogram</strong></td>
+      <td>A time-frequency representation of audio using the mel scale, which approximates human auditory perception.</td>
+    </tr>
+    <tr>
+      <td><strong>MFCC</strong></td>
+      <td>Mel-Frequency Cepstral Coefficients. A compact representation of the spectral envelope, widely used as features for speech tasks.</td>
+    </tr>
+    <tr>
+      <td><strong>PaSST</strong></td>
+      <td>Patchout faSt Spectrogram Transformer. An efficient variant of AST that drops random patches during training for regularization and speed.</td>
+    </tr>
+    <tr>
+      <td><strong>PEFT</strong></td>
+      <td>Parameter-Efficient Fine-Tuning. Techniques (LoRA, adapters, prefix tuning) that fine-tune only a small subset of model parameters.</td>
+    </tr>
+    <tr>
+      <td><strong>RAVDESS</strong></td>
+      <td>Ryerson Audio-Visual Database of Emotional Speech and Song. 1,440 clips from 24 actors expressing 8 emotions at two intensity levels.</td>
+    </tr>
+    <tr>
+      <td><strong>SER</strong></td>
+      <td>Speech Emotion Recognition. The task of automatically detecting emotional states from speech audio signals.</td>
+    </tr>
+    <tr>
+      <td><strong>SincNet</strong></td>
+      <td>A neural architecture using parameterized sinc function bandpass filters as the first layer, processing raw audio waveforms directly.</td>
+    </tr>
+    <tr>
+      <td><strong>SpecAugment</strong></td>
+      <td>A data augmentation technique that applies time and frequency masking to spectrograms during training.</td>
+    </tr>
+    <tr>
+      <td><strong>Wav2Vec 2.0</strong></td>
+      <td>A self-supervised model from Meta that learns speech representations from raw waveforms using contrastive learning and masked prediction.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ===== BOTTOM NAVIGATION ===== -->
+<nav class="category-nav">
+  <a href="../traditional-ml-classifiers/index.html" class="prev-category">&larr; Traditional ML Classifiers</a>
+  <a href="../foundation-models/index.html" class="next-category">Self-Supervised Foundation Models &rarr;</a>
+</nav>
+
+</div>
+</main>
+</div>
+
+<script>
+// ===== Mermaid Init =====
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'neutral',
+  themeVariables: {
+    primaryColor: '#FFF5F0',
+    primaryBorderColor: '#E85D26',
+    primaryTextColor: '#1E293B',
+    lineColor: '#94A3B8',
+    secondaryColor: '#DBEAFE',
+    tertiaryColor: '#D1FAE5',
+    fontSize: '14px'
+  },
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  securityLevel: 'loose'
+});
+
+// ===== Theme Toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  // Re-render mermaid diagrams for theme
+  reinitMermaid(next);
+}
+
+function reinitMermaid(theme) {
+  const isDark = theme === 'dark';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDark ? 'dark' : 'neutral',
+    themeVariables: isDark ? {
+      primaryColor: '#2A1510',
+      primaryBorderColor: '#F09060',
+      primaryTextColor: '#E2E8F0',
+      lineColor: '#64748B',
+      secondaryColor: '#1E3A5F',
+      tertiaryColor: '#064E3B',
+      fontSize: '14px'
+    } : {
+      primaryColor: '#FFF5F0',
+      primaryBorderColor: '#E85D26',
+      primaryTextColor: '#1E293B',
+      lineColor: '#94A3B8',
+      secondaryColor: '#DBEAFE',
+      tertiaryColor: '#D1FAE5',
+      fontSize: '14px'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    securityLevel: 'loose'
+  });
+
+  document.querySelectorAll('.mermaid').forEach(async (el) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', code);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// ===== Apply Saved Theme =====
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+// ===== Active Sidebar Link =====
+function updateActiveSidebarLink() {
+  const sections = document.querySelectorAll('h2[id], h3[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+  let current = '';
+
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 100) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  links.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveSidebarLink, { passive: true });
+updateActiveSidebarLink();
+
+// ===== Close mobile menu on link click =====
+document.querySelectorAll('.sidebar-link, .sidebar-back').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

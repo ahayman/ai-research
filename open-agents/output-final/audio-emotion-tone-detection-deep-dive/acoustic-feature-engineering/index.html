@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Acoustic Feature Engineering & Signal Processing - How raw audio is transformed into emotion-revealing feature vectors through MFCCs, prosodic analysis, spectral features, and voice quality measures.">
+  <title>Acoustic Feature Engineering & Signal Processing | Audio Emotion Detection Deep Dive</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #EEF2FF;
+      --color-primary-dark: #4338CA;
+      --color-primary-ghost: rgba(99,102,241,0.08);
+      --color-accent: #8B5CF6;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+      --color-info: #3B82F6;
+      --color-text: #1F2937;
+      --color-text-light: #6B7280;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9FAFB;
+      --color-bg-card: #FFFFFF;
+      --color-bg-code: #F3F4F6;
+      --color-border: #E5E7EB;
+      --color-border-light: #F3F4F6;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 4px;
+      --sidebar-width: 280px;
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #818CF8;
+      --color-primary-light: #1E1B4B;
+      --color-primary-dark: #A5B4FC;
+      --color-primary-ghost: rgba(129,140,248,0.1);
+      --color-accent: #A78BFA;
+      --color-success: #34D399;
+      --color-warning: #FBBF24;
+      --color-danger: #F87171;
+      --color-info: #60A5FA;
+      --color-text: #F9FAFB;
+      --color-text-light: #D1D5DB;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-code: #334155;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.92);
+    }
+
+    [data-theme="dark"] .top-bar {
+      background: rgba(15,23,42,0.92);
+    }
+
+    .back-to-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .back-to-hub:hover { color: var(--color-primary-dark); }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.375rem 0.625rem;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--color-text);
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-primary-ghost);
+      border-color: var(--color-primary);
+    }
+
+    .sidebar-toggle {
+      display: none;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.375rem 0.625rem;
+      cursor: pointer;
+      font-size: 1.125rem;
+      color: var(--color-text);
+    }
+
+    /* ===== LAYOUT ===== */
+    .layout {
+      display: flex;
+      margin-top: 56px;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: var(--sidebar-width);
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      background: var(--color-bg-alt);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 0;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-label {
+      padding: 0 1.25rem;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-lighter);
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-nav { list-style: none; }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 0.5rem 1.25rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--color-text);
+      background: var(--color-primary-ghost);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+      background: var(--color-primary-ghost);
+      font-weight: 600;
+    }
+
+    .sidebar-nav .sub-item a {
+      padding-left: 2rem;
+      font-size: 0.75rem;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 1rem 1.25rem;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      max-width: 900px;
+      padding: 2.5rem 3rem 4rem;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #6366F1, #4338CA, #312E81);
+      color: white;
+      padding: 3rem 2.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .page-hero .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero .subtitle {
+      font-size: 1.0625rem;
+      opacity: 0.9;
+      max-width: 640px;
+      line-height: 1.6;
+    }
+
+    .page-hero .meta-pills {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .page-hero .meta-pill {
+      background: rgba(255,255,255,0.12);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      margin-bottom: 3.5rem;
+    }
+
+    .section-anchor {
+      display: block;
+      position: relative;
+      top: -80px;
+      visibility: hidden;
+    }
+
+    h2 {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h2 .section-icon {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    h4 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    /* ===== DIAGRAM CONTAINERS ===== */
+    .diagram-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .diagram-container .diagram-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-lighter);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ===== CALLOUT BOXES ===== */
+    .callout {
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-sm);
+      margin: 1.5rem 0;
+      border-left: 4px solid;
+    }
+
+    .callout-info {
+      background: #EFF6FF;
+      border-color: var(--color-info);
+      color: #1E40AF;
+    }
+
+    .callout-success {
+      background: #ECFDF5;
+      border-color: var(--color-success);
+      color: #065F46;
+    }
+
+    .callout-warning {
+      background: #FFFBEB;
+      border-color: var(--color-warning);
+      color: #92400E;
+    }
+
+    .callout-ios {
+      background: #F5F3FF;
+      border-color: var(--color-accent);
+      color: #5B21B6;
+    }
+
+    [data-theme="dark"] .callout-info {
+      background: rgba(59,130,246,0.1);
+      color: #93C5FD;
+    }
+    [data-theme="dark"] .callout-success {
+      background: rgba(16,185,129,0.1);
+      color: #6EE7B7;
+    }
+    [data-theme="dark"] .callout-warning {
+      background: rgba(245,158,11,0.1);
+      color: #FCD34D;
+    }
+    [data-theme="dark"] .callout-ios {
+      background: rgba(139,92,246,0.1);
+      color: #C4B5FD;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 0.375rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ===== CODE BLOCKS ===== */
+    .code-block {
+      background: var(--color-bg-code);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .code-block .code-label {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.125rem 0.625rem;
+      border-radius: 0 var(--radius-sm) 0 var(--radius-xs);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-block pre {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--color-text);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background: var(--color-bg-code);
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-xs);
+      font-size: 0.875em;
+      color: var(--color-primary);
+    }
+
+    [data-theme="dark"] code {
+      color: var(--color-primary-dark);
+    }
+
+    /* ===== TABLES ===== */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: var(--color-primary);
+      color: white;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:nth-child(even) { background: var(--color-bg-alt); }
+
+    tr:hover { background: var(--color-primary-ghost); }
+
+    /* ===== FORMULA DISPLAY ===== */
+    .formula {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      overflow-x: auto;
+    }
+
+    .formula .formula-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      color: var(--color-text-lighter);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    /* ===== GLOSSARY TOOLTIPS ===== */
+    .glossary-term {
+      border-bottom: 1px dashed var(--color-primary);
+      color: var(--color-primary);
+      cursor: help;
+      position: relative;
+      font-weight: 500;
+    }
+
+    .glossary-term .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-text);
+      color: var(--color-bg);
+      padding: 0.625rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.5;
+      width: 280px;
+      max-width: 90vw;
+      z-index: 500;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+    }
+
+    .glossary-term .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-text);
+    }
+
+    .glossary-term:hover .tooltip { display: block; }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .feature-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .feature-card .fc-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card h4 {
+      margin-top: 0;
+      font-size: 0.9375rem;
+      margin-bottom: 0.375rem;
+    }
+
+    .feature-card p {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      margin-bottom: 0;
+    }
+
+    /* ===== STEP INDICATORS ===== */
+    .pipeline-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 1.5rem 0;
+      counter-reset: step;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      min-width: 140px;
+      position: relative;
+      padding: 1rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      text-align: center;
+    }
+
+    .pipeline-step:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+    .pipeline-step:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+    .pipeline-step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin: 0 auto 0.5rem;
+    }
+
+    .pipeline-step .step-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .pipeline-step .step-detail {
+      font-size: 0.6875rem;
+      color: var(--color-text-lighter);
+      margin-top: 0.25rem;
+    }
+
+    /* ===== EMOTION INDICATOR BADGES ===== */
+    .emotion-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+
+    .emotion-anger { background: #FEE2E2; color: #991B1B; }
+    .emotion-happiness { background: #FEF3C7; color: #92400E; }
+    .emotion-sadness { background: #DBEAFE; color: #1E40AF; }
+    .emotion-fear { background: #F3E8FF; color: #6B21A8; }
+    .emotion-surprise { background: #D1FAE5; color: #065F46; }
+    .emotion-neutral { background: #F3F4F6; color: #4B5563; }
+
+    [data-theme="dark"] .emotion-anger { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+    [data-theme="dark"] .emotion-happiness { background: rgba(245,158,11,0.15); color: #FCD34D; }
+    [data-theme="dark"] .emotion-sadness { background: rgba(59,130,246,0.15); color: #93C5FD; }
+    [data-theme="dark"] .emotion-fear { background: rgba(139,92,246,0.15); color: #C4B5FD; }
+    [data-theme="dark"] .emotion-surprise { background: rgba(16,185,129,0.15); color: #6EE7B7; }
+    [data-theme="dark"] .emotion-neutral { background: rgba(107,114,128,0.15); color: #D1D5DB; }
+
+    /* ===== BOTTOM NAVIGATION ===== */
+    .category-nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .category-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--color-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      transition: all 0.2s;
+    }
+
+    .category-nav a:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .next-category { margin-left: auto; }
+    .prev-category { margin-right: auto; }
+
+    /* ===== LISTS ===== */
+    ul, ol {
+      margin: 0.75rem 0 1rem 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.375rem;
+      color: var(--color-text);
+    }
+
+    li strong { color: var(--color-text); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-toggle {
+        display: block;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .page-hero {
+        padding: 2rem 1.5rem;
+      }
+
+      .page-hero h1 {
+        font-size: 1.625rem;
+      }
+
+      .pipeline-steps {
+        flex-direction: column;
+      }
+
+      .pipeline-step {
+        border-radius: 0 !important;
+      }
+
+      .pipeline-step:first-child { border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important; }
+      .pipeline-step:last-child { border-radius: 0 0 var(--radius-sm) var(--radius-sm) !important; }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h2 { font-size: 1.375rem; }
+
+      .category-nav {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .category-nav a {
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+
+    /* ===== OVERLAY ===== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 99;
+    }
+
+    .sidebar-overlay.active { display: block; }
+
+    /* ===== DETAILS/SUMMARY ===== */
+    details {
+      margin: 1rem 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 0.875rem 1.25rem;
+      background: var(--color-bg-alt);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    summary::before {
+      content: '\25B6';
+      font-size: 0.625rem;
+      transition: transform 0.2s;
+    }
+
+    details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    details .detail-content {
+      padding: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOP BAR ===== -->
+  <div class="top-bar">
+    <a href="../index.html" class="back-to-hub">&larr; Back to Audio Emotion &amp; Tone Detection Deep Dive</a>
+    <div class="top-bar-actions">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">&#9776;</button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">&#9790;</button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="layout">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-label">On This Page</div>
+      <ul class="sidebar-nav" id="sidebarNav">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#pipeline">Signal Processing Pipeline</a></li>
+        <li class="sub-item"><a href="#pre-emphasis">Pre-emphasis</a></li>
+        <li class="sub-item"><a href="#framing-windowing">Framing &amp; Windowing</a></li>
+        <li class="sub-item"><a href="#normalization">Normalization</a></li>
+        <li><a href="#mfcc">MFCCs</a></li>
+        <li class="sub-item"><a href="#mel-scale">The Mel Scale</a></li>
+        <li class="sub-item"><a href="#mfcc-pipeline">MFCC Pipeline</a></li>
+        <li class="sub-item"><a href="#delta-features">Delta Features</a></li>
+        <li><a href="#prosodic">Prosodic Features</a></li>
+        <li class="sub-item"><a href="#pitch">Pitch (F0)</a></li>
+        <li class="sub-item"><a href="#energy">Energy &amp; Intensity</a></li>
+        <li class="sub-item"><a href="#rate-rhythm">Rate &amp; Rhythm</a></li>
+        <li><a href="#spectral">Spectral Features</a></li>
+        <li><a href="#formants">Formant Frequencies</a></li>
+        <li><a href="#voice-quality">Voice Quality</a></li>
+        <li><a href="#temporal">Temporal Features</a></li>
+        <li><a href="#taxonomy">Feature Taxonomy</a></li>
+        <li><a href="#emotion-mapping">Emotion-Feature Mapping</a></li>
+        <li><a href="#comparison">Feature Comparison</a></li>
+        <li><a href="#realtime">Real-Time Architecture</a></li>
+        <li><a href="#ios-integration">iOS/Swift Integration</a></li>
+        <li><a href="#tools">Extraction Tools</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+      </ul>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">Deep Dive Categories</div>
+      <ul class="sidebar-nav">
+        <li><a href="../index.html" style="font-weight:600; color: var(--color-primary);">1. Acoustic Features (current)</a></li>
+        <li><a href="../traditional-ml-classifiers/index.html">2. Traditional ML Classifiers</a></li>
+        <li><a href="../deep-learning-architectures/index.html">3. Deep Learning Architectures</a></li>
+        <li><a href="../foundation-models/index.html">4. Foundation Models</a></li>
+        <li><a href="../open-source-toolkits/index.html">5. Open Source Toolkits</a></li>
+        <li><a href="../commercial-api-services/index.html">6. Commercial APIs</a></li>
+        <li><a href="../multimodal-fusion-llm/index.html">7. Multimodal Fusion</a></li>
+        <li><a href="../apple-platform-integration/index.html">8. Apple Platform Integration</a></li>
+      </ul>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+      <!-- Hero -->
+      <div class="page-hero">
+        <div class="category-badge">Category 1 of 8</div>
+        <h1>Acoustic Feature Engineering &amp; Signal Processing</h1>
+        <p class="subtitle">
+          How raw audio waveforms are transformed into emotion-revealing numerical representations through mathematical signal processing, perceptual modeling, and carefully engineered feature extraction.
+        </p>
+        <div class="meta-pills">
+          <span class="meta-pill">Foundation Layer</span>
+          <span class="meta-pill">MFCCs &bull; Prosody &bull; Spectral &bull; Voice Quality</span>
+          <span class="meta-pill">~15 min read</span>
+        </div>
+      </div>
+
+      <!-- ===== OVERVIEW ===== -->
+      <div class="section">
+        <span class="section-anchor" id="overview"></span>
+        <h2><span class="section-icon">&#127911;</span> Overview</h2>
+
+        <p>
+          Every audio emotion detection system begins here: converting a continuous pressure wave captured by a microphone into a structured set of numbers that reveal the speaker's emotional state. This process, called <strong>acoustic feature engineering</strong>, is the single most important step in the entire pipeline. No amount of model sophistication can recover emotion information that was lost during feature extraction.
+        </p>
+
+        <p>
+          The human voice encodes emotion through dozens of simultaneously varying acoustic properties: the pitch rises and falls, the voice trembles or stabilizes, the speaking pace quickens or slows, the timbre brightens or darkens. Feature engineering is the art and science of capturing these variations as measurable quantities.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">&#128161; Why This Matters</div>
+          <p>
+            All downstream components in the emotion detection pipeline (ML classifiers, deep learning models, commercial APIs) ultimately depend on the quality of acoustic features. Understanding these features is essential for debugging, improving accuracy, choosing the right model architecture, and building practical real-time systems on platforms like iOS.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="fc-icon">&#127925;</div>
+            <h4>MFCCs</h4>
+            <p>Capture vocal tract shape and timbre using perceptually-motivated frequency analysis. The most widely used speech features.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon">&#128200;</div>
+            <h4>Prosodic Features</h4>
+            <p>Pitch, energy, speaking rate, and rhythm encode emotional arousal and valence through suprasegmental patterns.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon">&#127752;</div>
+            <h4>Spectral Features</h4>
+            <p>Spectral centroid, flux, rolloff, and bandwidth describe the frequency distribution and brightness of the voice.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon">&#128490;</div>
+            <h4>Voice Quality</h4>
+            <p>Jitter, shimmer, and HNR measure micro-perturbations in pitch and amplitude that indicate vocal tension and breathiness.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon">&#128292;</div>
+            <h4>Formants</h4>
+            <p>Resonance frequencies of the vocal tract (F1-F4) shift with articulatory changes caused by emotional state.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon">&#9202;</div>
+            <h4>Temporal Features</h4>
+            <p>Pause patterns, speech-to-silence ratio, and timing reveal emotional engagement and cognitive load.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SIGNAL PROCESSING PIPELINE ===== -->
+      <div class="section">
+        <span class="section-anchor" id="pipeline"></span>
+        <h2><span class="section-icon">&#9881;</span> Signal Processing Pipeline</h2>
+
+        <p>
+          Before any features can be extracted, raw audio must pass through a preprocessing pipeline that prepares the signal for analysis. Each step addresses a specific physical or mathematical requirement.
+        </p>
+
+        <div class="diagram-container">
+          <div class="diagram-title">Figure 1: Audio Signal Processing Pipeline</div>
+          <div class="mermaid">
+            flowchart LR
+              A["&#127908; Raw Audio\n16kHz, 16-bit PCM"] --> B["Pre-emphasis\ny[n] = x[n] - 0.97x[n-1]"]
+              B --> C["Framing\n25ms frames\n10ms hop"]
+              C --> D["Windowing\nHamming window"]
+              D --> E["FFT\nMagnitude spectrum"]
+              E --> F["Feature\nExtraction"]
+              F --> G["Normalization\nCMVN"]
+              G --> H["&#128202; Feature\nVector"]
+
+              style A fill:#6366F1,color:#fff,stroke:none
+              style H fill:#10B981,color:#fff,stroke:none
+              style B fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+              style C fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+              style D fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+              style E fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+              style F fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+              style G fill:#EEF2FF,color:#1F2937,stroke:#6366F1
+          </div>
+        </div>
+
+        <!-- Pre-emphasis -->
+        <span class="section-anchor" id="pre-emphasis"></span>
+        <h3>Pre-emphasis</h3>
+        <p>
+          The human voice concentrates most of its energy in lower frequencies (below 1 kHz). Higher frequencies, which carry critical information for distinguishing consonants and detecting emotion-related timbral changes, are naturally weaker. Pre-emphasis applies a simple first-order high-pass filter to boost these higher frequencies.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">Pre-emphasis filter</span>
+          y[n] = x[n] - &alpha; &middot; x[n-1], &nbsp; where &alpha; = 0.95 to 0.97
+        </div>
+
+        <p>
+          This is computationally trivial (a single subtraction per sample) but significantly improves the signal-to-noise ratio for high-frequency components and produces a flatter spectral envelope, making downstream analysis more numerically stable.
+        </p>
+
+        <!-- Framing & Windowing -->
+        <span class="section-anchor" id="framing-windowing"></span>
+        <h3>Framing &amp; Windowing</h3>
+        <p>
+          Speech is a non-stationary signal: its properties change over time as the speaker articulates different sounds. However, over very short time intervals (20-30 milliseconds), the vocal tract shape remains approximately constant, making the signal
+          <span class="glossary-term">quasi-stationary
+            <span class="tooltip">A signal that changes over time but can be considered approximately constant (stationary) within short time windows, enabling frequency-domain analysis techniques that assume stationarity.</span>
+          </span>. This motivates splitting the audio into short overlapping <strong>frames</strong>.
+        </p>
+
+        <div class="pipeline-steps">
+          <div class="pipeline-step">
+            <div class="step-title">Frame</div>
+            <div class="step-detail">25ms windows at 16kHz = 400 samples per frame</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-title">Overlap</div>
+            <div class="step-detail">10ms hop = 60% overlap between consecutive frames</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-title">Window</div>
+            <div class="step-detail">Hamming window tapers edges to zero, reducing spectral leakage</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-title">Result</div>
+            <div class="step-detail">100 frames/sec, each ready for FFT analysis</div>
+          </div>
+        </div>
+
+        <div class="formula">
+          <span class="formula-label">Hamming Window Function</span>
+          w[n] = 0.54 - 0.46 &middot; cos(2&pi;n / (N-1)), &nbsp; 0 &le; n &le; N-1
+        </div>
+
+        <p>
+          Without windowing, the abrupt boundaries of each frame create high-frequency artifacts in the frequency domain (spectral leakage). The Hamming window smoothly tapers the frame edges to zero, producing a cleaner spectrum at the cost of slightly reduced frequency resolution.
+        </p>
+
+        <!-- Normalization -->
+        <span class="section-anchor" id="normalization"></span>
+        <h3>Normalization</h3>
+        <p>
+          After features are extracted, normalization removes unwanted variability caused by recording conditions, microphone characteristics, background noise, and speaker volume differences.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Formula</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Mean Normalization</strong></td>
+                <td><code>x' = x - mean(x)</code></td>
+                <td>Remove DC offset / channel bias</td>
+              </tr>
+              <tr>
+                <td><strong>Z-score (CMVN)</strong></td>
+                <td><code>x' = (x - mean) / std</code></td>
+                <td>Standardize mean and variance</td>
+              </tr>
+              <tr>
+                <td><strong>Min-Max</strong></td>
+                <td><code>x' = (x - min) / (max - min)</code></td>
+                <td>Scale to [0, 1] range</td>
+              </tr>
+              <tr>
+                <td><strong>Per-utterance CMN</strong></td>
+                <td><code>x' = x - utterance_mean</code></td>
+                <td>Reduce speaker/channel effects within an utterance</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">&#9888;&#65039; Normalization Pitfall</div>
+          <p>
+            In real-time systems, you cannot compute utterance-level statistics (mean, std) until the utterance is complete. Solutions include using a running mean/variance estimate updated with each new frame, or normalizing against a speaker-specific baseline captured during calibration.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== MFCC SECTION ===== -->
+      <div class="section">
+        <span class="section-anchor" id="mfcc"></span>
+        <h2><span class="section-icon">&#127932;</span> Mel-Frequency Cepstral Coefficients (MFCCs)</h2>
+
+        <p>
+          MFCCs are the single most important and widely used feature in speech and audio processing. They model the human auditory system's frequency perception to create a compact representation of the vocal tract shape, which encodes both the identity and emotional state of the speaker.
+        </p>
+
+        <!-- Mel Scale -->
+        <span class="section-anchor" id="mel-scale"></span>
+        <h3>The Mel Scale</h3>
+        <p>
+          Human pitch perception is not linear: we can easily distinguish between 200 Hz and 300 Hz, but 5200 Hz and 5300 Hz sound nearly identical. The
+          <span class="glossary-term">mel scale
+            <span class="tooltip">A perceptual scale of pitches where equal distances correspond to equal perceived pitch intervals. Below ~1000 Hz it is approximately linear; above ~1000 Hz it is approximately logarithmic. Named from the word "melody."</span>
+          </span>
+          transforms frequency to match this nonlinear perception.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">Hz to Mel Conversion (O'Shaughnessy, 1987)</span>
+          m = 2595 &middot; log&#8321;&#8320;(1 + f/700)
+        </div>
+
+        <div class="formula">
+          <span class="formula-label">Mel to Hz (Inverse)</span>
+          f = 700 &middot; (10<sup>m/2595</sup> - 1)
+        </div>
+
+        <p>
+          Key property: below ~1000 Hz, the mel scale is approximately linear (equal spacing in Hz = equal spacing in mels). Above ~1000 Hz, it becomes approximately logarithmic (each doubling of frequency corresponds to a roughly equal perceptual increase). This mirrors the cochlea's tonotopic organization.
+        </p>
+
+        <details>
+          <summary>Reference: Mel-to-Hz Conversion Table</summary>
+          <div class="detail-content">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr><th>Mel</th><th>Hz</th><th>Note</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>0</td><td>0</td><td>-</td></tr>
+                  <tr><td>200</td><td>133</td><td>Low male voice F0 range</td></tr>
+                  <tr><td>500</td><td>356</td><td>Typical F1 for open vowels</td></tr>
+                  <tr><td>1000</td><td>1000</td><td>Reference point (1000 mels = 1000 Hz)</td></tr>
+                  <tr><td>1500</td><td>2136</td><td>F2 range for front vowels</td></tr>
+                  <tr><td>2000</td><td>4562</td><td>F3 / brightness perception</td></tr>
+                  <tr><td>2500</td><td>9743</td><td>Upper spectral detail</td></tr>
+                  <tr><td>2843</td><td>16000</td><td>Nyquist at 16kHz sampling</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <!-- MFCC Pipeline -->
+        <span class="section-anchor" id="mfcc-pipeline"></span>
+        <h3>The MFCC Extraction Pipeline</h3>
+
+        <div class="diagram-container">
+          <div class="diagram-title">Figure 2: MFCC Extraction Process</div>
+          <div class="mermaid">
+            flowchart TD
+              A["&#127908; Audio Waveform"] --> B["Pre-emphasis\ny[n] = x[n] - 0.97x[n-1]"]
+              B --> C["Frame into\n25ms windows"]
+              C --> D["Apply Hamming\nWindow"]
+              D --> E["FFT\nTime -> Frequency Domain"]
+              E --> F["|X(k)|^2\nPower Spectrum"]
+              F --> G["Apply Mel Filterbank\n26-40 triangular filters"]
+              G --> H["Log Compression\nlog(mel energies)"]
+              H --> I["DCT\nDecorrelate features"]
+              I --> J["Keep 12-13\nCoefficients"]
+              J --> K["&#128202; MFCCs\n+ optional deltas"]
+
+              style A fill:#6366F1,color:#fff,stroke:none
+              style K fill:#10B981,color:#fff,stroke:none
+              style E fill:#DBEAFE,color:#1E3A8A,stroke:#3B82F6
+              style G fill:#FEF3C7,color:#92400E,stroke:#F59E0B
+              style H fill:#FEF3C7,color:#92400E,stroke:#F59E0B
+              style I fill:#EDE9FE,color:#5B21B6,stroke:#8B5CF6
+          </div>
+        </div>
+
+        <h4>Step-by-Step Breakdown</h4>
+
+        <p><strong>1. Pre-emphasis, Framing, Windowing</strong> (covered above): Prepare overlapping, windowed frames.</p>
+
+        <p><strong>2. FFT (Fast Fourier Transform)</strong>: Convert each time-domain frame to its frequency representation. The result is a complex-valued spectrum; we take the squared magnitude to get the <strong>power spectrum</strong>.</p>
+
+        <p><strong>3. Mel Filterbank</strong>: Apply 26-40 overlapping triangular bandpass filters whose center frequencies are equally spaced on the mel scale. Each filter sums the energy in its frequency band, producing one number per filter. Filters are narrower at low frequencies (higher resolution where human perception is sharper) and wider at high frequencies.</p>
+
+        <p><strong>4. Log Compression</strong>: Take the natural logarithm of each filterbank energy. This models human loudness perception (Weber-Fechner law: perceived loudness is proportional to log of intensity).</p>
+
+        <p><strong>5. DCT (Discrete Cosine Transform)</strong>: Apply the
+          <span class="glossary-term">DCT
+            <span class="tooltip">Discrete Cosine Transform: A Fourier-related transform that uses only cosine functions. It decorrelates the mel-log energies and compacts most of the information into the first few coefficients, providing dimensionality reduction.</span>
+          </span>
+          to the log mel energies. This decorrelates the features (adjacent mel bands are correlated because of filter overlap) and compacts the information: the first few DCT coefficients capture most of the variance. We keep only 12-13 coefficients, discarding coefficient 0 (which represents overall energy and is often replaced by log energy).
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">&#128161; Why MFCCs Capture Emotion</div>
+          <p>
+            The vocal tract changes shape with emotional state: muscle tension increases during anger, the larynx shifts position during sadness, breathing patterns change during fear. MFCCs capture the spectral envelope (which is determined by vocal tract shape), so they naturally encode these emotion-driven changes. The mel scale ensures we emphasize the frequency ranges most important for human perception of speech and emotion.
+          </p>
+        </div>
+
+        <div class="code-block">
+          <span class="code-label">Pseudocode</span>
+          <pre>
+function extractMFCC(signal, sampleRate=16000):
+    // Step 1: Pre-emphasis
+    emphasized = [signal[0]]
+    for n in 1..length(signal):
+        emphasized[n] = signal[n] - 0.97 * signal[n-1]
+
+    // Step 2: Framing (25ms frame, 10ms hop)
+    frameSize  = round(0.025 * sampleRate)   // 400 samples
+    hopSize    = round(0.010 * sampleRate)   // 160 samples
+    frames     = splitIntoFrames(emphasized, frameSize, hopSize)
+
+    // Step 3: Windowing
+    window = hammingWindow(frameSize)
+    for each frame in frames:
+        frame = frame * window
+
+    // Step 4: FFT + Power Spectrum
+    nfft = nextPowerOf2(frameSize)           // 512
+    for each frame in frames:
+        spectrum   = FFT(frame, nfft)
+        powerSpec  = |spectrum|^2 / nfft
+
+    // Step 5: Mel Filterbank (26 filters)
+    melFilters = createMelFilterbank(26, nfft, sampleRate)
+    for each powerSpec:
+        melEnergy = melFilters * powerSpec   // matrix multiply
+
+    // Step 6: Log compression
+    logMelEnergy = log(melEnergy + 1e-10)    // epsilon for stability
+
+    // Step 7: DCT and keep 12 coefficients
+    mfcc = DCT(logMelEnergy)[1:13]           // skip c0
+
+    return mfcc  // shape: (numFrames, 12)</pre>
+        </div>
+
+        <!-- Delta Features -->
+        <span class="section-anchor" id="delta-features"></span>
+        <h3>Delta and Delta-Delta (Acceleration) Features</h3>
+
+        <p>
+          Static MFCCs capture a snapshot of the spectrum at each frame. But emotion is encoded not just in <em>what</em> the voice sounds like at any instant, but <em>how it changes over time</em>. Delta features capture this temporal dynamics.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">Delta (Velocity) Coefficient</span>
+          d<sub>t</sub> = &sum;<sub>n=1..N</sub> n &middot; (c<sub>t+n</sub> - c<sub>t-n</sub>) / (2 &middot; &sum;<sub>n=1..N</sub> n&sup2;)
+        </div>
+
+        <p>Where <code>d<sub>t</sub></code> is the delta at frame <em>t</em>, <code>c</code> are the static MFCCs, and <em>N</em> is typically 2.</p>
+
+        <p><strong>Delta-delta (acceleration)</strong> coefficients apply the same formula to the delta coefficients, capturing the rate of change of the rate of change.</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Feature Type</th><th>Count</th><th>What It Captures</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Static MFCCs</strong></td><td>13</td><td>Spectral shape at each instant</td><td>Vocal tract configuration during a vowel</td></tr>
+              <tr><td><strong>Delta (velocity)</strong></td><td>13</td><td>How spectrum is changing</td><td>Transition from one sound to the next</td></tr>
+              <tr><td><strong>Delta-delta (acceleration)</strong></td><td>13</td><td>How rate of change is changing</td><td>Abrupt vs. gradual timbral shifts</td></tr>
+              <tr><td><strong>Total</strong></td><td><strong>39</strong></td><td colspan="2"><em>Standard MFCC feature vector per frame</em></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-title">&#9989; Practical Tip</div>
+          <p>
+            For emotion recognition, delta and delta-delta features are especially important. Emotional speech is characterized by dynamic patterns (pitch swoops, energy bursts, abrupt pauses) that static features miss. Including deltas typically improves emotion classification accuracy by 5-15%.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== PROSODIC FEATURES ===== -->
+      <div class="section">
+        <span class="section-anchor" id="prosodic"></span>
+        <h2><span class="section-icon">&#128200;</span> Prosodic Features</h2>
+
+        <p>
+          <span class="glossary-term">Prosody
+            <span class="tooltip">The patterns of rhythm, stress, and intonation in speech. Prosodic features are "suprasegmental" because they span multiple speech segments (syllables, words) rather than individual phonemes. They are the primary acoustic carrier of emotional information.</span>
+          </span>
+          refers to the musical qualities of speech: its melody (pitch), loudness, timing, and rhythm. These suprasegmental features are the primary acoustic carriers of emotional information and are among the first cues humans use to detect a speaker's emotional state.
+        </p>
+
+        <!-- Pitch -->
+        <span class="section-anchor" id="pitch"></span>
+        <h3>Fundamental Frequency (F0 / Pitch)</h3>
+        <p>
+          F0 is the rate at which the vocal folds vibrate, perceived as pitch. It is the single most studied feature in speech emotion recognition.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Property</th><th>Details</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Typical range</strong></td><td>80-250 Hz (male), 150-350 Hz (female)</td></tr>
+              <tr><td><strong>Extraction methods</strong></td><td>Autocorrelation, YIN, RAPT, SWIPE, pYIN</td></tr>
+              <tr><td><strong>Statistics used</strong></td><td>Mean, median, std dev, min, max, range, slope, contour shape</td></tr>
+              <tr><td><strong>Perceptual unit</strong></td><td>Semitones (logarithmic) — better models perceived pitch changes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>F0 and Emotion</h4>
+        <ul>
+          <li><span class="emotion-badge emotion-anger">Anger</span> Higher mean F0, wider range, faster pitch changes</li>
+          <li><span class="emotion-badge emotion-happiness">Happiness</span> Higher mean F0, wider range (acoustically similar to anger)</li>
+          <li><span class="emotion-badge emotion-sadness">Sadness</span> Lower mean F0, narrowest range (~90 Hz mean range), flatter contour</li>
+          <li><span class="emotion-badge emotion-fear">Fear</span> Higher mean F0, high variability, irregular contour</li>
+          <li><span class="emotion-badge emotion-surprise">Surprise</span> Highest F0 values overall, sharp upward contours</li>
+          <li><span class="emotion-badge emotion-neutral">Neutral</span> Mid-range F0, moderate variability</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">&#9888;&#65039; Challenge: Anger vs. Happiness</div>
+          <p>
+            Anger and happiness share many F0 characteristics (both are high-arousal emotions with elevated pitch and energy). Separating them requires additional features like spectral tilt, voice quality measures, and speaking rate patterns.
+          </p>
+        </div>
+
+        <!-- Energy -->
+        <span class="section-anchor" id="energy"></span>
+        <h3>Energy &amp; Intensity</h3>
+        <p>
+          Energy (or intensity) measures the loudness of the speech signal. It is computed as the root-mean-square (RMS) amplitude or the sum of squared magnitudes within each frame.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">RMS Energy</span>
+          E = &radic;( (1/N) &middot; &sum;<sub>n=0..N-1</sub> x[n]&sup2; )
+        </div>
+
+        <p>
+          High-arousal emotions (anger, happiness, fear) tend to produce higher overall energy and greater energy variability. Sadness and boredom are characterized by lower energy and flatter energy contours. Energy in specific frequency bands (e.g., above 500 Hz) can further distinguish emotions; anger produces disproportionately more high-frequency energy.
+        </p>
+
+        <!-- Rate & Rhythm -->
+        <span class="section-anchor" id="rate-rhythm"></span>
+        <h3>Speaking Rate &amp; Rhythm</h3>
+        <p>
+          Speaking rate is measured as syllables or phonemes per unit time. Rhythm captures the patterns of stressed and unstressed syllables, duration variation, and regularity.
+        </p>
+
+        <ul>
+          <li><strong>High-arousal emotions</strong> (anger, fear, happiness): Faster speaking rate, shorter pauses, more rhythmic energy</li>
+          <li><strong>Low-arousal emotions</strong> (sadness, boredom): Slower rate, longer pauses, less rhythmic variation</li>
+          <li><strong>Measurement</strong>: Voice Activity Detection (VAD) + syllable nuclei detection</li>
+        </ul>
+      </div>
+
+      <!-- ===== SPECTRAL FEATURES ===== -->
+      <div class="section">
+        <span class="section-anchor" id="spectral"></span>
+        <h2><span class="section-icon">&#127752;</span> Spectral Features</h2>
+
+        <p>
+          Spectral features describe how energy is distributed across frequencies at each moment. They complement MFCCs by providing interpretable, low-dimensional measures of the voice's timbral qualities.
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Spectral Centroid</h4>
+            <p>
+              The "center of gravity" of the spectrum. Higher values indicate a brighter sound. Anger and excitement produce higher centroids; sadness is lower.
+            </p>
+            <div class="formula" style="margin-top:0.75rem; padding:0.5rem; font-size:0.8125rem; text-align:center;">
+              SC = &sum;(f &middot; |X(f)|) / &sum;|X(f)|
+            </div>
+          </div>
+          <div class="feature-card">
+            <h4>Spectral Flux</h4>
+            <p>
+              Rate of change of the spectrum between frames. High flux indicates rapid timbral changes common in agitated or emotionally intense speech.
+            </p>
+            <div class="formula" style="margin-top:0.75rem; padding:0.5rem; font-size:0.8125rem; text-align:center;">
+              SF = &sum;(|X<sub>t</sub>(k)| - |X<sub>t-1</sub>(k)|)&sup2;
+            </div>
+          </div>
+          <div class="feature-card">
+            <h4>Spectral Rolloff</h4>
+            <p>
+              The frequency below which 85-95% of total spectral energy lies. Indicates where energy is concentrated; higher rolloff in energetic, bright emotions.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Spectral Bandwidth</h4>
+            <p>
+              Width of the spectrum around the centroid. Tonal sounds have narrow bandwidth; noisy or emotionally aroused speech has wider bandwidth.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Zero Crossing Rate</h4>
+            <p>
+              How often the signal crosses zero. A simple time-domain proxy for spectral content: higher ZCR correlates with more high-frequency energy and noisier speech.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h4>Spectral Slope / Tilt</h4>
+            <p>
+              Slope of the spectrum from low to high frequencies. Differentiates breathy (steep slope) from pressed (flat slope) voice quality. Helps separate anger from happiness.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== FORMANTS ===== -->
+      <div class="section">
+        <span class="section-anchor" id="formants"></span>
+        <h2><span class="section-icon">&#128292;</span> Formant Frequencies</h2>
+
+        <p>
+          <span class="glossary-term">Formants
+            <span class="tooltip">Resonance frequencies of the vocal tract. They appear as peaks in the spectral envelope and are determined by the shape, length, and configuration of the mouth, throat, and nasal cavities. Numbered F1 (lowest) through F4+ (highest).</span>
+          </span>
+          are the resonance frequencies of the vocal tract, appearing as prominent peaks in the spectral envelope. They are determined by the physical shape and configuration of the mouth, throat, and nasal cavities.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Formant</th><th>Frequency Range</th><th>Controlled By</th><th>Emotion Relevance</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>F1</strong></td>
+                <td>250-900 Hz</td>
+                <td>Jaw openness / tongue height</td>
+                <td>Tends to rise under stress and anger due to increased jaw opening</td>
+              </tr>
+              <tr>
+                <td><strong>F2</strong></td>
+                <td>700-2500 Hz</td>
+                <td>Tongue front-back position</td>
+                <td>Shifts with articulation changes under emotional arousal</td>
+              </tr>
+              <tr>
+                <td><strong>F3</strong></td>
+                <td>1500-3500 Hz</td>
+                <td>Lip rounding, rhoticity</td>
+                <td>Less studied for emotion but contributes to speaker's timbre</td>
+              </tr>
+              <tr>
+                <td><strong>F4</strong></td>
+                <td>3000-4500 Hz</td>
+                <td>Larynx height, vocal tract length</td>
+                <td>Shifts when larynx raises (tension, stress) or lowers (relaxation)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Formant extraction typically uses
+          <span class="glossary-term">Linear Predictive Coding (LPC)
+            <span class="tooltip">A method that models the vocal tract as an all-pole digital filter. By fitting an autoregressive model to the speech signal, LPC estimates the spectral envelope from which formant frequencies can be identified as peaks.</span>
+          </span>, which models the vocal tract as an all-pole digital filter. The LPC coefficients define the spectral envelope, and formants are identified as the peaks (poles) of this envelope.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-title">&#128161; Formant Bandwidth</div>
+          <p>
+            The <em>bandwidth</em> of each formant is also emotionally informative. Narrower formant bandwidths (sharper peaks) are associated with tense, pressed voice quality (anger, stress), while wider bandwidths indicate breathier, more relaxed voice quality (calm, sadness).
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== VOICE QUALITY ===== -->
+      <div class="section">
+        <span class="section-anchor" id="voice-quality"></span>
+        <h2><span class="section-icon">&#128490;</span> Voice Quality Measures</h2>
+
+        <p>
+          Voice quality features measure micro-perturbations in the periodicity and amplitude of the vocal fold vibration. These subtle variations are invisible on a spectrogram but carry significant emotional information.
+        </p>
+
+        <h3>Jitter (Frequency Perturbation)</h3>
+        <p>
+          Jitter measures the cycle-to-cycle variation in fundamental frequency period length. A perfectly periodic voice would have zero jitter; real voices always show some perturbation, which increases under stress, fatigue, or emotional intensity.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">Local Jitter</span>
+          Jitter(%) = (1/(N-1)) &middot; &sum;|T<sub>i</sub> - T<sub>i+1</sub>| / ((1/N) &middot; &sum; T<sub>i</sub>) &times; 100
+        </div>
+
+        <p>Where <em>T<sub>i</sub></em> is the length of the <em>i</em>-th pitch period. Normal range: &lt; 1% for healthy adult voices.</p>
+
+        <h3>Shimmer (Amplitude Perturbation)</h3>
+        <p>
+          Shimmer measures cycle-to-cycle variation in peak amplitude. Higher shimmer indicates breathier, less stable voice production.
+        </p>
+
+        <div class="formula">
+          <span class="formula-label">Local Shimmer</span>
+          Shimmer(%) = (1/(N-1)) &middot; &sum;|A<sub>i</sub> - A<sub>i+1</sub>| / ((1/N) &middot; &sum; A<sub>i</sub>) &times; 100
+        </div>
+
+        <p>Normal range: &lt; 3-5% for healthy voices. High shimmer often correlates with low HNR.</p>
+
+        <h3>Harmonics-to-Noise Ratio (HNR)</h3>
+        <p>
+          <span class="glossary-term">HNR
+            <span class="tooltip">Harmonics-to-Noise Ratio: The ratio of periodic (harmonic) energy to aperiodic (noise) energy in the voice signal, measured in decibels. Higher HNR indicates a cleaner, more periodic voice; lower HNR indicates breathiness, hoarseness, or vocal strain.</span>
+          </span>
+          measures the ratio of periodic (harmonic) energy to aperiodic (noise) energy in the voice signal.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Measure</th><th>What It Detects</th><th>Normal Range</th><th>Emotion Pattern</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Jitter</strong></td>
+                <td>Pitch period irregularity</td>
+                <td>&lt; 1%</td>
+                <td>Increases with stress, anger, fear, crying</td>
+              </tr>
+              <tr>
+                <td><strong>Shimmer</strong></td>
+                <td>Amplitude irregularity</td>
+                <td>&lt; 3-5%</td>
+                <td>Increases with breathiness, emotional intensity</td>
+              </tr>
+              <tr>
+                <td><strong>HNR</strong></td>
+                <td>Harmonic clarity</td>
+                <td>15-20+ dB</td>
+                <td>Decreases with stress, sadness, crying (breathier voice)</td>
+              </tr>
+              <tr>
+                <td><strong>CPP</strong></td>
+                <td>Cepstral peak prominence</td>
+                <td>Varies</td>
+                <td>More robust measure of voice quality across recording conditions</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">&#9888;&#65039; Limitations of Voice Quality Measures</div>
+          <p>
+            Jitter, shimmer, and HNR require accurate pitch tracking, which can be unreliable in noisy environments or during highly emotional speech (where the voice itself becomes irregular). These features are also less stable in spontaneous speech compared to controlled laboratory recordings, producing greater variability in real-world applications.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== TEMPORAL FEATURES ===== -->
+      <div class="section">
+        <span class="section-anchor" id="temporal"></span>
+        <h2><span class="section-icon">&#9202;</span> Temporal Features</h2>
+
+        <p>
+          Temporal features capture the timing structure of speech: when the speaker speaks, when they pause, and how these patterns relate to emotional state.
+        </p>
+
+        <h3>Pause Patterns</h3>
+        <ul>
+          <li><strong>Pause duration</strong>: Mean, median, and maximum silence duration between speech segments</li>
+          <li><strong>Pause frequency</strong>: Number of pauses per minute of speech</li>
+          <li><strong>Pause regularity</strong>: Variance in pause duration (regular vs. erratic pausing)</li>
+        </ul>
+
+        <h4>Emotion Correlates</h4>
+        <ul>
+          <li><span class="emotion-badge emotion-sadness">Sadness</span> More pauses, longer pauses, higher pause-to-speech ratio</li>
+          <li><span class="emotion-badge emotion-happiness">Happiness</span> Fewer pauses, shorter pauses, more continuous speech</li>
+          <li><span class="emotion-badge emotion-anger">Anger</span> Fewer pauses, shorter inter-word silence, forceful onsets</li>
+          <li><span class="emotion-badge emotion-fear">Fear</span> Variable pause patterns, hesitations, filled pauses ("um", "uh")</li>
+        </ul>
+
+        <h3>Speech-to-Silence Ratio</h3>
+        <p>
+          The ratio of voiced time to total recording time. Active, high-arousal emotions produce more speech and less silence; passive emotions produce more silence. Depression severity has been shown to correlate with shorter, less variable pauses.
+        </p>
+
+        <h3>Voice Activity Detection (VAD)</h3>
+        <p>
+          VAD segments audio into speech and silence regions. Methods range from simple energy thresholds to sophisticated ML-based detectors. The quality of VAD directly affects the accuracy of temporal features.
+        </p>
+      </div>
+
+      <!-- ===== FEATURE TAXONOMY ===== -->
+      <div class="section">
+        <span class="section-anchor" id="taxonomy"></span>
+        <h2><span class="section-icon">&#128218;</span> Feature Taxonomy</h2>
+
+        <div class="diagram-container">
+          <div class="diagram-title">Figure 3: Taxonomy of Acoustic Features for Emotion Recognition</div>
+          <div class="mermaid">
+            graph TD
+              ROOT["Acoustic Features for<br/>Emotion Recognition"] --> PROS["Prosodic<br/>Features"]
+              ROOT --> SPEC["Spectral<br/>Features"]
+              ROOT --> CEPS["Cepstral<br/>Features"]
+              ROOT --> VQ["Voice Quality<br/>Features"]
+              ROOT --> TEMP["Temporal<br/>Features"]
+
+              PROS --> P1["Pitch / F0<br/>mean, range, slope"]
+              PROS --> P2["Energy / Intensity<br/>RMS, loudness"]
+              PROS --> P3["Speaking Rate<br/>syllables/sec"]
+              PROS --> P4["Rhythm<br/>stress patterns"]
+
+              SPEC --> S1["Spectral Centroid<br/>brightness"]
+              SPEC --> S2["Spectral Flux<br/>change rate"]
+              SPEC --> S3["Spectral Rolloff<br/>energy concentration"]
+              SPEC --> S4["Bandwidth<br/>spectral width"]
+              SPEC --> S5["Formants F1-F4<br/>vocal tract resonance"]
+
+              CEPS --> C1["MFCCs<br/>12-13 coefficients"]
+              CEPS --> C2["Delta MFCCs<br/>velocity"]
+              CEPS --> C3["Delta-Delta<br/>acceleration"]
+              CEPS --> C4["Log Mel Energy<br/>filterbank output"]
+
+              VQ --> V1["Jitter<br/>pitch perturbation"]
+              VQ --> V2["Shimmer<br/>amplitude perturbation"]
+              VQ --> V3["HNR<br/>harmonic clarity"]
+              VQ --> V4["CPP<br/>cepstral peak"]
+
+              TEMP --> T1["Pause Duration<br/>silence length"]
+              TEMP --> T2["Pause Frequency<br/>pauses/min"]
+              TEMP --> T3["Speech/Silence<br/>ratio"]
+              TEMP --> T4["VAD<br/>voice activity"]
+
+              style ROOT fill:#6366F1,color:#fff,stroke:none
+              style PROS fill:#3B82F6,color:#fff,stroke:none
+              style SPEC fill:#10B981,color:#fff,stroke:none
+              style CEPS fill:#F59E0B,color:#fff,stroke:none
+              style VQ fill:#EF4444,color:#fff,stroke:none
+              style TEMP fill:#8B5CF6,color:#fff,stroke:none
+          </div>
+        </div>
+
+        <h3>Low-Level Descriptors (LLDs) vs. Statistical Functionals</h3>
+        <p>
+          Features can be extracted at two levels:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Level</th><th>Granularity</th><th>Example</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Frame-level (LLDs)</strong></td>
+                <td>One value per frame (~10ms)</td>
+                <td>F0 = 142 Hz at frame 37</td>
+                <td>Sequence models (RNNs, Transformers) that process temporal sequences</td>
+              </tr>
+              <tr>
+                <td><strong>Utterance-level (Functionals)</strong></td>
+                <td>One value per utterance</td>
+                <td>F0 mean = 158 Hz, std = 42 Hz</td>
+                <td>Traditional ML (SVM, Random Forest) that need fixed-length input</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Common statistical functionals applied to frame-level features: <strong>mean, std, min, max, range, median, percentiles (Q1, Q3), skewness, kurtosis, slope, offset, rising/falling duration</strong>.
+        </p>
+      </div>
+
+      <!-- ===== EMOTION-FEATURE MAPPING ===== -->
+      <div class="section">
+        <span class="section-anchor" id="emotion-mapping"></span>
+        <h2><span class="section-icon">&#127912;</span> Emotion-to-Feature Mapping</h2>
+
+        <p>
+          This comprehensive mapping shows which acoustic features are most informative for each emotion. Understanding these relationships is essential for feature selection and model interpretability.
+        </p>
+
+        <div class="diagram-container">
+          <div class="diagram-title">Figure 4: Emotion-Feature Correlation Map</div>
+          <div class="mermaid">
+            graph LR
+              subgraph Emotions
+                ANG["&#128545; Anger"]
+                HAP["&#128515; Happiness"]
+                SAD["&#128546; Sadness"]
+                FEA["&#128552; Fear"]
+                SUR["&#128562; Surprise"]
+                DIS["&#128534; Disgust"]
+              end
+
+              subgraph Features
+                F0["Pitch / F0"]
+                EN["Energy"]
+                RT["Speech Rate"]
+                SC["Spectral Centroid"]
+                JT["Jitter"]
+                HN["HNR"]
+                PA["Pause Patterns"]
+                FM["Formants"]
+              end
+
+              ANG -->|"HIGH mean & range"| F0
+              ANG -->|"HIGH, >500Hz"| EN
+              ANG -->|"FAST"| RT
+              ANG -->|"HIGH (bright)"| SC
+              ANG -->|"ELEVATED"| JT
+              ANG -->|"FEW, short"| PA
+
+              HAP -->|"HIGH mean & range"| F0
+              HAP -->|"HIGH, variable"| EN
+              HAP -->|"FAST"| RT
+
+              SAD -->|"LOW mean, NARROW"| F0
+              SAD -->|"LOW"| EN
+              SAD -->|"SLOW"| RT
+              SAD -->|"LOW (dark)"| SC
+              SAD -->|"LOW"| HN
+              SAD -->|"MANY, long"| PA
+
+              FEA -->|"HIGH, variable"| F0
+              FEA -->|"HIGH"| JT
+              FEA -->|"HIGH"| SC
+
+              SUR -->|"HIGHEST values"| F0
+              SUR -->|"HIGH"| EN
+
+              DIS -->|"LOW mean"| F0
+              DIS -->|"LOW"| SC
+
+              style ANG fill:#EF4444,color:#fff,stroke:none
+              style HAP fill:#F59E0B,color:#fff,stroke:none
+              style SAD fill:#3B82F6,color:#fff,stroke:none
+              style FEA fill:#8B5CF6,color:#fff,stroke:none
+              style SUR fill:#10B981,color:#fff,stroke:none
+              style DIS fill:#6B7280,color:#fff,stroke:none
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Emotion</th>
+                <th>Pitch (F0)</th>
+                <th>Energy</th>
+                <th>Rate</th>
+                <th>Pauses</th>
+                <th>Spectral</th>
+                <th>Voice Quality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="emotion-badge emotion-anger">Anger</span></td>
+                <td>High mean, wide range</td>
+                <td>High, more &gt;500Hz</td>
+                <td>Fast</td>
+                <td>Few, short</td>
+                <td>Bright, high centroid</td>
+                <td>Higher jitter, pressed</td>
+              </tr>
+              <tr>
+                <td><span class="emotion-badge emotion-happiness">Happiness</span></td>
+                <td>High mean, wide range</td>
+                <td>High, variable</td>
+                <td>Fast</td>
+                <td>Few</td>
+                <td>Bright</td>
+                <td>Moderate jitter</td>
+              </tr>
+              <tr>
+                <td><span class="emotion-badge emotion-sadness">Sadness</span></td>
+                <td>Low mean, narrow range</td>
+                <td>Low</td>
+                <td>Slow</td>
+                <td>Many, long</td>
+                <td>Dark, low centroid</td>
+                <td>Lower HNR, breathy</td>
+              </tr>
+              <tr>
+                <td><span class="emotion-badge emotion-fear">Fear</span></td>
+                <td>High mean, variable</td>
+                <td>Low-moderate</td>
+                <td>Fast</td>
+                <td>Variable</td>
+                <td>High-freq energy</td>
+                <td>High jitter/shimmer</td>
+              </tr>
+              <tr>
+                <td><span class="emotion-badge emotion-surprise">Surprise</span></td>
+                <td>Very high F0</td>
+                <td>High</td>
+                <td>Fast</td>
+                <td>Short</td>
+                <td>Wide bandwidth</td>
+                <td>Clear, low jitter</td>
+              </tr>
+              <tr>
+                <td><span class="emotion-badge emotion-neutral">Neutral</span></td>
+                <td>Mid-range</td>
+                <td>Moderate</td>
+                <td>Normal</td>
+                <td>Regular</td>
+                <td>Balanced</td>
+                <td>Normal HNR ~18dB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-title">&#128161; Key Insight: Arousal vs. Valence</div>
+          <p>
+            Acoustic features are much better at discriminating <strong>arousal</strong> (activation level: calm vs. excited) than <strong>valence</strong> (positive vs. negative). Pitch, energy, and speaking rate strongly correlate with arousal. Valence is harder to detect acoustically because anger (negative, high arousal) and happiness (positive, high arousal) share similar acoustic profiles. Separating valence often requires additional features like voice quality, spectral tilt, or linguistic content.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== FEATURE COMPARISON ===== -->
+      <div class="section">
+        <span class="section-anchor" id="comparison"></span>
+        <h2><span class="section-icon">&#9878;</span> Feature Comparison</h2>
+
+        <h3>Computational Cost &amp; Emotion Discrimination</h3>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature Category</th>
+                <th>Dimensions</th>
+                <th>Compute Cost</th>
+                <th>Arousal</th>
+                <th>Valence</th>
+                <th>Robustness</th>
+                <th>Real-Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>MFCCs (13+delta)</strong></td>
+                <td>39</td>
+                <td>Medium</td>
+                <td>Good</td>
+                <td>Moderate</td>
+                <td>Good</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Log Mel Spectrogram</strong></td>
+                <td>40-128</td>
+                <td>Medium</td>
+                <td>Good</td>
+                <td>Moderate</td>
+                <td>Good</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>F0 Statistics</strong></td>
+                <td>6-12</td>
+                <td>Medium</td>
+                <td>Excellent</td>
+                <td>Poor</td>
+                <td>Moderate</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Energy / RMS</strong></td>
+                <td>4-8</td>
+                <td>Low</td>
+                <td>Good</td>
+                <td>Poor</td>
+                <td>Good</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Spectral (centroid, flux, etc.)</strong></td>
+                <td>8-16</td>
+                <td>Low</td>
+                <td>Moderate</td>
+                <td>Low</td>
+                <td>Good</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Formants F1-F4</strong></td>
+                <td>8-16</td>
+                <td>High</td>
+                <td>Moderate</td>
+                <td>Moderate</td>
+                <td>Low</td>
+                <td>Possible</td>
+              </tr>
+              <tr>
+                <td><strong>Jitter / Shimmer / HNR</strong></td>
+                <td>6-10</td>
+                <td>High</td>
+                <td>Moderate</td>
+                <td>Moderate</td>
+                <td>Low</td>
+                <td>Difficult</td>
+              </tr>
+              <tr>
+                <td><strong>Temporal (pauses)</strong></td>
+                <td>4-8</td>
+                <td>Low</td>
+                <td>Good</td>
+                <td>Moderate</td>
+                <td>Good</td>
+                <td>Delayed</td>
+              </tr>
+              <tr>
+                <td><strong>eGeMAPS (full set)</strong></td>
+                <td>88</td>
+                <td>High</td>
+                <td>Excellent</td>
+                <td>Good</td>
+                <td>Good</td>
+                <td>Possible</td>
+              </tr>
+              <tr>
+                <td><strong>ComParE (full set)</strong></td>
+                <td>6373</td>
+                <td>Very High</td>
+                <td>Excellent</td>
+                <td>Good</td>
+                <td>Moderate*</td>
+                <td>No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><small>* ComParE's large feature set risks overfitting without careful feature selection or regularization.</small></p>
+
+        <h3>Feature Set Recommendations by Use Case</h3>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Use Case</th><th>Recommended Features</th><th>Total Dims</th><th>Rationale</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Mobile / Real-time</strong></td>
+                <td>MFCCs + F0 + energy</td>
+                <td>~50</td>
+                <td>Low latency, vDSP-compatible, proven effectiveness</td>
+              </tr>
+              <tr>
+                <td><strong>Research / Benchmarks</strong></td>
+                <td>eGeMAPS (88 features)</td>
+                <td>88</td>
+                <td>Standardized, reproducible, well-validated</td>
+              </tr>
+              <tr>
+                <td><strong>Deep Learning Input</strong></td>
+                <td>Log Mel Spectrogram</td>
+                <td>40-128 per frame</td>
+                <td>Retains all info; let the model learn what matters</td>
+              </tr>
+              <tr>
+                <td><strong>Clinical / Diagnostic</strong></td>
+                <td>eGeMAPS + voice quality + temporal</td>
+                <td>~110</td>
+                <td>Comprehensive analysis with interpretable features</td>
+              </tr>
+              <tr>
+                <td><strong>Quick Prototype</strong></td>
+                <td>MFCCs only (13 static)</td>
+                <td>13</td>
+                <td>Minimal implementation, surprisingly effective baseline</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== REAL-TIME ARCHITECTURE ===== -->
+      <div class="section">
+        <span class="section-anchor" id="realtime"></span>
+        <h2><span class="section-icon">&#9889;</span> Real-Time Feature Extraction Architecture</h2>
+
+        <p>
+          Building a real-time emotion detection system requires careful architecture to maintain low latency while processing continuous audio. Here is a practical architecture for streaming feature extraction.
+        </p>
+
+        <div class="diagram-container">
+          <div class="diagram-title">Figure 5: Real-Time Feature Extraction Architecture</div>
+          <div class="mermaid">
+            flowchart TD
+              MIC["&#127908; Microphone\nAVAudioEngine"] --> BUF["Ring Buffer\nCircular audio storage"]
+              BUF --> PRE["Pre-emphasis\nFilter"]
+              PRE --> FRM["Frame Splitter\n25ms / 10ms hop"]
+
+              FRM --> WIN["Hamming Window"]
+              WIN --> FFT["FFT via vDSP\nPower Spectrum"]
+
+              FFT --> MEL["Mel Filterbank\n40 triangular filters"]
+              MEL --> LOG["Log Compression"]
+              LOG --> DCT["DCT\n13 MFCCs"]
+
+              FFT --> SC["Spectral Features\nCentroid, Flux, Rolloff"]
+              FFT --> F0["Pitch Tracker\nYIN / Autocorrelation"]
+
+              DCT --> DELTA["Delta Computation\nVelocity + Acceleration"]
+              DELTA --> NORM["Running CMVN\nOnline normalization"]
+
+              SC --> VEC["Feature Vector\nAggregator"]
+              F0 --> VEC
+              NORM --> VEC
+
+              VEC --> BUF2["Feature Buffer\n~2 sec window"]
+              BUF2 --> FUNC["Statistical Functionals\nMean, Std, Range..."]
+              FUNC --> MODEL["&#129302; Emotion\nClassifier"]
+
+              subgraph "CPU - Accelerate/vDSP"
+                PRE
+                FRM
+                WIN
+                FFT
+                MEL
+                LOG
+                DCT
+                SC
+                F0
+                DELTA
+                NORM
+              end
+
+              subgraph "ML Inference"
+                MODEL
+              end
+
+              style MIC fill:#6366F1,color:#fff,stroke:none
+              style MODEL fill:#10B981,color:#fff,stroke:none
+              style BUF fill:#DBEAFE,color:#1E3A8A,stroke:#3B82F6
+              style BUF2 fill:#DBEAFE,color:#1E3A8A,stroke:#3B82F6
+              style VEC fill:#FEF3C7,color:#92400E,stroke:#F59E0B
+              style FUNC fill:#FEF3C7,color:#92400E,stroke:#F59E0B
+          </div>
+        </div>
+
+        <h3>Architecture Key Points</h3>
+        <ul>
+          <li><strong>Ring buffer</strong>: Continuously stores incoming audio samples; frames are extracted from the buffer without copying the entire signal</li>
+          <li><strong>Parallel extraction</strong>: Once the FFT is computed, MFCCs, spectral features, and pitch can be extracted in parallel from the same power spectrum</li>
+          <li><strong>Feature buffer</strong>: Accumulates ~2 seconds of frame-level features before computing utterance-level statistics</li>
+          <li><strong>Online normalization</strong>: Running mean and variance are updated with each new frame (exponential moving average) rather than waiting for the complete utterance</li>
+          <li><strong>Pipeline parallelism</strong>: CPU processes the current frame while the ML model (on GPU/ANE) processes the previous feature vector</li>
+        </ul>
+
+        <div class="code-block">
+          <span class="code-label">Pseudocode</span>
+          <pre>
+class RealtimeFeatureExtractor:
+    ringBuffer:    CircularBuffer(capacity: 16000 * 5)  // 5 sec
+    frameSize:     400    // 25ms at 16kHz
+    hopSize:       160    // 10ms hop
+    melFilters:    MelFilterbank(nFilters: 40, nFFT: 512, sr: 16000)
+    featureBuffer: RingBuffer(capacity: 200)  // ~2 sec of frames
+    runningMean:   zeros(39)
+    runningVar:    ones(39)
+    alpha:         0.995  // EMA smoothing factor
+
+    function onAudioReceived(samples: [Float]):
+        ringBuffer.append(samples)
+
+        while ringBuffer.availableFrames >= frameSize:
+            frame = ringBuffer.nextFrame(frameSize, hopSize)
+
+            // Pre-emphasis
+            frame = preEmphasize(frame, coeff: 0.97)
+
+            // Window + FFT (vDSP accelerated)
+            frame = frame * hammingWindow
+            spectrum = vDSP.fft(frame, n: 512)
+            powerSpec = magnitude_squared(spectrum)
+
+            // MFCC path
+            melEnergies = melFilters.apply(powerSpec)
+            logMel = log(melEnergies + 1e-10)
+            mfcc = dct(logMel)[1:13]
+
+            // Spectral features (from same power spectrum)
+            centroid = spectralCentroid(powerSpec)
+            flux = spectralFlux(powerSpec, previousSpec)
+            rolloff = spectralRolloff(powerSpec, threshold: 0.85)
+
+            // Pitch (from original frame)
+            f0 = yinPitchTrack(frame, sr: 16000)
+
+            // Combine and normalize
+            features = concat(mfcc, [centroid, flux, rolloff, f0])
+            features = onlineNormalize(features)
+
+            featureBuffer.append(features)
+
+        // Every ~500ms: compute statistics and classify
+        if featureBuffer.isFull:
+            stats = computeFunctionals(featureBuffer)
+            emotion = model.predict(stats)
+            emit(emotion)</pre>
+        </div>
+
+        <div class="callout callout-ios">
+          <div class="callout-title">&#63743; iOS Performance Notes</div>
+          <p>
+            On Apple Silicon, vDSP FFT operations complete in microseconds for 512-point transforms. A complete MFCC extraction pipeline for a single frame takes approximately 50-100 microseconds on an A14 chip, leaving abundant headroom for 100 frames/second processing. The key bottleneck is pitch tracking (YIN algorithm), which requires a longer analysis window (~50ms minimum) and more computation.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== iOS/SWIFT INTEGRATION ===== -->
+      <div class="section">
+        <span class="section-anchor" id="ios-integration"></span>
+        <h2><span class="section-icon">&#63743;</span> iOS / Swift Integration</h2>
+
+        <p>
+          Apple provides powerful frameworks for audio feature extraction directly on device. Here is how the acoustic feature engineering pipeline maps to Apple's technology stack.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Pipeline Stage</th><th>Apple Framework</th><th>Key API</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Audio capture</td>
+                <td>AVFoundation</td>
+                <td><code>AVAudioEngine</code></td>
+                <td>Real-time audio input with tap-based processing</td>
+              </tr>
+              <tr>
+                <td>Pre-emphasis</td>
+                <td>Accelerate</td>
+                <td><code>vDSP.multiply</code>, <code>vDSP.subtract</code></td>
+                <td>Element-wise vector operations</td>
+              </tr>
+              <tr>
+                <td>Windowing</td>
+                <td>Accelerate</td>
+                <td><code>vDSP.window(.hamming)</code></td>
+                <td>Built-in Hamming, Hanning, Blackman windows</td>
+              </tr>
+              <tr>
+                <td>FFT</td>
+                <td>Accelerate</td>
+                <td><code>vDSP.FFT</code> / <code>vDSP_fft_zrip</code></td>
+                <td>Power-of-2 sizes only; hardware accelerated</td>
+              </tr>
+              <tr>
+                <td>Mel filterbank</td>
+                <td>Accelerate</td>
+                <td><code>vDSP.multiply</code> (matrix)</td>
+                <td>Pre-compute filter matrix; apply via matrix multiply</td>
+              </tr>
+              <tr>
+                <td>Log + DCT</td>
+                <td>Accelerate</td>
+                <td><code>vForce.log</code>, <code>vDSP.DCT</code></td>
+                <td>Vectorized log and DCT operations</td>
+              </tr>
+              <tr>
+                <td>ML inference</td>
+                <td>Core ML</td>
+                <td><code>MLModel.prediction</code></td>
+                <td>Can run on CPU, GPU, or Apple Neural Engine</td>
+              </tr>
+              <tr>
+                <td>Speech analysis</td>
+                <td>Speech (iOS 26+)</td>
+                <td><code>SpeechAnalyzer</code></td>
+                <td>New high-level API for on-device speech processing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block">
+          <span class="code-label">Swift Pseudocode</span>
+          <pre>
+import Accelerate
+import AVFoundation
+
+class AcousticFeatureExtractor {
+    let fftSetup: vDSP.FFT&lt;DSPSplitComplex&gt;
+    let melFilterbank: [[Float]]  // Pre-computed mel filter matrix
+    let frameSize = 400           // 25ms at 16kHz
+    let fftSize = 512             // Next power of 2
+    let numMelFilters = 40
+    let numMFCCs = 13
+
+    func extractFeatures(frame: [Float]) -> [Float] {
+        // 1. Apply Hamming window
+        var windowed = [Float](repeating: 0, count: frameSize)
+        vDSP.multiply(frame, hammingWindow, result: &windowed)
+
+        // 2. FFT -> Power Spectrum
+        var powerSpectrum = performFFT(windowed)
+
+        // 3. Mel filterbank (matrix multiply)
+        var melEnergies = [Float](repeating: 0, count: numMelFilters)
+        for i in 0..&lt;numMelFilters {
+            vDSP.dot(melFilterbank[i], powerSpectrum, result: &melEnergies[i])
+        }
+
+        // 4. Log compression
+        var logMel = [Float](repeating: 0, count: numMelFilters)
+        vForce.log(melEnergies.map { max($0, 1e-10) }, result: &logMel)
+
+        // 5. DCT -> MFCCs
+        let mfccs = performDCT(logMel)[1..&lt;numMFCCs+1]
+
+        // 6. Spectral features (from same power spectrum)
+        let centroid = computeSpectralCentroid(powerSpectrum)
+        let rolloff  = computeSpectralRolloff(powerSpectrum)
+
+        return Array(mfccs) + [centroid, rolloff]
+    }
+}</pre>
+        </div>
+
+        <div class="callout callout-ios">
+          <div class="callout-title">&#63743; Practical Recommendations for iOS</div>
+          <ul>
+            <li><strong>Use 16kHz sampling rate</strong>: Sufficient for speech (8kHz bandwidth), reduces computation by 2.75x vs. 44.1kHz</li>
+            <li><strong>Use 40 mel filters</strong> with 13 MFCCs as baseline; add F0 and energy if needed</li>
+            <li><strong>Pre-compute all filter matrices</strong> at initialization; they are constant for a given sample rate</li>
+            <li><strong>Use vDSP exclusively</strong> for signal processing; avoid manual loops over audio buffers</li>
+            <li><strong>Process on a background thread</strong>; use <code>DispatchQueue</code> with <code>.userInitiated</code> QoS</li>
+            <li><strong>Consider Core ML</strong> with an <code>AudioFeaturePrint</code> model for end-to-end feature extraction trained for emotion</li>
+            <li><strong>Battery</strong>: The Accelerate framework's hardware acceleration reduces inference time ~30x compared to naive implementations, keeping energy use minimal</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== TOOLS ===== -->
+      <div class="section">
+        <span class="section-anchor" id="tools"></span>
+        <h2><span class="section-icon">&#128736;</span> Feature Extraction Tools</h2>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Language</th>
+                <th>Feature Sets</th>
+                <th>Strengths</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>openSMILE</strong></td>
+                <td>C++ / Python</td>
+                <td>eGeMAPS (88), ComParE (6373), emobase</td>
+                <td>Most comprehensive; standardized sets; fast</td>
+                <td>Research, benchmarks, production</td>
+              </tr>
+              <tr>
+                <td><strong>librosa</strong></td>
+                <td>Python</td>
+                <td>MFCCs, mel spectrogram, spectral features</td>
+                <td>Easy API; great docs; music + speech</td>
+                <td>Prototyping, data science, education</td>
+              </tr>
+              <tr>
+                <td><strong>Praat / Parselmouth</strong></td>
+                <td>Praat Script / Python</td>
+                <td>F0, formants, jitter, shimmer, HNR</td>
+                <td>Gold standard for phonetics; precise pitch tracking</td>
+                <td>Clinical analysis, phonetic research</td>
+              </tr>
+              <tr>
+                <td><strong>torchaudio</strong></td>
+                <td>Python (PyTorch)</td>
+                <td>MFCCs, spectrograms, filterbanks</td>
+                <td>GPU-accelerated; integrates with PyTorch models</td>
+                <td>Deep learning pipelines</td>
+              </tr>
+              <tr>
+                <td><strong>Apple Accelerate</strong></td>
+                <td>Swift / ObjC</td>
+                <td>FFT, mel spectrogram, custom</td>
+                <td>Hardware-optimized for Apple silicon; real-time</td>
+                <td>iOS/macOS apps</td>
+              </tr>
+              <tr>
+                <td><strong>Essentia</strong></td>
+                <td>C++ / Python</td>
+                <td>Spectral, tonal, rhythmic features</td>
+                <td>Designed for music; 600+ algorithms</td>
+                <td>Music emotion recognition</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details>
+          <summary>openSMILE eGeMAPS Feature List (88 features)</summary>
+          <div class="detail-content">
+            <p>The extended Geneva Minimalistic Acoustic Parameter Set includes 18 Low-Level Descriptors (LLDs) with statistical functionals applied:</p>
+            <ul>
+              <li><strong>Frequency-related</strong>: Pitch (F0) on semitone scale, jitter, formant frequencies (F1, F2, F3), formant bandwidths (B1)</li>
+              <li><strong>Energy/Amplitude</strong>: Shimmer, loudness, HNR</li>
+              <li><strong>Spectral</strong>: Alpha ratio, Hammarberg index, spectral slopes (0-500Hz, 500-1500Hz), formant relative energy, harmonic difference H1-H2, harmonic difference H1-A3</li>
+              <li><strong>Temporal</strong>: Rate of loudness peaks, mean/std of voiced/unvoiced segment lengths, number of continuous voiced regions per second</li>
+              <li><strong>Functionals applied</strong>: Mean, coefficient of variation, percentile range (20th-80th), rising/falling slope mean/std, for each applicable LLD</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- ===== GLOSSARY ===== -->
+      <div class="section">
+        <span class="section-anchor" id="glossary"></span>
+        <h2><span class="section-icon">&#128214;</span> Glossary</h2>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Term</th><th>Definition</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>MFCC</strong></td><td>Mel-Frequency Cepstral Coefficient. A compact representation of the spectral envelope based on human auditory perception, obtained by applying the DCT to the log of mel-scaled filterbank energies.</td></tr>
+              <tr><td><strong>Mel Scale</strong></td><td>A perceptual scale of pitch where equal mel intervals sound equally spaced to humans. Linear below ~1000 Hz, logarithmic above.</td></tr>
+              <tr><td><strong>Cepstrum</strong></td><td>The "spectrum of the spectrum." Obtained by taking the inverse Fourier transform (or DCT) of the log magnitude spectrum. Separates source (vocal fold vibration) from filter (vocal tract shape).</td></tr>
+              <tr><td><strong>FFT</strong></td><td>Fast Fourier Transform. An efficient algorithm to compute the Discrete Fourier Transform, converting time-domain signals to frequency-domain representations.</td></tr>
+              <tr><td><strong>DCT</strong></td><td>Discrete Cosine Transform. A Fourier-related transform using only cosine functions. Decorrelates features and compacts information into fewer coefficients.</td></tr>
+              <tr><td><strong>F0</strong></td><td>Fundamental Frequency. The lowest frequency of vocal fold vibration, perceived as pitch. Measured in Hz or semitones.</td></tr>
+              <tr><td><strong>Formant</strong></td><td>A resonance frequency of the vocal tract, appearing as a peak in the spectral envelope. F1-F4 are numbered from lowest to highest.</td></tr>
+              <tr><td><strong>Jitter</strong></td><td>Cycle-to-cycle variation in the fundamental frequency period. Measures pitch instability; increases with vocal stress.</td></tr>
+              <tr><td><strong>Shimmer</strong></td><td>Cycle-to-cycle variation in amplitude. Measures loudness instability; associated with breathiness and vocal fatigue.</td></tr>
+              <tr><td><strong>HNR</strong></td><td>Harmonics-to-Noise Ratio. The ratio of periodic (harmonic) to aperiodic (noise) energy in the voice, measured in dB. Lower HNR = breathier/hoarser voice.</td></tr>
+              <tr><td><strong>LPC</strong></td><td>Linear Predictive Coding. A method that models the vocal tract as an all-pole filter, used to estimate formant frequencies from the spectral envelope.</td></tr>
+              <tr><td><strong>Spectral Centroid</strong></td><td>The "center of mass" of the frequency spectrum, calculated as the weighted average of frequencies present. Indicates the perceived brightness of a sound.</td></tr>
+              <tr><td><strong>Spectral Flux</strong></td><td>The rate of change of the spectral envelope between consecutive frames. High flux indicates rapid timbral changes.</td></tr>
+              <tr><td><strong>Spectral Rolloff</strong></td><td>The frequency below which a specified percentage (typically 85-95%) of the total spectral energy is contained.</td></tr>
+              <tr><td><strong>Pre-emphasis</strong></td><td>A first-order high-pass filter applied to boost high frequencies and flatten the spectral envelope before feature extraction.</td></tr>
+              <tr><td><strong>CMVN</strong></td><td>Cepstral Mean and Variance Normalization. A technique to normalize features by removing the mean and standardizing the variance, reducing speaker and channel effects.</td></tr>
+              <tr><td><strong>eGeMAPS</strong></td><td>Extended Geneva Minimalistic Acoustic Parameter Set. A standardized set of 88 acoustic features designed for emotion and affect research.</td></tr>
+              <tr><td><strong>VAD</strong></td><td>Voice Activity Detection. The process of identifying segments of audio that contain speech vs. silence or background noise.</td></tr>
+              <tr><td><strong>Arousal</strong></td><td>The activation/energy dimension of emotion (calm to excited). Strongly correlated with pitch, energy, and speaking rate.</td></tr>
+              <tr><td><strong>Valence</strong></td><td>The positive-negative dimension of emotion (unpleasant to pleasant). Harder to detect from acoustic features alone; often requires linguistic content.</td></tr>
+              <tr><td><strong>vDSP</strong></td><td>Apple's Digital Signal Processing library within the Accelerate framework. Provides hardware-optimized routines for FFT, vector math, and signal processing.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== BOTTOM NAVIGATION ===== -->
+      <nav class="category-nav">
+        <a href="../traditional-ml-classifiers/index.html" class="next-category">Traditional ML Classifiers &rarr;</a>
+      </nav>
+
+    </main>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      themeVariables: {
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontSize: '14px'
+      }
+    });
+
+    // Dark mode toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+
+      // Re-render mermaid diagrams with appropriate theme
+      reinitMermaid(next);
+    }
+
+    function reinitMermaid(theme) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: theme === 'dark' ? 'dark' : 'default',
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+        themeVariables: {
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontSize: '14px'
+        }
+      });
+
+      document.querySelectorAll('.mermaid').forEach(el => {
+        const code = el.getAttribute('data-original') || el.textContent;
+        if (!el.getAttribute('data-original')) {
+          el.setAttribute('data-original', code);
+        }
+        el.removeAttribute('data-processed');
+        el.innerHTML = code;
+      });
+
+      mermaid.run();
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    // Sidebar toggle (mobile)
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+
+    // Close sidebar when clicking overlay
+    document.querySelector('.sidebar-overlay').addEventListener('click', toggleSidebar);
+
+    // Active section tracking
+    const sections = document.querySelectorAll('.section-anchor');
+    const navLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
+
+    const observerOptions = {
+      rootMargin: '-80px 0px -70% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    // Smooth scroll for sidebar links
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // Close sidebar on mobile
+        if (window.innerWidth <= 768) {
+          toggleSidebar();
+        }
+      });
+    });
+
+    // Store original mermaid code for re-rendering
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.mermaid').forEach(el => {
+        if (!el.getAttribute('data-original')) {
+          el.setAttribute('data-original', el.textContent.trim());
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

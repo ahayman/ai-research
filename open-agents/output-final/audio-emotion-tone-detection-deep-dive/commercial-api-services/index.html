@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial API Services | Audio Emotion & Tone Detection Deep Dive</title>
+<meta name="description" content="Comprehensive guide to commercial APIs for audio emotion and tone detection, including Hume AI, AssemblyAI, Speechmatics, Amazon Chime SDK, and more. Covers pricing, accuracy, iOS/Swift integration, and privacy considerations.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #6366F1;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #4338CA;
+  --color-primary-bg: #EEF2FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #6366F1;
+  --color-link-hover: #4338CA;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #6366F1;
+  --color-takeaway-bg: #EEF2FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #818CF8;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #6366F1;
+  --color-primary-bg: #1E1B4B;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #818CF8;
+  --color-link-hover: #A5B4FC;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #818CF8;
+  --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A5F;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #4338CA 0%, #6366F1 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+
+.sidebar-back:hover {
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-controls {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+h1 .subtitle {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+ul, ol {
+  margin: 0 0 1rem 1.5rem;
+  color: var(--color-text);
+}
+
+li { margin-bottom: 0.35rem; }
+
+strong { color: var(--color-heading); }
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--color-text);
+  font-size: inherit;
+}
+
+.code-label {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  white-space: nowrap;
+  border-bottom: 2px solid var(--color-border);
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-green { background: var(--color-success-bg); color: var(--color-success); }
+.badge-yellow { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge-red { background: var(--color-danger-bg); color: var(--color-danger); }
+.badge-blue { background: var(--color-info-bg); color: var(--color-info); }
+.badge-purple { background: var(--color-primary-bg); color: var(--color-primary); }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-left: 4px solid;
+  font-size: 0.9rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.callout-info {
+  border-color: var(--color-info);
+  background: var(--color-info-bg);
+}
+.callout-info .callout-title { color: var(--color-info); }
+
+.callout-warning {
+  border-color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+.callout-warning .callout-title { color: var(--color-warning); }
+
+.callout-success {
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+}
+.callout-success .callout-title { color: var(--color-success); }
+
+.callout-danger {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+.callout-danger .callout-title { color: var(--color-danger); }
+
+/* ===== Takeaway Boxes ===== */
+.takeaway {
+  background: var(--color-takeaway-bg);
+  border: 1px solid var(--color-takeaway-border);
+  border-left: 4px solid var(--color-takeaway-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.takeaway-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Provider Cards ===== */
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.provider-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all var(--transition);
+}
+
+.provider-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.provider-card h4 {
+  margin-top: 0;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.provider-card .provider-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.provider-card .provider-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0.5rem 0;
+}
+
+.provider-card .provider-price span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.provider-card ul {
+  margin: 0.5rem 0 0 1.25rem;
+  font-size: 0.85rem;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+  color: var(--color-primary);
+}
+
+.glossary-term:hover .glossary-def,
+.glossary-term:focus .glossary-def {
+  display: block;
+}
+
+.glossary-def {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  width: 260px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-weight: 400;
+  pointer-events: none;
+}
+
+.glossary-def::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+/* ===== Comparison Bars ===== */
+.comparison-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+.comparison-bar-label {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.comparison-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.comparison-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.comparison-bar-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  width: 35px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+
+.category-nav a {
+  padding: 0.75rem 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  max-width: 48%;
+}
+
+.category-nav a:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+  text-decoration: none;
+}
+
+.prev-category { text-align: left; }
+.next-category { text-align: right; margin-left: auto; }
+
+/* ===== Swift Focus Highlight ===== */
+.swift-focus {
+  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-info-bg));
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.swift-focus h4 {
+  margin-top: 0;
+  color: var(--color-primary);
+}
+
+/* ===== Score Grid ===== */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.score-item {
+  text-align: center;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 0.5rem;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.score-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.25rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .provider-grid { grid-template-columns: 1fr; }
+  .score-grid { grid-template-columns: repeat(2, 1fr); }
+  .category-nav { flex-direction: column; }
+  .category-nav a { max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; }
+  .table-wrapper { font-size: 0.8rem; }
+  th, td { padding: 0.5rem 0.6rem; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Commercial API Services</div>
+    <div class="sidebar-subtitle">Audio Emotion & Tone Detection</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#intro" class="sidebar-link">Introduction</a>
+    <a href="#landscape" class="sidebar-link">API Landscape</a>
+    <a href="#architecture" class="sidebar-link">How Cloud APIs Work</a>
+
+    <div class="sidebar-nav-section">Providers</div>
+    <a href="#hume-ai" class="sidebar-link">Hume AI</a>
+    <a href="#assemblyai" class="sidebar-link">AssemblyAI</a>
+    <a href="#speechmatics" class="sidebar-link">Speechmatics</a>
+    <a href="#amazon-chime" class="sidebar-link">Amazon Chime SDK</a>
+    <a href="#deepaffects" class="sidebar-link">DeepAffects</a>
+    <a href="#imentiv" class="sidebar-link">Imentiv AI</a>
+    <a href="#vokaturi" class="sidebar-link">Vokaturi</a>
+    <a href="#big-cloud" class="sidebar-link">Google / Azure / Eden AI</a>
+
+    <div class="sidebar-nav-section">Comparison</div>
+    <a href="#comparison-table" class="sidebar-link">Provider Comparison</a>
+    <a href="#pricing" class="sidebar-link">Pricing Breakdown</a>
+    <a href="#decision-tree" class="sidebar-link">Decision Tree</a>
+    <a href="#cloud-vs-device" class="sidebar-link">Cloud vs. On-Device</a>
+
+    <div class="sidebar-nav-section">Integration</div>
+    <a href="#swift-integration" class="sidebar-link">iOS / Swift Guide</a>
+    <a href="#code-examples" class="sidebar-link">Code Examples</a>
+    <a href="#privacy" class="sidebar-link">Privacy & Compliance</a>
+
+    <div class="sidebar-nav-section">Summary</div>
+    <a href="#recommendations" class="sidebar-link">Recommendations</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" class="back-to-hub" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Audio Emotion & Tone Detection Deep Dive</a>
+
+<h1>Commercial API Services
+  <span class="subtitle">Cloud-Based Emotion Detection You Can Integrate Today</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">A practical guide to every major commercial API for detecting emotion and tone from speech audio &mdash; covering capabilities, pricing, accuracy, latency, privacy, and hands-on iOS/Swift integration patterns.</p>
+
+<!-- ===== Key Stats ===== -->
+<div class="score-grid">
+  <div class="score-item">
+    <div class="score-value">10+</div>
+    <div class="score-label">APIs Reviewed</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">$0.003</div>
+    <div class="score-label">Cheapest /min</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">48</div>
+    <div class="score-label">Max Emotions</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">~300ms</div>
+    <div class="score-label">Best Latency</div>
+  </div>
+</div>
+
+<!-- ==================== INTRODUCTION ==================== -->
+<h2 id="intro">Introduction: Why Use a Commercial API?</h2>
+
+<p>If you want to add emotion detection to an app <em>this week</em>, commercial APIs are the fastest path. Instead of training models, managing GPU infrastructure, and curating datasets, you send audio to an endpoint and receive emotion predictions back as JSON. The trade-offs are cost, latency, and privacy &mdash; you are sending user audio to someone else's servers.</p>
+
+<p>This page evaluates every significant commercial API that can analyze emotion or sentiment from speech audio as of early 2026. We focus specifically on what matters for an iOS/Swift developer building a transcription app:</p>
+
+<ul>
+  <li><strong>Detection depth</strong> &mdash; 3 sentiments vs. 48 nuanced emotions</li>
+  <li><strong>Detection method</strong> &mdash; text-based sentiment vs. true acoustic/prosodic analysis</li>
+  <li><strong>iOS integration ease</strong> &mdash; official Swift SDK vs. raw REST calls</li>
+  <li><strong>Pricing</strong> &mdash; per-minute costs at different volumes</li>
+  <li><strong>Privacy</strong> &mdash; data retention, GDPR compliance, on-premise options</li>
+  <li><strong>Latency</strong> &mdash; batch vs. real-time, response times</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-title">Two Fundamentally Different Approaches</div>
+  <p style="margin-bottom:0;">Most "sentiment from audio" APIs actually transcribe speech first, then run text sentiment analysis on the transcript. This misses vocal tone entirely. Only a few &mdash; notably Hume AI, DeepAffects, and Amazon Chime &mdash; analyze the <em>acoustic signal</em> directly to detect prosodic emotion cues like pitch contour, speaking rate, and vocal quality.</p>
+</div>
+
+<!-- ==================== LANDSCAPE ==================== -->
+<h2 id="landscape">The API Landscape</h2>
+
+<p>The commercial emotion detection market segments into four tiers based on what the API actually analyzes:</p>
+
+<div class="provider-grid">
+  <div class="provider-card">
+    <div class="provider-type">Tier 1 &mdash; True Acoustic Emotion</div>
+    <h4>Prosodic + Linguistic Analysis</h4>
+    <p style="font-size:0.85rem;">Analyzes vocal features (pitch, rhythm, timbre) AND text. Returns granular emotion categories.</p>
+    <ul>
+      <li><strong>Hume AI</strong> (48 emotions)</li>
+      <li><strong>Amazon Chime SDK</strong> (3 sentiments, hybrid)</li>
+      <li><strong>DeepAffects</strong> (6 Ekman emotions)</li>
+    </ul>
+  </div>
+  <div class="provider-card">
+    <div class="provider-type">Tier 2 &mdash; Text-Based Sentiment</div>
+    <h4>Transcription + NLP Sentiment</h4>
+    <p style="font-size:0.85rem;">Transcribes audio to text, then runs sentiment analysis on the transcript. Misses tone-of-voice.</p>
+    <ul>
+      <li><strong>AssemblyAI</strong> (3 sentiments)</li>
+      <li><strong>Speechmatics</strong> (3 sentiments)</li>
+      <li><strong>Google Cloud</strong> (2-step pipeline)</li>
+    </ul>
+  </div>
+  <div class="provider-card">
+    <div class="provider-type">Tier 3 &mdash; Multimodal Platforms</div>
+    <h4>Audio + Video + Text</h4>
+    <p style="font-size:0.85rem;">Analyze multiple modalities together. Often research or enterprise focused.</p>
+    <ul>
+      <li><strong>Imentiv AI</strong> (8 emotions)</li>
+      <li><strong>iMotions</strong> (research grade)</li>
+    </ul>
+  </div>
+  <div class="provider-card">
+    <div class="provider-type">Tier 4 &mdash; Libraries / Aggregators</div>
+    <h4>On-Device or Unified Access</h4>
+    <p style="font-size:0.85rem;">Run locally or aggregate multiple providers behind one interface.</p>
+    <ul>
+      <li><strong>Vokaturi</strong> (5 emotions, on-device)</li>
+      <li><strong>Eden AI</strong> (aggregator)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== ARCHITECTURE DIAGRAM ==================== -->
+<h2 id="architecture">How Cloud Emotion APIs Work</h2>
+
+<p>All cloud-based emotion APIs follow the same general pattern: your app captures audio, sends it to a cloud endpoint, the service processes it through ML models, and returns structured emotion predictions. The critical difference is <em>what</em> gets analyzed.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">API Integration Architecture</div>
+  <div class="mermaid">
+flowchart LR
+    subgraph Client["iOS App"]
+        A["Capture Audio<br/>(AVAudioEngine)"] --> B["Encode &<br/>Compress"]
+        B --> C["API Request<br/>(URLSession/SDK)"]
+    end
+
+    subgraph Cloud["Cloud Service"]
+        C -->|"HTTPS/WSS"| D["Audio<br/>Ingestion"]
+        D --> E{"Analysis<br/>Type?"}
+        E -->|"Acoustic"| F["Prosodic Feature<br/>Extraction"]
+        E -->|"Text-based"| G["ASR<br/>Transcription"]
+        F --> H["Emotion ML<br/>Model"]
+        G --> I["NLP Sentiment<br/>Model"]
+        H --> J["Results<br/>Aggregation"]
+        I --> J
+    end
+
+    subgraph Response["JSON Response"]
+        J --> K["Emotion Scores<br/>+ Timestamps"]
+        K --> L["Parse &<br/>Display"]
+    end
+
+    style Client fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style Cloud fill:#F0FDF4,stroke:#059669,color:#1E293B
+    style Response fill:#FEF3C7,stroke:#D97706,color:#1E293B
+  </div>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">Latency Matters</div>
+  <p style="margin-bottom:0;">Batch APIs (upload file, wait for result) add 2-10 seconds of latency. Real-time WebSocket APIs (Hume AI, DeepAffects) can return emotion predictions within 300-500ms per utterance, enabling live emotion feedback in your app.</p>
+</div>
+
+<!-- ==================== HUME AI ==================== -->
+<h2 id="hume-ai">Hume AI</h2>
+
+<p>Hume AI is the standout platform for speech emotion detection, offering the richest emotion taxonomy of any commercial API. Built on peer-reviewed research, it goes far beyond simple positive/negative sentiment to measure 48 distinct emotional expressions from voice alone.</p>
+
+<h3>Expression Measurement API</h3>
+
+<p>The Expression Measurement API provides three specialized models for audio analysis:</p>
+
+<ul>
+  <li><strong><span class="glossary-term" tabindex="0">Prosody Model<span class="glossary-def">Analyzes pitch contour, rhythm, tempo, loudness, and voice quality to identify emotional expression patterns in how words are spoken, independent of what words are said.</span></span></strong> &mdash; Extracts 48 emotional dimensions from the tone, rhythm, and timbre of speech. This is where the core emotion detection happens for audio.</li>
+  <li><strong>Vocal Burst Model</strong> &mdash; Detects non-speech vocalizations (laughs, sighs, screams, gasps, "uh-huh", "hmm") along the same 48 dimensions. Particularly useful for capturing emotional reactions that happen between words.</li>
+  <li><strong>Language Model</strong> &mdash; Analyzes the emotional content of transcribed text along 53 dimensions. Complements the prosody model by capturing what was <em>said</em> vs. how it was <em>said</em>.</li>
+</ul>
+
+<h4>The 48 Emotion Dimensions</h4>
+<p>Unlike APIs that return just "positive/negative/neutral," Hume returns a score (0-1) for each of 48 named expressions per audio segment:</p>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <td>Admiration</td><td>Adoration</td><td>Aesthetic Appreciation</td><td>Amusement</td><td>Anger</td><td>Anxiety</td>
+  </tr>
+  <tr>
+    <td>Awe</td><td>Awkwardness</td><td>Boredom</td><td>Calmness</td><td>Concentration</td><td>Confusion</td>
+  </tr>
+  <tr>
+    <td>Contemplation</td><td>Contempt</td><td>Contentment</td><td>Craving</td><td>Determination</td><td>Disappointment</td>
+  </tr>
+  <tr>
+    <td>Disgust</td><td>Distress</td><td>Doubt</td><td>Ecstasy</td><td>Embarrassment</td><td>Empathic Pain</td>
+  </tr>
+  <tr>
+    <td>Entrancement</td><td>Envy</td><td>Excitement</td><td>Fear</td><td>Guilt</td><td>Horror</td>
+  </tr>
+  <tr>
+    <td>Interest</td><td>Joy</td><td>Love</td><td>Nostalgia</td><td>Pain</td><td>Pride</td>
+  </tr>
+  <tr>
+    <td>Realization</td><td>Relief</td><td>Romance</td><td>Sadness</td><td>Satisfaction</td><td>Shame</td>
+  </tr>
+  <tr>
+    <td>Surprise (negative)</td><td>Surprise (positive)</td><td>Sympathy</td><td>Tiredness</td><td>Triumph</td><td>Desire</td>
+  </tr>
+</table>
+</div>
+
+<h3>Hume AI Processing Pipeline</h3>
+
+<div class="diagram-container">
+  <div class="diagram-title">Hume AI Expression Measurement Pipeline</div>
+  <div class="mermaid">
+flowchart TB
+    A["Audio Input<br/>(WAV/MP3/FLAC)"] --> B["Audio Segmentation<br/>& VAD"]
+
+    B --> C["Prosody Analysis"]
+    B --> D["Vocal Burst<br/>Detection"]
+    B --> E["Speech-to-Text<br/>Transcription"]
+
+    C --> F["48 Emotion Scores<br/>per utterance"]
+    D --> G["48 Emotion Scores<br/>per vocal burst"]
+    E --> H["Language Model"]
+    H --> I["53 Emotion Scores<br/>per sentence"]
+
+    F --> J["Combined<br/>Results JSON"]
+    G --> J
+    I --> J
+
+    J --> K["Per-segment output:<br/>timestamps + scores<br/>+ transcription"]
+
+    style A fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style C fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style D fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style H fill:#D1FAE5,stroke:#059669,color:#1E293B
+    style K fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+  </div>
+</div>
+
+<h3>Empathic Voice Interface (EVI)</h3>
+<p>EVI is Hume's speech-to-speech conversational AI that understands and responds with emotional intelligence. While not primarily an "emotion detection API," it demonstrates the underlying emotion understanding capabilities:</p>
+<ul>
+  <li><strong>EVI 3</strong> and <strong>EVI 4-mini</strong> are current versions (EVI 1 & 2 reached end-of-support August 2025)</li>
+  <li>~300ms response latency for real-time conversation</li>
+  <li>Supports voice cloning and expressive speech generation</li>
+  <li><strong>Octave 2</strong> (preview) &mdash; their latest TTS model</li>
+</ul>
+
+<h3>Pricing</h3>
+<div class="table-wrapper">
+<table>
+  <tr><th>Input Type</th><th>Price per Minute</th><th>Models Included</th></tr>
+  <tr><td>Audio Only</td><td><strong>$0.0639</strong></td><td>Prosody + Vocal Bursts + Language</td></tr>
+  <tr><td>Video + Audio</td><td>$0.0828</td><td>Face + Prosody + Transcription</td></tr>
+  <tr><td>Video Only</td><td>$0.045</td><td>Face + Facemesh</td></tr>
+  <tr><td>EVI (conversational)</td><td>Usage-based</td><td>Full speech-to-speech</td></tr>
+</table>
+</div>
+<p><strong>Free tier</strong> available with limited credits. Enterprise volume discounts negotiable.</p>
+
+<div class="swift-focus">
+  <h4>Swift / iOS Integration</h4>
+  <p>Hume AI is the <strong>only major emotion API with an official Swift SDK</strong>. Available via Swift Package Manager from <code>HumeAI/hume-swift-sdk</code> on GitHub.</p>
+  <ul>
+    <li><strong>VoiceProvider</strong> abstraction manages WebSocket connections</li>
+    <li>Built-in microphone capture and real-time audio playback</li>
+    <li>TTS file streaming support</li>
+    <li>Access token authentication</li>
+    <li>Supports iOS and macOS (including background audio mode)</li>
+  </ul>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Key Takeaway</div>
+  <p style="margin-bottom:0;">Hume AI is the clear leader for iOS emotion detection. It offers the most granular emotion taxonomy (48 dimensions vs. 3-6 for competitors), true acoustic analysis (not just text sentiment), an official Swift SDK, and both batch REST and real-time WebSocket APIs. The trade-off is price: at $0.064/min it costs roughly 20x more than text-only sentiment APIs.</p>
+</div>
+
+<!-- ==================== ASSEMBLYAI ==================== -->
+<h2 id="assemblyai">AssemblyAI</h2>
+
+<p>AssemblyAI is a leading speech-to-text platform that offers sentiment analysis as an add-on feature. It is important to understand that AssemblyAI's "sentiment analysis" works on the <em>transcribed text</em>, not on acoustic features. It tells you whether the <em>words</em> are positive, negative, or neutral &mdash; it cannot detect sarcasm, frustration, or excitement conveyed through tone of voice alone.</p>
+
+<h3>How It Works</h3>
+<ol>
+  <li>Submit audio via REST API</li>
+  <li>Universal-2 model transcribes speech to text</li>
+  <li>NLP sentiment model classifies each sentence as POSITIVE, NEGATIVE, or NEUTRAL</li>
+  <li>Response includes transcript + per-sentence sentiment with confidence scores and timestamps</li>
+</ol>
+
+<h3>Capabilities</h3>
+<ul>
+  <li><strong>Sentiments</strong>: POSITIVE, NEGATIVE, NEUTRAL only</li>
+  <li><strong>Granularity</strong>: Per-sentence analysis</li>
+  <li><strong>Speaker Diarization</strong>: When enabled, sentiment results include speaker labels</li>
+  <li><strong>Additional Features</strong>: Topic detection, entity recognition, PII redaction, content moderation</li>
+  <li><strong>LLM Gateway</strong>: Apply Claude, GPT, or Gemini to transcripts for deeper analysis</li>
+</ul>
+
+<h3>Pricing</h3>
+<div class="table-wrapper">
+<table>
+  <tr><th>Feature</th><th>Price</th><th>Notes</th></tr>
+  <tr><td>Base Transcription (Universal-2)</td><td>$0.0025/min ($0.15/hr)</td><td>Required for all features</td></tr>
+  <tr><td>Sentiment Analysis</td><td>+$0.00033/min ($0.02/hr)</td><td>Add-on to transcription</td></tr>
+  <tr><td>Speaker Diarization</td><td>+$0.007/min</td><td>Optional add-on</td></tr>
+  <tr><td><strong>Total with Sentiment</strong></td><td><strong>~$0.003/min</strong></td><td>Cheapest option reviewed</td></tr>
+</table>
+</div>
+
+<h3>iOS Integration</h3>
+<p>A community-maintained Swift package exists on the Swift Package Index. Integration uses standard REST API calls:</p>
+<ul>
+  <li>Upload audio file to AssemblyAI's servers</li>
+  <li>Submit transcription request with <code>sentiment_analysis: true</code></li>
+  <li>Poll for results or use webhook</li>
+</ul>
+
+<div class="callout callout-warning">
+  <div class="callout-title">Limitation</div>
+  <p style="margin-bottom:0;">AssemblyAI does <strong>not</strong> detect emotion from vocal tone. A person saying "I'm fine" in a shaky, tearful voice would be classified as NEUTRAL based on the text alone. For true emotion detection, combine with an acoustic analysis API like Hume AI.</p>
+</div>
+
+<!-- ==================== SPEECHMATICS ==================== -->
+<h2 id="speechmatics">Speechmatics</h2>
+
+<p>Speechmatics is an enterprise-grade speech-to-text platform known for supporting 50+ languages with high accuracy. Their sentiment analysis works similarly to AssemblyAI &mdash; it runs on transcribed text, not acoustic features.</p>
+
+<h3>Capabilities</h3>
+<ul>
+  <li><strong>Sentiments</strong>: Positive, Negative, Neutral with confidence scores</li>
+  <li><strong>Modes</strong>: Batch API (primary), Real-time transcription available</li>
+  <li><strong>Sentiment Language</strong>: English only (transcription supports 50+ languages)</li>
+  <li><strong>Output</strong>: Labeled transcript segments with sentiment and confidence</li>
+</ul>
+
+<h3>Pricing</h3>
+<div class="table-wrapper">
+<table>
+  <tr><th>Mode</th><th>Standard</th><th>Enhanced</th></tr>
+  <tr><td>Batch</td><td>$0.005/min</td><td>$0.0083/min</td></tr>
+  <tr><td>Real-Time</td><td>$0.0067/min</td><td>$0.0117/min</td></tr>
+</table>
+</div>
+<p><strong>Free tier</strong>: 480 min/month (240 batch + 240 real-time). 20% discount over 500 hr/month.</p>
+
+<h3>iOS Integration</h3>
+<p>No official iOS SDK. Integration via standard REST/WebSocket API calls using <code>URLSession</code>.</p>
+
+<!-- ==================== AMAZON CHIME ==================== -->
+<h2 id="amazon-chime">Amazon Chime SDK</h2>
+
+<p>Amazon Chime SDK Call Analytics provides real-time voice tone analysis that is architecturally different from most competitors. It uses a <strong>hybrid approach</strong>: a deep neural network that jointly analyzes both acoustic/tonal features AND lexical/linguistic content. This makes it one of the few APIs that truly analyzes <em>how</em> something is said, not just <em>what</em> is said.</p>
+
+<h3>How It Works</h3>
+<ul>
+  <li>DNN processes 5-second voice segments every 2.5 seconds</li>
+  <li>Jointly extracts acoustic features (pitch, energy, speaking rate) and linguistic features</li>
+  <li>Returns probability scores for Positive, Neutral, and Negative sentiment</li>
+  <li>Real-time processing designed for live call monitoring</li>
+</ul>
+
+<h3>Pricing</h3>
+<p><strong>$0.023/min</strong> (US East region). Pay-as-you-go, no upfront commitment.</p>
+
+<h3>Limitations</h3>
+<ul>
+  <li>Designed for call center and meeting scenarios, not general-purpose mobile apps</li>
+  <li>Only 3 sentiment classes (no granular emotions)</li>
+  <li>Requires AWS infrastructure (CloudFormation, Lambda, etc.)</li>
+  <li>iOS integration requires the full AWS SDK (heavy dependency)</li>
+  <li>Not suitable as a standalone emotion API for a transcription app</li>
+</ul>
+
+<!-- ==================== DEEPAFFECTS ==================== -->
+<h2 id="deepaffects">DeepAffects</h2>
+
+<p>DeepAffects is one of the few APIs that performs true <span class="glossary-term" tabindex="0">paralinguistic<span class="glossary-def">Relating to the non-verbal aspects of speech communication, including tone, pitch, speaking rate, pauses, and vocal quality &mdash; everything besides the actual words being said.</span></span> emotion recognition. It identifies emotions directly from acoustic properties of speech without relying on text transcription.</p>
+
+<h3>Capabilities</h3>
+<ul>
+  <li><strong>Emotions</strong>: 6 core Ekman emotions &mdash; Anger, Happiness, Sadness, Fear, Disgust, Surprise (plus Stress)</li>
+  <li><strong>Method</strong>: Pure acoustic/paralinguistic analysis (no text dependency)</li>
+  <li><strong>API Format</strong>: REST with both sync and async endpoints</li>
+  <li><strong>Real-Time</strong>: Separate real-time emotion recognition API available</li>
+</ul>
+
+<h3>API Endpoints</h3>
+<pre><code>// Synchronous (wait for result)
+POST /audio/generic/api/v2/sync/recognise_emotion
+
+// Asynchronous (get result via webhook)
+POST /audio/generic/api/v2/async/recognise_emotion</code></pre>
+
+<h3>Limitations</h3>
+<ul>
+  <li>Small company with limited public documentation</li>
+  <li>No iOS SDK &mdash; requires manual REST integration</li>
+  <li>Pricing not publicly listed (contact sales)</li>
+  <li>Uncertain long-term viability as a smaller player</li>
+</ul>
+
+<!-- ==================== IMENTIV ==================== -->
+<h2 id="imentiv">Imentiv AI</h2>
+
+<p>Imentiv AI is a multimodal emotion recognition platform that can analyze audio, video, images, and text. Their audio emotion analysis detects 8 emotions and maps them on a Valence-Arousal model.</p>
+
+<h3>Capabilities</h3>
+<ul>
+  <li><strong>Emotions</strong>: Happy, Sad, Angry, Fear, Surprise, Disgust, Boredom, Neutral</li>
+  <li><strong>Model</strong>: Valence-Arousal mapping with real-time emotion graphing</li>
+  <li><strong>Speaker Diarization</strong>: Separates and analyzes individual voices in group audio</li>
+  <li><strong>Advanced</strong>: Personality trait analysis, emotion highlights, comprehensive reports</li>
+</ul>
+
+<h3>Pricing</h3>
+<p>Credit-based system. 500 free credits to start. Custom enterprise plans available.</p>
+
+<h3>Limitations</h3>
+<ul>
+  <li>Primarily video-focused platform (audio is secondary)</li>
+  <li>No iOS SDK</li>
+  <li>Limited public API documentation</li>
+</ul>
+
+<!-- ==================== VOKATURI ==================== -->
+<h2 id="vokaturi">Vokaturi</h2>
+
+<p>Vokaturi takes a fundamentally different approach: it is a lightweight <strong>on-device library</strong>, not a cloud API. Originally an academic project, it analyzes 9 acoustic cues through a small neural network to detect 5 basic emotions. The key advantage is that <em>no audio ever leaves the device</em>.</p>
+
+<h3>Capabilities</h3>
+<ul>
+  <li><strong>Emotions</strong>: Neutral, Happiness, Sadness, Anger, Fear</li>
+  <li><strong>Output</strong>: Probability percentages for each of the 5 emotions</li>
+  <li><strong>Architecture</strong>: Three-level neural network with rectifying units, analyzing 9 acoustic cues</li>
+  <li><strong>Processing</strong>: Entirely local (no cloud, no network required)</li>
+</ul>
+
+<h3>Licensing</h3>
+<div class="table-wrapper">
+<table>
+  <tr><th>Version</th><th>License</th><th>Accuracy</th><th>Cost</th></tr>
+  <tr><td>OpenVokaturi</td><td>GPL (open source)</td><td>High (unspecified)</td><td>Free</td></tr>
+  <tr><td>VokaturiPlus</td><td>Proprietary (commercial)</td><td>"Human listener-level"</td><td>Contact sales</td></tr>
+</table>
+</div>
+
+<h3>iOS Integration</h3>
+<p>Vokaturi is distributed as a C library. For iOS integration, you would need to create a <strong>bridging header</strong> and call the C functions from Swift. An Android JNI wrapper exists, but there is no official iOS/Swift SDK. This makes integration significantly more complex than REST-based APIs.</p>
+
+<div class="callout callout-success">
+  <div class="callout-title">Privacy Advantage</div>
+  <p style="margin-bottom:0;">Vokaturi is ideal for privacy-sensitive applications. Since it runs entirely on-device, no audio data is ever transmitted to external servers. This eliminates GDPR data transfer concerns entirely.</p>
+</div>
+
+<!-- ==================== BIG CLOUD ==================== -->
+<h2 id="big-cloud">Google Cloud, Microsoft Azure, and Eden AI</h2>
+
+<h3>Google Cloud</h3>
+<p>Google does not offer a dedicated speech emotion API. Achieving "emotion from audio" requires a <strong>two-step pipeline</strong>:</p>
+<ol>
+  <li><strong>Speech-to-Text API</strong> (Chirp 2 model) &mdash; Transcribe audio</li>
+  <li><strong>Natural Language API</strong> &mdash; Analyze sentiment on the transcript (score: -1.0 to 1.0, magnitude: 0 to infinity)</li>
+</ol>
+<p>Pricing: ~$0.006-0.024/min for STT + $1.00 per 1,000 text records for NLP (first 5K free/month). The two-step approach adds latency and complexity.</p>
+
+<h3>Microsoft Azure (Foundry Tools)</h3>
+<p>Azure Speech Service (now under the "Foundry Tools" branding) provides comprehensive speech-to-text but <strong>no speech emotion recognition API</strong>. Azure's emotion capabilities are limited to the output side: HD Voices can detect emotional cues in text and adjust TTS speaking style accordingly. For sentiment from audio, you would need to combine Azure STT with Azure Text Analytics, similar to the Google approach.</p>
+
+<h3>Eden AI</h3>
+<p>Eden AI is not an emotion detection engine itself &mdash; it is an <strong>API aggregator</strong> that provides a single unified interface to multiple AI providers including emotion detection services. Key features:</p>
+<ul>
+  <li>Standardized JSON output across all underlying providers</li>
+  <li>Switch providers with a single parameter change</li>
+  <li>Pay-per-use at vendor rates (no monthly fees since January 2025)</li>
+  <li>GDPR engine filtering available</li>
+  <li>Providers include VERN AI, Google, AWS, Microsoft, and specialized engines</li>
+</ul>
+
+<!-- ==================== COMPARISON TABLE ==================== -->
+<h2 id="comparison-table">Provider Comparison Matrix</h2>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Provider</th>
+    <th>Detection Method</th>
+    <th>Emotions</th>
+    <th>Real-Time</th>
+    <th>iOS SDK</th>
+    <th>Privacy</th>
+  </tr>
+  <tr>
+    <td><strong>Hume AI</strong></td>
+    <td><span class="badge badge-green">Acoustic + Text</span></td>
+    <td>48 dimensions</td>
+    <td><span class="badge badge-green">WebSocket</span></td>
+    <td><span class="badge badge-green">Official Swift</span></td>
+    <td>Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>AssemblyAI</strong></td>
+    <td><span class="badge badge-yellow">Text Only</span></td>
+    <td>3 sentiments</td>
+    <td><span class="badge badge-yellow">Streaming STT</span></td>
+    <td><span class="badge badge-yellow">Community</span></td>
+    <td>Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>Speechmatics</strong></td>
+    <td><span class="badge badge-yellow">Text Only</span></td>
+    <td>3 sentiments</td>
+    <td><span class="badge badge-green">WebSocket</span></td>
+    <td><span class="badge badge-red">None</span></td>
+    <td>Cloud / On-Prem</td>
+  </tr>
+  <tr>
+    <td><strong>Amazon Chime</strong></td>
+    <td><span class="badge badge-green">Hybrid Acoustic</span></td>
+    <td>3 sentiments</td>
+    <td><span class="badge badge-green">Real-Time</span></td>
+    <td><span class="badge badge-red">AWS SDK</span></td>
+    <td>AWS Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>DeepAffects</strong></td>
+    <td><span class="badge badge-green">Acoustic Only</span></td>
+    <td>6 Ekman + Stress</td>
+    <td><span class="badge badge-green">WebSocket</span></td>
+    <td><span class="badge badge-red">None</span></td>
+    <td>Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>Imentiv AI</strong></td>
+    <td><span class="badge badge-green">Acoustic + Text</span></td>
+    <td>8 emotions</td>
+    <td><span class="badge badge-red">Batch</span></td>
+    <td><span class="badge badge-red">None</span></td>
+    <td>Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>Vokaturi</strong></td>
+    <td><span class="badge badge-green">Acoustic Only</span></td>
+    <td>5 emotions</td>
+    <td><span class="badge badge-green">On-Device</span></td>
+    <td><span class="badge badge-yellow">C Bridge</span></td>
+    <td><span class="badge badge-green">Local Only</span></td>
+  </tr>
+  <tr>
+    <td><strong>Google Cloud</strong></td>
+    <td><span class="badge badge-yellow">Text Only</span></td>
+    <td>Score (-1 to 1)</td>
+    <td><span class="badge badge-yellow">Streaming STT</span></td>
+    <td><span class="badge badge-yellow">GCloud SDK</span></td>
+    <td>Cloud</td>
+  </tr>
+  <tr>
+    <td><strong>iMotions</strong></td>
+    <td><span class="badge badge-green">Acoustic</span></td>
+    <td>4 + VAD dims</td>
+    <td><span class="badge badge-green">Real-Time</span></td>
+    <td><span class="badge badge-red">Desktop Only</span></td>
+    <td><span class="badge badge-green">Local</span></td>
+  </tr>
+  <tr>
+    <td><strong>Eden AI</strong></td>
+    <td><span class="badge badge-blue">Aggregator</span></td>
+    <td>Varies</td>
+    <td><span class="badge badge-yellow">Varies</span></td>
+    <td><span class="badge badge-red">None</span></td>
+    <td>Through provider</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== PRICING ==================== -->
+<h2 id="pricing">Pricing Breakdown</h2>
+
+<h3>Cost per Minute of Audio</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Provider</th>
+    <th>Price/Min</th>
+    <th>What You Get</th>
+    <th>Cost for 1,000 Min</th>
+    <th>Cost for 10,000 Min</th>
+  </tr>
+  <tr>
+    <td><strong>AssemblyAI</strong></td>
+    <td>~$0.003</td>
+    <td>Transcription + 3-class text sentiment</td>
+    <td>$3.00</td>
+    <td>$30.00</td>
+  </tr>
+  <tr>
+    <td><strong>Speechmatics</strong></td>
+    <td>$0.005-0.012</td>
+    <td>Transcription + 3-class text sentiment</td>
+    <td>$5.00-12.00</td>
+    <td>$50-120</td>
+  </tr>
+  <tr>
+    <td><strong>Google Cloud</strong></td>
+    <td>~$0.01-0.03</td>
+    <td>Two-step: STT + NLP sentiment</td>
+    <td>$10-30</td>
+    <td>$100-300</td>
+  </tr>
+  <tr>
+    <td><strong>Amazon Chime</strong></td>
+    <td>$0.023</td>
+    <td>Hybrid acoustic+text, 3 sentiments</td>
+    <td>$23.00</td>
+    <td>$230.00</td>
+  </tr>
+  <tr style="background:var(--color-primary-bg);">
+    <td><strong>Hume AI</strong></td>
+    <td><strong>$0.064</strong></td>
+    <td><strong>48 emotions, prosody + bursts + language</strong></td>
+    <td><strong>$64.00</strong></td>
+    <td><strong>$640.00</strong></td>
+  </tr>
+  <tr>
+    <td><strong>Vokaturi</strong></td>
+    <td>License fee</td>
+    <td>5 emotions, on-device, no per-use cost</td>
+    <td>$0 (after license)</td>
+    <td>$0 (after license)</td>
+  </tr>
+  <tr>
+    <td><strong>iMotions</strong></td>
+    <td>$2,900+/yr</td>
+    <td>Research platform, 4 emotions + dimensions</td>
+    <td>N/A (annual)</td>
+    <td>N/A (annual)</td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title">Cost Perspective</div>
+  <p style="margin-bottom:0;">For a transcription app processing 10,000 minutes/month: AssemblyAI sentiment costs ~$30/mo, while Hume AI's full emotion analysis costs ~$640/mo. That is a 20x difference, but you get 48 emotions vs. 3 sentiments. Consider a hybrid approach: use AssemblyAI for transcription and basic sentiment, then call Hume AI selectively for segments where granular emotion data adds value.</p>
+</div>
+
+<!-- ==================== DECISION TREE ==================== -->
+<h2 id="decision-tree">Which API Should You Choose?</h2>
+
+<div class="diagram-container">
+  <div class="diagram-title">Decision Tree: Choosing an Emotion Detection API</div>
+  <div class="mermaid">
+flowchart TD
+    A["Need emotion<br/>from audio?"] --> B{"Need actual<br/>VOCAL TONE<br/>analysis?"}
+
+    B -->|"Yes, acoustic<br/>emotion"| C{"Budget?"}
+    B -->|"No, text sentiment<br/>is sufficient"| D{"Primary<br/>need?"}
+
+    C -->|"Premium<br/>($0.06/min)"| E["Hume AI<br/>48 emotions<br/>Swift SDK"]
+    C -->|"Mid-range<br/>($0.02/min)"| F{"Need AWS<br/>ecosystem?"}
+    C -->|"Minimal<br/>(license fee)"| G["Vokaturi<br/>5 emotions<br/>on-device"]
+
+    F -->|"Yes"| H["Amazon Chime<br/>3 sentiments"]
+    F -->|"No"| I["DeepAffects<br/>6 Ekman emotions"]
+
+    D -->|"Cheapest"| J["AssemblyAI<br/>$0.003/min"]
+    D -->|"Multi-language"| K["Speechmatics<br/>50+ languages"]
+    D -->|"Google ecosystem"| L["Google Cloud<br/>STT + NLP"]
+
+    E --> M(["Best for iOS<br/>transcription app"])
+    J --> N(["Best budget<br/>option"])
+    G --> O(["Best for<br/>privacy"])
+
+    style A fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style E fill:#D1FAE5,stroke:#059669,color:#1E293B
+    style M fill:#D1FAE5,stroke:#059669,color:#1E293B
+    style N fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style O fill:#FEF3C7,stroke:#D97706,color:#1E293B
+  </div>
+</div>
+
+<!-- ==================== CLOUD VS DEVICE ==================== -->
+<h2 id="cloud-vs-device">Cloud vs. On-Device Processing</h2>
+
+<p>A fundamental architectural decision for any emotion detection feature is whether to process audio in the cloud or on the user's device. Each approach has significant trade-offs:</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">Cloud API vs. On-Device Processing Trade-offs</div>
+  <div class="mermaid">
+flowchart LR
+    subgraph Cloud["Cloud API Processing"]
+        direction TB
+        CA["Advantages"] --> CA1["Higher accuracy<br/>(larger models)"]
+        CA --> CA2["More emotion<br/>categories"]
+        CA --> CA3["Continuous model<br/>updates"]
+        CA --> CA4["No device<br/>resource usage"]
+
+        CD["Disadvantages"] --> CD1["Latency<br/>(300ms-10s)"]
+        CD --> CD2["Per-minute<br/>cost"]
+        CD --> CD3["Privacy risk<br/>(audio leaves device)"]
+        CD --> CD4["Requires<br/>network"]
+    end
+
+    subgraph Device["On-Device Processing"]
+        direction TB
+        DA["Advantages"] --> DA1["Zero latency<br/>(instant)"]
+        DA --> DA2["No per-use<br/>cost"]
+        DA --> DA3["Full privacy<br/>(local only)"]
+        DA --> DA4["Works<br/>offline"]
+
+        DD["Disadvantages"] --> DD1["Lower accuracy<br/>(smaller models)"]
+        DD --> DD2["Fewer emotion<br/>categories"]
+        DD --> DD3["Battery &<br/>CPU usage"]
+        DD --> DD4["Static model<br/>(no updates)"]
+    end
+
+    style Cloud fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style Device fill:#D1FAE5,stroke:#059669,color:#1E293B
+  </div>
+</div>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Factor</th>
+    <th>Cloud API</th>
+    <th>On-Device</th>
+    <th>Winner</th>
+  </tr>
+  <tr>
+    <td>Accuracy</td>
+    <td>Higher (large models, training data)</td>
+    <td>Lower (constrained models)</td>
+    <td><span class="badge badge-blue">Cloud</span></td>
+  </tr>
+  <tr>
+    <td>Latency</td>
+    <td>300ms - 10s</td>
+    <td>&lt;50ms</td>
+    <td><span class="badge badge-green">On-Device</span></td>
+  </tr>
+  <tr>
+    <td>Privacy</td>
+    <td>Audio sent to servers</td>
+    <td>Audio stays on device</td>
+    <td><span class="badge badge-green">On-Device</span></td>
+  </tr>
+  <tr>
+    <td>Cost (at scale)</td>
+    <td>$30-640+/mo for 10K min</td>
+    <td>One-time license fee</td>
+    <td><span class="badge badge-green">On-Device</span></td>
+  </tr>
+  <tr>
+    <td>Emotion granularity</td>
+    <td>Up to 48 categories</td>
+    <td>Typically 5-7</td>
+    <td><span class="badge badge-blue">Cloud</span></td>
+  </tr>
+  <tr>
+    <td>Model updates</td>
+    <td>Continuous, automatic</td>
+    <td>Requires app update</td>
+    <td><span class="badge badge-blue">Cloud</span></td>
+  </tr>
+  <tr>
+    <td>Offline support</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td><span class="badge badge-green">On-Device</span></td>
+  </tr>
+  <tr>
+    <td>Battery impact</td>
+    <td>Minimal (network only)</td>
+    <td>Higher (CPU/Neural Engine)</td>
+    <td><span class="badge badge-blue">Cloud</span></td>
+  </tr>
+</table>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Hybrid Approach Recommendation</div>
+  <p style="margin-bottom:0;">For a Swift transcription app, consider a <strong>hybrid architecture</strong>: run a lightweight on-device model (like Core ML with a SER model) for instant basic emotion feedback, then batch-send audio segments to Hume AI for detailed 48-emotion analysis when the user wants deeper insights. This gives you real-time responsiveness, offline capability, and detailed cloud-powered analysis when needed.</p>
+</div>
+
+<!-- ==================== SWIFT INTEGRATION ==================== -->
+<h2 id="swift-integration">iOS / Swift Integration Guide</h2>
+
+<div class="diagram-container">
+  <div class="diagram-title">iOS Integration Pattern for Cloud Emotion APIs</div>
+  <div class="mermaid">
+sequenceDiagram
+    participant App as iOS App
+    participant AVA as AVAudioEngine
+    participant Enc as Audio Encoder
+    participant SDK as Hume Swift SDK<br/>(or URLSession)
+    participant API as Cloud API
+    participant UI as SwiftUI View
+
+    App->>AVA: Start recording
+    AVA->>Enc: PCM audio buffers
+    Enc->>SDK: Compressed audio data
+
+    alt WebSocket (Real-Time)
+        SDK->>API: WSS connection
+        API-->>SDK: Emotion scores (per segment)
+        SDK-->>UI: Update emotion display
+    else REST (Batch)
+        SDK->>API: POST audio file
+        API-->>SDK: JSON response
+        SDK-->>UI: Display results
+    end
+
+    Note over App,UI: Audio capture runs on<br/>background thread
+    Note over API: Processing: 300ms-10s<br/>depending on API
+  </div>
+</div>
+
+<h2 id="code-examples">Practical Code Examples</h2>
+
+<h3>Example 1: Hume AI with Official Swift SDK</h3>
+
+<div class="code-label">Swift</div>
+<pre><code>import Hume
+
+// 1. Initialize client with access token
+class EmotionAnalyzer: ObservableObject {
+    private var humeClient: HumeClient?
+    private var voiceProvider: VoiceProvider?
+
+    @Published var emotions: [String: Double] = [:]
+
+    func connect() async throws {
+        // Fetch access token from your backend
+        let token = try await fetchAccessToken()
+
+        humeClient = HumeClient(
+            options: .accessToken(token: token)
+        )
+
+        // Create voice provider (manages WebSocket + audio)
+        voiceProvider = VoiceProviderFactory
+            .getVoiceProvider(client: humeClient!)
+
+        // Connect opens WebSocket, starts microphone
+        try await voiceProvider?.connect(
+            configId: "your-config-id"
+        )
+    }
+
+    func disconnect() {
+        voiceProvider?.disconnect()
+    }
+
+    private func fetchAccessToken() async throws -> String {
+        // Call your backend to get a Hume access token
+        // Never embed API keys in client apps
+        let url = URL(string: "https://your-backend.com/hume-token")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let response = try JSONDecoder().decode(
+            TokenResponse.self, from: data
+        )
+        return response.accessToken
+    }
+}</code></pre>
+
+<h3>Example 2: Hume AI Expression Measurement (REST Batch)</h3>
+
+<div class="code-label">Swift</div>
+<pre><code>import Foundation
+
+struct HumeEmotionResult: Codable {
+    let name: String
+    let score: Double
+}
+
+struct HumePrediction: Codable {
+    let emotions: [HumeEmotionResult]
+    let time: TimeRange?
+
+    struct TimeRange: Codable {
+        let begin: Double
+        let end: Double
+    }
+}
+
+class HumeBatchAnalyzer {
+    private let apiKey: String
+    private let baseURL = "https://api.hume.ai/v0/batch/jobs"
+
+    init(apiKey: String) {
+        self.apiKey = apiKey
+    }
+
+    /// Submit audio file for batch emotion analysis
+    func analyzeAudio(fileURL: URL) async throws -> [HumePrediction] {
+        var request = URLRequest(url: URL(string: baseURL)!)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+
+        // Build multipart form data
+        let boundary = UUID().uuidString
+        request.setValue(
+            "multipart/form-data; boundary=\(boundary)",
+            forHTTPHeaderField: "Content-Type"
+        )
+
+        let audioData = try Data(contentsOf: fileURL)
+        var body = Data()
+
+        // Add models configuration
+        let config = """
+        {"models":{"prosody":{},"language":{},"burst":{}}}
+        """
+        body.appendMultipart(
+            boundary: boundary, name: "json",
+            contentType: "application/json",
+            data: config.data(using: .utf8)!
+        )
+
+        // Add audio file
+        body.appendMultipart(
+            boundary: boundary, name: "file",
+            filename: fileURL.lastPathComponent,
+            contentType: "audio/wav",
+            data: audioData
+        )
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        // Parse and return predictions
+        return try JSONDecoder().decode(
+            [HumePrediction].self, from: data
+        )
+    }
+
+    /// Get top N emotions from a prediction
+    func topEmotions(
+        from prediction: HumePrediction,
+        count: Int = 5
+    ) -> [(name: String, score: Double)] {
+        prediction.emotions
+            .sorted { $0.score > $1.score }
+            .prefix(count)
+            .map { ($0.name, $0.score) }
+    }
+}</code></pre>
+
+<h3>Example 3: AssemblyAI Sentiment Analysis</h3>
+
+<div class="code-label">Swift</div>
+<pre><code>import Foundation
+
+struct AssemblyAITranscript: Codable {
+    let id: String
+    let status: String
+    let text: String?
+    let sentiment_analysis_results: [SentimentResult]?
+
+    struct SentimentResult: Codable {
+        let text: String
+        let sentiment: String  // "POSITIVE", "NEGATIVE", "NEUTRAL"
+        let confidence: Double
+        let start: Int  // ms
+        let end: Int    // ms
+        let speaker: String?
+    }
+}
+
+class AssemblyAISentimentAnalyzer {
+    private let apiKey: String
+    private let baseURL = "https://api.assemblyai.com/v2"
+
+    init(apiKey: String) {
+        self.apiKey = apiKey
+    }
+
+    /// Upload audio and get sentiment analysis
+    func analyzeSentiment(audioURL: URL) async throws -> [AssemblyAITranscript.SentimentResult] {
+
+        // Step 1: Upload audio file
+        let uploadURL = try await uploadFile(audioURL)
+
+        // Step 2: Create transcription with sentiment
+        let transcriptId = try await createTranscript(
+            audioURL: uploadURL,
+            sentimentAnalysis: true
+        )
+
+        // Step 3: Poll for results
+        let transcript = try await pollForResult(id: transcriptId)
+
+        return transcript.sentiment_analysis_results ?? []
+    }
+
+    private func createTranscript(
+        audioURL: String,
+        sentimentAnalysis: Bool
+    ) async throws -> String {
+        var request = URLRequest(
+            url: URL(string: "\(baseURL)/transcript")!
+        )
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "audio_url": audioURL,
+            "sentiment_analysis": sentimentAnalysis,
+            "speaker_labels": true
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        return json["id"] as! String
+    }
+
+    private func pollForResult(
+        id: String,
+        interval: TimeInterval = 3.0
+    ) async throws -> AssemblyAITranscript {
+        while true {
+            var request = URLRequest(
+                url: URL(string: "\(baseURL)/transcript/\(id)")!
+            )
+            request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let transcript = try JSONDecoder().decode(
+                AssemblyAITranscript.self, from: data
+            )
+
+            if transcript.status == "completed" {
+                return transcript
+            } else if transcript.status == "error" {
+                throw NSError(
+                    domain: "AssemblyAI",
+                    code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: "Transcription failed"]
+                )
+            }
+
+            try await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
+        }
+    }
+
+    private func uploadFile(_ fileURL: URL) async throws -> String {
+        var request = URLRequest(
+            url: URL(string: "\(baseURL)/upload")!
+        )
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+        request.setValue(
+            "application/octet-stream",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.httpBody = try Data(contentsOf: fileURL)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        return json["upload_url"] as! String
+    }
+}</code></pre>
+
+<h3>Example 4: Generic REST API Pattern (DeepAffects, Imentiv, etc.)</h3>
+
+<div class="code-label">Swift</div>
+<pre><code>import Foundation
+
+/// Generic emotion API client for any REST-based provider
+class GenericEmotionAPIClient {
+    let baseURL: String
+    let apiKey: String
+
+    init(baseURL: String, apiKey: String) {
+        self.baseURL = baseURL
+        self.apiKey = apiKey
+    }
+
+    /// Send audio data and receive emotion predictions
+    func analyzeEmotion(
+        audioData: Data,
+        endpoint: String = "/recognise_emotion",
+        contentType: String = "audio/wav"
+    ) async throws -> [[String: Any]] {
+
+        let url = URL(string: "\(baseURL)\(endpoint)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        request.httpBody = audioData
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+
+        return try JSONSerialization.jsonObject(with: data)
+            as? [[String: Any]] ?? []
+    }
+}
+
+// Usage for DeepAffects
+let deepAffects = GenericEmotionAPIClient(
+    baseURL: "https://proxy.api.deepaffects.com/audio/generic/api/v2/sync",
+    apiKey: "your-api-key"
+)
+
+// Usage for Imentiv AI
+let imentiv = GenericEmotionAPIClient(
+    baseURL: "https://api.imentiv.ai/v1",
+    apiKey: "your-api-key"
+)</code></pre>
+
+<div class="swift-focus">
+  <h4>iOS Architecture Recommendation</h4>
+  <p>For a production transcription app, abstract the emotion API behind a Swift protocol:</p>
+  <pre><code>protocol EmotionAnalyzer {
+    func analyze(audioData: Data) async throws -> [EmotionScore]
+}
+
+struct EmotionScore {
+    let emotion: String    // e.g., "Joy", "POSITIVE"
+    let confidence: Double // 0.0 - 1.0
+    let timeRange: ClosedRange&lt;TimeInterval&gt;?
+}
+
+// Then implement for each provider:
+class HumeEmotionAnalyzer: EmotionAnalyzer { ... }
+class AssemblyAIEmotionAnalyzer: EmotionAnalyzer { ... }
+class VokaturiEmotionAnalyzer: EmotionAnalyzer { ... }</code></pre>
+  <p>This lets you swap providers without changing your UI code, A/B test accuracy, and fall back to on-device processing when offline.</p>
+</div>
+
+<!-- ==================== PRIVACY ==================== -->
+<h2 id="privacy">Privacy and Compliance</h2>
+
+<p>Audio data is among the most sensitive data types. Voice recordings contain biometric voiceprints, can capture background conversations, and the emotion data itself reveals intimate psychological states. Regulatory frameworks are still catching up.</p>
+
+<h3>Key Regulatory Considerations</h3>
+
+<ul>
+  <li><strong>GDPR (EU)</strong> &mdash; Voice data is treated as sensitive personal information requiring explicit consent, secure processing, and documented retention policies</li>
+  <li><strong>EU AI Act</strong> &mdash; <em>Bans emotion recognition in workplaces and schools</em>. This is a hard legal constraint if your app could be used in those contexts</li>
+  <li><strong>CCPA (California)</strong> &mdash; Users must be able to request deletion of voice data and opt out of its sale</li>
+  <li><strong>BIPA (Illinois)</strong> &mdash; Voice data may qualify as biometric data requiring written consent before collection</li>
+</ul>
+
+<h3>Provider Privacy Comparison</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Provider</th>
+    <th>Data Processing</th>
+    <th>Data Retention</th>
+    <th>GDPR</th>
+    <th>On-Premise</th>
+    <th>SOC 2</th>
+  </tr>
+  <tr>
+    <td>Hume AI</td>
+    <td>Cloud</td>
+    <td>Configurable</td>
+    <td><span class="badge badge-green">Yes</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-green">Yes</span></td>
+  </tr>
+  <tr>
+    <td>AssemblyAI</td>
+    <td>Cloud</td>
+    <td>Configurable</td>
+    <td><span class="badge badge-green">Yes</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-green">Yes</span></td>
+  </tr>
+  <tr>
+    <td>Speechmatics</td>
+    <td>Cloud</td>
+    <td>Configurable</td>
+    <td><span class="badge badge-green">Yes</span></td>
+    <td><span class="badge badge-green">Available</span></td>
+    <td><span class="badge badge-green">Yes</span></td>
+  </tr>
+  <tr>
+    <td>Amazon Chime</td>
+    <td>AWS Cloud</td>
+    <td>AWS policies</td>
+    <td><span class="badge badge-green">Yes</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-green">Yes</span></td>
+  </tr>
+  <tr>
+    <td>DeepAffects</td>
+    <td>Cloud</td>
+    <td>Unknown</td>
+    <td><span class="badge badge-yellow">Unclear</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-yellow">Unknown</span></td>
+  </tr>
+  <tr>
+    <td>Imentiv AI</td>
+    <td>Cloud</td>
+    <td>Unknown</td>
+    <td><span class="badge badge-yellow">Unclear</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-yellow">Unknown</span></td>
+  </tr>
+  <tr>
+    <td>Vokaturi</td>
+    <td><strong>Local only</strong></td>
+    <td>N/A</td>
+    <td><span class="badge badge-green">N/A</span></td>
+    <td><span class="badge badge-green">Default</span></td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>iMotions</td>
+    <td><strong>Local only</strong></td>
+    <td>User-controlled</td>
+    <td><span class="badge badge-green">Yes</span></td>
+    <td><span class="badge badge-green">Default</span></td>
+    <td><span class="badge badge-green">Yes</span></td>
+  </tr>
+  <tr>
+    <td>Eden AI</td>
+    <td>Through provider</td>
+    <td>No storage</td>
+    <td><span class="badge badge-green">GDPR filter</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-yellow">Varies</span></td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-danger">
+  <div class="callout-title">Critical: EU AI Act Implications</div>
+  <p style="margin-bottom:0;">If your transcription app could be used in European workplaces or educational settings, the EU AI Act's ban on emotion recognition in those contexts applies regardless of which API you use. Design your app with clear consent flows and context awareness. Consider making emotion detection an opt-in feature that users explicitly enable.</p>
+</div>
+
+<h3>Privacy Best Practices for iOS Apps</h3>
+<ol>
+  <li><strong>Minimize data sent</strong> &mdash; Send only the audio segments needed for analysis, not entire recordings</li>
+  <li><strong>Encrypt in transit</strong> &mdash; All APIs use HTTPS/WSS, but verify certificate pinning</li>
+  <li><strong>Inform users</strong> &mdash; iOS requires <code>NSMicrophoneUsageDescription</code> &mdash; be specific about what you analyze</li>
+  <li><strong>Offer on-device fallback</strong> &mdash; Use Core ML for basic emotion detection when privacy is paramount</li>
+  <li><strong>Request deletion</strong> &mdash; Implement API calls to request data deletion after processing</li>
+  <li><strong>Transparency</strong> &mdash; Display which emotions are being detected and why</li>
+</ol>
+
+<!-- ==================== RECOMMENDATIONS ==================== -->
+<h2 id="recommendations">Recommendations</h2>
+
+<h3>For an iOS Transcription App</h3>
+
+<div class="provider-grid">
+  <div class="provider-card" style="border-color:var(--color-success);border-width:2px;">
+    <div class="provider-type" style="color:var(--color-success);">Best Overall</div>
+    <h4>Hume AI</h4>
+    <div class="provider-price">$0.064<span>/min</span></div>
+    <ul>
+      <li>Official Swift SDK (only provider)</li>
+      <li>48 granular emotions from voice</li>
+      <li>True acoustic analysis</li>
+      <li>Real-time WebSocket support</li>
+      <li>Battle-tested, well-documented</li>
+    </ul>
+    <p style="font-size:0.82rem;color:var(--color-text-secondary);margin-top:0.5rem;">Best when: You need rich emotion data and are willing to pay for quality.</p>
+  </div>
+
+  <div class="provider-card" style="border-color:var(--color-info);border-width:2px;">
+    <div class="provider-type" style="color:var(--color-info);">Best Budget</div>
+    <h4>AssemblyAI</h4>
+    <div class="provider-price">$0.003<span>/min</span></div>
+    <ul>
+      <li>Cheapest per-minute pricing</li>
+      <li>Excellent transcription (Universal-2)</li>
+      <li>Simple REST integration</li>
+      <li>Community Swift package</li>
+      <li>Good for basic pos/neg/neutral</li>
+    </ul>
+    <p style="font-size:0.82rem;color:var(--color-text-secondary);margin-top:0.5rem;">Best when: Budget matters and text sentiment is sufficient.</p>
+  </div>
+
+  <div class="provider-card" style="border-color:var(--color-warning);border-width:2px;">
+    <div class="provider-type" style="color:var(--color-warning);">Best for Privacy</div>
+    <h4>Vokaturi (On-Device)</h4>
+    <div class="provider-price">License fee<span> (no per-use cost)</span></div>
+    <ul>
+      <li>100% on-device processing</li>
+      <li>No network required</li>
+      <li>Zero per-minute cost</li>
+      <li>Works offline</li>
+      <li>5 basic emotions</li>
+    </ul>
+    <p style="font-size:0.82rem;color:var(--color-text-secondary);margin-top:0.5rem;">Best when: Privacy is paramount and basic emotions suffice.</p>
+  </div>
+</div>
+
+<h3>Suggested Hybrid Architecture</h3>
+<p>For a production transcription app that needs both responsiveness and depth:</p>
+<ol>
+  <li><strong>Primary Transcription</strong>: Apple Speech framework (free, on-device, excellent for iOS)</li>
+  <li><strong>Basic Sentiment</strong>: AssemblyAI ($0.003/min) for simple positive/negative/neutral per sentence</li>
+  <li><strong>Deep Emotion Analysis</strong>: Hume AI ($0.064/min) triggered on-demand when the user taps "Analyze Emotions" on a specific recording</li>
+  <li><strong>Offline Fallback</strong>: Core ML model for basic emotion (see the Open-Source Toolkits category for model conversion guides)</li>
+</ol>
+
+<p>This approach keeps costs low for everyday use while providing rich emotion data when specifically requested.</p>
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr>
+    <td><strong>Prosody</strong></td>
+    <td>The patterns of rhythm, stress, pitch, and intonation in speech. Prosodic features carry emotional meaning independent of the words being spoken.</td>
+  </tr>
+  <tr>
+    <td><strong>Paralinguistic</strong></td>
+    <td>Non-verbal aspects of speech communication including tone, pitch, speaking rate, pauses, and vocal quality &mdash; everything besides the actual words.</td>
+  </tr>
+  <tr>
+    <td><strong>Vocal Burst</strong></td>
+    <td>Non-speech vocalizations such as laughs, sighs, screams, gasps, and filler sounds ("uh-huh", "hmm") that carry emotional information.</td>
+  </tr>
+  <tr>
+    <td><strong>Valence-Arousal Model</strong></td>
+    <td>A dimensional model of emotion where states are mapped on two axes: valence (pleasant to unpleasant) and arousal (calm to excited).</td>
+  </tr>
+  <tr>
+    <td><strong>Ekman Emotions</strong></td>
+    <td>Six basic emotions proposed by Paul Ekman: anger, disgust, fear, happiness, sadness, and surprise. Many APIs use this as their taxonomy.</td>
+  </tr>
+  <tr>
+    <td><strong>SER</strong></td>
+    <td>Speech Emotion Recognition &mdash; the task of detecting emotional states from audio speech signals using machine learning.</td>
+  </tr>
+  <tr>
+    <td><strong>VAD</strong></td>
+    <td>Voice Activity Detection &mdash; identifying whether a given audio segment contains speech or silence.</td>
+  </tr>
+  <tr>
+    <td><strong>ASR</strong></td>
+    <td>Automatic Speech Recognition &mdash; converting spoken audio into text (speech-to-text).</td>
+  </tr>
+  <tr>
+    <td><strong>Diarization</strong></td>
+    <td>The process of segmenting an audio recording by speaker identity ("who spoke when").</td>
+  </tr>
+  <tr>
+    <td><strong>WebSocket (WSS)</strong></td>
+    <td>A persistent bidirectional communication protocol enabling real-time data streaming between client and server over a single connection.</td>
+  </tr>
+  <tr>
+    <td><strong>Core ML</strong></td>
+    <td>Apple's machine learning framework for running models on-device on iOS, macOS, watchOS, and tvOS with hardware acceleration.</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== CATEGORY NAV ==================== -->
+<nav class="category-nav">
+  <a href="../foundation-models/index.html" class="prev-category">&larr; Self-Supervised Foundation Models</a>
+  <a href="../open-source-toolkits/index.html" class="next-category">Open-Source Toolkits & Libraries &rarr;</a>
+</nav>
+
+</div><!-- .content -->
+</main>
+</div><!-- .layout -->
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  // Re-initialize mermaid with appropriate theme
+  initMermaid(next);
+}
+
+function initMermaid(theme) {
+  const mermaidTheme = theme === 'dark' ? 'dark' : 'default';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: mermaidTheme,
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    sequence: { useMaxWidth: true, actorMargin: 50 },
+    securityLevel: 'loose'
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', code);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Initialize
+(function() {
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  initMermaid(theme);
+})();
+
+// Active sidebar link tracking
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+  observer.observe(heading);
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+</script>
+
+</body>
+</html>

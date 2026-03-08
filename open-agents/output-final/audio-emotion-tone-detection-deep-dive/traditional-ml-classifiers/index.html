@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Traditional Machine Learning Classifiers for Speech Emotion Recognition — SVM, GMM, HMM, Random Forest, KNN, and ensemble methods explained with benchmarks and deployment considerations.">
+  <title>Traditional ML Classifiers | Audio Emotion &amp; Tone Detection Deep Dive</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #EEF2FF;
+      --color-primary-dark: #4338CA;
+      --color-accent: #8B5CF6;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-danger: #EF4444;
+      --color-info: #3B82F6;
+      --color-text: #1F2937;
+      --color-text-light: #6B7280;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9FAFB;
+      --color-bg-card: #FFFFFF;
+      --color-bg-code: #F3F4F6;
+      --color-border: #E5E7EB;
+      --color-border-light: #F3F4F6;
+      --color-sidebar-bg: #FFFFFF;
+      --color-sidebar-hover: #EEF2FF;
+      --color-sidebar-active: #6366F1;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 4px;
+      --sidebar-width: 280px;
+      --header-height: 60px;
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #818CF8;
+      --color-primary-light: #1E1B4B;
+      --color-primary-dark: #A5B4FC;
+      --color-accent: #A78BFA;
+      --color-text: #F9FAFB;
+      --color-text-light: #D1D5DB;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-code: #1E293B;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+      --color-sidebar-bg: #0F172A;
+      --color-sidebar-hover: #1E293B;
+      --color-sidebar-active: #818CF8;
+    }
+
+    [data-theme="dark"] .mermaid {
+      filter: invert(1) hue-rotate(180deg);
+    }
+
+    /* ========== Reset & Base ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 1rem); }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ========== Header ========== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-to-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+
+    .back-to-hub:hover {
+      background: var(--color-primary-light);
+    }
+
+    .header-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      display: none;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--color-text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle:hover { border-color: var(--color-primary); }
+
+    .sidebar-toggle {
+      display: none;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--color-text);
+    }
+
+    /* ========== Layout ========== */
+    .layout {
+      display: flex;
+      margin-top: var(--header-height);
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    /* ========== Sidebar ========== */
+    .sidebar {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--color-sidebar-bg);
+      border-right: 1px solid var(--color-border);
+      overflow-y: auto;
+      padding: 1.5rem 0;
+      z-index: 900;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-lighter);
+      padding: 0 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-nav { list-style: none; }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 0.4rem 1.5rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.5;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--color-text);
+      background: var(--color-sidebar-hover);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--color-sidebar-active);
+      border-left-color: var(--color-sidebar-active);
+      background: var(--color-primary-light);
+      font-weight: 600;
+    }
+
+    .sidebar-nav .sub-item a {
+      padding-left: 2.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* ========== Main Content ========== */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 2.5rem 4rem;
+    }
+
+    /* ========== Hero ========== */
+    .page-hero {
+      background: linear-gradient(135deg, #6366F1, #4338CA, #312E81);
+      color: white;
+      padding: 3.5rem 2.5rem 3rem;
+      margin-left: var(--sidebar-width);
+    }
+
+    .page-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .page-hero .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(255,255,255,0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero .subtitle {
+      font-size: 1.0625rem;
+      opacity: 0.9;
+      line-height: 1.6;
+      max-width: 700px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      text-align: center;
+    }
+
+    .hero-meta-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .hero-meta-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.8;
+    }
+
+    /* ========== Content Sections ========== */
+    .section {
+      margin-bottom: 3rem;
+      scroll-margin-top: calc(var(--header-height) + 1rem);
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section h3 {
+      font-size: 1.125rem;
+      font-weight: 650;
+      color: var(--color-text);
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    .section h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    .section p {
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .section ul, .section ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .section li {
+      margin-bottom: 0.4rem;
+      color: var(--color-text);
+    }
+
+    /* ========== Cards ========== */
+    .card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .card-icon.svm { background: #DBEAFE; color: #2563EB; }
+    .card-icon.gmm { background: #D1FAE5; color: #059669; }
+    .card-icon.hmm { background: #FEF3C7; color: #D97706; }
+    .card-icon.rf { background: #EDE9FE; color: #7C3AED; }
+    .card-icon.knn { background: #FCE7F3; color: #DB2777; }
+    .card-icon.ensemble { background: #FFEDD5; color: #EA580C; }
+
+    [data-theme="dark"] .card-icon.svm { background: #1E3A5F; }
+    [data-theme="dark"] .card-icon.gmm { background: #064E3B; }
+    [data-theme="dark"] .card-icon.hmm { background: #78350F; }
+    [data-theme="dark"] .card-icon.rf { background: #3B0764; }
+    [data-theme="dark"] .card-icon.knn { background: #831843; }
+    [data-theme="dark"] .card-icon.ensemble { background: #7C2D12; }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 650;
+    }
+
+    .card-subtitle {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    /* ========== Info Boxes ========== */
+    .info-box {
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      border-left: 4px solid;
+      font-size: 0.9375rem;
+    }
+
+    .info-box.tip {
+      background: #ECFDF5;
+      border-color: var(--color-success);
+      color: #065F46;
+    }
+
+    .info-box.warning {
+      background: #FFFBEB;
+      border-color: var(--color-warning);
+      color: #92400E;
+    }
+
+    .info-box.note {
+      background: #EFF6FF;
+      border-color: var(--color-info);
+      color: #1E40AF;
+    }
+
+    .info-box.key {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--color-primary-dark);
+    }
+
+    [data-theme="dark"] .info-box.tip { background: #064E3B; color: #A7F3D0; }
+    [data-theme="dark"] .info-box.warning { background: #78350F; color: #FDE68A; }
+    [data-theme="dark"] .info-box.note { background: #1E3A5F; color: #BFDBFE; }
+    [data-theme="dark"] .info-box.key { background: #312E81; color: #C7D2FE; }
+
+    .info-box strong { display: block; margin-bottom: 0.25rem; }
+
+    /* ========== Diagrams ========== */
+    .diagram-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .diagram-container .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* ========== Tables ========== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    thead th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--color-border-light);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: var(--color-bg-alt); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .badge-green { background: #D1FAE5; color: #065F46; }
+    .badge-yellow { background: #FEF3C7; color: #92400E; }
+    .badge-red { background: #FEE2E2; color: #991B1B; }
+    .badge-blue { background: #DBEAFE; color: #1E40AF; }
+    .badge-purple { background: #EDE9FE; color: #5B21B6; }
+
+    [data-theme="dark"] .badge-green { background: #064E3B; color: #A7F3D0; }
+    [data-theme="dark"] .badge-yellow { background: #78350F; color: #FDE68A; }
+    [data-theme="dark"] .badge-red { background: #7F1D1D; color: #FECACA; }
+    [data-theme="dark"] .badge-blue { background: #1E3A5F; color: #BFDBFE; }
+    [data-theme="dark"] .badge-purple { background: #3B0764; color: #DDD6FE; }
+
+    /* ========== Code blocks ========== */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--color-bg-code);
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-xs);
+      color: var(--color-primary);
+    }
+
+    pre {
+      background: var(--color-bg-code);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--color-text);
+    }
+
+    /* ========== Glossary Tooltips ========== */
+    .glossary-term {
+      border-bottom: 1.5px dashed var(--color-primary);
+      cursor: help;
+      position: relative;
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .glossary-term .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-text);
+      color: var(--color-bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.5;
+      width: 260px;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+
+    .glossary-term .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-text);
+    }
+
+    .glossary-term:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* ========== Comparison Grid ========== */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .comparison-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .comparison-card:hover { box-shadow: var(--shadow-md); }
+
+    .comparison-card h4 {
+      margin: 0 0 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-card .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      font-size: 0.8125rem;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .comparison-card .metric:last-child { border-bottom: none; }
+
+    .comparison-card .metric-label { color: var(--color-text-light); }
+
+    .comparison-card .metric-value { font-weight: 600; }
+
+    /* ========== Pros/Cons ========== */
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .pros, .cons {
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+    }
+
+    .pros {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+    }
+
+    .cons {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+    }
+
+    [data-theme="dark"] .pros { background: #064E3B; border-color: #065F46; }
+    [data-theme="dark"] .cons { background: #7F1D1D; border-color: #991B1B; }
+
+    .pros h5, .cons h5 {
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .pros h5 { color: #059669; }
+    .cons h5 { color: #DC2626; }
+
+    [data-theme="dark"] .pros h5 { color: #34D399; }
+    [data-theme="dark"] .cons h5 { color: #FCA5A5; }
+
+    .pros ul, .cons ul {
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+
+    .pros li, .cons li { margin-bottom: 0.25rem; }
+
+    /* ========== Meter bars ========== */
+    .meter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+    }
+
+    .meter-label {
+      width: 120px;
+      flex-shrink: 0;
+      color: var(--color-text-light);
+    }
+
+    .meter-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--color-border-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .meter-value {
+      width: 40px;
+      text-align: right;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    /* ========== Category Navigation ========== */
+    .category-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .category-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .category-nav a:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ========== Footer ========== */
+    .page-footer {
+      margin-left: var(--sidebar-width);
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+      padding: 2rem 2.5rem;
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-text-lighter);
+    }
+
+    /* ========== Scrollbar ========== */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+    /* ========== Mobile Responsive ========== */
+    @media (max-width: 1024px) {
+      .header-title { display: block; }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .sidebar-toggle { display: block; }
+
+      .main-content { margin-left: 0; }
+      .page-hero { margin-left: 0; }
+      .page-footer { margin-left: 0; }
+
+      .content-wrapper { padding: 1.5rem; }
+
+      .page-hero { padding: 2.5rem 1.5rem 2rem; }
+      .page-hero h1 { font-size: 1.75rem; }
+
+      .comparison-grid { grid-template-columns: 1fr; }
+      .pros-cons { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .page-hero h1 { font-size: 1.5rem; }
+      .hero-meta { gap: 1rem; }
+      .category-nav { flex-direction: column; gap: 0.75rem; }
+      .category-nav a { justify-content: center; }
+      .meter-label { width: 80px; font-size: 0.75rem; }
+
+      table { font-size: 0.75rem; }
+      thead th, tbody td { padding: 0.5rem 0.625rem; }
+    }
+
+    /* ========== Overlay for mobile sidebar ========== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 899;
+    }
+
+    .sidebar-overlay.active { display: block; }
+
+    /* ========== Step Indicators ========== */
+    .step-list {
+      counter-reset: step-counter;
+      list-style: none;
+      padding: 0;
+    }
+
+    .step-list li {
+      counter-increment: step-counter;
+      position: relative;
+      padding-left: 3rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2rem;
+      height: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 700;
+    }
+
+    /* ========== Accordion ========== */
+    .accordion-item {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1.25rem;
+      background: var(--color-bg-card);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .accordion-header:hover { background: var(--color-bg-alt); }
+
+    .accordion-arrow {
+      transition: transform 0.2s;
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+    }
+
+    .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+
+    .accordion-body {
+      display: none;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--color-border-light);
+      font-size: 0.9375rem;
+    }
+
+    .accordion-item.open .accordion-body { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+      <a href="../index.html" class="back-to-hub">&larr; Back to Deep Dive Hub</a>
+      <span class="header-title">Traditional ML Classifiers</span>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">&#9790;</button>
+    </div>
+  </header>
+
+  <!-- ========== SIDEBAR ========== -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">On This Page</div>
+      <ul class="sidebar-nav" id="sidebarNav">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#pipeline">Classification Pipeline</a></li>
+        <li><a href="#svm">Support Vector Machines</a></li>
+        <li class="sub-item"><a href="#svm-kernels">Kernel Functions</a></li>
+        <li class="sub-item"><a href="#svm-multiclass">Multi-class Strategies</a></li>
+        <li><a href="#gmm">Gaussian Mixture Models</a></li>
+        <li class="sub-item"><a href="#gmm-ubm">GMM-UBM Architecture</a></li>
+        <li class="sub-item"><a href="#gmm-supervector">Supervector Approach</a></li>
+        <li><a href="#hmm">Hidden Markov Models</a></li>
+        <li class="sub-item"><a href="#hmm-temporal">Temporal Modeling</a></li>
+        <li class="sub-item"><a href="#gmm-hmm">GMM-HMM Architecture</a></li>
+        <li><a href="#rf-knn">Random Forest &amp; KNN</a></li>
+        <li><a href="#ensembles">Ensemble Methods</a></li>
+        <li><a href="#feature-selection">Feature Selection</a></li>
+        <li><a href="#comparison">Classifier Comparison</a></li>
+        <li><a href="#on-device">On-Device Deployment</a></li>
+        <li><a href="#interpretability">Interpretability</a></li>
+        <li><a href="#decision-guide">Decision Guide</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Category Navigation</div>
+      <ul class="sidebar-nav">
+        <li><a href="../acoustic-feature-engineering/index.html">&larr; Acoustic Features</a></li>
+        <li><a href="../deep-learning-architectures/index.html">Deep Learning &rarr;</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ========== HERO ========== -->
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="category-badge">&#9881; Category 2 of 8</div>
+      <h1>Traditional Machine Learning Classifiers</h1>
+      <p class="subtitle">
+        From Support Vector Machines to ensemble methods &mdash; the foundational classifiers that shaped
+        speech emotion recognition, still prized for their efficiency, interpretability, and suitability
+        for real-time on-device deployment.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">6</div>
+          <div class="hero-meta-label">Classifier Families</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">70&ndash;90%</div>
+          <div class="hero-meta-label">Typical Accuracy Range</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">&lt;10 MB</div>
+          <div class="hero-meta-label">Model Sizes</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">&lt;1 ms</div>
+          <div class="hero-meta-label">Inference Time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="layout">
+    <main class="main-content">
+      <div class="content-wrapper">
+
+        <!-- ===== OVERVIEW ===== -->
+        <section class="section" id="overview">
+          <h2>&#128218; Overview</h2>
+          <p>
+            Traditional machine learning classifiers were the workhorses of speech emotion recognition (SER) before the deep learning era &mdash; and they remain remarkably relevant. While deep neural networks now dominate benchmark leaderboards, traditional ML approaches offer compelling advantages: <strong>sub-millisecond inference</strong>, <strong>kilobyte-to-megabyte model sizes</strong>, <strong>no GPU requirement</strong>, and <strong>fully interpretable decisions</strong>.
+          </p>
+          <p>
+            These classifiers operate on hand-crafted acoustic features (covered in <a href="../acoustic-feature-engineering/index.html">Category 1</a>), transforming carefully engineered representations of pitch, energy, spectral shape, and temporal patterns into emotion predictions. The pipeline is two-stage: first extract features, then classify.
+          </p>
+
+          <div class="info-box key">
+            <strong>Why This Matters for iOS / On-Device</strong>
+            Traditional ML classifiers are ideal candidates for on-device emotion detection. An SVM model trained on
+            <span class="glossary-term">MFCC<span class="tooltip">Mel-Frequency Cepstral Coefficients &mdash; a compact representation of the spectral envelope of audio, widely used as the primary acoustic feature for speech analysis.</span></span>
+            features fits in under 5 MB, requires zero GPU resources, and produces predictions in under 1 millisecond &mdash; making real-time continuous emotion monitoring feasible on mobile hardware.
+          </div>
+
+          <p>
+            This section covers six classifier families &mdash; SVM, GMM, HMM, Random Forest, KNN, and ensemble methods &mdash; along with the feature selection and dimensionality reduction techniques that maximize their performance. We conclude with a practical decision guide for choosing the right classifier for your use case.
+          </p>
+        </section>
+
+        <!-- ===== CLASSIFICATION PIPELINE ===== -->
+        <section class="section" id="pipeline">
+          <h2>&#128736; Classification Pipeline</h2>
+          <p>
+            Every traditional ML approach to SER follows the same general architecture: raw audio enters, acoustic features are extracted, those features are optionally reduced or selected, and a classifier maps them to an emotion label with a confidence score.
+          </p>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+flowchart LR
+    A["&#127908; Raw Audio<br/>Waveform"] --> B["&#127929; Feature<br/>Extraction"]
+    B --> C["&#128202; Dimensionality<br/>Reduction"]
+    C --> D["&#9881; Classifier"]
+    D --> E["&#127919; Emotion<br/>Label"]
+
+    B --> |"MFCCs, F0, Energy,<br/>Spectral, Prosodic"| C
+    C --> |"PCA / LDA<br/>Feature Selection"| D
+    D --> |"SVM, GMM, HMM,<br/>RF, KNN, Ensemble"| E
+
+    style A fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+    style B fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style C fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style D fill:#EDE9FE,stroke:#7C3AED,color:#3B0764
+    style E fill:#FCE7F3,stroke:#DB2777,color:#831843
+            </div>
+            <div class="diagram-caption">Figure 1: End-to-end classification pipeline for traditional ML-based speech emotion recognition</div>
+          </div>
+
+          <h3>Pipeline Stages</h3>
+          <ol class="step-list">
+            <li>
+              <strong>Feature Extraction</strong> &mdash; Acoustic features are computed from audio frames (typically 25 ms windows with 10 ms hop). Common feature sets include MFCCs (13&ndash;40 coefficients + deltas), fundamental frequency (F0), energy contours, spectral features (centroid, rolloff, flux), and prosodic statistics. Large feature sets like
+              <span class="glossary-term">openSMILE ComParE<span class="tooltip">A standardized feature set of 6,373 acoustic features used in the Computational Paralinguistics Challenge, covering spectral, prosodic, and voice quality dimensions.</span></span>
+              can produce 6,000+ features per utterance.
+            </li>
+            <li>
+              <strong>Dimensionality Reduction</strong> &mdash; With thousands of raw features, reduction is essential. PCA removes correlated features, LDA maximizes class separation, and feature selection methods (forward, backward, mutual information) identify the most discriminative subset.
+            </li>
+            <li>
+              <strong>Classification</strong> &mdash; The reduced feature vector is fed to one or more classifiers. Each classifier family has distinct strengths: SVMs excel at high-dimensional separation, GMMs model probability distributions, HMMs capture temporal dynamics.
+            </li>
+            <li>
+              <strong>Post-processing</strong> &mdash; Raw classifier outputs may be smoothed temporally (moving average), calibrated to probabilities, or combined via ensemble voting to produce final emotion labels with confidence scores.
+            </li>
+          </ol>
+        </section>
+
+        <!-- ===== SVM ===== -->
+        <section class="section" id="svm">
+          <h2>&#9878; Support Vector Machines</h2>
+          <p>
+            <span class="glossary-term">SVMs<span class="tooltip">Support Vector Machines &mdash; supervised learning models that find optimal hyperplanes separating classes in feature space. The &ldquo;support vectors&rdquo; are the training points closest to the decision boundary.</span></span>
+            are the most widely used traditional classifier for speech emotion recognition, consistently achieving the best results across multiple benchmark datasets. An SVM finds the optimal
+            <span class="glossary-term">hyperplane<span class="tooltip">A decision boundary in N-dimensional feature space that maximally separates two classes. The margin between the hyperplane and the nearest data points (support vectors) is maximized.</span></span>
+            that maximally separates emotion classes in feature space.
+          </p>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon svm">&#9878;</div>
+              <div>
+                <div class="card-title">SVM for Emotion Classification</div>
+                <div class="card-subtitle">Best results in 4 of 6 standard SER datasets</div>
+              </div>
+            </div>
+            <p>
+              The core insight of SVMs is the <strong>kernel trick</strong>: when emotion classes are not linearly separable in the original feature space (as is usually the case with acoustic features), a kernel function implicitly maps them into a higher-dimensional space where linear separation becomes possible &mdash; without ever computing the high-dimensional coordinates explicitly.
+            </p>
+          </div>
+
+          <h3 id="svm-kernels">Kernel Functions</h3>
+          <p>The choice of kernel function fundamentally shapes how the SVM perceives similarity between speech samples:</p>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+flowchart TD
+    A["Input Feature Space<br/>&#40;Non-linearly separable&#41;"] --> K{"Kernel<br/>Function"}
+    K --> |"&#966;&#40;x&#41; = x"| L["Linear Kernel<br/>K&#40;x,y&#41; = x&middot;y"]
+    K --> |"&#966;&#40;x&#41; &#8594; &#8734;-dim"| R["RBF Kernel<br/>K&#40;x,y&#41; = exp&#40;-&#947;&#8214;x-y&#8214;&sup2;&#41;"]
+    K --> |"&#966;&#40;x&#41; &#8594; d-dim"| P["Polynomial Kernel<br/>K&#40;x,y&#41; = &#40;x&middot;y + c&#41;&sup2;"]
+
+    L --> L1["Fast training<br/>Best for high-dim spaces<br/>GMM supervectors"]
+    R --> R1["Most common for SER<br/>Captures nonlinear boundaries<br/>&#126;82% accuracy with MFCC"]
+    P --> P1["Captures interactions<br/>Degree controls complexity<br/>Less common for SER"]
+
+    L1 --> F["SVM Decision<br/>Boundary"]
+    R1 --> F
+    P1 --> F
+    F --> G["Emotion<br/>Prediction"]
+
+    style A fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+    style K fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style L fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style R fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style P fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style F fill:#EDE9FE,stroke:#7C3AED,color:#3B0764
+    style G fill:#FCE7F3,stroke:#DB2777,color:#831843
+            </div>
+            <div class="diagram-caption">Figure 2: SVM kernel functions transform non-linearly separable features into spaces where linear separation is possible</div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kernel</th>
+                  <th>Formula</th>
+                  <th>Best For</th>
+                  <th>SER Accuracy</th>
+                  <th>Speed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>RBF (Gaussian)</strong></td>
+                  <td><code>exp(-&gamma;||x-y||&sup2;)</code></td>
+                  <td>General SER, MFCC features</td>
+                  <td><span class="badge badge-green">80&ndash;90%</span></td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Linear</strong></td>
+                  <td><code>x &middot; y</code></td>
+                  <td>High-dim supervectors, large datasets</td>
+                  <td><span class="badge badge-green">75&ndash;85%</span></td>
+                  <td><span class="badge badge-green">Fast</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Polynomial</strong></td>
+                  <td><code>(x &middot; y + c)^d</code></td>
+                  <td>Feature interaction modeling</td>
+                  <td><span class="badge badge-yellow">70&ndash;80%</span></td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="svm-multiclass">Multi-Class Strategies</h3>
+          <p>
+            SVMs are inherently binary classifiers. For multi-emotion classification (typically 4&ndash;7 emotion classes), two strategies are used:
+          </p>
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <h4>One-vs-One (OvO)</h4>
+              <div class="metric"><span class="metric-label">Classifiers Trained</span><span class="metric-value">C(C-1)/2</span></div>
+              <div class="metric"><span class="metric-label">For 6 Emotions</span><span class="metric-value">15 classifiers</span></div>
+              <div class="metric"><span class="metric-label">Prediction</span><span class="metric-value">Majority vote</span></div>
+              <div class="metric"><span class="metric-label">Training Speed</span><span class="metric-value">Faster per model</span></div>
+              <div class="metric"><span class="metric-label">Accuracy</span><span class="metric-value">Generally higher</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>One-vs-All (OvA)</h4>
+              <div class="metric"><span class="metric-label">Classifiers Trained</span><span class="metric-value">C</span></div>
+              <div class="metric"><span class="metric-label">For 6 Emotions</span><span class="metric-value">6 classifiers</span></div>
+              <div class="metric"><span class="metric-label">Prediction</span><span class="metric-value">Max confidence</span></div>
+              <div class="metric"><span class="metric-label">Training Speed</span><span class="metric-value">Fewer models total</span></div>
+              <div class="metric"><span class="metric-label">Accuracy</span><span class="metric-value">May have ties</span></div>
+            </div>
+          </div>
+
+          <div class="info-box tip">
+            <strong>iOS Deployment Tip</strong>
+            Apple's Core ML framework natively supports SVM models. You can train an SVM with scikit-learn, convert it via <code>coremltools</code>, and deploy directly on-device. A typical SVM emotion classifier with RBF kernel occupies 2&ndash;5 MB and runs inference in under 0.5 ms on an iPhone.
+          </div>
+
+          <h3>Benchmark Performance</h3>
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <h4>RAVDESS</h4>
+              <div class="metric"><span class="metric-label">SVM (RBF)</span><span class="metric-value">81.3%</span></div>
+              <div class="metric"><span class="metric-label">SVM + TQWT</span><span class="metric-value">>90%</span></div>
+              <div class="metric"><span class="metric-label">Feature Set</span><span class="metric-value">MFCC + Prosodic</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>IEMOCAP</h4>
+              <div class="metric"><span class="metric-label">SVM (standard)</span><span class="metric-value">~75%</span></div>
+              <div class="metric"><span class="metric-label">GMM-SVM</span><span class="metric-value">79%</span></div>
+              <div class="metric"><span class="metric-label">Human Baseline</span><span class="metric-value">79.8%</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>EMO-DB</h4>
+              <div class="metric"><span class="metric-label">SVM + Selection</span><span class="metric-value">>90%</span></div>
+              <div class="metric"><span class="metric-label">Best Kernel</span><span class="metric-value">RBF</span></div>
+              <div class="metric"><span class="metric-label">Classes</span><span class="metric-value">7 emotions</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== GMM ===== -->
+        <section class="section" id="gmm">
+          <h2>&#128200; Gaussian Mixture Models</h2>
+          <p>
+            <span class="glossary-term">GMMs<span class="tooltip">Gaussian Mixture Models &mdash; probabilistic models that represent data as a mixture of multiple Gaussian (normal) distributions, each with its own mean and covariance. Used to model the statistical distribution of acoustic features.</span></span>
+            take a fundamentally different approach than SVMs: rather than finding decision boundaries, GMMs model the <em>probability distribution</em> of acoustic features for each emotion. Classification works by computing which emotion's distribution best explains the observed features.
+          </p>
+
+          <h3 id="gmm-ubm">GMM-UBM Architecture</h3>
+          <p>
+            The
+            <span class="glossary-term">GMM-UBM<span class="tooltip">GMM-Universal Background Model &mdash; a technique from speaker recognition where a general-purpose GMM (the UBM) is trained on all available speech data, then adapted to specific classes (emotions) using MAP adaptation.</span></span>
+            framework, borrowed from speaker recognition, has proven highly effective for SER:
+          </p>
+
+          <ol class="step-list">
+            <li>
+              <strong>Train Universal Background Model</strong> &mdash; A GMM with 256&ndash;512 Gaussian components is trained on all available speech data, regardless of emotion label. This UBM captures the general statistical structure of speech.
+            </li>
+            <li>
+              <strong>MAP Adaptation</strong> &mdash; For each emotion category, the UBM is adapted using
+              <span class="glossary-term">Maximum A Posteriori<span class="tooltip">MAP adaptation adjusts the parameters of the UBM (means, covariances, weights) toward the specific training data for each emotion class, providing a regularized, data-efficient way to create emotion-specific models.</span></span>
+              estimation. This shifts the Gaussian means toward the emotion-specific data while keeping the general speech structure from the UBM.
+            </li>
+            <li>
+              <strong>Likelihood Scoring</strong> &mdash; A test utterance is scored against each emotion-adapted GMM. The emotion whose GMM assigns the highest likelihood is selected as the prediction.
+            </li>
+          </ol>
+
+          <h3 id="gmm-supervector">The GMM Supervector Approach</h3>
+          <p>
+            The supervector approach bridges GMMs and SVMs, combining the generative modeling power of GMMs with the discriminative classification power of SVMs:
+          </p>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon gmm">&#128200;</div>
+              <div>
+                <div class="card-title">GMM-SVM Supervector Pipeline</div>
+                <div class="card-subtitle">~79% accuracy, approaching human-level performance</div>
+              </div>
+            </div>
+            <ol>
+              <li>Train a UBM with <em>M</em> Gaussian components, each with <em>d</em>-dimensional mean vectors</li>
+              <li>For each utterance, MAP-adapt the UBM to obtain an utterance-specific GMM</li>
+              <li>Concatenate all <em>M</em> adapted mean vectors into a single <em>M &times; d</em> supervector</li>
+              <li>Feed the supervectors into an SVM classifier (typically with linear kernel, since supervectors are already high-dimensional)</li>
+            </ol>
+            <p style="margin-top:0.75rem;">
+              With 256 Gaussians and 39-dimensional MFCC features (13 + delta + delta-delta), each supervector has <strong>9,984 dimensions</strong> &mdash; a rich representation capturing both the general speech structure and utterance-specific emotional characteristics.
+            </p>
+          </div>
+
+          <div class="info-box note">
+            <strong>Feature Considerations</strong>
+            GMM-based systems commonly use RASTA-PLP features or 13-dimensional MFCCs with energy, plus delta and acceleration coefficients, producing 42-dimensional frame-level feature vectors. The GMM then aggregates these frame-level features into a single utterance-level representation.
+          </div>
+
+          <div class="pros-cons">
+            <div class="pros">
+              <h5>Strengths</h5>
+              <ul>
+                <li>Models full probability distributions, not just boundaries</li>
+                <li>Provides calibrated confidence scores (likelihoods)</li>
+                <li>UBM transfer learning reduces need for large labeled datasets</li>
+                <li>Supervector approach combines generative + discriminative power</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h5>Limitations</h5>
+              <ul>
+                <li>Higher computational cost for probability estimation</li>
+                <li>Assumes Gaussian distribution of features (not always valid)</li>
+                <li>Number of mixture components requires careful tuning</li>
+                <li>Larger model size than SVM alone (5&ndash;20 MB)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== HMM ===== -->
+        <section class="section" id="hmm">
+          <h2>&#9201; Hidden Markov Models</h2>
+          <p>
+            <span class="glossary-term">HMMs<span class="tooltip">Hidden Markov Models &mdash; statistical models for sequential data where the system transitions between hidden states over time. Each state emits observable outputs (acoustic features) according to a probability distribution.</span></span>
+            bring something unique to SER that neither SVMs nor GMMs offer: <strong>explicit temporal modeling</strong>. While other classifiers treat an utterance as a bag of features, HMMs model how emotional characteristics <em>evolve over time</em> within a speech segment.
+          </p>
+
+          <h3 id="hmm-temporal">Temporal Emotion Modeling</h3>
+          <p>
+            Emotions in speech are inherently temporal phenomena. A sentence expressing anger might start with a measured tone, build in intensity, and end with a sharp prosodic contour. HMMs capture this through:
+          </p>
+          <ul>
+            <li><strong>States</strong> &mdash; Each hidden state represents a phase of emotional expression (onset, peak, decay)</li>
+            <li><strong>Transition Probabilities</strong> &mdash; Model the likelihood of moving between emotional phases</li>
+            <li><strong>Emission Probabilities</strong> &mdash; At each state, a probability distribution (often a GMM) models which acoustic features are likely to be observed</li>
+          </ul>
+
+          <h3 id="gmm-hmm">GMM-HMM and Hybrid Architectures</h3>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+flowchart LR
+    subgraph Input["Audio Stream"]
+      direction TB
+      F1["Frame 1<br/>Features"]
+      F2["Frame 2<br/>Features"]
+      F3["Frame 3<br/>Features"]
+      FN["Frame N<br/>Features"]
+    end
+
+    subgraph HMM["Hidden Markov Model"]
+      direction LR
+      S1(("S1<br/>Onset"))
+      S2(("S2<br/>Build"))
+      S3(("S3<br/>Peak"))
+      S4(("S4<br/>Decay"))
+      S1 -->|"a12"| S2
+      S2 -->|"a23"| S3
+      S3 -->|"a34"| S4
+      S1 -->|"a11"| S1
+      S2 -->|"a22"| S2
+      S3 -->|"a33"| S3
+      S4 -->|"a44"| S4
+    end
+
+    subgraph Emission["GMM Emissions"]
+      G1["GMM 1<br/>P&#40;x|S1&#41;"]
+      G2["GMM 2<br/>P&#40;x|S2&#41;"]
+      G3["GMM 3<br/>P&#40;x|S3&#41;"]
+      G4["GMM 4<br/>P&#40;x|S4&#41;"]
+    end
+
+    F1 -.-> S1
+    F2 -.-> S2
+    F3 -.-> S3
+    FN -.-> S4
+
+    S1 --- G1
+    S2 --- G2
+    S3 --- G3
+    S4 --- G4
+
+    HMM --> V{"Viterbi<br/>Decoding"}
+    V --> Result["Emotion<br/>Label"]
+
+    style S1 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style S2 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style S3 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style S4 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style V fill:#EDE9FE,stroke:#7C3AED,color:#3B0764
+    style Result fill:#D1FAE5,stroke:#059669,color:#064E3B
+            </div>
+            <div class="diagram-caption">Figure 3: GMM-HMM architecture for temporal emotion modeling &mdash; hidden states capture emotional evolution over time</div>
+          </div>
+
+          <h3>HMM Architecture Variants</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Architecture</th>
+                  <th>Emission Model</th>
+                  <th>Strengths</th>
+                  <th>Accuracy (7 classes)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>GMM-HMM</strong></td>
+                  <td>Gaussian Mixtures</td>
+                  <td>Proven, interpretable states</td>
+                  <td><span class="badge badge-green">>86%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SGMM-HMM</strong></td>
+                  <td>Subspace GMMs</td>
+                  <td>More compact, parameter sharing</td>
+                  <td><span class="badge badge-green">~84%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>DNN-HMM</strong></td>
+                  <td>Deep Neural Network</td>
+                  <td>Learned features + temporal structure</td>
+                  <td><span class="badge badge-green">>88%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>DTMN</strong></td>
+                  <td>Time-Delay NN</td>
+                  <td>Modern hybrid, captures long context</td>
+                  <td><span class="badge badge-green">>90%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="info-box warning">
+            <strong>Key Finding</strong>
+            HMM-based systems have achieved average recognition accuracy exceeding <strong>86%</strong> for seven discrete emotions using global statistics &mdash; outperforming human deciders at 79.8% on the same corpus. The temporal modeling capability of HMMs is their decisive advantage for capturing emotion dynamics.
+          </div>
+
+          <div class="pros-cons">
+            <div class="pros">
+              <h5>Strengths</h5>
+              <ul>
+                <li>Captures temporal evolution of emotion within utterances</li>
+                <li>Proven track record from decades of ASR research</li>
+                <li>States are interpretable (onset, peak, decay phases)</li>
+                <li>Can exceed human-level performance on structured datasets</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h5>Limitations</h5>
+              <ul>
+                <li>Larger model size (5&ndash;30 MB) than SVM</li>
+                <li>Slower inference (~5 ms/sample) due to Viterbi decoding</li>
+                <li>First-order Markov assumption limits long-range dependencies</li>
+                <li>Training can be complex (EM algorithm, state count selection)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== RF & KNN ===== -->
+        <section class="section" id="rf-knn">
+          <h2>&#127795; Random Forests &amp; KNN</h2>
+
+          <h3>Random Forests</h3>
+          <p>
+            <span class="glossary-term">Random Forests<span class="tooltip">An ensemble of decision trees, each trained on a bootstrap sample of the data with a random subset of features. Predictions are made by majority vote across all trees.</span></span>
+            bring the power of ensemble decision trees to emotion classification. Each tree in the forest is trained on a bootstrap sample with random feature subsets, and the forest's prediction is the majority vote.
+          </p>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon rf">&#127795;</div>
+              <div>
+                <div class="card-title">Random Forest for SER</div>
+                <div class="card-subtitle">Built-in feature importance + ensemble robustness</div>
+              </div>
+            </div>
+            <p>
+              Random Forests offer a unique advantage over other classifiers: <strong>built-in feature importance ranking</strong>. After training, the forest can report which acoustic features (e.g., F0 variance, MFCC coefficients, energy contour) contributed most to emotion discrimination. This is invaluable for understanding which acoustic dimensions carry emotional information and for pruning feature sets for deployment.
+            </p>
+            <div style="margin-top:1rem;">
+              <h4>Typical Performance</h4>
+              <div class="meter-row">
+                <span class="meter-label">Average Accuracy</span>
+                <div class="meter-bar"><div class="meter-fill" style="width:69%;background:var(--color-primary)"></div></div>
+                <span class="meter-value">~69%</span>
+              </div>
+              <div class="meter-row">
+                <span class="meter-label">Fear Precision</span>
+                <div class="meter-bar"><div class="meter-fill" style="width:72%;background:var(--color-success)"></div></div>
+                <span class="meter-value">72%</span>
+              </div>
+              <div class="meter-row">
+                <span class="meter-label">Calm Recall</span>
+                <div class="meter-bar"><div class="meter-fill" style="width:84%;background:var(--color-info)"></div></div>
+                <span class="meter-value">84%</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>K-Nearest Neighbors (KNN)</h3>
+          <p>
+            <span class="glossary-term">KNN<span class="tooltip">K-Nearest Neighbors &mdash; a non-parametric classifier that assigns a label based on the majority class among the K closest training samples in feature space. Requires no training phase but inference scales with dataset size.</span></span>
+            is the simplest classifier in the SER toolkit: it classifies a new sample by finding the K most similar training samples and taking a majority vote. Despite its simplicity, KNN can be useful for prototyping and for understanding the geometric structure of emotion feature spaces.
+          </p>
+
+          <h4>Distance Metrics for Audio Features</h4>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Distance Metric</th>
+                  <th>Formula</th>
+                  <th>Best For</th>
+                  <th>SER Performance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Euclidean</strong></td>
+                  <td><code>&radic;&Sigma;(x_i - y_i)&sup2;</code></td>
+                  <td>Standardized features, general use</td>
+                  <td><span class="badge badge-yellow">58&ndash;65%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Cosine</strong></td>
+                  <td><code>1 - (x&middot;y)/(|x||y|)</code></td>
+                  <td>MFCC features, spectral similarity</td>
+                  <td><span class="badge badge-yellow">60&ndash;67%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Manhattan</strong></td>
+                  <td><code>&Sigma;|x_i - y_i|</code></td>
+                  <td>High-dimensional sparse features</td>
+                  <td><span class="badge badge-yellow">55&ndash;63%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Mahalanobis</strong></td>
+                  <td><code>&radic;((x-y)&prime;S&sup-;&sup1;(x-y))</code></td>
+                  <td>Correlated features, accounts for covariance</td>
+                  <td><span class="badge badge-green">65&ndash;70%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <h4>&#127795; Random Forest</h4>
+              <div class="metric"><span class="metric-label">Accuracy</span><span class="metric-value">65&ndash;73%</span></div>
+              <div class="metric"><span class="metric-label">Model Size</span><span class="metric-value">5&ndash;50 MB</span></div>
+              <div class="metric"><span class="metric-label">Inference</span><span class="metric-value">&lt;1 ms</span></div>
+              <div class="metric"><span class="metric-label">Training</span><span class="metric-value">Seconds&ndash;Minutes</span></div>
+              <div class="metric"><span class="metric-label">Interpretability</span><span class="metric-value">High</span></div>
+              <div class="metric"><span class="metric-label">On-Device</span><span class="metric-value badge badge-green">Good</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>&#128205; KNN</h4>
+              <div class="metric"><span class="metric-label">Accuracy</span><span class="metric-value">58&ndash;67%</span></div>
+              <div class="metric"><span class="metric-label">Model Size</span><span class="metric-value">= Training set</span></div>
+              <div class="metric"><span class="metric-label">Inference</span><span class="metric-value">Scales with N</span></div>
+              <div class="metric"><span class="metric-label">Training</span><span class="metric-value">None (lazy)</span></div>
+              <div class="metric"><span class="metric-label">Interpretability</span><span class="metric-value">Medium</span></div>
+              <div class="metric"><span class="metric-label">On-Device</span><span class="metric-value badge badge-red">Poor</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== ENSEMBLES ===== -->
+        <section class="section" id="ensembles">
+          <h2>&#128279; Ensemble Methods</h2>
+          <p>
+            Ensemble methods combine multiple classifiers to produce more robust and accurate predictions than any single model. For SER, where different classifiers excel at recognizing different emotions, ensembles can capture complementary strengths.
+          </p>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+flowchart TB
+    subgraph Bagging["Bagging &#40;Bootstrap Aggregating&#41;"]
+      direction TB
+      D1["Bootstrap<br/>Sample 1"] --> M1["Model 1"]
+      D2["Bootstrap<br/>Sample 2"] --> M2["Model 2"]
+      D3["Bootstrap<br/>Sample 3"] --> M3["Model 3"]
+      M1 --> V1["Majority<br/>Vote"]
+      M2 --> V1
+      M3 --> V1
+    end
+
+    subgraph Boosting["Boosting &#40;Sequential&#41;"]
+      direction TB
+      B1["Model 1<br/>&#40;all data&#41;"] --> E1["Errors"]
+      E1 --> B2["Model 2<br/>&#40;weighted&#41;"]
+      B2 --> E2["Errors"]
+      E2 --> B3["Model 3<br/>&#40;weighted&#41;"]
+      B3 --> V2["Weighted<br/>Sum"]
+      B1 --> V2
+      B2 --> V2
+    end
+
+    subgraph Stacking["Stacking &#40;Meta-Learning&#41;"]
+      direction TB
+      S1["SVM"] --> ML["Meta-<br/>Learner"]
+      S2["RF"] --> ML
+      S3["GMM"] --> ML
+      S4["KNN"] --> ML
+      ML --> V3["Final<br/>Prediction"]
+    end
+
+    V1 --> R["Reduced<br/>Variance"]
+    V2 --> RB["Reduced<br/>Bias"]
+    V3 --> RP["Improved<br/>Performance"]
+
+    style R fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style RB fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+    style RP fill:#EDE9FE,stroke:#7C3AED,color:#3B0764
+    style V1 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style V2 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style V3 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style ML fill:#FCE7F3,stroke:#DB2777,color:#831843
+            </div>
+            <div class="diagram-caption">Figure 4: Three ensemble strategies &mdash; bagging reduces variance, boosting reduces bias, stacking improves overall performance</div>
+          </div>
+
+          <div class="accordion-item open">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              Bagging (Bootstrap Aggregating)
+              <span class="accordion-arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+              <p>Bagging creates diverse models by training each on a different bootstrap sample of the data. The key benefit is <strong>variance reduction</strong> &mdash; individual decision trees may overfit, but the ensemble averages out their errors.</p>
+              <ul>
+                <li><strong>Random Forest</strong> is a specialized form of bagging that adds random feature selection at each split</li>
+                <li>Each tree sees ~63.2% of the training data (the rest are "out-of-bag" samples used for validation)</li>
+                <li>Predictions are combined via majority voting for classification</li>
+                <li>Particularly effective when individual classifiers are unstable (high variance)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              Boosting (AdaBoost, Gradient Boosting, XGBoost)
+              <span class="accordion-arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+              <p>Boosting trains models <strong>sequentially</strong>, with each new model focusing on the mistakes of the previous ones. This reduces <strong>bias</strong> and can achieve very high accuracy.</p>
+              <ul>
+                <li><strong>AdaBoost</strong>: Increases weights of misclassified samples, forces subsequent models to focus on hard cases</li>
+                <li><strong>Gradient Boosting</strong>: Each model fits the residual errors of the combined previous models</li>
+                <li><strong>XGBoost</strong>: Optimized gradient boosting with regularization, particularly effective for tabular acoustic features</li>
+                <li>Risk of overfitting with too many boosting rounds &mdash; early stopping is essential</li>
+              </ul>
+              <div class="info-box tip" style="margin-top:0.75rem;">
+                <strong>XGBoost for SER</strong>
+                XGBoost is particularly well-suited for acoustic feature classification because it handles mixed feature types, provides built-in regularization, and can be exported to compact models (1&ndash;10 MB) for on-device deployment.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              Stacking (Meta-Learning)
+              <span class="accordion-arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+              <p>Stacking trains a <strong>meta-classifier</strong> to learn the optimal way to combine predictions from diverse base classifiers:</p>
+              <ol>
+                <li>Train multiple base classifiers (SVM, RF, GMM, KNN) on the training data</li>
+                <li>Use cross-validated predictions from base classifiers as features for the meta-classifier</li>
+                <li>Train the meta-classifier (often logistic regression or a small neural network) to combine base predictions</li>
+              </ol>
+              <p style="margin-top:0.5rem;">Stacking is especially effective for SER in <strong>multi-lingual environments</strong>, where different classifiers may excel for different languages or speaker characteristics.</p>
+            </div>
+          </div>
+
+          <div class="info-box note">
+            <strong>Ensemble Fusion for SER</strong>
+            Research shows that combining SVM + GMM via stacking can improve SER accuracy by 3&ndash;8% over either classifier alone. The SVM captures discriminative decision boundaries while the GMM provides calibrated probability estimates &mdash; the meta-learner learns when to trust each.
+          </div>
+        </section>
+
+        <!-- ===== FEATURE SELECTION ===== -->
+        <section class="section" id="feature-selection">
+          <h2>&#128269; Feature Selection &amp; Dimensionality Reduction</h2>
+          <p>
+            Speech emotion recognition often starts with enormous feature sets &mdash; openSMILE's ComParE set extracts <strong>6,373 features</strong> per utterance. Not all features are useful; many are redundant or noisy. Effective dimensionality reduction is critical for traditional ML classifiers, which can struggle with high-dimensional data (the
+            <span class="glossary-term">curse of dimensionality<span class="tooltip">As the number of features grows, the volume of the feature space increases exponentially, making the available data sparse. This causes distance-based classifiers to become unreliable and increases the risk of overfitting.</span></span>).
+          </p>
+
+          <h3>Transformation Methods</h3>
+
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <h4>PCA</h4>
+              <div class="metric"><span class="metric-label">Type</span><span class="metric-value">Unsupervised</span></div>
+              <div class="metric"><span class="metric-label">Goal</span><span class="metric-value">Max variance</span></div>
+              <div class="metric"><span class="metric-label">Best For</span><span class="metric-value">Decorrelation</span></div>
+              <div class="metric"><span class="metric-label">Typical Output</span><span class="metric-value">50&ndash;200 dims</span></div>
+              <div class="metric"><span class="metric-label">Preserves Class Info</span><span class="metric-value">No</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>LDA</h4>
+              <div class="metric"><span class="metric-label">Type</span><span class="metric-value">Supervised</span></div>
+              <div class="metric"><span class="metric-label">Goal</span><span class="metric-value">Max class separation</span></div>
+              <div class="metric"><span class="metric-label">Best For</span><span class="metric-value">Low-dim projection</span></div>
+              <div class="metric"><span class="metric-label">Typical Output</span><span class="metric-value">C-1 dims</span></div>
+              <div class="metric"><span class="metric-label">Preserves Class Info</span><span class="metric-value">Yes</span></div>
+            </div>
+            <div class="comparison-card">
+              <h4>PCA + LDA</h4>
+              <div class="metric"><span class="metric-label">Type</span><span class="metric-value">Two-stage</span></div>
+              <div class="metric"><span class="metric-label">Goal</span><span class="metric-value">Both</span></div>
+              <div class="metric"><span class="metric-label">Best For</span><span class="metric-value">High-dim SER data</span></div>
+              <div class="metric"><span class="metric-label">Typical Output</span><span class="metric-value">20&ndash;50 dims</span></div>
+              <div class="metric"><span class="metric-label">Preserves Class Info</span><span class="metric-value">Yes</span></div>
+            </div>
+          </div>
+
+          <h3>Feature Selection Methods</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Approach</th>
+                  <th>Computation</th>
+                  <th>Effectiveness</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Forward Selection (FFS)</strong></td>
+                  <td>Greedily adds best feature one at a time</td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                  <td><span class="badge badge-green">Good</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Backward Elimination (BFS)</strong></td>
+                  <td>Starts with all features, removes least useful</td>
+                  <td><span class="badge badge-red">High</span></td>
+                  <td><span class="badge badge-green">Good</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Mutual Information</strong></td>
+                  <td>Ranks features by statistical dependence on labels</td>
+                  <td><span class="badge badge-green">Low</span></td>
+                  <td><span class="badge badge-green">Good</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Fisher Criterion</strong></td>
+                  <td>Ratio of between-class to within-class scatter</td>
+                  <td><span class="badge badge-green">Low</span></td>
+                  <td><span class="badge badge-yellow">Moderate</span></td>
+                </tr>
+                <tr>
+                  <td><strong>INCA Selector</strong></td>
+                  <td>Advanced selection with SVM; >90% on RAVDESS</td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                  <td><span class="badge badge-green">Excellent</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RF Importance</strong></td>
+                  <td>Gini importance or permutation importance from RF</td>
+                  <td><span class="badge badge-green">Low</span></td>
+                  <td><span class="badge badge-green">Good</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="info-box key">
+            <strong>Best Practice: PCA then LDA</strong>
+            Research consistently shows that combining PCA and LDA outperforms either alone. Apply PCA first to decorrelate features and reduce dimensionality (e.g., 6,000 &rarr; 200), then apply LDA to project into a maximally class-separating subspace (200 &rarr; C-1 dimensions, where C is the number of emotion classes). This two-stage pipeline is the recommended approach for traditional ML-based SER.
+          </div>
+        </section>
+
+        <!-- ===== COMPARISON TABLE ===== -->
+        <section class="section" id="comparison">
+          <h2>&#128200; Comprehensive Classifier Comparison</h2>
+          <p>
+            The following table compares all six traditional ML classifier families across key dimensions relevant to SER deployment:
+          </p>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Classifier</th>
+                  <th>Accuracy</th>
+                  <th>Model Size</th>
+                  <th>Inference</th>
+                  <th>Training</th>
+                  <th>Interpretability</th>
+                  <th>Temporal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>SVM (RBF)</strong></td>
+                  <td><span class="badge badge-green">80&ndash;90%</span></td>
+                  <td>1&ndash;10 MB</td>
+                  <td>&lt;0.5 ms</td>
+                  <td>Minutes</td>
+                  <td>Low</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>GMM</strong></td>
+                  <td><span class="badge badge-green">75&ndash;82%</span></td>
+                  <td>5&ndash;20 MB</td>
+                  <td>~1 ms</td>
+                  <td>Minutes</td>
+                  <td>Medium</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>GMM-SVM</strong></td>
+                  <td><span class="badge badge-green">79&ndash;85%</span></td>
+                  <td>10&ndash;30 MB</td>
+                  <td>~2 ms</td>
+                  <td>Minutes</td>
+                  <td>Low</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>HMM (GMM-HMM)</strong></td>
+                  <td><span class="badge badge-green">>86%</span></td>
+                  <td>5&ndash;30 MB</td>
+                  <td>~5 ms</td>
+                  <td>Min&ndash;Hours</td>
+                  <td>Medium</td>
+                  <td><strong>Yes</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Random Forest</strong></td>
+                  <td><span class="badge badge-yellow">65&ndash;73%</span></td>
+                  <td>5&ndash;50 MB</td>
+                  <td>&lt;1 ms</td>
+                  <td>Seconds</td>
+                  <td><strong>High</strong></td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>KNN</strong></td>
+                  <td><span class="badge badge-yellow">58&ndash;67%</span></td>
+                  <td>= Dataset</td>
+                  <td>Scales w/ N</td>
+                  <td>None</td>
+                  <td>Medium</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>XGBoost</strong></td>
+                  <td><span class="badge badge-green">75&ndash;85%</span></td>
+                  <td>1&ndash;10 MB</td>
+                  <td>&lt;1 ms</td>
+                  <td>Minutes</td>
+                  <td>High</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>Stacked Ensemble</strong></td>
+                  <td><span class="badge badge-green">82&ndash;90%</span></td>
+                  <td>Sum of base</td>
+                  <td>Sum of base</td>
+                  <td>Hours</td>
+                  <td>Low</td>
+                  <td>Possible</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Performance vs. Deep Learning</h3>
+          <p>How do traditional classifiers compare against modern deep learning approaches on the same benchmarks?</p>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Approach</th>
+                  <th>RAVDESS</th>
+                  <th>IEMOCAP</th>
+                  <th>EMO-DB</th>
+                  <th>Parameters</th>
+                  <th>GPU Needed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>SVM (best config)</strong></td>
+                  <td>81&ndash;90%</td>
+                  <td>75&ndash;79%</td>
+                  <td>>90%</td>
+                  <td>~10K</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>GMM-HMM</strong></td>
+                  <td>~82%</td>
+                  <td>~78%</td>
+                  <td>>86%</td>
+                  <td>~50K</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td><strong>CNN-LSTM</strong></td>
+                  <td>95.5%</td>
+                  <td>96.2%</td>
+                  <td>95.8%</td>
+                  <td>~782K</td>
+                  <td>Yes</td>
+                </tr>
+                <tr>
+                  <td><strong>Wav2Vec2 fine-tuned</strong></td>
+                  <td>>96%</td>
+                  <td>>96%</td>
+                  <td>>97%</td>
+                  <td>95M</td>
+                  <td>Yes</td>
+                </tr>
+                <tr>
+                  <td><strong>MLP (small)</strong></td>
+                  <td>83.8%</td>
+                  <td>83.8%</td>
+                  <td>~90%</td>
+                  <td>~100K</td>
+                  <td>Optional</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="info-box warning">
+            <strong>Context Matters</strong>
+            Deep learning dominates on large, diverse datasets. But on small or domain-specific datasets (common in real-world deployments), traditional ML classifiers can match or exceed deep learning performance while being orders of magnitude smaller and faster. A CNN-LSTM baseline (61% precision) was shown to significantly surpass all PaSST transformer configurations on moderately-sized datasets.
+          </div>
+        </section>
+
+        <!-- ===== ON-DEVICE ===== -->
+        <section class="section" id="on-device">
+          <h2>&#128241; On-Device Deployment</h2>
+          <p>
+            For iOS and mobile deployment, traditional ML classifiers have a decisive edge. Here is a practical breakdown of deployment considerations:
+          </p>
+
+          <h3>Model Size Comparison</h3>
+          <div style="margin:1.5rem 0;">
+            <div class="meter-row">
+              <span class="meter-label">SVM (RBF)</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:5%;background:#10B981"></div></div>
+              <span class="meter-value">2&ndash;5 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">XGBoost</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:6%;background:#10B981"></div></div>
+              <span class="meter-value">1&ndash;10 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">Random Forest</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:15%;background:#F59E0B"></div></div>
+              <span class="meter-value">5&ndash;50 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">GMM-HMM</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:10%;background:#F59E0B"></div></div>
+              <span class="meter-value">5&ndash;30 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">MLP (small)</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:8%;background:#F59E0B"></div></div>
+              <span class="meter-value">3&ndash;10 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">CNN-LSTM</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:30%;background:#EF4444"></div></div>
+              <span class="meter-value">10&ndash;50 MB</span>
+            </div>
+            <div class="meter-row">
+              <span class="meter-label">VGG16</span>
+              <div class="meter-bar"><div class="meter-fill" style="width:100%;background:#EF4444"></div></div>
+              <span class="meter-value">~500 MB</span>
+            </div>
+          </div>
+
+          <h3>iOS / Apple Platform Integration</h3>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon svm">&#63743;</div>
+              <div>
+                <div class="card-title">Core ML Deployment Pipeline</div>
+                <div class="card-subtitle">From scikit-learn to on-device inference</div>
+              </div>
+            </div>
+            <ol>
+              <li><strong>Train</strong> your classifier with scikit-learn (SVM, RF, XGBoost) using acoustic features</li>
+              <li><strong>Convert</strong> the trained model with <code>coremltools</code>: <code>ct.converters.sklearn.convert(model)</code></li>
+              <li><strong>Optimize</strong> the Core ML model with quantization (FP16 or INT8) to reduce size further</li>
+              <li><strong>Deploy</strong> using Apple's <code>MLModel</code> API for synchronous on-device inference</li>
+              <li><strong>Combine</strong> with <code>AVAudioEngine</code> for real-time audio capture and feature extraction</li>
+            </ol>
+          </div>
+
+          <div class="info-box tip">
+            <strong>Recommended Stack for iOS Emotion Detection</strong>
+            <code>AVAudioEngine</code> (audio capture) &rarr; <code>vDSP</code> / <code>Accelerate</code> (FFT, MFCC extraction) &rarr; Core ML SVM model (classification) &rarr; SwiftUI (display). Total added app size: ~3&ndash;7 MB. Inference latency: &lt;2 ms end-to-end on iPhone 12+.
+          </div>
+        </section>
+
+        <!-- ===== INTERPRETABILITY ===== -->
+        <section class="section" id="interpretability">
+          <h2>&#128270; Interpretability &amp; Explainability</h2>
+          <p>
+            A major advantage of traditional ML classifiers over deep learning is <strong>interpretability</strong>: the ability to understand <em>why</em> a particular emotion was predicted. This is especially important in applications involving communication support, therapy, or accessibility, where trust in the system's reasoning is essential.
+          </p>
+
+          <h3>SHAP Analysis for SER</h3>
+          <p>
+            <span class="glossary-term">SHAP<span class="tooltip">SHapley Additive exPlanations &mdash; a game-theoretic approach to explain model predictions. Each feature receives a SHAP value indicating its contribution to pushing the prediction from the base rate toward the actual output.</span></span>
+            (SHapley Additive exPlanations) provides both global and local explanations for classifier decisions:
+          </p>
+          <ul>
+            <li><strong>Global explanations</strong>: Reveal which acoustic features matter most across the entire dataset. Research shows MFCC coefficients consistently hold higher importance for distinguishing <em>aroused</em> emotions (anger, happiness) versus <em>subdued</em> states (tiredness, sadness).</li>
+            <li><strong>Local explanations</strong>: For a specific utterance, show exactly which features pushed the prediction toward a particular emotion and by how much.</li>
+            <li><strong>Feature boosting</strong>: A novel approach uses SHAP importance to iteratively boost SER features, creating a feedback loop: classify &rarr; explain &rarr; boost important features &rarr; re-classify.</li>
+          </ul>
+
+          <h3>Interpretability by Classifier</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Classifier</th>
+                  <th>Native Interpretability</th>
+                  <th>SHAP Compatible</th>
+                  <th>Key Insight Available</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Decision Tree</strong></td>
+                  <td><span class="badge badge-green">Excellent</span></td>
+                  <td>Yes (TreeSHAP)</td>
+                  <td>Complete decision path visible</td>
+                </tr>
+                <tr>
+                  <td><strong>Random Forest</strong></td>
+                  <td><span class="badge badge-green">High</span></td>
+                  <td>Yes (TreeSHAP)</td>
+                  <td>Feature importance ranking</td>
+                </tr>
+                <tr>
+                  <td><strong>XGBoost</strong></td>
+                  <td><span class="badge badge-green">High</span></td>
+                  <td>Yes (TreeSHAP)</td>
+                  <td>Feature importance + gain</td>
+                </tr>
+                <tr>
+                  <td><strong>SVM (linear)</strong></td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                  <td>Yes (KernelSHAP)</td>
+                  <td>Feature weights</td>
+                </tr>
+                <tr>
+                  <td><strong>SVM (RBF)</strong></td>
+                  <td><span class="badge badge-red">Low</span></td>
+                  <td>Yes (KernelSHAP)</td>
+                  <td>Support vector proximity</td>
+                </tr>
+                <tr>
+                  <td><strong>GMM</strong></td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                  <td>Limited</td>
+                  <td>Component responsibilities</td>
+                </tr>
+                <tr>
+                  <td><strong>KNN</strong></td>
+                  <td><span class="badge badge-yellow">Medium</span></td>
+                  <td>Yes (KernelSHAP)</td>
+                  <td>Nearest neighbor examples</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== DECISION GUIDE ===== -->
+        <section class="section" id="decision-guide">
+          <h2>&#127919; Decision Guide: Which Classifier to Choose?</h2>
+          <p>
+            Selecting the right classifier depends on your specific constraints and priorities. Use this decision flowchart:
+          </p>
+
+          <div class="diagram-container">
+            <div class="mermaid">
+flowchart TD
+    Start["What is your<br/>primary constraint?"] --> Acc{"Highest<br/>accuracy?"}
+    Start --> Speed{"Fastest<br/>inference?"}
+    Start --> Size{"Smallest<br/>model?"}
+    Start --> Interp{"Most<br/>interpretable?"}
+    Start --> Temporal{"Need temporal<br/>modeling?"}
+
+    Acc -->|"Large dataset"| DL["Use Deep Learning<br/>&#40;CNN-LSTM, Wav2Vec2&#41;"]
+    Acc -->|"Small dataset"| Ens["Stacked Ensemble<br/>&#40;SVM + GMM + RF&#41;"]
+
+    Speed --> SVM["SVM with RBF Kernel<br/>&lt;0.5 ms inference"]
+    Speed --> XGB["XGBoost<br/>&lt;0.5 ms inference"]
+
+    Size --> SVM2["SVM &#40;Linear&#41;<br/>1-3 MB"]
+    Size --> XGB2["XGBoost<br/>1-5 MB"]
+
+    Interp --> RF["Random Forest<br/>Feature importance"]
+    Interp --> DT["Decision Tree<br/>Full path visible"]
+
+    Temporal --> HMM["GMM-HMM<br/>State-based modeling"]
+    Temporal --> DNNHMM["DNN-HMM Hybrid<br/>Best of both worlds"]
+
+    SVM --> Deploy["Deploy via<br/>Core ML"]
+    XGB --> Deploy
+    SVM2 --> Deploy
+    XGB2 --> Deploy
+    RF --> Deploy
+    DT --> Deploy
+    Ens --> Deploy
+
+    style Start fill:#EDE9FE,stroke:#7C3AED,color:#3B0764
+    style Deploy fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style DL fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+    style SVM fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style SVM2 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style XGB fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style XGB2 fill:#FEF3C7,stroke:#D97706,color:#78350F
+    style HMM fill:#FCE7F3,stroke:#DB2777,color:#831843
+    style DNNHMM fill:#FCE7F3,stroke:#DB2777,color:#831843
+    style RF fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style DT fill:#D1FAE5,stroke:#059669,color:#064E3B
+    style Ens fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F
+            </div>
+            <div class="diagram-caption">Figure 5: Decision flowchart for selecting the right classifier based on deployment constraints</div>
+          </div>
+
+          <h3>Quick Recommendations</h3>
+          <div class="comparison-grid">
+            <div class="comparison-card" style="border-left:4px solid #2563EB;">
+              <h4>Best Overall</h4>
+              <p style="font-size:0.875rem;margin-top:0.5rem;">
+                <strong>SVM with RBF kernel</strong> &mdash; Best balance of accuracy (80&ndash;90%), speed (&lt;0.5 ms), and model size (2&ndash;5 MB). The default choice for most SER applications.
+              </p>
+            </div>
+            <div class="comparison-card" style="border-left:4px solid #059669;">
+              <h4>Best for On-Device</h4>
+              <p style="font-size:0.875rem;margin-top:0.5rem;">
+                <strong>XGBoost or SVM (linear)</strong> &mdash; Smallest models (1&ndash;5 MB), fastest inference, excellent Core ML support. Ideal for continuous real-time monitoring on iOS.
+              </p>
+            </div>
+            <div class="comparison-card" style="border-left:4px solid #D97706;">
+              <h4>Best for Understanding</h4>
+              <p style="font-size:0.875rem;margin-top:0.5rem;">
+                <strong>Random Forest</strong> &mdash; Built-in feature importance reveals which acoustic dimensions carry emotion information. Useful for research and feature engineering.
+              </p>
+            </div>
+            <div class="comparison-card" style="border-left:4px solid #7C3AED;">
+              <h4>Best for Temporal Dynamics</h4>
+              <p style="font-size:0.875rem;margin-top:0.5rem;">
+                <strong>GMM-HMM</strong> &mdash; Only traditional classifier that models how emotion evolves within an utterance. Exceeds human performance on structured datasets.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== GLOSSARY ===== -->
+        <section class="section" id="glossary">
+          <h2>&#128214; Glossary</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Term</th>
+                  <th>Definition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>SVM</strong></td>
+                  <td>Support Vector Machine &mdash; a supervised classifier that finds optimal hyperplanes separating classes in feature space</td>
+                </tr>
+                <tr>
+                  <td><strong>GMM</strong></td>
+                  <td>Gaussian Mixture Model &mdash; a probabilistic model representing data as a weighted sum of Gaussian distributions</td>
+                </tr>
+                <tr>
+                  <td><strong>HMM</strong></td>
+                  <td>Hidden Markov Model &mdash; a statistical model for sequential data with hidden states and observable emissions</td>
+                </tr>
+                <tr>
+                  <td><strong>UBM</strong></td>
+                  <td>Universal Background Model &mdash; a general-purpose GMM trained on all available data, serving as a prior for adaptation</td>
+                </tr>
+                <tr>
+                  <td><strong>MAP Adaptation</strong></td>
+                  <td>Maximum A Posteriori adaptation &mdash; adjusting model parameters toward specific data while retaining prior knowledge</td>
+                </tr>
+                <tr>
+                  <td><strong>Supervector</strong></td>
+                  <td>A high-dimensional feature vector formed by concatenating all adapted GMM mean vectors</td>
+                </tr>
+                <tr>
+                  <td><strong>Kernel Trick</strong></td>
+                  <td>Computing dot products in high-dimensional space without explicitly transforming data to that space</td>
+                </tr>
+                <tr>
+                  <td><strong>RBF Kernel</strong></td>
+                  <td>Radial Basis Function kernel &mdash; maps data to infinite-dimensional space; most popular SVM kernel for SER</td>
+                </tr>
+                <tr>
+                  <td><strong>PCA</strong></td>
+                  <td>Principal Component Analysis &mdash; unsupervised method finding orthogonal axes of maximum variance</td>
+                </tr>
+                <tr>
+                  <td><strong>LDA</strong></td>
+                  <td>Linear Discriminant Analysis &mdash; supervised method maximizing between-class separation relative to within-class scatter</td>
+                </tr>
+                <tr>
+                  <td><strong>MFCC</strong></td>
+                  <td>Mel-Frequency Cepstral Coefficients &mdash; compact spectral envelope representation mimicking human auditory perception</td>
+                </tr>
+                <tr>
+                  <td><strong>Viterbi Decoding</strong></td>
+                  <td>Dynamic programming algorithm to find the most likely state sequence in an HMM</td>
+                </tr>
+                <tr>
+                  <td><strong>SHAP</strong></td>
+                  <td>SHapley Additive exPlanations &mdash; game-theoretic method for attributing predictions to individual features</td>
+                </tr>
+                <tr>
+                  <td><strong>Bagging</strong></td>
+                  <td>Bootstrap Aggregating &mdash; ensemble technique that trains models on bootstrap samples and averages predictions</td>
+                </tr>
+                <tr>
+                  <td><strong>Boosting</strong></td>
+                  <td>Sequential ensemble technique where each model corrects the errors of its predecessor</td>
+                </tr>
+                <tr>
+                  <td><strong>Stacking</strong></td>
+                  <td>Ensemble technique using a meta-learner to combine predictions from diverse base classifiers</td>
+                </tr>
+                <tr>
+                  <td><strong>IEMOCAP</strong></td>
+                  <td>Interactive Emotional Dyadic Motion Capture &mdash; benchmark dataset of ~12 hours of acted/improvised emotional speech</td>
+                </tr>
+                <tr>
+                  <td><strong>RAVDESS</strong></td>
+                  <td>Ryerson Audio-Visual Database of Emotional Speech and Song &mdash; 7,356 files from 24 actors</td>
+                </tr>
+                <tr>
+                  <td><strong>EMO-DB</strong></td>
+                  <td>Berlin Database of Emotional Speech &mdash; German-language benchmark with 535 utterances across 7 emotions</td>
+                </tr>
+                <tr>
+                  <td><strong>Core ML</strong></td>
+                  <td>Apple's machine learning framework for on-device inference on iOS, macOS, watchOS, and tvOS</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== CATEGORY NAVIGATION ===== -->
+        <nav class="category-nav">
+          <a href="../acoustic-feature-engineering/index.html" class="prev-category">&larr; Acoustic Feature Engineering</a>
+          <a href="../deep-learning-architectures/index.html" class="next-category">Deep Learning Architectures &rarr;</a>
+        </nav>
+
+      </div><!-- /content-wrapper -->
+    </main>
+  </div><!-- /layout -->
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="page-footer">
+    <p>Audio Emotion &amp; Tone Detection Deep Dive &mdash; Category 2: Traditional ML Classifiers</p>
+    <p style="margin-top:0.5rem;">Research compiled March 2026. Sources include IEEE Xplore, Springer, PMC/PubMed, arXiv, and benchmark evaluations on IEMOCAP, RAVDESS, and EMO-DB datasets.</p>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      themeVariables: {
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontSize: '13px'
+      }
+    });
+
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+
+      // Re-render Mermaid diagrams
+      document.querySelectorAll('.mermaid').forEach(el => {
+        el.removeAttribute('data-processed');
+      });
+      mermaid.init(undefined, '.mermaid');
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    // Sidebar Toggle (mobile)
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('active');
+    }
+
+    // Close sidebar when clicking a link (mobile)
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          document.getElementById('sidebar').classList.remove('open');
+          document.querySelector('.sidebar-overlay').classList.remove('active');
+        }
+      });
+    });
+
+    // Active sidebar link tracking
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
+
+    const observerOptions = {
+      rootMargin: '-80px 0px -70% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    // Accordion
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

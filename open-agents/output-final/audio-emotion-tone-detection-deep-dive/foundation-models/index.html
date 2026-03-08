@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Self-Supervised Foundation Models for Speech Emotion Recognition: Wav2Vec2, HuBERT, emotion2vec, WavLM, DistilHuBERT, Whisper and more">
+  <title>Self-Supervised Foundation Models | Audio Emotion & Tone Detection Deep Dive</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary: #6366F1;
+      --color-primary-light: #EEF2FF;
+      --color-primary-dark: #4338CA;
+      --color-primary-glow: rgba(99,102,241,0.15);
+      --color-accent: #8B5CF6;
+      --color-accent-light: #F5F3FF;
+      --color-success: #10B981;
+      --color-success-light: #ECFDF5;
+      --color-warning: #F59E0B;
+      --color-warning-light: #FFFBEB;
+      --color-danger: #EF4444;
+      --color-danger-light: #FEF2F2;
+      --color-info: #3B82F6;
+      --color-info-light: #EFF6FF;
+      --color-text: #1F2937;
+      --color-text-secondary: #4B5563;
+      --color-text-light: #6B7280;
+      --color-text-lighter: #9CA3AF;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9FAFB;
+      --color-bg-card: #FFFFFF;
+      --color-bg-code: #F3F4F6;
+      --color-border: #E5E7EB;
+      --color-border-light: #F3F4F6;
+      --color-sidebar-bg: #F8FAFC;
+      --color-sidebar-active: #EEF2FF;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 4px;
+      --sidebar-width: 280px;
+      --header-height: 56px;
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #818CF8;
+      --color-primary-light: #1E1B4B;
+      --color-primary-dark: #A5B4FC;
+      --color-primary-glow: rgba(129,140,248,0.15);
+      --color-accent: #A78BFA;
+      --color-accent-light: #1E1B4B;
+      --color-success: #34D399;
+      --color-success-light: #064E3B;
+      --color-warning: #FBBF24;
+      --color-warning-light: #78350F;
+      --color-danger: #F87171;
+      --color-danger-light: #7F1D1D;
+      --color-info: #60A5FA;
+      --color-info-light: #1E3A5F;
+      --color-text: #F9FAFB;
+      --color-text-secondary: #D1D5DB;
+      --color-text-light: #9CA3AF;
+      --color-text-lighter: #6B7280;
+      --color-bg: #0F172A;
+      --color-bg-alt: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-code: #334155;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+      --color-sidebar-bg: #0F172A;
+      --color-sidebar-active: #1E1B4B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 1rem); }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.85);
+    }
+
+    [data-theme="dark"] .site-header {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-to-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-primary);
+      text-decoration: none;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-xs);
+      transition: background 0.2s;
+    }
+
+    .back-to-hub:hover {
+      background: var(--color-primary-light);
+    }
+
+    .header-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xs);
+      padding: 0.375rem 0.5rem;
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: 1.25rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xs);
+      padding: 0.375rem 0.625rem;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--color-text);
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-bg-alt);
+    }
+
+    /* ===== LAYOUT ===== */
+    .layout {
+      display: flex;
+      margin-top: var(--header-height);
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      width: var(--sidebar-width);
+      height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+      background: var(--color-sidebar-bg);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 0;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-lighter);
+      padding: 0 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 0.4375rem 1.25rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-glow);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--color-primary);
+      background: var(--color-sidebar-active);
+      border-left-color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .sidebar-nav .sub-item a {
+      padding-left: 2.25rem;
+      font-size: 0.75rem;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      max-width: calc(100% - var(--sidebar-width));
+    }
+
+    .content-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #6366F1, #8B5CF6, #A78BFA);
+      color: white;
+      padding: 3rem 2rem;
+      margin: -2.5rem -2rem 2.5rem;
+      border-radius: 0;
+    }
+
+    .page-hero .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .page-hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero .subtitle {
+      font-size: 1.0625rem;
+      opacity: 0.9;
+      max-width: 640px;
+      line-height: 1.6;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      opacity: 0.85;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h2 {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 2rem 0 0.75rem;
+    }
+
+    h4 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* ===== KEY INSIGHT BOXES ===== */
+    .insight-box {
+      background: var(--color-primary-light);
+      border: 1px solid var(--color-primary);
+      border-left: 4px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .insight-box.success {
+      background: var(--color-success-light);
+      border-color: var(--color-success);
+    }
+
+    .insight-box.warning {
+      background: var(--color-warning-light);
+      border-color: var(--color-warning);
+    }
+
+    .insight-box.info {
+      background: var(--color-info-light);
+      border-color: var(--color-info);
+    }
+
+    .insight-box.danger {
+      background: var(--color-danger-light);
+      border-color: var(--color-danger);
+    }
+
+    .insight-box-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-box.success .insight-box-title { color: var(--color-success); }
+    .insight-box.warning .insight-box-title { color: var(--color-warning); }
+    .insight-box.info .insight-box-title { color: var(--color-info); }
+    .insight-box.danger .insight-box-title { color: var(--color-danger); }
+
+    .insight-box p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9375rem;
+    }
+
+    .insight-box p:last-child { margin-bottom: 0; }
+
+    /* ===== DIAGRAMS ===== */
+    .diagram-container {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .diagram-container .diagram-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .diagram-container .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .diagram-caption {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      text-align: center;
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* ===== TABLES ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead {
+      background: var(--color-bg-alt);
+    }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 2px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--color-border-light);
+      color: var(--color-text-secondary);
+    }
+
+    tbody tr:hover {
+      background: var(--color-primary-glow);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-green { background: var(--color-success-light); color: var(--color-success); }
+    .badge-blue { background: var(--color-info-light); color: var(--color-info); }
+    .badge-yellow { background: var(--color-warning-light); color: var(--color-warning); }
+    .badge-red { background: var(--color-danger-light); color: var(--color-danger); }
+    .badge-purple { background: var(--color-accent-light); color: var(--color-accent); }
+
+    /* ===== CODE BLOCKS ===== */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      background: var(--color-bg-code);
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-xs);
+      color: var(--color-primary);
+    }
+
+    pre {
+      background: var(--color-bg-code);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--color-text);
+    }
+
+    /* ===== GLOSSARY TOOLTIPS ===== */
+    .glossary-term {
+      border-bottom: 1px dashed var(--color-primary);
+      cursor: help;
+      position: relative;
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .glossary-term .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-text);
+      color: var(--color-bg);
+      padding: 0.625rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 400;
+      width: 280px;
+      line-height: 1.5;
+      z-index: 500;
+      transition: opacity 0.2s, visibility 0.2s;
+      pointer-events: none;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .glossary-term .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-text);
+    }
+
+    .glossary-term:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* ===== MODEL CARDS ===== */
+    .model-card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      transition: box-shadow 0.2s;
+    }
+
+    .model-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .model-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .model-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .model-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+
+    .model-card-subtitle {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    .model-card-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .model-stat {
+      text-align: center;
+    }
+
+    .model-stat-value {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .model-stat-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-lighter);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== FEATURE LIST ===== */
+    .feature-list {
+      list-style: none;
+      margin: 0.75rem 0;
+    }
+
+    .feature-list li {
+      padding: 0.375rem 0 0.375rem 1.5rem;
+      position: relative;
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .feature-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+
+    /* ===== COMPARISON GRID ===== */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .comparison-item {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+    }
+
+    .comparison-item h4 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ===== PIPELINE STEPS ===== */
+    .pipeline-steps {
+      display: flex;
+      gap: 0;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      min-width: 140px;
+      text-align: center;
+      position: relative;
+      padding: 1rem 0.5rem;
+    }
+
+    .pipeline-step::after {
+      content: '\2192';
+      position: absolute;
+      right: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      color: var(--color-text-lighter);
+    }
+
+    .pipeline-step:last-child::after { display: none; }
+
+    .pipeline-step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .pipeline-step-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .pipeline-step-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+      margin-top: 0.25rem;
+    }
+
+    /* ===== BOTTOM NAVIGATION ===== */
+    .category-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .category-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--color-primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .category-nav a:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      background: var(--color-primary-light);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .main-content {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 99;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-hero {
+        padding: 2rem 1.5rem;
+      }
+
+      .page-hero h1 {
+        font-size: 1.625rem;
+      }
+
+      .content-wrapper {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      h2 { font-size: 1.375rem; }
+      h3 { font-size: 1.125rem; }
+
+      .hero-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .pipeline-steps {
+        flex-direction: column;
+      }
+
+      .pipeline-step::after {
+        content: '\2193';
+        position: static;
+        display: block;
+        transform: none;
+      }
+
+      .pipeline-step:last-child::after { display: none; }
+
+      .category-nav {
+        flex-direction: column;
+      }
+
+      .model-card-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Scrollbar styling */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle navigation">&#9776;</button>
+      <a href="../index.html" class="back-to-hub">&larr; Back to Deep Dive</a>
+      <span class="header-title">Category 4 of 8</span>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#9790;</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Overview</div>
+        <ul class="sidebar-nav">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#ssl-paradigm">The SSL Paradigm</a></li>
+          <li><a href="#pretraining-pipeline">Pre-training Pipeline</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Foundation Models</div>
+        <ul class="sidebar-nav">
+          <li><a href="#wav2vec2">Wav2Vec2</a></li>
+          <li><a href="#hubert">HuBERT</a></li>
+          <li><a href="#wavlm">WavLM</a></li>
+          <li><a href="#emotion2vec">emotion2vec</a></li>
+          <li><a href="#whisper">Whisper Encoder</a></li>
+          <li><a href="#distilhubert">DistilHuBERT</a></li>
+          <li><a href="#data2vec">data2vec</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Practical Guide</div>
+        <ul class="sidebar-nav">
+          <li><a href="#fine-tuning">Fine-Tuning Strategies</a></li>
+          <li><a href="#cross-lingual">Cross-Lingual SER</a></li>
+          <li><a href="#comparison">Model Comparison</a></li>
+          <li><a href="#on-device">On-Device Deployment</a></li>
+          <li><a href="#speechbrain">SpeechBrain Integration</a></li>
+          <li><a href="#recommendations">Recommendations</a></li>
+          <li><a href="#glossary">Glossary</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="content-wrapper">
+
+        <!-- HERO -->
+        <section class="page-hero">
+          <div class="category-badge">&#9881; Category 4: State of the Art</div>
+          <h1>Self-Supervised Foundation Models</h1>
+          <p class="subtitle">Pre-trained on massive unlabeled audio corpora, these models learn rich speech representations that transfer powerfully to emotion recognition -- achieving the best accuracy with minimal labeled data.</p>
+          <div class="hero-meta">
+            <div class="hero-meta-item">&#128218; 7 models covered</div>
+            <div class="hero-meta-item">&#127919; IEMOCAP benchmark focus</div>
+            <div class="hero-meta-item">&#128241; iOS deployment strategies</div>
+          </div>
+        </section>
+
+        <!-- INTRODUCTION -->
+        <section id="introduction">
+          <h2>Introduction</h2>
+          <p>Self-supervised learning (SSL) has revolutionized speech processing. Rather than requiring millions of labeled emotion samples, these models first learn general speech representations from vast amounts of <em>unlabeled</em> audio, then transfer that knowledge to emotion recognition with remarkably little labeled data. The result: state-of-the-art accuracy that was unimaginable just a few years ago.</p>
+
+          <p>This category covers the current frontier of speech emotion recognition (SER). While traditional approaches (MFCCs + SVM) and supervised deep learning (CNNs, LSTMs) remain relevant for constrained deployments, self-supervised foundation models now define what is possible in terms of accuracy and generalization.</p>
+
+          <div class="insight-box">
+            <div class="insight-box-title">Key Insight</div>
+            <p>Foundation models like emotion2vec achieve state-of-the-art on IEMOCAP with <strong>only a linear classification layer</strong> on top of frozen pre-trained representations. No complex fine-tuning required -- the pre-trained features already encode emotion.</p>
+          </div>
+        </section>
+
+        <!-- SSL PARADIGM -->
+        <section id="ssl-paradigm">
+          <h2>The Self-Supervised Learning Paradigm</h2>
+          <p>Self-supervised learning solves the fundamental bottleneck in speech emotion recognition: the scarcity of labeled emotional speech data. While labeled datasets like IEMOCAP contain roughly 12 hours of data, SSL models pre-train on 960 to 60,000+ hours of unlabeled speech.</p>
+
+          <h3>Why SSL Works for Emotion</h3>
+          <ul class="feature-list">
+            <li><strong>Acoustic universals:</strong> Pitch contours, energy patterns, and spectral dynamics that distinguish emotions are present in all speech, not just labeled emotional data</li>
+            <li><strong>Contextual learning:</strong> Transformer architectures learn long-range dependencies between acoustic features that correlate with emotional expression</li>
+            <li><strong>Transfer power:</strong> Representations learned for speech understanding (phonemes, prosody, speaker identity) decompose naturally into features useful for emotion</li>
+            <li><strong>Data efficiency:</strong> Once pre-trained, these models need only hundreds -- not thousands -- of labeled examples to achieve competitive emotion recognition</li>
+          </ul>
+
+          <h3>Three Pre-training Paradigms</h3>
+          <div class="comparison-grid">
+            <div class="comparison-item">
+              <h4>Contrastive Learning</h4>
+              <p style="font-size:0.875rem;"><strong>Example:</strong> Wav2Vec2</p>
+              <p style="font-size:0.875rem;">Learns by distinguishing true speech representations from distractors. Masks portions of the input and requires the model to identify the correct quantized target among negative samples.</p>
+            </div>
+            <div class="comparison-item">
+              <h4>Masked Prediction</h4>
+              <p style="font-size:0.875rem;"><strong>Example:</strong> HuBERT</p>
+              <p style="font-size:0.875rem;">Masks input frames and predicts discrete cluster assignments (pseudo-labels from k-means). Iteratively refines both representations and targets across training rounds.</p>
+            </div>
+            <div class="comparison-item">
+              <h4>Online Distillation</h4>
+              <p style="font-size:0.875rem;"><strong>Example:</strong> data2vec, emotion2vec</p>
+              <p style="font-size:0.875rem;">Teacher-student framework where both networks are initialized identically. The teacher (updated via EMA) produces targets from unmasked input; the student predicts these from masked input.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRE-TRAINING PIPELINE DIAGRAM -->
+        <section id="pretraining-pipeline">
+          <h2>Pre-training Pipeline</h2>
+          <p>All SSL speech models share a common high-level structure, despite differences in their specific pre-training objectives. The pipeline transforms raw, unlabeled audio into rich, transferable representations.</p>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Self-Supervised Pre-training Pipeline</div>
+            <div class="mermaid">
+flowchart LR
+    A["&#127925; Unlabeled\nAudio\n(960-60K hrs)"] --> B["CNN Feature\nEncoder\n(7 conv layers)"]
+    B --> C["Random\nMasking\n(~50%)"]
+    C --> D["Transformer\nEncoder\n(12-24 layers)"]
+    D --> E["Pretext Task\n(contrastive /\nmasked prediction /\ndistillation)"]
+    E --> F["&#10024; Learned\nRepresentations\n(768/1024-dim)"]
+
+    style A fill:#4338CA,color:#fff,stroke:none
+    style B fill:#6366F1,color:#fff,stroke:none
+    style C fill:#8B5CF6,color:#fff,stroke:none
+    style D fill:#A78BFA,color:#fff,stroke:none
+    style E fill:#C4B5FD,color:#312E81,stroke:none
+    style F fill:#10B981,color:#fff,stroke:none
+            </div>
+            <div class="diagram-caption">All SSL speech models follow this general pipeline: encode raw audio, mask portions, process through transformers, and optimize via a pretext task. The specific pretext task varies by model.</div>
+          </div>
+
+          <div class="pipeline-steps">
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">1</div>
+              <div class="pipeline-step-title">Raw Audio</div>
+              <div class="pipeline-step-desc">16kHz waveform input, no handcrafted features</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">2</div>
+              <div class="pipeline-step-title">CNN Encoder</div>
+              <div class="pipeline-step-desc">7 conv blocks extract 49Hz local features</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">3</div>
+              <div class="pipeline-step-title">Masking</div>
+              <div class="pipeline-step-desc">~50% of frames replaced with mask tokens</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">4</div>
+              <div class="pipeline-step-title">Transformer</div>
+              <div class="pipeline-step-desc">Contextualized representations via self-attention</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">5</div>
+              <div class="pipeline-step-title">Pretext Task</div>
+              <div class="pipeline-step-desc">Contrastive, prediction, or distillation loss</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- WAV2VEC2 -->
+        <section id="wav2vec2">
+          <h2>Wav2Vec2</h2>
+          <p>Wav2Vec2 (Meta AI, 2020) pioneered the application of self-supervised learning to speech. It demonstrated that a model pre-trained on unlabeled audio can match or exceed fully supervised systems when fine-tuned on just 10 minutes of labeled data for speech recognition -- a paradigm shift that extends powerfully to emotion recognition.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-info-light);">&#127793;</div>
+              <div>
+                <div class="model-card-title">Wav2Vec2</div>
+                <div class="model-card-subtitle">Meta AI (Facebook) -- NeurIPS 2020</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">95M</div>
+                <div class="model-stat-label">Params (Base)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">317M</div>
+                <div class="model-stat-label">Params (Large)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">~360MB</div>
+                <div class="model-stat-label">Size (Base)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">78.7%</div>
+                <div class="model-stat-label">IEMOCAP Acc</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Architecture</h3>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Wav2Vec2 Architecture</div>
+            <div class="mermaid">
+flowchart TB
+    subgraph Input
+        A["&#127925; Raw Audio\n16kHz waveform"]
+    end
+
+    subgraph CNN["CNN Feature Encoder"]
+        B1["Conv Block 1\n(k=10, s=5, 512ch)"]
+        B2["Conv Block 2\n(k=3, s=2, 512ch)"]
+        B3["Conv Blocks 3-7\n(k=3/2, s=2, 512ch)"]
+    end
+
+    subgraph Quantizer["Quantization Module"]
+        Q1["Gumbel-Softmax"]
+        Q2["Codebook\nEntries"]
+    end
+
+    subgraph Transformer["Transformer Context Network"]
+        M["Masking\n(~50% of frames)"]
+        T1["Positional\nEncoding"]
+        T2["12 Transformer Layers\n768-dim (Base)\n24 layers, 1024-dim (Large)"]
+    end
+
+    subgraph Loss["Pre-training Losses"]
+        L1["Contrastive Loss\n(identify true target\namong K distractors)"]
+        L2["Diversity Loss\n(encourage full\ncodebook usage)"]
+    end
+
+    A --> B1 --> B2 --> B3
+    B3 -->|"latent repr\n~49Hz"| Q1
+    Q1 --> Q2
+    B3 --> M
+    M --> T1 --> T2
+    T2 --> L1
+    Q2 -->|"quantized\ntargets"| L1
+    Q1 --> L2
+
+    style A fill:#1E293B,color:#fff,stroke:none
+    style B1 fill:#6366F1,color:#fff,stroke:none
+    style B2 fill:#6366F1,color:#fff,stroke:none
+    style B3 fill:#6366F1,color:#fff,stroke:none
+    style Q1 fill:#F59E0B,color:#fff,stroke:none
+    style Q2 fill:#F59E0B,color:#fff,stroke:none
+    style M fill:#EF4444,color:#fff,stroke:none
+    style T1 fill:#8B5CF6,color:#fff,stroke:none
+    style T2 fill:#8B5CF6,color:#fff,stroke:none
+    style L1 fill:#10B981,color:#fff,stroke:none
+    style L2 fill:#10B981,color:#fff,stroke:none
+            </div>
+            <div class="diagram-caption">Wav2Vec2 uses a CNN to extract local features, quantizes them for contrastive targets, masks ~50% of frames, and trains a Transformer to identify the correct quantized target among distractors.</div>
+          </div>
+
+          <h4>CNN Feature Encoder</h4>
+          <p>Seven convolutional blocks with 512 channels each process the raw 16kHz waveform. The strides <code>[5,2,2,2,2,2,2]</code> and kernel widths <code>[10,3,3,3,3,2,2]</code> downsample the audio to approximately 49Hz -- one representation vector every ~20ms. Each block uses layer normalization and GELU activation.</p>
+
+          <h4>Contrastive Pre-training</h4>
+          <p>The <span class="glossary-term">contrastive loss<span class="tooltip">A training objective that teaches the model to distinguish a correct target from incorrect distractors. The model maximizes cosine similarity with the true target while minimizing similarity with negatives.</span></span> works as follows: for each masked time step, the model must identify the true quantized latent representation among K+1 candidates (1 true + K distractors sampled from other masked positions in the same utterance). The <span class="glossary-term">diversity loss<span class="tooltip">A regularization term that maximizes the entropy of codebook usage, ensuring all quantized entries are used uniformly rather than collapsing to a few frequently-used codes.</span></span> prevents codebook collapse by encouraging uniform usage of all quantization entries.</p>
+
+          <h4>Emotion Recognition with Wav2Vec2</h4>
+          <ul class="feature-list">
+            <li><strong>SpeechBrain pre-built model:</strong> wav2vec2-IEMOCAP achieves 78.7% accuracy (4-class) using attentive statistical pooling + Additive Margin Softmax</li>
+            <li><strong>Frozen Feature Extractor:</strong> Freeze the CNN feature encoder while fine-tuning the Transformer and classification head -- preserves acoustic understanding</li>
+            <li><strong>Combined architectures:</strong> Wav2vec2 + Neural Controlled Differential Equations (NCDE) achieves 73.37% WA, 74.18% UA (2025)</li>
+            <li><strong>Best reported:</strong> 79.58% WA in speaker-dependent setting on IEMOCAP</li>
+          </ul>
+        </section>
+
+        <!-- HUBERT -->
+        <section id="hubert">
+          <h2>HuBERT</h2>
+          <p>HuBERT (Hidden-Unit BERT, Meta AI, 2021) shares the same architecture as Wav2Vec2 but takes a fundamentally different approach to generating training targets. Instead of learning targets on-the-fly through quantization (Gumbel-softmax), HuBERT uses <strong>offline k-means clustering</strong> to generate discrete pseudo-labels, then iteratively refines both the representations and the targets.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-success-light);">&#129302;</div>
+              <div>
+                <div class="model-card-title">HuBERT</div>
+                <div class="model-card-subtitle">Meta AI -- IEEE/ACM TASLP 2021</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">95M</div>
+                <div class="model-stat-label">Params (Base)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">316M</div>
+                <div class="model-stat-label">Params (Large)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">~1B</div>
+                <div class="model-stat-label">Params (X-Large)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">82.6%</div>
+                <div class="model-stat-label">RAVDESS (XL+SVM)</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Key Difference: Offline Clustering</h3>
+          <p>HuBERT's training alternates between two phases:</p>
+          <ol style="margin:0.5rem 0 1rem 1.5rem; color:var(--color-text-secondary);">
+            <li><strong>Clustering phase:</strong> Run k-means on acoustic features (MFCCs in iteration 1, learned representations in subsequent iterations) to produce cluster assignments as pseudo-labels</li>
+            <li><strong>Prediction phase:</strong> Train the model with masked prediction -- predict the cluster assignment for each masked frame</li>
+          </ol>
+
+          <div class="insight-box info">
+            <div class="insight-box-title">Wav2Vec2 vs HuBERT: Target Generation</div>
+            <p><strong>Wav2Vec2</strong> learns its targets simultaneously during training via Gumbel-softmax quantization -- the targets and representations co-evolve.</p>
+            <p><strong>HuBERT</strong> pre-computes targets offline via k-means clustering, then uses them as fixed labels during each training iteration. After training, new k-means clustering on the improved representations produces better targets for the next iteration.</p>
+          </div>
+
+          <h3>Emotion Recognition Performance</h3>
+          <ul class="feature-list">
+            <li>HuBERT X-Large features + SVM classifier: <strong>82.6% accuracy on RAVDESS</strong></li>
+            <li>Fine-tuned HuBERT benchmark: <strong>79.58% WA</strong> (speaker-dependent) on IEMOCAP</li>
+            <li>HuBERT-CLAP: Contrastive learning-based multimodal approach pairing HuBERT audio features with text for improved emotion recognition</li>
+            <li>Different transformer layers capture different emotional aspects -- middle layers often best for emotion</li>
+          </ul>
+        </section>
+
+        <!-- WAVLM -->
+        <section id="wavlm">
+          <h2>WavLM</h2>
+          <p>WavLM (Microsoft, 2022) extends HuBERT's framework with two crucial innovations: a <strong>masked speech denoising</strong> objective and <strong>gated relative position bias</strong> in the self-attention mechanism. These changes make WavLM particularly effective for non-ASR tasks, including emotion recognition, speaker verification, and speech separation.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-warning-light);">&#127919;</div>
+              <div>
+                <div class="model-card-title">WavLM</div>
+                <div class="model-card-subtitle">Microsoft -- IEEE JSTSP 2022</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">95M</div>
+                <div class="model-stat-label">Params (Base/Base+)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">317M</div>
+                <div class="model-stat-label">Params (Large)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">+22.6%</div>
+                <div class="model-stat-label">vs HuBERT (Diarization)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">Best PEFT</div>
+                <div class="model-stat-label">LoRA Target</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Architectural Innovations</h3>
+
+          <h4>1. Masked Speech Denoising</h4>
+          <p>During pre-training, WavLM processes <em>corrupted</em> input -- speech mixed with other speakers (simulating overlap) or environmental noise -- but the target remains the clean speech pseudo-labels. This forces the model to learn:</p>
+          <ul class="feature-list">
+            <li><strong>Noise robustness:</strong> Representations remain stable despite acoustic interference</li>
+            <li><strong>Speaker awareness:</strong> Model learns to separate and identify individual speakers</li>
+            <li><strong>Paralinguistic sensitivity:</strong> Enhanced encoding of prosodic and emotional cues that persist through noise</li>
+          </ul>
+
+          <h4>2. Gated Relative Position Bias</h4>
+          <p>Unlike Wav2Vec2 and HuBERT (which use convolutional position encoding), WavLM adds a gated relative position bias to each self-attention layer. This learnable bias improves the model's ability to capture position-dependent relationships -- particularly beneficial for content-related tasks and temporal emotion dynamics.</p>
+
+          <div class="insight-box success">
+            <div class="insight-box-title">Why WavLM Excels at Emotion</div>
+            <p>The denoising objective endows WavLM with natural sensitivity to paralinguistic cues. By training on corrupted speech, the model learns to preserve <em>how</em> something is said (emotion, tone, emphasis) even when <em>what</em> is said is partially obscured. LoRA fine-tuning on WavLM Base+ achieves the best parameter-efficient results for emotion recognition among all SSL models tested.</p>
+          </div>
+        </section>
+
+        <!-- EMOTION2VEC -->
+        <section id="emotion2vec">
+          <h2>emotion2vec</h2>
+          <p>While Wav2Vec2, HuBERT, and WavLM are <em>general-purpose</em> speech models repurposed for emotion, emotion2vec (ACL 2024) is the first <strong>purpose-built</strong> foundation model for speech emotion representation. Pre-trained exclusively on emotional speech data, it achieves state-of-the-art results with remarkably simple downstream architectures.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-danger-light);">&#10084;&#65039;</div>
+              <div>
+                <div class="model-card-title">emotion2vec</div>
+                <div class="model-card-subtitle">ACL 2024 Findings -- Universal Emotion Model</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">~90M</div>
+                <div class="model-stat-label">Params (Base)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">~300M</div>
+                <div class="model-stat-label">Params (Large)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">74.5%</div>
+                <div class="model-stat-label">IEMOCAP WA</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">9</div>
+                <div class="model-stat-label">Emotion Classes</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Architecture and Training</h3>
+
+          <div class="diagram-container">
+            <div class="diagram-title">emotion2vec: Self-Supervised Online Distillation</div>
+            <div class="mermaid">
+flowchart TB
+    subgraph Input["Emotional Speech Data (262 hrs)"]
+        A["&#127925; Unlabeled\nEmotional Audio"]
+    end
+
+    subgraph Teacher["Teacher Network (EMA updated)"]
+        T1["Full Audio\n(no masking)"]
+        T2["data2vec\nEncoder"]
+        T3["Teacher\nRepresentations"]
+    end
+
+    subgraph Student["Student Network (gradient updated)"]
+        S1["Masked Audio\n(~50% masked)"]
+        S2["data2vec\nEncoder"]
+        S3["Student\nPredictions"]
+    end
+
+    subgraph Losses["Dual-Level Loss"]
+        L1["&#127908; Utterance-Level Loss\n(global emotion of clip)"]
+        L2["&#127916; Frame-Level Loss\n(temporal emotion dynamics)"]
+    end
+
+    subgraph Output["Result"]
+        O["&#10024; Universal Emotion\nRepresentations"]
+    end
+
+    A --> T1 --> T2 --> T3
+    A --> S1 --> S2 --> S3
+    T3 --> L1
+    S3 --> L1
+    T3 --> L2
+    S3 --> L2
+    L1 --> O
+    L2 --> O
+    S2 -.->|"EMA\nupdate"| T2
+
+    style A fill:#4338CA,color:#fff,stroke:none
+    style T1 fill:#10B981,color:#fff,stroke:none
+    style T2 fill:#10B981,color:#fff,stroke:none
+    style T3 fill:#10B981,color:#fff,stroke:none
+    style S1 fill:#6366F1,color:#fff,stroke:none
+    style S2 fill:#6366F1,color:#fff,stroke:none
+    style S3 fill:#6366F1,color:#fff,stroke:none
+    style L1 fill:#F59E0B,color:#fff,stroke:none
+    style L2 fill:#EF4444,color:#fff,stroke:none
+    style O fill:#8B5CF6,color:#fff,stroke:none
+            </div>
+            <div class="diagram-caption">emotion2vec uses online distillation with a teacher-student framework. The teacher processes unmasked audio and is updated via EMA. The student processes masked audio and is trained via gradient descent. Both utterance-level and frame-level losses optimize for emotion representation.</div>
+          </div>
+
+          <h4>Online Distillation Framework</h4>
+          <p>emotion2vec builds on the <span class="glossary-term">data2vec<span class="tooltip">A self-supervised learning framework by Meta that uses a single learning method across speech, vision, and language. It predicts contextualized latent representations rather than modality-specific targets.</span></span> framework with a teacher-student architecture:</p>
+          <ul class="feature-list">
+            <li><strong>Initialization:</strong> Both teacher and student are initialized with the same pre-trained weights</li>
+            <li><strong>Teacher network:</strong> Processes the full (unmasked) audio; parameters updated via <span class="glossary-term">exponential moving average (EMA)<span class="tooltip">A method of updating teacher weights as a weighted average of teacher and student weights: teacher = alpha * teacher + (1-alpha) * student. This provides stable, slowly-evolving targets.</span></span> of student weights</li>
+            <li><strong>Student network:</strong> Processes masked audio; parameters updated via gradient descent</li>
+            <li><strong>Linear projection:</strong> 384 to 768 dimensions for computing the masked language model loss</li>
+          </ul>
+
+          <h4>Dual-Level Loss: The Key Innovation</h4>
+          <div class="comparison-grid">
+            <div class="comparison-item">
+              <h4>Utterance-Level Loss</h4>
+              <p style="font-size:0.875rem;">Captures the <strong>global emotional state</strong> of the entire audio clip. Ensures the model learns holistic emotion representations -- is this clip angry, sad, or neutral overall?</p>
+            </div>
+            <div class="comparison-item">
+              <h4>Frame-Level Loss</h4>
+              <p style="font-size:0.875rem;">Captures <strong>temporal emotion dynamics</strong> within the utterance. Tracks how emotion evolves across time -- the build-up to anger, the wavering in sadness, mixed emotions within a single sentence.</p>
+            </div>
+          </div>
+
+          <h3>emotion2vec+ Variants</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Variant</th>
+                  <th>Training Data</th>
+                  <th>Params</th>
+                  <th>Emotion Classes</th>
+                  <th>Best Use Case</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>emotion2vec+ seed</strong></td>
+                  <td>Academic data (EmoBox)</td>
+                  <td>~90M</td>
+                  <td>9</td>
+                  <td>Research benchmarking</td>
+                </tr>
+                <tr>
+                  <td><strong>emotion2vec+ base</strong></td>
+                  <td>Large-scale pseudo-labeled</td>
+                  <td>~90M</td>
+                  <td>9</td>
+                  <td>Production deployment</td>
+                </tr>
+                <tr>
+                  <td><strong>emotion2vec+ large</strong></td>
+                  <td>Large-scale pseudo-labeled</td>
+                  <td>~300M</td>
+                  <td>9</td>
+                  <td>Maximum accuracy</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The 9 emotion classes supported: <span class="badge badge-red">Angry</span> <span class="badge badge-yellow">Disgusted</span> <span class="badge badge-purple">Fearful</span> <span class="badge badge-green">Happy</span> <span class="badge badge-blue">Neutral</span> <span class="badge badge-yellow">Sad</span> <span class="badge badge-purple">Surprised</span> <span class="badge badge-blue">Other</span> <span class="badge badge-red">Unknown</span></p>
+
+          <div class="insight-box success">
+            <div class="insight-box-title">State-of-the-Art Performance</div>
+            <p>emotion2vec achieves SOTA on IEMOCAP with <strong>only linear probing</strong> -- no complex fine-tuning needed. It outperforms all existing SSL models, including both base and large variants. It also shows <strong>consistent improvements across 10 languages</strong> and generalizes to song emotion recognition, conversational emotion, and sentiment analysis.</p>
+          </div>
+        </section>
+
+        <!-- WHISPER ENCODER -->
+        <section id="whisper">
+          <h2>Whisper Encoder</h2>
+          <p>OpenAI's <span class="glossary-term">Whisper<span class="tooltip">A large-scale automatic speech recognition (ASR) model by OpenAI, trained on 680,000 hours of multilingual web audio. While designed for transcription, its encoder produces representations rich in paralinguistic information.</span></span> was designed for automatic speech recognition (ASR), not emotion detection. However, its encoder representations -- trained on 680,000 hours of multilingual audio -- contain rich paralinguistic information that can be repurposed for emotion recognition with surprisingly strong results.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-accent-light);">&#128172;</div>
+              <div>
+                <div class="model-card-title">Whisper (Encoder)</div>
+                <div class="model-card-subtitle">OpenAI -- Trained on 680K hours</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">39M</div>
+                <div class="model-stat-label">Tiny</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">244M</div>
+                <div class="model-stat-label">Small</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">1.55B</div>
+                <div class="model-stat-label">Large-v3</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">92%</div>
+                <div class="model-stat-label">Acc (7-class, LV3)</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Why Whisper Works for Emotion</h3>
+          <ul class="feature-list">
+            <li><strong>Massive pre-training:</strong> 680,000 hours of multilingual audio provides broad acoustic understanding</li>
+            <li><strong>Paralinguistic encoding:</strong> To transcribe accurately, the encoder must implicitly model speaker characteristics, emotional states, and prosodic patterns</li>
+            <li><strong>Intermediate layers:</strong> Middle encoder layers often outperform final layers for emotion -- suggesting emotion is an intermediate representation between acoustics and linguistics</li>
+            <li><strong>Multilingual advantage:</strong> Unlike wav2vec2 (where English-only outperforms multilingual), Whisper benefits from multilingual pre-training for cross-lingual emotion recognition</li>
+          </ul>
+
+          <h3>Adaptation Strategies</h3>
+          <ul class="feature-list">
+            <li><strong>Attention-based pooling:</strong> Multi-head Attentive Average Pooling and QKV Pooling efficiently reduce encoder output dimensionality while preserving emotional features</li>
+            <li><strong>Layer selection:</strong> Best results come from intermediate transformer layers rather than the final layer</li>
+            <li><strong>Knowledge distillation:</strong> Whisper encoder features can be distilled into smaller models for efficient deployment</li>
+          </ul>
+
+          <div class="insight-box warning">
+            <div class="insight-box-title">iOS Deployment Note</div>
+            <p><strong>WhisperKit</strong> (by Argmax) demonstrates that Whisper can run on-device on Apple Silicon with 0.46s latency and 2.2% WER. The same CoreML pipeline could be adapted for emotion recognition using the encoder representations, making Whisper a viable path for iOS deployment -- though the full Large-v3 model (1.55B params) is too large. Whisper Tiny (39M) or Small (244M) are more practical on-device candidates.</p>
+          </div>
+        </section>
+
+        <!-- DISTILHUBERT -->
+        <section id="distilhubert">
+          <h2>DistilHuBERT</h2>
+          <p>DistilHuBERT solves the biggest practical challenge of SSL speech models: <strong>they are too large for edge deployment</strong>. By distilling a 12-layer HuBERT into a 2-layer student model, DistilHuBERT achieves a 75% compression with minimal accuracy loss -- making real-time, on-device emotion recognition feasible.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-success-light);">&#9889;</div>
+              <div>
+                <div class="model-card-title">DistilHuBERT</div>
+                <div class="model-card-subtitle">NTU -- Distilled for Edge Deployment</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">~23.8M</div>
+                <div class="model-stat-label">Parameters</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">23MB</div>
+                <div class="model-stat-label">Size (INT8)</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">75%</div>
+                <div class="model-stat-label">Compression</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">70.6%</div>
+                <div class="model-stat-label">Emotion Acc</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Distillation Approach</h3>
+          <ul class="feature-list">
+            <li><strong>Student model:</strong> 2 Transformer layers (vs 12 in HuBERT-base) with the same CNN feature encoder</li>
+            <li><strong>Multi-task distillation:</strong> Student hidden states are projected by linear layers to mimic hidden states from different teacher layers simultaneously</li>
+            <li><strong>Layer-wise knowledge transfer:</strong> Rather than just matching the final output, the student learns to approximate multiple internal representations of the teacher</li>
+          </ul>
+
+          <h3>Compression Results</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>HuBERT-Base</th>
+                  <th>DistilHuBERT</th>
+                  <th>Improvement</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Parameters</td>
+                  <td>95M</td>
+                  <td>~23.8M</td>
+                  <td><span class="badge badge-green">75% smaller</span></td>
+                </tr>
+                <tr>
+                  <td>Model Size (INT8)</td>
+                  <td>~180MB</td>
+                  <td>23MB</td>
+                  <td><span class="badge badge-green">87% smaller</span></td>
+                </tr>
+                <tr>
+                  <td>Inference Speed</td>
+                  <td>1x baseline</td>
+                  <td>3.7x faster</td>
+                  <td><span class="badge badge-green">73% faster</span></td>
+                </tr>
+                <tr>
+                  <td>Emotion Accuracy</td>
+                  <td>~78%</td>
+                  <td>70.6%</td>
+                  <td><span class="badge badge-yellow">~91% retained</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insight-box success">
+            <div class="insight-box-title">Best for On-Device iOS Deployment</div>
+            <p>At <strong>23MB (INT8)</strong>, DistilHuBERT is the most deployment-friendly SSL model. Export to ONNX with 8-bit quantization, then convert to CoreML for iOS. The model runs entirely on-device, preserving user privacy and eliminating network latency. With 70.6% accuracy, it retains over 90% of full HuBERT's emotion recognition performance at a fraction of the size.</p>
+          </div>
+        </section>
+
+        <!-- DATA2VEC -->
+        <section id="data2vec">
+          <h2>data2vec</h2>
+          <p>data2vec (Meta AI, 2022) is a general-purpose self-supervised learning framework that uses the <strong>same learning method</strong> across speech, vision, and text. Its significance for emotion recognition lies primarily in providing the foundation that emotion2vec builds upon.</p>
+
+          <div class="model-card">
+            <div class="model-card-header">
+              <div class="model-card-icon" style="background:var(--color-info-light);">&#127760;</div>
+              <div>
+                <div class="model-card-title">data2vec</div>
+                <div class="model-card-subtitle">Meta AI -- ICML 2022 -- Multimodal SSL</div>
+              </div>
+            </div>
+            <div class="model-card-stats">
+              <div class="model-stat">
+                <div class="model-stat-value">3</div>
+                <div class="model-stat-label">Modalities</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">EMA</div>
+                <div class="model-stat-label">Target Method</div>
+              </div>
+              <div class="model-stat">
+                <div class="model-stat-value">SOTA</div>
+                <div class="model-stat-label">Cross-Modal</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Core Innovation</h3>
+          <p>Unlike Wav2Vec2 (which predicts quantized discrete targets) or HuBERT (which predicts cluster assignments), data2vec predicts <strong>contextualized latent representations</strong> of the full input. The teacher network produces these continuous targets from the unmasked input, and the student must predict them from the masked view.</p>
+
+          <h3>Relevance to Emotion Recognition</h3>
+          <ul class="feature-list">
+            <li><strong>Foundation for emotion2vec:</strong> emotion2vec directly extends data2vec with emotion-specific pre-training data and dual-level loss</li>
+            <li><strong>AV-data2vec:</strong> Audio-visual extension for multimodal emotion recognition</li>
+            <li><strong>Modality-agnostic learning:</strong> Demonstrates that rich representations can be learned without modality-specific targets, suggesting that the same approach could work for emotion across speech, text, and visual modalities</li>
+          </ul>
+        </section>
+
+        <!-- FINE-TUNING STRATEGIES -->
+        <section id="fine-tuning">
+          <h2>Fine-Tuning Strategies</h2>
+          <p>How you adapt a pre-trained foundation model to emotion recognition dramatically affects both performance and computational cost. Four main strategies exist, each with distinct trade-offs.</p>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Fine-Tuning Pipeline: Pre-trained Model to Emotion Classifier</div>
+            <div class="mermaid">
+flowchart LR
+    subgraph Pretrained["Pre-trained Foundation Model"]
+        P1["CNN Feature\nEncoder"]
+        P2["Transformer\nEncoder\n(12-24 layers)"]
+    end
+
+    subgraph Strategy["Adaptation Strategy"]
+        direction TB
+        S1["Linear Probing\n(freeze all, train linear head)"]
+        S2["Full Fine-Tuning\n(update all parameters)"]
+        S3["Adapter Layers\n(insert lightweight modules)"]
+        S4["LoRA\n(low-rank matrices)"]
+    end
+
+    subgraph Task["Emotion Task Head"]
+        T1["Pooling Layer\n(attentive / mean)"]
+        T2["Classification\nHead"]
+        T3["&#127908; Emotion\nPrediction"]
+    end
+
+    P1 --> P2
+    P2 --> S1
+    P2 --> S2
+    P2 --> S3
+    P2 --> S4
+    S1 --> T1
+    S2 --> T1
+    S3 --> T1
+    S4 --> T1
+    T1 --> T2 --> T3
+
+    style P1 fill:#6366F1,color:#fff,stroke:none
+    style P2 fill:#6366F1,color:#fff,stroke:none
+    style S1 fill:#10B981,color:#fff,stroke:none
+    style S2 fill:#EF4444,color:#fff,stroke:none
+    style S3 fill:#F59E0B,color:#fff,stroke:none
+    style S4 fill:#8B5CF6,color:#fff,stroke:none
+    style T1 fill:#3B82F6,color:#fff,stroke:none
+    style T2 fill:#3B82F6,color:#fff,stroke:none
+    style T3 fill:#3B82F6,color:#fff,stroke:none
+            </div>
+            <div class="diagram-caption">Four adaptation strategies for converting a pre-trained SSL model into an emotion classifier. Each trades off between trainable parameters, compute cost, and final accuracy.</div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Strategy</th>
+                  <th>Trainable Params</th>
+                  <th>Compute Cost</th>
+                  <th>Overfitting Risk</th>
+                  <th>Performance</th>
+                  <th>Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Linear Probing</strong></td>
+                  <td>&lt; 0.1%</td>
+                  <td>Minimal</td>
+                  <td>Very Low</td>
+                  <td>Good</td>
+                  <td>emotion2vec, quick evaluation</td>
+                </tr>
+                <tr>
+                  <td><strong>Full Fine-Tuning</strong></td>
+                  <td>100%</td>
+                  <td>Very High</td>
+                  <td>High</td>
+                  <td>Highest potential</td>
+                  <td>Large datasets, max accuracy</td>
+                </tr>
+                <tr>
+                  <td><strong>Adapter Layers</strong></td>
+                  <td>2-5%</td>
+                  <td>Low</td>
+                  <td>Low</td>
+                  <td>Good-Very Good</td>
+                  <td>Multi-task deployment</td>
+                </tr>
+                <tr>
+                  <td><strong>LoRA</strong></td>
+                  <td>2-3%</td>
+                  <td>Low</td>
+                  <td>Low</td>
+                  <td>Very Good-Excellent</td>
+                  <td>WavLM, production systems</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Linear Probing</h3>
+          <p>Freeze the entire pre-trained model and train only a linear classification layer on top. This works surprisingly well when the pre-trained representations already encode emotion -- emotion2vec achieves SOTA on IEMOCAP with <em>only</em> linear probing. Fastest to train, lowest risk of overfitting, and demonstrates the quality of learned representations.</p>
+
+          <h3>LoRA (Low-Rank Adaptation)</h3>
+          <p><span class="glossary-term">LoRA<span class="tooltip">Low-Rank Adaptation: Freezes pre-trained weights and injects small trainable rank decomposition matrices (A and B) into each transformer layer. The original weight matrix W is augmented by W + BA, where B and A have much smaller dimensions.</span></span> freezes the pre-trained weights and injects trainable low-rank decomposition matrices into each transformer layer. Research shows LoRA achieves the best fine-tuning results on WavLM Base+ for emotion recognition, with stable and superior performance across all tested pre-trained systems while using only 2-3% of the total parameters.</p>
+
+          <h3>Adapter Layers</h3>
+          <p>Lightweight bottleneck modules inserted after the feed-forward layers in each transformer block. Only adapter weights are updated during fine-tuning, with residual connections preserving pre-trained representations. Particularly useful when you need to adapt one base model to multiple tasks (emotion + intent + speaker ID).</p>
+
+          <h3>Full Fine-Tuning</h3>
+          <p>Updating all model parameters provides the highest potential accuracy but risks catastrophic forgetting (losing general speech knowledge) and overfitting on small emotion datasets. Best reserved for scenarios with abundant labeled data and compute budget.</p>
+
+          <div class="insight-box warning">
+            <div class="insight-box-title">Practical Recommendation</div>
+            <p>Start with <strong>linear probing</strong> to benchmark representation quality. If more accuracy is needed, move to <strong>LoRA</strong> (best accuracy-to-cost ratio). Only use full fine-tuning if you have sufficient data (&gt;10K labeled utterances) and compute resources. Combined approaches (BA + LoRA + WS + WG) can surpass full fine-tuning while using just 2-3% of parameters.</p>
+          </div>
+        </section>
+
+        <!-- CROSS-LINGUAL -->
+        <section id="cross-lingual">
+          <h2>Cross-Lingual Emotion Recognition</h2>
+          <p>Can a model trained on English emotional speech recognize emotion in Mandarin, Arabic, or German? Cross-lingual transfer is a critical capability for global deployment, and multilingual SSL models offer a promising path.</p>
+
+          <h3>Key Findings</h3>
+          <ul class="feature-list">
+            <li><strong>Whisper benefits from multilingual pre-training</strong> for cross-lingual SER -- its 680K hours of multilingual data provides broad emotional understanding</li>
+            <li><strong>Wav2Vec2 English-only outperforms XLS-R (multilingual)</strong> in most languages -- a surprising result suggesting that English-only models learn more emotion-relevant representations</li>
+            <li><strong>Layer selection matters:</strong> Whisper performs best with last-layer features + linear classifier; wav2vec2 benefits from middle/early layer features</li>
+            <li><strong>emotion2vec generalizes across 10 languages</strong> despite being pre-trained primarily on emotion-focused data</li>
+          </ul>
+
+          <h3>Multilingual Models</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Languages</th>
+                  <th>Pre-training Hours</th>
+                  <th>Cross-Lingual SER</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>XLSR-53</strong></td>
+                  <td>53 languages</td>
+                  <td>56K hrs</td>
+                  <td>Good baseline for multilingual emotion</td>
+                </tr>
+                <tr>
+                  <td><strong>XLS-R</strong></td>
+                  <td>128 languages</td>
+                  <td>436K hrs</td>
+                  <td>Underperforms English-only wav2vec2 for SER</td>
+                </tr>
+                <tr>
+                  <td><strong>Whisper (multilingual)</strong></td>
+                  <td>99 languages</td>
+                  <td>680K hrs</td>
+                  <td>Best cross-lingual transfer for SER</td>
+                </tr>
+                <tr>
+                  <td><strong>emotion2vec</strong></td>
+                  <td>Pre-trained on mixed</td>
+                  <td>262 hrs</td>
+                  <td>Consistent improvement across 10 languages</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODEL COMPARISON -->
+        <section id="comparison">
+          <h2>Comprehensive Model Comparison</h2>
+          <p>Choosing the right foundation model depends on your specific constraints: accuracy requirements, deployment target (cloud vs edge), available compute, and language coverage needs.</p>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Model Size vs Emotion Recognition Accuracy Trade-off</div>
+            <div class="mermaid">
+quadrantChart
+    title Model Size vs Accuracy for Emotion Recognition
+    x-axis Small Model --> Large Model
+    y-axis Lower Accuracy --> Higher Accuracy
+    quadrant-1 "High Accuracy, Large Size (Cloud)"
+    quadrant-2 "High Accuracy, Small Size (Ideal)"
+    quadrant-3 "Lower Accuracy, Small Size (Edge)"
+    quadrant-4 "Lower Accuracy, Large Size (Avoid)"
+    "DistilHuBERT": [0.18, 0.52]
+    "Wav2Vec2 Base": [0.42, 0.72]
+    "emotion2vec Base": [0.42, 0.82]
+    "HuBERT Base": [0.42, 0.73]
+    "WavLM Base+": [0.42, 0.76]
+    "Whisper Small": [0.5, 0.68]
+    "HuBERT Large": [0.65, 0.80]
+    "emotion2vec Large": [0.68, 0.88]
+    "Whisper Large-v3": [0.85, 0.85]
+            </div>
+            <div class="diagram-caption">Models in the upper-left quadrant (high accuracy, small size) are ideal for production deployment. emotion2vec Base offers the best accuracy-to-size ratio. DistilHuBERT trades accuracy for extreme compactness, ideal for edge devices.</div>
+          </div>
+
+          <h3>Full Comparison Table</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Params</th>
+                  <th>Size (FP32)</th>
+                  <th>Pre-training</th>
+                  <th>IEMOCAP</th>
+                  <th>iOS Viable</th>
+                  <th>Strengths</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Wav2Vec2 Base</strong></td>
+                  <td>95M</td>
+                  <td>~360MB</td>
+                  <td>Contrastive</td>
+                  <td>~78.7%</td>
+                  <td><span class="badge badge-yellow">Possible*</span></td>
+                  <td>Well-studied, SpeechBrain support</td>
+                </tr>
+                <tr>
+                  <td><strong>HuBERT Base</strong></td>
+                  <td>95M</td>
+                  <td>~360MB</td>
+                  <td>Offline clustering</td>
+                  <td>~79.6%</td>
+                  <td><span class="badge badge-yellow">Possible*</span></td>
+                  <td>Clean representations, strong baseline</td>
+                </tr>
+                <tr>
+                  <td><strong>WavLM Base+</strong></td>
+                  <td>95M</td>
+                  <td>~360MB</td>
+                  <td>Denoising + clustering</td>
+                  <td>~80%</td>
+                  <td><span class="badge badge-yellow">Possible*</span></td>
+                  <td>Best for noisy audio, LoRA-friendly</td>
+                </tr>
+                <tr>
+                  <td><strong>emotion2vec Base</strong></td>
+                  <td>~90M</td>
+                  <td>~340MB</td>
+                  <td>Online distillation</td>
+                  <td>~74.5%**</td>
+                  <td><span class="badge badge-yellow">Possible*</span></td>
+                  <td>SOTA with linear probe, multilingual</td>
+                </tr>
+                <tr>
+                  <td><strong>emotion2vec Large</strong></td>
+                  <td>~300M</td>
+                  <td>~1.1GB</td>
+                  <td>Online distillation</td>
+                  <td>Best</td>
+                  <td><span class="badge badge-red">No</span></td>
+                  <td>Maximum accuracy, 9-class support</td>
+                </tr>
+                <tr>
+                  <td><strong>Whisper Tiny</strong></td>
+                  <td>39M</td>
+                  <td>~150MB</td>
+                  <td>Supervised ASR</td>
+                  <td>~65%</td>
+                  <td><span class="badge badge-green">Yes</span></td>
+                  <td>Smallest Whisper, ASR dual-use</td>
+                </tr>
+                <tr>
+                  <td><strong>Whisper Small</strong></td>
+                  <td>244M</td>
+                  <td>~930MB</td>
+                  <td>Supervised ASR</td>
+                  <td>~72%</td>
+                  <td><span class="badge badge-yellow">Possible*</span></td>
+                  <td>Good cross-lingual, dual ASR+emotion</td>
+                </tr>
+                <tr>
+                  <td><strong>DistilHuBERT</strong></td>
+                  <td>~23.8M</td>
+                  <td>~90MB</td>
+                  <td>Distilled</td>
+                  <td>~70.6%</td>
+                  <td><span class="badge badge-green">Yes</span></td>
+                  <td>23MB INT8, fastest inference</td>
+                </tr>
+                <tr>
+                  <td><strong>HuBERT X-Large</strong></td>
+                  <td>~1B</td>
+                  <td>~3.8GB</td>
+                  <td>Offline clustering</td>
+                  <td>~82.6%***</td>
+                  <td><span class="badge badge-red">No</span></td>
+                  <td>Highest single-model accuracy</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:0.8125rem; color:var(--color-text-lighter);">* Possible with FP16 quantization, ~180MB. ** Linear probe only (SOTA for linear probe). *** On RAVDESS with SVM classifier.</p>
+        </section>
+
+        <!-- ON-DEVICE DEPLOYMENT -->
+        <section id="on-device">
+          <h2>On-Device iOS Deployment</h2>
+          <p>Deploying SSL speech models on iOS requires careful attention to model size, inference latency, and the conversion pipeline from PyTorch to CoreML.</p>
+
+          <h3>Conversion Pipeline</h3>
+          <div class="pipeline-steps">
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">1</div>
+              <div class="pipeline-step-title">Train / Fine-Tune</div>
+              <div class="pipeline-step-desc">PyTorch model on GPU server</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">2</div>
+              <div class="pipeline-step-title">Distill (optional)</div>
+              <div class="pipeline-step-desc">12-layer to 2-4 layers</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">3</div>
+              <div class="pipeline-step-title">Export ONNX</div>
+              <div class="pipeline-step-desc">torch.onnx.export()</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">4</div>
+              <div class="pipeline-step-title">Quantize</div>
+              <div class="pipeline-step-desc">FP32 to FP16 / INT8</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-number">5</div>
+              <div class="pipeline-step-title">CoreML</div>
+              <div class="pipeline-step-desc">coremltools convert</div>
+            </div>
+          </div>
+
+          <h3>Size Budget Guidelines</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Target</th>
+                  <th>Max Model Size</th>
+                  <th>Suitable Models</th>
+                  <th>Strategy</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>App Store bundle</td>
+                  <td>&lt; 50MB</td>
+                  <td>DistilHuBERT (23MB INT8)</td>
+                  <td>INT8 quantization</td>
+                </tr>
+                <tr>
+                  <td>On-demand download</td>
+                  <td>&lt; 150MB</td>
+                  <td>Whisper Tiny, custom distilled models</td>
+                  <td>FP16 quantization</td>
+                </tr>
+                <tr>
+                  <td>Background download</td>
+                  <td>&lt; 300MB</td>
+                  <td>Wav2Vec2/HuBERT Base (FP16)</td>
+                  <td>FP16, background fetch</td>
+                </tr>
+                <tr>
+                  <td>Cloud-assisted</td>
+                  <td>Unlimited</td>
+                  <td>Any model including Large variants</td>
+                  <td>Server-side inference</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>CoreML Execution</h3>
+          <p>CoreML models can run on three compute units on Apple devices:</p>
+          <ul class="feature-list">
+            <li><strong>CPU:</strong> Most compatible, slowest for transformer models</li>
+            <li><strong>GPU:</strong> Good balance of speed and compatibility for medium models</li>
+            <li><strong>Apple Neural Engine (ANE):</strong> Fastest for supported operations, but transformer self-attention may fall back to GPU/CPU. Best for the CNN feature encoder portion</li>
+          </ul>
+
+          <div class="insight-box">
+            <div class="insight-box-title">Recommended iOS Strategy</div>
+            <p><strong>For maximum quality:</strong> Fine-tune emotion2vec or WavLM on your target data, distill to a 2-4 layer student model, quantize to INT8, convert to CoreML. Target 20-50MB.</p>
+            <p><strong>For fastest deployment:</strong> Use DistilHuBERT directly -- export to ONNX (INT8), convert to CoreML. 23MB, ready to ship.</p>
+            <p><strong>For dual ASR + emotion:</strong> Use Whisper Tiny encoder for both transcription and emotion features. WhisperKit provides the CoreML infrastructure.</p>
+          </div>
+
+          <h3>Code Example: Export Pipeline</h3>
+          <pre><code># Step 1: Fine-tune or use pre-trained model
+from transformers import HubertModel
+model = HubertModel.from_pretrained("ntu-spml/distilhubert")
+
+# Step 2: Export to ONNX
+import torch
+dummy_input = torch.randn(1, 16000)  # 1 second of 16kHz audio
+torch.onnx.export(model, dummy_input, "distilhubert.onnx",
+                   input_names=["audio"],
+                   output_names=["features"],
+                   dynamic_axes={"audio": {1: "seq_len"}})
+
+# Step 3: Quantize to INT8
+from onnxruntime.quantization import quantize_dynamic
+quantize_dynamic("distilhubert.onnx",
+                 "distilhubert_int8.onnx")
+
+# Step 4: Convert to CoreML
+import coremltools as ct
+mlmodel = ct.converters.onnx.convert("distilhubert_int8.onnx")
+mlmodel.save("DistilHuBERT.mlpackage")</code></pre>
+        </section>
+
+        <!-- SPEECHBRAIN -->
+        <section id="speechbrain">
+          <h2>SpeechBrain Integration</h2>
+          <p><span class="glossary-term">SpeechBrain<span class="tooltip">An open-source PyTorch-based speech processing toolkit. It provides modular components ("lobes") for SSL models, pre-built recipes for emotion recognition, and seamless HuggingFace integration.</span></span> is the most practical way to use foundation models for emotion recognition. It wraps Wav2Vec2, HuBERT, WavLM, and Whisper as interchangeable "lobes" and provides pre-built recipes for common tasks.</p>
+
+          <h3>Pre-Built Emotion Recognition</h3>
+          <pre><code># Install SpeechBrain
+pip install speechbrain
+
+# Load pre-trained emotion recognition model
+from speechbrain.inference.classifiers import EncoderClassifier
+
+classifier = EncoderClassifier.from_hparams(
+    source="speechbrain/emotion-recognition-wav2vec2-IEMOCAP",
+    savedir="pretrained_models/emotion-recognition"
+)
+
+# Classify emotion from audio file
+out_prob, score, index, text_lab = classifier.classify_file(
+    "path/to/audio.wav"
+)
+print(f"Predicted emotion: {text_lab}")
+# Output: Predicted emotion: ['ang']  (angry, hap, sad, neu)</code></pre>
+
+          <h3>Custom Fine-Tuning with SpeechBrain</h3>
+          <p>SpeechBrain supports swapping the backbone model while keeping the same training recipe:</p>
+          <ul class="feature-list">
+            <li>Replace <code>wav2vec2-base</code> with <code>hubert-base-ls960</code> or <code>wavlm-base-plus</code> in the YAML config</li>
+            <li>Attentive statistical pooling converts variable-length transformer output to fixed-size embeddings</li>
+            <li>Additive Margin Softmax loss provides better inter-class separation than standard cross-entropy</li>
+            <li>Built-in data augmentation (speed perturbation, noise injection) for robust training</li>
+          </ul>
+        </section>
+
+        <!-- RECOMMENDATIONS -->
+        <section id="recommendations">
+          <h2>Practical Recommendations</h2>
+
+          <h3>Decision Matrix</h3>
+
+          <div class="comparison-grid">
+            <div class="comparison-item" style="border-left:4px solid var(--color-success);">
+              <h4>Best Overall Accuracy</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-success);">emotion2vec+ Large</p>
+              <p style="font-size:0.8125rem;">Purpose-built for emotion, SOTA with linear probe, 9-class support, works across 10+ languages. Use for cloud/server deployment where model size is not a constraint.</p>
+            </div>
+            <div class="comparison-item" style="border-left:4px solid var(--color-info);">
+              <h4>Best for iOS On-Device</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-info);">DistilHuBERT</p>
+              <p style="font-size:0.8125rem;">23MB INT8, 73% faster than HuBERT, 91% accuracy retention. Ready for App Store deployment. Export via ONNX to CoreML.</p>
+            </div>
+            <div class="comparison-item" style="border-left:4px solid var(--color-warning);">
+              <h4>Best Accuracy/Size Ratio</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-warning);">emotion2vec+ Base</p>
+              <p style="font-size:0.8125rem;">~90M params, SOTA linear probe performance, can be further distilled. Best starting point for custom distillation to iOS.</p>
+            </div>
+            <div class="comparison-item" style="border-left:4px solid var(--color-accent);">
+              <h4>Best for Noisy Audio</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-accent);">WavLM Base+</p>
+              <p style="font-size:0.8125rem;">Denoising pre-training provides noise robustness. Best with LoRA fine-tuning. Ideal for real-world conditions with background noise.</p>
+            </div>
+            <div class="comparison-item" style="border-left:4px solid var(--color-danger);">
+              <h4>Best Dual-Purpose (ASR + Emotion)</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-danger);">Whisper Small/Tiny</p>
+              <p style="font-size:0.8125rem;">Get transcription AND emotion from one model. WhisperKit provides iOS infrastructure. Best cross-lingual support via multilingual pre-training.</p>
+            </div>
+            <div class="comparison-item" style="border-left:4px solid var(--color-primary);">
+              <h4>Best Ecosystem / Tooling</h4>
+              <p style="font-size:0.9375rem; font-weight:600; color:var(--color-primary);">Wav2Vec2 Base</p>
+              <p style="font-size:0.8125rem;">Most studied model, best SpeechBrain/HuggingFace support, extensive tutorials and community. Best for learning and prototyping.</p>
+            </div>
+          </div>
+
+          <h3>Getting Started Checklist</h3>
+          <ol style="margin:0.5rem 0 1rem 1.5rem; color:var(--color-text-secondary); font-size:0.9375rem;">
+            <li>Choose your deployment target (cloud, on-device, or hybrid)</li>
+            <li>Start with linear probing on emotion2vec to benchmark representation quality</li>
+            <li>If accuracy is insufficient, try LoRA fine-tuning on WavLM Base+</li>
+            <li>For iOS: distill your best model to 2-4 transformer layers, quantize to INT8</li>
+            <li>Use SpeechBrain for rapid prototyping with swappable backbones</li>
+            <li>Validate cross-corpus: train on IEMOCAP, test on RAVDESS/SAVEE to check generalization</li>
+          </ol>
+        </section>
+
+        <!-- GLOSSARY -->
+        <section id="glossary">
+          <h2>Glossary</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Term</th>
+                  <th>Definition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>SSL</strong></td>
+                  <td>Self-Supervised Learning -- pre-training on unlabeled data using pretext tasks (masking, contrastive, distillation)</td>
+                </tr>
+                <tr>
+                  <td><strong>SER</strong></td>
+                  <td>Speech Emotion Recognition -- classifying the emotional state of a speaker from audio</td>
+                </tr>
+                <tr>
+                  <td><strong>IEMOCAP</strong></td>
+                  <td>Interactive Emotional Dyadic Motion Capture -- standard benchmark dataset (~12 hrs, 4 emotions: angry, happy, sad, neutral)</td>
+                </tr>
+                <tr>
+                  <td><strong>Contrastive Loss</strong></td>
+                  <td>Training objective that distinguishes correct targets from distractors using cosine similarity</td>
+                </tr>
+                <tr>
+                  <td><strong>EMA</strong></td>
+                  <td>Exponential Moving Average -- slowly updating teacher weights as a weighted combination of teacher and student weights</td>
+                </tr>
+                <tr>
+                  <td><strong>LoRA</strong></td>
+                  <td>Low-Rank Adaptation -- parameter-efficient fine-tuning by injecting small trainable matrices into frozen layers</td>
+                </tr>
+                <tr>
+                  <td><strong>Linear Probing</strong></td>
+                  <td>Freezing the pre-trained model and training only a linear classifier on the learned representations</td>
+                </tr>
+                <tr>
+                  <td><strong>WA / UA</strong></td>
+                  <td>Weighted Accuracy / Unweighted Accuracy -- metrics for imbalanced emotion classification</td>
+                </tr>
+                <tr>
+                  <td><strong>CoreML</strong></td>
+                  <td>Apple's on-device ML framework supporting CPU, GPU, and Neural Engine inference</td>
+                </tr>
+                <tr>
+                  <td><strong>ONNX</strong></td>
+                  <td>Open Neural Network Exchange -- cross-platform model format for interoperability</td>
+                </tr>
+                <tr>
+                  <td><strong>Quantization</strong></td>
+                  <td>Reducing numerical precision (FP32 to FP16/INT8) to shrink model size and speed up inference</td>
+                </tr>
+                <tr>
+                  <td><strong>Knowledge Distillation</strong></td>
+                  <td>Training a smaller (student) model to replicate the behavior of a larger (teacher) model</td>
+                </tr>
+                <tr>
+                  <td><strong>Pretext Task</strong></td>
+                  <td>An auxiliary task (masking, contrastive prediction) used during self-supervised pre-training to learn representations</td>
+                </tr>
+                <tr>
+                  <td><strong>PEFT</strong></td>
+                  <td>Parameter-Efficient Fine-Tuning -- adapting large models by updating only a small subset of parameters (LoRA, adapters)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="category-nav">
+          <a href="../deep-learning-architectures/index.html" class="prev-category">&larr; Deep Learning Architectures</a>
+          <a href="../commercial-api-services/index.html" class="next-category">Commercial API Services &rarr;</a>
+        </nav>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      themeVariables: {
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontSize: '14px'
+      },
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      quadrantChart: {
+        chartWidth: 500,
+        chartHeight: 400,
+        titleFontSize: 16,
+        titlePadding: 10
+      }
+    });
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+      // Re-render mermaid diagrams for theme change
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: theme === 'dark' ? 'dark' : 'default',
+        themeVariables: {
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontSize: '14px'
+        },
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+      });
+      document.querySelectorAll('.mermaid').forEach(el => {
+        const content = el.getAttribute('data-mermaid-src');
+        if (content) {
+          el.removeAttribute('data-processed');
+          el.innerHTML = content;
+        }
+      });
+      mermaid.run();
+    }
+
+    // Store original mermaid source for re-rendering
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.mermaid').forEach(el => {
+        el.setAttribute('data-mermaid-src', el.textContent.trim());
+      });
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Mobile Sidebar
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+
+    // Close sidebar on nav click (mobile)
+    sidebar.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+    // Active sidebar link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+    function updateActiveLink() {
+      const scrollPos = window.scrollY + 100;
+
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        const id = section.getAttribute('id');
+
+        if (scrollPos >= top && scrollPos < top + height) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+    updateActiveLink();
+  </script>
+</body>
+</html>
