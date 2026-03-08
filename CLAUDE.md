@@ -12,6 +12,14 @@ This project uses the Open Agent System to transform research topics into compre
 > "Describe the architecture of [system]"
 > "Help me understand [topic]"
 
+### Deep Dive Pipeline (multi-page knowledge base)
+> "Deep dive into [topic]"
+> "Explore all aspects of [topic]"
+> "Full examination of [topic]"
+> "Comprehensive breakdown of [topic]"
+
+Produces a hub page linking to individual explainer pages for each discovered category/aspect of the topic. Each category gets the full explainer pipeline (concept research, diagrams, explanation, webpage).
+
 ### With Research Validation (add to any pipeline)
 > "Research [topic] and validate the findings"
 > "Double-check research on [topic] and create a webpage"
