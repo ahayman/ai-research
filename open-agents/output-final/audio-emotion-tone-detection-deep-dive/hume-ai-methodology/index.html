@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hume AI's 48-Dimension Methodology | Audio Emotion & Tone Detection Deep Dive</title>
+<meta name="description" content="Deep technical breakdown of Hume AI's 48-dimension emotion detection: Semantic Space Theory, data collection via mimicry paradigm, Whisper-based model architecture, LEED for LLM integration, and three strategies for local replication.">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #6366F1;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #4338CA;
+  --color-primary-bg: #EEF2FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #6366F1;
+  --color-link-hover: #4338CA;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #6366F1;
+  --color-takeaway-bg: #EEF2FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #818CF8;
+  --color-primary-light: #C4B5FD;
+  --color-primary-dark: #6366F1;
+  --color-primary-bg: #1E1B4B;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #818CF8;
+  --color-link-hover: #A5B4FC;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #818CF8;
+  --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A5F;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #4338CA 0%, #6366F1 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+
+.sidebar-back:hover {
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+
+.sidebar-link:hover {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+.sidebar-link.sub {
+  padding-left: 2.25rem;
+  font-size: 0.78rem;
+}
+
+.sidebar-controls {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+}
+
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+h1 .subtitle {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+ul, ol {
+  margin: 0 0 1rem 1.5rem;
+  color: var(--color-text);
+}
+
+li { margin-bottom: 0.35rem; }
+
+strong { color: var(--color-heading); }
+
+/* ===== Code ===== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--color-primary);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  position: relative;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--color-text);
+  font-size: inherit;
+}
+
+.code-label {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--color-border);
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+.copy-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  white-space: nowrap;
+  border-bottom: 2px solid var(--color-border);
+}
+
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-green { background: var(--color-success-bg); color: var(--color-success); }
+.badge-yellow { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge-red { background: var(--color-danger-bg); color: var(--color-danger); }
+.badge-blue { background: var(--color-info-bg); color: var(--color-info); }
+.badge-purple { background: var(--color-primary-bg); color: var(--color-primary); }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0 1.5rem;
+  overflow-x: auto;
+}
+
+.diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+.diagram-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-left: 4px solid;
+  font-size: 0.9rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.callout-info {
+  border-color: var(--color-info);
+  background: var(--color-info-bg);
+}
+.callout-info .callout-title { color: var(--color-info); }
+
+.callout-warning {
+  border-color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+.callout-warning .callout-title { color: var(--color-warning); }
+
+.callout-success {
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+}
+.callout-success .callout-title { color: var(--color-success); }
+
+.callout-danger {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+.callout-danger .callout-title { color: var(--color-danger); }
+
+/* ===== Takeaway Boxes ===== */
+.takeaway {
+  background: var(--color-takeaway-bg);
+  border: 1px solid var(--color-takeaway-border);
+  border-left: 4px solid var(--color-takeaway-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.takeaway-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Score Grid ===== */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.score-item {
+  text-align: center;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 0.5rem;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.score-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.25rem;
+}
+
+/* ===== Emotion Grid ===== */
+.emotion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.emotion-chip {
+  padding: 0.5rem 0.75rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--color-text);
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.emotion-chip:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.emotion-cluster-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+  color: var(--color-primary);
+}
+
+.glossary-term:hover .glossary-def,
+.glossary-term:focus .glossary-def {
+  display: block;
+}
+
+.glossary-def {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  width: 260px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-weight: 400;
+  pointer-events: none;
+}
+
+.glossary-def::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+/* ===== Strategy Cards ===== */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.strategy-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all var(--transition);
+}
+
+.strategy-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.strategy-card h4 {
+  margin-top: 0;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.strategy-card .strategy-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.strategy-card ul {
+  margin: 0.5rem 0 0 1.25rem;
+  font-size: 0.85rem;
+}
+
+/* ===== Comparison Bars ===== */
+.comparison-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+.comparison-bar-label {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.comparison-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.comparison-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.comparison-bar-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  width: 35px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ===== Swift Focus Highlight ===== */
+.swift-focus {
+  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-info-bg));
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.swift-focus h4 {
+  margin-top: 0;
+  color: var(--color-primary);
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+
+.category-nav a {
+  padding: 0.75rem 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  max-width: 48%;
+}
+
+.category-nav a:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+  text-decoration: none;
+}
+
+.prev-category { text-align: left; }
+.next-category { text-align: right; margin-left: auto; }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .score-grid { grid-template-columns: repeat(2, 1fr); }
+  .emotion-grid { grid-template-columns: repeat(2, 1fr); }
+  .category-nav { flex-direction: column; }
+  .category-nav a { max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; }
+  .table-wrapper { font-size: 0.8rem; }
+  th, td { padding: 0.5rem 0.6rem; }
+  .emotion-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Hume AI 48-Dimension Methodology</div>
+    <div class="sidebar-subtitle">Audio Emotion & Tone Detection</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Foundation</div>
+    <a href="#intro" class="sidebar-link">Introduction</a>
+    <a href="#semantic-space" class="sidebar-link">Semantic Space Theory</a>
+    <a href="#48-dimensions" class="sidebar-link">The 48 Dimensions</a>
+
+    <div class="sidebar-nav-section">Data & Training</div>
+    <a href="#data-collection" class="sidebar-link">Data Collection</a>
+    <a href="#model-architecture" class="sidebar-link">Model Architecture</a>
+    <a href="#why-unique" class="sidebar-link">Why Others Can't Match</a>
+
+    <div class="sidebar-nav-section">LLM Bridge</div>
+    <a href="#leed" class="sidebar-link">LEED: Emotions to LLMs</a>
+
+    <div class="sidebar-nav-section">Local Replication</div>
+    <a href="#replication" class="sidebar-link">Replication Strategies</a>
+    <a href="#strategy-a" class="sidebar-link sub">A: Distillation</a>
+    <a href="#strategy-b" class="sidebar-link sub">B: Multi-Dataset</a>
+    <a href="#strategy-c" class="sidebar-link sub">C: Hybrid</a>
+
+    <div class="sidebar-nav-section">Deployment</div>
+    <a href="#on-device" class="sidebar-link">On-Device Architecture</a>
+    <a href="#roadmap" class="sidebar-link">Practical Roadmap</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+    <a href="#sources" class="sidebar-link">Sources</a>
+  </nav>
+
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" class="back-to-hub" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Audio Emotion & Tone Detection Deep Dive</a>
+
+<h1>Hume AI's 48-Dimension Methodology
+  <span class="subtitle">How It Works &amp; Local Replication</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">A deep technical breakdown of how Hume AI detects 48 simultaneous emotional dimensions from voice &mdash; the scientific theory, the unprecedented dataset, the model architecture, and three concrete strategies for replicating this capability locally on Apple devices.</p>
+
+<!-- ===== Key Stats ===== -->
+<div class="score-grid">
+  <div class="score-item">
+    <div class="score-value">48</div>
+    <div class="score-label">Emotion Dimensions</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">282K+</div>
+    <div class="score-label">Labeled Vocal Bursts</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">16K+</div>
+    <div class="score-label">Participants</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">~85</div>
+    <div class="score-label">Raters Per Sample</div>
+  </div>
+</div>
+
+<!-- ==================== INTRODUCTION ==================== -->
+<h2 id="intro">Introduction: Why 48 Dimensions?</h2>
+
+<p>Most emotion detection systems &mdash; commercial APIs, open-source models, even academic benchmarks &mdash; classify speech into a handful of categories: happy, sad, angry, neutral, maybe fearful and disgusted. This maps to Paul Ekman's influential "basic emotions" theory from the 1970s, which posited six universal emotional states.</p>
+
+<p>Hume AI takes a radically different approach. Instead of assigning a single label to each audio segment, Hume returns a <strong>continuous score from 0 to 1 for each of 48 named emotional expressions simultaneously</strong>. A single utterance might register as 0.72 joy, 0.38 amusement, 0.24 excitement, 0.15 satisfaction, and 0.08 relief &mdash; all at once. This is not a classification problem; it is a <strong>multi-label regression</strong> problem across 48 dimensions.</p>
+
+<p>This capability did not come from a clever engineering trick layered on top of standard datasets. It required rethinking the science of emotion from the ground up &mdash; and then building an entirely new data collection infrastructure to match.</p>
+
+<div class="callout callout-info">
+  <div class="callout-title">The Core Insight</div>
+  <p style="margin-bottom:0;">Hume AI's advantage is not primarily its model architecture (which is based on fine-tuned Whisper). Its advantage is its <em>dataset</em> &mdash; hundreds of thousands of audio samples, each labeled by ~85 raters across 48 continuous dimensions. This dataset cannot be replicated from any publicly available source, and it is the direct product of a specific scientific theory about how emotions work.</p>
+</div>
+
+<p>Hume AI was founded by <strong>Alan Cowen</strong>, whose research at UC Berkeley's <em>Greater Good Science Center</em> established the empirical foundation for high-dimensional emotion measurement. The company's approach is grounded in <strong>Semantic Space Theory (SST)</strong>, a framework that Cowen developed through a series of landmark publications between 2017 and 2021.</p>
+
+<!-- ==================== SEMANTIC SPACE THEORY ==================== -->
+<h2 id="semantic-space">Semantic Space Theory &mdash; The Scientific Foundation</h2>
+
+<p>To understand why Hume detects 48 dimensions instead of 6 or 8, you need to understand the scientific debate that Semantic Space Theory resolves.</p>
+
+<h3>The Old Model: Basic Emotions</h3>
+
+<p>Paul Ekman's "basic emotions" theory (1960s&ndash;1970s) proposed that humans have a small set of universal, discrete emotional states &mdash; typically anger, disgust, fear, happiness, sadness, and surprise. Each emotion was thought to be a distinct category with its own facial expression, physiological signature, and neural circuit. This framework dominated psychology and AI for decades and directly shaped the emotion labels used in datasets like IEMOCAP, RAVDESS, and MELD.</p>
+
+<p>The problem: real human emotional expression does not fit neatly into 6 boxes. Is a wistful smile "happy"? Is frustrated exhaustion "angry" or "sad"? Is the feeling you get watching a beautiful sunset "happiness" or something else entirely? Forced-choice labeling creates artificial boundaries that do not reflect lived emotional experience.</p>
+
+<h3>The Dimensional Model: Valence-Arousal</h3>
+
+<p>Russell's circumplex model (1980) tried to solve this by placing emotions on two continuous axes: <strong>valence</strong> (pleasant to unpleasant) and <strong>arousal</strong> (calm to activated). This captured the continuous nature of emotion but lost the categorical distinctiveness. Joy and excitement collapse together (both high valence, high arousal); awe and relief become indistinguishable (similar valence-arousal coordinates but clearly different experiences).</p>
+
+<h3>Semantic Space Theory: The Synthesis</h3>
+
+<p>Alan Cowen's research found that neither model is correct in isolation. Through a series of large-scale empirical studies, he established that:</p>
+
+<ul>
+  <li><strong>Emotions are high-dimensional</strong> &mdash; not 2 dimensions (valence-arousal) and not 6 discrete bins, but 24&ndash;28 distinct categories that vary by modality</li>
+  <li><strong>Emotions are continuous, not discrete</strong> &mdash; they form smooth gradients in a high-dimensional space, with blends and transitions between adjacent states</li>
+  <li><strong>Emotions are culturally bridged</strong> &mdash; the same dimensional structure appears across cultures, though intensity norms vary</li>
+  <li><strong>Each modality reveals different dimensions</strong> &mdash; facial expressions, vocal prosody, vocal bursts, and music each activate overlapping but distinct subsets of the full emotional space</li>
+</ul>
+
+<h3>Key Publications</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Publication</th>
+    <th>Year</th>
+    <th>Journal</th>
+    <th>Key Finding</th>
+  </tr>
+  <tr>
+    <td>Self-report captures 27 distinct categories</td>
+    <td>2017</td>
+    <td>PNAS</td>
+    <td>27 emotion categories discovered via responses to 2,185 short video clips. Used PPCA to find true dimensionality. Emotions form continuous gradients, not clusters.</td>
+  </tr>
+  <tr>
+    <td>Mapping 24 emotions in vocal bursts</td>
+    <td>2018</td>
+    <td>American Psychologist</td>
+    <td>24 distinct emotion categories recognized in non-speech vocalizations (laughs, screams, sighs). Cross-cultural consistency across US and India.</td>
+  </tr>
+  <tr>
+    <td>12 emotions in speech prosody</td>
+    <td>2019</td>
+    <td>Nature Human Behaviour</td>
+    <td>Prosody (the melody of speech) conveys at least 12 distinct emotion dimensions. This established the prosodic foundation for Hume's speech model.</td>
+  </tr>
+  <tr>
+    <td>28 emotions in facial expression</td>
+    <td>2019</td>
+    <td>American Psychologist</td>
+    <td>28 distinct emotion categories in facial expressions, far more than Ekman's 6. Continuous transitions between categories confirmed.</td>
+  </tr>
+  <tr>
+    <td>13 emotions in music</td>
+    <td>2020</td>
+    <td>PNAS</td>
+    <td>Music conveys 13 emotion categories cross-culturally. Same SST methodology applied to a different modality.</td>
+  </tr>
+</table>
+</div>
+
+<h3>The Method: PPCA and Crowd-Sourced Dimensionality Discovery</h3>
+
+<p>The critical methodological innovation is how the dimensionality was <em>discovered</em>, not assumed. The research follows a consistent protocol:</p>
+
+<ol>
+  <li><strong>Collect stimuli</strong> &mdash; thousands of audio/video/image samples representing the full range of emotional expression</li>
+  <li><strong>Crowd-source ratings</strong> &mdash; hundreds to thousands of participants rate each stimulus across a large initial set of emotion categories using continuous intensity scales (not forced-choice)</li>
+  <li><strong>Apply <span class="glossary-term" tabindex="0">PPCA<span class="glossary-def">Principal Preserved Component Analysis &mdash; a dimensionality reduction technique that preserves the categorical structure of the data while finding the true number of independent dimensions needed to explain the variance.</span></span></strong> &mdash; discover how many independent dimensions are needed to explain the variance in ratings</li>
+  <li><strong>Validate with <span class="glossary-term" tabindex="0">CCA<span class="glossary-def">Canonical Correlation Analysis &mdash; a statistical method that finds relationships between two sets of variables. Used here to confirm that the dimensional structure found in one sample replicates in an independent sample.</span></span></strong> &mdash; confirm the structure replicates in independent samples across cultures</li>
+</ol>
+
+<div class="diagram-container">
+  <div class="diagram-title">Basic Emotions vs. Semantic Space Theory</div>
+  <div class="mermaid">
+graph LR
+    subgraph Basic["Basic Emotions Model (Ekman)"]
+        direction TB
+        B1["Anger"] --- B2["Disgust"]
+        B2 --- B3["Fear"]
+        B3 --- B4["Happiness"]
+        B4 --- B5["Sadness"]
+        B5 --- B6["Surprise"]
+    end
+
+    subgraph VA["Valence-Arousal Model (Russell)"]
+        direction TB
+        V1["2 axes: Valence + Arousal"]
+        V1 --> V2["Pleasant + Excited = Joy"]
+        V1 --> V3["Unpleasant + Calm = Sadness"]
+        V1 --> V4["Loses distinctiveness between<br/>similar V-A coordinates"]
+    end
+
+    subgraph SST["Semantic Space Theory (Cowen)"]
+        direction TB
+        S1["48 continuous dimensions"]
+        S1 --> S2["Joy: 0.72"]
+        S1 --> S3["Amusement: 0.38"]
+        S1 --> S4["Excitement: 0.24"]
+        S1 --> S5["Satisfaction: 0.15"]
+        S1 --> S6["All 48 scored simultaneously"]
+    end
+
+    Basic -->|"Too few<br/>categories"| VA
+    VA -->|"Too few<br/>dimensions"| SST
+
+    style Basic fill:#FEE2E2,stroke:#DC2626,color:#1E293B
+    style VA fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style SST fill:#D1FAE5,stroke:#059669,color:#1E293B
+  </div>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Key Takeaway</div>
+  <p style="margin-bottom:0;">Semantic Space Theory treats emotion categories as regions in a continuous high-dimensional space rather than discrete bins. This is why Hume can return "60% joy + 30% relief + 10% triumph" for a single audio segment &mdash; the model was designed from the start to predict intensity across the full space, not to pick a winner.</p>
+</div>
+
+<!-- ==================== THE 48 DIMENSIONS ==================== -->
+<h2 id="48-dimensions">The Complete 48 Emotion Dimensions</h2>
+
+<p>Hume's Expression Measurement API returns scores for all 48 dimensions on every audio segment. These are not mutually exclusive categories &mdash; they are independent intensity scales from 0 (absent) to 1 (maximally present). The 48 dimensions were derived from the SST research and represent the full space of emotions detectable from vocal expression.</p>
+
+<h3>All 48 Dimensions by Cluster</h3>
+
+<h4>Positive Social &amp; Relational</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Admiration</div>
+  <div class="emotion-chip">Adoration</div>
+  <div class="emotion-chip">Aesthetic Appreciation</div>
+  <div class="emotion-chip">Love</div>
+  <div class="emotion-chip">Romance</div>
+  <div class="emotion-chip">Sympathy</div>
+  <div class="emotion-chip">Empathic Pain</div>
+</div>
+
+<h4>Joy &amp; Excitement</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Amusement</div>
+  <div class="emotion-chip">Ecstasy</div>
+  <div class="emotion-chip">Excitement</div>
+  <div class="emotion-chip">Joy</div>
+  <div class="emotion-chip">Triumph</div>
+  <div class="emotion-chip">Pride</div>
+  <div class="emotion-chip">Satisfaction</div>
+</div>
+
+<h4>Calm &amp; Reflective</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Calmness</div>
+  <div class="emotion-chip">Contentment</div>
+  <div class="emotion-chip">Relief</div>
+  <div class="emotion-chip">Nostalgia</div>
+  <div class="emotion-chip">Contemplation</div>
+  <div class="emotion-chip">Interest</div>
+  <div class="emotion-chip">Realization</div>
+</div>
+
+<h4>Surprise &amp; Wonder</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Awe</div>
+  <div class="emotion-chip">Entrancement</div>
+  <div class="emotion-chip">Surprise (positive)</div>
+  <div class="emotion-chip">Surprise (negative)</div>
+</div>
+
+<h4>Desire &amp; Drive</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Craving</div>
+  <div class="emotion-chip">Desire</div>
+  <div class="emotion-chip">Determination</div>
+  <div class="emotion-chip">Concentration</div>
+</div>
+
+<h4>Distress &amp; Negative Affect</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Anger</div>
+  <div class="emotion-chip">Anxiety</div>
+  <div class="emotion-chip">Contempt</div>
+  <div class="emotion-chip">Disappointment</div>
+  <div class="emotion-chip">Disgust</div>
+  <div class="emotion-chip">Distress</div>
+  <div class="emotion-chip">Fear</div>
+  <div class="emotion-chip">Horror</div>
+  <div class="emotion-chip">Pain</div>
+  <div class="emotion-chip">Sadness</div>
+</div>
+
+<h4>Self-Conscious &amp; Social Discomfort</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Awkwardness</div>
+  <div class="emotion-chip">Confusion</div>
+  <div class="emotion-chip">Doubt</div>
+  <div class="emotion-chip">Embarrassment</div>
+  <div class="emotion-chip">Envy</div>
+  <div class="emotion-chip">Guilt</div>
+  <div class="emotion-chip">Shame</div>
+</div>
+
+<h4>Low Energy</h4>
+<div class="emotion-grid">
+  <div class="emotion-chip">Boredom</div>
+  <div class="emotion-chip">Tiredness</div>
+</div>
+
+<h3>How Scores Map to Valence-Arousal Space</h3>
+
+<p>While the 48 dimensions are richer than a simple valence-arousal model, there is a relationship. High-valence, high-arousal emotions (Ecstasy, Excitement) tend to be in the Joy cluster, while low-valence, high-arousal emotions (Anger, Fear) cluster in Distress. The advantage of 48 dimensions is that you can distinguish between emotions that occupy similar valence-arousal coordinates but are experientially distinct &mdash; for instance, Awe and Entrancement are both positive and moderately arousing, but they mean very different things.</p>
+
+<div class="callout callout-info">
+  <div class="callout-title">Multi-Label, Not Multi-Class</div>
+  <p style="margin-bottom:0;">A traditional classifier picks one label: "This is angry." Hume's model predicts 48 intensities simultaneously: "This is 0.65 anger + 0.42 contempt + 0.31 disappointment + 0.08 disgust." The scores do not need to sum to 1.0 &mdash; they are independent intensity predictions. This is <strong>multi-label regression</strong>, not <strong>multi-class classification</strong>.</p>
+</div>
+
+<!-- ==================== DATA COLLECTION ==================== -->
+<h2 id="data-collection">Data Collection: The Mimicry Paradigm</h2>
+
+<p>The single most important differentiator in Hume's approach is not the model &mdash; it is the dataset. Hume AI has built what is almost certainly the largest and most densely labeled emotional speech dataset in existence, using a novel data collection methodology called the <strong>mimicry paradigm</strong>.</p>
+
+<h3>The Scale</h3>
+
+<div class="score-grid">
+  <div class="score-item">
+    <div class="score-value">16K+</div>
+    <div class="score-label">Participants</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">5+</div>
+    <div class="score-label">Countries</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">282K+</div>
+    <div class="score-label">Labeled Vocal Bursts</div>
+  </div>
+  <div class="score-item">
+    <div class="score-value">~85</div>
+    <div class="score-label">Raters Per Sample</div>
+  </div>
+</div>
+
+<h3>How the Mimicry Paradigm Works</h3>
+
+<p>Traditional speech emotion datasets (IEMOCAP, RAVDESS) use <em>acted</em> speech: "Say this sentence as if you are angry." This produces exaggerated, stereotyped performances that do not reflect real-world emotional expression. Hume's mimicry paradigm solves this in a clever way:</p>
+
+<ol>
+  <li><strong>Seed Recordings</strong> &mdash; Start with naturally expressive audio samples sourced from datasets like MELD (TV dialogue) and VENEC (cross-cultural emotional speech)</li>
+  <li><strong>Mimicry Generation</strong> &mdash; Participants on crowdsourcing platforms (MTurk, Prolific, Clickworker) listen to a seed recording and <em>reproduce</em> it in their own voice, imitating the emotional tone they hear</li>
+  <li><strong>Dense Rating</strong> &mdash; A separate pool of 7,000&ndash;16,000 raters judges each recording across all 48 emotion dimensions using continuous 1&ndash;100 intensity scales</li>
+  <li><strong>Aggregation</strong> &mdash; Ratings are averaged across the ~85 raters per sample, producing a robust 48-dimensional label vector for each audio clip</li>
+</ol>
+
+<div class="diagram-container">
+  <div class="diagram-title">Hume AI Data Collection Pipeline</div>
+  <div class="mermaid">
+flowchart TB
+    subgraph Seeds["Seed Audio Sources"]
+        S1["MELD Dataset<br/>(TV dialogue)"]
+        S2["VENEC Dataset<br/>(cross-cultural)"]
+        S3["Natural speech<br/>samples"]
+    end
+
+    subgraph Mimicry["Mimicry Collection (16K+ participants)"]
+        M1["Listen to<br/>seed recording"]
+        M2["Reproduce in<br/>own voice"]
+        M3["Upload via<br/>crowdsourcing platform"]
+    end
+
+    subgraph Rating["Dense Rating (7K-16K raters)"]
+        R1["48 emotion<br/>dimensions"]
+        R2["Continuous 1-100<br/>intensity scale"]
+        R3["~85 raters<br/>per sample"]
+    end
+
+    subgraph Output["Final Dataset"]
+        O1["282K+ labeled<br/>vocal bursts"]
+        O2["Each sample has<br/>48-dim label vector"]
+        O3["Cross-cultural<br/>validation"]
+    end
+
+    Seeds --> Mimicry
+    Mimicry --> Rating
+    Rating --> Output
+
+    style Seeds fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style Mimicry fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style Rating fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style Output fill:#D1FAE5,stroke:#059669,color:#1E293B
+  </div>
+</div>
+
+<h3>Why ~85 Raters Per Sample Matters</h3>
+
+<p>Standard emotion datasets use 3&ndash;5 raters per sample and resolve disagreements by majority vote. This works for forced-choice categorical labels ("angry" vs. "sad"), but it destroys the nuance needed for continuous multi-dimensional labels. With only 3 raters, the average rating is noisy and unreliable for dimensions with low base rates (like "Nostalgia" or "Aesthetic Appreciation").</p>
+
+<p>With ~85 raters per sample, the averaged score becomes a stable estimate of the <em>population-level perception</em> of each emotion dimension. This is what makes the 48-dimensional regression target meaningful rather than noisy.</p>
+
+<h3>Hume-Prosody Benchmark Dataset</h3>
+
+<p>In addition to the proprietary mimicry dataset, Hume AI published the <strong>Hume-Prosody</strong> benchmark at NeurIPS 2023:</p>
+
+<ul>
+  <li><strong>41 hours, 48 minutes</strong> of English speech</li>
+  <li><strong>1,004 speakers</strong> (ages 20&ndash;66, balanced gender)</li>
+  <li><strong>48 emotion labels</strong> per segment (continuous intensity)</li>
+  <li>Publicly available for research use</li>
+</ul>
+
+<h3>Dataset Scale Comparison</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Dataset</th>
+    <th>Hours</th>
+    <th>Speakers</th>
+    <th>Emotions</th>
+    <th>Label Type</th>
+    <th>Raters/Sample</th>
+  </tr>
+  <tr>
+    <td><strong>Hume (proprietary)</strong></td>
+    <td>1,000+</td>
+    <td>16,000+</td>
+    <td>48</td>
+    <td>Continuous 48-dim</td>
+    <td>~85</td>
+  </tr>
+  <tr>
+    <td><strong>Hume-Prosody</strong></td>
+    <td>41.8</td>
+    <td>1,004</td>
+    <td>48</td>
+    <td>Continuous 48-dim</td>
+    <td>~85</td>
+  </tr>
+  <tr>
+    <td>IEMOCAP</td>
+    <td>12</td>
+    <td>10</td>
+    <td>4</td>
+    <td>Categorical</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>RAVDESS</td>
+    <td>~1</td>
+    <td>24</td>
+    <td>8</td>
+    <td>Categorical</td>
+    <td>N/A (scripted)</td>
+  </tr>
+  <tr>
+    <td>MELD</td>
+    <td>~13</td>
+    <td>260+</td>
+    <td>7</td>
+    <td>Categorical</td>
+    <td>3&ndash;5</td>
+  </tr>
+  <tr>
+    <td>CMU-MOSEI</td>
+    <td>65</td>
+    <td>1,000</td>
+    <td>6 + sentiment</td>
+    <td>Categorical + V/A/D</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>CREMA-D</td>
+    <td>~3</td>
+    <td>91</td>
+    <td>6</td>
+    <td>Categorical</td>
+    <td>~30</td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">The Data Moat</div>
+  <p style="margin-bottom:0;">The combination of scale (282K+ samples), density (~85 raters), dimensionality (48 continuous labels), and cross-cultural coverage (5+ countries) makes Hume's dataset essentially unreplicable from public sources. This is the real competitive moat &mdash; not the model architecture.</p>
+</div>
+
+<!-- ==================== MODEL ARCHITECTURE ==================== -->
+<h2 id="model-architecture">Model Architecture &mdash; Under the Hood</h2>
+
+<p>Hume AI operates three distinct expression measurement models. The model architectures are well-known foundations &mdash; the secret sauce is in the fine-tuning dataset, not the architecture.</p>
+
+<h3>Prosody Model: Fine-Tuned Whisper-Small</h3>
+
+<p>The prosody model is the core of Hume's audio emotion detection. It is built on <strong>OpenAI's Whisper-Small</strong>, a 244M-parameter encoder-decoder transformer originally trained for speech recognition.</p>
+
+<ul>
+  <li><strong>Base Model</strong>: Whisper-Small, pre-trained on 680,000 hours of multilingual, multi-task supervised audio data</li>
+  <li><strong>Fine-tuning</strong>: The encoder is fine-tuned on Hume's proprietary 48-dimensional labeled dataset. Only the encoder is used for emotion prediction &mdash; the decoder (used for transcription) is replaced with a regression head</li>
+  <li><strong>Segmentation</strong>: Deepgram provides word-level timestamps. Audio is segmented at word, sentence, utterance, or conversational turn boundaries</li>
+  <li><strong>Output</strong>: 48 continuous scores per segment, each in the range [0, 1]</li>
+  <li><strong>Granularity options</strong>: word-level, sentence-level, utterance-level, or conversational turn-level emotion scores</li>
+</ul>
+
+<h3>Facial Expression Model: Fine-Tuned FaceNet</h3>
+
+<ul>
+  <li><strong>Base Model</strong>: FaceNet (Inception ResNet v1), pre-trained on VGGFace2</li>
+  <li><strong>Face Detection</strong>: MTCNN (Multi-Task Cascaded Convolutional Networks) for face localization</li>
+  <li><strong>Fine-tuning</strong>: Trained on hundreds of thousands of mimicry-generated facial expression images with 48-dimensional continuous labels</li>
+  <li><strong>Output</strong>: 48 scores per video frame</li>
+</ul>
+
+<h3>The Architecture in Detail</h3>
+
+<div class="diagram-container">
+  <div class="diagram-title">Hume AI Prosody Model Architecture</div>
+  <div class="mermaid">
+flowchart TB
+    subgraph Input["Audio Input"]
+        A1["Raw Audio<br/>(any format)"]
+        A1 --> A2["Deepgram ASR<br/>word-level timestamps"]
+        A1 --> A3["Audio Segmenter<br/>(word/sentence/turn)"]
+        A2 --> A3
+    end
+
+    subgraph Encoder["Whisper-Small Encoder (fine-tuned)"]
+        A3 --> E1["Log-Mel Spectrogram<br/>(80 bins, 25ms frames)"]
+        E1 --> E2["2x Conv1D<br/>(feature extraction)"]
+        E2 --> E3["12 Transformer Blocks<br/>(768-dim, 12 heads)"]
+        E3 --> E4["Encoder Output<br/>(sequence of 768-dim vectors)"]
+    end
+
+    subgraph Head["Emotion Regression Head"]
+        E4 --> H1["Temporal Pooling<br/>(mean + attention)"]
+        H1 --> H2["Linear(768, 256)<br/>+ ReLU + Dropout"]
+        H2 --> H3["Linear(256, 48)<br/>+ Sigmoid"]
+        H3 --> H4["48 Emotion Scores<br/>(each 0.0 - 1.0)"]
+    end
+
+    style Input fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style Encoder fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style Head fill:#D1FAE5,stroke:#059669,color:#1E293B
+  </div>
+</div>
+
+<h3>Training Details</h3>
+
+<ul>
+  <li><strong>Loss Function</strong>: Multi-label mean squared error (MSE) across all 48 dimensions &mdash; this is <strong>regression</strong>, not classification</li>
+  <li><strong>Why MSE, not cross-entropy?</strong> Because the targets are continuous intensity values (0.0&ndash;1.0), not one-hot categorical labels. The model learns to predict "how much" of each emotion is present, not "which one"</li>
+  <li><strong>Output activation</strong>: Sigmoid on each of the 48 outputs, constraining predictions to [0, 1] without forcing them to sum to 1</li>
+  <li><strong>Training labels</strong>: Mean of ~85 raters' continuous intensity judgments, normalized to [0, 1]</li>
+</ul>
+
+<div class="callout callout-success">
+  <div class="callout-title">Why Whisper?</div>
+  <p style="margin-bottom:0;">Whisper was trained on 680K hours of diverse, real-world audio &mdash; far more than any emotion-specific dataset. Its encoder has already learned rich representations of pitch, rhythm, timbre, speaking rate, and other prosodic features. Fine-tuning this encoder for emotion prediction is a textbook example of transfer learning: the pretrained features generalize well, and only the task-specific head needs to be trained from scratch.</p>
+</div>
+
+<!-- ==================== WHY UNIQUE ==================== -->
+<h2 id="why-unique">Why Standard Approaches Can't Match This</h2>
+
+<p>Understanding why Hume's approach cannot be trivially replicated requires understanding the data dependency chain:</p>
+
+<h3>The Fundamental Bottleneck</h3>
+
+<ol>
+  <li><strong>48-dimensional output requires 48-dimensional training labels.</strong> You cannot train a model to predict 48 continuous emotion scores if your training data only has 4 categorical labels. IEMOCAP gives you {happy, sad, angry, neutral}. You cannot derive "Nostalgia: 0.34, Contemplation: 0.21" from that.</li>
+  <li><strong>Continuous labels require many raters.</strong> A single rater's judgment of "how much Aesthetic Appreciation is in this 3-second clip?" is highly variable. You need dozens of raters per sample to get a stable mean. Standard datasets use 3&ndash;5.</li>
+  <li><strong>The mimicry paradigm produces natural-sounding emotional speech at scale.</strong> Acted speech from RAVDESS is exaggerated. Conversational speech from MELD has noisy labels and background audio. Hume's mimicry data is clean, emotionally expressive, and comes with dense multi-dimensional ratings.</li>
+</ol>
+
+<h3>Capability Comparison</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Capability</th>
+    <th>Hume AI Data</th>
+    <th>IEMOCAP</th>
+    <th>RAVDESS</th>
+    <th>MELD</th>
+    <th>CMU-MOSEI</th>
+  </tr>
+  <tr>
+    <td>Detectable emotions</td>
+    <td><span class="badge badge-green">48</span></td>
+    <td><span class="badge badge-red">4</span></td>
+    <td><span class="badge badge-red">8</span></td>
+    <td><span class="badge badge-yellow">7</span></td>
+    <td><span class="badge badge-yellow">6</span></td>
+  </tr>
+  <tr>
+    <td>Label type</td>
+    <td><span class="badge badge-green">Continuous</span></td>
+    <td><span class="badge badge-red">Categorical</span></td>
+    <td><span class="badge badge-red">Categorical</span></td>
+    <td><span class="badge badge-red">Categorical</span></td>
+    <td><span class="badge badge-yellow">Mixed</span></td>
+  </tr>
+  <tr>
+    <td>Multi-label blends</td>
+    <td><span class="badge badge-green">Yes (native)</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-red">No</span></td>
+    <td><span class="badge badge-yellow">Partial</span></td>
+  </tr>
+  <tr>
+    <td>Cross-cultural</td>
+    <td><span class="badge badge-green">5+ countries</span></td>
+    <td><span class="badge badge-red">US only</span></td>
+    <td><span class="badge badge-red">Canada only</span></td>
+    <td><span class="badge badge-yellow">TV shows</span></td>
+    <td><span class="badge badge-green">YouTube global</span></td>
+  </tr>
+  <tr>
+    <td>Rater density</td>
+    <td><span class="badge badge-green">~85/sample</span></td>
+    <td><span class="badge badge-red">3/sample</span></td>
+    <td><span class="badge badge-red">N/A</span></td>
+    <td><span class="badge badge-red">3-5/sample</span></td>
+    <td><span class="badge badge-red">3/sample</span></td>
+  </tr>
+</table>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Bottom Line</div>
+  <p style="margin-bottom:0;">The data collection methodology <em>is</em> the moat. The science (SST) determines what to label. The mimicry paradigm determines how to collect it. The dense rating protocol determines label quality. The model architecture (fine-tuned Whisper) is well-understood and replicable. The dataset is not.</p>
+</div>
+
+<!-- ==================== LEED ==================== -->
+<h2 id="leed">LEED: Bridging Emotion Scores to LLMs</h2>
+
+<p><strong>Language-based Emotional Expression Description (LEED)</strong> is a technique for converting Hume's 48-dimensional emotion vectors into natural language descriptions that can be fed to Large Language Models. This bridges the gap between numerical emotion scores and the text-based world of LLMs.</p>
+
+<h3>How LEED Works</h3>
+
+<ol>
+  <li><strong>Get 48-dim emotion vector</strong> from Hume API (or your own model)</li>
+  <li><strong>Threshold and rank</strong>: Filter dimensions above a threshold (e.g., 0.2), sort by intensity</li>
+  <li><strong>Map intensities to adverbs</strong>: 0.2&ndash;0.4 = "slightly", 0.4&ndash;0.6 = "moderately", 0.6&ndash;0.8 = "quite", 0.8&ndash;1.0 = "extremely"</li>
+  <li><strong>Generate description</strong>: "The speaker sounded extremely joyful and quite relieved, with slight amusement"</li>
+  <li><strong>Embed in LLM prompt</strong>: Include the description as context for emotion-aware analysis</li>
+</ol>
+
+<h3>LEED Performance</h3>
+
+<p>Hume researchers demonstrated LEED's effectiveness as a proof-of-concept:</p>
+
+<ul>
+  <li><strong>Task</strong>: RAVDESS 8-class emotion classification</li>
+  <li><strong>LEED + Ada V2 embeddings + SVM</strong>: 0.79 UAR (Unweighted Average Recall)</li>
+  <li><strong>Raw Emotion Expression Embeddings (EEEs) + SVM</strong>: 0.69 UAR</li>
+  <li><strong>Improvement</strong>: Converting to natural language improved classification accuracy by 10 percentage points, because LLM text embeddings capture semantic relationships between emotion terms</li>
+</ul>
+
+<h3>Prompt Engineering with LEED</h3>
+
+<div class="code-label">Prompt Template</div>
+<pre><code>You are analyzing a conversation transcript. For each utterance, I will provide:
+1. The transcribed text
+2. The speaker's vocal emotion profile (from audio analysis)
+
+Use both the words spoken AND the emotional tone to analyze sentiment and intent.
+
+---
+[00:12] Speaker A: "That sounds like a great plan."
+Vocal emotion: Extremely enthusiastic and quite excited, with moderate
+determination and slight amusement.
+
+[00:18] Speaker B: "Yeah, we should definitely do that."
+Vocal emotion: Slightly bored and moderately tired, with mild contempt.
+
+---
+Analyze: Is Speaker B genuinely agreeing, or being sarcastic?
+<button class="copy-btn" onclick="copyCode(this)">Copy</button></code></pre>
+
+<p>In this example, the text alone suggests agreement, but the vocal emotion reveals sarcasm. LEED bridges the audio emotion signal into a format that any LLM can reason about, without requiring the LLM to process audio directly.</p>
+
+<h3>Multimodal Fusion Strategies</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Strategy</th>
+    <th>Method</th>
+    <th>When to Use</th>
+  </tr>
+  <tr>
+    <td><strong>Early Fusion</strong></td>
+    <td>Concatenate raw 48-dim vector with text embedding before classifier</td>
+    <td>Custom model training, maximum feature interaction</td>
+  </tr>
+  <tr>
+    <td><strong>Late Fusion (LEED)</strong></td>
+    <td>Convert scores to text, include in LLM prompt alongside transcript</td>
+    <td>Fastest to implement, works with any LLM, most flexible</td>
+  </tr>
+  <tr>
+    <td><strong>Hybrid</strong></td>
+    <td>Raw scores for quantitative analysis + LEED descriptions for LLM reasoning</td>
+    <td>Production systems needing both numeric tracking and narrative analysis</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== REPLICATION STRATEGIES ==================== -->
+<h2 id="replication">Replicating Hume's Approach Locally</h2>
+
+<p>Given that Hume's dataset is proprietary, how can you build a local (on-device) model that approaches 48-dimensional emotion detection? There are three viable strategies, each with different cost, quality, and coverage trade-offs.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">Choosing a Replication Strategy</div>
+  <div class="mermaid">
+graph TD
+    START["Goal: 48-dim emotion<br/>on device"] --> Q1{"Budget for<br/>API labels?"}
+
+    Q1 -->|"$500-$2K"| Q2{"Care about<br/>ToS risk?"}
+    Q1 -->|"$0"| STRAT_B["Strategy B<br/>Multi-Dataset Aggregation"]
+
+    Q2 -->|"Low risk tolerance"| STRAT_C["Strategy C<br/>Hybrid (Recommended)"]
+    Q2 -->|"Acceptable"| STRAT_A["Strategy A<br/>Teacher-Student Distillation"]
+
+    STRAT_A --> RESULT_A["48-dim coverage<br/>Best quality<br/>~$640 for 10K min"]
+    STRAT_B --> RESULT_B["15-20 dim coverage<br/>Free, open source<br/>Subjective label mapping"]
+    STRAT_C --> RESULT_C["48-dim coverage<br/>Best quality/cost ratio<br/>~$300-$500"]
+
+    style START fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style STRAT_A fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style STRAT_B fill:#D1FAE5,stroke:#059669,color:#1E293B
+    style STRAT_C fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style RESULT_A fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style RESULT_B fill:#D1FAE5,stroke:#059669,color:#1E293B
+    style RESULT_C fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+  </div>
+</div>
+
+<!-- Strategy A -->
+<h3 id="strategy-a">Strategy A: Teacher-Student Distillation from Hume API</h3>
+
+<p>The most direct path to 48-dimensional coverage. Use Hume's API as a "teacher" to generate soft labels for your audio data, then train a smaller "student" model on those labels.</p>
+
+<h4>Process</h4>
+
+<ol>
+  <li><strong>Curate an audio corpus</strong> &mdash; 5,000&ndash;15,000 minutes of diverse speech. Sources: LibriSpeech, Common Voice, VoxCeleb, your own recordings (with consent)</li>
+  <li><strong>Run through Hume API</strong> &mdash; Process every audio segment to get 48-dimensional soft labels</li>
+  <li><strong>Train student model</strong> &mdash; Fine-tune DistilHuBERT or Whisper-Tiny using the API-generated labels with MSE loss</li>
+  <li><strong>Convert to Core ML</strong> &mdash; Quantize and export for on-device deployment</li>
+</ol>
+
+<h4>Training Loop Concept</h4>
+
+<div class="code-label">Python</div>
+<pre><code>import torch
+import torch.nn as nn
+from transformers import AutoModel
+
+class EmotionStudent(nn.Module):
+    """Student model: DistilHuBERT encoder + 48-dim regression head"""
+    def __init__(self):
+        super().__init__()
+        self.encoder = AutoModel.from_pretrained("ntu-spml/distilhubert")
+        self.head = nn.Sequential(
+            nn.Linear(768, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 48),
+            nn.Sigmoid()  # Output range [0, 1] per dimension
+        )
+
+    def forward(self, input_values):
+        features = self.encoder(input_values).last_hidden_state
+        pooled = features.mean(dim=1)  # temporal pooling
+        return self.head(pooled)
+
+# Training
+model = EmotionStudent()
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
+loss_fn = nn.MSELoss()  # Regression, not classification
+
+for batch in dataloader:
+    audio = batch["audio"]            # Raw audio waveforms
+    labels = batch["hume_48_scores"]  # Soft labels from Hume API
+
+    predictions = model(audio)        # [batch, 48]
+    loss = loss_fn(predictions, labels)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+<button class="copy-btn" onclick="copyCode(this)">Copy</button></code></pre>
+
+<h4>Cost Estimate</h4>
+
+<div class="table-wrapper">
+<table>
+  <tr><th>Audio Volume</th><th>Hume API Cost</th><th>Coverage</th><th>Quality</th></tr>
+  <tr><td>5,000 min</td><td>~$320</td><td>Decent</td><td>Good for common emotions</td></tr>
+  <tr><td>10,000 min</td><td>~$640</td><td>Good</td><td>Solid across all 48 dimensions</td></tr>
+  <tr><td>20,000 min</td><td>~$1,280</td><td>Excellent</td><td>Production-quality student</td></tr>
+</table>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">Terms of Service Consideration</div>
+  <p style="margin-bottom:0;">Using API outputs to train a competing model may violate Hume's terms of service. Review the ToS carefully before pursuing this strategy. Consider this a bootstrapping approach that you refine with your own labeled data over time.</p>
+</div>
+
+<!-- Strategy B -->
+<h3 id="strategy-b">Strategy B: Multi-Dataset Multi-Label Aggregation</h3>
+
+<p>The fully open-source approach. Combine multiple public emotion datasets and map their categorical labels into the 48-dimensional space.</p>
+
+<h4>Process</h4>
+
+<ol>
+  <li><strong>Combine datasets</strong>: IEMOCAP + RAVDESS + MELD + CREMA-D + CMU-MOSEI</li>
+  <li><strong>Create a label mapping</strong>: Map categorical labels to 48-dim vectors
+    <ul>
+      <li>"angry" &rarr; Anger: 1.0, Contempt: 0.3, Disgust: 0.2, Distress: 0.4, Determination: 0.2</li>
+      <li>"happy" &rarr; Joy: 1.0, Amusement: 0.4, Excitement: 0.3, Contentment: 0.2, Satisfaction: 0.3</li>
+      <li>"sad" &rarr; Sadness: 1.0, Disappointment: 0.5, Distress: 0.3, Tiredness: 0.2</li>
+    </ul>
+  </li>
+  <li><strong>Train with partial label masking</strong>: Only compute loss on dimensions that are covered by the source dataset's label</li>
+  <li><strong>Fine-tune DistilHuBERT</strong> with the mapped multi-dimensional labels</li>
+</ol>
+
+<h4>Coverage Analysis</h4>
+
+<div class="table-wrapper">
+<table>
+  <tr><th>Source Dataset</th><th>Original Labels</th><th>48-Dim Coverage</th></tr>
+  <tr><td>IEMOCAP</td><td>Happy, Sad, Angry, Neutral</td><td>~8 dimensions</td></tr>
+  <tr><td>RAVDESS</td><td>Calm, Happy, Sad, Angry, Fearful, Surprise, Disgust, Neutral</td><td>~12 dimensions</td></tr>
+  <tr><td>MELD</td><td>Anger, Disgust, Fear, Joy, Neutral, Sadness, Surprise</td><td>~10 dimensions</td></tr>
+  <tr><td>CREMA-D</td><td>Angry, Disgust, Fear, Happy, Sad, Neutral</td><td>~10 dimensions</td></tr>
+  <tr><td>CMU-MOSEI</td><td>6 emotions + sentiment + V/A/D</td><td>~12 dimensions</td></tr>
+  <tr><td><strong>Combined</strong></td><td>&mdash;</td><td><strong>~15&ndash;20 dimensions</strong></td></tr>
+</table>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title">The Mapping Problem</div>
+  <p style="margin-bottom:0;">The biggest weakness is that the label mapping is subjective. When IEMOCAP says "happy," does that mean Joy: 1.0, Amusement: 0.4? Or Joy: 0.8, Excitement: 0.6? These mappings are hand-crafted heuristics, not empirically derived &mdash; the exact opposite of Hume's data-driven approach. You will cover the "big" emotions well (anger, joy, sadness) but miss subtle ones entirely (Aesthetic Appreciation, Entrancement, Nostalgia).</p>
+</div>
+
+<!-- Strategy C -->
+<h3 id="strategy-c">Strategy C: Hybrid Approach (Recommended)</h3>
+
+<p>The best quality-to-cost ratio. Combine API-generated labels with public datasets for grounding, and use curriculum learning to refine progressively.</p>
+
+<h4>Process</h4>
+
+<ol>
+  <li><strong>Bootstrap with public data</strong> &mdash; Start with Strategy B to get a baseline model covering ~15&ndash;20 dimensions</li>
+  <li><strong>Label unlabeled corpora with Hume API</strong> &mdash; Process 3,000&ndash;5,000 minutes of diverse audio (podcasts, audiobooks, conversations) through Hume API to get 48-dim soft labels</li>
+  <li><strong>Combine all labels</strong> &mdash; Use public dataset labels for grounding (known-correct categories) and API labels for coverage (all 48 dimensions)</li>
+  <li><strong>Curriculum learning</strong>:
+    <ul>
+      <li>Phase 1: Train on all combined data with equal weight</li>
+      <li>Phase 2: Upweight high-confidence API labels + human-validated samples</li>
+      <li>Phase 3: Fine-tune on small set of human-labeled data for critical dimensions</li>
+    </ul>
+  </li>
+  <li><strong>Deploy and improve</strong> &mdash; Ship the model, collect user feedback, and refine</li>
+</ol>
+
+<h4>Strategy Comparison</h4>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Factor</th>
+    <th>Strategy A (Distillation)</th>
+    <th>Strategy B (Multi-Dataset)</th>
+    <th>Strategy C (Hybrid)</th>
+  </tr>
+  <tr>
+    <td>48-dim coverage</td>
+    <td><span class="badge badge-green">Full</span></td>
+    <td><span class="badge badge-yellow">15&ndash;20</span></td>
+    <td><span class="badge badge-green">Full</span></td>
+  </tr>
+  <tr>
+    <td>Cost</td>
+    <td>$320&ndash;$1,280</td>
+    <td>$0</td>
+    <td>$200&ndash;$500</td>
+  </tr>
+  <tr>
+    <td>Label quality</td>
+    <td><span class="badge badge-green">High (API)</span></td>
+    <td><span class="badge badge-yellow">Mixed</span></td>
+    <td><span class="badge badge-green">High (grounded)</span></td>
+  </tr>
+  <tr>
+    <td>ToS risk</td>
+    <td><span class="badge badge-red">Higher</span></td>
+    <td><span class="badge badge-green">None</span></td>
+    <td><span class="badge badge-yellow">Lower</span></td>
+  </tr>
+  <tr>
+    <td>Time to train</td>
+    <td>1&ndash;2 weeks</td>
+    <td>2&ndash;3 weeks</td>
+    <td>2&ndash;4 weeks</td>
+  </tr>
+  <tr>
+    <td>Recommended for</td>
+    <td>Fast prototyping</td>
+    <td>Budget-zero, research</td>
+    <td>Production apps</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== ON-DEVICE DEPLOYMENT ==================== -->
+<h2 id="on-device">On-Device Deployment Architecture</h2>
+
+<p>Once you have a trained 48-dimension emotion model, here is the recommended architecture for deploying it on Apple devices.</p>
+
+<h3>Recommended Base Models</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Model</th>
+    <th>Params</th>
+    <th>Size (FP32)</th>
+    <th>Size (INT8)</th>
+    <th>Inference (ANE)</th>
+    <th>Recommended For</th>
+  </tr>
+  <tr>
+    <td><strong>DistilHuBERT</strong></td>
+    <td>23.8M</td>
+    <td>~95 MB</td>
+    <td>~20 MB</td>
+    <td>~15 ms</td>
+    <td>Best size/quality balance</td>
+  </tr>
+  <tr>
+    <td><strong>Whisper-Tiny encoder</strong></td>
+    <td>39M</td>
+    <td>~156 MB</td>
+    <td>~40 MB</td>
+    <td>~25 ms</td>
+    <td>Best if sharing with transcription</td>
+  </tr>
+  <tr>
+    <td><strong>Whisper-Small encoder</strong></td>
+    <td>244M</td>
+    <td>~980 MB</td>
+    <td>~250 MB</td>
+    <td>~50 ms</td>
+    <td>Closest to Hume's own model</td>
+  </tr>
+</table>
+</div>
+
+<h3>Head Architecture</h3>
+
+<pre><code># Emotion regression head (append to encoder output)
+Linear(768, 256)  # Hidden projection
+ReLU()            # Non-linearity
+Dropout(0.3)      # Regularization
+Linear(256, 48)   # 48-dim output
+Sigmoid()         # Constrain each output to [0, 1]
+<button class="copy-btn" onclick="copyCode(this)">Copy</button></code></pre>
+
+<h3>On-Device Architecture Diagram</h3>
+
+<div class="diagram-container">
+  <div class="diagram-title">On-Device 48-Dimension Emotion Pipeline</div>
+  <div class="mermaid">
+flowchart TB
+    subgraph Audio["AVAudioEngine"]
+        A1["Microphone<br/>(44.1 kHz)"] --> A2["Mixer Node<br/>(resample 16 kHz mono)"]
+        A2 --> A3["installTap<br/>(bufferSize: 4096)"]
+    end
+
+    subgraph Processing["Background Queue"]
+        A3 --> P1["Ring Buffer<br/>(accumulate 2-3 sec)"]
+        P1 --> P2["Mel Spectrogram<br/>(Accelerate/vDSP)"]
+        P2 --> P3["MLMultiArray<br/>[1, 80, 128]"]
+    end
+
+    subgraph ML["ML Queue (ANE)"]
+        P3 --> M1["Core ML Model<br/>(DistilHuBERT + head)"]
+        M1 --> M2["48 Emotion Scores<br/>(0.0 - 1.0 each)"]
+        M2 --> M3["Temporal Smoothing<br/>(EMA, alpha=0.3)"]
+    end
+
+    subgraph Output["Main Thread"]
+        M3 --> O1["EmotionViewModel<br/>(@Published)"]
+        O1 --> O2["SwiftUI Bars<br/>(top-5 emotions)"]
+        O1 --> O3["LEED Description<br/>(for LLM prompt)"]
+    end
+
+    style Audio fill:#EEF2FF,stroke:#6366F1,color:#1E293B
+    style Processing fill:#FEF3C7,stroke:#D97706,color:#1E293B
+    style ML fill:#DBEAFE,stroke:#2563EB,color:#1E293B
+    style Output fill:#D1FAE5,stroke:#059669,color:#1E293B
+  </div>
+</div>
+
+<h3>Swift Inference Pipeline</h3>
+
+<div class="code-label">Swift</div>
+<pre><code>import CoreML
+import AVFoundation
+import Accelerate
+
+/// Manages 48-dimension emotion inference on device
+class Emotion48DimPredictor {
+    private let model: MLModel
+    private let emotionLabels: [String] = [
+        "Admiration", "Adoration", "Aesthetic Appreciation", "Amusement",
+        "Anger", "Anxiety", "Awe", "Awkwardness", "Boredom", "Calmness",
+        "Concentration", "Confusion", "Contemplation", "Contempt",
+        "Contentment", "Craving", "Desire", "Determination",
+        "Disappointment", "Disgust", "Distress", "Doubt", "Ecstasy",
+        "Embarrassment", "Empathic Pain", "Entrancement", "Envy",
+        "Excitement", "Fear", "Guilt", "Horror", "Interest", "Joy",
+        "Love", "Nostalgia", "Pain", "Pride", "Realization", "Relief",
+        "Romance", "Sadness", "Satisfaction", "Shame",
+        "Surprise (positive)", "Surprise (negative)", "Sympathy",
+        "Tiredness", "Triumph"
+    ]
+
+    init() throws {
+        let config = MLModelConfiguration()
+        config.computeUnits = .all  // ANE preferred
+        self.model = try Emotion48Model(configuration: config).model
+    }
+
+    /// Run inference on mel spectrogram features
+    func predict(melSpectrogram: MLMultiArray) throws
+        -> [(emotion: String, score: Double)]
+    {
+        let input = try MLDictionaryFeatureProvider(
+            dictionary: ["audio_features": MLFeatureValue(multiArray: melSpectrogram)]
+        )
+
+        let output = try model.prediction(from: input)
+
+        guard let scores = output.featureValue(
+            for: "emotion_scores"
+        )?.multiArrayValue else {
+            return []
+        }
+
+        // Pair labels with scores, sort by intensity
+        return emotionLabels.enumerated()
+            .map { (emotion: $0.element, score: scores[$0.offset].doubleValue) }
+            .sorted { $0.score > $1.score }
+    }
+
+    /// Generate LEED description for LLM integration
+    func leedDescription(
+        from scores: [(emotion: String, score: Double)],
+        threshold: Double = 0.15
+    ) -> String {
+        let significant = scores.filter { $0.score >= threshold }
+        guard !significant.isEmpty else {
+            return "The speaker's emotional tone was neutral."
+        }
+
+        let descriptions = significant.prefix(5).map { item -> String in
+            let adverb: String
+            switch item.score {
+            case 0.8...: adverb = "extremely"
+            case 0.6..<0.8: adverb = "quite"
+            case 0.4..<0.6: adverb = "moderately"
+            case 0.2..<0.4: adverb = "slightly"
+            default: adverb = "subtly"
+            }
+            return "\(adverb) \(item.emotion.lowercased())"
+        }
+
+        if descriptions.count == 1 {
+            return "The speaker sounded \(descriptions[0])."
+        }
+
+        let last = descriptions.last!
+        let rest = descriptions.dropLast().joined(separator: ", ")
+        return "The speaker sounded \(rest), and \(last)."
+    }
+}
+<button class="copy-btn" onclick="copyCode(this)">Copy</button></code></pre>
+
+<h3>Performance Budget</h3>
+
+<div class="table-wrapper">
+<table>
+  <tr>
+    <th>Stage</th>
+    <th>Time (DistilHuBERT, M1+)</th>
+    <th>Notes</th>
+  </tr>
+  <tr>
+    <td>Audio buffer accumulation</td>
+    <td>2,000 ms</td>
+    <td>2-second analysis window</td>
+  </tr>
+  <tr>
+    <td>Mel spectrogram (Accelerate)</td>
+    <td>5&ndash;10 ms</td>
+    <td>vDSP FFT + mel filterbank</td>
+  </tr>
+  <tr>
+    <td>Core ML inference (ANE)</td>
+    <td>15&ndash;25 ms</td>
+    <td>DistilHuBERT + 48-dim head</td>
+  </tr>
+  <tr>
+    <td>Post-processing + smoothing</td>
+    <td>&lt; 1 ms</td>
+    <td>EMA, thresholding</td>
+  </tr>
+  <tr>
+    <td><strong>Total pipeline</strong></td>
+    <td><strong>~2.0&ndash;2.05 s</strong></td>
+    <td>Dominated by analysis window</td>
+  </tr>
+</table>
+</div>
+
+<p>With 50% overlap and a 2-second window, you get a new 48-dimension emotion reading every second &mdash; more than smooth enough for real-time annotation alongside transcription.</p>
+
+<!-- ==================== ROADMAP ==================== -->
+<h2 id="roadmap">Practical Roadmap for Your Transcription App</h2>
+
+<p>Here is a phased plan for integrating 48-dimension emotion detection into an iOS transcription app, starting with the fastest path and evolving toward full on-device capability.</p>
+
+<div class="diagram-container">
+  <div class="diagram-title">Integration Roadmap</div>
+  <div class="mermaid">
+gantt
+    title 48-Dim Emotion Integration Roadmap
+    dateFormat X
+    axisFormat %s
+
+    section Phase 1 - API
+    Integrate Hume API           :a1, 0, 2
+    Basic emotion display in UI  :a2, 1, 3
+
+    section Phase 2 - Data
+    Collect training data via API :b1, 2, 5
+    Build labeled dataset         :b2, 3, 6
+
+    section Phase 3 - Train
+    Train student model           :c1, 5, 8
+    Validate against API          :c2, 7, 9
+
+    section Phase 4 - Deploy
+    Convert to Core ML            :d1, 8, 10
+    On-device inference pipeline  :d2, 9, 11
+
+    section Phase 5 - Enhance
+    LEED + LLM text fusion        :e1, 10, 12
+    Ship to users                 :e2, 11, 13
+  </div>
+</div>
+
+<h3>Phase 1: Integrate Hume API Directly (Weeks 1&ndash;2)</h3>
+<p>The fastest path to 48-dimensional emotion data in your app. Use Hume's WebSocket API for real-time analysis or the batch API for recorded audio. Display the top 5 emotions per utterance alongside transcription text. This immediately gives your users the richest emotion feedback available from any provider.</p>
+
+<h3>Phase 2: Collect Training Data (Weeks 2&ndash;5)</h3>
+<p>As your app processes audio through the Hume API (with user consent), save the audio segments alongside the API's 48-dimensional labels. You are building a proprietary training dataset, labeled by Hume's model. Target 5,000&ndash;10,000 minutes of diverse speech. Supplement with unlabeled podcast and audiobook audio processed through the API.</p>
+
+<h3>Phase 3: Train Student Model (Weeks 5&ndash;8)</h3>
+<p>Fine-tune DistilHuBERT (or Whisper-Tiny encoder) on your API-labeled dataset using MSE loss. Validate against held-out API labels. Target: Pearson correlation &ge; 0.85 per dimension against the teacher model. If using the Hybrid approach (Strategy C), incorporate public datasets for grounding.</p>
+
+<h3>Phase 4: Deploy On-Device (Weeks 8&ndash;10)</h3>
+<p>Convert the trained model to Core ML using coremltools. Quantize to INT8. Build the AVAudioEngine &rarr; Mel Spectrogram &rarr; Core ML &rarr; 48 scores pipeline in Swift. Run the on-device model as primary, with optional cloud API fallback for high-stakes analysis.</p>
+
+<h3>Phase 5: LEED + LLM Integration (Weeks 10&ndash;12)</h3>
+<p>Convert 48-dim scores to LEED descriptions and embed in LLM prompts for emotion-aware analysis. Use Apple's Foundation Models framework for on-device text analysis of transcriptions. Combine acoustic emotion (from your model) with semantic emotion (from the LLM) for the richest possible understanding of each utterance.</p>
+
+<div class="swift-focus">
+  <h4>End-State Architecture</h4>
+  <p>When fully deployed, your transcription app will have:</p>
+  <ul>
+    <li><strong>On-device speech-to-text</strong> (WhisperKit or Apple Speech)</li>
+    <li><strong>On-device 48-dim emotion</strong> (your Core ML student model)</li>
+    <li><strong>On-device semantic analysis</strong> (Apple Foundation Models + LEED)</li>
+    <li><strong>Zero cloud dependency</strong> for the core pipeline</li>
+    <li><strong>Optional cloud enhancement</strong> (Hume API for detailed analysis on demand)</li>
+  </ul>
+  <p>All audio stays on-device by default. This is the strongest possible privacy story: "Your voice never leaves your phone."</p>
+</div>
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr>
+    <td><strong>SST (Semantic Space Theory)</strong></td>
+    <td>The scientific framework behind Hume AI. Treats emotions as regions in a continuous high-dimensional space rather than discrete categories. Developed by Alan Cowen at UC Berkeley.</td>
+  </tr>
+  <tr>
+    <td><strong>EEE (Expressive Emotion Embedding)</strong></td>
+    <td>The 48-dimensional vector of continuous emotion scores that Hume's model outputs for each audio segment. Each dimension ranges from 0 (absent) to 1 (maximally present).</td>
+  </tr>
+  <tr>
+    <td><strong>PPCA</strong></td>
+    <td>Principal Preserved Component Analysis &mdash; dimensionality reduction technique used to discover the true number of emotion dimensions from crowd-sourced ratings.</td>
+  </tr>
+  <tr>
+    <td><strong>CCA</strong></td>
+    <td>Canonical Correlation Analysis &mdash; statistical method for validating that discovered emotion dimensions replicate across independent samples and cultures.</td>
+  </tr>
+  <tr>
+    <td><strong>LEED</strong></td>
+    <td>Language-based Emotional Expression Description &mdash; technique for converting 48-dimensional emotion vectors into natural language descriptions for LLM integration.</td>
+  </tr>
+  <tr>
+    <td><strong>Soft Labels</strong></td>
+    <td>Continuous-valued training labels (e.g., [0.72, 0.38, 0.24, ...]) as opposed to hard/one-hot labels (e.g., [1, 0, 0, ...]). Generated by a teacher model in knowledge distillation.</td>
+  </tr>
+  <tr>
+    <td><strong>Multi-Label Regression</strong></td>
+    <td>Predicting continuous values for multiple output dimensions simultaneously. Unlike classification (pick one label) or multi-class (probability distribution over mutually exclusive classes), multi-label regression outputs independent intensity values per dimension.</td>
+  </tr>
+  <tr>
+    <td><strong>Knowledge Distillation</strong></td>
+    <td>Training a small "student" model to replicate the predictions of a large "teacher" model. The student learns from the teacher's soft outputs rather than from hard ground-truth labels.</td>
+  </tr>
+  <tr>
+    <td><strong>Mimicry Paradigm</strong></td>
+    <td>Hume AI's data collection method where participants listen to emotionally expressive "seed" recordings and reproduce them in their own voice. Produces natural-sounding emotional speech at scale.</td>
+  </tr>
+  <tr>
+    <td><strong>Valence-Arousal</strong></td>
+    <td>A two-dimensional model of emotion: valence (pleasant to unpleasant) and arousal (calm to excited). Simpler than SST's high-dimensional approach but loses fine-grained distinctions.</td>
+  </tr>
+  <tr>
+    <td><strong>Prosody</strong></td>
+    <td>The patterns of rhythm, stress, pitch, intonation, and tempo in speech. Prosodic features carry emotional meaning independent of the words being spoken.</td>
+  </tr>
+  <tr>
+    <td><strong>UAR</strong></td>
+    <td>Unweighted Average Recall &mdash; classification metric that averages per-class recall, giving equal weight to each class regardless of size. Standard metric in speech emotion recognition.</td>
+  </tr>
+  <tr>
+    <td><strong>MSE Loss</strong></td>
+    <td>Mean Squared Error &mdash; loss function used for regression tasks. Measures the average squared difference between predicted and target continuous values. Used for multi-label emotion regression.</td>
+  </tr>
+  <tr>
+    <td><strong>DistilHuBERT</strong></td>
+    <td>A compressed version of HuBERT (Hidden-Unit BERT) with 23.8M parameters (vs 95M for HuBERT-base). Retains most of the speech representation quality at a fraction of the size.</td>
+  </tr>
+  <tr>
+    <td><strong>Whisper-Small</strong></td>
+    <td>OpenAI's 244M-parameter multilingual speech recognition model. Its encoder, pre-trained on 680K hours of audio, is the backbone of Hume AI's prosody model.</td>
+  </tr>
+  <tr>
+    <td><strong>Core ML</strong></td>
+    <td>Apple's on-device ML framework. Dispatches models to the Apple Neural Engine, GPU, or CPU for optimal performance and power efficiency.</td>
+  </tr>
+  <tr>
+    <td><strong>ANE</strong></td>
+    <td>Apple Neural Engine &mdash; dedicated ML accelerator in Apple Silicon chips. Ideal for running emotion models at low power.</td>
+  </tr>
+  <tr>
+    <td><strong>EMA</strong></td>
+    <td>Exponential Moving Average &mdash; smoothing technique applied to emotion scores over time to reduce jitter and produce stable readings.</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== SOURCES ==================== -->
+<h2 id="sources">Sources</h2>
+
+<div class="table-wrapper">
+<table>
+  <tr><th>#</th><th>Source</th><th>Type</th></tr>
+  <tr>
+    <td>1</td>
+    <td><a href="https://www.pnas.org/doi/10.1073/pnas.1702247114" target="_blank">Cowen & Keltner (2017). "Self-report captures 27 distinct categories of emotion bridged by continuous gradients." PNAS.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><a href="https://doi.org/10.1037/amp0000399" target="_blank">Cowen, Elfenbein & Keltner (2018). "Mapping 24 emotions conveyed by brief human vocalization." American Psychologist.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><a href="https://doi.org/10.1038/s41562-019-0533-6" target="_blank">Cowen et al. (2019). "Mapping the passions: Toward a high-dimensional taxonomy of emotional experience and expression." Nature Human Behaviour.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><a href="https://doi.org/10.1037/amp0000488" target="_blank">Cowen & Keltner (2019). "What the face displays: Mapping 28 emotions conveyed by naturalistic expression." American Psychologist.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><a href="https://www.pnas.org/doi/10.1073/pnas.1910704117" target="_blank">Cowen et al. (2020). "What music makes us feel: At least 13 dimensions organize subjective experiences." PNAS.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><a href="https://dev.hume.ai/docs/expression-measurement-api" target="_blank">Hume AI Expression Measurement API Documentation</a></td>
+    <td>Documentation</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td><a href="https://www.hume.ai/blog" target="_blank">Hume AI Blog &mdash; Technical posts on model architecture and data collection</a></td>
+    <td>Blog</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td><a href="https://arxiv.org/abs/2307.10757" target="_blank">Cowen et al. (2023). "Hume-Prosody: A speech prosody dataset for multidimensional emotion analysis." NeurIPS Datasets and Benchmarks.</a></td>
+    <td>Peer-reviewed</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td><a href="https://github.com/openai/whisper" target="_blank">OpenAI Whisper &mdash; General-purpose speech recognition model</a></td>
+    <td>Open source</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td><a href="https://huggingface.co/ntu-spml/distilhubert" target="_blank">DistilHuBERT &mdash; Compact speech representation model</a></td>
+    <td>Open source</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td><a href="https://apple.github.io/coremltools/docs-guides/" target="_blank">Apple coremltools &mdash; ML model conversion and optimization</a></td>
+    <td>Documentation</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple Core ML Framework Documentation</a></td>
+    <td>Documentation</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td><a href="https://sail.usc.edu/iemocap/" target="_blank">IEMOCAP &mdash; Interactive Emotional Dyadic Motion Capture Database</a></td>
+    <td>Dataset</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td><a href="https://zenodo.org/records/1188976" target="_blank">RAVDESS &mdash; Ryerson Audio-Visual Database of Emotional Speech and Song</a></td>
+    <td>Dataset</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td><a href="https://affective-meld.github.io/" target="_blank">MELD &mdash; Multimodal EmotionLines Dataset</a></td>
+    <td>Dataset</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td><a href="http://multicomp.cs.cmu.edu/resources/cmu-mosei-dataset/" target="_blank">CMU-MOSEI &mdash; Multimodal Opinion Sentiment and Emotion Intensity</a></td>
+    <td>Dataset</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== CATEGORY NAV ==================== -->
+<nav class="category-nav">
+  <a href="../apple-platform-integration/index.html" class="prev-category">&larr; Apple Platform Integration</a>
+</nav>
+
+</div><!-- .content -->
+</main>
+</div><!-- .layout -->
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  // Re-initialize mermaid with appropriate theme
+  initMermaid(next);
+}
+
+function initMermaid(theme) {
+  const mermaidTheme = theme === 'dark' ? 'dark' : 'default';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: mermaidTheme,
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    sequence: { useMaxWidth: true, actorMargin: 50 },
+    gantt: { useMaxWidth: true },
+    securityLevel: 'loose'
+  });
+  // Re-render all mermaid diagrams
+  document.querySelectorAll('.mermaid').forEach((el, i) => {
+    const code = el.getAttribute('data-original') || el.textContent;
+    if (!el.getAttribute('data-original')) {
+      el.setAttribute('data-original', code);
+    }
+    el.removeAttribute('data-processed');
+    el.innerHTML = code;
+  });
+  mermaid.run();
+}
+
+// Initialize
+(function() {
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  initMermaid(theme);
+})();
+
+// Active sidebar link tracking
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+  observer.observe(heading);
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Copy button functionality
+function copyCode(button) {
+  const pre = button.closest('pre');
+  const code = pre.querySelector('code') || pre;
+  const text = code.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    button.textContent = 'Copied!';
+    setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
