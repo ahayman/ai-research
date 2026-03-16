@@ -642,13 +642,36 @@
       display: block;
     }
 
-    .search-highlight {
-      background: rgba(99, 102, 241, 0.2);
-      border-radius: 2px;
+    .search-results-grid {
+      display: none;
+      margin-bottom: 2.5rem;
     }
 
-    [data-theme="dark"] .search-highlight {
-      background: rgba(129, 140, 248, 0.3);
+    .search-results-grid.visible {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .search-results-grid .card {
+      margin: 0;
+    }
+
+    mark.search-highlight {
+      background: #fbbf24;
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    [data-theme="dark"] mark.search-highlight {
+      background: #854d0e;
+      color: #fef3c7;
+    }
+
+    .card-header mark.search-highlight {
+      background: rgba(255,255,255,0.35);
+      color: white;
     }
 
     @media print {
@@ -777,6 +800,7 @@
         <div class="search-no-results" id="search-no-results">
           No articles match your search. Try different keywords.
         </div>
+        <div class="search-results-grid" id="search-results-grid"></div>
         <!-- Health & Wellness Section -->
         <section class="category-section" data-section="health">
           <div class="category-header">
@@ -1820,65 +1844,128 @@
       });
     });
 
-    // Fuzzy match: checks if all characters of the query appear in order within the text
-    // Returns { match: boolean, score: number, indices: number[] }
+    // Fuzzy match with quality gate: returns { match, score, indices } on the given text.
+    // For queries 3+ chars, scattered character matches are rejected via a density check.
     function fuzzyMatch(query, text) {
-      query = query.toLowerCase();
-      text = text.toLowerCase();
-      const queryLen = query.length;
-      const textLen = text.length;
-      if (queryLen === 0) return { match: true, score: 0, indices: [] };
-      if (queryLen > textLen) return { match: false, score: 0, indices: [] };
+      const q = query.toLowerCase();
+      const t = text.toLowerCase();
+      const qLen = q.length;
+      const tLen = t.length;
+      if (qLen === 0) return { match: true, score: 0, indices: [] };
+      if (qLen > tLen) return { match: false, score: 0, indices: [] };
 
-      // First check: exact substring match (highest priority)
-      const exactIdx = text.indexOf(query);
+      // Exact substring (highest priority)
+      const exactIdx = t.indexOf(q);
       if (exactIdx !== -1) {
         const indices = [];
-        for (let i = 0; i < queryLen; i++) indices.push(exactIdx + i);
-        return { match: true, score: queryLen * 3 + 100, indices };
+        for (let i = 0; i < qLen; i++) indices.push(exactIdx + i);
+        return { match: true, score: qLen * 10 + 200, indices };
       }
 
-      // Word-start bonus matching
-      let qi = 0;
-      let score = 0;
-      const indices = [];
-      let lastMatchIdx = -1;
+      // Word-boundary match: query matches the start of a word in text
+      // e.g. "lang" matches "Language" or "cross-linguistic"
+      const wordRe = new RegExp('(?:^|[\\s\\-(/])' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      const wordMatch = t.match(wordRe);
+      if (wordMatch) {
+        const start = wordMatch.index + (wordMatch[0].length - q.length);
+        const indices = [];
+        for (let i = 0; i < qLen; i++) indices.push(start + i);
+        return { match: true, score: qLen * 8 + 150, indices };
+      }
 
-      for (let ti = 0; ti < textLen && qi < queryLen; ti++) {
-        if (text[ti] === query[qi]) {
+      // Fuzzy sequential character match
+      let qi = 0, score = 0, consecutive = 0;
+      const indices = [];
+      let lastIdx = -1;
+
+      for (let ti = 0; ti < tLen && qi < qLen; ti++) {
+        if (t[ti] === q[qi]) {
           indices.push(ti);
-          // Consecutive character bonus
-          if (ti === lastMatchIdx + 1) score += 3;
-          // Word-start bonus (first char or after space/hyphen/paren)
-          if (ti === 0 || ' -(/'.includes(text[ti - 1])) score += 5;
-          // General match point
+          const isConsecutive = ti === lastIdx + 1;
+          const isWordStart = ti === 0 || ' -(/'.includes(t[ti - 1]);
+          if (isConsecutive) { score += 4; consecutive++; }
+          if (isWordStart) score += 6;
           score += 1;
-          lastMatchIdx = ti;
+          lastIdx = ti;
           qi++;
         }
       }
 
-      if (qi === queryLen) {
-        // Penalize spread (matches far apart are worse)
-        const spread = indices[indices.length - 1] - indices[0];
-        score -= spread * 0.1;
-        return { match: true, score, indices };
+      if (qi < qLen) return { match: false, score: 0, indices: [] };
+
+      // Quality gate: for queries 3+ chars, require decent clustering
+      // At least 40% of matched chars must be consecutive with their predecessor
+      if (qLen >= 3) {
+        const consecutiveRatio = consecutive / (qLen - 1);
+        if (consecutiveRatio < 0.35) return { match: false, score: 0, indices: [] };
       }
 
-      return { match: false, score: 0, indices: [] };
+      const spread = indices[indices.length - 1] - indices[0];
+      score -= spread * 0.2;
+      return { match: true, score, indices };
+    }
+
+    // Highlight matched portions within a text string, returns HTML
+    function highlightText(text, query) {
+      if (!query) return text;
+      const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+      // Collect all character indices to highlight
+      const highlightSet = new Set();
+      const lowerText = text.toLowerCase();
+
+      for (const word of words) {
+        // Try exact substring first
+        let idx = lowerText.indexOf(word);
+        if (idx !== -1) {
+          for (let i = 0; i < word.length; i++) highlightSet.add(idx + i);
+          continue;
+        }
+        // Try word-boundary match
+        const wordRe = new RegExp('(?:^|[\\s\\-(/])' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+        const wm = lowerText.match(wordRe);
+        if (wm) {
+          const start = wm.index + (wm[0].length - word.length);
+          for (let i = 0; i < word.length; i++) highlightSet.add(start + i);
+          continue;
+        }
+        // Fuzzy: highlight the matched character positions
+        const result = fuzzyMatch(word, text);
+        if (result.match) {
+          for (const i of result.indices) highlightSet.add(i);
+        }
+      }
+
+      if (highlightSet.size === 0) return text;
+
+      // Build HTML with <mark> spans around consecutive highlighted chars
+      let html = '';
+      let inMark = false;
+      for (let i = 0; i < text.length; i++) {
+        const shouldHighlight = highlightSet.has(i);
+        if (shouldHighlight && !inMark) { html += '<mark class="search-highlight">'; inMark = true; }
+        else if (!shouldHighlight && inMark) { html += '</mark>'; inMark = false; }
+        // Escape HTML entities
+        const ch = text[i];
+        html += ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : ch === '&' ? '&amp;' : ch;
+      }
+      if (inMark) html += '</mark>';
+      return html;
     }
 
     function performSearch(query) {
       query = query.trim();
-      const cards = document.querySelectorAll('.card');
       const sections = document.querySelectorAll('.category-section');
       const noResults = document.getElementById('search-no-results');
+      const resultsGrid = document.getElementById('search-results-grid');
 
       if (!query) {
-        // Reset: show all cards, respect current category filter
-        cards.forEach(card => card.classList.remove('search-hidden'));
+        // Reset: clear search results, show category sections
+        resultsGrid.innerHTML = '';
+        resultsGrid.classList.remove('visible');
         sections.forEach(s => s.classList.remove('hidden'));
         noResults.classList.remove('visible');
+        // Restore original card text (remove highlights)
+        document.querySelectorAll('.card').forEach(card => card.classList.remove('search-hidden'));
         // Re-apply active category filter
         const activeFilter = document.querySelector('.sidebar-link.active');
         if (activeFilter && activeFilter.dataset.filter !== 'all') {
@@ -1887,14 +1974,15 @@
         return;
       }
 
-      // Reset category filter to "all" when searching
+      // Reset category filter to "all" during search
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.classList.toggle('active', link.dataset.filter === 'all');
       });
-      sections.forEach(s => s.classList.remove('hidden'));
-      document.getElementById('page-title').textContent = 'Research Library';
+      document.getElementById('page-title').textContent = 'Search Results';
 
-      let visibleCount = 0;
+      // Score every card
+      const cards = document.querySelectorAll('.category-section .card');
+      const scored = [];
 
       cards.forEach(card => {
         const title = card.querySelector('.card-title')?.textContent || '';
@@ -1903,36 +1991,46 @@
         const type = card.querySelector('.card-type')?.textContent || '';
         const searchText = `${title} ${desc} ${tags} ${type}`;
 
-        // Split query into words and fuzzy match each
         const words = query.toLowerCase().split(/\s+/).filter(Boolean);
         let allMatch = true;
         let totalScore = 0;
 
         for (const word of words) {
           const result = fuzzyMatch(word, searchText);
-          if (!result.match) {
-            allMatch = false;
-            break;
-          }
+          if (!result.match) { allMatch = false; break; }
           totalScore += result.score;
         }
 
         if (allMatch) {
-          card.classList.remove('search-hidden');
-          card.style.order = Math.round(-totalScore);
-          visibleCount++;
-        } else {
-          card.classList.add('search-hidden');
+          scored.push({ card, score: totalScore, title, desc });
         }
       });
 
-      // Hide sections with no visible cards
-      sections.forEach(section => {
-        const visibleCards = section.querySelectorAll('.card:not(.search-hidden)');
-        section.classList.toggle('hidden', visibleCards.length === 0);
-      });
+      // Sort highest score first
+      scored.sort((a, b) => b.score - a.score);
 
-      noResults.classList.toggle('visible', visibleCount === 0);
+      // Hide all category sections, show search results grid
+      sections.forEach(s => s.classList.add('hidden'));
+
+      // Build results grid with cloned cards + highlighting
+      resultsGrid.innerHTML = '';
+      for (const { card, title, desc } of scored) {
+        const clone = card.cloneNode(true);
+        // Apply highlighting to title
+        const titleEl = clone.querySelector('.card-title');
+        if (titleEl) titleEl.innerHTML = highlightText(title, query);
+        // Apply highlighting to description
+        const descEl = clone.querySelector('.card-description');
+        if (descEl) descEl.innerHTML = highlightText(desc, query);
+        // Apply highlighting to tags
+        clone.querySelectorAll('.card-tag').forEach(tag => {
+          tag.innerHTML = highlightText(tag.textContent, query);
+        });
+        resultsGrid.appendChild(clone);
+      }
+
+      resultsGrid.classList.toggle('visible', scored.length > 0);
+      noResults.classList.toggle('visible', scored.length === 0);
     }
 
     function clearSearch() {
