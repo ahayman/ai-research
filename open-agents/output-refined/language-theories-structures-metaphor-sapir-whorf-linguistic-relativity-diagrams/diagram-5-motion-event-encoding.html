@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion Event Encoding: Satellite-Framed vs. Verb-Framed</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --muted: #6c757d;
+    --manner-color: #e74c3c;
+    --manner-bg: #fdedec;
+    --path-color: #2980b9;
+    --path-bg: #ebf5fb;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9a825;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --muted: #9a9ab0;
+      --manner-color: #ff6b6b;
+      --manner-bg: #2a1010;
+      --path-color: #5dade2;
+      --path-bg: #0d2a3a;
+      --callout-bg: #2a2510;
+      --callout-border: #c49000;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .mermaid-wrapper { overflow-x: auto; padding: 1rem 0; }
+  .mermaid { display: flex; justify-content: center; }
+  .panels { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-top: 1.5rem; }
+  .panel {
+    flex: 1 1 440px;
+    max-width: 500px;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+  }
+  .panel-s { background: var(--manner-bg); border-color: var(--manner-color); }
+  .panel-v { background: var(--path-bg); border-color: var(--path-color); }
+  .panel h3 { font-size: 1.1rem; margin-bottom: 0.8rem; }
+  .panel-s h3 { color: var(--manner-color); }
+  .panel-v h3 { color: var(--path-color); }
+  .sentence { font-size: 1.15rem; margin: 0.6rem 0; line-height: 1.7; }
+  .manner { color: var(--manner-color); font-weight: 700; text-transform: uppercase; }
+  .path { color: var(--path-color); font-weight: 700; text-transform: uppercase; }
+  .label-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    vertical-align: super;
+    font-weight: 600;
+  }
+  .label-manner { background: var(--manner-color); color: #fff; }
+  .label-path { background: var(--path-color); color: #fff; }
+  .label-adjunct { background: var(--muted); color: #fff; }
+  .annotation { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+  .cost-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .cost-bar .bar-label { font-size: 0.85rem; font-weight: 600; min-width: 120px; }
+  .cost-bar .bar-track { flex: 1; height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; }
+  .cost-bar .bar-fill { height: 100%; border-radius: 6px; }
+  .bar-fill-manner { background: var(--manner-color); }
+  .bar-fill-path { background: var(--path-color); }
+  .callout {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    background: var(--callout-bg);
+    border: 1.5px solid var(--callout-border);
+    text-align: center;
+  }
+  .callout strong { font-size: 0.95rem; }
+  .callout p { font-size: 0.88rem; color: var(--muted); margin-top: 0.3rem; }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Motion Event Encoding</h2>
+  <p class="subtitle">Satellite-Framed vs. Verb-Framed Languages (Talmy Typology / Slobin's Thinking for Speaking)</p>
+
+  <div class="mermaid-wrapper">
+    <pre class="mermaid">
+graph LR
+    EVENT["Motion Event<br/><i>Person moves into a house while running</i>"]
+
+    EVENT --> S["<b>Satellite-Framed</b><br/>English, German, Slavic, Mandarin"]
+    EVENT --> V["<b>Verb-Framed</b><br/>Spanish, French, Italian, Turkish, Japanese"]
+
+    S --> S_VERB["<b>Main Verb</b> = MANNER<br/><i>How</i> movement happens<br/><span style='color:#e74c3c;font-weight:bold'>ran, danced, skipped</span>"]
+    S --> S_SAT["<b>Satellite</b> = PATH<br/><i>Where</i> movement goes<br/><span style='color:#2980b9;font-weight:bold'>into, across, out of</span>"]
+
+    V --> V_VERB["<b>Main Verb</b> = PATH<br/><i>Where</i> movement goes<br/><span style='color:#2980b9;font-weight:bold'>entered, crossed, exited</span>"]
+    V --> V_ADJ["<b>Adjunct</b> = MANNER<br/><i>How</i> (if mentioned at all)<br/><span style='color:#e74c3c;font-weight:bold'>running, dancing</span>"]
+
+    style EVENT fill:#f5f5f5,stroke:#666,color:#333
+    style S fill:#fdedec,stroke:#e74c3c,color:#333
+    style V fill:#ebf5fb,stroke:#2980b9,color:#333
+    style S_VERB fill:#fce4ec,stroke:#c62828,color:#333
+    style S_SAT fill:#e3f2fd,stroke:#1565c0,color:#333
+    style V_VERB fill:#e3f2fd,stroke:#1565c0,color:#333
+    style V_ADJ fill:#fce4ec,stroke:#c62828,color:#333
+    </pre>
+  </div>
+
+  <div class="panels">
+    <!-- Satellite-framed panel -->
+    <div class="panel panel-s">
+      <h3>Satellite-Framed (English)</h3>
+
+      <div class="sentence">
+        He <span class="manner">RAN</span> <span class="label-tag label-manner">verb = manner</span>
+        <span class="path">into</span> <span class="label-tag label-path">satellite = path</span> the house
+      </div>
+      <p class="annotation">Manner is "cheap" -- encoded in the main verb slot</p>
+
+      <div class="sentence">
+        She <span class="manner">DANCED</span> <span class="label-tag label-manner">verb = manner</span>
+        <span class="path">across</span> <span class="label-tag label-path">satellite = path</span> the room
+      </div>
+
+      <div class="sentence">
+        The ball <span class="manner">ROLLED</span> <span class="label-tag label-manner">verb = manner</span>
+        <span class="path">out of</span> <span class="label-tag label-path">satellite = path</span> the yard
+      </div>
+
+      <div class="cost-bar">
+        <span class="bar-label" style="color:var(--manner-color)">Manner expression</span>
+        <div class="bar-track"><div class="bar-fill bar-fill-manner" style="width:90%"></div></div>
+        <span style="font-size:0.8rem;color:var(--muted)">90% of narratives</span>
+      </div>
+    </div>
+
+    <!-- Verb-framed panel -->
+    <div class="panel panel-v">
+      <h3>Verb-Framed (Spanish)</h3>
+
+      <div class="sentence">
+        <span class="path">ENTRO</span> <span class="label-tag label-path">verb = path</span>
+        a la casa <span class="manner">corriendo</span> <span class="label-tag label-adjunct">adjunct = manner</span>
+      </div>
+      <p class="annotation">Manner is "expensive" -- requires extra syntactic structure</p>
+
+      <div class="sentence">
+        <span class="path">CRUZO</span> <span class="label-tag label-path">verb = path</span>
+        el salon <span class="manner">bailando</span> <span class="label-tag label-adjunct">adjunct = manner</span>
+      </div>
+
+      <div class="sentence">
+        La pelota <span class="path">SALIO</span> <span class="label-tag label-path">verb = path</span>
+        del jardin <span class="manner">(rodando)</span> <span class="label-tag label-adjunct">often omitted</span>
+      </div>
+
+      <div class="cost-bar">
+        <span class="bar-label" style="color:var(--path-color)">Manner expression</span>
+        <div class="bar-track"><div class="bar-fill bar-fill-path" style="width:35%"></div></div>
+        <span style="font-size:0.8rem;color:var(--muted)">~35% of narratives</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Key Insight: "Thinking for Speaking" (Slobin, 1987)</strong>
+    <p>Grammatical structure determines which information is "cheap" vs. "expensive" to encode. S-language speakers habitually attend to manner; V-language speakers habitually attend to path. This is not about what speakers <em>can</em> perceive, but what they <em>habitually</em> notice, encode, and remember.</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 5: Motion Event Encoding -- Satellite-Framed vs. Verb-Framed Languages</strong>
+    <span>Leonard Talmy's typology reveals that English (satellite-framed) encodes manner of motion in the main verb and path in a satellite particle, while Spanish (verb-framed) does the reverse. Dan Slobin's "Thinking for Speaking" hypothesis demonstrates that these structural differences shape habitual attention: English speakers spontaneously notice and remember how things move, while Spanish speakers attend more to where things go. The difference emerges in narrative frequency, eye-tracking data, and memory tests.</span>
+  </figcaption>
+</figure>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+</script>
+</body>
+</html>

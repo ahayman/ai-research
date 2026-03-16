@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline of Constructed Languages</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #1a1a2e;
+  }
+  .timeline-container {
+    overflow-x: auto;
+    padding: 1rem 0;
+  }
+  .timeline {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    min-width: 1000px;
+    padding: 2rem 1rem 3rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    right: 2%;
+    height: 4px;
+    background: linear-gradient(90deg, #7c3aed, #2563eb, #0891b2, #16a34a, #d97706, #dc2626);
+    border-radius: 2px;
+    transform: translateY(-50%);
+  }
+  .era {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  .era-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    white-space: nowrap;
+  }
+  .event-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+  }
+  .event {
+    position: relative;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    border-left: 3px solid;
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+  .event .year {
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .event .name {
+    font-weight: 600;
+    display: block;
+  }
+  .event .detail {
+    color: #6b7280;
+    font-size: 0.68rem;
+    display: block;
+    margin-top: 0.1rem;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    position: relative;
+    z-index: 2;
+    margin: 0.5rem 0;
+    flex-shrink: 0;
+  }
+  /* Era Colors */
+  .era-medieval .era-label { background: #f3e8ff; color: #7c3aed; }
+  .era-medieval .event { background: #faf5ff; border-color: #7c3aed; }
+  .era-medieval .dot { background: #7c3aed; }
+  .era-medieval .year { color: #7c3aed; }
+
+  .era-philosophical .era-label { background: #dbeafe; color: #2563eb; }
+  .era-philosophical .event { background: #eff6ff; border-color: #2563eb; }
+  .era-philosophical .dot { background: #2563eb; }
+  .era-philosophical .year { color: #2563eb; }
+
+  .era-auxiliary .era-label { background: #ccfbf1; color: #0891b2; }
+  .era-auxiliary .event { background: #f0fdfa; border-color: #0891b2; }
+  .era-auxiliary .dot { background: #0891b2; }
+  .era-auxiliary .year { color: #0891b2; }
+
+  .era-logical .era-label { background: #dcfce7; color: #16a34a; }
+  .era-logical .event { background: #f0fdf4; border-color: #16a34a; }
+  .era-logical .dot { background: #16a34a; }
+  .era-logical .year { color: #16a34a; }
+
+  .era-artistic .era-label { background: #fef3c7; color: #d97706; }
+  .era-artistic .event { background: #fffbeb; border-color: #d97706; }
+  .era-artistic .dot { background: #d97706; }
+  .era-artistic .year { color: #d97706; }
+
+  .era-modern .era-label { background: #fee2e2; color: #dc2626; }
+  .era-modern .event { background: #fef2f2; border-color: #dc2626; }
+  .era-modern .dot { background: #dc2626; }
+  .era-modern .year { color: #dc2626; }
+
+  .above { order: -1; }
+  .below { order: 1; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: #495057;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.15);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong {
+    display: block;
+    font-size: 1.05rem;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+  figcaption span {
+    font-size: 0.85rem;
+    color: #6c757d;
+    line-height: 1.6;
+    display: block;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .diagram-title { color: #e9ecef; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+    .legend-item { color: #adb5bd; }
+    .event .detail { color: #9ca3af; }
+    .era-medieval .event { background: #2a1f3d; }
+    .era-philosophical .event { background: #1e2a3d; }
+    .era-auxiliary .event { background: #1a2e2e; }
+    .era-logical .event { background: #1a2e1f; }
+    .era-artistic .event { background: #2e2a1a; }
+    .era-modern .event { background: #2e1a1a; }
+    .era-medieval .year { color: #a78bfa; }
+    .era-philosophical .year { color: #60a5fa; }
+    .era-auxiliary .year { color: #22d3ee; }
+    .era-logical .year { color: #4ade80; }
+    .era-artistic .year { color: #fbbf24; }
+    .era-modern .year { color: #f87171; }
+    .event .name { color: #e9ecef; }
+    .timeline::before {
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #22d3ee, #4ade80, #fbbf24, #f87171);
+    }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-title">Timeline of Constructed Languages: Nine Centuries of Linguistic Engineering</div>
+  <div class="timeline-container">
+    <div class="timeline">
+
+      <!-- Medieval Precursors -->
+      <div class="era era-medieval">
+        <div class="era-label">Medieval</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">c. 1150</span>
+            <span class="name">Lingua Ignota</span>
+            <span class="detail">Hildegard von Bingen's mystical language -- earliest known conlang</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Philosophical Languages -->
+      <div class="era era-philosophical">
+        <div class="era-label">Philosophical</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">1647</span>
+            <span class="name">Lodwick's Universal Alphabet</span>
+            <span class="detail">Early phonetic notation attempt</span>
+          </div>
+          <div class="event">
+            <span class="year">1661</span>
+            <span class="name">Dalgarno's Ars Signorum</span>
+            <span class="detail">Taxonomic classification of ideas</span>
+          </div>
+          <div class="event">
+            <span class="year">1668</span>
+            <span class="name">Wilkins' Real Character</span>
+            <span class="detail">Royal Society-commissioned universal language: 40 genera taxonomy</span>
+          </div>
+          <div class="event">
+            <span class="year">c. 1679</span>
+            <span class="name">Leibniz's Characteristica Universalis</span>
+            <span class="detail">Never completed -- algebra of thought, precursor to formal logic</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auxiliary Languages -->
+      <div class="era era-auxiliary">
+        <div class="era-label">Auxiliary</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">1879</span>
+            <span class="name">Volapuk</span>
+            <span class="detail">Johann Martin Schleyer. First conlang to gain mass following; rapid decline</span>
+          </div>
+          <div class="event">
+            <span class="year">1887</span>
+            <span class="name">Esperanto</span>
+            <span class="detail">L. L. Zamenhof. Most successful IAL: ~2M speakers, evolving community</span>
+          </div>
+          <div class="event">
+            <span class="year">1907-28</span>
+            <span class="name">Ido, Occidental, Novial</span>
+            <span class="detail">"Reformed Esperanto" offshoots; none surpassed the original</span>
+          </div>
+          <div class="event">
+            <span class="year">1951</span>
+            <span class="name">Interlingua</span>
+            <span class="detail">IALA project: naturalistic approach from Romance core</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logical Languages -->
+      <div class="era era-logical">
+        <div class="era-label">Logical</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">1955</span>
+            <span class="name">Loglan</span>
+            <span class="detail">James Cooke Brown. Designed to test the Sapir-Whorf hypothesis</span>
+          </div>
+          <div class="event">
+            <span class="year">1987</span>
+            <span class="name">Lojban</span>
+            <span class="detail">Forked from Loglan. Predicate logic grammar; no syntactic ambiguity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artistic Languages -->
+      <div class="era era-artistic">
+        <div class="era-label">Artistic</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">1910s-73</span>
+            <span class="name">Tolkien's Languages</span>
+            <span class="detail">Quenya, Sindarin: fiction-driven conlangs with etymological depth</span>
+          </div>
+          <div class="event">
+            <span class="year">2001</span>
+            <span class="name">Toki Pona</span>
+            <span class="detail">Sonja Lang. ~120 words; Daoist minimalism as language design</span>
+          </div>
+          <div class="event">
+            <span class="year">2005-09</span>
+            <span class="name">Na'vi / Dothraki</span>
+            <span class="detail">Hollywood conlangs by Frommer and Peterson</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modern Era -->
+      <div class="era era-modern">
+        <div class="era-label">Modern</div>
+        <div class="dot"></div>
+        <div class="event-group">
+          <div class="event">
+            <span class="year">2007</span>
+            <span class="name">Language Creation Society</span>
+            <span class="detail">Conlanging becomes organized community</span>
+          </div>
+          <div class="event">
+            <span class="year">2010s+</span>
+            <span class="name">Internet Conlang Boom</span>
+            <span class="detail">Thousands of conlangs; subreddits, Fiat Lingua journal, online tools</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#f3e8ff; border-color:#7c3aed;"></div> Medieval Precursors</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#dbeafe; border-color:#2563eb;"></div> Philosophical Languages</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ccfbf1; border-color:#0891b2;"></div> International Auxiliary</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#dcfce7; border-color:#16a34a;"></div> Logical Languages</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fef3c7; border-color:#d97706;"></div> Artistic Languages</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fee2e2; border-color:#dc2626;"></div> Modern Era</div>
+  </div>
+  <figcaption>
+    <strong>Figure 1: Timeline of Constructed Languages (c. 1150 -- Present)</strong>
+    <span>Nine centuries of linguistic engineering, from Hildegard von Bingen's mystical Lingua Ignota through the Scientific Revolution's philosophical languages, the 19th-century international auxiliary movement, mid-20th-century logical experiments, Tolkien's artistic conlangs, and into the modern era of community-driven language creation. Each era reflects a different motivation -- divine revelation, scientific taxonomy, international peace, logical precision, artistic expression, or creative play -- but all share the dream of improving on natural language. The most successful conlangs (Esperanto, Tolkien's languages) are those that embraced rather than eliminated natural-language features like irregularity and cultural evolution.</span>
+  </figcaption>
+</figure>
+</body>
+</html>
