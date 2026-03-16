@@ -409,6 +409,11 @@
       --card-color-dark: #0E7490;
     }
 
+    .card[data-category="language"] {
+      --card-color: #D946EF;
+      --card-color-dark: #C026D3;
+    }
+
     /* Footer */
     .footer {
       background: var(--color-bg);
@@ -555,6 +560,97 @@
       }
     }
 
+    /* Search */
+    .search-wrapper {
+      margin-top: 1.5rem;
+      position: relative;
+      max-width: 500px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 0.9375rem;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .search-input:focus {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.7;
+      pointer-events: none;
+      color: white;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-clear.visible {
+      display: flex;
+    }
+
+    .search-clear:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    .card.search-hidden {
+      display: none;
+    }
+
+    .search-no-results {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--color-text-light);
+      font-size: 1rem;
+    }
+
+    .search-no-results.visible {
+      display: block;
+    }
+
+    .search-highlight {
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 2px;
+    }
+
+    [data-theme="dark"] .search-highlight {
+      background: rgba(129, 140, 248, 0.3);
+    }
+
     @media print {
       .theme-toggle, .sidebar-toggle, .sidebar { display: none; }
       .main { margin-left: 0; }
@@ -631,6 +727,12 @@
           <span class="sidebar-link-count" id="count-geopolitics">3</span>
         </button>
 
+        <button class="sidebar-link" data-filter="language" onclick="filterCategory('language')">
+          <span class="sidebar-link-icon">🗣️</span>
+          <span>Language & Linguistics</span>
+          <span class="sidebar-link-count" id="count-language">1</span>
+        </button>
+
         <div class="sidebar-section">
           <div class="sidebar-section-title">Content Type</div>
         </div>
@@ -663,10 +765,18 @@
               <div class="header-stat-label">Categories</div>
             </div>
           </div>
+          <div class="search-wrapper">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" class="search-input" id="search-input" placeholder="Search articles, topics, keywords..." autocomplete="off" />
+            <button class="search-clear" id="search-clear" onclick="clearSearch()">&times;</button>
+          </div>
         </div>
       </header>
 
       <div class="container">
+        <div class="search-no-results" id="search-no-results">
+          No articles match your search. Try different keywords.
+        </div>
         <!-- Health & Wellness Section -->
         <section class="category-section" data-section="health">
           <div class="category-header">
@@ -1640,6 +1750,7 @@
         'economics': 'Economics',
         'history': 'History',
         'geopolitics': 'Geopolitics',
+        'language': 'Language & Linguistics',
         'dashboard': 'Data Dashboards'
       };
       document.getElementById('page-title').textContent = titles[category] || 'Research Library';
@@ -1679,6 +1790,7 @@
         economics: document.querySelectorAll('[data-section="economics"] .card').length,
         history: document.querySelectorAll('[data-section="history"] .card').length,
         geopolitics: document.querySelectorAll('[data-section="geopolitics"] .card').length,
+        language: document.querySelectorAll('[data-section="language"] .card').length,
         dashboard: document.querySelectorAll('[data-section="dashboard"] .card').length
       };
 
@@ -1691,11 +1803,145 @@
       document.getElementById('count-economics').textContent = counts.economics;
       document.getElementById('count-history').textContent = counts.history;
       document.getElementById('count-geopolitics').textContent = counts.geopolitics;
+      document.getElementById('count-language').textContent = counts.language;
       document.getElementById('count-dashboard').textContent = counts.dashboard;
 
       document.getElementById('article-count').textContent = total - counts.dashboard;
       document.getElementById('dashboard-count').textContent = counts.dashboard;
+
+      // Search setup
+      const searchInput = document.getElementById('search-input');
+      const searchClear = document.getElementById('search-clear');
+      let searchTimeout;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => performSearch(searchInput.value), 150);
+        searchClear.classList.toggle('visible', searchInput.value.length > 0);
+      });
     });
+
+    // Fuzzy match: checks if all characters of the query appear in order within the text
+    // Returns { match: boolean, score: number, indices: number[] }
+    function fuzzyMatch(query, text) {
+      query = query.toLowerCase();
+      text = text.toLowerCase();
+      const queryLen = query.length;
+      const textLen = text.length;
+      if (queryLen === 0) return { match: true, score: 0, indices: [] };
+      if (queryLen > textLen) return { match: false, score: 0, indices: [] };
+
+      // First check: exact substring match (highest priority)
+      const exactIdx = text.indexOf(query);
+      if (exactIdx !== -1) {
+        const indices = [];
+        for (let i = 0; i < queryLen; i++) indices.push(exactIdx + i);
+        return { match: true, score: queryLen * 3 + 100, indices };
+      }
+
+      // Word-start bonus matching
+      let qi = 0;
+      let score = 0;
+      const indices = [];
+      let lastMatchIdx = -1;
+
+      for (let ti = 0; ti < textLen && qi < queryLen; ti++) {
+        if (text[ti] === query[qi]) {
+          indices.push(ti);
+          // Consecutive character bonus
+          if (ti === lastMatchIdx + 1) score += 3;
+          // Word-start bonus (first char or after space/hyphen/paren)
+          if (ti === 0 || ' -(/'.includes(text[ti - 1])) score += 5;
+          // General match point
+          score += 1;
+          lastMatchIdx = ti;
+          qi++;
+        }
+      }
+
+      if (qi === queryLen) {
+        // Penalize spread (matches far apart are worse)
+        const spread = indices[indices.length - 1] - indices[0];
+        score -= spread * 0.1;
+        return { match: true, score, indices };
+      }
+
+      return { match: false, score: 0, indices: [] };
+    }
+
+    function performSearch(query) {
+      query = query.trim();
+      const cards = document.querySelectorAll('.card');
+      const sections = document.querySelectorAll('.category-section');
+      const noResults = document.getElementById('search-no-results');
+
+      if (!query) {
+        // Reset: show all cards, respect current category filter
+        cards.forEach(card => card.classList.remove('search-hidden'));
+        sections.forEach(s => s.classList.remove('hidden'));
+        noResults.classList.remove('visible');
+        // Re-apply active category filter
+        const activeFilter = document.querySelector('.sidebar-link.active');
+        if (activeFilter && activeFilter.dataset.filter !== 'all') {
+          filterCategory(activeFilter.dataset.filter);
+        }
+        return;
+      }
+
+      // Reset category filter to "all" when searching
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.filter === 'all');
+      });
+      sections.forEach(s => s.classList.remove('hidden'));
+      document.getElementById('page-title').textContent = 'Research Library';
+
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title')?.textContent || '';
+        const desc = card.querySelector('.card-description')?.textContent || '';
+        const tags = Array.from(card.querySelectorAll('.card-tag')).map(t => t.textContent).join(' ');
+        const type = card.querySelector('.card-type')?.textContent || '';
+        const searchText = `${title} ${desc} ${tags} ${type}`;
+
+        // Split query into words and fuzzy match each
+        const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+        let allMatch = true;
+        let totalScore = 0;
+
+        for (const word of words) {
+          const result = fuzzyMatch(word, searchText);
+          if (!result.match) {
+            allMatch = false;
+            break;
+          }
+          totalScore += result.score;
+        }
+
+        if (allMatch) {
+          card.classList.remove('search-hidden');
+          card.style.order = Math.round(-totalScore);
+          visibleCount++;
+        } else {
+          card.classList.add('search-hidden');
+        }
+      });
+
+      // Hide sections with no visible cards
+      sections.forEach(section => {
+        const visibleCards = section.querySelectorAll('.card:not(.search-hidden)');
+        section.classList.toggle('hidden', visibleCards.length === 0);
+      });
+
+      noResults.classList.toggle('visible', visibleCount === 0);
+    }
+
+    function clearSearch() {
+      const searchInput = document.getElementById('search-input');
+      searchInput.value = '';
+      document.getElementById('search-clear').classList.remove('visible');
+      performSearch('');
+      searchInput.focus();
+    }
   </script>
 </body>
 </html>
