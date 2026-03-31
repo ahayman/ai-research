@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article Selection Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #4361ee; --accent-light: #e8edff;
+    --def: #3b82f6; --def-bg: #dbeafe;
+    --indef: #22c55e; --indef-bg: #dcfce7;
+    --part: #8b5cf6; --part-bg: #ede9fe;
+    --neg: #ef4444; --neg-bg: #fee2e2;
+    --quant: #f59e0b; --quant-bg: #fef3c7;
+    --english: #6c757d; --english-bg: #f8f9fa;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --accent-light: #1e2a4a;
+      --def: #60a5fa; --def-bg: #1e3a5f;
+      --indef: #4ade80; --indef-bg: #14532d;
+      --part: #a78bfa; --part-bg: #2e1a5e;
+      --neg: #f87171; --neg-bg: #5c1a1a;
+      --quant: #fbbf24; --quant-bg: #78350f;
+      --english: #9a9ab0; --english-bg: #1a1a2e;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem 1rem; overflow-x: auto;
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  svg { display: block; margin: 0 auto; }
+  .title-text { font: bold 14px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+  .label { font: 11px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+  .label-bold { font: bold 11px 'Segoe UI', system-ui, sans-serif; }
+  .label-sm { font: 10px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+  .word { font: bold 14px 'Segoe UI', system-ui, sans-serif; }
+  .legend { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; font-size: 0.82rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <svg viewBox="0 0 1060 730" xmlns="http://www.w3.org/2000/svg" style="min-width:780px;">
+      <text x="530" y="25" text-anchor="middle" class="title-text" style="font-size:16px;">Article Selection Decision Tree</text>
+      <text x="530" y="42" text-anchor="middle" class="label-sm" style="font-size:11px;">French has NO bare nouns -- every noun needs an article. This tree picks the right one.</text>
+
+      <!-- ENTRY -->
+      <rect x="380" y="55" width="300" height="35" rx="17" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="530" y="77" text-anchor="middle" class="label-bold" fill="var(--accent)">What kind of noun phrase?</text>
+
+      <!-- BRANCH 1: SPECIFIC/KNOWN -->
+      <line x1="430" y1="90" x2="200" y2="120" stroke="var(--def)" stroke-width="2"/>
+      <rect x="50" y="108" width="300" height="55" rx="8" fill="var(--def-bg)" stroke="var(--def)" stroke-width="2"/>
+      <text x="200" y="128" text-anchor="middle" class="label-bold" fill="var(--def)">Specific / identified noun?</text>
+      <text x="200" y="145" text-anchor="middle" class="word" fill="var(--def)">le / la / l' / les</text>
+      <text x="200" y="158" text-anchor="middle" class="label-sm">"Le chat dort" = The cat sleeps</text>
+
+      <!-- EN comparison inline -->
+      <text x="200" y="175" text-anchor="middle" class="label-sm" fill="var(--english)">EN: "the" (same pattern)</text>
+
+      <!-- BRANCH 2: GENERIC -->
+      <line x1="530" y1="90" x2="530" y2="120" stroke="var(--def)" stroke-width="2"/>
+      <rect x="380" y="108" width="300" height="55" rx="8" fill="var(--def-bg)" stroke="var(--def)" stroke-width="2"/>
+      <text x="530" y="128" text-anchor="middle" class="label-bold" fill="var(--def)">Generic / category as a whole?</text>
+      <text x="530" y="145" text-anchor="middle" class="word" fill="var(--def)">le / la / les (DEFINITE!)</text>
+      <text x="530" y="158" text-anchor="middle" class="label-sm">"J'aime le chocolat" = I like chocolate</text>
+
+      <rect x="410" y="168" width="240" height="22" rx="4" fill="var(--neg-bg)" stroke="var(--neg)" stroke-width="1"/>
+      <text x="530" y="183" text-anchor="middle" class="label-bold" fill="var(--neg)">TRAP: English uses NO article here!</text>
+
+      <!-- BRANCH 3: INDEFINITE COUNTABLE -->
+      <line x1="630" y1="90" x2="860" y2="120" stroke="var(--indef)" stroke-width="2"/>
+      <rect x="710" y="108" width="300" height="55" rx="8" fill="var(--indef-bg)" stroke="var(--indef)" stroke-width="2"/>
+      <text x="860" y="128" text-anchor="middle" class="label-bold" fill="var(--indef)">Indefinite countable thing?</text>
+      <text x="860" y="145" text-anchor="middle" class="word" fill="var(--indef)">un / une / des</text>
+      <text x="860" y="158" text-anchor="middle" class="label-sm">"J'ai un chat" = I have a cat</text>
+      <text x="860" y="175" text-anchor="middle" class="label-sm" fill="var(--english)">EN: "a/an" (sg.) or no article (pl.)</text>
+
+      <!-- BRANCH 4: PARTITIVE -->
+      <line x1="530" y1="200" x2="530" y2="225" stroke="var(--part)" stroke-width="2"/>
+      <rect x="340" y="215" width="380" height="60" rx="8" fill="var(--part-bg)" stroke="var(--part)" stroke-width="2"/>
+      <text x="530" y="235" text-anchor="middle" class="label-bold" fill="var(--part)">Indefinite uncountable / abstract / "some" quantity?</text>
+      <text x="530" y="255" text-anchor="middle" class="word" fill="var(--part)">du / de la / de l'</text>
+      <text x="530" y="270" text-anchor="middle" class="label-sm">"Je bois du cafe" = I drink coffee</text>
+
+      <rect x="400" y="278" width="260" height="22" rx="4" fill="var(--neg-bg)" stroke="var(--neg)" stroke-width="1"/>
+      <text x="530" y="293" text-anchor="middle" class="label-bold" fill="var(--neg)">TRAP: English uses NO article here too!</text>
+
+      <!-- MODIFICATION RULES -->
+      <text x="530" y="325" text-anchor="middle" class="title-text" fill="var(--accent)">Modification Rules (apply AFTER selecting article)</text>
+
+      <!-- NEGATION -->
+      <rect x="30" y="340" width="490" height="90" rx="10" fill="var(--neg-bg)" stroke="var(--neg)" stroke-width="1.5"/>
+      <text x="275" y="358" text-anchor="middle" class="label-bold" fill="var(--neg)">AFTER NEGATION: indefinite + partitive -> de/d'</text>
+
+      <text x="45" y="378" text-anchor="start" class="label" fill="var(--fg)">un/une/des -> de: "Je n'ai pas de chat"</text>
+      <text x="45" y="394" text-anchor="start" class="label" fill="var(--fg)">du/de la -> de: "Je ne bois pas de cafe"</text>
+      <text x="45" y="412" text-anchor="start" class="label-bold" fill="var(--neg)">EXCEPTION: le/la/les do NOT change: "Je n'aime pas le cafe"</text>
+      <text x="45" y="424" text-anchor="start" class="label-bold" fill="var(--neg)">EXCEPTION: after etre: "Ce n'est pas un probleme"</text>
+
+      <!-- QUANTITY -->
+      <rect x="540" y="340" width="490" height="90" rx="10" fill="var(--quant-bg)" stroke="var(--quant)" stroke-width="1.5"/>
+      <text x="785" y="358" text-anchor="middle" class="label-bold" fill="var(--quant)">AFTER QUANTITY EXPRESSIONS: use de alone</text>
+
+      <text x="555" y="378" text-anchor="start" class="label" fill="var(--fg)">beaucoup de livres (many books)</text>
+      <text x="555" y="394" text-anchor="start" class="label" fill="var(--fg)">un peu de sucre (a little sugar)</text>
+      <text x="555" y="410" text-anchor="start" class="label" fill="var(--fg)">assez de temps (enough time), trop de problemes</text>
+      <text x="555" y="424" text-anchor="start" class="label-bold" fill="var(--quant)">EXCEPTION: la plupart des (most of the) keeps article</text>
+
+      <!-- ADJ BEFORE PLURAL NOUN -->
+      <rect x="30" y="445" width="490" height="50" rx="10" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="275" y="463" text-anchor="middle" class="label-bold" fill="var(--accent)">ADJ BEFORE PLURAL NOUN: des -> de/d'</text>
+      <text x="275" y="480" text-anchor="middle" class="label" fill="var(--fg)">"J'ai de bons amis" (not *"des bons amis") -- declining in spoken FR</text>
+
+      <!-- PARALLEL EXAMPLES -->
+      <g transform="translate(30, 510)">
+        <rect x="0" y="0" width="1000" height="100" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="500" y="18" text-anchor="middle" class="title-text" fill="var(--accent)" style="font-size:12px;">PARALLEL EXAMPLES: Same Noun, Different Articles</text>
+
+        <text x="20" y="40" text-anchor="start" class="label-bold" fill="var(--def)">Specific:</text>
+        <text x="100" y="40" text-anchor="start" class="label" fill="var(--fg)">"Je vois le cafe" (I see the cafe)</text>
+        <text x="450" y="40" text-anchor="start" class="label-sm" fill="var(--english)">EN: "the cafe"</text>
+
+        <text x="20" y="56" text-anchor="start" class="label-bold" fill="var(--def)">Generic:</text>
+        <text x="100" y="56" text-anchor="start" class="label" fill="var(--fg)">"J'aime le cafe" (I like coffee [in general])</text>
+        <text x="450" y="56" text-anchor="start" class="label-sm" fill="var(--neg)">EN: no article! "I like coffee"</text>
+
+        <text x="20" y="72" text-anchor="start" class="label-bold" fill="var(--part)">Partitive:</text>
+        <text x="100" y="72" text-anchor="start" class="label" fill="var(--fg)">"Je bois du cafe" (I drink [some] coffee)</text>
+        <text x="450" y="72" text-anchor="start" class="label-sm" fill="var(--neg)">EN: no article! "I drink coffee"</text>
+
+        <text x="20" y="88" text-anchor="start" class="label-bold" fill="var(--neg)">Negated:</text>
+        <text x="100" y="88" text-anchor="start" class="label" fill="var(--fg)">"Je ne bois pas de cafe" (I don't drink coffee)</text>
+        <text x="450" y="88" text-anchor="start" class="label-sm" fill="var(--english)">EN: still no article. "I don't drink coffee"</text>
+      </g>
+
+      <!-- ENGLISH COMPARISON -->
+      <g transform="translate(30, 625)">
+        <rect x="0" y="0" width="1000" height="80" rx="10" fill="var(--english-bg)" stroke="var(--english)" stroke-width="1.5"/>
+        <text x="500" y="18" text-anchor="middle" class="title-text" fill="var(--english)" style="font-size:12px;">ENGLISH COMPARISON: Two Most Common Errors</text>
+        <text x="15" y="40" text-anchor="start" class="label-bold" fill="var(--neg)">Error 1: Using no article for generic nouns.</text>
+        <text x="15" y="54" text-anchor="start" class="label" fill="var(--fg)">*"J'aime cafe" -- WRONG. French requires: "J'aime le cafe" (definite for generic)</text>
+        <text x="15" y="72" text-anchor="start" class="label-bold" fill="var(--neg)">Error 2: Using no article for partitive nouns.</text>
+        <text x="15" y="86" text-anchor="start" class="label" fill="var(--fg)">*"Je bois cafe" -- WRONG. French requires: "Je bois du cafe" (partitive for uncountable)</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--def-bg);border-color:var(--def);"></div> Definite (le/la/les)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--indef-bg);border-color:var(--indef);"></div> Indefinite (un/une/des)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--part-bg);border-color:var(--part);"></div> Partitive (du/de la)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--neg-bg);border-color:var(--neg);"></div> Negation / traps</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--quant-bg);border-color:var(--quant);"></div> Quantity expressions</div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 7 -- Article Selection Decision Tree</h2>
+    <p>French requires an article before virtually every noun -- there are no bare nouns. This decision tree systematizes the choice: definite for specific and generic, indefinite for countable, partitive for uncountable. After negation, indefinite and partitive collapse to "de." The two most common English-speaker errors are using no article for generic nouns (French uses definite) and for partitive nouns (French uses du/de la), because English uses nothing where French requires a specific form.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

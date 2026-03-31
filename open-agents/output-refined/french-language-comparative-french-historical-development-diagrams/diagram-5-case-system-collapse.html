@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case System Collapse -- Latin to Modern French (with English Parallel)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --accent-shared: #8b5cf6;
+    --accent-shared-bg: #f5f3ff;
+    --lost: #e63946;
+    --lost-bg: #fef2f2;
+    --survived: #10b981;
+    --survived-bg: #ecfdf5;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --accent-shared: #a78bfa;
+      --accent-shared-bg: #1e1b3a;
+      --lost: #f87171;
+      --lost-bg: #2a1215;
+      --survived: #34d399;
+      --survived-bg: #132e24;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .progression {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr 40px 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 2rem;
+  }
+  .stage {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .stage.fr-stage { border-color: var(--accent-fr); }
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .stage-header .tag {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .tag-fr { background: var(--accent-fr-bg); color: var(--accent-fr); }
+  .stage-title { font-size: 1rem; font-weight: 700; }
+  .stage-cases { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .case-count { font-size: 1.8rem; font-weight: 800; color: var(--accent-fr); }
+
+  .paradigm {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+  }
+  .paradigm th {
+    padding: 0.3rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .paradigm td {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .paradigm .lost-form {
+    color: var(--lost);
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  .paradigm .survived-form {
+    color: var(--survived);
+    font-weight: 700;
+  }
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--muted);
+  }
+
+  .survivors-box {
+    border: 2px solid var(--survived);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .survivors-box h3 { font-size: 0.95rem; color: var(--survived); margin-bottom: 0.8rem; text-align: center; }
+  .survivor-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+  .survivor-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .survivor-card .s-nom { font-weight: 700; color: var(--survived); }
+  .survivor-card .s-obl { color: var(--lost); font-size: 0.75rem; text-decoration: line-through; }
+  .survivor-card .s-note { font-size: 0.72rem; color: var(--muted); }
+
+  .consequence-box {
+    border: 2px solid var(--accent-shared);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    background: var(--accent-shared-bg);
+  }
+  .consequence-box h3 { font-size: 0.95rem; color: var(--accent-shared); margin-bottom: 0.8rem; text-align: center; }
+  .consequence-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 0;
+    align-items: center;
+  }
+  .conseq-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .conseq-arrow { text-align: center; font-size: 1.3rem; color: var(--accent-shared); }
+
+  .en-parallel {
+    margin-top: 1.5rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-parallel h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-parallel p { font-size: 0.88rem; }
+  .en-paradigm-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 0;
+    align-items: center;
+    margin-top: 0.8rem;
+  }
+  .en-paradigm {
+    border: 1px solid var(--accent-en);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .progression { grid-template-columns: 1fr; gap: 0.5rem; }
+    .arrow-col { transform: rotate(90deg); padding: 0.3rem 0; }
+    .survivor-grid { grid-template-columns: repeat(3, 1fr); }
+    .consequence-grid { grid-template-columns: 1fr; gap: 0.3rem; }
+    .en-paradigm-row { grid-template-columns: 1fr; gap: 0.3rem; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Case System Collapse</h2>
+  <p class="subtitle">Latin (6 cases) -> Old French (2 cases) -> Modern French (0 cases) -- a parallel trajectory to English</p>
+
+  <div class="progression">
+    <div class="stage fr-stage">
+      <div class="stage-header"><span class="tag tag-fr">Latin</span></div>
+      <div class="stage-title">Classical Latin</div>
+      <div class="case-count">6 cases</div>
+      <table class="paradigm">
+        <thead><tr><th>Case</th><th>Form</th><th>Function</th></tr></thead>
+        <tbody>
+          <tr><td>Nominative</td><td>murus</td><td>Subject</td></tr>
+          <tr><td>Genitive</td><td class="lost-form">muri</td><td class="lost-form">Possession</td></tr>
+          <tr><td>Dative</td><td class="lost-form">muro</td><td class="lost-form">Indirect object</td></tr>
+          <tr><td>Accusative</td><td>murum</td><td>Direct object</td></tr>
+          <tr><td>Ablative</td><td class="lost-form">muro</td><td class="lost-form">Instrument/means</td></tr>
+          <tr><td>Vocative</td><td class="lost-form">mure</td><td class="lost-form">Direct address</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="arrow-col">&#10132;</div>
+
+    <div class="stage fr-stage">
+      <div class="stage-header"><span class="tag tag-fr">Old French</span></div>
+      <div class="stage-title">9th-14th Century</div>
+      <div class="case-count">2 cases</div>
+      <table class="paradigm">
+        <thead><tr><th>Case</th><th>Singular</th><th>Plural</th></tr></thead>
+        <tbody>
+          <tr><td>Cas sujet (nom.)</td><td class="lost-form">li murs</td><td class="lost-form">li mur</td></tr>
+          <tr><td>Cas regime (obl.)</td><td class="survived-form">le mur</td><td class="survived-form">les murs</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">Primarily marked in masculine nouns. Allowed flexible word order. Collapsed by early 14th century.</p>
+    </div>
+
+    <div class="arrow-col">&#10132;</div>
+
+    <div class="stage fr-stage">
+      <div class="stage-header"><span class="tag tag-fr">Modern French</span></div>
+      <div class="stage-title">17th Century - Present</div>
+      <div class="case-count">0 cases</div>
+      <table class="paradigm">
+        <thead><tr><th>Form</th><th>Singular</th><th>Plural</th></tr></thead>
+        <tbody>
+          <tr><td>Default</td><td class="survived-form">le mur</td><td class="survived-form">les murs</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">Oblique form survived as default. Word order fixes to SVO. Prepositions replace case functions (de = genitive, a = dative).</p>
+    </div>
+  </div>
+
+  <div class="survivors-box">
+    <h3>Nominative Survivors -- Fossils from the Lost Case System</h3>
+    <div class="survivor-grid">
+      <div class="survivor-card">
+        <div class="s-nom">sire</div>
+        <div class="s-obl">seigneur</div>
+        <div class="s-note">Both survive with different meanings</div>
+      </div>
+      <div class="survivor-card">
+        <div class="s-nom">soeur</div>
+        <div class="s-obl">seror</div>
+        <div class="s-note">Nominative won</div>
+      </div>
+      <div class="survivor-card">
+        <div class="s-nom">fils</div>
+        <div class="s-obl">*fil</div>
+        <div class="s-note">Nominative won</div>
+      </div>
+      <div class="survivor-card">
+        <div class="s-nom">on</div>
+        <div class="s-obl">homme</div>
+        <div class="s-note">Both survive: on (pronoun), homme (noun)</div>
+      </div>
+      <div class="survivor-card">
+        <div class="s-nom">pretre</div>
+        <div class="s-obl">provoire</div>
+        <div class="s-note">Nominative won</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="consequence-box">
+    <h3>The Cascade Effect: Case Loss -> Word Order Rigidification</h3>
+    <div class="consequence-grid">
+      <div class="conseq-card">
+        <strong>With Cases</strong><br>
+        Word order flexible. "Le roi aime la reine" and "La reine aime le roi" both possible -- case marking tells you who is subject.<br>
+        <em style="font-size:0.78rem;color:var(--muted);">Latin: Regem regina amat = The queen loves the king (cases mark roles)</em>
+      </div>
+      <div class="conseq-arrow">&#10132;</div>
+      <div class="conseq-card">
+        <strong>Without Cases</strong><br>
+        Word order MUST be fixed to SVO. "Le roi aime la reine" = The king loves the queen. Word order is the ONLY signal of who does what.<br>
+        <em style="font-size:0.78rem;color:var(--muted);">Prepositions replace case: de (genitive), a (dative)</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-parallel">
+    <h4>ENGLISH PARALLEL -- The Same Trajectory, Different Timing</h4>
+    <p>English underwent the same case collapse but earlier and more completely:</p>
+    <div class="en-paradigm-row">
+      <div class="en-paradigm">
+        <strong>Old English (4 cases)</strong><br>
+        stan (nom) / stanes (gen) / stane (dat) / stan (acc)<br>
+        <em style="font-size:0.78rem;">Collapsed 11th-12th centuries</em>
+      </div>
+      <div class="conseq-arrow" style="color:var(--accent-en);">&#10132;</div>
+      <div class="en-paradigm">
+        <strong>Modern English (~0 cases)</strong><br>
+        stone / stone's (possessive clitic)<br>
+        <em style="font-size:0.78rem;">Only pronouns retain case: I/me, he/him, she/her</em>
+      </div>
+    </div>
+    <p style="margin-top:0.8rem;"><strong>The pattern:</strong> Latin (6 cases) -> Old French (2 cases, lost 13th-14th C.) -> Modern French (0). Old English (4 cases, lost 11th-12th C.) -> Modern English (0, except pronouns). Both languages followed the same structural trajectory -- synthetic to analytic -- but French's case loss happened later. The Norman Conquest may have accelerated English's loss through contact with caseless Norman French.</p>
+  </div>
+
+  <figcaption>
+    Case loss is not random decay but a structural transformation: morphological complexity (case endings) is replaced by syntactic complexity (fixed word order + prepositions). Both French and English made this trade -- exchanging inflectional flexibility for positional clarity.
+  </figcaption>
+</figure>
+</body>
+</html>

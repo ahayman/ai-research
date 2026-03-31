@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The ~80% Predictability Map (Lyster 2006)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --fem-color: #ec4899;
+    --fem-bg: #fdf2f8;
+    --masc-color: #3b82f6;
+    --masc-bg: #eff6ff;
+    --unpred-color: #6b7280;
+    --unpred-bg: #f3f4f6;
+    --except-color: #f59e0b;
+    --except-bg: #fffbeb;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --fem-color: #f472b6;
+      --fem-bg: #2a1525;
+      --masc-color: #60a5fa;
+      --masc-bg: #1e293b;
+      --unpred-color: #9ca3af;
+      --unpred-bg: #1f2937;
+      --except-color: #fbbf24;
+      --except-bg: #2a2510;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .source-line { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 2rem; font-style: italic; }
+
+  .stat-bar {
+    display: flex;
+    height: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    border: 2px solid var(--border);
+  }
+  .stat-segment { display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #fff; }
+  .stat-predictable { background: linear-gradient(90deg, var(--masc-color), var(--fem-color)); width: 80%; }
+  .stat-unpredictable { background: var(--unpred-color); width: 20%; }
+  .stat-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .gender-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .gender-col {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .gender-col.masc { border-color: var(--masc-color); }
+  .gender-col.fem { border-color: var(--fem-color); }
+  .gender-col h3 { font-size: 1rem; margin-bottom: 0.8rem; }
+  .gender-col.masc h3 { color: var(--masc-color); }
+  .gender-col.fem h3 { color: var(--fem-color); }
+
+  .ending-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .ending-suffix {
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    min-width: 70px;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .masc .ending-suffix { background: var(--masc-bg); color: var(--masc-color); }
+  .fem .ending-suffix { background: var(--fem-bg); color: var(--fem-color); }
+  .ending-examples { color: var(--muted); font-size: 0.78rem; flex: 1; }
+  .ending-reliability { font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+  .masc .ending-reliability { color: var(--masc-color); }
+  .fem .ending-reliability { color: var(--fem-color); }
+
+  .exceptions {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--except-bg);
+    border: 2px solid var(--except-color);
+    border-radius: 10px;
+  }
+  .exceptions h3 { font-size: 0.95rem; color: var(--except-color); margin-bottom: 0.5rem; }
+  .exception-list { font-size: 0.82rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; }
+  .exception-item { padding: 0.2rem 0; }
+  .exception-item .wrong { text-decoration: line-through; opacity: 0.6; }
+
+  .unpredictable {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--unpred-bg);
+    border: 2px solid var(--unpred-color);
+    border-radius: 10px;
+  }
+  .unpredictable h3 { font-size: 0.95rem; color: var(--unpred-color); margin-bottom: 0.5rem; }
+  .unpredictable p { font-size: 0.82rem; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .gender-columns { grid-template-columns: 1fr; }
+    .exception-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The ~80% Predictability Map</h2>
+  <p class="subtitle">French gender is far more systematic than its reputation suggests.</p>
+  <p class="source-line">Based on Lyster (2006), corpus of 9,961 nouns from Le Robert Junior Illustr&eacute;</p>
+
+  <!-- Overall stat bar -->
+  <div class="stat-bar">
+    <div class="stat-segment stat-predictable">~80% predictable from ending</div>
+    <div class="stat-segment stat-unpredictable">~20%</div>
+  </div>
+  <div class="stat-labels">
+    <span>81% of feminine nouns + 80% of masculine nouns have reliable ending patterns (90%+ accuracy)</span>
+    <span>Must learn individually</span>
+  </div>
+
+  <!-- Two columns -->
+  <div class="gender-columns">
+    <div class="gender-col masc">
+      <h3>Masculine Endings (80% of masc. nouns)</h3>
+      <div class="ending-row">
+        <span class="ending-suffix">-ment</span>
+        <span class="ending-examples">gouvernement, moment, appartement</span>
+        <span class="ending-reliability">~99%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-age</span>
+        <span class="ending-examples">fromage, voyage, garage, village</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-eau</span>
+        <span class="ending-examples">bateau, ch&acirc;teau, chapeau, g&acirc;teau</span>
+        <span class="ending-reliability">~98%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-isme</span>
+        <span class="ending-examples">capitalisme, tourisme, r&eacute;alisme</span>
+        <span class="ending-reliability">~100%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-al</span>
+        <span class="ending-examples">animal, journal, h&ocirc;pital</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-et</span>
+        <span class="ending-examples">billet, cabinet, secret</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-in</span>
+        <span class="ending-examples">jardin, matin, cousin</span>
+        <span class="ending-reliability">~90%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ent/-ant</span>
+        <span class="ending-examples">moment, restaurant, accent</span>
+        <span class="ending-reliability">~90%</span>
+      </div>
+    </div>
+
+    <div class="gender-col fem">
+      <h3>Feminine Endings (81% of fem. nouns)</h3>
+      <div class="ending-row">
+        <span class="ending-suffix">-tion/-sion</span>
+        <span class="ending-examples">information, d&eacute;cision, nation</span>
+        <span class="ending-reliability">~99%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ence/-ance</span>
+        <span class="ending-examples">patience, importance, science</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ie</span>
+        <span class="ending-examples">philosophie, biologie, &eacute;nergie</span>
+        <span class="ending-reliability">~98%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-&eacute;e</span>
+        <span class="ending-examples">journ&eacute;e, id&eacute;e, arriv&eacute;e</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ette</span>
+        <span class="ending-examples">bicyclette, cigarette, baguette</span>
+        <span class="ending-reliability">~99%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ure</span>
+        <span class="ending-examples">nature, culture, aventure, voiture</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-sse</span>
+        <span class="ending-examples">adresse, finesse, jeunesse</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+      <div class="ending-row">
+        <span class="ending-suffix">-ise/-ade</span>
+        <span class="ending-examples">surprise, entreprise, salade</span>
+        <span class="ending-reliability">~95%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notable exceptions -->
+  <div class="exceptions">
+    <h3>Notable Exceptions (the traps)</h3>
+    <div class="exception-list">
+      <div class="exception-item"><strong>le mus&eacute;e</strong> (museum) -- MASC despite -&eacute;e ending</div>
+      <div class="exception-item"><strong>la plage</strong> (beach) -- FEM despite -age ending</div>
+      <div class="exception-item"><strong>l'image</strong> (image) -- FEM despite -age ending</div>
+      <div class="exception-item"><strong>la page</strong> (page) -- FEM despite -age ending</div>
+      <div class="exception-item"><strong>la fleur</strong> (flower) -- FEM despite -eur ending</div>
+      <div class="exception-item"><strong>la douleur</strong> (pain) -- FEM despite -eur ending</div>
+    </div>
+  </div>
+
+  <!-- Unpredictable -->
+  <div class="unpredictable">
+    <h3>The Remaining ~20%: Learn Individually</h3>
+    <p>Nouns ending in plain <strong>-e</strong> (without a longer suffix) are the worst offenders: <em>la table, le livre, la route, le monde</em>. Also mixed: <strong>-oire</strong> endings (<em>le territoire, la gloire</em>). These ~20% include many high-frequency words, so while the rules cover 80% of nouns by count, the first 500 words a learner encounters will have a higher proportion of irregulars.</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 2: The ~80% Predictability Map (Lyster 2006)</strong>
+    <span>Lyster's 2006 corpus analysis of 9,961 French nouns revealed that approximately 80% have noun endings that predict their gender at 90%+ reliability. This means gender assignment, while arbitrary at the semantic level, is systematic at the morphophonological level. The -tion/-sion endings are nearly 100% feminine. The -ment and -isme endings are nearly 100% masculine. This systematic predictability rewards pattern-recognition approaches to learning French gender.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

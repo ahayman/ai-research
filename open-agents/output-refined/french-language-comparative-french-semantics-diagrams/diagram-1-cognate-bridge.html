@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cognate Bridge -- ~1,700 Near-Identical Words</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --fr-color: #3b82f6;
+    --fr-bg: #eff6ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --shared-color: #8b5cf6;
+    --shared-bg: #f5f3ff;
+    --hist-color: #f59e0b;
+    --hist-bg: #fffbeb;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --fr-color: #60a5fa;
+      --fr-bg: #1e293b;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --shared-color: #a78bfa;
+      --shared-bg: #1e1b3a;
+      --hist-color: #fbbf24;
+      --hist-bg: #2a2510;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Overlap visualization */
+  .overlap-viz {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    position: relative;
+    height: 200px;
+  }
+  .circle {
+    width: 260px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 0.82rem;
+    position: absolute;
+  }
+  .circle.fr {
+    background: rgba(59, 130, 246, 0.12);
+    border: 2px solid var(--fr-color);
+    left: calc(50% - 200px);
+  }
+  .circle.en {
+    background: rgba(16, 185, 129, 0.12);
+    border: 2px solid var(--en-color);
+    right: calc(50% - 200px);
+  }
+  .circle .circle-label { font-weight: 700; font-size: 0.95rem; }
+  .circle.fr .circle-label { color: var(--fr-color); }
+  .circle.en .circle-label { color: var(--en-color); }
+  .circle .circle-words { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.3rem; }
+  .overlap-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background: var(--shared-bg);
+    border: 2px solid var(--shared-color);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    text-align: center;
+  }
+  .overlap-center .big { font-size: 1.3rem; font-weight: 800; color: var(--shared-color); }
+  .overlap-center .desc { font-size: 0.72rem; color: var(--muted); }
+  .overlap-center .broader { font-size: 0.72rem; color: var(--shared-color); margin-top: 0.2rem; }
+
+  /* Sound correspondences */
+  .correspondences {
+    background: var(--shared-bg);
+    border: 2px solid var(--shared-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .correspondences h3 { color: var(--shared-color); font-size: 1rem; margin-bottom: 0.8rem; text-align: center; }
+  .corr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  .corr-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .corr-pattern {
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+  .corr-pattern .fr-part { color: var(--fr-color); }
+  .corr-pattern .en-part { color: var(--en-color); }
+  .corr-examples { font-size: 0.75rem; color: var(--muted); }
+
+  /* Norman Conquest */
+  .history-box {
+    background: var(--hist-bg);
+    border: 2px solid var(--hist-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .history-box h3 { color: var(--hist-color); font-size: 1rem; margin-bottom: 0.5rem; }
+  .history-box p { font-size: 0.85rem; }
+  .meat-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+  }
+  .meat-col { padding: 0.5rem; border-radius: 6px; }
+  .meat-col.germanic { background: var(--en-bg); border: 1px solid var(--en-color); }
+  .meat-col.french { background: var(--fr-bg); border: 1px solid var(--fr-color); }
+  .meat-col h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.3rem; }
+  .meat-col.germanic h4 { color: var(--en-color); }
+  .meat-col.french h4 { color: var(--fr-color); }
+
+  /* Cognate examples */
+  .cognate-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .cognate-tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    background: var(--shared-bg);
+    border: 1px solid var(--shared-color);
+    color: var(--shared-color);
+    font-weight: 500;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .corr-grid { grid-template-columns: 1fr 1fr; }
+    .meat-split { grid-template-columns: 1fr; }
+    .overlap-viz { height: 240px; }
+    .circle { width: 200px; height: 160px; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Cognate Bridge</h2>
+  <p class="subtitle">~1,700 near-identical words + ~30% of English vocabulary from French. A massive shared foundation.</p>
+
+  <!-- Overlap visualization -->
+  <div class="overlap-viz">
+    <div class="circle fr">
+      <span class="circle-label">French</span>
+      <span class="circle-words">commencer, obtenir,<br>assister, demander</span>
+    </div>
+    <div class="overlap-center">
+      <div class="big">~1,700</div>
+      <div class="desc">near-identical cognates</div>
+      <div class="broader">~30% of English vocabulary is French-origin</div>
+    </div>
+    <div class="circle en">
+      <span class="circle-label">English</span>
+      <span class="circle-words">begin, get, help,<br>ask (Germanic core)</span>
+    </div>
+  </div>
+
+  <!-- Sample cognates -->
+  <div class="cognate-examples">
+    <span class="cognate-tag">information</span>
+    <span class="cognate-tag">table</span>
+    <span class="cognate-tag">art</span>
+    <span class="cognate-tag">culture</span>
+    <span class="cognate-tag">nation</span>
+    <span class="cognate-tag">important</span>
+    <span class="cognate-tag">possible</span>
+    <span class="cognate-tag">distance</span>
+    <span class="cognate-tag">silence</span>
+    <span class="cognate-tag">communication</span>
+    <span class="cognate-tag">tradition</span>
+    <span class="cognate-tag">different</span>
+    <span class="cognate-tag">normal</span>
+    <span class="cognate-tag">special</span>
+    <span class="cognate-tag">nature</span>
+    <span class="cognate-tag">intelligence</span>
+  </div>
+
+  <!-- Sound correspondences -->
+  <div class="correspondences">
+    <h3>Systematic Sound Correspondences (Predictable Cognate Patterns)</h3>
+    <div class="corr-grid">
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-tion</span> = <span class="fr-part">-tion</span></div>
+        <div class="corr-examples">nation, station, education</div>
+      </div>
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-ty</span> = <span class="fr-part">-t&eacute;</span></div>
+        <div class="corr-examples">liberty/libert&eacute;, university/universit&eacute;</div>
+      </div>
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-ous</span> = <span class="fr-part">-eux/-euse</span></div>
+        <div class="corr-examples">generous/g&eacute;n&eacute;reux, curious/curieux</div>
+      </div>
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-ment</span> = <span class="fr-part">-ment</span></div>
+        <div class="corr-examples">government/gouvernement</div>
+      </div>
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-ence/-ance</span> = <span class="fr-part">-ence/-ance</span></div>
+        <div class="corr-examples">patience, importance</div>
+      </div>
+      <div class="corr-item">
+        <div class="corr-pattern"><span class="en-part">-al</span> = <span class="fr-part">-al/-el</span></div>
+        <div class="corr-examples">national, professionnel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Norman Conquest -->
+  <div class="history-box">
+    <h3>The Norman Conquest (1066): Origin of the Bridge</h3>
+    <p>After William the Conqueror, English was spoken by commoners and Norman French by the ruling class. This created the famous meat/animal split:</p>
+    <div class="meat-split">
+      <div class="meat-col germanic">
+        <h4>Germanic (live animals -- peasants raised them)</h4>
+        cow, pig, sheep, calf, deer
+      </div>
+      <div class="meat-col french">
+        <h4>French (meat on the table -- nobles ate them)</h4>
+        beef (b&oelig;uf), pork (porc), mutton (mouton), veal (veau), venison (venaison)
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;">The flood of French borrowing peaked in the 13th-14th centuries. By token frequency, Germanic words still dominate English (the 100 most frequent English words are almost all Germanic), but by dictionary entries, ~30% are French-origin.</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 1: The Cognate Bridge -- ~1,700 Near-Identical Words</strong>
+    <span>French and English share approximately 1,700 near-identical cognates and a broader vocabulary overlap of ~30% of English dictionary entries. Systematic sound correspondences (-tion/-tion, -ty/-t&eacute;, -ous/-eux) make cognate recognition predictable. This shared foundation originated primarily from the Norman Conquest of 1066, when Norman French became the language of England's ruling class. The vocabulary bridge is massive -- but deceptive, because register positions and some meanings diverge (see Faux Amis and Register Asymmetry diagrams).</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline -- Latin to Modern French with English Parallel Track</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --accent-shared: #8b5cf6;
+    --accent-shared-bg: #f5f3ff;
+    --accent-contact: #e63946;
+    --accent-contact-bg: #fef2f2;
+    --accent-event: #f59e0b;
+    --accent-event-bg: #fffbeb;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --accent-shared: #a78bfa;
+      --accent-shared-bg: #1e1b3a;
+      --accent-contact: #f87171;
+      --accent-contact-bg: #2a1215;
+      --accent-event: #fbbf24;
+      --accent-event-bg: #2a2510;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .timeline-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+  }
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .track-header {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+  }
+  .fr-header { background: var(--accent-fr-bg); color: var(--accent-fr); border: 2px solid var(--accent-fr); }
+  .en-header { background: var(--accent-en-bg); color: var(--accent-en); border: 2px solid var(--accent-en); }
+
+  .era {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .era.fr-era { border-left: 4px solid var(--accent-fr); }
+  .era.en-era { border-left: 4px solid var(--accent-en); }
+  .era .era-date {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+  }
+  .fr-era .era-date { color: var(--accent-fr); }
+  .en-era .era-date { color: var(--accent-en); }
+  .era .era-name { font-weight: 700; font-size: 0.9rem; }
+  .era .era-features { color: var(--muted); font-size: 0.78rem; margin-top: 0.3rem; }
+
+  .center-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .center-line {
+    width: 3px;
+    flex: 1;
+    background: var(--border);
+    position: relative;
+  }
+  .contact-event {
+    position: relative;
+    z-index: 2;
+    background: var(--accent-contact-bg);
+    border: 2px solid var(--accent-contact);
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent-contact);
+    text-align: center;
+    margin: 0.3rem 0;
+    white-space: nowrap;
+  }
+  .milestone-event {
+    background: var(--accent-event-bg);
+    border: 2px solid var(--accent-event);
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent-event);
+    text-align: center;
+    margin: 0.3rem 0;
+  }
+  .spacer { height: 2rem; }
+  .spacer-sm { height: 0.5rem; }
+
+  .substrate-layer {
+    margin-top: 2rem;
+    border: 2px solid var(--accent-shared);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .substrate-layer h3 { font-size: 1rem; color: var(--accent-shared); margin-bottom: 1rem; text-align: center; }
+  .layer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+  .layer-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .layer-card .layer-name { font-weight: 700; margin-bottom: 0.3rem; }
+  .layer-card .layer-type {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .layer-card .layer-contribution { font-size: 0.78rem; color: var(--muted); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+    font-size: 0.78rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .timeline-container { grid-template-columns: 1fr; gap: 1rem; }
+    .center-col { display: none; }
+    .layer-grid { grid-template-columns: 1fr 1fr; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Latin to Modern French -- with English Parallel Track</h2>
+  <p class="subtitle">Two languages from Proto-Indo-European, intertwined by history, divergent in structure</p>
+
+  <div class="timeline-container">
+    <!-- FRENCH TRACK -->
+    <div class="track">
+      <div class="track-header fr-header">FRENCH (Italic/Romance)</div>
+      <div class="era fr-era">
+        <div class="era-date">200 BCE - 5th C. CE</div>
+        <div class="era-name">Vulgar Latin in Gaul</div>
+        <div class="era-features">6 cases, 3 genders, flexible word order. Gaulish substrate: ~70-400 Celtic words, vigesimal counting, possibly front rounded vowels.</div>
+      </div>
+      <div class="era fr-era">
+        <div class="era-date">5th - 9th C.</div>
+        <div class="era-name">Gallo-Romance / Proto-French</div>
+        <div class="era-features">Frankish superstrate: 400+ Germanic words, stress accent triggers massive diphthongization, aspirate-h. Language diverges from other Romance.</div>
+      </div>
+      <div class="era fr-era">
+        <div class="era-date">9th - 14th C.</div>
+        <div class="era-name">Old French</div>
+        <div class="era-features">Serments de Strasbourg (842). Two-case system. Enormous diphthong inventory. Chanson de Roland (~1100). Rich dialectal diversity (Francien, Norman, Picard).</div>
+      </div>
+      <div class="era fr-era">
+        <div class="era-date">14th - 17th C.</div>
+        <div class="era-name">Middle French</div>
+        <div class="era-features">Case system collapses (13th-14th C.). SVO rigidifies. Villers-Cotterets (1539). Renaissance Latin borrowing creates doublets. Diphthongs simplify.</div>
+      </div>
+      <div class="era fr-era">
+        <div class="era-date">17th C. - Present</div>
+        <div class="era-name">Modern French</div>
+        <div class="era-features">Academie francaise (Feb. 22, 1635). Spelling standardizes. Pronunciation continues changing. Jespersen Cycle: ne-drop 60-95%. 0 cases, 2 genders, rigid SVO.</div>
+      </div>
+    </div>
+
+    <!-- CENTER COLUMN -->
+    <div class="center-col">
+      <div class="center-line"></div>
+      <div class="spacer"></div>
+      <div class="contact-event">Gaulish substrate</div>
+      <div class="spacer"></div>
+      <div class="contact-event">Frankish superstrate</div>
+      <div class="spacer"></div>
+      <div class="milestone-event">842 Strasbourg</div>
+      <div class="spacer-sm"></div>
+      <div class="contact-event" style="background:var(--accent-shared-bg);border-color:var(--accent-shared);color:var(--accent-shared);">1066 Norman Conquest</div>
+      <div class="spacer"></div>
+      <div class="milestone-event">1539 Villers-Cotterets</div>
+      <div class="spacer-sm"></div>
+      <div class="milestone-event">1635 Academie</div>
+      <div class="spacer"></div>
+      <div class="contact-event" style="font-size:0.65rem;">Modern: EN -> FR borrowing</div>
+      <div class="center-line"></div>
+    </div>
+
+    <!-- ENGLISH TRACK -->
+    <div class="track">
+      <div class="track-header en-header">ENGLISH (Germanic)</div>
+      <div class="era en-era">
+        <div class="era-date">~500 BCE - 5th C. CE</div>
+        <div class="era-name">Proto-Germanic / Continental</div>
+        <div class="era-features">4-5 cases, 3 genders, strong/weak nouns and verbs, flexible word order. Celtic Britain awaits Germanic settlement.</div>
+      </div>
+      <div class="era en-era">
+        <div class="era-date">5th - 11th C.</div>
+        <div class="era-name">Old English</div>
+        <div class="era-features">Anglo-Saxon settlement. 4 cases, 3 genders. Viking contact adds Norse vocabulary. Rich literary tradition (Beowulf). Highly inflected.</div>
+      </div>
+      <div class="era en-era">
+        <div class="era-date">11th - 15th C.</div>
+        <div class="era-name">Middle English</div>
+        <div class="era-features">Norman Conquest (1066): 10,000+ French words enter English. Case system collapses. Register doubling (cow/beef, ask/demand, kingly/royal). thou begins decline.</div>
+      </div>
+      <div class="era en-era">
+        <div class="era-date">15th - 17th C.</div>
+        <div class="era-name">Early Modern English</div>
+        <div class="era-features">Great Vowel Shift. thou disappears (~1650). No equivalent of Villers-Cotterets. No language academy (Swift proposes one 1712, rejected).</div>
+      </div>
+      <div class="era en-era">
+        <div class="era-date">17th C. - Present</div>
+        <div class="era-name">Modern English</div>
+        <div class="era-features">Johnson's dictionary (1755, private). Webster (1828). No official regulation. ~30% vocabulary from French. 0 cases (except pronouns), 0 gender, rigid SVO.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="substrate-layer">
+    <h3>The Layer Architecture of French</h3>
+    <div class="layer-grid">
+      <div class="layer-card" style="border-color:#f59e0b;">
+        <div class="layer-type" style="color:#f59e0b;">Substrate (Bottom)</div>
+        <div class="layer-name">Gaulish Celtic</div>
+        <div class="layer-contribution">~70-400 words. Vigesimal numbers. Possibly front rounded vowels. Terrain, agriculture vocabulary.</div>
+      </div>
+      <div class="layer-card" style="border-color:var(--accent-fr);">
+        <div class="layer-type" style="color:var(--accent-fr);">Core (Middle)</div>
+        <div class="layer-name">Vulgar Latin</div>
+        <div class="layer-contribution">Majority of grammar, basic vocabulary, verb system. The structural foundation.</div>
+      </div>
+      <div class="layer-card" style="border-color:var(--accent-shared);">
+        <div class="layer-type" style="color:var(--accent-shared);">Superstrate (Top)</div>
+        <div class="layer-name">Frankish Germanic</div>
+        <div class="layer-contribution">400+ words. Stress accent -> diphthongization. Aspirate-h. War, nature vocabulary.</div>
+      </div>
+      <div class="layer-card" style="border-color:var(--accent-en);">
+        <div class="layer-type" style="color:var(--accent-en);">Learned Layer</div>
+        <div class="layer-name">Renaissance Latin + Greek</div>
+        <div class="layer-contribution">Scholarly/technical vocabulary. Creates doublets: ecouter (inherited) / ausculter (borrowed).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-fr);"></div> French periods</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-en);"></div> English periods</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-contact);"></div> Contact events</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-event);"></div> Milestones</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-shared);"></div> Cross-language events</div>
+  </div>
+
+  <figcaption>
+    Both languages evolved from heavily inflected ancestors toward analytic structures -- but through different contact histories and at different rates. The 1066 Norman Conquest is the critical crossover point where the two languages' histories become permanently intertwined.
+  </figcaption>
+</figure>
+</body>
+</html>

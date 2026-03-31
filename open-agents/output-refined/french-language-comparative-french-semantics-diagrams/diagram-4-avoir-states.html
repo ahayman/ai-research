@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avoir-States vs. English Be-States</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --fr-color: #3b82f6;
+    --fr-bg: #eff6ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --danger: #e63946;
+    --danger-bg: #fef2f2;
+    --metaphor-color: #8b5cf6;
+    --metaphor-bg: #f5f3ff;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --fr-color: #60a5fa;
+      --fr-bg: #1e293b;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --danger: #ff6b6b;
+      --danger-bg: #2a1515;
+      --metaphor-color: #a78bfa;
+      --metaphor-bg: #1e1b3a;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Metaphor comparison */
+  .metaphor-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .metaphor-card {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metaphor-card.fr { border-color: var(--fr-color); background: var(--fr-bg); }
+  .metaphor-card.en { border-color: var(--en-color); background: var(--en-bg); }
+  .metaphor-card h3 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .metaphor-card.fr h3 { color: var(--fr-color); }
+  .metaphor-card.en h3 { color: var(--en-color); }
+  .metaphor-formula { font-size: 1.2rem; font-weight: 700; margin: 0.3rem 0; }
+  .metaphor-card.fr .metaphor-formula { color: var(--fr-color); }
+  .metaphor-card.en .metaphor-formula { color: var(--en-color); }
+  .metaphor-label { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+  /* Mapping table */
+  .mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .mapping-table th {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .mapping-table th:nth-child(1) { color: var(--fr-color); text-align: left; }
+  .mapping-table th:nth-child(2) { text-align: center; color: var(--muted); }
+  .mapping-table th:nth-child(3) { color: var(--en-color); text-align: left; }
+  .mapping-table td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .mapping-table tr:last-child td { border-bottom: none; }
+  .fr-expr { font-weight: 600; color: var(--fr-color); }
+  .fr-literal { font-size: 0.75rem; color: var(--muted); font-style: italic; display: block; }
+  .en-expr { font-weight: 600; color: var(--en-color); }
+  .arrow-cell { text-align: center; color: var(--muted); }
+
+  /* Danger zone */
+  .danger-zone {
+    background: var(--danger-bg);
+    border: 3px solid var(--danger);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .danger-zone h3 { color: var(--danger); font-size: 1rem; margin-bottom: 0.5rem; }
+  .danger-zone p { font-size: 0.85rem; }
+  .danger-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .danger-item {
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+  .danger-item.correct { background: var(--fr-bg); border: 1px solid var(--fr-color); }
+  .danger-item.incorrect { background: var(--danger-bg); border: 1px solid var(--danger); }
+  .danger-item strong { display: block; margin-bottom: 0.2rem; }
+
+  /* Cross-Romance */
+  .cross-romance {
+    padding: 1rem;
+    background: var(--metaphor-bg);
+    border: 2px solid var(--metaphor-color);
+    border-radius: 10px;
+  }
+  .cross-romance h3 { color: var(--metaphor-color); font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .cross-romance p { font-size: 0.85rem; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .metaphor-bar { grid-template-columns: 1fr; }
+    .danger-comparison { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Avoir-States vs. English Be-States</h2>
+  <p class="subtitle">Two different conceptual metaphors for the same human experiences</p>
+
+  <!-- Conceptual metaphor comparison -->
+  <div class="metaphor-bar">
+    <div class="metaphor-card fr">
+      <h3>French</h3>
+      <div class="metaphor-formula">AVOIR + noun</div>
+      <div class="metaphor-label">STATES ARE POSSESSIONS -- you HAVE hunger</div>
+    </div>
+    <div class="metaphor-card en">
+      <h3>English</h3>
+      <div class="metaphor-formula">BE + adjective</div>
+      <div class="metaphor-label">STATES ARE PROPERTIES -- you ARE hungry</div>
+    </div>
+  </div>
+
+  <!-- Mapping table -->
+  <table class="mapping-table">
+    <thead>
+      <tr>
+        <th>French (avoir + noun)</th>
+        <th></th>
+        <th>English (be + adjective)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="fr-expr">J'ai faim</span><span class="fr-literal">I have hunger</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am hungry</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai soif</span><span class="fr-literal">I have thirst</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am thirsty</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai chaud</span><span class="fr-literal">I have hot</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am hot</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai froid</span><span class="fr-literal">I have cold</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am cold</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai peur</span><span class="fr-literal">I have fear</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am afraid</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">Tu as raison</span><span class="fr-literal">You have reason</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">You are right</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">Il a tort</span><span class="fr-literal">He has wrong</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">He is wrong</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai sommeil</span><span class="fr-literal">I have sleep</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am sleepy</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">Elle a honte</span><span class="fr-literal">She has shame</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">She is ashamed</span></td>
+      </tr>
+      <tr>
+        <td><span class="fr-expr">J'ai 30 ans</span><span class="fr-literal">I have 30 years</span></td>
+        <td class="arrow-cell">=</td>
+        <td><span class="en-expr">I am 30 years old</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Danger zone -->
+  <div class="danger-zone">
+    <h3>The Famous Trap: "avoir chaud" vs. "&ecirc;tre chaud"</h3>
+    <p>Translating "I am hot" literally into French produces a very different meaning:</p>
+    <div class="danger-comparison">
+      <div class="danger-item correct">
+        <strong style="color:var(--fr-color);">J'ai chaud</strong>
+        = I am hot (temperature). CORRECT.
+      </div>
+      <div class="danger-item incorrect">
+        <strong style="color:var(--danger);">Je suis chaud(e)</strong>
+        = I am sexually aroused (slang). VERY WRONG.
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">This is one of the most notorious errors English speakers make in French.</p>
+  </div>
+
+  <!-- Cross-Romance -->
+  <div class="cross-romance">
+    <h3>A Romance Language Pattern -- Not Unique to French</h3>
+    <p>The avoir/tener/avere construction exists across all Romance languages: Spanish "tener hambre," Italian "avere fame," Portuguese "ter fome." All inherited it from Latin's "habere" constructions. English is the odd one out -- using "be" where all the Romance languages use "have."</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 4: Avoir-States vs. English Be-States</strong>
+    <span>French conceptualizes physical and emotional states as POSSESSIONS (avoir + noun: "I have hunger"), while English conceptualizes them as PROPERTIES (be + adjective: "I am hungry"). This is not just a vocabulary difference -- it reflects a different underlying conceptual metaphor inherited from Latin. The pattern is systematic and predictable across all common state expressions, with one critical trap: &ecirc;tre chaud carries a very different connotation than avoir chaud.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

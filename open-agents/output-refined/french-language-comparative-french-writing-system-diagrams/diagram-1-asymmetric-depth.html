@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asymmetric Orthographic Depth -- Regular Reading, Irregular Writing</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --regular: #10b981;
+    --regular-bg: #ecfdf5;
+    --irregular: #e63946;
+    --irregular-bg: #fef2f2;
+    --accent-shared: #8b5cf6;
+    --accent-shared-bg: #f5f3ff;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --regular: #34d399;
+      --regular-bg: #132e24;
+      --irregular: #f87171;
+      --irregular-bg: #2a1215;
+      --accent-shared: #a78bfa;
+      --accent-shared-bg: #1e1b3a;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .bridge-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    margin-bottom: 2rem;
+    border: 2px solid var(--accent-fr);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .bridge-side {
+    text-align: center;
+    padding: 1rem;
+  }
+  .bridge-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .bridge-label { font-size: 1.1rem; font-weight: 700; }
+  .bridge-sub { font-size: 0.82rem; color: var(--muted); }
+  .bridge-center {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  .arrow-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .arrow-line {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .arrow-line.regular { background: var(--regular); }
+  .arrow-line.irregular { background: var(--irregular); }
+  .arrow-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .arrow-label.regular { color: var(--regular); }
+  .arrow-label.irregular { color: var(--irregular); }
+  .arrow-tip { font-size: 1rem; }
+
+  .rules-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .rules-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .rules-card.reading { border-color: var(--regular); }
+  .rules-card.writing { border-color: var(--irregular); }
+  .rules-card h3 { font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .rules-card.reading h3 { color: var(--regular); }
+  .rules-card.writing h3 { color: var(--irregular); }
+  .rule-list { list-style: none; }
+  .rule-list li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rule-list li:last-child { border-bottom: none; }
+  .rule-spell { font-weight: 600; }
+  .rule-sound { color: var(--muted); font-style: italic; }
+  .rule-arrow { color: var(--muted); margin: 0 0.3rem; }
+  .multi-spellings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+  .multi-spell {
+    font-size: 0.72rem;
+    background: var(--irregular-bg);
+    color: var(--irregular);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+
+  .spectrum-section {
+    border: 2px solid var(--accent-shared);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .spectrum-section h3 { font-size: 0.95rem; color: var(--accent-shared); margin-bottom: 1rem; text-align: center; }
+  .spectrum {
+    position: relative;
+    height: 50px;
+    background: linear-gradient(to right, var(--regular-bg), var(--irregular-bg));
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+  }
+  .spectrum-marker {
+    position: absolute;
+    top: -8px;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .spectrum-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin: 0 auto 2px;
+    border: 2px solid var(--fg);
+  }
+  .spectrum-bracket {
+    position: absolute;
+    top: 28px;
+    height: 22px;
+    border: 2px solid var(--accent-fr);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+  }
+  .spectrum-bracket-label {
+    position: absolute;
+    top: 52px;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-fr);
+    white-space: nowrap;
+  }
+  .spectrum-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 2rem;
+  }
+  .spectrum-axis .shallow { color: var(--regular); }
+  .spectrum-axis .deep { color: var(--irregular); }
+
+  .oiseau-box {
+    border: 2px solid var(--accent-fr);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .oiseau-box h3 { font-size: 0.95rem; color: var(--accent-fr); margin-bottom: 0.5rem; }
+  .oiseau-word { font-size: 2rem; font-weight: 800; letter-spacing: 0.3em; color: var(--accent-fr); }
+  .oiseau-ipa { font-size: 1.1rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .oiseau-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .oiseau-letter {
+    border: 2px solid var(--accent-fr);
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .oiseau-letter .letter { font-size: 1.2rem; font-weight: 800; color: var(--accent-fr); }
+  .oiseau-letter .role { font-size: 0.7rem; color: var(--muted); }
+  .oiseau-note { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .bridge-diagram { grid-template-columns: 1fr; }
+    .rules-section { grid-template-columns: 1fr; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Asymmetric Orthographic Depth</h2>
+  <p class="subtitle">French is regular for reading (~95% predictable) but irregular for writing -- the defining characteristic of its orthography</p>
+
+  <div class="bridge-diagram">
+    <div class="bridge-side">
+      <div class="bridge-label">Written French</div>
+      <div class="bridge-sub">Text on the page</div>
+    </div>
+    <div class="bridge-center">
+      <div class="arrow-row">
+        <span class="arrow-label regular">READING: Spelling -> Sound</span>
+        <div class="arrow-line regular"></div>
+        <span class="arrow-tip" style="color:var(--regular);">&#10132;</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--regular);text-align:center;font-weight:600;">~95% predictable. Complex rules, but CONSISTENT.</div>
+      <div style="height:0.5rem;"></div>
+      <div class="arrow-row" style="flex-direction:row-reverse;">
+        <span class="arrow-label irregular">WRITING: Sound -> Spelling</span>
+        <div class="arrow-line irregular"></div>
+        <span class="arrow-tip" style="color:var(--irregular);">&#10132;</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--irregular);text-align:center;font-weight:600;">Highly ambiguous. One sound = many possible spellings.</div>
+    </div>
+    <div class="bridge-side">
+      <div class="bridge-label">Spoken French</div>
+      <div class="bridge-sub">Sound in the air</div>
+    </div>
+  </div>
+
+  <div class="rules-section">
+    <div class="rules-card reading">
+      <h3>Reading Direction: Consistent Rules</h3>
+      <ul class="rule-list">
+        <li><span class="rule-spell">ou</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /u/</span></li>
+        <li><span class="rule-spell">ai</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /e/ or /ɛ/</span></li>
+        <li><span class="rule-spell">eau</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /o/</span></li>
+        <li><span class="rule-spell">oi</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /wa/</span></li>
+        <li><span class="rule-spell">ch</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /ʃ/ (sh)</span></li>
+        <li><span class="rule-spell">gn</span> <span class="rule-arrow">-></span> <span class="rule-sound">always /ɲ/ (ny)</span></li>
+        <li><span class="rule-spell">final -e</span> <span class="rule-arrow">-></span> <span class="rule-sound">silent (activates preceding consonant)</span></li>
+      </ul>
+      <p style="font-size:0.78rem;color:var(--regular);margin-top:0.5rem;font-weight:600;">Pattern: Complex rules, but each spelling pattern consistently maps to the same sound. Learnable as an algorithm.</p>
+    </div>
+
+    <div class="rules-card writing">
+      <h3>Writing Direction: Ambiguous Mappings</h3>
+      <ul class="rule-list">
+        <li>
+          <span class="rule-sound">/o/</span> <span class="rule-arrow">-></span>
+          <div class="multi-spellings"><span class="multi-spell">o</span><span class="multi-spell">o</span><span class="multi-spell">au</span><span class="multi-spell">eau</span><span class="multi-spell">ot</span><span class="multi-spell">os</span><span class="multi-spell">op</span></div>
+        </li>
+        <li>
+          <span class="rule-sound">/ɛ/</span> <span class="rule-arrow">-></span>
+          <div class="multi-spellings"><span class="multi-spell">e</span><span class="multi-spell">e</span><span class="multi-spell">ai</span><span class="multi-spell">ei</span><span class="multi-spell">e+CC</span><span class="multi-spell">et</span></div>
+        </li>
+        <li>
+          <span class="rule-sound">/s/</span> <span class="rule-arrow">-></span>
+          <div class="multi-spellings"><span class="multi-spell">s</span><span class="multi-spell">ss</span><span class="multi-spell">c</span><span class="multi-spell">c</span><span class="multi-spell">sc</span><span class="multi-spell">t (-tion)</span></div>
+        </li>
+        <li>
+          <span class="rule-sound">/k/</span> <span class="rule-arrow">-></span>
+          <div class="multi-spellings"><span class="multi-spell">c</span><span class="multi-spell">qu</span><span class="multi-spell">k</span><span class="multi-spell">ch (Greek)</span></div>
+        </li>
+      </ul>
+      <p style="font-size:0.78rem;color:var(--irregular);margin-top:0.5rem;font-weight:600;">Pattern: One sound maps to many spellings. Requires word-specific knowledge + grammatical analysis.</p>
+    </div>
+  </div>
+
+  <div class="spectrum-section">
+    <h3>Orthographic Depth Spectrum -- Where French and English Sit</h3>
+    <div class="spectrum">
+      <div class="spectrum-marker" style="left:8%;">
+        <div class="spectrum-dot" style="background:var(--regular);"></div>
+        Finnish
+      </div>
+      <div class="spectrum-marker" style="left:15%;">
+        <div class="spectrum-dot" style="background:var(--regular);"></div>
+        Spanish
+      </div>
+      <div class="spectrum-marker" style="left:22%;">
+        <div class="spectrum-dot" style="background:var(--regular);"></div>
+        Italian
+      </div>
+      <div class="spectrum-marker" style="left:38%;">
+        <div class="spectrum-dot" style="background:#f59e0b;"></div>
+        German
+      </div>
+      <div class="spectrum-marker" style="left:52%;">
+        <div class="spectrum-dot" style="background:var(--accent-fr);"></div>
+        FR read
+      </div>
+      <div class="spectrum-marker" style="left:75%;">
+        <div class="spectrum-dot" style="background:var(--accent-fr);"></div>
+        FR write
+      </div>
+      <div class="spectrum-bracket" style="left:52%;width:23%;"></div>
+      <div class="spectrum-bracket-label" style="left:63.5%;">French asymmetry</div>
+      <div class="spectrum-marker" style="left:88%;">
+        <div class="spectrum-dot" style="background:var(--irregular);"></div>
+        English
+      </div>
+    </div>
+    <div class="spectrum-axis">
+      <span class="shallow">SHALLOW (transparent)</span>
+      <span class="deep">DEEP (opaque)</span>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:1rem;text-align:center;">English is deep in BOTH directions (symmetrically opaque). French is deep mainly in the WRITING direction (asymmetrically opaque). Compare: English "ough" has 6+ pronunciations; French "oi" always = /wa/.</p>
+  </div>
+
+  <div class="oiseau-box">
+    <h3>"Oiseau" -- The Extreme Case</h3>
+    <div class="oiseau-word">O I S E A U</div>
+    <div class="oiseau-ipa">/wazo/ -- 6 letters, 4 phonemes</div>
+    <div class="oiseau-breakdown">
+      <div class="oiseau-letter">
+        <div class="letter">oi</div>
+        <div class="role">digraph = /wa/</div>
+      </div>
+      <div class="oiseau-letter">
+        <div class="letter">s</div>
+        <div class="role">between vowels = /z/</div>
+      </div>
+      <div class="oiseau-letter">
+        <div class="letter">eau</div>
+        <div class="role">trigraph = /o/</div>
+      </div>
+    </div>
+    <div class="oiseau-note">No single letter represents its "expected" sound -- yet it follows PERFECTLY REGULAR French reading rules. The chaos is only in the writing direction.</div>
+  </div>
+
+  <figcaption>
+    French orthographic depth is asymmetric: complex but consistent rules for reading, ambiguous many-to-one mappings for writing. This is why the dictee (testing writing from dictation) is the supreme test of French orthographic mastery.
+  </figcaption>
+</figure>
+</body>
+</html>

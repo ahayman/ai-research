@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu/Vous Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --tu-color: #10b981;
+    --tu-bg: #ecfdf5;
+    --vous-color: #3b82f6;
+    --vous-bg: #eff6ff;
+    --ambig-color: #f59e0b;
+    --ambig-bg: #fffbeb;
+    --danger-color: #e63946;
+    --danger-bg: #fef2f2;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --tu-color: #34d399;
+      --tu-bg: #132e24;
+      --vous-color: #60a5fa;
+      --vous-bg: #1e293b;
+      --ambig-color: #fbbf24;
+      --ambig-bg: #2a2510;
+      --danger-color: #f87171;
+      --danger-bg: #2a1215;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1000px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+  .tree-container { display: flex; flex-direction: column; gap: 0; align-items: center; }
+  .node {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    font-size: 0.88rem;
+    max-width: 280px;
+    position: relative;
+  }
+  .node-start {
+    background: var(--surface);
+    border-color: var(--accent-fr);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .node-question {
+    background: var(--surface);
+    border-color: var(--border);
+    font-weight: 600;
+  }
+  .node-tu {
+    background: var(--tu-bg);
+    border-color: var(--tu-color);
+    color: var(--tu-color);
+    font-weight: 700;
+  }
+  .node-vous {
+    background: var(--vous-bg);
+    border-color: var(--vous-color);
+    color: var(--vous-color);
+    font-weight: 700;
+  }
+  .node-ambig {
+    background: var(--ambig-bg);
+    border-color: var(--ambig-color);
+    font-weight: 600;
+  }
+  .node-danger {
+    background: var(--danger-bg);
+    border-color: var(--danger-color);
+    font-weight: 600;
+  }
+  .connector { color: var(--muted); font-size: 1.2rem; line-height: 1; padding: 0.2rem 0; }
+  .branch-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+  }
+  .branch-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+  }
+  .example {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem 0;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .grid-rules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .rule-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .rule-card.tu-card { border-color: var(--tu-color); }
+  .rule-card.vous-card { border-color: var(--vous-color); }
+  .rule-card h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .rule-card ul { list-style: none; padding: 0; }
+  .rule-card li { padding: 0.2rem 0; }
+  .rule-card li::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.5rem; vertical-align: middle; }
+  .tu-card li::before { background: var(--tu-color); }
+  .vous-card li::before { background: var(--vous-color); }
+  .special-section {
+    margin-top: 1.5rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .special-section h4 { font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .special-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .special-card {
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.82rem;
+  }
+  .special-card .label { font-weight: 700; margin-bottom: 0.3rem; }
+  .en-comparison {
+    margin-top: 2rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-comparison h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-comparison p { font-size: 0.88rem; }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .tag-tu { background: var(--tu-bg); color: var(--tu-color); }
+  .tag-vous { background: var(--vous-bg); color: var(--vous-color); }
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    .grid-rules { grid-template-columns: 1fr; }
+    .branch-row { flex-direction: column; align-items: center; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Tu/Vous Decision Tree</h2>
+  <p class="subtitle">The grammaticalized social distance system -- every French utterance carries an explicit signal that English leaves implicit</p>
+
+  <div class="tree-container">
+    <div class="node node-start">Who are you addressing?</div>
+    <div class="connector">|</div>
+  </div>
+
+  <div class="branch-row">
+    <div class="branch">
+      <div class="branch-label">Always Tu</div>
+      <div class="node node-tu">
+        Child / Animal / God
+        <div class="example">Tu veux jouer ? -- Want to play?</div>
+      </div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Default Tu</div>
+      <div class="node node-tu">
+        Close friend / Family / Partner
+        <div class="example">Tu viens ce soir ? -- Coming tonight?</div>
+      </div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Usually Tu</div>
+      <div class="node node-tu">
+        Peers / Students / Social media
+        <div class="example">T'as vu ca ? -- Did you see that?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector" style="text-align:center; margin: 0.5rem 0;">|</div>
+
+  <div class="branch-row">
+    <div class="branch">
+      <div class="branch-label">Negotiable Zone</div>
+      <div class="node node-ambig">
+        Colleagues -- depends on workplace culture
+        <div class="example">"On se tutoie ?" -- Shall we use tu?</div>
+      </div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Negotiable Zone</div>
+      <div class="node node-ambig">
+        In-laws / Acquaintances
+        <div class="example">Wait for the older/higher-status person to propose</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector" style="text-align:center; margin: 0.5rem 0;">|</div>
+
+  <div class="branch-row">
+    <div class="branch">
+      <div class="branch-label">Default Vous</div>
+      <div class="node node-vous">
+        Strangers / Service encounters
+        <div class="example">Excusez-moi, pourriez-vous... ?</div>
+      </div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Always Vous</div>
+      <div class="node node-vous">
+        Superiors / Elders / Formal contexts
+        <div class="example">Vous avez raison, Madame.</div>
+      </div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Always Vous</div>
+      <div class="node node-vous">
+        Formal writing / Official communication
+        <div class="example">Je vous prie d'agreer...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">The Power Dynamics Layer</div>
+  <div class="special-section">
+    <div class="special-row">
+      <div class="special-card" style="border-color: var(--danger-color);">
+        <div class="label" style="color: var(--danger-color);">Tu of Contempt</div>
+        Using tu with a stranger to demean them. A police officer using tu with a suspect. Road rage tu. Signal: "I consider you beneath formal respect."
+      </div>
+      <div class="special-card" style="border-color: var(--vous-color);">
+        <div class="label" style="color: var(--vous-color);">Vous of Cold Distance</div>
+        A married couple switching from tu back to vous during a fight. Signal: "I am withdrawing intimacy. We are no longer close."
+      </div>
+      <div class="special-card" style="border-color: var(--ambig-color);">
+        <div class="label" style="color: var(--ambig-color);">The Transition Ritual</div>
+        <strong>"On se tutoie ?"</strong> -- Explicit negotiation of relationship change. Proposed by the older or higher-status person. Declining is socially delicate but possible.
+      </div>
+    </div>
+  </div>
+
+  <div class="en-comparison">
+    <h4>ENGLISH COMPARISON -- The Missing Signal</h4>
+    <p>English lost its T-V distinction when "thou" disappeared by ~1650. Where French encodes social distance in a <strong>binary grammatical signal</strong> (tu/vous) that propagates through verb forms, possessives, and object pronouns, English must encode the same information through <strong>implicit strategies</strong>: modal hedging (could/would/might), vocabulary register (begin vs. commence), passive voice, and tone of voice. The French system is more <em>explicit and rule-governed</em>; the English system is more <em>flexible but ambiguous</em>.</p>
+    <p style="margin-top: 0.5rem;"><strong>The pattern:</strong> French GRAMMATICALIZES social information that English leaves to PRAGMATIC INFERENCE. For a pattern-oriented mind, this means French provides a clear, learnable rule where English provides a fuzzy, context-dependent judgment.</p>
+  </div>
+
+  <figcaption>
+    Tu/Vous is not simply "informal/formal" -- it is a multidimensional social signal encoding intimacy, respect, power, contempt, and group membership. Every second-person utterance in French carries this signal; no English utterance does.
+  </figcaption>
+</figure>
+</body>
+</html>

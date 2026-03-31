@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gender Agreement Chain -- Full Visualization</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --fem-color: #ec4899;
+    --fem-bg: #fdf2f8;
+    --masc-color: #3b82f6;
+    --masc-bg: #eff6ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --agree-color: #8b5cf6;
+    --source-color: #f59e0b;
+    --source-bg: #fffbeb;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --fem-color: #f472b6;
+      --fem-bg: #2a1525;
+      --masc-color: #60a5fa;
+      --masc-bg: #1e293b;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --agree-color: #a78bfa;
+      --source-color: #fbbf24;
+      --source-bg: #2a2510;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .sentence-display {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .sentence-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+  }
+  .fr-label { color: var(--fem-color); }
+  .en-label { color: var(--en-color); }
+  .sentence-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .word {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .word-text {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .word-text.agreed {
+    background: var(--fem-bg);
+    border: 2px solid var(--fem-color);
+    color: var(--fem-color);
+  }
+  .word-text.source {
+    background: var(--source-bg);
+    border: 2px solid var(--source-color);
+    color: var(--source-color);
+  }
+  .word-text.neutral {
+    border: 1px solid var(--border);
+    color: var(--fg);
+  }
+  .word-text.en-neutral {
+    border: 1px solid var(--en-color);
+    color: var(--en-color);
+    background: var(--en-bg);
+  }
+  .word-role {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .word-role.fem { color: var(--fem-color); font-weight: 600; }
+
+  .agreement-count {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+  }
+  .agreement-count .num { font-size: 1.5rem; }
+  .agreement-count.fr { color: var(--fem-color); }
+  .agreement-count.en { color: var(--en-color); }
+
+  .arrow-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: -0.3rem 0 0.3rem;
+    font-size: 0.9rem;
+    color: var(--agree-color);
+    flex-wrap: wrap;
+  }
+  .arrow-segment { padding: 0 0.4rem; }
+
+  .comparison-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .comp-card {
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid;
+    text-align: center;
+  }
+  .comp-card.fr { border-color: var(--fem-color); background: var(--fem-bg); }
+  .comp-card.en { border-color: var(--en-color); background: var(--en-bg); }
+  .comp-card h3 { font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .comp-card.fr h3 { color: var(--fem-color); }
+  .comp-card.en h3 { color: var(--en-color); }
+  .comp-card .big-num { font-size: 3rem; font-weight: 800; line-height: 1.1; }
+  .comp-card.fr .big-num { color: var(--fem-color); }
+  .comp-card.en .big-num { color: var(--en-color); }
+  .comp-card p { font-size: 0.82rem; color: var(--muted); }
+
+  .domains {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+  .domain {
+    border: 1px solid var(--fem-color);
+    border-radius: 8px;
+    padding: 0.6rem;
+    text-align: center;
+    font-size: 0.78rem;
+  }
+  .domain-title { font-weight: 700; color: var(--fem-color); margin-bottom: 0.3rem; font-size: 0.82rem; }
+  .domain-ex { font-style: italic; color: var(--muted); }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .comparison-panel { grid-template-columns: 1fr; }
+    .domains { grid-template-columns: 1fr 1fr; }
+    .sentence-words { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Gender Agreement Chain</h2>
+  <p class="subtitle">How gender propagates from ONE noun through an entire sentence. French: 7 agreements. English: 0.</p>
+
+  <!-- FRENCH sentence -->
+  <div class="sentence-display" style="border-color:var(--fem-color)">
+    <div class="sentence-label fr-label">French (Feminine Plural)</div>
+    <div class="sentence-words">
+      <div class="word">
+        <span class="word-text agreed">Les</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text agreed">belles</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text agreed">grandes</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text source">robes</span>
+        <span class="word-role fem">SOURCE FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text agreed">rouges</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text neutral">que</span>
+        <span class="word-role">REL.PRON</span>
+      </div>
+      <div class="word">
+        <span class="word-text neutral">j'ai</span>
+        <span class="word-role">AUX</span>
+      </div>
+      <div class="word">
+        <span class="word-text agreed">achet&eacute;es</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+      <div class="word">
+        <span class="word-text neutral">sont</span>
+        <span class="word-role">AUX</span>
+      </div>
+      <div class="word">
+        <span class="word-text agreed">arriv&eacute;es</span>
+        <span class="word-role fem">FEM.PL</span>
+      </div>
+    </div>
+    <div class="agreement-count fr"><span class="num">7</span> words carry feminine plural marking -- all from one noun</div>
+  </div>
+
+  <!-- ENGLISH sentence -->
+  <div class="sentence-display" style="border-color:var(--en-color)">
+    <div class="sentence-label en-label">English (Zero Agreement)</div>
+    <div class="sentence-words">
+      <div class="word">
+        <span class="word-text en-neutral">The</span>
+        <span class="word-role">DET</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">beautiful</span>
+        <span class="word-role">ADJ</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">big</span>
+        <span class="word-role">ADJ</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">red</span>
+        <span class="word-role">ADJ</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">dresses</span>
+        <span class="word-role">NOUN</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">that</span>
+        <span class="word-role">REL</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">I</span>
+        <span class="word-role">SUBJ</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">bought</span>
+        <span class="word-role">VERB</span>
+      </div>
+      <div class="word">
+        <span class="word-text en-neutral">arrived</span>
+        <span class="word-role">VERB</span>
+      </div>
+    </div>
+    <div class="agreement-count en"><span class="num">0</span> words carry any gender marking</div>
+  </div>
+
+  <!-- Side by side counts -->
+  <div class="comparison-panel">
+    <div class="comp-card fr">
+      <h3>French</h3>
+      <div class="big-num">7</div>
+      <p>Gender-agreeing words per sentence. Gender threads through determiners, adjectives, participles -- the entire NP and beyond.</p>
+    </div>
+    <div class="comp-card en">
+      <h3>English</h3>
+      <div class="big-num">0</div>
+      <p>English has zero grammatical gender. No word in "The beautiful big red dresses that I bought arrived" encodes gender.</p>
+    </div>
+  </div>
+
+  <!-- Four agreement domains -->
+  <div class="domains">
+    <div class="domain">
+      <div class="domain-title">1. Determiner</div>
+      <div class="domain-ex">le / la / les<br>un / une / des</div>
+    </div>
+    <div class="domain">
+      <div class="domain-title">2. Adjective</div>
+      <div class="domain-ex">grand / grande<br>beau / belle</div>
+    </div>
+    <div class="domain">
+      <div class="domain-title">3. Pronoun</div>
+      <div class="domain-ex">il / elle<br>le / la</div>
+    </div>
+    <div class="domain">
+      <div class="domain-title">4. Past Participle</div>
+      <div class="domain-ex">all&eacute; / all&eacute;e<br>&eacute;crit / &eacute;crite</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 1: The Gender Agreement Chain</strong>
+    <span>Gender in French is not a local phenomenon -- it propagates from the noun outward through every determiner, adjective, pronoun, and past participle that depends on it. A single noun can trigger 5-7+ agreement markings in one sentence. English has zero grammatical gender and zero agreement of this kind. This asymmetry -- 7 vs. 0 -- makes grammatical gender arguably the single largest structural difference between the two languages.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

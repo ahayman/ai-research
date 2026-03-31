@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Conditional Politeness Gradient</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --direct-color: #e63946;
+    --direct-bg: #fef2f2;
+    --polite-color: #10b981;
+    --polite-bg: #ecfdf5;
+    --accent-shared: #8b5cf6;
+    --accent-shared-bg: #f5f3ff;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --direct-color: #f87171;
+      --direct-bg: #2a1215;
+      --polite-color: #34d399;
+      --polite-bg: #132e24;
+      --accent-shared: #a78bfa;
+      --accent-shared-bg: #1e1b3a;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .gradient-section {
+    margin-bottom: 2rem;
+  }
+  .gradient-label {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .tag-fr { background: var(--accent-fr-bg); color: var(--accent-fr); }
+  .tag-en { background: var(--accent-en-bg); color: var(--accent-en); }
+
+  .gradient-bar {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+  .gradient-bar .arrow-overlay {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+  .gradient-step {
+    flex: 1;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    font-size: 0.82rem;
+    position: relative;
+  }
+  .gradient-step:last-child { border-right: none; }
+  .gradient-step .level-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.04em;
+  }
+  .gradient-step .french-form {
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 0.2rem;
+  }
+  .gradient-step .english-gloss {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .gradient-step .mechanism-note {
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .step-1 { background: var(--direct-bg); }
+  .step-1 .level-num { color: var(--direct-color); }
+  .step-2 { background: color-mix(in srgb, var(--direct-bg) 70%, var(--polite-bg) 30%); }
+  .step-2 .level-num { color: var(--direct-color); }
+  .step-3 { background: color-mix(in srgb, var(--direct-bg) 30%, var(--polite-bg) 70%); }
+  .step-3 .level-num { color: var(--muted); }
+  .step-4 { background: var(--polite-bg); }
+  .step-4 .level-num { color: var(--polite-color); }
+  .step-5 { background: var(--polite-bg); }
+  .step-5 .level-num { color: var(--polite-color); }
+
+  .gradient-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .axis-direct { color: var(--direct-color); }
+  .axis-polite { color: var(--polite-color); }
+  .axis-arrow {
+    flex: 1;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.7rem;
+  }
+
+  .mechanism-compare {
+    margin-top: 2rem;
+    border: 2px solid var(--accent-shared);
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: var(--accent-shared-bg);
+  }
+  .mechanism-compare h3 {
+    font-size: 1rem;
+    color: var(--accent-shared);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .mech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .mech-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .mech-card h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .mech-card.fr-mech { border-color: var(--accent-fr); }
+  .mech-card.fr-mech h4 { color: var(--accent-fr); }
+  .mech-card.en-mech { border-color: var(--accent-en); }
+  .mech-card.en-mech h4 { color: var(--accent-en); }
+  .morph-highlight {
+    background: var(--accent-fr-bg);
+    border: 1px solid var(--accent-fr);
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-weight: 700;
+  }
+  .aux-highlight {
+    background: var(--accent-en-bg);
+    border: 1px solid var(--accent-en);
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-weight: 700;
+  }
+
+  .coffee-example {
+    margin-top: 1.5rem;
+    border: 2px solid var(--accent-fr);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .coffee-example h4 { font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-fr); }
+  .coffee-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .coffee-row:last-child { border-bottom: none; }
+  .coffee-level {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 50px;
+    text-align: center;
+  }
+  .coffee-assessment {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .gradient-bar { flex-direction: column; }
+    .gradient-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .gradient-step:last-child { border-bottom: none; }
+    .mech-grid { grid-template-columns: 1fr; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Conditional Politeness Gradient</h2>
+  <p class="subtitle">How verb mood creates a politeness spectrum -- French changes the WORD, English adds more WORDS</p>
+
+  <div class="gradient-section">
+    <div class="gradient-label"><span class="tag tag-fr">French</span> Morphological politeness (mood change)</div>
+    <div class="gradient-bar">
+      <div class="gradient-step step-1">
+        <div class="level-num">Blunt</div>
+        <div class="french-form">Donne-moi!</div>
+        <div class="english-gloss">Give me!</div>
+        <div class="mechanism-note" style="background:var(--direct-bg); color:var(--direct-color);">Imperative</div>
+      </div>
+      <div class="gradient-step step-2">
+        <div class="level-num">Direct</div>
+        <div class="french-form">Je veux un cafe.</div>
+        <div class="english-gloss">I want a coffee.</div>
+        <div class="mechanism-note" style="background:var(--direct-bg); color:var(--direct-color);">Indicative</div>
+      </div>
+      <div class="gradient-step step-3">
+        <div class="level-num">Acceptable</div>
+        <div class="french-form">Pouvez-vous...?</div>
+        <div class="english-gloss">Can you...?</div>
+        <div class="mechanism-note" style="background:var(--accent-shared-bg); color:var(--accent-shared);">Indicative + question</div>
+      </div>
+      <div class="gradient-step step-4">
+        <div class="level-num">Polite</div>
+        <div class="french-form">Je voudr<span class="morph-highlight">ais</span>...</div>
+        <div class="english-gloss">I would like...</div>
+        <div class="mechanism-note" style="background:var(--polite-bg); color:var(--polite-color);">Conditional mood</div>
+      </div>
+      <div class="gradient-step step-5">
+        <div class="level-num">Very Polite</div>
+        <div class="french-form">Pourr<span class="morph-highlight">iez</span>-vous...?</div>
+        <div class="english-gloss">Could you...?</div>
+        <div class="mechanism-note" style="background:var(--polite-bg); color:var(--polite-color);">Conditional + question + SVP</div>
+      </div>
+    </div>
+    <div class="gradient-axis">
+      <span class="axis-direct">DIRECT</span>
+      <span class="axis-arrow">-------- increasing politeness --------></span>
+      <span class="axis-polite">INDIRECT</span>
+    </div>
+  </div>
+
+  <div class="gradient-section">
+    <div class="gradient-label"><span class="tag tag-en">English</span> Periphrastic politeness (auxiliary substitution)</div>
+    <div class="gradient-bar">
+      <div class="gradient-step step-1">
+        <div class="level-num">Blunt</div>
+        <div class="french-form">Give me!</div>
+        <div class="english-gloss">Imperative</div>
+      </div>
+      <div class="gradient-step step-2">
+        <div class="level-num">Direct</div>
+        <div class="french-form">I want a coffee.</div>
+        <div class="english-gloss">Statement</div>
+      </div>
+      <div class="gradient-step step-3">
+        <div class="level-num">Neutral</div>
+        <div class="french-form"><span class="aux-highlight">Can</span> you...?</div>
+        <div class="english-gloss">Modal auxiliary</div>
+      </div>
+      <div class="gradient-step step-4">
+        <div class="level-num">Polite</div>
+        <div class="french-form"><span class="aux-highlight">Could</span> you...?</div>
+        <div class="english-gloss">Past modal</div>
+      </div>
+      <div class="gradient-step step-5">
+        <div class="level-num">Very Polite</div>
+        <div class="french-form"><span class="aux-highlight">Would</span> you <span class="aux-highlight">mind</span>...?</div>
+        <div class="english-gloss">More words = more polite</div>
+      </div>
+    </div>
+    <div class="gradient-axis">
+      <span class="axis-direct">DIRECT</span>
+      <span class="axis-arrow">-------- increasing politeness --------></span>
+      <span class="axis-polite">INDIRECT</span>
+    </div>
+  </div>
+
+  <div class="mechanism-compare">
+    <h3>The Architectural Difference</h3>
+    <div class="mech-grid">
+      <div class="mech-card fr-mech">
+        <h4>French: Morphological</h4>
+        <p>Politeness is encoded by <strong>changing the verb form itself</strong>. The conditional mood (future stem + imperfect endings) transforms the speech act. One word changes: veux -> voudr<span class="morph-highlight">ais</span>, pouvez -> pourr<span class="morph-highlight">iez</span>.</p>
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted);">The mechanism: hypotheticality creates distance. "I would want" implies "if it were possible" -- the unstated condition softens the request.</p>
+      </div>
+      <div class="mech-card en-mech">
+        <h4>English: Periphrastic</h4>
+        <p>Politeness is encoded by <strong>substituting or adding auxiliary words</strong>. Can -> <span class="aux-highlight">Could</span>. Do you want -> <span class="aux-highlight">Would</span> you <span class="aux-highlight">mind</span>. More words = more indirect = more polite.</p>
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted);">The mechanism: the same hypotheticality principle, but realized through separate auxiliary verbs rather than morphological mood change.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="coffee-example">
+    <h4>Ordering Coffee -- Four Registers</h4>
+    <div class="coffee-row">
+      <div class="coffee-level" style="color:var(--direct-color);">1</div>
+      <div>"Un cafe." -- <em>A coffee.</em></div>
+      <div class="coffee-assessment">Minimal. Only in casual/established relationships.</div>
+    </div>
+    <div class="coffee-row">
+      <div class="coffee-level" style="color:var(--direct-color);">2</div>
+      <div>"Je veux un cafe." -- <em>I want a coffee.</em></div>
+      <div class="coffee-assessment">Direct. Potentially rude with strangers.</div>
+    </div>
+    <div class="coffee-row">
+      <div class="coffee-level" style="color:var(--polite-color);">3</div>
+      <div>"Je voudrais un cafe, s'il vous plait." -- <em>I would like a coffee, please.</em></div>
+      <div class="coffee-assessment">Standard polite. The expected register.</div>
+    </div>
+    <div class="coffee-row">
+      <div class="coffee-level" style="color:var(--polite-color);">4</div>
+      <div>"Est-ce que je pourrais avoir un cafe, s'il vous plait?" -- <em>Could I have a coffee, please?</em></div>
+      <div class="coffee-assessment">Very polite. Question + conditional + SVP.</div>
+    </div>
+  </div>
+
+  <figcaption>
+    The shared underlying principle: hypotheticality creates politeness. Both languages use it, but French encodes it through morphology (changing the verb) while English encodes it through periphrasis (adding words). The conditional primarily applies to verbs of desire (vouloir), ability (pouvoir), and obligation (devoir).
+  </figcaption>
+</figure>
+</body>
+</html>

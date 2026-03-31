@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Endings -- Grammar Invisible in Speech</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-fr: #3b82f6;
+    --accent-en: #10b981;
+    --accent-fr-bg: #eff6ff;
+    --accent-en-bg: #ecfdf5;
+    --silent: #e63946;
+    --silent-bg: #fef2f2;
+    --audible: #10b981;
+    --audible-bg: #ecfdf5;
+    --accent-shared: #8b5cf6;
+    --accent-shared-bg: #f5f3ff;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-fr: #60a5fa;
+      --accent-en: #34d399;
+      --accent-fr-bg: #1e293b;
+      --accent-en-bg: #132e24;
+      --silent: #f87171;
+      --silent-bg: #2a1215;
+      --audible: #34d399;
+      --audible-bg: #132e24;
+      --accent-shared: #a78bfa;
+      --accent-shared-bg: #1e1b3a;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .sentence-analysis {
+    border: 2px solid var(--accent-fr);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .sentence-analysis h3 { font-size: 0.95rem; color: var(--accent-fr); margin-bottom: 1rem; text-align: center; }
+  .sentence-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .layer-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+  }
+  .layer-written {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0.8rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .layer-written .silent-letter {
+    color: var(--silent);
+    font-weight: 800;
+    background: var(--silent-bg);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .layer-spoken {
+    font-size: 1rem;
+    font-style: italic;
+    padding: 0.8rem;
+    background: var(--audible-bg);
+    border-radius: 8px;
+    border: 1px solid var(--audible);
+    color: var(--audible);
+  }
+  .layer-grammar {
+    font-size: 0.82rem;
+    padding: 0.8rem;
+    background: var(--silent-bg);
+    border-radius: 8px;
+    border: 1px solid var(--silent);
+  }
+  .silent-count {
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--silent);
+    margin-top: 0.5rem;
+  }
+
+  .collapse-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .collapse-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .collapse-card h3 { font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .collapse-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .collapse-table th {
+    padding: 0.4rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .collapse-table td {
+    padding: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-written { font-weight: 600; }
+  .form-spoken { color: var(--audible); font-style: italic; }
+  .form-silent { color: var(--silent); font-weight: 700; }
+  .same-row { background: var(--silent-bg); }
+
+  .comparison-box {
+    border: 2px solid var(--accent-shared);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    background: var(--accent-shared-bg);
+  }
+  .comparison-box h3 { font-size: 0.95rem; color: var(--accent-shared); margin-bottom: 1rem; text-align: center; }
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .comp-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .comp-card h4 { font-size: 0.88rem; margin-bottom: 0.3rem; }
+
+  .en-comparison {
+    margin-top: 1.5rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-comparison h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-comparison p { font-size: 0.88rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    .collapse-grid { grid-template-columns: 1fr; }
+    .comp-grid { grid-template-columns: 1fr; }
+    figure { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Silent Endings -- Grammar Invisible in Speech</h2>
+  <p class="subtitle">Written French encodes grammatical distinctions (gender, number, person) that are entirely absent from the spoken signal</p>
+
+  <div class="sentence-analysis">
+    <h3>Anatomy of a French Sentence -- Written vs. Spoken Information</h3>
+    <div class="sentence-layers">
+      <div class="layer-label" style="color:var(--accent-fr);">Written Form</div>
+      <div class="layer-written">
+        Le<span class="silent-letter">s</span> petit<span class="silent-letter">e</span><span class="silent-letter">s</span> fille<span class="silent-letter">s</span> sont alle<span class="silent-letter">e</span><span class="silent-letter">s</span> au parc
+      </div>
+      <div class="layer-label" style="color:var(--audible);">Spoken Form (IPA)</div>
+      <div class="layer-spoken">
+        /le pətit fij sɔ̃t‿ale o paʁk/
+      </div>
+      <div class="layer-label" style="color:var(--silent);">Silent Grammar Encoded</div>
+      <div class="layer-grammar">
+        <strong>-s</strong> on "les" = plural determiner (liaison may voice it) |
+        <strong>-e-s</strong> on "petites" = feminine + plural adjective agreement |
+        <strong>-s</strong> on "filles" = plural noun |
+        <strong>-e-s</strong> on "allees" = feminine + plural past participle agreement
+      </div>
+      <div class="silent-count">7 silent grammatical letters carrying information ABSENT from speech</div>
+    </div>
+  </div>
+
+  <div class="collapse-grid">
+    <div class="collapse-card" style="border-color:var(--silent);">
+      <h3 style="color:var(--silent);">Verb Conjugation: 4 Forms, 1 Sound</h3>
+      <table class="collapse-table">
+        <thead><tr><th>Subject</th><th>Written</th><th>Spoken</th><th>Silent</th></tr></thead>
+        <tbody>
+          <tr class="same-row"><td>je</td><td class="form-written">parle</td><td class="form-spoken">/paʁl/</td><td class="form-silent">-e</td></tr>
+          <tr class="same-row"><td>tu</td><td class="form-written">parles</td><td class="form-spoken">/paʁl/</td><td class="form-silent">-es</td></tr>
+          <tr class="same-row"><td>il/elle</td><td class="form-written">parle</td><td class="form-spoken">/paʁl/</td><td class="form-silent">-e</td></tr>
+          <tr class="same-row"><td>ils/elles</td><td class="form-written">parlent</td><td class="form-spoken">/paʁl/</td><td class="form-silent">-ent</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem;color:var(--silent);margin-top:0.5rem;">The -ent ending of 3rd person plural is ALWAYS silent in verbs. Only the subject pronoun signals person in speech.</p>
+    </div>
+
+    <div class="collapse-card" style="border-color:var(--silent);">
+      <h3 style="color:var(--silent);">Past Participle: 4 Forms, 1 Sound</h3>
+      <table class="collapse-table">
+        <thead><tr><th>Agreement</th><th>Written</th><th>Spoken</th><th>Silent</th></tr></thead>
+        <tbody>
+          <tr class="same-row"><td>masc. sg.</td><td class="form-written">alle</td><td class="form-spoken">/ale/</td><td class="form-silent">--</td></tr>
+          <tr class="same-row"><td>fem. sg.</td><td class="form-written">allee</td><td class="form-spoken">/ale/</td><td class="form-silent">-e</td></tr>
+          <tr class="same-row"><td>masc. pl.</td><td class="form-written">alles</td><td class="form-spoken">/ale/</td><td class="form-silent">-s</td></tr>
+          <tr class="same-row"><td>fem. pl.</td><td class="form-written">allees</td><td class="form-spoken">/ale/</td><td class="form-silent">-es</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem;color:var(--silent);margin-top:0.5rem;">Gender and number agreement of past participles is ENTIRELY a written phenomenon -- zero audible difference.</p>
+    </div>
+  </div>
+
+  <div class="comparison-box">
+    <h3>The Consequence: Spelling = Phonological Task + Grammatical Task</h3>
+    <div class="comp-grid">
+      <div class="comp-card" style="border-color:var(--accent-fr);">
+        <h4 style="color:var(--accent-fr);">French Spelling (Dictee)</h4>
+        <p>Hearing /paʁl/ requires: (1) Select correct graphemes for the sound (phonological), THEN (2) Identify the subject from context, determine person/number, and add the correct SILENT ending (grammatical).</p>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Spelling is simultaneously phonological AND grammatical.</p>
+      </div>
+      <div class="comp-card" style="border-color:var(--accent-en);">
+        <h4 style="color:var(--accent-en);">English Spelling (Spelling Test)</h4>
+        <p>Hearing /spik/ requires: Select correct graphemes (s-p-e-a-k). English's -s plural and -ed past are (almost) always audible. Nearly everything written is also spoken.</p>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Spelling is primarily phonological. Grammar tests are separate.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-comparison">
+    <h4>ENGLISH COMPARISON -- The Most Important Structural Difference</h4>
+    <p>English has very few silent grammatical endings. The -s of plurals is audible. The -ed of past tense is audible (though its pronunciation varies: /t/, /d/, /ɪd/). Nearly everything written in English is also spoken. This means:</p>
+    <p style="margin-top:0.5rem;"><strong>English spelling</strong> = hearing sounds and writing letters (phonological task)</p>
+    <p><strong>French spelling</strong> = hearing sounds, writing letters, AND analyzing grammar to determine silent endings (phonological + grammatical task)</p>
+    <p style="margin-top:0.5rem;">This is why France has the <strong>dictee</strong> (a comprehensive language test disguised as dictation) and English-speaking countries have <strong>spelling bees</strong> (a pure word-memorization contest). The tasks are structurally different because the writing systems encode different types of information.</p>
+  </div>
+
+  <figcaption>
+    Written French is morphologically richer than spoken French -- a rare situation among world languages. The silent inflectional endings create an entire grammatical layer visible only on the page, making French spelling a test of grammatical analysis, not just phonological memory.
+  </figcaption>
+</figure>
+</body>
+</html>

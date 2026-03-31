@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gender Prediction Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #4361ee; --accent-light: #e8edff;
+    --fem: #ec4899; --fem-bg: #fce7f3;
+    --masc: #3b82f6; --masc-bg: #dbeafe;
+    --ambig: #f59e0b; --ambig-bg: #fef3c7;
+    --exception: #ef4444; --exception-bg: #fee2e2;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --accent-light: #1e2a4a;
+      --fem: #f472b6; --fem-bg: #5c1a3a;
+      --masc: #60a5fa; --masc-bg: #1e3a5f;
+      --ambig: #fbbf24; --ambig-bg: #78350f;
+      --exception: #f87171; --exception-bg: #5c1a1a;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem 1rem; overflow-x: auto;
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  svg { display: block; margin: 0 auto; }
+  .title-text { font: bold 14px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+  .label { font: 11px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+  .label-bold { font: bold 11px 'Segoe UI', system-ui, sans-serif; }
+  .label-sm { font: 10px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+  .pct { font: bold 12px 'Segoe UI', system-ui, sans-serif; }
+  .legend { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; font-size: 0.82rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <svg viewBox="0 0 1060 780" xmlns="http://www.w3.org/2000/svg" style="min-width:780px;">
+      <defs>
+        <marker id="arrF" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--fem)"/></marker>
+        <marker id="arrM" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--masc)"/></marker>
+        <marker id="arrA" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--ambig)"/></marker>
+      </defs>
+
+      <text x="530" y="25" text-anchor="middle" class="title-text" style="font-size:16px;">Gender Prediction Decision Tree</text>
+      <text x="530" y="42" text-anchor="middle" class="label-sm" style="font-size:11px;">Based on Lyster (2006): ~80% of French nouns have endings that predict their gender</text>
+
+      <!-- ENTRY NODE -->
+      <rect x="400" y="55" width="260" height="35" rx="17" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="530" y="77" text-anchor="middle" class="label-bold" fill="var(--accent)">What does the noun end in?</text>
+
+      <!-- LEFT COLUMN: FEMININE -->
+      <text x="180" y="110" text-anchor="middle" class="title-text" fill="var(--fem)">FEMININE PREDICTORS</text>
+
+      <!-- -tion/-sion -->
+      <line x1="430" y1="90" x2="180" y2="130" stroke="var(--fem)" stroke-width="1.5"/>
+      <rect x="60" y="120" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="140" text-anchor="start" class="label-bold" fill="var(--fem)">-tion / -sion / -aison</text>
+      <text x="260" y="140" text-anchor="end" class="pct" fill="var(--fem)">99%</text>
+      <text x="80" y="153" text-anchor="start" class="label-sm">nation, passion, raison, education</text>
+
+      <!-- -te/-ite -->
+      <rect x="60" y="163" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="183" text-anchor="start" class="label-bold" fill="var(--fem)">-te / -ite</text>
+      <text x="260" y="183" text-anchor="end" class="pct" fill="var(--fem)">95%</text>
+      <text x="80" y="196" text-anchor="start" class="label-sm">liberte, societe, beaute, universite</text>
+
+      <!-- -ure -->
+      <rect x="60" y="206" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="226" text-anchor="start" class="label-bold" fill="var(--fem)">-ure</text>
+      <text x="260" y="226" text-anchor="end" class="pct" fill="var(--fem)">90%</text>
+      <text x="80" y="239" text-anchor="start" class="label-sm">nature, culture, voiture, aventure</text>
+
+      <!-- -ence/-ance -->
+      <rect x="60" y="249" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="269" text-anchor="start" class="label-bold" fill="var(--fem)">-ence / -ance</text>
+      <text x="260" y="269" text-anchor="end" class="pct" fill="var(--fem)">95%</text>
+      <text x="80" y="282" text-anchor="start" class="label-sm">science, chance, patience</text>
+
+      <!-- -ie/-rie -->
+      <rect x="60" y="292" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="312" text-anchor="start" class="label-bold" fill="var(--fem)">-ie / -rie</text>
+      <text x="260" y="312" text-anchor="end" class="pct" fill="var(--fem)">95%</text>
+      <text x="80" y="325" text-anchor="start" class="label-sm">vie, philosophie, boulangerie</text>
+
+      <!-- -ette/-elle -->
+      <rect x="60" y="335" width="240" height="38" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="355" text-anchor="start" class="label-bold" fill="var(--fem)">-ette / -elle</text>
+      <text x="260" y="355" text-anchor="end" class="pct" fill="var(--fem)">98%</text>
+      <text x="80" y="368" text-anchor="start" class="label-sm">assiette, fourchette, chapelle</text>
+
+      <!-- -ee -->
+      <rect x="60" y="378" width="240" height="48" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="1.5"/>
+      <text x="80" y="398" text-anchor="start" class="label-bold" fill="var(--fem)">-ee</text>
+      <text x="260" y="398" text-anchor="end" class="pct" fill="var(--fem)">95%</text>
+      <text x="80" y="413" text-anchor="start" class="label-sm">idee, journee, annee, entree</text>
+      <text x="80" y="423" text-anchor="start" class="label-sm" fill="var(--exception)">Exception: musee (m)</text>
+
+      <!-- RIGHT COLUMN: MASCULINE -->
+      <text x="880" y="110" text-anchor="middle" class="title-text" fill="var(--masc)">MASCULINE PREDICTORS</text>
+
+      <line x1="630" y1="90" x2="880" y2="130" stroke="var(--masc)" stroke-width="1.5"/>
+
+      <!-- -ment -->
+      <rect x="760" y="120" width="240" height="38" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="140" text-anchor="start" class="label-bold" fill="var(--masc)">-ment</text>
+      <text x="960" y="140" text-anchor="end" class="pct" fill="var(--masc)">95%</text>
+      <text x="780" y="153" text-anchor="start" class="label-sm">moment, gouvernement, changement</text>
+
+      <!-- -age -->
+      <rect x="760" y="163" width="240" height="48" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="183" text-anchor="start" class="label-bold" fill="var(--masc)">-age</text>
+      <text x="960" y="183" text-anchor="end" class="pct" fill="var(--masc)">90%</text>
+      <text x="780" y="198" text-anchor="start" class="label-sm">voyage, fromage, village</text>
+      <text x="780" y="208" text-anchor="start" class="label-sm" fill="var(--exception)">Exc: image, page, plage (f)</text>
+
+      <!-- -eau -->
+      <rect x="760" y="216" width="240" height="38" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="236" text-anchor="start" class="label-bold" fill="var(--masc)">-eau</text>
+      <text x="960" y="236" text-anchor="end" class="pct" fill="var(--masc)">95%</text>
+      <text x="780" y="249" text-anchor="start" class="label-sm">bureau, chateau, tableau</text>
+
+      <!-- -isme -->
+      <rect x="760" y="259" width="240" height="38" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="279" text-anchor="start" class="label-bold" fill="var(--masc)">-isme</text>
+      <text x="960" y="279" text-anchor="end" class="pct" fill="var(--masc)">100%</text>
+      <text x="780" y="292" text-anchor="start" class="label-sm">capitalisme, realisme, tourisme</text>
+
+      <!-- -eur -->
+      <rect x="760" y="302" width="240" height="48" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="322" text-anchor="start" class="label-bold" fill="var(--masc)">-eur</text>
+      <text x="960" y="322" text-anchor="end" class="pct" fill="var(--masc)">85%</text>
+      <text x="780" y="337" text-anchor="start" class="label-sm">honneur, bonheur, moteur</text>
+      <text x="780" y="347" text-anchor="start" class="label-sm" fill="var(--exception)">Exc: fleur, couleur, peur (f)</text>
+
+      <!-- -al/-ail/-eil -->
+      <rect x="760" y="355" width="240" height="38" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="375" text-anchor="start" class="label-bold" fill="var(--masc)">-al / -ail / -eil</text>
+      <text x="960" y="375" text-anchor="end" class="pct" fill="var(--masc)">95%</text>
+      <text x="780" y="388" text-anchor="start" class="label-sm">journal, travail, soleil</text>
+
+      <!-- -oir -->
+      <rect x="760" y="398" width="240" height="38" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="1.5"/>
+      <text x="780" y="418" text-anchor="start" class="label-bold" fill="var(--masc)">-oir</text>
+      <text x="960" y="418" text-anchor="end" class="pct" fill="var(--masc)">95%</text>
+      <text x="780" y="431" text-anchor="start" class="label-sm">miroir, espoir, pouvoir</text>
+
+      <!-- MIDDLE COLUMN: WEAK PREDICTORS -->
+      <text x="530" y="460" text-anchor="middle" class="title-text" fill="var(--ambig)">WEAK PREDICTORS (use as tiebreakers)</text>
+
+      <rect x="340" y="470" width="160" height="45" rx="6" fill="var(--fem-bg)" stroke="var(--ambig)" stroke-width="1.5"/>
+      <text x="420" y="490" text-anchor="middle" class="label-bold" fill="var(--fem)">Ends in silent -e?</text>
+      <text x="420" y="506" text-anchor="middle" class="label-sm">~65% feminine (weak)</text>
+
+      <rect x="560" y="470" width="160" height="45" rx="6" fill="var(--masc-bg)" stroke="var(--ambig)" stroke-width="1.5"/>
+      <text x="640" y="490" text-anchor="middle" class="label-bold" fill="var(--masc)">Ends in consonant?</text>
+      <text x="640" y="506" text-anchor="middle" class="label-sm">~80% masculine</text>
+
+      <!-- FALLBACK -->
+      <rect x="380" y="530" width="300" height="35" rx="17" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="530" y="552" text-anchor="middle" class="label-bold" fill="var(--accent)">Not covered? Learn individually (~20%)</text>
+
+      <!-- ENGLISH COMPARISON -->
+      <g transform="translate(50, 585)">
+        <rect x="0" y="0" width="960" height="60" rx="10" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="480" y="18" text-anchor="middle" class="title-text" fill="var(--accent)" style="font-size:12px;">ENGLISH COMPARISON</text>
+        <text x="480" y="36" text-anchor="middle" class="label" fill="var(--fg)">English has NO grammatical gender. English speakers have no prior framework for gender prediction.</text>
+        <text x="480" y="52" text-anchor="middle" class="label-bold" fill="var(--accent)">This decision tree provides the systematic, rule-based approach that replaces rote memorization.</text>
+      </g>
+
+      <!-- Usage example -->
+      <g transform="translate(50, 660)">
+        <rect x="0" y="0" width="960" height="95" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="480" y="18" text-anchor="middle" class="title-text" fill="var(--accent)" style="font-size:12px;">EXAMPLE: You encounter "organisation" -- what gender?</text>
+        <text x="30" y="40" text-anchor="start" class="label" fill="var(--fg)">Step 1: Does it end in -tion? YES</text>
+        <text x="30" y="55" text-anchor="start" class="label" fill="var(--fg)">Step 2: -tion/-sion endings are 99% feminine</text>
+        <text x="30" y="70" text-anchor="start" class="label-bold" fill="var(--fem)">Prediction: FEMININE -> "l'organisation"</text>
+        <text x="30" y="88" text-anchor="start" class="label-bold" fill="var(--accent)">Result: CORRECT. No dictionary lookup needed.</text>
+        <text x="600" y="65" text-anchor="start" class="label" fill="var(--muted)">This algorithm correctly predicts gender</text>
+        <text x="600" y="80" text-anchor="start" class="label" fill="var(--muted)">for 80% of all French nouns (Lyster 2006,</text>
+        <text x="600" y="95" text-anchor="start" class="label" fill="var(--muted)">corpus of 9,961 nouns).</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--fem-bg);border-color:var(--fem);"></div> Feminine predictor</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--masc-bg);border-color:var(--masc);"></div> Masculine predictor</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--ambig-bg);border-color:var(--ambig);"></div> Weak predictor</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--exception-bg);border-color:var(--exception);"></div> Known exception</div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 2 -- Gender Prediction Decision Tree</h2>
+    <p>Based on Lyster's 2006 corpus analysis of 9,961 French nouns, approximately 80% of nouns have endings that systematically predict their gender. This decision tree transforms gender from a memorization task (learn each noun individually) into a pattern-recognition task (check the ending, apply the rule). Accuracy ranges from 85% (-eur) to 100% (-isme), with known exceptions that are themselves patterned.</p>
+  </figcaption>
+</figure>
+</body>
+</html>
