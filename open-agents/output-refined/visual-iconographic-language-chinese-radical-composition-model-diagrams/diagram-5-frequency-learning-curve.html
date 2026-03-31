@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Frequency and Learning Curve</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1000px;
+    width: 100%;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #1a1a2e;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-height: 450px;
+    margin-bottom: 1.5rem;
+  }
+  .milestone-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .milestone {
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    min-width: 140px;
+    flex: 1;
+    max-width: 180px;
+  }
+  .milestone .ms-chars {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .milestone .ms-pct {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 0.1rem;
+  }
+  .milestone .ms-label {
+    font-size: 0.7rem;
+    margin-top: 0.3rem;
+    opacity: 0.7;
+  }
+  .ms-a { border-color: #f59e0b; }
+  .ms-a .ms-chars { color: #f59e0b; }
+  .ms-b { border-color: #22c55e; }
+  .ms-b .ms-chars { color: #22c55e; }
+  .ms-c { border-color: #3b82f6; }
+  .ms-c .ms-chars { color: #3b82f6; }
+  .ms-d { border-color: #8b5cf6; }
+  .ms-d .ms-chars { color: #8b5cf6; }
+  .ms-e { border-color: #ef4444; }
+  .ms-e .ms-chars { color: #ef4444; }
+
+  .insight-box {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .insight-box strong {
+    color: #dc2626;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+  figcaption span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .diagram-title { color: #e9ecef; }
+    .diagram-subtitle { color: #adb5bd; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+    .insight-box { background: rgba(239,68,68,0.1); }
+    .milestone { background: rgba(0,0,0,0.2); }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-title">Character Frequency and the Learning Curve</div>
+  <div class="diagram-subtitle">How many characters you need to know for different levels of text comprehension -- and the cost of each additional percentage point</div>
+
+  <div class="milestone-cards">
+    <div class="milestone ms-a">
+      <div class="ms-chars">100</div>
+      <div class="ms-pct">42%</div>
+      <div class="ms-label">characters for ~42% text</div>
+    </div>
+    <div class="milestone ms-b">
+      <div class="ms-chars">300</div>
+      <div class="ms-pct">64%</div>
+      <div class="ms-label">characters for ~64% text</div>
+    </div>
+    <div class="milestone ms-c">
+      <div class="ms-chars">1,000</div>
+      <div class="ms-pct">90%</div>
+      <div class="ms-label">characters for ~90% text</div>
+    </div>
+    <div class="milestone ms-d">
+      <div class="ms-chars">2,300</div>
+      <div class="ms-pct">~98%</div>
+      <div class="ms-label">chars for ~98% text</div>
+    </div>
+    <div class="milestone ms-e">
+      <div class="ms-chars">3,000</div>
+      <div class="ms-pct">~99%</div>
+      <div class="ms-label">chars for ~99% text</div>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="freqChart"></canvas>
+  </div>
+
+  <div class="insight-box">
+    <strong>The long-tail problem:</strong> Going from 90% to 99% comprehension requires learning 2,000 additional characters (1,000 to 3,000). Each additional percentage point of comprehension costs exponentially more effort. This is a fundamental property of Zipf-distributed vocabularies -- and any visual language with a large symbol inventory will face the same curve. The design imperative: make unfamiliar symbols as predictable as possible through systematic composition rules.
+  </div>
+
+  <figcaption>
+    <strong>Diagram 5: Character Frequency and Learning Curve</strong>
+    <span>Cumulative text coverage as a function of characters known, with HSK proficiency levels overlaid. The curve follows a classic Zipfian distribution: a small number of high-frequency characters cover a large proportion of text, but the long tail demands massive additional learning for incremental gains. The corrected figures show ~98% at approximately 2,300 characters and ~99% at approximately 3,000 characters. Sources: Chinese character frequency (Wikipedia), HanyuAce, Migaku.</span>
+  </figcaption>
+</figure>
+<script>
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const textColor = isDark ? '#adb5bd' : '#6c757d';
+  const gridColor = isDark ? '#3d3d5c' : '#e5e7eb';
+
+  const ctx = document.getElementById('freqChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [0, 10, 50, 100, 200, 300, 500, 1000, 1500, 2000, 2300, 3000, 4000, 5000],
+      datasets: [{
+        label: 'Text Coverage (%)',
+        data: [0, 4, 25, 42, 55, 64, 78, 90, 94, 97, 98, 99, 99.5, 99.8],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#3b82f6',
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 2.2,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.parsed.y + '% text covered with ' + context.parsed.x + ' characters';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Number of Characters Known',
+            color: textColor,
+            font: { size: 13 }
+          },
+          ticks: { color: textColor },
+          grid: { color: gridColor }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Text Comprehension (%)',
+            color: textColor,
+            font: { size: 13 }
+          },
+          min: 0,
+          max: 100,
+          ticks: { color: textColor, callback: v => v + '%' },
+          grid: { color: gridColor }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

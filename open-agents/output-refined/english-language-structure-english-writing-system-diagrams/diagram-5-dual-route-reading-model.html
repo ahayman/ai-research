@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual-Route Reading Model for English</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --route1-color: #1565c0;
+    --route1-bg: #e3f2fd;
+    --route1-line: #42a5f5;
+    --route2-color: #c2185b;
+    --route2-bg: #fce4ec;
+    --route2-line: #ef5350;
+    --input-color: #2e7d32;
+    --input-bg: #e8f5e9;
+    --output-color: #e65100;
+    --output-bg: #fff3e0;
+    --node-bg: #ffffff;
+    --node-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --fail-color: #c62828;
+    --success-color: #2e7d32;
+    --dyslexia-color: #7b1fa2;
+    --dyslexia-bg: #f3e5f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --route1-color: #64b5f6;
+      --route1-bg: #152540;
+      --route1-line: #42a5f5;
+      --route2-color: #f48fb1;
+      --route2-bg: #311b2c;
+      --route2-line: #ef5350;
+      --input-color: #81c784;
+      --input-bg: #1a3020;
+      --output-color: #ffb74d;
+      --output-bg: #2a2010;
+      --node-bg: #22223a;
+      --node-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      --fail-color: #ef9a9a;
+      --success-color: #81c784;
+      --dyslexia-color: #ce93d8;
+      --dyslexia-bg: #2a1f40;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 920px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Input node */
+  .input-node {
+    background: var(--input-bg);
+    border: 2px solid var(--input-color);
+    border-radius: 12px;
+    padding: 0.7rem 1.5rem;
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+  }
+  .input-node .icon { font-size: 1.3rem; }
+  .input-node .label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--input-color);
+  }
+  .input-node .sublabel {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Arrow down */
+  .arrow-down {
+    width: 2px;
+    height: 30px;
+    background: var(--border);
+    position: relative;
+  }
+  .arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: -4px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--border);
+  }
+
+  /* Fork */
+  .fork-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .fork-label {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .routes-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .route {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .route-header {
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px 10px 0 0;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .route-header.route1 { background: var(--route1-bg); color: var(--route1-color); border: 2px solid var(--route1-color); border-bottom: none; }
+  .route-header.route2 { background: var(--route2-bg); color: var(--route2-color); border: 2px solid var(--route2-color); border-bottom: none; }
+  .route-header .route-subtitle {
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.8;
+  }
+
+  .route-body {
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .route-body.route1 { border: 2px solid var(--route1-color); border-top: none; background: var(--surface); }
+  .route-body.route2 { border: 2px solid var(--route2-color); border-top: none; background: var(--surface); }
+
+  .step-node {
+    background: var(--node-bg);
+    border-radius: 8px;
+    padding: 0.45rem 0.7rem;
+    box-shadow: var(--node-shadow);
+    text-align: center;
+    width: 100%;
+    max-width: 280px;
+  }
+  .step-node .step-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .step-node .step-detail {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .mini-arrow {
+    width: 2px;
+    height: 14px;
+    position: relative;
+  }
+  .mini-arrow.route1 { background: var(--route1-line); }
+  .mini-arrow.route2 { background: var(--route2-line); }
+  .mini-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+  }
+  .mini-arrow.route1::after { border-top: 5px solid var(--route1-line); }
+  .mini-arrow.route2::after { border-top: 5px solid var(--route2-line); }
+
+  .works-for {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    margin-top: 0.3rem;
+  }
+  .works-for.route1 { background: var(--route1-bg); border: 1px solid var(--route1-color); }
+  .works-for.route2 { background: var(--route2-bg); border: 1px solid var(--route2-color); }
+  .works-for .wf-title {
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .works-for .success-word { color: var(--success-color); font-weight: 600; font-style: italic; }
+  .works-for .fail-word { color: var(--fail-color); font-weight: 600; font-style: italic; }
+
+  /* Merge node */
+  .merge-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .merge-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    width: 60%;
+    height: 30px;
+    position: relative;
+  }
+  .merge-arrows::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 20px;
+    border-bottom: 2px solid var(--border);
+    border-left: 2px solid var(--route1-line);
+    border-right: 2px solid var(--route2-line);
+    border-radius: 0 0 12px 12px;
+  }
+  .merge-arrows::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--border);
+  }
+
+  .output-node {
+    background: var(--output-bg);
+    border: 2px solid var(--output-color);
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+  }
+  .output-node .label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--output-color);
+  }
+
+  /* Evidence box */
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .evidence-card {
+    background: var(--dyslexia-bg);
+    border: 1px solid var(--dyslexia-color);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+  }
+  .evidence-card .ev-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--dyslexia-color);
+    margin-bottom: 0.3rem;
+  }
+  .evidence-card .ev-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .evidence-card .ev-desc strong { color: var(--fg); }
+
+  .cross-ling-bar {
+    margin-top: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+  }
+  .cross-ling-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .comparison-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.8rem;
+  }
+  .comparison-row:last-child { margin-bottom: 0; }
+  .lang-label {
+    min-width: 110px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+  .accuracy-bar-track {
+    flex: 1;
+    height: 18px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .accuracy-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .accuracy-bar-fill.high { background: var(--success-color); }
+  .accuracy-bar-fill.low { background: var(--fail-color); }
+  .accuracy-bar-fill.med { background: var(--output-color); }
+
+  @media (max-width: 650px) {
+    .routes-container { grid-template-columns: 1fr; gap: 1rem; }
+    .evidence-grid { grid-template-columns: 1fr; }
+    .merge-arrows { display: none; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="flow-diagram">
+    <!-- Input -->
+    <div class="input-node">
+      <div class="label">Written Word Enters Visual System</div>
+      <div class="sublabel">e.g., <em>cat</em>, <em>yacht</em>, <em>brint</em></div>
+    </div>
+
+    <div class="arrow-down"></div>
+
+    <!-- Fork -->
+    <div class="fork-container">
+      <div class="fork-label">Two Parallel Processing Routes</div>
+
+      <div class="routes-container">
+        <!-- Route 1: Sublexical -->
+        <div class="route">
+          <div class="route-header route1">
+            Route 1: Sublexical (Phonological)
+            <div class="route-subtitle">"Sounding it out"</div>
+          </div>
+          <div class="route-body route1">
+            <div class="step-node">
+              <div class="step-name">Grapheme Parsing</div>
+              <div class="step-detail">Segment letters into grapheme units<br><em>sh-i-p</em>, <em>ch-ur-ch</em></div>
+            </div>
+            <div class="mini-arrow route1"></div>
+            <div class="step-node">
+              <div class="step-name">Grapheme-Phoneme Conversion</div>
+              <div class="step-detail">Apply ~200 spelling-sound rules<br><em>sh</em> &rarr; /ʃ/, <em>ch</em> &rarr; /tʃ/</div>
+            </div>
+            <div class="mini-arrow route1"></div>
+            <div class="step-node">
+              <div class="step-name">Phonological Assembly</div>
+              <div class="step-detail">Blend phonemes into pronunciation<br>/ʃ/ + /ɪ/ + /p/ &rarr; /ʃɪp/</div>
+            </div>
+
+            <div class="works-for route1">
+              <div class="wf-title">Works for:</div>
+              <span class="success-word">cat, stop, brint, splofe</span> (regular + novel)<br>
+              <div class="wf-title" style="margin-top: 0.2rem;">Fails for:</div>
+              <span class="fail-word">yacht, colonel, said</span> (irregular)
+            </div>
+          </div>
+        </div>
+
+        <!-- Route 2: Lexical -->
+        <div class="route">
+          <div class="route-header route2">
+            Route 2: Lexical (Direct)
+            <div class="route-subtitle">"Whole-word recognition"</div>
+          </div>
+          <div class="route-body route2">
+            <div class="step-node">
+              <div class="step-name">Visual Word Recognition</div>
+              <div class="step-detail">Match word shape to stored entry<br>in mental lexicon (~50,000+ entries)</div>
+            </div>
+            <div class="mini-arrow route2"></div>
+            <div class="step-node">
+              <div class="step-name">Semantic Access</div>
+              <div class="step-detail">Retrieve meaning directly<br><em>yacht</em> &rarr; "a sailing vessel"</div>
+            </div>
+            <div class="mini-arrow route2"></div>
+            <div class="step-node">
+              <div class="step-name">Pronunciation Retrieval</div>
+              <div class="step-detail">Recall stored pronunciation<br><em>yacht</em> &rarr; /jɒt/</div>
+            </div>
+
+            <div class="works-for route2">
+              <div class="wf-title">Works for:</div>
+              <span class="success-word">yacht, colonel, said, have</span> (familiar, any regularity)<br>
+              <div class="wf-title" style="margin-top: 0.2rem;">Fails for:</div>
+              <span class="fail-word">brint, splofe</span> (novel words not in lexicon)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Merge -->
+    <div class="merge-section">
+      <div class="merge-arrows"></div>
+      <div class="output-node">
+        <div class="label">Pronunciation &amp; Comprehension</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evidence: double dissociation -->
+  <div class="evidence-grid">
+    <div class="evidence-card">
+      <div class="ev-title">Surface Dyslexia (Route 2 impaired)</div>
+      <div class="ev-desc">
+        Can sound out regular and novel words via Route 1, but <strong>cannot read irregular words</strong>.
+        Regularizes: reads <em>yacht</em> as */jætʃt/, <em>colonel</em> as */kɒl.ə.nel/.
+        <br>Evidence: lexical route is damaged; sublexical route intact.
+      </div>
+    </div>
+    <div class="evidence-card">
+      <div class="ev-title">Phonological Dyslexia (Route 1 impaired)</div>
+      <div class="ev-desc">
+        Can read familiar words of any regularity via Route 2, but <strong>cannot decode novel words</strong>.
+        Fails on: <em>brint</em>, <em>splofe</em>, any new word.
+        <br>Evidence: sublexical route is damaged; lexical route intact.
+      </div>
+    </div>
+  </div>
+
+  <!-- Cross-linguistic acquisition -->
+  <div class="cross-ling-bar">
+    <div class="cross-ling-title">Why This Matters: Reading Acquisition Speed (Seymour, Aro &amp; Erskine, 2003)</div>
+    <div class="comparison-row">
+      <span class="lang-label">Finnish, Greek, Italian</span>
+      <div class="accuracy-bar-track">
+        <div class="accuracy-bar-fill high" style="width: 95%;">~95% accuracy (mid-1st grade)</div>
+      </div>
+    </div>
+    <div class="comparison-row">
+      <span class="lang-label">French, Danish</span>
+      <div class="accuracy-bar-track">
+        <div class="accuracy-bar-fill med" style="width: 70%;">~70% accuracy</div>
+      </div>
+    </div>
+    <div class="comparison-row">
+      <span class="lang-label">English</span>
+      <div class="accuracy-bar-track">
+        <div class="accuracy-bar-fill low" style="width: 34%;">~34% accuracy</div>
+      </div>
+    </div>
+    <div style="font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; text-align: center;">
+      Transparent orthographies need only Route 1. English demands both routes -- and the second takes years to build.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>The Dual-Route Reading Model for English</h2>
+    <p>English readers maintain two parallel processing systems: a sublexical route for sounding out regular and novel words, and a lexical route for recognizing familiar words (including irregular ones) as wholes. The double dissociation between surface and phonological dyslexia confirms these are genuinely independent neural pathways. This dual requirement is why English reading takes 2-3 years longer to learn than transparent orthographies.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

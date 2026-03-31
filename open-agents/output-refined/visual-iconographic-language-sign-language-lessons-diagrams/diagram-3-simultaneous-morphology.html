@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simultaneous Morphology -- Information Channels in a Single Sign</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #1a1a2e;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+
+  .scenario-box {
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .scenario-box .scenario-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .channels-section {
+    margin-bottom: 2rem;
+  }
+  .channels-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #374151;
+  }
+
+  .channel-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .channel-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .channel-row:last-child {
+    border-bottom: none;
+  }
+  .channel-label {
+    width: 160px;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    border-right: 2px solid #e5e7eb;
+  }
+  .channel-content {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+  .channel-bar {
+    width: 100%;
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .ch-dom { background: #dbeafe; border-left: 4px solid #2563eb; }
+  .ch-dom .channel-label { color: #2563eb; }
+  .ch-nondom { background: #dcfce7; border-left: 4px solid #22c55e; }
+  .ch-nondom .channel-label { color: #16a34a; }
+  .ch-movement { background: #fef3c7; border-left: 4px solid #f59e0b; }
+  .ch-movement .channel-label { color: #d97706; }
+  .ch-face { background: #fee2e2; border-left: 4px solid #ef4444; }
+  .ch-face .channel-label { color: #dc2626; }
+  .ch-gaze { background: #f3e8ff; border-left: 4px solid #7c3aed; }
+  .ch-gaze .channel-label { color: #7c3aed; }
+
+  .time-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    gap: 0.5rem;
+  }
+  .time-arrow .arrow-line {
+    flex: 1;
+    height: 2px;
+    background: #d1d5db;
+    position: relative;
+  }
+  .time-arrow .arrow-line::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    border-left: 8px solid #d1d5db;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
+  .comparison-section {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .comparison-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #374151;
+  }
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .comp-card {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .comp-card h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .comp-spoken {
+    border-color: #6b7280;
+  }
+  .comp-spoken h4 { color: #6b7280; }
+  .comp-signed {
+    border-color: #2563eb;
+  }
+  .comp-signed h4 { color: #2563eb; }
+  .word-chain {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+  }
+  .word-chip {
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .word-chip-spoken {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+  }
+  .word-arrow {
+    color: #9ca3af;
+    font-size: 0.9rem;
+  }
+  .stack-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .stack-chip {
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+  .stack-1 { background: #dbeafe; }
+  .stack-2 { background: #dcfce7; }
+  .stack-3 { background: #fef3c7; }
+  .stack-4 { background: #fee2e2; }
+  .stack-5 { background: #f3e8ff; }
+
+  .encoding-note {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-top: 0.6rem;
+    line-height: 1.4;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+  figcaption span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .diagram-title, .channels-section h3, .comparison-section h3 { color: #e9ecef; }
+    .diagram-subtitle { color: #adb5bd; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+    .scenario-box { background: #23233a; }
+    .channel-row { border-bottom-color: #3d3d5c; }
+    .channel-label { border-right-color: #3d3d5c; }
+    .ch-dom .channel-bar { background: rgba(37,99,235,0.15); }
+    .ch-nondom .channel-bar { background: rgba(34,197,94,0.15); }
+    .ch-movement .channel-bar { background: rgba(245,158,11,0.15); }
+    .ch-face .channel-bar { background: rgba(239,68,68,0.15); }
+    .ch-gaze .channel-bar { background: rgba(124,58,237,0.15); }
+    .comp-card { background: rgba(0,0,0,0.1); }
+    .comp-spoken h4 { color: #9ca3af; }
+    .comp-signed h4 { color: #93c5fd; }
+    .word-chip-spoken { background: #3d3d5c; border-color: #4b5563; color: #d1d5db; }
+    .stack-1 { background: rgba(37,99,235,0.2); color: #93c5fd; }
+    .stack-2 { background: rgba(34,197,94,0.2); color: #86efac; }
+    .stack-3 { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .stack-4 { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .stack-5 { background: rgba(124,58,237,0.2); color: #d8b4fe; }
+    .encoding-note { color: #adb5bd; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-title">Simultaneous Morphology -- Information Channels in a Single Sign</div>
+  <div class="diagram-subtitle">How sign language encodes multiple morphemes in parallel across five articulatory channels, contrasted with spoken language's sequential stacking</div>
+
+  <div class="scenario-box">
+    <div class="scenario-label">Classifier predicate example</div>
+    "A car drives quickly off a cliff"
+  </div>
+
+  <div class="channels-section">
+    <h3>Five Channels Encoding Simultaneously</h3>
+    <div class="channel-tracks">
+      <div class="channel-row ch-dom">
+        <div class="channel-label">&#x270B; Dominant Hand</div>
+        <div class="channel-content">
+          <div class="channel-bar" style="background: #dbeafe;">
+            <strong>Vehicle classifier (flat hand)</strong> -- Handshape represents "car/vehicle" category. Moves forward then rapidly downward.
+          </div>
+        </div>
+      </div>
+      <div class="channel-row ch-nondom">
+        <div class="channel-label">&#x1F91A; Non-Dominant</div>
+        <div class="channel-content">
+          <div class="channel-bar" style="background: #dcfce7;">
+            <strong>Surface classifier (flat-B hand)</strong> -- Represents the cliff edge. Held stationary as spatial reference.
+          </div>
+        </div>
+      </div>
+      <div class="channel-row ch-movement">
+        <div class="channel-label">&#x27A1; Movement</div>
+        <div class="channel-content">
+          <div class="channel-bar" style="background: #fef3c7;">
+            <strong>Forward path + sharp downward</strong> -- Encodes trajectory: driving along, then falling. Speed encodes "quickly."
+          </div>
+        </div>
+      </div>
+      <div class="channel-row ch-face">
+        <div class="channel-label">&#x1F610; Facial Expression</div>
+        <div class="channel-content">
+          <div class="channel-bar" style="background: #fee2e2;">
+            <strong>Wide eyes, tight lips</strong> -- Encodes manner adverb: dramatic, sudden, perhaps alarming. Grammatical, not optional.
+          </div>
+        </div>
+      </div>
+      <div class="channel-row ch-gaze">
+        <div class="channel-label">&#x1F441; Eye Gaze</div>
+        <div class="channel-content">
+          <div class="channel-bar" style="background: #f3e8ff;">
+            <strong>Follows dominant hand movement</strong> -- Tracks the car's path. Confirms the referent being described.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="time-arrow">
+      <span>All channels active</span>
+      <div class="arrow-line"></div>
+      <span>Simultaneously</span>
+    </div>
+  </div>
+
+  <div class="comparison-section">
+    <h3>Sequential vs. Simultaneous Encoding</h3>
+    <div class="comp-grid">
+      <div class="comp-card comp-spoken">
+        <h4>Spoken / Written (Sequential)</h4>
+        <div class="word-chain">
+          <span class="word-chip word-chip-spoken">A</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">car</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">drives</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">quickly</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">off</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">a</span>
+          <span class="word-arrow">></span>
+          <span class="word-chip word-chip-spoken">cliff</span>
+        </div>
+        <div class="encoding-note">7 words processed sequentially. Each word adds one piece of information in linear order.</div>
+      </div>
+      <div class="comp-card comp-signed">
+        <h4>Signed (Simultaneous)</h4>
+        <div class="stack-visual">
+          <div class="stack-chip stack-1">Dominant hand: vehicle classifier (= car)</div>
+          <div class="stack-chip stack-2">Non-dominant: surface classifier (= cliff)</div>
+          <div class="stack-chip stack-3">Movement: forward + drop (= drive off)</div>
+          <div class="stack-chip stack-4">Face: wide eyes (= quickly/dramatically)</div>
+          <div class="stack-chip stack-5">Gaze: tracks path (= confirms trajectory)</div>
+        </div>
+        <div class="encoding-note">One complex sign encodes the entire event. 5 information layers active at the same moment.</div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Diagram 3: Simultaneous Morphology -- Information Channels in a Single Sign</strong>
+    <span>A classifier predicate for "a car drives quickly off a cliff" demonstrates the key affordance of the visual-spatial modality: simultaneity. Five independent articulatory channels -- dominant hand, non-dominant hand, movement, facial expression, and eye gaze -- encode different morphemic information in parallel. Spoken language must stack the same information sequentially. The challenge for a 2D written visual language: can spatial arrangement in static form replicate this information density? Sources: PMC (Paradox of Sign Language Morphology), Frontiers (Simultaneous structures).</span>
+  </figcaption>
+</figure>
+</body>
+</html>

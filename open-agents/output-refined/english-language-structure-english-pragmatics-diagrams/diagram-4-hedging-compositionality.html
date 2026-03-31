@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hedging Compositionality in English</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 950px;
+    width: 100%;
+  }
+  h2 { text-align: center; font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.9rem; color: #6c757d; margin-bottom: 2rem; }
+
+  .stacking-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .stack-level {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+  }
+  .stack-level:last-child { border-bottom: none; }
+  .stack-label {
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    padding: 0.3rem;
+    border-radius: 6px;
+  }
+  .stack-utterance {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .hedge-added {
+    font-weight: 700;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .force-meter {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .force-bar-bg {
+    flex: 1;
+    height: 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .force-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+  }
+
+  /* Colors per level */
+  .lv0 .stack-label { background: #dc2626; color: #fff; }
+  .lv0 .hedge-added { background: #fee2e2; color: #dc2626; }
+  .lv0 .force-bar { background: #dc2626; width: 100%; }
+
+  .lv1 .stack-label { background: #f59e0b; color: #fff; }
+  .lv1 .hedge-added { background: #fef3c7; color: #92400e; }
+  .lv1 .force-bar { background: #f59e0b; width: 70%; }
+
+  .lv2 .stack-label { background: #22c55e; color: #fff; }
+  .lv2 .hedge-added { background: #dcfce7; color: #15803d; }
+  .lv2 .force-bar { background: #22c55e; width: 50%; }
+
+  .lv3 .stack-label { background: #3b82f6; color: #fff; }
+  .lv3 .hedge-added { background: #dbeafe; color: #1d4ed8; }
+  .lv3 .force-bar { background: #3b82f6; width: 30%; }
+
+  .lv4 .stack-label { background: #8b5cf6; color: #fff; }
+  .lv4 .hedge-added { background: #ede9fe; color: #6d28d9; }
+  .lv4 .force-bar { background: #8b5cf6; width: 15%; }
+
+  /* Category taxonomy */
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .cat-card {
+    padding: 0.6rem;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+  .cat-card .cat-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+  }
+  .cat-card .cat-examples {
+    font-style: italic;
+    color: #6b7280;
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+  .cat-modal { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .cat-approx { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .cat-shield { background: #fef9ee; border: 1px solid #fde68a; }
+  .cat-down { background: #fdf2f8; border: 1px solid #fbcfe8; }
+  .cat-disc { background: #f5f3ff; border: 1px solid #ddd6fe; }
+
+  .pattern-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .pattern-note strong { color: #1e40af; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  figcaption span { font-size: 0.85rem; color: #6c757d; line-height: 1.5; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    h2 { color: #e9ecef; }
+    .subtitle { color: #adb5bd; }
+    .stack-level { border-bottom-color: #3d3d5c; }
+    .stack-utterance { color: #e9ecef; }
+    .force-bar-bg { background: #3d3d5c; }
+    .lv0 .hedge-added { background: #450a0a; color: #fca5a5; }
+    .lv1 .hedge-added { background: #451a03; color: #fcd34d; }
+    .lv2 .hedge-added { background: #052e16; color: #86efac; }
+    .lv3 .hedge-added { background: #1e1b4b; color: #93c5fd; }
+    .lv4 .hedge-added { background: #2e1065; color: #c4b5fd; }
+    .cat-modal { background: #1e2a4a; border-color: #1d4ed8; }
+    .cat-approx { background: #1a2e1a; border-color: #16a34a; }
+    .cat-shield { background: #2a1f0a; border-color: #d97706; }
+    .cat-down { background: #2e1a2a; border-color: #db2777; }
+    .cat-disc { background: #2a1f4a; border-color: #7c3aed; }
+    .cat-card .cat-examples { color: #9ca3af; }
+    .pattern-note { background: #1e2a4a; border-left-color: #60a5fa; color: #cbd5e1; }
+    .pattern-note strong { color: #93bbfc; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+  }
+
+  @media (max-width: 700px) {
+    .stack-level { grid-template-columns: 60px 1fr; }
+    .force-meter { display: none; }
+    .categories { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Hedging Compositionality in English</h2>
+  <p class="subtitle">Hedges stack systematically -- each layer reduces illocutionary force by a predictable increment</p>
+
+  <div class="stacking-demo">
+
+    <div class="stack-level lv0">
+      <div class="stack-label">+0 hedges</div>
+      <div class="stack-utterance"><span class="hedge-added">Close the window.</span></div>
+      <div class="force-meter"><div class="force-bar-bg"><div class="force-bar"></div></div></div>
+    </div>
+
+    <div class="stack-level lv1">
+      <div class="stack-label">+1 hedge</div>
+      <div class="stack-utterance"><span class="hedge-added">Could you</span> close the window?</div>
+      <div class="force-meter"><div class="force-bar-bg"><div class="force-bar"></div></div></div>
+    </div>
+
+    <div class="stack-level lv2">
+      <div class="stack-label">+2 hedges</div>
+      <div class="stack-utterance"><span class="hedge-added">Could you possibly</span> close the window?</div>
+      <div class="force-meter"><div class="force-bar-bg"><div class="force-bar"></div></div></div>
+    </div>
+
+    <div class="stack-level lv3">
+      <div class="stack-label">+3 hedges</div>
+      <div class="stack-utterance"><span class="hedge-added">I don't suppose you could possibly</span> close the window?</div>
+      <div class="force-meter"><div class="force-bar-bg"><div class="force-bar"></div></div></div>
+    </div>
+
+    <div class="stack-level lv4">
+      <div class="stack-label">+4 hedges</div>
+      <div class="stack-utterance"><span class="hedge-added">I was wondering if you might possibly be able to</span> close the window?</div>
+      <div class="force-meter"><div class="force-bar-bg"><div class="force-bar"></div></div></div>
+    </div>
+
+  </div>
+
+  <div class="categories">
+    <div class="cat-card cat-modal">
+      <div class="cat-title">Modal Hedges</div>
+      <div class="cat-examples">could, might, may, would</div>
+    </div>
+    <div class="cat-card cat-approx">
+      <div class="cat-title">Approximators</div>
+      <div class="cat-examples">sort of, about, roughly, kind of</div>
+    </div>
+    <div class="cat-card cat-shield">
+      <div class="cat-title">Shield Hedges</div>
+      <div class="cat-examples">I think, it seems, I suppose</div>
+    </div>
+    <div class="cat-card cat-down">
+      <div class="cat-title">Downtoners</div>
+      <div class="cat-examples">quite (BrE), rather, fairly, slightly</div>
+    </div>
+    <div class="cat-card cat-disc">
+      <div class="cat-title">Discourse Hedges</div>
+      <div class="cat-examples">if you don't mind, I was wondering, to be honest</div>
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>The Pattern:</strong> Hedge stacking is compositional and ordered. The force-reduction is approximately logarithmic: the first hedge (modal verb) has the largest effect, each subsequent hedge adds progressively less. Native speakers calibrate the number of hedges to the <em>weight</em> of the face-threat (D + P + R). This compositionality is learnable as a rule: count the hedges in an utterance and you can read the speaker's assessment of how much the request imposes. One hedge = minor ask. Four hedges = the speaker knows they're asking a lot.
+  </div>
+
+  <figcaption>
+    <strong>Figure 4 -- Hedging Compositionality</strong>
+    <span>Demonstration of the English hedge-stacking system. Each added hedge reduces illocutionary force. Based on Lakoff (1972), Brown &amp; Levinson (1987), and pragmatics research on English request modification. The force meter shows approximate relative directness.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

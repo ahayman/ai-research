@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Question Formation: Do-Support &amp; Inversion</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --do-color: #e63946;
+    --do-bg: #fef3f0;
+    --inv-color: #2d8a4e;
+    --inv-bg: #f0faf0;
+    --wh-color: #7c3aed;
+    --wh-bg: #f5f0ff;
+    --hist-color: #e9a820;
+    --hist-bg: #fdf6ec;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --do-color: #ff6b6b;
+      --do-bg: #2a1520;
+      --inv-color: #5cb87a;
+      --inv-bg: #102a18;
+      --wh-color: #a78bfa;
+      --wh-bg: #1a1030;
+      --hist-color: #f0c050;
+      --hist-bg: #2a2210;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 1.2rem 0 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .section-title:first-child { margin-top: 0; }
+  /* Flowchart */
+  .flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .flow-box {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 2px solid;
+    font-size: 0.88rem;
+    min-width: 200px;
+  }
+  .flow-decision {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-align: center;
+    min-width: 250px;
+  }
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 1.2rem;
+    min-width: 30px;
+    text-align: center;
+  }
+  .flow-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .do-box { background: var(--do-bg); border-color: var(--do-color); }
+  .do-box strong { color: var(--do-color); }
+  .inv-box { background: var(--inv-bg); border-color: var(--inv-color); }
+  .inv-box strong { color: var(--inv-color); }
+
+  /* Transformation examples */
+  .transform-section {
+    margin: 1rem 0;
+  }
+  .transform-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .sentence-box {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .sentence-box .subj { color: #2d8a4e; font-weight: 600; }
+  .sentence-box .verb { color: #e63946; font-weight: 600; }
+  .sentence-box .aux { color: #e63946; font-weight: 800; text-decoration: underline; }
+  .sentence-box .wh { color: #7c3aed; font-weight: 800; }
+  .sentence-box .obj { color: #7c3aed; font-weight: 600; }
+  .result-box {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 2px solid var(--accent);
+    background: var(--accent-light);
+    font-weight: 600;
+  }
+  .step-tag {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .arrow { color: var(--muted); font-size: 1.1rem; }
+
+  /* Cross-linguistic comparison */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 1rem 0;
+  }
+  .compare-table th, .compare-table td {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .compare-table th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .unique-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    background: var(--do-bg);
+    color: var(--do-color);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .hist-note {
+    padding: 0.8rem 1rem;
+    background: var(--hist-bg);
+    border-left: 4px solid var(--hist-color);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+  .hist-note strong { color: var(--hist-color); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <!-- Decision flowchart -->
+    <div class="section-title">The Question-Formation Algorithm</div>
+    <div class="flow-container">
+      <div class="flow-step">
+        <div class="flow-box" style="border-color:var(--border); background:var(--surface);">
+          Start: declarative sentence<br><strong>"She likes tea."</strong>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-arrow">&darr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-decision">Is there an auxiliary or modal verb?</div>
+      </div>
+      <div class="flow-step">
+        <div style="display:flex; gap:2rem; width:100%;">
+          <div style="flex:1;">
+            <div class="flow-label" style="text-align:center; margin-bottom:0.3rem;">YES &darr;</div>
+            <div class="flow-box inv-box">
+              <strong>Invert</strong> the first auxiliary with the subject<br>
+              "She <strong>is</strong> leaving" &rarr; "<strong>Is</strong> she leaving?"<br>
+              "They <strong>have</strong> arrived" &rarr; "<strong>Have</strong> they arrived?"
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div class="flow-label" style="text-align:center; margin-bottom:0.3rem;">NO &darr;</div>
+            <div class="flow-box do-box">
+              <strong>Insert DO</strong> (carrying tense), then invert<br>
+              "She like<strong>s</strong> tea" &rarr; "<strong>Does</strong> she like tea?"<br>
+              "They play<strong>ed</strong>" &rarr; "<strong>Did</strong> they play?"<br>
+              <span class="unique-tag">TYPOLOGICALLY UNIQUE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wh-question formation -->
+    <div class="section-title">Wh-Question Formation (Two Operations)</div>
+    <div class="transform-section">
+      <div class="transform-row">
+        <span class="step-tag">Base</span>
+        <div class="sentence-box"><span class="subj">You</span> <span class="verb">saw</span> <span class="obj">what</span>.</div>
+      </div>
+      <div class="transform-row">
+        <span class="step-tag">Step 1: Wh-movement</span>
+        <div class="sentence-box"><span class="wh">What</span> <span class="subj">you</span> <span class="verb">saw</span> ___.</div>
+        <span class="arrow">&larr;</span>
+        <span style="font-size:0.78rem; color:var(--muted);">Move wh-word to front; leave gap</span>
+      </div>
+      <div class="transform-row">
+        <span class="step-tag">Step 2: Do-support + SAI</span>
+        <div class="result-box"><span class="wh">What</span> <span class="aux">did</span> <span class="subj">you</span> <span class="verb">see</span> ___?</div>
+        <span class="arrow">&larr;</span>
+        <span style="font-size:0.78rem; color:var(--muted);">Insert DO, invert, main verb reverts to base form</span>
+      </div>
+    </div>
+
+    <div class="transform-section">
+      <div class="transform-row">
+        <span class="step-tag">Subject Wh</span>
+        <div class="sentence-box"><span class="wh">Who</span> <span class="verb">ate</span> <span class="obj">the cake</span>?</div>
+        <span style="font-size:0.78rem; color:var(--muted);">When wh-word IS the subject: NO inversion, NO do-support</span>
+      </div>
+    </div>
+
+    <!-- Do-support for negation too -->
+    <div class="section-title">Do-Support Also Handles Negation &amp; Emphasis</div>
+    <div class="transform-section">
+      <div class="transform-row">
+        <span class="step-tag">Negation</span>
+        <div class="sentence-box"><span class="subj">She</span> <span class="verb">likes</span> <span class="obj">tea</span>.</div>
+        <span class="arrow">&rarr;</span>
+        <div class="result-box"><span class="subj">She</span> <span class="aux">does</span> not <span class="verb">like</span> <span class="obj">tea</span>.</div>
+      </div>
+      <div class="transform-row">
+        <span class="step-tag">Emphasis</span>
+        <div class="sentence-box"><span class="subj">She</span> <span class="verb">likes</span> <span class="obj">tea</span>.</div>
+        <span class="arrow">&rarr;</span>
+        <div class="result-box"><span class="subj">She</span> <span class="aux">DOES</span> <span class="verb">like</span> <span class="obj">tea</span>!</div>
+      </div>
+    </div>
+
+    <!-- Cross-linguistic comparison -->
+    <div class="section-title">Cross-Linguistic Comparison: "Does she speak French?"</div>
+    <table class="compare-table">
+      <thead>
+        <tr><th>Language</th><th>Question</th><th>Mechanism</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>English</strong></td>
+          <td>"<strong>Does</strong> she speak French?"</td>
+          <td>Do-support + SAI <span class="unique-tag">UNIQUE</span></td>
+        </tr>
+        <tr>
+          <td><strong>German</strong></td>
+          <td>"<strong>Spricht</strong> sie Franz&ouml;sisch?"</td>
+          <td>Verb-second (main verb moves to front)</td>
+        </tr>
+        <tr>
+          <td><strong>French</strong></td>
+          <td>"Est-ce qu'elle parle fran&ccedil;ais?"</td>
+          <td>Question particle (est-ce que) or intonation</td>
+        </tr>
+        <tr>
+          <td><strong>Japanese</strong></td>
+          <td>"Kanojo wa furansugo o hanashimasu <strong>ka</strong>?"</td>
+          <td>Sentence-final question particle (ka)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hist-note">
+      <strong>Why English needs do-support:</strong> Until the 16th century, English formed questions by moving the main verb to first position ("Speaks she French?"), just like German still does. When English lost this verb-second movement, it needed a structural replacement. "Do" was recruited as a dummy tense-carrier: it holds the tense and agreement features, allowing the main verb to stay in place while "do" inverts. This became obligatory by the 18th century. Do-support is a <em>structural patch</em> -- historically contingent, typologically unique.
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> English question formation follows a strict algorithm: (1) check for an existing auxiliary, (2) if none exists, insert DO, (3) invert the auxiliary with the subject. For wh-questions, add wh-movement to the front. The only exception: when the wh-word is itself the subject ("Who ate the cake?"), no inversion or do-support is needed. This algorithm is deterministic -- given any declarative sentence, the rules produce exactly one correct question form.
+  </div>
+
+  <figcaption>
+    <h2>Figure 3 &mdash; Question Formation: Do-Support and Subject-Auxiliary Inversion</h2>
+    <p>English forms questions through subject-auxiliary inversion (SAI): the first auxiliary moves before the subject. When no auxiliary exists, do-support inserts the dummy auxiliary DO to carry tense. Wh-questions combine wh-movement (fronting the question word) with SAI. Do-support is typologically unique to English -- the result of losing verb-second word order during the Middle English period.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connected Speech Processes</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --elision: #e63946;
+    --elision-bg: #fef3f0;
+    --assim: #2d8a4e;
+    --assim-bg: #f0faf0;
+    --linking: #7c3aed;
+    --linking-bg: #f5f0ff;
+    --weak: #e9a820;
+    --weak-bg: #fdf6ec;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --arrow-color: #aab0c0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --elision: #ff6b6b;
+      --elision-bg: #2a1520;
+      --assim: #5cb87a;
+      --assim-bg: #102a18;
+      --linking: #a78bfa;
+      --linking-bg: #1a1030;
+      --weak: #f0c050;
+      --weak-bg: #2a2210;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --arrow-color: #555570;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  .process-card {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    border-left: 5px solid;
+  }
+  .process-card:last-child { margin-bottom: 0; }
+  .elision-card { background: var(--elision-bg); border-color: var(--elision); }
+  .assim-card { background: var(--assim-bg); border-color: var(--assim); }
+  .linking-card { background: var(--linking-bg); border-color: var(--linking); }
+  .weak-card { background: var(--weak-bg); border-color: var(--weak); }
+  .process-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .process-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: white;
+  }
+  .elision-card .process-icon { background: var(--elision); }
+  .assim-card .process-icon { background: var(--assim); }
+  .linking-card .process-icon { background: var(--linking); }
+  .weak-card .process-icon { background: var(--weak); }
+  .process-name { font-weight: 700; font-size: 1rem; }
+  .elision-card .process-name { color: var(--elision); }
+  .assim-card .process-name { color: var(--assim); }
+  .linking-card .process-name { color: var(--linking); }
+  .weak-card .process-name { color: var(--weak); }
+  .process-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .transform-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .citation-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-family: 'Gentium Plus', 'Noto Sans', serif;
+    font-size: 0.95rem;
+  }
+  .arrow { color: var(--arrow-color); font-size: 1.2rem; }
+  .natural-form {
+    background: var(--surface);
+    border: 2px solid;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-family: 'Gentium Plus', 'Noto Sans', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .elision-card .natural-form { border-color: var(--elision); color: var(--elision); }
+  .assim-card .natural-form { border-color: var(--assim); color: var(--assim); }
+  .linking-card .natural-form { border-color: var(--linking); color: var(--linking); }
+  .weak-card .natural-form { border-color: var(--weak); color: var(--weak); }
+  .deleted { text-decoration: line-through; opacity: 0.5; }
+  .changed { font-weight: 700; }
+  .rule-tag {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .full-example {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: var(--accent-light);
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+  }
+  .full-example h3 {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+  .full-example .citation-form,
+  .full-example .natural-form {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+  }
+  .full-example .natural-form {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .annotation-list {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    list-style: none;
+  }
+  .annotation-list li { margin-bottom: 0.2rem; }
+  .annotation-list li::before { content: ""; margin-right: 0.4rem; }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <!-- Elision -->
+    <div class="process-card elision-card">
+      <div class="process-header">
+        <div class="process-icon">&times;</div>
+        <span class="process-name">Elision (Sound Deletion)</span>
+      </div>
+      <div class="process-desc">Consonants -- most commonly /t/ and /d/ -- are deleted in clusters at word boundaries.</div>
+      <div class="transform-row">
+        <span class="citation-form">mus<span class="deleted">t</span> be</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/m&#x28C;s bi&#x2D0;/</span>
+        <span class="rule-tag">/t/ deleted before /b/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">nex<span class="deleted">t</span> day</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/neks de&#x26A;/</span>
+        <span class="rule-tag">/t/ deleted before /d/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">han<span class="deleted">d</span>bag</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/h&#xE6;mb&#xE6;g/</span>
+        <span class="rule-tag">/d/ deleted + assimilation</span>
+      </div>
+    </div>
+
+    <!-- Assimilation -->
+    <div class="process-card assim-card">
+      <div class="process-header">
+        <div class="process-icon">&asymp;</div>
+        <span class="process-name">Assimilation (Sounds Becoming Similar)</span>
+      </div>
+      <div class="process-desc">A sound changes to become more like a neighboring sound in place, voicing, or manner.</div>
+      <div class="transform-row">
+        <span class="citation-form">te<span class="changed">n</span> bikes</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/te<span class="changed">m</span> ba&#x26A;ks/</span>
+        <span class="rule-tag">Place: /n/ &rarr; /m/ before bilabial</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">ha<span class="changed">v</span>e to</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/h&#xE6;<span class="changed">f</span>t&#x259;/</span>
+        <span class="rule-tag">Voice: /v/ devoices before /t/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">goo<span class="changed">d</span> night</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/g&#x28A;<span class="changed">n</span> na&#x26A;t/</span>
+        <span class="rule-tag">Manner: /d/ &rarr; /n/ before nasal</span>
+      </div>
+    </div>
+
+    <!-- Linking -->
+    <div class="process-card linking-card">
+      <div class="process-header">
+        <div class="process-icon">&#x2194;</div>
+        <span class="process-name">Linking and Intrusive /r/</span>
+      </div>
+      <div class="process-desc">In non-rhotic accents (RP), /r/ appears between words to bridge vowel-vowel boundaries.</div>
+      <div class="transform-row">
+        <span class="citation-form">far away</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/f&#x251;&#x2D0;<span class="changed">r</span> &#x259;we&#x26A;/</span>
+        <span class="rule-tag">Linking-r: historical /r/ restored before vowel</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">law and order</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/l&#x254;&#x2D0;<span class="changed">r</span> &#x259;nd &#x254;&#x2D0;d&#x259;/</span>
+        <span class="rule-tag">Intrusive-r: no historical /r/ -- inserted by analogy</span>
+      </div>
+    </div>
+
+    <!-- Weak Forms -->
+    <div class="process-card weak-card">
+      <div class="process-header">
+        <div class="process-icon">&#x25BD;</div>
+        <span class="process-name">Weak Forms (Vowel Reduction)</span>
+      </div>
+      <div class="process-desc">Function words (articles, prepositions, auxiliaries, pronouns) have reduced pronunciations in unstressed positions. Vowels collapse toward schwa /&#x259;/.</div>
+      <div class="transform-row">
+        <span class="citation-form">and /&#xE6;nd/</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/&#x259;n/ or /n/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">for /f&#x254;&#x2D0;/</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/f&#x259;/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">was /w&#x252;z/</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/w&#x259;z/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">can /k&#xE6;n/</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/k&#x259;n/</span>
+      </div>
+      <div class="transform-row">
+        <span class="citation-form">to /tu&#x2D0;/</span>
+        <span class="arrow">&rarr;</span>
+        <span class="natural-form">/t&#x259;/</span>
+      </div>
+    </div>
+
+    <!-- Full Sentence Example -->
+    <div class="full-example">
+      <h3>Combined Example: All Processes in One Sentence</h3>
+      <div class="citation-form" style="border-color: var(--border);">Careful: "I want to go to the next department"<br>/a&#x26A; w&#x252;nt tu&#x2D0; g&#x259;&#x28A; tu&#x2D0; &#x00F0;&#x259; nekst d&#x26A;&#x2C8;p&#x251;&#x2D0;tm&#x259;nt/</div>
+      <div class="natural-form" style="margin-top: 0.5rem;">Natural: /a&#x26A; w&#x252;n&#x259; g&#x259;&#x28A; t&#x259; &#x00F0;&#x259; neks d&#x26A;&#x2C8;p&#x251;&#x2D0;&#x0294;m&#x259;n&#x0294;/</div>
+      <ul class="annotation-list">
+        <li><strong style="color:var(--elision);">Elision:</strong> "want to" &rarr; "wanna" (/t/ deleted); "next" loses /t/ before /d/</li>
+        <li><strong style="color:var(--weak);">Weak form:</strong> "to" reduces to /t&#x259;/</li>
+        <li><strong style="color:var(--elision);">Glottalization:</strong> /t/ in "department" &rarr; [&#x0294;] (BrE)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> Connected speech is not "sloppy pronunciation" -- it is <em>rule-governed phonological processing</em>. Every change follows a predictable rule: elision targets specific consonant clusters, assimilation follows place/voice/manner dimensions, linking-r bridges vowel sequences, and weak forms reduce function words. The rules predict exactly which sounds change and in which environments.
+  </div>
+
+  <figcaption>
+    <h2>Figure 4 &mdash; Connected Speech Processes</h2>
+    <p>Four systematic processes transform careful/citation pronunciation into natural connected speech: elision (sound deletion), assimilation (sounds becoming similar), linking/intrusive-r (vowel bridging in non-rhotic accents), and weak forms (vowel reduction in function words). Each process is rule-governed and predictable by phonological environment.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

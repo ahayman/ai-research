@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Request Strategy Hierarchy</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 900px;
+    width: 100%;
+  }
+  h2 {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+    color: #1a1a2e;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  .hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .hierarchy::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #dc2626, #f59e0b, #22c55e, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+  }
+  .level {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 0;
+    align-items: stretch;
+    position: relative;
+  }
+  .level-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .level-num span {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  .level-content {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: 180px 1fr 100px;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .level:last-child .level-content { border-bottom: none; }
+  .strategy-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .strategy-example {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: #495057;
+  }
+  .frequency {
+    text-align: right;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .freq-bar-container {
+    width: 80px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+  }
+  .freq-bar {
+    height: 100%;
+    border-radius: 4px;
+  }
+  /* Color coding: direct = red, mid = amber, indirect = blue/purple */
+  .c1 { background: #dc2626; } .c2 { background: #e04040; }
+  .c3 { background: #e85d04; } .c4 { background: #f59e0b; }
+  .c5 { background: #84cc16; } .c6 { background: #22c55e; }
+  .c7 { background: #0ea5e9; } .c8 { background: #3b82f6; }
+  .c9 { background: #7c3aed; } .c10 { background: #8b5cf6; }
+
+  .axis-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.2rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-top: 2px solid #e9ecef;
+  }
+  .axis-direct { color: #dc2626; }
+  .axis-indirect { color: #7c3aed; }
+
+  .pattern-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .pattern-note strong { color: #1e40af; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  figcaption span { font-size: 0.85rem; color: #6c757d; line-height: 1.5; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    h2 { color: #e9ecef; }
+    .subtitle { color: #adb5bd; }
+    .level-content { border-bottom-color: #3d3d5c; }
+    .strategy-name { color: #e9ecef; }
+    .strategy-example { color: #adb5bd; }
+    .freq-bar-container { background: #3d3d5c; }
+    .axis-labels { border-top-color: #3d3d5c; }
+    .pattern-note { background: #1e2a4a; border-left-color: #60a5fa; color: #cbd5e1; }
+    .pattern-note strong { color: #93bbfc; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+  }
+
+  @media (max-width: 700px) {
+    .level-content { grid-template-columns: 1fr; gap: 0.2rem; }
+    .frequency { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>English Request Strategy Hierarchy</h2>
+  <p class="subtitle">10 levels from maximally direct to maximally indirect -- with typical frequency in everyday English</p>
+
+  <div class="hierarchy">
+
+    <div class="level">
+      <div class="level-num"><span class="c1">1</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#dc2626;">Mood Derivable</div>
+        <div class="strategy-example">"Close the window."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c1" style="width:15%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c2">2</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#e04040;">Performative</div>
+        <div class="strategy-example">"I'm asking you to close the window."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c2" style="width:5%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c3">3</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#e85d04;">Hedged Performative</div>
+        <div class="strategy-example">"I'd like to ask you to close the window."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c3" style="width:8%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c4">4</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#f59e0b;">Obligation Statement</div>
+        <div class="strategy-example">"You should close the window."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c4" style="width:10%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c5">5</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#84cc16;">Want Statement</div>
+        <div class="strategy-example">"I'd like you to close the window."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c5" style="width:12%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c6">6</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#22c55e;">Suggestory Formula</div>
+        <div class="strategy-example">"How about closing the window?"</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c6" style="width:10%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c7">7</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#0ea5e9;">Query Preparatory (ability)</div>
+        <div class="strategy-example">"Can / Could you close the window?"</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c7" style="width:90%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c8">8</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#3b82f6;">Query Preparatory (willingness)</div>
+        <div class="strategy-example">"Would you mind closing the window?"</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c8" style="width:60%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c9">9</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#7c3aed;">Strong Hint</div>
+        <div class="strategy-example">"It's getting cold in here."</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c9" style="width:18%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="level">
+      <div class="level-num"><span class="c10">10</span></div>
+      <div class="level-content">
+        <div class="strategy-name" style="color:#8b5cf6;">Mild Hint</div>
+        <div class="strategy-example">"I just love fresh warm air, don't you?"</div>
+        <div class="frequency"><div class="freq-bar-container"><div class="freq-bar c10" style="width:5%"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="axis-labels">
+    <span class="axis-direct">MOST DIRECT -- Imperative force</span>
+    <span class="axis-indirect">MOST INDIRECT -- Inferential work required</span>
+  </div>
+
+  <div class="pattern-note">
+    <strong>The Pattern:</strong> English overwhelmingly defaults to levels 7-8 (query preparatory). The "can/could you" form is so conventionalized it is never interpreted literally -- "Can you pass the salt?" is a request, not a question about ability. The frequency spike at levels 7-8 is the structural signature of English negative politeness: speakers protect the hearer's autonomy by framing requests as questions about the hearer's capacity or willingness.
+  </div>
+
+  <figcaption>
+    <strong>Figure 1 -- English Request Strategy Hierarchy</strong>
+    <span>Based on Blum-Kulka, House, & Kasper's CCSARP framework. Frequency bars represent approximate relative frequency in everyday British/Australian English conversation. The dramatic clustering at levels 7-8 distinguishes English from languages that prefer direct strategies.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

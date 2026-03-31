@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learnability-Expressiveness Trade-Off</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --grid: #e9ecef;
+    --emoji: #e76f51;
+    --makaton: #db2777;
+    --pecs: #0284c7;
+    --bliss: #7c3aed;
+    --chinese: #d97706;
+    --asl: #16a34a;
+    --target: #4361ee;
+    --target-bg: rgba(67, 97, 238, 0.08);
+    --curve: #6b7280;
+    --shifted: #16a34a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --grid: #252540;
+      --emoji: #ffa07a;
+      --makaton: #f472b6;
+      --pecs: #6b8aff;
+      --bliss: #a78bfa;
+      --chinese: #fbbf24;
+      --asl: #34d399;
+      --target: #6b8aff;
+      --target-bg: rgba(107, 138, 255, 0.08);
+      --curve: #6b7280;
+      --shifted: #34d399;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .chart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem 1rem;
+    overflow-x: auto;
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <svg viewBox="0 0 920 560" xmlns="http://www.w3.org/2000/svg" style="min-width:680px;">
+      <defs>
+        <style>
+          .title { font: bold 16px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+          .subtitle { font: 12px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+          .axis-label { font: bold 12px 'Segoe UI', system-ui, sans-serif; fill: var(--fg); }
+          .axis-text { font: 11px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+          .dot-label { font: bold 11px 'Segoe UI', system-ui, sans-serif; }
+          .dot-desc { font: 10px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+          .target-label { font: bold 13px 'Segoe UI', system-ui, sans-serif; fill: var(--target); }
+          .note-text { font: 11px 'Segoe UI', system-ui, sans-serif; fill: var(--muted); }
+          .curve-label { font: italic 10px 'Segoe UI', system-ui, sans-serif; }
+        </style>
+        <marker id="arrowShift" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6" fill="var(--shifted)"/>
+        </marker>
+      </defs>
+
+      <text x="460" y="28" text-anchor="middle" class="title">The Learnability-Expressiveness Trade-Off</text>
+      <text x="460" y="46" text-anchor="middle" class="subtitle">Can compositionality from grounded primitives shift the frontier?</text>
+
+      <g transform="translate(110, 70)">
+        <!-- Y-axis: Expressiveness -->
+        <line x1="0" y1="0" x2="0" y2="400" stroke="var(--fg)" stroke-width="2"/>
+        <text x="-15" y="200" text-anchor="middle" transform="rotate(-90, -15, 200)" class="axis-label">Expressiveness</text>
+        <text x="-8" y="10" text-anchor="end" class="axis-text">Full natural</text>
+        <text x="-8" y="24" text-anchor="end" class="axis-text">language</text>
+        <text x="-8" y="395" text-anchor="end" class="axis-text">Minimal</text>
+
+        <!-- X-axis: Learning Time -->
+        <line x1="0" y1="400" x2="700" y2="400" stroke="var(--fg)" stroke-width="2"/>
+        <text x="350" y="445" text-anchor="middle" class="axis-label">Learning Time to Functional Use</text>
+        <text x="10" y="420" class="axis-text">Days</text>
+        <text x="175" y="420" text-anchor="middle" class="axis-text">Weeks</text>
+        <text x="350" y="420" text-anchor="middle" class="axis-text">Months</text>
+        <text x="525" y="420" text-anchor="middle" class="axis-text">Years</text>
+        <text x="690" y="420" text-anchor="end" class="axis-text">Decades</text>
+
+        <!-- Grid -->
+        <line x1="0" y1="100" x2="700" y2="100" stroke="var(--grid)" stroke-width="0.5"/>
+        <line x1="0" y1="200" x2="700" y2="200" stroke="var(--grid)" stroke-width="0.5"/>
+        <line x1="0" y1="300" x2="700" y2="300" stroke="var(--grid)" stroke-width="0.5"/>
+        <line x1="175" y1="0" x2="175" y2="400" stroke="var(--grid)" stroke-width="0.5"/>
+        <line x1="350" y1="0" x2="350" y2="400" stroke="var(--grid)" stroke-width="0.5"/>
+        <line x1="525" y1="0" x2="525" y2="400" stroke="var(--grid)" stroke-width="0.5"/>
+
+        <!-- Current frontier curve -->
+        <path d="M30,360 C100,340 200,200 450,50 Q550,10 650,5" fill="none" stroke="var(--curve)" stroke-width="2" stroke-dasharray="8,4"/>
+        <text x="590" y="25" class="curve-label" fill="var(--curve)">current frontier</text>
+
+        <!-- Shifted frontier (proposed) -->
+        <path d="M30,300 C80,270 150,140 300,50 Q380,20 500,10" fill="none" stroke="var(--shifted)" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="420" y="30" class="curve-label" fill="var(--shifted)">shifted frontier?</text>
+
+        <!-- Arrow showing the shift -->
+        <line x1="320" y1="155" x2="230" y2="100" stroke="var(--shifted)" stroke-width="2" marker-end="url(#arrowShift)"/>
+        <text x="300" y="140" class="dot-desc" fill="var(--shifted)">Compositionality</text>
+        <text x="300" y="153" class="dot-desc" fill="var(--shifted)">shifts the curve</text>
+
+        <!-- Emoji -->
+        <circle cx="30" cy="350" r="10" fill="var(--emoji)" opacity="0.8"/>
+        <text x="45" y="345" class="dot-label" fill="var(--emoji)">Emoji</text>
+        <text x="45" y="358" class="dot-desc">Learn in hours, express almost nothing</text>
+
+        <!-- PECS Phase 1 -->
+        <circle cx="60" cy="315" r="10" fill="var(--pecs)" opacity="0.8"/>
+        <text x="75" y="310" class="dot-label" fill="var(--pecs)">PECS (Phase 1)</text>
+        <text x="75" y="323" class="dot-desc">Hours to days, basic requesting</text>
+
+        <!-- Makaton core -->
+        <circle cx="220" cy="240" r="11" fill="var(--makaton)" opacity="0.8"/>
+        <text x="235" y="235" class="dot-label" fill="var(--makaton)">Makaton</text>
+        <text x="235" y="248" class="dot-desc">Weeks-months, 450 concepts</text>
+
+        <!-- Blissymbolics -->
+        <circle cx="380" cy="140" r="11" fill="var(--bliss)" opacity="0.8"/>
+        <text x="395" y="133" class="dot-label" fill="var(--bliss)">Blissymbolics</text>
+        <text x="395" y="146" class="dot-desc">Months-years, compositional</text>
+
+        <!-- ASL -->
+        <circle cx="450" cy="50" r="12" fill="var(--asl)" opacity="0.8"/>
+        <text x="466" y="43" class="dot-label" fill="var(--asl)">ASL</text>
+        <text x="466" y="56" class="dot-desc">~60-100 hrs conversational; years for fluency</text>
+
+        <!-- Chinese -->
+        <circle cx="580" cy="30" r="12" fill="var(--chinese)" opacity="0.8"/>
+        <text x="530" y="60" class="dot-label" fill="var(--chinese)">Chinese</text>
+        <text x="505" y="73" class="dot-desc">4-5 years for 3,000 characters</text>
+        <text x="505" y="86" class="dot-desc">Full expressiveness</text>
+
+        <!-- Target position -->
+        <rect x="130" y="80" width="170" height="70" rx="10" fill="var(--target-bg)" stroke="var(--target)" stroke-width="2.5" stroke-dasharray="6,3"/>
+        <circle cx="215" cy="115" r="9" fill="var(--target)" opacity="0.6"/>
+        <text x="215" y="98" text-anchor="middle" class="target-label">VIL Target</text>
+        <text x="215" y="130" text-anchor="middle" class="dot-desc">2-6 months functional</text>
+        <text x="215" y="143" text-anchor="middle" class="dot-desc">Tier 2 expressiveness</text>
+      </g>
+
+      <!-- Bottom note -->
+      <rect x="100" y="500" width="720" height="45" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="460" y="518" text-anchor="middle" class="note-text"><tspan font-weight="bold">Learnability targets are projections, not empirical data.</tspan> No image-schema-based visual language has been tested.</text>
+      <text x="460" y="535" text-anchor="middle" class="note-text">Targets extrapolated from Makaton, PECS, Blissymbolics, and ASL learning timelines. Empirical validation needed.</text>
+    </svg>
+  </div>
+  <figcaption>
+    <h2>Figure 2 &mdash; The Learnability-Expressiveness Trade-Off Map</h2>
+    <p>Existing systems plotted by learning time and expressiveness, revealing the fundamental trade-off. Emoji: learn in hours, minimal expressiveness. Chinese characters: years of study, full expressiveness. The visual iconographic language targets a position between Makaton and ASL -- 2-6 months for functional communication at Tier 2 expressiveness. The key hypothesis: compositionality from experientially grounded primitives (image schemas) might shift the trade-off frontier, allowing greater expressiveness at lower learning cost. This remains empirically untested.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

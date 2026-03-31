@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loss of Inflections Progression</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1000px;
+    width: 100%;
+  }
+  h2 { text-align: center; font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.9rem; color: #6c757d; margin-bottom: 2rem; }
+
+  .chart-area { position: relative; }
+
+  /* Category rows */
+  .category-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .cat-row {
+    display: grid;
+    grid-template-columns: 160px repeat(4, 1fr);
+    gap: 0.3rem;
+    align-items: center;
+  }
+  .cat-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding-right: 0.5rem;
+    text-align: right;
+  }
+  .period-header {
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.4rem;
+  }
+  .ph-oe  { color: #dc2626; }
+  .ph-eme { color: #f59e0b; }
+  .ph-lme { color: #3b82f6; }
+  .ph-mod { color: #22c55e; }
+
+  .cell {
+    padding: 0.4rem 0.3rem;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    text-align: center;
+    line-height: 1.4;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Alive/declining/dead encoding */
+  .alive    { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+  .declining { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .vestigial { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  .dead      { background: #f3f4f6; color: #9ca3af; border: 1px solid #e5e7eb; text-decoration: line-through; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+  }
+  .legend-swatch {
+    width: 14px; height: 14px; border-radius: 4px;
+  }
+
+  /* Cause arrows */
+  .causes {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+  .cause-card {
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .cause-card .cause-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.2rem;
+  }
+  .cause-stress { background: #ede9fe; border: 1px solid #c4b5fd; color: #4c1d95; }
+  .cause-norse { background: #dbeafe; border: 1px solid #93c5fd; color: #1e3a5f; }
+  .cause-french { background: #fef3c7; border: 1px solid #fcd34d; color: #78350f; }
+
+  .pattern-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .pattern-note strong { color: #1e40af; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  figcaption span { font-size: 0.85rem; color: #6c757d; line-height: 1.5; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    h2 { color: #e9ecef; }
+    .subtitle { color: #adb5bd; }
+    .cat-label { color: #e9ecef; }
+    .alive    { background: #052e16; color: #86efac; border-color: #15803d; }
+    .declining { background: #451a03; color: #fcd34d; border-color: #b45309; }
+    .vestigial { background: #450a0a; color: #fca5a5; border-color: #991b1b; }
+    .dead      { background: #1f2937; color: #6b7280; border-color: #374151; }
+    .cause-stress { background: #2e1065; border-color: #7c3aed; color: #ddd6fe; }
+    .cause-norse { background: #1e2a4a; border-color: #3b82f6; color: #bfdbfe; }
+    .cause-french { background: #451a03; border-color: #d97706; color: #fde68a; }
+    .pattern-note { background: #1e2a4a; border-left-color: #60a5fa; color: #cbd5e1; }
+    .pattern-note strong { color: #93bbfc; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+  }
+
+  @media (max-width: 700px) {
+    .cat-row { grid-template-columns: 100px repeat(4, 1fr); }
+    .causes { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Loss of Inflections: The Great Erosion</h2>
+  <p class="subtitle">Tracking the collapse of Old English morphology across four periods</p>
+
+  <div class="chart-area">
+    <div class="category-grid">
+      <!-- Header -->
+      <div class="cat-row">
+        <div class="cat-label"></div>
+        <div class="period-header ph-oe">Old English<br>(449-1100)</div>
+        <div class="period-header ph-eme">Early ME<br>(1100-1300)</div>
+        <div class="period-header ph-lme">Late ME<br>(1300-1500)</div>
+        <div class="period-header ph-mod">Modern<br>(1700+)</div>
+      </div>
+
+      <!-- Noun cases -->
+      <div class="cat-row">
+        <div class="cat-label">Noun Cases</div>
+        <div class="cell alive">4 cases<br>(Nom/Acc/Gen/Dat)</div>
+        <div class="cell declining">3 merging<br>(Nom=Acc merging)</div>
+        <div class="cell vestigial">2 remnants<br>(common + possessive)</div>
+        <div class="cell dead">Possessive -'s only<br>(+ pronoun cases)</div>
+      </div>
+
+      <!-- Grammatical gender -->
+      <div class="cat-row">
+        <div class="cat-label">Grammatical Gender</div>
+        <div class="cell alive">3 genders<br>(M / F / N)</div>
+        <div class="cell declining">Collapsing<br>(north leads)</div>
+        <div class="cell dead">Gone<br>(natural gender only)</div>
+        <div class="cell dead">Gone</div>
+      </div>
+
+      <!-- Adjective agreement -->
+      <div class="cat-row">
+        <div class="cat-label">Adjective Agreement</div>
+        <div class="cell alive">Strong + weak<br>declensions<br>(case/gender/number)</div>
+        <div class="cell declining">Simplifying<br>(-e remnant)</div>
+        <div class="cell dead">Gone<br>(Chaucer: final -e dying)</div>
+        <div class="cell dead">Gone<br>(adjectives invariable)</div>
+      </div>
+
+      <!-- Verb conjugation -->
+      <div class="cat-row">
+        <div class="cat-label">Verb Person/Number</div>
+        <div class="cell alive">Distinct forms<br>per person/number<br>(-e, -est, -eth, -ath)</div>
+        <div class="cell declining">Reducing<br>(some merger)</div>
+        <div class="cell vestigial">-eth/-s distinction<br>(3rd person only)</div>
+        <div class="cell dead">-s (3rd sg.)<br>only survivor</div>
+      </div>
+
+      <!-- V2 word order -->
+      <div class="cat-row">
+        <div class="cat-label">V2 Word Order</div>
+        <div class="cell alive">Active V2<br>(verb second<br>in main clauses)</div>
+        <div class="cell declining">Weakening<br>(SVO preferred)</div>
+        <div class="cell dead">SVO dominant<br>(V2 gone)</div>
+        <div class="cell dead">Fixed SVO<br>(rigid)</div>
+      </div>
+
+      <!-- Demonstrative system -->
+      <div class="cat-row">
+        <div class="cat-label">Demonstrative / Article</div>
+        <div class="cell alive">se/seo/thaet<br>(gender-marked<br>demonstratives)</div>
+        <div class="cell declining">Reducing to<br>"the" + "that"</div>
+        <div class="cell vestigial">"the" (definite)<br>"a/an" (indefinite)<br>emerging</div>
+        <div class="cell dead">Fixed article<br>system<br>(the / a / an)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch alive"></span> Fully functional</div>
+    <div class="legend-item"><span class="legend-swatch declining"></span> Actively eroding</div>
+    <div class="legend-item"><span class="legend-swatch vestigial"></span> Vestigial remnants</div>
+    <div class="legend-item"><span class="legend-swatch dead"></span> Lost / replaced</div>
+  </div>
+
+  <div class="causes">
+    <div class="cause-card cause-stress">
+      <div class="cause-title">Fixed Initial Stress</div>
+      Proto-Germanic innovation: first syllable always stressed. Unstressed final syllables (carrying inflections) progressively weakened and merged.
+    </div>
+    <div class="cause-card cause-norse">
+      <div class="cause-title">Old Norse Contact</div>
+      Similar roots, different endings. Bilingual communication in the Danelaw dropped the divergent endings. Erosion started in the north, spread south.
+    </div>
+    <div class="cause-card cause-french">
+      <div class="cause-title">French Displacement</div>
+      200 years without English as a prestige literary language removed any standardizing brake on inflectional change. No prestige norm = no resistance.
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>The Pattern:</strong> Read the grid left-to-right: nearly every row transitions from green (alive) through yellow (declining) to grey (dead). The erosion is systematic and unidirectional -- no category reverses course. The three causes at the bottom operated simultaneously and reinforced each other: stress weakened endings phonologically, Norse contact made weakened endings functionally expendable, and French displacement removed the social force that might have preserved them. The result: Old English had dozens of inflectional distinctions; Modern English retains exactly 8 (plural -s, possessive -'s, 3rd person -s, pronoun case forms, comparative -er, superlative -est, past -ed, progressive -ing).
+  </div>
+
+  <figcaption>
+    <strong>Figure 2 -- Loss of Inflections Progression</strong>
+    <span>Six morphological categories tracked across four periods, from fully functional (Old English) to lost or vestigial (Modern English). Three reinforcing causes shown below. The unidirectional pattern demonstrates that English's transformation from fusional to analytic was systematic, not random.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

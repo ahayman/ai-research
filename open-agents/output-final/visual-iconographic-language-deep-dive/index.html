@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Deep Dive: Visual Iconographic Language Design — Feasibility of a Metaphor-Based Communication System. Exploring whether a visual language built on image schemas and semantic primitives could serve as an alternative to phonetic writing.">
+<title>Visual Iconographic Language Design | Deep Dive</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #131c33;
+  --bg-card: #1e293b;
+  --bg-card-hover: #253349;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --border-light: #475569;
+  --accent: #8b5cf6;
+  --accent-dim: #6d28d9;
+  --accent-glow: rgba(139, 92, 246, 0.15);
+  --teal: #14b8a6;
+  --teal-dim: #0d9488;
+  --teal-glow: rgba(20, 184, 166, 0.12);
+  --amber: #f59e0b;
+  --amber-dim: #b45309;
+  --amber-glow: rgba(245, 158, 11, 0.12);
+  --blue: #3b82f6;
+  --blue-dim: #1e40af;
+  --blue-glow: rgba(59, 130, 246, 0.12);
+  --rose: #f43f5e;
+  --rose-dim: #be123c;
+  --rose-glow: rgba(244, 63, 94, 0.12);
+  --emerald: #10b981;
+  --emerald-dim: #059669;
+  --emerald-glow: rgba(16, 185, 129, 0.12);
+  --sky: #0ea5e9;
+  --sky-dim: #0284c7;
+  --orange: #f97316;
+  --orange-dim: #c2410c;
+  --pink: #ec4899;
+  --pink-dim: #be185d;
+  --coral: #fb7185;
+  --coral-dim: #e11d48;
+  --indigo: #818cf8;
+  --indigo-dim: #4f46e5;
+  --lime: #a3e635;
+  --lime-dim: #65a30d;
+  --cyan: #22d3ee;
+  --cyan-dim: #0891b2;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== HERO HEADER ===== */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 4.5rem 1.5rem 3.5rem;
+  background: linear-gradient(180deg, #1a0f30 0%, #0f1a2e 30%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 25% 15%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 25%, rgba(245, 158, 11, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 75%, rgba(20, 184, 166, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Floating visual primitives background */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='30' fill='none' stroke='%238b5cf6' stroke-width='1.5' opacity='0.05'/%3E%3Cline x1='60' y1='20' x2='60' y2='100' stroke='%238b5cf6' stroke-width='1' opacity='0.04'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M20 100 L60 20 L100 100' fill='none' stroke='%23f59e0b' stroke-width='1.5' opacity='0.04'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect x='25' y='25' width='70' height='70' rx='4' fill='none' stroke='%2314b8a6' stroke-width='1.5' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px, 220px 220px, 180px 180px;
+  background-position: 8% 15%, 82% 55%, 45% 85%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  animation: floatPrimitives 25s ease-in-out infinite alternate;
+}
+
+@keyframes floatPrimitives {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(5px, -6px) rotate(0.5deg); }
+  100% { transform: translate(-3px, -10px) rotate(-0.3deg); }
+}
+
+.hero-content {
+  position: relative;
+  max-width: 920px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.hero-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+}
+
+.hero-title {
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--amber) 40%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.6rem;
+  line-height: 1.15;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text-secondary);
+  max-width: 780px;
+  margin: 0 auto 0.75rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.hero-question {
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  color: var(--amber);
+  font-style: italic;
+  font-weight: 500;
+  max-width: 650px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.date-badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  max-width: 960px;
+  margin: 0 auto 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stat-item {
+  flex: 1 1 160px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  min-width: 140px;
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: block;
+  line-height: 1.2;
+}
+
+.stat-value.purple { color: var(--accent); }
+.stat-value.teal { color: var(--teal); }
+.stat-value.amber { color: var(--amber); }
+.stat-value.rose { color: var(--rose); }
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-section {
+  max-width: 960px;
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+}
+
+.progress-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progress-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.progress-count {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.progress-count span {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(100, 116, 139, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+/* ===== OVERVIEW SECTION ===== */
+.overview-section {
+  max-width: 960px;
+  margin: 0 auto 3rem;
+  padding: 0 1.5rem;
+}
+
+.overview-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.overview-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--amber), var(--teal));
+}
+
+.overview-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.overview-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.overview-text:last-child {
+  margin-bottom: 0;
+}
+
+.overview-highlight {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.overview-teal {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.overview-amber {
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.overview-rose {
+  color: var(--rose);
+  font-weight: 600;
+}
+
+/* ===== SEARCH & FILTER ===== */
+.controls-section {
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: 0 1.5rem;
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1 1 250px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-pill {
+  padding: 0.45rem 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.filter-pill.active {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===== SECTION DIVIDERS ===== */
+.section-divider {
+  max-width: 960px;
+  margin: 3rem auto 1.75rem;
+  padding: 0 1.5rem;
+}
+
+.section-divider:first-of-type {
+  margin-top: 1rem;
+}
+
+.section-divider-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-divider-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.section-divider-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ===== CARD GRID ===== */
+.card-grid {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 1.25rem;
+}
+
+.card-grid.single-column {
+  grid-template-columns: 1fr;
+}
+
+/* ===== CATEGORY CARDS ===== */
+.cat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--accent));
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+}
+
+.cat-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cat-card:hover::before {
+  opacity: 1;
+}
+
+.cat-card.card-pending {
+  opacity: 0.85;
+}
+
+.cat-card.card-pending:hover {
+  opacity: 1;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-number {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  background: rgba(100, 116, 139, 0.15);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-pending {
+  background: rgba(100, 116, 139, 0.12);
+  border: 1px solid rgba(100, 116, 139, 0.25);
+  color: var(--text-muted);
+}
+
+.status-pending .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-complete {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--emerald);
+}
+
+.status-complete .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.card-title a:hover {
+  color: var(--accent);
+}
+
+.card-core-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+}
+
+.card-personal-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: var(--rose);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+}
+
+.card-synthesis-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+}
+
+.card-summary {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.topic-tag {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  background: rgba(100, 116, 139, 0.1);
+  border: 1px solid rgba(100, 116, 139, 0.18);
+  border-radius: 5px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.topic-tag.tag-key {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.2);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(100, 116, 139, 0.1);
+}
+
+.section-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.tag-history { color: var(--accent); background: rgba(139, 92, 246, 0.08); }
+.tag-theory { color: var(--teal); background: rgba(20, 184, 166, 0.08); }
+.tag-cognitive { color: var(--blue); background: rgba(59, 130, 246, 0.08); }
+.tag-model { color: var(--amber); background: rgba(245, 158, 11, 0.08); }
+.tag-engineering { color: var(--emerald); background: rgba(16, 185, 129, 0.08); }
+.tag-personal { color: var(--rose); background: rgba(244, 63, 94, 0.08); }
+
+.read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.read-link:hover {
+  color: #a78bfa;
+  gap: 0.6rem;
+}
+
+.read-link .arrow {
+  transition: transform 0.2s ease;
+  font-size: 1.1em;
+}
+
+.read-link:hover .arrow {
+  transform: translateX(3px);
+}
+
+.read-link.disabled {
+  color: var(--text-muted);
+  pointer-events: none;
+  cursor: default;
+}
+
+.read-link.disabled:hover {
+  gap: 0.4rem;
+}
+
+/* ===== READING PATHS ===== */
+.paths-section {
+  max-width: 960px;
+  margin: 2rem auto 3rem;
+  padding: 0 1.5rem;
+}
+
+.paths-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.paths-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.path-card {
+  padding: 1.25rem;
+  background: rgba(100, 116, 139, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.path-card:hover {
+  background: rgba(100, 116, 139, 0.1);
+}
+
+.path-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.path-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+}
+
+.path-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.path-route {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ===== OPEN QUESTIONS ===== */
+.questions-section {
+  max-width: 960px;
+  margin: 0 auto 3rem;
+  padding: 0 1.5rem;
+}
+
+.questions-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.questions-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--amber), var(--rose));
+}
+
+.questions-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.questions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.questions-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.questions-list li:last-child {
+  border-bottom: none;
+}
+
+.questions-list li::before {
+  content: '?';
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+/* ===== NO RESULTS ===== */
+.no-results {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  display: none;
+}
+
+.no-results-text {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ===== FOOTER ===== */
+.page-footer {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(0deg, #0b1120 0%, var(--bg-primary) 100%);
+}
+
+.footer-line {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.footer-line strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.footer-note {
+  max-width: 650px;
+  margin: 1rem auto 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-top:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===== ANIMATIONS ===== */
+.cat-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.cat-card:nth-child(1) { animation-delay: 0.05s; }
+.cat-card:nth-child(2) { animation-delay: 0.1s; }
+.cat-card:nth-child(3) { animation-delay: 0.15s; }
+.cat-card:nth-child(4) { animation-delay: 0.2s; }
+.cat-card:nth-child(5) { animation-delay: 0.25s; }
+.cat-card:nth-child(6) { animation-delay: 0.3s; }
+.cat-card:nth-child(7) { animation-delay: 0.35s; }
+.cat-card:nth-child(8) { animation-delay: 0.4s; }
+.cat-card:nth-child(9) { animation-delay: 0.45s; }
+.cat-card:nth-child(10) { animation-delay: 0.5s; }
+.cat-card:nth-child(11) { animation-delay: 0.55s; }
+.cat-card:nth-child(12) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 1rem 2.5rem;
+  }
+
+  .stats-bar {
+    margin: 0 1rem 2rem;
+    border-radius: 8px;
+  }
+
+  .stat-item {
+    flex: 1 1 45%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0.75rem;
+  }
+
+  .stat-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .stat-item:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-item:last-child {
+    border-right: none;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cat-card {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+  .overview-box {
+    padding: 1.5rem;
+  }
+
+  .paths-box {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-item {
+    flex: 1 1 100%;
+    border-right: none !important;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+  }
+
+  .search-box {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .filter-pills {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.25rem;
+  }
+
+  .paths-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-content">
+    <span class="hero-icon" aria-hidden="true">&#9679;&#8594;&#9723;</span>
+    <h1 class="hero-title">Visual Iconographic Language Design</h1>
+    <p class="hero-subtitle">Feasibility of a Metaphor-Based Communication System &mdash; can a visual language built on image schemas and semantic primitives encode meaning without encoding speech?</p>
+    <p class="hero-question">"What if writing didn't have to represent speech? What if it could encode the conceptual structures humans actually think in?"</p>
+    <span class="date-badge">Research initiated: March 31, 2026</span>
+  </div>
+</header>
+
+<!-- ===== STATS BAR ===== -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-value purple">12</span>
+    <span class="stat-label">Categories</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-value teal">65</span>
+    <span class="stat-label">Semantic Primes</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-value amber">6,000+</span>
+    <span class="stat-label">Years of Visual Communication</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-value rose">1</span>
+    <span class="stat-label">Big Question</span>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-section">
+  <div class="progress-container">
+    <div class="progress-header">
+      <span class="progress-title">Deep Dive Progress</span>
+      <span class="progress-count"><span>12</span> of 12 complete</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" style="width: 100%;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="overview-section">
+  <div class="overview-box">
+    <h2 class="overview-title">What This Deep Dive Is About</h2>
+    <p class="overview-text">
+      Humans have attempted to build visual communication systems independent of phonetics for centuries &mdash; from <span class="overview-highlight">Leibniz's <em>characteristica universalis</em></span> (1666) through <span class="overview-highlight">Bliss's Semantography</span> (1949) to the peer-reviewed <span class="overview-highlight">Icono system</span> published in <em>Frontiers in Psychology</em> in 2023. None has achieved widespread adoption as a general-purpose language. But the theoretical raw materials are richer than ever. Wierzbicka's Natural Semantic Metalanguage has identified <span class="overview-teal">65 semantic primes</span> &mdash; irreducible meaning atoms found in every known human language. Lakoff and Johnson's Conceptual Metaphor Theory has mapped how abstract thought is systematically structured by embodied experience. Johnson's image schemas provide a vocabulary of spatial-relational primitives that humans learn <em>before language</em> from physical interaction with the world.
+    </p>
+    <p class="overview-text">
+      Meanwhile, <span class="overview-teal">sign languages</span> prove that full natural languages can operate entirely in the visual-spatial modality. <span class="overview-amber">Chinese radical composition</span> demonstrates that a finite set of semantic building blocks can generate an open-ended vocabulary across millennia. And cognitive science reveals that the human brain devotes 30&ndash;40% of cortical real estate to vision, with symbols processed more efficiently than their verbal equivalents.
+    </p>
+    <p class="overview-text">
+      The hard problems are real. <span class="overview-rose">No semasiographic system</span> &mdash; one that represents meaning directly without encoding speech sounds &mdash; has ever achieved full natural-language expressiveness. The phoneme representation problem, compositionality at scale, and the adoption challenge remain unsolved. This deep dive maps the full landscape: what has been tried, what theoretical foundations could ground a new approach, what the cognitive science says, and whether the pieces can actually fit together into something that works &mdash; particularly for <span class="overview-rose">visual-spatial thinkers</span> whose cognitive architecture may be poorly served by phonetic-verbal systems.
+    </p>
+  </div>
+</div>
+
+<!-- ===== SEARCH & FILTER ===== -->
+<div class="controls-section">
+  <div class="controls-bar">
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="searchInput" placeholder="Search categories..." aria-label="Search categories">
+    </div>
+    <div class="filter-pills">
+      <button class="filter-pill active" data-filter="all">All (12)</button>
+      <button class="filter-pill" data-filter="history">History</button>
+      <button class="filter-pill" data-filter="theory">Theory</button>
+      <button class="filter-pill" data-filter="cognitive">Cognitive</button>
+      <button class="filter-pill" data-filter="model">Models</button>
+      <button class="filter-pill" data-filter="engineering">Engineering</button>
+      <button class="filter-pill" data-filter="personal">Personal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== THE LANDSCAPE: WHAT EXISTS ===== -->
+<div class="section-divider" data-section="history">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#128220;</span>
+    <span class="section-divider-text">The Landscape: What Exists</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="history">
+
+  <!-- 1. Historical Visual Language Systems -->
+  <div class="cat-card" data-category="history" data-search="historical visual language systems leibniz characteristica universalis wilkins real character bliss blissymbolics locos neurath isotype elephant memory icono iconji emoji ota semantography">
+    <div class="card-top">
+      <span class="card-number">Category 1 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Historical Visual Language Systems</h3>
+    <p class="card-summary">From Leibniz's algebraic symbolic reasoning (1666) through Neurath's ISOTYPE pictograms, Bliss's Semantography, LoCoS, and Elephant's Memory, to the peer-reviewed Icono system (2023). Every attempt illuminates different aspects of what a visual language requires &mdash; and where the hard problems lie. Their collective failures and partial successes define the design space.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Blissymbolics</span>
+      <span class="topic-tag tag-key">Icono (2023)</span>
+      <span class="topic-tag">Leibniz &amp; Wilkins</span>
+      <span class="topic-tag">ISOTYPE</span>
+      <span class="topic-tag">LoCoS</span>
+      <span class="topic-tag">Elephant's Memory</span>
+      <span class="topic-tag">Emoji</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-history">History</span>
+      <a href="./historical-visual-language-systems/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 2. Semasiographic vs. Glottographic Systems -->
+  <div class="cat-card" data-category="history" data-search="semasiographic glottographic writing meaning speech gelb sampson defrancis aztec maya mathematical notation domain restricted phonographic">
+    <div class="card-top">
+      <span class="card-number">Category 2 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Semasiographic vs. Glottographic Systems <span class="card-core-badge">Core</span></h3>
+    <p class="card-summary">The fundamental distinction that frames everything. Glottographic systems encode speech; semasiographic systems encode meaning directly. Mathematical notation, road signs, and circuit diagrams are functioning semasiographic systems &mdash; but all are domain-restricted. The central theoretical question: is this limitation fundamental, or merely an engineering problem not yet solved?</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Gelb's Taxonomy</span>
+      <span class="topic-tag tag-key">Sampson vs. DeFrancis</span>
+      <span class="topic-tag">Mathematical Notation</span>
+      <span class="topic-tag">Domain Restriction</span>
+      <span class="topic-tag">Aztec &amp; Maya</span>
+      <span class="topic-tag">The Generality Problem</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-history">History</span>
+      <a href="./semasiographic-vs-glottographic/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== THEORETICAL FOUNDATIONS ===== -->
+<div class="section-divider" data-section="theory">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#129518;</span>
+    <span class="section-divider-text">Theoretical Foundations</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="theory">
+
+  <!-- 3. Semantic Primitives and NSM -->
+  <div class="cat-card" data-category="theory" data-search="semantic primitives natural semantic metalanguage nsm wierzbicka goddard primes universal concepts atoms meaning explication molecules" style="--card-accent: var(--teal);">
+    <div class="card-top">
+      <span class="card-number">Category 3 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Semantic Primitives &amp; NSM <span class="card-core-badge">Core</span></h3>
+    <p class="card-summary">Wierzbicka and Goddard's five-decade quest to identify the irreducible building blocks of human meaning. 65 semantic primes &mdash; GOOD, BAD, DO, HAPPEN, SOMEONE, SOMETHING, IF, BECAUSE &mdash; claimed to have exact equivalents in every known language. If these concepts are truly universal, they could serve as the foundational symbol inventory. But can you <em>draw</em> IF? BECAUSE? VERY?</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">65 Semantic Primes</span>
+      <span class="topic-tag tag-key">Wierzbicka &amp; Goddard</span>
+      <span class="topic-tag">Semantic Molecules</span>
+      <span class="topic-tag">Cross-Linguistic Testing</span>
+      <span class="topic-tag">Explication Method</span>
+      <span class="topic-tag">Imageability Challenge</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-theory">Theory</span>
+      <a href="./semantic-primitives-nsm/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 4. Image Schemas as Visual Building Blocks -->
+  <div class="cat-card" data-category="theory" data-search="image schemas visual building blocks johnson lakoff container path force balance link center periphery cycle disl diagrammatic embodied experience mandler spatial primitives" style="--card-accent: var(--teal);">
+    <div class="card-top">
+      <span class="card-number">Category 4 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Image Schemas as Visual Building Blocks <span class="card-core-badge">Core</span></h3>
+    <p class="card-summary">The theoretical heart of the proposed language. Mark Johnson's image schemas &mdash; CONTAINER, PATH, FORCE, BALANCE, LINK &mdash; are pre-linguistic spatial structures learned from bodily experience before language develops. The DISL framework (2024) has already formalized visual symbols for these primitives. If primary metaphors map abstract concepts onto these schemas, then image schemas are the bridge between visual representation and abstract meaning.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">CONTAINER / PATH / FORCE</span>
+      <span class="topic-tag tag-key">DISL (2024)</span>
+      <span class="topic-tag">Johnson &amp; Lakoff</span>
+      <span class="topic-tag">Mandler's Spatial Primitives</span>
+      <span class="topic-tag">Primary Metaphor Grounding</span>
+      <span class="topic-tag">Pre-linguistic Origins</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-theory">Theory</span>
+      <a href="./image-schemas-visual-building-blocks/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 5. Compositionality Requirements -->
+  <div class="cat-card" data-category="theory" data-search="compositionality visual meaning construction grammar syntax recursion negation conditionality quantification tense aspect blissymbolics chinese locos visual programming" style="--card-accent: var(--teal);">
+    <div class="card-top">
+      <span class="card-number">Category 5 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Compositionality Requirements</h3>
+    <p class="card-summary">The central engineering challenge. Without compositionality, a visual language is just a picture dictionary &mdash; useful for concrete nouns but incapable of expressing "If it hadn't rained yesterday, I would have gone for a walk." How do you represent negation, conditionality, tense, and recursive embedding in a visual grammar? This is where most visual language projects stall.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Visual Grammar</span>
+      <span class="topic-tag tag-key">Recursive Embedding</span>
+      <span class="topic-tag">Negation &amp; Conditionality</span>
+      <span class="topic-tag">Spatial Syntax</span>
+      <span class="topic-tag">Visual Programming Lessons</span>
+      <span class="topic-tag">Expressiveness Trade-offs</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-theory">Theory</span>
+      <a href="./compositionality-requirements/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 6. The Phoneme Representation Problem -->
+  <div class="cat-card" data-category="theory" data-search="phoneme representation problem proper names borrowed words transliteration fingerspelling chinese radical phonetic ipa hangul katakana articulatory" style="--card-accent: var(--teal);">
+    <div class="card-top">
+      <span class="card-number">Category 6 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">The Phoneme Representation Problem</h3>
+    <p class="card-summary">The thorniest practical challenge for any non-phonetic writing system. A language that cannot represent "Tokyo," "Shakespeare," or "paracetamol" is fatally limited. Chinese uses phonetic radicals. Sign languages use fingerspelling. How does a semasiographic system interface with the phonetic world without undermining its visual-spatial logic?</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Fingerspelling</span>
+      <span class="topic-tag tag-key">Chinese Phonetic Radicals</span>
+      <span class="topic-tag">IPA Visual Encoding</span>
+      <span class="topic-tag">Hangul as Precedent</span>
+      <span class="topic-tag">Katakana Strategy</span>
+      <span class="topic-tag">Cross-Linguistic Design</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-theory">Theory</span>
+      <a href="./phoneme-representation-problem/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== EXISTING MODELS ===== -->
+<div class="section-divider" data-section="model">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#128300;</span>
+    <span class="section-divider-text">Existing Models &amp; Existence Proofs</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="model">
+
+  <!-- 7. Chinese Radical Composition as Model -->
+  <div class="cat-card" data-category="model" data-search="chinese radical composition model kangxi radicals semantic phonetic compound liushu character classification pictograph ideograph opacity learning burden literacy" style="--card-accent: var(--amber);">
+    <div class="card-top">
+      <span class="card-number">Category 7 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Chinese Radical Composition as Model</h3>
+    <p class="card-summary">The world's longest-running experiment in composable visual meaning-making. 214 Kangxi radicals generate tens of thousands of compound characters, with 80%+ being semantic-phonetic compounds. Proof that a finite set of visual building blocks can serve a civilization for millennia &mdash; but also a warning about opacity, phonetic drift, and the learning burden of thousands of symbols.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">214 Kangxi Radicals</span>
+      <span class="topic-tag tag-key">Semantic-Phonetic Compounds</span>
+      <span class="topic-tag">Character Classification</span>
+      <span class="topic-tag">Composition Rules</span>
+      <span class="topic-tag">Opacity Problem</span>
+      <span class="topic-tag">3,000+ Years</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-model">Model</span>
+      <a href="./chinese-radical-composition-model/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 8. Sign Language Lessons -->
+  <div class="cat-card" data-category="model" data-search="sign language asl bsl visual spatial grammar simultaneity classifier spatial locus signwriting sutton fingerspelling iconicity modality" style="--card-accent: var(--amber);">
+    <div class="card-top">
+      <span class="card-number">Category 8 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Sign Language Lessons</h3>
+    <p class="card-summary">The existence proof. Sign languages are full natural languages &mdash; complete grammars, literature, poetry &mdash; operating entirely in the visual-spatial modality. They exploit simultaneity, spatial reference, and classifier systems in ways phonetic languages cannot. SignWriting proves these can be notated in 2D. The question: which innovations transfer to a non-gestural written medium?</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Visual-Spatial Grammar</span>
+      <span class="topic-tag tag-key">SignWriting (652 symbols)</span>
+      <span class="topic-tag">Simultaneity</span>
+      <span class="topic-tag">Classifier Systems</span>
+      <span class="topic-tag">Spatial Loci</span>
+      <span class="topic-tag">Non-Manual Markers</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-model">Model</span>
+      <a href="./sign-language-lessons/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== COGNITIVE FOUNDATIONS ===== -->
+<div class="section-divider" data-section="cognitive">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#129504;</span>
+    <span class="section-divider-text">Cognitive Foundations</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="cognitive">
+
+  <!-- 9. Cognitive Science of Visual Processing -->
+  <div class="cat-card" data-category="cognitive" data-search="cognitive science visual processing dual coding paivio symbol superiority barsalou perceptual symbol vwfa visual word form area dehaene neural recycling cognitive load" style="--card-accent: var(--blue);">
+    <div class="card-top">
+      <span class="card-number">Category 9 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Cognitive Science of Visual Processing</h3>
+    <p class="card-summary">The neurological substrate that constrains and enables visual language design. Dual coding theory, the symbol superiority effect ("$" remembered better than "dollar"), Barsalou's perceptual symbol systems, and how the Visual Word Form Area reconfigures for reading. A visual language must work with the grain of human visual cognition &mdash; understanding where the processing advantages and bottlenecks lie.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Dual Coding Theory</span>
+      <span class="topic-tag tag-key">Symbol Superiority</span>
+      <span class="topic-tag">VWFA &amp; Neural Recycling</span>
+      <span class="topic-tag">Perceptual Symbols</span>
+      <span class="topic-tag">Cognitive Load</span>
+      <span class="topic-tag">30&ndash;40% Cortical Vision</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-cognitive">Cognitive</span>
+      <a href="./cognitive-science-visual-processing/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- 10. Existing Symbol Communication Systems -->
+  <div class="cat-card" data-category="cognitive" data-search="existing symbol communication systems aac pecs pcs widgit makaton blissymbolics augmentative alternative communication core vocabulary icon design accessibility" style="--card-accent: var(--blue);">
+    <div class="card-top">
+      <span class="card-number">Category 10 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Existing Symbol Communication Systems</h3>
+    <p class="card-summary">Decades of real-world deployment serving millions. PECS, PCS (45,000+ symbols), Widgit, Makaton, and Blissymbolics in AAC contexts &mdash; these are not theoretical proposals but working technologies. Core vocabulary research shows ~300 words cover 80%+ of daily communication. Their achievements define what works; their ceiling defines what is missing.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">PECS &amp; PCS</span>
+      <span class="topic-tag tag-key">Core Vocabulary (~300 words)</span>
+      <span class="topic-tag">Widgit &amp; Makaton</span>
+      <span class="topic-tag">Blissymbolics in AAC</span>
+      <span class="topic-tag">Symbol Design Principles</span>
+      <span class="topic-tag">Staged Learning</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-cognitive">Cognitive</span>
+      <a href="./existing-symbol-communication-systems/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== THE PERSONAL DIMENSION ===== -->
+<div class="section-divider" data-section="personal">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#10024;</span>
+    <span class="section-divider-text">The Personal Dimension</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="personal">
+
+  <!-- 11. Visual Thinking, Autism, and Alternative Modalities -->
+  <div class="cat-card" data-category="personal" data-search="visual thinking autism alternative modalities grandin object visualizer spatial visualizer enhanced perceptual functioning epf mottron block design ravens nonverbal neurodiversity" style="--card-accent: var(--rose);">
+    <div class="card-top">
+      <span class="card-number">Category 11 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Visual Thinking, Autism &amp; Alternative Modalities <span class="card-personal-badge">Personal</span></h3>
+    <p class="card-summary">The "why" behind the entire project. If visual-spatial processing is a genuine cognitive style &mdash; not a deficit but an alternative architecture &mdash; then the absence of a robust visual language is a systemic accessibility failure. Grandin's object vs. spatial visualizers, the Enhanced Perceptual Functioning model, and the case that a metaphor-based visual language could work <em>with</em> visual-spatial cognition rather than against it.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Grandin's Visual Taxonomy</span>
+      <span class="topic-tag tag-key">EPF Model (Mottron)</span>
+      <span class="topic-tag">Block Design &amp; Raven's</span>
+      <span class="topic-tag">The Mismatch Hypothesis</span>
+      <span class="topic-tag">Neurodiversity-Affirming Design</span>
+      <span class="topic-tag">Beyond AAC</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-personal">Personal</span>
+      <a href="./visual-thinking-autism-alternative-modalities/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== SYNTHESIS ===== -->
+<div class="section-divider" data-section="engineering">
+  <div class="section-divider-inner">
+    <span class="section-divider-icon" aria-hidden="true">&#128736;</span>
+    <span class="section-divider-text">Synthesis &amp; Feasibility</span>
+    <div class="section-divider-line"></div>
+  </div>
+</div>
+
+<div class="card-grid" data-section="engineering">
+
+  <!-- 12. Requirements Engineering and Feasibility -->
+  <div class="cat-card" data-category="engineering" data-search="requirements engineering feasibility assessment learnability expressiveness adoption problem standardization digital rendering incremental deployment core primitives prototype" style="--card-accent: var(--emerald);">
+    <div class="card-top">
+      <span class="card-number">Category 12 of 12</span>
+      <span class="card-status status-complete"><span class="status-dot"></span> Complete</span>
+    </div>
+    <h3 class="card-title">Requirements Engineering &amp; Feasibility <span class="card-synthesis-badge">Synthesis</span></h3>
+    <p class="card-summary">The verdict. Given everything from the other eleven categories &mdash; is this actually buildable? Functional requirements, the learnability-expressiveness trade-off, the adoption problem, technology needs, and the incremental path from personal notation to community tool. Honest about what is feasible now, what requires breakthrough research, and what may be fundamentally impossible.</p>
+    <div class="card-topics">
+      <span class="topic-tag tag-key">Feasibility Assessment</span>
+      <span class="topic-tag tag-key">Learnability vs. Expressiveness</span>
+      <span class="topic-tag">The Adoption Problem</span>
+      <span class="topic-tag">Standardization</span>
+      <span class="topic-tag">Digital-First Design</span>
+      <span class="topic-tag">Incremental Deployment</span>
+    </div>
+    <div class="card-footer">
+      <span class="section-tag tag-engineering">Engineering</span>
+      <a href="./requirements-engineering-feasibility/index.html" class="read-link">Read <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== NO RESULTS MESSAGE ===== -->
+<div class="no-results" id="noResults">
+  <p class="no-results-text">No categories match your search. Try different keywords.</p>
+</div>
+
+<!-- ===== READING PATHS ===== -->
+<div class="paths-section">
+  <div class="paths-box">
+    <h2 class="paths-title">Suggested Reading Paths</h2>
+    <div class="paths-grid">
+      <div class="path-card">
+        <span class="path-icon" aria-hidden="true">&#128218;</span>
+        <div class="path-name">The Recommended Order</div>
+        <p class="path-desc">Follow the research-recommended sequence: historical context, theoretical framework, meaning atoms, the core proposal, cognitive substrate, existing models, engineering challenges, and the feasibility verdict.</p>
+        <span class="path-route">1 &rarr; 2 &rarr; 3 &rarr; 4 &rarr; 9 &rarr; 7 &rarr; 8 &rarr; 5 &rarr; 6 &rarr; 10 &rarr; 11 &rarr; 12</span>
+      </div>
+      <div class="path-card">
+        <span class="path-icon" aria-hidden="true">&#129504;</span>
+        <div class="path-name">The Theory Track</div>
+        <p class="path-desc">Focus on the cognitive and linguistic foundations. Semantic primitives, image schemas, conceptual metaphor grounding, and what cognitive science says about visual processing.</p>
+        <span class="path-route">3 &rarr; 4 &rarr; 9 &rarr; 5 &rarr; 6</span>
+      </div>
+      <div class="path-card">
+        <span class="path-icon" aria-hidden="true">&#128300;</span>
+        <div class="path-name">The Existence Proof Track</div>
+        <p class="path-desc">Start with what already works. Historical attempts, Chinese radical composition, sign language innovations, and deployed AAC systems &mdash; the empirical evidence base.</p>
+        <span class="path-route">1 &rarr; 2 &rarr; 7 &rarr; 8 &rarr; 10</span>
+      </div>
+      <div class="path-card">
+        <span class="path-icon" aria-hidden="true">&#10024;</span>
+        <div class="path-name">The Personal Path</div>
+        <p class="path-desc">Why this matters for visual-spatial thinkers. Start with the cognitive case for alternative modalities, ground it in neuroscience, then evaluate what could actually be built.</p>
+        <span class="path-route">11 &rarr; 9 &rarr; 4 &rarr; 3 &rarr; 12</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OPEN QUESTIONS ===== -->
+<div class="questions-section">
+  <div class="questions-box">
+    <h2 class="questions-title">Open Questions Driving This Research</h2>
+    <ul class="questions-list">
+      <li>Has anyone attempted to systematically map Wierzbicka's 65 semantic primes to visual representations? What happens when you try to draw IF, BECAUSE, NOT, or VERY?</li>
+      <li>Could the DISL framework (which already formalizes visual representations of image schemas) be extended from a descriptive notation into a productive communication system?</li>
+      <li>What is the actual overlap between Wierzbicka's semantic primes and Johnson's image schemas? Are they complementary inventories or competing frameworks?</li>
+      <li>Has any research tested whether icon recognition for abstract concepts is consistent cross-culturally?</li>
+      <li>What is the minimum viable symbol set for functional communication? (Makaton says ~450 concepts; core vocabulary research says ~300 words; NSM says 65 primes + 50 molecules)</li>
+      <li>What would a digital input method for composable visual symbols look like?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="page-footer">
+  <p class="footer-line"><strong>Visual Iconographic Language Design</strong> &mdash; Deep Dive</p>
+  <p class="footer-line">12 categories &bull; Validated research &bull; March 2026</p>
+  <p class="footer-note">
+    This deep dive investigates the feasibility of a metaphor-based visual communication system grounded in cognitive
+    linguistics, image schema theory, and natural semantic metalanguage. Research validated independently with a
+    confidence score of 8/10. Individual category pages will contain detailed citations to primary academic sources.
+  </p>
+</footer>
+
+<!-- ===== SCROLL TO TOP ===== -->
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">&uarr;</button>
+
+<script>
+// ===== Scroll-to-top button =====
+const scrollBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollBtn.classList.toggle('visible', window.scrollY > 400);
+});
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== Search functionality =====
+const searchInput = document.getElementById('searchInput');
+const cards = document.querySelectorAll('.cat-card');
+const noResults = document.getElementById('noResults');
+const sectionDividers = document.querySelectorAll('.section-divider');
+const cardGrids = document.querySelectorAll('.card-grid');
+
+function filterCards() {
+  const query = searchInput.value.toLowerCase().trim();
+  const activeFilter = document.querySelector('.filter-pill.active');
+  const filterVal = activeFilter ? activeFilter.dataset.filter : 'all';
+
+  let anyVisible = false;
+
+  cards.forEach(card => {
+    const searchText = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+    const category = card.dataset.category;
+    const matchesSearch = !query || searchText.includes(query);
+    const matchesFilter = filterVal === 'all' || category === filterVal;
+
+    if (matchesSearch && matchesFilter) {
+      card.style.display = '';
+      anyVisible = true;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide section dividers based on whether any cards in that section are visible
+  sectionDividers.forEach(divider => {
+    const sectionName = divider.dataset.section;
+    const grid = document.querySelector(`.card-grid[data-section="${sectionName}"]`);
+    if (grid) {
+      const visibleCards = grid.querySelectorAll('.cat-card:not([style*="display: none"])');
+      divider.style.display = visibleCards.length > 0 ? '' : 'none';
+      grid.style.display = visibleCards.length > 0 ? '' : 'none';
+    }
+  });
+
+  noResults.style.display = anyVisible ? 'none' : 'block';
+}
+
+searchInput.addEventListener('input', filterCards);
+
+// ===== Filter pills =====
+document.querySelectorAll('.filter-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    filterCards();
+  });
+});
+
+// ===== Keyboard shortcut: / to focus search =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape' && document.activeElement === searchInput) {
+    searchInput.value = '';
+    searchInput.blur();
+    filterCards();
+  }
+});
+</script>
+
+</body>
+</html>

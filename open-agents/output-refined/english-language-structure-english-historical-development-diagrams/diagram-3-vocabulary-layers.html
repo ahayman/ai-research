@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Vocabulary Layers</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1000px;
+    width: 100%;
+  }
+  h2 { text-align: center; font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.9rem; color: #6c757d; margin-bottom: 2rem; }
+
+  /* Stacked layers */
+  .layers-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .vocab-layer {
+    padding: 1rem 1.2rem;
+    border-radius: 0;
+    display: grid;
+    grid-template-columns: 180px 100px 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  .vocab-layer:first-child { border-radius: 10px 10px 0 0; }
+  .vocab-layer:last-child  { border-radius: 0 0 10px 10px; }
+  .layer-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .layer-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+  .layer-source {
+    font-size: 0.72rem;
+    opacity: 0.8;
+    margin-top: 0.1rem;
+  }
+  .layer-date {
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  .layer-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .word-chip {
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-style: italic;
+    background: rgba(255,255,255,0.4);
+  }
+
+  /* Layer colors (bottom = oldest) */
+  .l-global   { background: #fdf2f8; color: #831843; border-bottom: 1px solid #fbcfe8; }
+  .l-latin    { background: #ede9fe; color: #4c1d95; border-bottom: 1px solid #c4b5fd; }
+  .l-french   { background: #dbeafe; color: #1e3a5f; border-bottom: 1px solid #93c5fd; }
+  .l-norse    { background: #fef3c7; color: #78350f; border-bottom: 1px solid #fcd34d; }
+  .l-germanic { background: #dcfce7; color: #14532d; }
+
+  /* Three-tier example */
+  .triplets {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  .triplets h3 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+    margin-bottom: 0.6rem;
+    text-align: center;
+  }
+  .triplet-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.3rem;
+    font-size: 0.78rem;
+  }
+  .triplet-header {
+    font-weight: 700;
+    text-align: center;
+    padding: 0.3rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .triplet-cell {
+    text-align: center;
+    padding: 0.3rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-style: italic;
+  }
+
+  /* Animal/meat table */
+  .animal-meat {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .am-header { font-weight: 700; font-size: 0.7rem; padding: 0.3rem; color: #475569; }
+  .am-english { padding: 0.3rem; background: #dcfce7; border-radius: 4px; color: #14532d; }
+  .am-french  { padding: 0.3rem; background: #dbeafe; border-radius: 4px; color: #1e3a5f; }
+  .am-arrow   { display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 1.1rem; }
+
+  .pattern-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .pattern-note strong { color: #1e40af; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  figcaption span { font-size: 0.85rem; color: #6c757d; line-height: 1.5; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    h2 { color: #e9ecef; }
+    .subtitle { color: #adb5bd; }
+    .l-global   { background: #4a0d2b; color: #f9a8d4; border-bottom-color: #831843; }
+    .l-latin    { background: #2e1065; color: #ddd6fe; border-bottom-color: #6d28d9; }
+    .l-french   { background: #1e2a4a; color: #bfdbfe; border-bottom-color: #1d4ed8; }
+    .l-norse    { background: #451a03; color: #fde68a; border-bottom-color: #b45309; }
+    .l-germanic { background: #052e16; color: #bbf7d0; }
+    .word-chip  { background: rgba(0,0,0,0.2); }
+    .triplets { background: #1e2a4a; border-color: #3d3d5c; }
+    .triplets h3 { color: #adb5bd; }
+    .triplet-header { border-bottom-color: #3d3d5c; color: #e9ecef; }
+    .triplet-cell { border-bottom-color: #3d3d5c; color: #cbd5e1; }
+    .am-header { color: #adb5bd; }
+    .am-english { background: #052e16; color: #86efac; }
+    .am-french  { background: #1e2a4a; color: #93c5fd; }
+    .am-arrow   { color: #6b7280; }
+    .pattern-note { background: #1e2a4a; border-left-color: #60a5fa; color: #cbd5e1; }
+    .pattern-note strong { color: #93bbfc; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+  }
+
+  @media (max-width: 700px) {
+    .vocab-layer { grid-template-columns: 1fr; gap: 0.4rem; }
+    .triplet-grid { grid-template-columns: repeat(2, 1fr); }
+    .animal-meat { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>English Vocabulary Layers</h2>
+  <p class="subtitle">Five strata of borrowing -- each invasion and contact event deposited a new layer</p>
+
+  <div class="layers-container">
+    <div class="vocab-layer l-global">
+      <div class="layer-info">
+        <div class="layer-name">Global / Modern</div>
+        <div class="layer-source">Technology, trade, media</div>
+      </div>
+      <div class="layer-date">1700+</div>
+      <div class="layer-words">
+        <span class="word-chip">algebra (Arabic)</span>
+        <span class="word-chip">tsunami (Japanese)</span>
+        <span class="word-chip">robot (Czech)</span>
+        <span class="word-chip">yoga (Sanskrit)</span>
+        <span class="word-chip">google (brand)</span>
+      </div>
+    </div>
+
+    <div class="vocab-layer l-latin">
+      <div class="layer-info">
+        <div class="layer-name">Latin-Greek Learned</div>
+        <div class="layer-source">Renaissance, science, academy</div>
+      </div>
+      <div class="layer-date">1500-1700</div>
+      <div class="layer-words">
+        <span class="word-chip">interrogate</span>
+        <span class="word-chip">conflagration</span>
+        <span class="word-chip">initiate</span>
+        <span class="word-chip">encyclopedia</span>
+        <span class="word-chip">hypothesis</span>
+        <span class="word-chip">democracy</span>
+      </div>
+    </div>
+
+    <div class="vocab-layer l-french">
+      <div class="layer-info">
+        <div class="layer-name">Norman French</div>
+        <div class="layer-source">Norman Conquest (~10,000 words)</div>
+      </div>
+      <div class="layer-date">1066-1500</div>
+      <div class="layer-words">
+        <span class="word-chip">question</span>
+        <span class="word-chip">flame</span>
+        <span class="word-chip">commence</span>
+        <span class="word-chip">parliament</span>
+        <span class="word-chip">justice</span>
+        <span class="word-chip">beef</span>
+        <span class="word-chip">beauty</span>
+      </div>
+    </div>
+
+    <div class="vocab-layer l-norse">
+      <div class="layer-info">
+        <div class="layer-name">Old Norse</div>
+        <div class="layer-source">Viking settlement (Danelaw)</div>
+      </div>
+      <div class="layer-date">793-1100</div>
+      <div class="layer-words">
+        <span class="word-chip">they/them/their</span>
+        <span class="word-chip">sky</span>
+        <span class="word-chip">take</span>
+        <span class="word-chip">get</span>
+        <span class="word-chip">window</span>
+        <span class="word-chip">egg</span>
+        <span class="word-chip">are</span>
+        <span class="word-chip">wrong</span>
+      </div>
+    </div>
+
+    <div class="vocab-layer l-germanic">
+      <div class="layer-info">
+        <div class="layer-name">Germanic Base</div>
+        <div class="layer-source">Anglo-Saxon core vocabulary</div>
+      </div>
+      <div class="layer-date">449+</div>
+      <div class="layer-words">
+        <span class="word-chip">ask</span>
+        <span class="word-chip">fire</span>
+        <span class="word-chip">begin</span>
+        <span class="word-chip">water</span>
+        <span class="word-chip">hand</span>
+        <span class="word-chip">house</span>
+        <span class="word-chip">the</span>
+        <span class="word-chip">is</span>
+        <span class="word-chip">cow</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="triplets">
+    <h3>The Three-Tier Lexicon -- Same Meaning, Three Registers</h3>
+    <div class="triplet-grid">
+      <div class="triplet-header">Concept</div>
+      <div class="triplet-header" style="color:#14532d;">Germanic</div>
+      <div class="triplet-header" style="color:#1e3a5f;">French</div>
+      <div class="triplet-header" style="color:#4c1d95;">Latin/Greek</div>
+
+      <div class="triplet-cell" style="font-style:normal; font-weight:600;">asking</div>
+      <div class="triplet-cell">ask</div>
+      <div class="triplet-cell">question</div>
+      <div class="triplet-cell">interrogate</div>
+
+      <div class="triplet-cell" style="font-style:normal; font-weight:600;">burning</div>
+      <div class="triplet-cell">fire</div>
+      <div class="triplet-cell">flame</div>
+      <div class="triplet-cell">conflagration</div>
+
+      <div class="triplet-cell" style="font-style:normal; font-weight:600;">starting</div>
+      <div class="triplet-cell">begin</div>
+      <div class="triplet-cell">commence</div>
+      <div class="triplet-cell">initiate</div>
+
+      <div class="triplet-cell" style="font-style:normal; font-weight:600;">kingly</div>
+      <div class="triplet-cell">kingly</div>
+      <div class="triplet-cell">royal</div>
+      <div class="triplet-cell">regal</div>
+
+      <div class="triplet-cell" style="font-style:normal; font-weight:600;">help</div>
+      <div class="triplet-cell">help</div>
+      <div class="triplet-cell">aid</div>
+      <div class="triplet-cell">assist / facilitate</div>
+    </div>
+  </div>
+
+  <div class="animal-meat" style="margin-top:1rem;">
+    <div class="am-header">Animal (English)</div>
+    <div class="am-header"></div>
+    <div class="am-header">Meat (French)</div>
+    <div class="am-header"></div>
+    <div class="am-header">Why?</div>
+
+    <div class="am-english">cow</div>
+    <div class="am-arrow">--></div>
+    <div class="am-french">beef</div>
+    <div class="am-arrow"></div>
+    <div style="font-size:0.7rem; text-align:left; padding:0.3rem; color:#6b7280;" rowspan="4">English peasants tended the animals; French aristocrats ate the meat.</div>
+
+    <div class="am-english">pig</div>
+    <div class="am-arrow">--></div>
+    <div class="am-french">pork</div>
+
+    <div class="am-english">sheep</div>
+    <div class="am-arrow">--></div>
+    <div class="am-french">mutton</div>
+
+    <div class="am-english">calf</div>
+    <div class="am-arrow">--></div>
+    <div class="am-french">veal</div>
+
+    <div class="am-english">deer</div>
+    <div class="am-arrow">--></div>
+    <div class="am-french">venison</div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>The Pattern:</strong> English vocabulary is geological: each layer was deposited by a specific historical event and occupies a distinct register niche. Germanic words are everyday, emotionally close, monosyllabic. French words are administrative, formal, often bisyllabic. Latin/Greek words are technical, academic, polysyllabic. A native speaker unconsciously selects the appropriate layer for the register: "help" in conversation, "aid" in a newspaper, "facilitate" in an academic paper. The layers are not redundant -- they encode social information. Word choice is register choice.
+  </div>
+
+  <figcaption>
+    <strong>Figure 3 -- English Vocabulary Layer Invasion</strong>
+    <span>Five chronological strata of English vocabulary, from the Germanic base through Norse, French, Latin/Greek, and global borrowing. The three-tier lexicon and the animal/meat split demonstrate how historical events created permanent register stratification.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

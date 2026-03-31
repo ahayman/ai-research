@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Phrase Structure (NP, VP, PP Hierarchy)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --np-color: #2d8a4e;
+    --np-bg: #f0faf0;
+    --vp-color: #e63946;
+    --vp-bg: #fef3f0;
+    --pp-color: #7c3aed;
+    --pp-bg: #f5f0ff;
+    --adjp-color: #e9a820;
+    --adjp-bg: #fdf6ec;
+    --advp-color: #0d9488;
+    --advp-bg: #f0fafa;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --tree-line: #aab0c0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --np-color: #5cb87a;
+      --np-bg: #102a18;
+      --vp-color: #ff6b6b;
+      --vp-bg: #2a1520;
+      --pp-color: #a78bfa;
+      --pp-bg: #1a1030;
+      --adjp-color: #f0c050;
+      --adjp-bg: #2a2210;
+      --advp-color: #2dd4bf;
+      --advp-bg: #102a28;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --tree-line: #555570;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 1.2rem 0 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .phrase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .phrase-card {
+    border-radius: 10px;
+    border: 2px solid;
+    overflow: hidden;
+  }
+  .phrase-header {
+    padding: 0.5rem 0.8rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .phrase-body { padding: 0.7rem 0.8rem; }
+  .template {
+    font-family: monospace;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 0.4rem;
+  }
+  .template .optional { opacity: 0.5; }
+  .template .head { font-weight: 700; text-decoration: underline; }
+  .phrase-example {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    line-height: 1.4;
+  }
+  .phrase-example strong { color: var(--fg); }
+
+  .np-card { border-color: var(--np-color); }
+  .np-card .phrase-header { background: var(--np-bg); color: var(--np-color); }
+  .vp-card { border-color: var(--vp-color); }
+  .vp-card .phrase-header { background: var(--vp-bg); color: var(--vp-color); }
+  .pp-card { border-color: var(--pp-color); }
+  .pp-card .phrase-header { background: var(--pp-bg); color: var(--pp-color); }
+  .adjp-card { border-color: var(--adjp-color); }
+  .adjp-card .phrase-header { background: var(--adjp-bg); color: var(--adjp-color); }
+  .advp-card { border-color: var(--advp-color); }
+  .advp-card .phrase-header { background: var(--advp-bg); color: var(--advp-color); }
+
+  .full-width { grid-column: 1 / -1; }
+  .head-initial-note {
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+  }
+  .head-initial-note strong { color: var(--accent); }
+  .hi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .hi-example {
+    padding: 0.3rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .hi-example .head-word { font-weight: 700; color: var(--accent); }
+  .hi-example .comp-word { color: var(--muted); }
+  .exception-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    background: var(--adjp-bg);
+    color: var(--adjp-color);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">The Five Phrase Types</div>
+
+    <div class="phrase-grid">
+      <!-- NP -->
+      <div class="phrase-card np-card">
+        <div class="phrase-header">
+          <span>Noun Phrase (NP)</span>
+          <span style="font-size:0.7rem; opacity:0.7;">Head = Noun</span>
+        </div>
+        <div class="phrase-body">
+          <div class="template"><span class="optional">(Det)</span> + <span class="optional">(AdjP)</span> + <span class="head">N</span> + <span class="optional">(PP / RelCl)</span></div>
+          <div class="phrase-example">
+            "<strong>the</strong> (Det) <strong>very old stone</strong> (modifiers) <strong>bridge</strong> (Head N) <strong>over the river</strong> (PP) <strong>that we crossed</strong> (RelCl)"
+          </div>
+        </div>
+      </div>
+
+      <!-- VP -->
+      <div class="phrase-card vp-card">
+        <div class="phrase-header">
+          <span>Verb Phrase (VP)</span>
+          <span style="font-size:0.7rem; opacity:0.7;">Head = Verb</span>
+        </div>
+        <div class="phrase-body">
+          <div class="template"><span class="optional">(Aux/Modal)*</span> + <span class="head">V</span> + <span class="optional">(NP / PP / CP)</span> + <span class="optional">(Adjuncts)</span></div>
+          <div class="phrase-example">
+            "<strong>might have been</strong> (Aux) <strong>reading</strong> (Head V) <strong>the book</strong> (NP obj) <strong>in the library</strong> (PP adjunct) <strong>yesterday</strong> (AdvP)"
+          </div>
+        </div>
+      </div>
+
+      <!-- PP -->
+      <div class="phrase-card pp-card">
+        <div class="phrase-header">
+          <span>Prepositional Phrase (PP)</span>
+          <span style="font-size:0.7rem; opacity:0.7;">Head = Preposition</span>
+        </div>
+        <div class="phrase-body">
+          <div class="template"><span class="head">P</span> + NP</div>
+          <div class="phrase-example">
+            "<strong>on</strong> (Head P) <strong>the old wooden table</strong> (NP complement)"<br>
+            Functions: location, time, manner, NP modifier, verb complement
+          </div>
+        </div>
+      </div>
+
+      <!-- AdjP -->
+      <div class="phrase-card adjp-card">
+        <div class="phrase-header">
+          <span>Adjective Phrase (AdjP)</span>
+          <span style="font-size:0.7rem; opacity:0.7;">Head = Adjective</span>
+        </div>
+        <div class="phrase-body">
+          <div class="template"><span class="optional">(Intensifier)</span> + <span class="head">Adj</span> + <span class="optional">(PP complement)</span></div>
+          <div class="phrase-example">
+            "<strong>very</strong> (Adv) <strong>proud</strong> (Head Adj) <strong>of her children</strong> (PP complement)"
+          </div>
+        </div>
+      </div>
+
+      <!-- AdvP -->
+      <div class="phrase-card advp-card full-width">
+        <div class="phrase-header">
+          <span>Adverb Phrase (AdvP)</span>
+          <span style="font-size:0.7rem; opacity:0.7;">Head = Adverb</span>
+        </div>
+        <div class="phrase-body">
+          <div class="template"><span class="optional">(Intensifier)</span> + <span class="head">Adv</span></div>
+          <div class="phrase-example">
+            "<strong>very</strong> (Intensifier) <strong>quickly</strong> (Head Adv)" | "<strong>almost</strong> <strong>certainly</strong>"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Head-initial -->
+    <div class="head-initial-note">
+      <strong>English is head-initial:</strong> The head of each phrase precedes its complement.
+      <div class="hi-grid">
+        <div class="hi-example"><span class="head-word">to</span> <span class="comp-word">the store</span> (P before NP)</div>
+        <div class="hi-example"><span class="head-word">read</span> <span class="comp-word">the book</span> (V before Object)</div>
+        <div class="hi-example"><span class="head-word">will</span> <span class="comp-word">go</span> (Aux before VP)</div>
+        <div class="hi-example"><span class="head-word">proud</span> <span class="comp-word">of her</span> (Adj before PP complement)</div>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <span class="exception-tag">EXCEPTION</span> Adjectives precede nouns: "<strong>big</strong> house" -- a Germanic retention in an otherwise head-initial language.
+      </div>
+    </div>
+
+    <!-- Embedding / Recursion -->
+    <div class="section-title">Phrases Within Phrases: Recursive Embedding</div>
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="max-width:800px; margin:0 auto; display:block;">
+      <!-- Outermost: S -->
+      <rect x="10" y="10" width="780" height="180" rx="10" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6"/>
+      <text x="20" y="28" font-size="11" font-weight="700" fill="var(--accent)">S</text>
+
+      <!-- NP subject -->
+      <rect x="20" y="35" width="180" height="50" rx="8" fill="var(--np-bg)" stroke="var(--np-color)" stroke-width="1.5"/>
+      <text x="30" y="52" font-size="10" font-weight="700" fill="var(--np-color)">NP (subject)</text>
+      <text x="30" y="72" font-size="12" fill="var(--fg)">The tall student</text>
+
+      <!-- VP -->
+      <rect x="210" y="35" width="570" height="150" rx="8" fill="var(--vp-bg)" stroke="var(--vp-color)" stroke-width="1.5"/>
+      <text x="220" y="52" font-size="10" font-weight="700" fill="var(--vp-color)">VP</text>
+
+      <!-- V -->
+      <text x="225" y="82" font-size="13" font-weight="600" fill="var(--vp-color)">quickly read</text>
+
+      <!-- NP object inside VP -->
+      <rect x="340" y="60" width="210" height="50" rx="7" fill="var(--np-bg)" stroke="var(--np-color)" stroke-width="1.5"/>
+      <text x="350" y="77" font-size="10" font-weight="700" fill="var(--np-color)">NP (object)</text>
+      <text x="350" y="97" font-size="12" fill="var(--fg)">the interesting book</text>
+
+      <!-- PP inside VP -->
+      <rect x="560" y="60" width="210" height="115" rx="7" fill="var(--pp-bg)" stroke="var(--pp-color)" stroke-width="1.5"/>
+      <text x="570" y="77" font-size="10" font-weight="700" fill="var(--pp-color)">PP (adjunct)</text>
+      <text x="575" y="97" font-size="13" font-weight="600" fill="var(--pp-color)">in</text>
+
+      <!-- NP inside PP -->
+      <rect x="570" y="105" width="190" height="60" rx="6" fill="var(--np-bg)" stroke="var(--np-color)" stroke-width="1.2"/>
+      <text x="580" y="122" font-size="9" font-weight="700" fill="var(--np-color)">NP (PP complement)</text>
+      <text x="580" y="145" font-size="12" fill="var(--fg)">the old library</text>
+      <text x="580" y="158" font-size="9" fill="var(--muted)">NP inside PP inside VP inside S</text>
+    </svg>
+    <div style="text-align:center; font-size:0.82rem; color:var(--muted); margin-top:0.5rem;">
+      "The tall student quickly read the interesting book in the old library" -- four levels of phrase nesting
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> Every English phrase follows the same structural template: an optional specifier, a head word, and optional complements/modifiers. The five phrase types (NP, VP, PP, AdjP, AdvP) can embed inside each other recursively -- an NP can contain a PP which contains an NP which contains a relative clause which contains another VP. This recursive embedding from a small set of phrase types is what gives English its infinite expressive capacity from finite rules.
+  </div>
+
+  <figcaption>
+    <h2>Figure 2 &mdash; English Phrase Structure: NP, VP, PP Hierarchy</h2>
+    <p>Five phrase types build all English sentences. Each has a template with an obligatory head and optional specifiers, complements, and modifiers. English is head-initial (head precedes complement) with the Germanic exception of pre-nominal adjectives. Phrases embed recursively within each other, producing arbitrary structural depth from a small inventory of rules.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

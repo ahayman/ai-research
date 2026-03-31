@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Four Layers of English Spelling Irregularity</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --layer1: #c2185b;
+    --layer1-bg: #fce4ec;
+    --layer2: #1565c0;
+    --layer2-bg: #e3f2fd;
+    --layer3: #2e7d32;
+    --layer3-bg: #e8f5e9;
+    --layer4: #e65100;
+    --layer4-bg: #fff3e0;
+    --arrow-color: #9e9e9e;
+    --stratum-border: rgba(0,0,0,0.08);
+    --word-bg: #ffffff;
+    --word-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --phonetic-color: #7b1fa2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --layer1: #f48fb1;
+      --layer1-bg: #311b2c;
+      --layer2: #64b5f6;
+      --layer2-bg: #152540;
+      --layer3: #81c784;
+      --layer3-bg: #1a3020;
+      --layer4: #ffb74d;
+      --layer4-bg: #2a2010;
+      --arrow-color: #555;
+      --stratum-border: rgba(255,255,255,0.06);
+      --word-bg: #22223a;
+      --word-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      --phonetic-color: #ce93d8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 960px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  .strata-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .time-axis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .time-axis .arrow { font-size: 1.2rem; }
+
+  .stratum {
+    border: 2px solid var(--stratum-border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+
+  .stratum-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .stratum-number {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .stratum-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .stratum-date {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-left: auto;
+  }
+  .stratum-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .examples-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.6rem;
+  }
+  .example-card {
+    background: var(--word-bg);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    box-shadow: var(--word-shadow);
+    border-left: 3px solid transparent;
+  }
+  .example-word {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .example-detail {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-top: 0.2rem;
+  }
+  .example-detail .phonetic {
+    color: var(--phonetic-color);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .example-detail .old-form {
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .example-detail .change-arrow {
+    display: inline-block;
+    margin: 0 0.2rem;
+    color: var(--arrow-color);
+  }
+
+  /* Layer-specific colors */
+  .stratum--1 { background: var(--layer1-bg); border-color: var(--layer1); }
+  .stratum--1 .stratum-number { background: var(--layer1); color: #fff; }
+  .stratum--1 .stratum-title { color: var(--layer1); }
+  .stratum--1 .example-card { border-left-color: var(--layer1); }
+
+  .stratum--2 { background: var(--layer2-bg); border-color: var(--layer2); }
+  .stratum--2 .stratum-number { background: var(--layer2); color: #fff; }
+  .stratum--2 .stratum-title { color: var(--layer2); }
+  .stratum--2 .example-card { border-left-color: var(--layer2); }
+
+  .stratum--3 { background: var(--layer3-bg); border-color: var(--layer3); }
+  .stratum--3 .stratum-number { background: var(--layer3); color: #fff; }
+  .stratum--3 .stratum-title { color: var(--layer3); }
+  .stratum--3 .example-card { border-left-color: var(--layer3); }
+
+  .stratum--4 { background: var(--layer4-bg); border-color: var(--layer4); }
+  .stratum--4 .stratum-number { background: var(--layer4); color: #fff; }
+  .stratum--4 .stratum-title { color: var(--layer4); }
+  .stratum--4 .example-card { border-left-color: var(--layer4); }
+
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .pattern-note strong { color: var(--fg); }
+
+  @media (max-width: 600px) {
+    .examples-grid { grid-template-columns: 1fr; }
+    .stratum { padding: 0.8rem 1rem; }
+    .stratum-date { margin-left: 0; flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="time-axis">
+    <span>Oldest</span>
+    <span class="arrow">&#x2190;</span>
+    <span>geological strata of spelling irregularity</span>
+    <span class="arrow">&#x2192;</span>
+    <span>Most recent</span>
+  </div>
+
+  <div class="strata-container">
+    <!-- Layer 1: GVS Freeze -->
+    <div class="stratum stratum--1">
+      <div class="stratum-header">
+        <span class="stratum-number">Layer 1</span>
+        <span class="stratum-title">The Great Vowel Shift Freeze</span>
+        <span class="stratum-date">c. 1400 -- 1700</span>
+      </div>
+      <div class="stratum-desc">
+        The printing press (1476) standardized spelling just as every long vowel was shifting.
+        Spelling preserves Middle English pronunciation like a fossil record.
+      </div>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-word">name</div>
+          <div class="example-detail">
+            ME <span class="old-form">/naː.mə/</span>
+            <span class="change-arrow">&rarr;</span>
+            <span class="phonetic">/neɪm/</span><br>
+            Final -e was once pronounced; /aː/ shifted to /eɪ/
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">meat &amp; meet</div>
+          <div class="example-detail">
+            ME <span class="old-form">/mɛːt/</span> vs <span class="old-form">/meːt/</span>
+            <span class="change-arrow">&rarr;</span>
+            both <span class="phonetic">/miːt/</span><br>
+            Two different ME vowels merged; spelling preserves the old distinction
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">mice</div>
+          <div class="example-detail">
+            ME <span class="old-form">/miːs/</span>
+            <span class="change-arrow">&rarr;</span>
+            <span class="phonetic">/maɪs/</span><br>
+            Long /iː/ diphthongized to /aɪ/; "i" still marks the old vowel
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">house</div>
+          <div class="example-detail">
+            ME <span class="old-form">/huːs/</span>
+            <span class="change-arrow">&rarr;</span>
+            <span class="phonetic">/haʊs/</span><br>
+            Long /uː/ diphthongized to /aʊ/; "ou" marks the old vowel
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 2: French Scribes -->
+    <div class="stratum stratum--2">
+      <div class="stratum-header">
+        <span class="stratum-number">Layer 2</span>
+        <span class="stratum-title">French Scribal Conventions</span>
+        <span class="stratum-date">c. 1066 -- 1400</span>
+      </div>
+      <div class="stratum-desc">
+        After the Norman Conquest, French-trained scribes imposed French spelling habits onto English words.
+        One language's orthographic logic was systematically applied to another language's sounds.
+      </div>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-word">queen</div>
+          <div class="example-detail">
+            OE <span class="old-form">cwen</span>
+            <span class="change-arrow">&rarr;</span>
+            <strong>qu</strong> replaced OE <strong>cw</strong> for /kw/
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">church</div>
+          <div class="example-detail">
+            OE <span class="old-form">cirice</span>
+            <span class="change-arrow">&rarr;</span>
+            <strong>ch</strong> replaced OE <strong>c</strong> for /tʃ/
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">night</div>
+          <div class="example-detail">
+            OE <span class="old-form">niht</span>
+            <span class="change-arrow">&rarr;</span>
+            <strong>gh</strong> for /x/ (now silent)
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">house</div>
+          <div class="example-detail">
+            OE <span class="old-form">hus</span>
+            <span class="change-arrow">&rarr;</span>
+            <strong>ou</strong> replaced OE <strong>u</strong> for /uː/
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 3: Etymological Respelling -->
+    <div class="stratum stratum--3">
+      <div class="stratum-header">
+        <span class="stratum-number">Layer 3</span>
+        <span class="stratum-title">Etymological Respelling</span>
+        <span class="stratum-date">c. 1400 -- 1700</span>
+      </div>
+      <div class="stratum-desc">
+        Renaissance scholars inserted silent letters to display (real or supposed) Latin and Greek origins.
+        Some were correct etymologies; others were wrong.
+      </div>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-word">de<strong>b</strong>t</div>
+          <div class="example-detail">
+            Was <span class="old-form">dette</span>;
+            <strong>b</strong> inserted from Latin <em>debitum</em>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">dou<strong>b</strong>t</div>
+          <div class="example-detail">
+            Was <span class="old-form">doute</span>;
+            <strong>b</strong> inserted from Latin <em>dubitare</em>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">recei<strong>p</strong>t</div>
+          <div class="example-detail">
+            Was <span class="old-form">receite</span>;
+            <strong>p</strong> inserted from Latin <em>receptum</em>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">i<strong>s</strong>land</div>
+          <div class="example-detail">
+            Was <span class="old-form">iland</span> (Germanic);
+            <strong>s</strong> by <em>false analogy</em> with Latin <em>insula</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 4: Borrowings -->
+    <div class="stratum stratum--4">
+      <div class="stratum-header">
+        <span class="stratum-number">Layer 4</span>
+        <span class="stratum-title">Foreign Borrowing Preservation</span>
+        <span class="stratum-date">c. 1500 -- present</span>
+      </div>
+      <div class="stratum-desc">
+        English borrowed words from dozens of languages and preserved source-language spelling conventions,
+        creating a patchwork of competing orthographic systems in a single language.
+      </div>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-word">restaurant</div>
+          <div class="example-detail">
+            French: silent final <strong>t</strong>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">psychology</div>
+          <div class="example-detail">
+            Greek: <strong>ps</strong> for /s/, <strong>ch</strong> for /k/
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">piano</div>
+          <div class="example-detail">
+            Italian: <strong>ia</strong> vowel cluster
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-word">algebra</div>
+          <div class="example-detail">
+            Arabic: <strong>al-</strong> is the definite article
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>The pattern:</strong> Each layer is an identifiable historical event that deposited a stratum of irregularity.
+    Modern English spelling is the sum of all four layers -- a geological record of the language's encounters
+    with printing technology, conquest, scholarship, and global contact.
+  </div>
+
+  <figcaption>
+    <h2>The Four Layers of English Spelling Irregularity</h2>
+    <p>English spelling is not random chaos -- it is stratified sediment. Each layer of irregularity traces to a specific historical cause: the GVS/printing collision, Norman scribal conventions, Renaissance etymological pride, and global borrowing. Knowing which layer a word belongs to makes its spelling predictable.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

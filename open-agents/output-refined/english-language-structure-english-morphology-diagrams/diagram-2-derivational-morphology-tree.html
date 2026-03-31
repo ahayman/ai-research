@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derivational Morphology: Class I vs Class II Affixes</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --class1: #e63946;
+    --class1-bg: #fef3f0;
+    --class2: #2d8a4e;
+    --class2-bg: #f0faf0;
+    --root-color: #7c3aed;
+    --root-bg: #f5f0ff;
+    --error-color: #dc3545;
+    --error-bg: #fff0f0;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --class1: #ff6b6b;
+      --class1-bg: #2a1520;
+      --class2: #5cb87a;
+      --class2-bg: #102a18;
+      --root-color: #a78bfa;
+      --root-bg: #1a1030;
+      --error-color: #ff5555;
+      --error-bg: #2a1515;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .class-card {
+    border-radius: 10px;
+    border: 2px solid;
+    overflow: hidden;
+  }
+  .class1-card { border-color: var(--class1); }
+  .class2-card { border-color: var(--class2); }
+  .class-header {
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .class1-card .class-header { background: var(--class1-bg); color: var(--class1); }
+  .class2-card .class-header { background: var(--class2-bg); color: var(--class2); }
+  .class-body { padding: 0.8rem 1rem; }
+  .prop-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .prop-label {
+    font-weight: 600;
+    color: var(--muted);
+    min-width: 100px;
+  }
+  .affix-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .affix-chip {
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .class1-card .affix-chip { background: var(--class1-bg); color: var(--class1); border: 1px solid var(--class1); }
+  .class2-card .affix-chip { background: var(--class2-bg); color: var(--class2); border: 1px solid var(--class2); }
+  .ordering-section {
+    margin: 1.5rem 0;
+    padding: 1.2rem;
+    background: var(--accent-light);
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+  }
+  .ordering-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+  }
+  .layer-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 0.8rem 0;
+  }
+  .layer-box {
+    padding: 0.5rem 0.8rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+    border: 2px solid;
+    min-width: 90px;
+  }
+  .layer-root {
+    background: var(--root-bg);
+    color: var(--root-color);
+    border-color: var(--root-color);
+    border-radius: 6px 0 0 6px;
+  }
+  .layer-c1 {
+    background: var(--class1-bg);
+    color: var(--class1);
+    border-color: var(--class1);
+  }
+  .layer-c2 {
+    background: var(--class2-bg);
+    color: var(--class2);
+    border-color: var(--class2);
+  }
+  .layer-infl {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-color: var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .example-build {
+    text-align: center;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+    font-family: 'Gentium Plus', 'Noto Sans', serif;
+  }
+  .example-build strong { font-weight: 700; }
+  .violation-section {
+    margin-top: 1.5rem;
+  }
+  .violation-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+  }
+  .valid-row { background: var(--class2-bg); border: 1px solid var(--class2); }
+  .invalid-row { background: var(--error-bg); border: 1px solid var(--error-color); }
+  .valid-mark { color: var(--class2); font-weight: 800; font-size: 1.1rem; }
+  .invalid-mark { color: var(--error-color); font-weight: 800; font-size: 1.1rem; }
+  .violation-word { font-weight: 600; font-size: 0.9rem; }
+  .violation-reason { font-size: 0.78rem; color: var(--muted); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Class I (Latinate) vs. Class II (Germanic) Affixes</div>
+
+    <div class="comparison-grid">
+      <!-- Class I -->
+      <div class="class-card class1-card">
+        <div class="class-header">Class I -- Latinate (Inner Layer)</div>
+        <div class="class-body">
+          <div class="prop-row">
+            <span class="prop-label">Stress:</span>
+            <span>Shifts stress on base</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Attaches to:</span>
+            <span>Bound and free roots</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Position:</span>
+            <span>Inner (closer to root)</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Suffixes:</span>
+            <div class="affix-list">
+              <span class="affix-chip">-tion</span>
+              <span class="affix-chip">-ity</span>
+              <span class="affix-chip">-ic</span>
+              <span class="affix-chip">-ous</span>
+              <span class="affix-chip">-al</span>
+              <span class="affix-chip">-ive</span>
+              <span class="affix-chip">-ify</span>
+              <span class="affix-chip">-ence</span>
+            </div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Prefixes:</span>
+            <div class="affix-list">
+              <span class="affix-chip">in-/im-</span>
+              <span class="affix-chip">con-/com-</span>
+              <span class="affix-chip">pre-</span>
+              <span class="affix-chip">pro-</span>
+              <span class="affix-chip">re-</span>
+            </div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Example:</span>
+            <span><strong>&#x2C8;nation</strong> &rarr; na<strong>&#x2C8;tion</strong>al &rarr; nationali<strong>&#x2C8;za</strong>tion</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class II -->
+      <div class="class-card class2-card">
+        <div class="class-header">Class II -- Germanic (Outer Layer)</div>
+        <div class="class-body">
+          <div class="prop-row">
+            <span class="prop-label">Stress:</span>
+            <span>Never shifts stress</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Attaches to:</span>
+            <span>Free-standing words only</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Position:</span>
+            <span>Outer (farther from root)</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Suffixes:</span>
+            <div class="affix-list">
+              <span class="affix-chip">-ness</span>
+              <span class="affix-chip">-ful</span>
+              <span class="affix-chip">-less</span>
+              <span class="affix-chip">-ly</span>
+              <span class="affix-chip">-ish</span>
+              <span class="affix-chip">-er</span>
+              <span class="affix-chip">-dom</span>
+              <span class="affix-chip">-ship</span>
+            </div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Prefixes:</span>
+            <div class="affix-list">
+              <span class="affix-chip">un-</span>
+              <span class="affix-chip">re-</span>
+              <span class="affix-chip">mis-</span>
+              <span class="affix-chip">out-</span>
+              <span class="affix-chip">over-</span>
+              <span class="affix-chip">under-</span>
+            </div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Example:</span>
+            <span><strong>&#x2C8;happy</strong> &rarr; <strong>&#x2C8;happi</strong>ness &rarr; <strong>&#x2C8;un</strong>happiness</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ordering Constraint -->
+    <div class="ordering-section">
+      <div class="ordering-title">The Ordering Constraint: Root &rarr; Class I &rarr; Class II &rarr; Inflection</div>
+      <div class="layer-diagram">
+        <div class="layer-box layer-root">ROOT</div>
+        <div class="layer-box layer-c1">Class I<br><small>Latinate</small></div>
+        <div class="layer-box layer-c2">Class II<br><small>Germanic</small></div>
+        <div class="layer-box layer-infl">Inflection<br><small>-s, -ed, -ing</small></div>
+      </div>
+      <div class="example-build">
+        <strong style="color:var(--root-color);">nation</strong> +
+        <strong style="color:var(--class1);">-al</strong> +
+        <strong style="color:var(--class1);">-ize</strong> +
+        <strong style="color:var(--class1);">-ation</strong> +
+        <strong style="color:var(--accent);">-s</strong>
+        = <strong>nationalizations</strong>
+      </div>
+      <div style="text-align:center; font-size:0.8rem; color:var(--muted);">Class I affixes stack near the root; Class II affixes wrap outside; inflections are always outermost</div>
+    </div>
+
+    <!-- Violation Examples -->
+    <div class="violation-section">
+      <div class="section-title">Stratal Matching: Tendency, Not Absolute Law</div>
+      <div class="violation-row valid-row">
+        <span class="valid-mark">&check;</span>
+        <span class="violation-word">un-happy</span>
+        <span class="violation-reason">Germanic prefix + Germanic root</span>
+      </div>
+      <div class="violation-row valid-row">
+        <span class="valid-mark">&check;</span>
+        <span class="violation-word">in-hospitable</span>
+        <span class="violation-reason">Latinate prefix + Latinate root</span>
+      </div>
+      <div class="violation-row valid-row">
+        <span class="valid-mark">&check;</span>
+        <span class="violation-word">un-deniable</span>
+        <span class="violation-reason">Cross-stratal but accepted (Germanic un- + Latinate deny + Latinate -able)</span>
+      </div>
+      <div class="violation-row invalid-row">
+        <span class="invalid-mark">&times;</span>
+        <span class="violation-word">*in-happy</span>
+        <span class="violation-reason">Latinate prefix + Germanic root (dispreferred)</span>
+      </div>
+      <div class="violation-row invalid-row">
+        <span class="invalid-mark">&times;</span>
+        <span class="violation-word">*ness-ity</span>
+        <span class="violation-reason">Class II inside Class I (ordering violation)</span>
+      </div>
+      <div style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem; font-style:italic;">
+        Note: The stratal system is a strong tendency with exceptions. Some cross-stratal combinations (like "undeniable") are fully accepted; the system is not an absolute wall but a powerful default.
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> English derivational morphology is organized into two strata that mirror the language's etymological layers. Latinate affixes are "inner" (closer to the root, stress-shifting); Germanic affixes are "outer" (farther from the root, stress-neutral). This hidden structure explains why some word combinations "sound right" and others don't -- native speakers unconsciously follow stratal ordering without ever being taught it.
+  </div>
+
+  <figcaption>
+    <h2>Figure 2 &mdash; Derivational Morphology: Class I vs. Class II Affixes</h2>
+    <p>English derivational affixes divide into two strata with distinct properties. Class I (Latinate) affixes shift stress and attach close to the root. Class II (Germanic) affixes are stress-neutral and attach outside. The ordering constraint (Root &rarr; Class I &rarr; Class II &rarr; Inflection) governs word building. Stratal matching between prefix and root is a strong tendency with acknowledged exceptions.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

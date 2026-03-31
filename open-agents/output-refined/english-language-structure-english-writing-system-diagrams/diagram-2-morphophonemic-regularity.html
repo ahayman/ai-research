@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morphophonemic Regularity: The Hidden Logic</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --silent-color: #c2185b;
+    --silent-bg: #fce4ec;
+    --alive-color: #2e7d32;
+    --alive-bg: #e8f5e9;
+    --morpheme-bg: #ede7f6;
+    --morpheme-color: #5e35b1;
+    --connector: #bdbdbd;
+    --vowel-shift-color: #e65100;
+    --vowel-shift-bg: #fff3e0;
+    --card-bg: #ffffff;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --silent-color: #f48fb1;
+      --silent-bg: #311b2c;
+      --alive-color: #81c784;
+      --alive-bg: #1a3020;
+      --morpheme-bg: #2a1f40;
+      --morpheme-color: #b39ddb;
+      --connector: #444;
+      --vowel-shift-color: #ffb74d;
+      --vowel-shift-bg: #2a2010;
+      --card-bg: #22223a;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 900px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  .principle-box {
+    background: var(--morpheme-bg);
+    border: 2px solid var(--morpheme-color);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .principle-box .label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--morpheme-color);
+    margin-bottom: 0.3rem;
+  }
+  .principle-box .text {
+    font-size: 0.95rem;
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .families-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .family-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+  }
+  .family-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .family-section-title.silent-consonants { color: var(--silent-color); }
+  .family-section-title.vowel-shifts { color: var(--vowel-shift-color); }
+
+  .family-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 0.75rem;
+  }
+  .family-row:last-child { margin-bottom: 0; }
+
+  .word-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    box-shadow: var(--card-shadow);
+    min-width: 140px;
+    flex: 1;
+    max-width: 220px;
+  }
+  .word-card .word {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .word-card .phonetic {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.1rem;
+  }
+  .word-card .note {
+    font-size: 0.72rem;
+    margin-top: 0.2rem;
+    line-height: 1.3;
+  }
+
+  /* Highlight the magic letter */
+  .letter-silent {
+    color: var(--silent-color);
+    background: var(--silent-bg);
+    padding: 0 0.12em;
+    border-radius: 3px;
+    font-weight: 800;
+  }
+  .letter-alive {
+    color: var(--alive-color);
+    background: var(--alive-bg);
+    padding: 0 0.12em;
+    border-radius: 3px;
+    font-weight: 800;
+  }
+  .letter-shift {
+    color: var(--vowel-shift-color);
+    background: var(--vowel-shift-bg);
+    padding: 0 0.12em;
+    border-radius: 3px;
+    font-weight: 800;
+  }
+
+  .connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    min-width: 70px;
+    position: relative;
+    color: var(--connector);
+  }
+  .connector svg {
+    width: 60px;
+    height: 30px;
+  }
+  .connector .conn-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .note-silent { color: var(--silent-color); }
+  .note-alive { color: var(--alive-color); }
+  .note-shift { color: var(--vowel-shift-color); }
+
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  @media (max-width: 600px) {
+    .family-row { flex-direction: column; align-items: center; }
+    .connector { width: auto; min-width: auto; height: 40px; }
+    .connector svg { transform: rotate(90deg); }
+    .word-card { max-width: 100%; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="principle-box">
+    <div class="label">Chomsky &amp; Halle's Insight (1968)</div>
+    <div class="text">
+      English spelling preserves <strong>morpheme identity</strong> across pronunciation changes.
+      Silent letters and vowel shifts are not defects -- they are <strong>visual links</strong> between related words.
+    </div>
+  </div>
+
+  <div class="families-container">
+    <!-- Silent Consonants Section -->
+    <div class="family-section">
+      <div class="family-section-title silent-consonants">Silent Consonants That Come Alive in Derived Forms</div>
+
+      <!-- sign → signal -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">si<span class="letter-silent">g</span>n</div>
+          <div class="phonetic">/saɪn/</div>
+          <div class="note note-silent">the <strong>g</strong> is silent</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>morpheme</span>
+        </div>
+        <div class="word-card">
+          <div class="word">si<span class="letter-alive">g</span>nal</div>
+          <div class="phonetic">/ˈsɪɡ.nəl/</div>
+          <div class="note note-alive">the <strong>g</strong> is pronounced</div>
+        </div>
+      </div>
+
+      <!-- bomb → bombard -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">bom<span class="letter-silent">b</span></div>
+          <div class="phonetic">/bɒm/</div>
+          <div class="note note-silent">the final <strong>b</strong> is silent</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>morpheme</span>
+        </div>
+        <div class="word-card">
+          <div class="word">bom<span class="letter-alive">b</span>ard</div>
+          <div class="phonetic">/bɒmˈbɑːd/</div>
+          <div class="note note-alive">the <strong>b</strong> is pronounced</div>
+        </div>
+      </div>
+
+      <!-- damn → damnation -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">dam<span class="letter-silent">n</span></div>
+          <div class="phonetic">/dæm/</div>
+          <div class="note note-silent">the final <strong>n</strong> is silent</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>morpheme</span>
+        </div>
+        <div class="word-card">
+          <div class="word">dam<span class="letter-alive">n</span>ation</div>
+          <div class="phonetic">/dæmˈneɪ.ʃən/</div>
+          <div class="note note-alive">the <strong>n</strong> is pronounced</div>
+        </div>
+      </div>
+
+      <!-- muscle → muscular -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">mus<span class="letter-silent">c</span>le</div>
+          <div class="phonetic">/ˈmʌs.əl/</div>
+          <div class="note note-silent">the <strong>c</strong> is silent</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>morpheme</span>
+        </div>
+        <div class="word-card">
+          <div class="word">mus<span class="letter-alive">c</span>ular</div>
+          <div class="phonetic">/ˈmʌs.kjʊ.lər/</div>
+          <div class="note note-alive">the <strong>c</strong> is pronounced</div>
+        </div>
+      </div>
+
+      <!-- hymn → hymnal -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">hym<span class="letter-silent">n</span></div>
+          <div class="phonetic">/hɪm/</div>
+          <div class="note note-silent">the final <strong>n</strong> is silent</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>morpheme</span>
+        </div>
+        <div class="word-card">
+          <div class="word">hym<span class="letter-alive">n</span>al</div>
+          <div class="phonetic">/ˈhɪm.nəl/</div>
+          <div class="note note-alive">the <strong>n</strong> is pronounced</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vowel Shifts Section -->
+    <div class="family-section">
+      <div class="family-section-title vowel-shifts">Vowel Shifts Across Derivation (Spelling Holds Constant)</div>
+
+      <!-- nation → national -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">n<span class="letter-shift">a</span>tion</div>
+          <div class="phonetic">/ˈneɪ.ʃən/</div>
+          <div class="note note-shift"><strong>a</strong> = /eɪ/</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>spelling</span>
+        </div>
+        <div class="word-card">
+          <div class="word">n<span class="letter-shift">a</span>tional</div>
+          <div class="phonetic">/ˈnæʃ.nəl/</div>
+          <div class="note note-shift"><strong>a</strong> = /æ/</div>
+        </div>
+      </div>
+
+      <!-- serene → serenity -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">ser<span class="letter-shift">e</span>ne</div>
+          <div class="phonetic">/sɪˈriːn/</div>
+          <div class="note note-shift"><strong>e</strong> = /iː/</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>spelling</span>
+        </div>
+        <div class="word-card">
+          <div class="word">ser<span class="letter-shift">e</span>nity</div>
+          <div class="phonetic">/sɪˈren.ɪ.ti/</div>
+          <div class="note note-shift"><strong>e</strong> = /e/</div>
+        </div>
+      </div>
+
+      <!-- photograph → photography -->
+      <div class="family-row">
+        <div class="word-card">
+          <div class="word">ph<span class="letter-shift">o</span>tograph</div>
+          <div class="phonetic">/ˈfoʊ.tə.ɡrɑːf/</div>
+          <div class="note note-shift"><strong>o</strong> = /oʊ/, stress on 1st syllable</div>
+        </div>
+        <div class="connector">
+          <svg viewBox="0 0 60 30"><line x1="5" y1="15" x2="45" y2="15" stroke="currentColor" stroke-width="2"/><polygon points="45,10 55,15 45,20" fill="currentColor"/></svg>
+          <span class="conn-label">same<br>spelling</span>
+        </div>
+        <div class="word-card">
+          <div class="word">ph<span class="letter-shift">o</span>tography</div>
+          <div class="phonetic">/fəˈtɒɡ.rə.fi/</div>
+          <div class="note note-shift"><strong>o</strong> = /ə/, stress on 2nd syllable</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-swatch" style="background: var(--silent-bg); border: 1px solid var(--silent-color);"></span>
+      <span>Silent in base form</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-swatch" style="background: var(--alive-bg); border: 1px solid var(--alive-color);"></span>
+      <span>Pronounced in derived form</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-swatch" style="background: var(--vowel-shift-bg); border: 1px solid var(--vowel-shift-color);"></span>
+      <span>Vowel shifts, spelling holds constant</span>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Morphophonemic Regularity: Silent Letters Are Not Defects</h2>
+    <p>Chomsky and Halle (1968) argued that English spelling is "a near-optimal system for lexical representation" because it preserves morpheme identity across pronunciation changes. Silent letters are latent -- they come alive in derived forms, revealing the family relationship between words.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

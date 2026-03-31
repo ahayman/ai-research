@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Visual Processing Pipeline -- From Retina to Meaning</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #1a1a2e;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .stage {
+    min-width: 140px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .stage-box {
+    border: 2.5px solid;
+    border-radius: 12px;
+    padding: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+  .stage-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+  }
+  .stage-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .stage-region {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+  .stage-time {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+  }
+  .stage-desc {
+    font-size: 0.72rem;
+    color: #6c757d;
+    line-height: 1.3;
+    margin-top: 0.3rem;
+    max-width: 130px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .stage-arrow {
+    font-size: 1.5rem;
+    color: #d1d5db;
+    flex-shrink: 0;
+    min-width: 25px;
+    text-align: center;
+  }
+
+  .s1 .stage-box { border-color: #6b7280; background: #f9fafb; }
+  .s1 .stage-name { color: #374151; }
+  .s1 .stage-time { background: #f3f4f6; color: #374151; }
+
+  .s2 .stage-box { border-color: #3b82f6; background: #eff6ff; }
+  .s2 .stage-name { color: #2563eb; }
+  .s2 .stage-time { background: #dbeafe; color: #2563eb; }
+
+  .s3 .stage-box { border-color: #8b5cf6; background: #f5f3ff; }
+  .s3 .stage-name { color: #7c3aed; }
+  .s3 .stage-time { background: #ede9fe; color: #7c3aed; }
+
+  .s4 .stage-box { border-color: #ef4444; background: #fef2f2; }
+  .s4 .stage-name { color: #dc2626; }
+  .s4 .stage-time { background: #fee2e2; color: #dc2626; }
+
+  .s5 .stage-box { border-color: #22c55e; background: #f0fdf4; }
+  .s5 .stage-name { color: #16a34a; }
+  .s5 .stage-time { background: #dcfce7; color: #16a34a; }
+
+  .vwfa-highlight {
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .vwfa-highlight h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #dc2626;
+    margin-bottom: 0.3rem;
+  }
+  .vwfa-main {
+    flex: 1;
+    min-width: 250px;
+  }
+  .vwfa-main p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .vwfa-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 200px;
+  }
+  .vwfa-fact {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.6rem;
+    background: #fef2f2;
+    border-radius: 6px;
+    line-height: 1.3;
+  }
+
+  .feedback-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+  figcaption span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .diagram-title { color: #e9ecef; }
+    .diagram-subtitle { color: #adb5bd; }
+    .stage-desc { color: #adb5bd; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+    .s1 .stage-box { background: rgba(107,114,128,0.1); }
+    .s2 .stage-box { background: rgba(59,130,246,0.1); }
+    .s3 .stage-box { background: rgba(139,92,246,0.1); }
+    .s4 .stage-box { background: rgba(239,68,68,0.1); }
+    .s5 .stage-box { background: rgba(34,197,94,0.1); }
+    .vwfa-highlight { border-color: #ef4444; background: rgba(239,68,68,0.05); }
+    .vwfa-main p { color: #e9ecef; }
+    .vwfa-fact { background: rgba(239,68,68,0.1); color: #fca5a5; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-title">The Visual Processing Pipeline -- From Retina to Meaning</div>
+  <div class="diagram-subtitle">How the brain transforms a visual symbol into recognized meaning in under 400 milliseconds</div>
+
+  <div class="pipeline">
+    <div class="stage s1">
+      <div class="stage-box">
+        <div class="stage-icon">&#x1F441;</div>
+        <div class="stage-name">Retina</div>
+        <div class="stage-region">Optic nerve</div>
+      </div>
+      <div class="stage-time">0 ms</div>
+      <div class="stage-desc">Light hits photoreceptors. Signal sent to brain.</div>
+    </div>
+    <div class="stage-arrow">&#x2192;</div>
+    <div class="stage s2">
+      <div class="stage-box">
+        <div class="stage-icon">&#x1F4D0;</div>
+        <div class="stage-name">V1</div>
+        <div class="stage-region">Primary visual cortex</div>
+      </div>
+      <div class="stage-time">~50 ms</div>
+      <div class="stage-desc">Edges, orientations, spatial frequencies detected.</div>
+    </div>
+    <div class="stage-arrow">&#x2192;</div>
+    <div class="stage s3">
+      <div class="stage-box">
+        <div class="stage-icon">&#x1F300;</div>
+        <div class="stage-name">V2 / V4</div>
+        <div class="stage-region">Ventral stream</div>
+      </div>
+      <div class="stage-time">~100 ms</div>
+      <div class="stage-desc">Contours, shapes, object features assembled.</div>
+    </div>
+    <div class="stage-arrow">&#x2192;</div>
+    <div class="stage s4">
+      <div class="stage-box">
+        <div class="stage-icon">&#x1F4D6;</div>
+        <div class="stage-name">VWFA</div>
+        <div class="stage-region">Left fusiform gyrus</div>
+      </div>
+      <div class="stage-time">~150-200 ms</div>
+      <div class="stage-desc">Symbol/word recognition. Cultural learning bottleneck.</div>
+    </div>
+    <div class="stage-arrow">&#x2192;</div>
+    <div class="stage s5">
+      <div class="stage-box">
+        <div class="stage-icon">&#x1F4A1;</div>
+        <div class="stage-name">Semantic</div>
+        <div class="stage-region">Temporal + frontal</div>
+      </div>
+      <div class="stage-time">~200-400 ms</div>
+      <div class="stage-desc">Meaning retrieved. Dual coding activated. Comprehension.</div>
+    </div>
+  </div>
+
+  <div class="feedback-note">Top-down feedback flows backward at every stage -- expectations shape what we see, not just what enters the eye</div>
+
+  <div class="vwfa-highlight">
+    <div class="vwfa-main">
+      <h4>The VWFA: The Cultural Learning Bottleneck</h4>
+      <p>The Visual Word Form Area is not an evolved reading center -- it is a region that originally processed objects and tools, repurposed ("neurally recycled") for reading through years of experience. Any new visual language must pass through this bottleneck: the VWFA must learn to recognize the new symbol set, and this takes years of exposure, not weeks.</p>
+    </div>
+    <div class="vwfa-facts">
+      <div class="vwfa-fact">Same brain region activated for English, Chinese, Japanese kana</div>
+      <div class="vwfa-fact">Adjacent to face-recognition area in fusiform gyrus</div>
+      <div class="vwfa-fact">Bilingual readers develop VWFA sensitivity to both scripts</div>
+      <div class="vwfa-fact">Years of development needed for expert-level processing</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Diagram 2: The Visual Processing Pipeline -- From Retina to Meaning</strong>
+    <span>Five-stage pathway tracing how a visual symbol is processed: from initial photoreceptor activation (0ms) through edge detection in V1 (~50ms), feature assembly in V2/V4 (~100ms), symbol recognition in the VWFA (~150-200ms), and semantic access (~200-400ms). The VWFA in the left fusiform gyrus is the critical bottleneck -- a cultural adaptation that must learn any new writing system through extended exposure. Dehaene's neural recycling hypothesis explains this: the VWFA repurposes circuits originally evolved for object recognition. Sources: Wikipedia (VWFA, Neuronal recycling), PLOS Biology, PNAS.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

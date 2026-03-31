@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Three-Layer English Lexicon</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --germ: #2d8a4e;
+    --germ-bg: #f0faf0;
+    --french: #e9a820;
+    --french-bg: #fdf6ec;
+    --latin: #7c3aed;
+    --latin-bg: #f5f0ff;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --germ: #5cb87a;
+      --germ-bg: #102a18;
+      --french: #f0c050;
+      --french-bg: #2a2210;
+      --latin: #a78bfa;
+      --latin-bg: #1a1030;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  /* Pyramid layers */
+  .pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 1.5rem;
+  }
+  .pyramid-layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border: 2px solid;
+    text-align: center;
+    position: relative;
+  }
+  .layer-latin {
+    background: var(--latin-bg);
+    border-color: var(--latin);
+    border-radius: 8px 8px 0 0;
+    width: 60%;
+  }
+  .layer-french {
+    background: var(--french-bg);
+    border-color: var(--french);
+    border-top: none;
+    width: 80%;
+  }
+  .layer-germ {
+    background: var(--germ-bg);
+    border-color: var(--germ);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    width: 100%;
+  }
+  .layer-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    min-width: 140px;
+  }
+  .layer-latin .layer-name { color: var(--latin); }
+  .layer-french .layer-name { color: var(--french); }
+  .layer-germ .layer-name { color: var(--germ); }
+  .layer-props {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: left;
+  }
+  .layer-props strong { color: var(--fg); }
+  /* Register arrow */
+  .register-arrow {
+    position: absolute;
+    right: -70px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    writing-mode: vertical-rl;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  /* Triplet table */
+  .triplet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+  .triplet-table th, .triplet-table td {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .triplet-table th {
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .th-germ { background: var(--germ-bg); color: var(--germ); }
+  .th-french { background: var(--french-bg); color: var(--french); }
+  .th-latin { background: var(--latin-bg); color: var(--latin); }
+  .th-meaning { background: var(--accent-light); color: var(--accent); }
+  .td-germ { color: var(--germ); font-weight: 600; }
+  .td-french { color: var(--french); font-weight: 600; }
+  .td-latin { color: var(--latin); font-weight: 600; }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 1.5rem 0 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <!-- Pyramid -->
+    <div class="pyramid">
+      <div class="pyramid-layer layer-latin">
+        <div>
+          <div class="layer-name">Latin / Greek</div>
+          <div class="layer-props">
+            <strong>Register:</strong> technical, academic, scientific<br>
+            <strong>Words:</strong> long (3+ syllables), abstract<br>
+            <strong>Stress:</strong> shifting with suffixation<br>
+            <strong>Source:</strong> Renaissance scholarly borrowing
+          </div>
+        </div>
+      </div>
+      <div class="pyramid-layer layer-french">
+        <div>
+          <div class="layer-name">French</div>
+          <div class="layer-props">
+            <strong>Register:</strong> formal, social, administrative<br>
+            <strong>Words:</strong> medium-length, often polysyllabic<br>
+            <strong>Stress:</strong> variable patterns<br>
+            <strong>Source:</strong> Norman Conquest (1066+)
+          </div>
+        </div>
+      </div>
+      <div class="pyramid-layer layer-germ">
+        <div>
+          <div class="layer-name">Germanic</div>
+          <div class="layer-props">
+            <strong>Register:</strong> everyday, informal, intimate<br>
+            <strong>Words:</strong> short (1-2 syllables), concrete<br>
+            <strong>Stress:</strong> initial/root stress (fixed)<br>
+            <strong>Source:</strong> Anglo-Saxon core vocabulary
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Triplet Table -->
+    <div class="section-title">Register Triplets: Three Words, One Meaning, Three Levels of Formality</div>
+    <table class="triplet-table">
+      <thead>
+        <tr>
+          <th class="th-germ">Germanic (everyday)</th>
+          <th class="th-french">French (formal)</th>
+          <th class="th-latin">Latin/Greek (technical)</th>
+          <th class="th-meaning">Core Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-germ">ask</td><td class="td-french">question</td><td class="td-latin">interrogate</td><td>seek information</td></tr>
+        <tr><td class="td-germ">rise</td><td class="td-french">mount</td><td class="td-latin">ascend</td><td>move upward</td></tr>
+        <tr><td class="td-germ">kingly</td><td class="td-french">royal</td><td class="td-latin">regal</td><td>of a king</td></tr>
+        <tr><td class="td-germ">begin</td><td class="td-french">commence</td><td class="td-latin">initiate</td><td>start</td></tr>
+        <tr><td class="td-germ">help</td><td class="td-french">aid</td><td class="td-latin">assist</td><td>give support</td></tr>
+        <tr><td class="td-germ">buy</td><td class="td-french">purchase</td><td class="td-latin">acquire</td><td>obtain</td></tr>
+        <tr><td class="td-germ">hide</td><td class="td-french">conceal</td><td class="td-latin">secrete</td><td>put out of sight</td></tr>
+        <tr><td class="td-germ">gut / belly</td><td class="td-french">stomach</td><td class="td-latin">gastric</td><td>digestive organ</td></tr>
+        <tr><td class="td-germ">hearty</td><td class="td-french">cordial</td><td class="td-latin">cardiac</td><td>of the heart</td></tr>
+        <tr><td class="td-germ">freedom</td><td class="td-french">liberty</td><td class="td-latin">autonomy</td><td>self-governance</td></tr>
+        <tr><td class="td-germ">fatherly</td><td class="td-french">paternal</td><td class="td-latin">patriarchal</td><td>of a father</td></tr>
+        <tr><td class="td-germ">fire</td><td class="td-french">flame</td><td class="td-latin">conflagration</td><td>combustion</td></tr>
+        <tr><td class="td-germ">fear</td><td class="td-french">terror</td><td class="td-latin">trepidation</td><td>strong apprehension</td></tr>
+        <tr><td class="td-germ">folk</td><td class="td-french">people</td><td class="td-latin">populace</td><td>group of persons</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> The three-layer lexicon is not just trivia -- it is a <em>structural register system</em>. Writers and speakers unconsciously modulate formality by shifting between layers. "We need to begin" (Germanic) vs. "We need to commence" (French) vs. "We need to initiate proceedings" (Latin) carry identical propositional content but radically different register signals. The Latinate-Germanic ratio in a text reliably predicts its formality: child-directed speech is overwhelmingly Germanic; legal and academic prose is heavily Latinate.
+  </div>
+
+  <figcaption>
+    <h2>Figure 3 &mdash; The Three-Layer English Lexicon</h2>
+    <p>English vocabulary is organized into three etymological layers with systematic register associations. The Germanic base layer (Anglo-Saxon) provides everyday, concrete words. The French middle layer (Norman Conquest) provides formal and administrative vocabulary. The Latin/Greek top layer (Renaissance borrowing) provides technical and scientific terminology. The same concept often has representatives in all three layers, forming register triplets.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

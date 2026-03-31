@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English SVO Sentence Structure</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --subj: #2d8a4e;
+    --subj-bg: #f0faf0;
+    --verb: #e63946;
+    --verb-bg: #fef3f0;
+    --obj: #7c3aed;
+    --obj-bg: #f5f0ff;
+    --history: #e9a820;
+    --history-bg: #fdf6ec;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --tree-line: #aab0c0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --subj: #5cb87a;
+      --subj-bg: #102a18;
+      --verb: #ff6b6b;
+      --verb-bg: #2a1520;
+      --obj: #a78bfa;
+      --obj-bg: #1a1030;
+      --history: #f0c050;
+      --history-bg: #2a2210;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --tree-line: #555570;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+    min-width: 700px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  /* SVO Display */
+  .svo-display {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+  .svo-block {
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    min-width: 180px;
+    border: 2px solid;
+    position: relative;
+  }
+  .svo-block:first-child { border-radius: 10px 0 0 10px; }
+  .svo-block:last-child { border-radius: 0 10px 10px 0; }
+  .svo-letter {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .svo-role { font-size: 0.85rem; font-weight: 600; }
+  .svo-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+  .svo-example { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
+  .subj-block { background: var(--subj-bg); border-color: var(--subj); }
+  .subj-block .svo-letter, .subj-block .svo-role { color: var(--subj); }
+  .verb-block { background: var(--verb-bg); border-color: var(--verb); border-left: none; border-right: none; }
+  .verb-block .svo-letter, .verb-block .svo-role { color: var(--verb); }
+  .obj-block { background: var(--obj-bg); border-color: var(--obj); }
+  .obj-block .svo-letter, .obj-block .svo-role { color: var(--obj); }
+
+  /* Tree diagram */
+  .tree-container { margin: 1.5rem 0; }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  /* Departure table */
+  .departure-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+  .departure-table th, .departure-table td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+  }
+  .departure-table th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+    text-align: left;
+  }
+  .departure-table td:first-child { font-weight: 600; }
+
+  /* History note */
+  .history-note {
+    margin-top: 1.5rem;
+    padding: 0.8rem 1rem;
+    background: var(--history-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--history);
+    font-size: 0.85rem;
+  }
+  .history-note strong { color: var(--history); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Canonical English Word Order: Subject - Verb - Object</div>
+
+    <!-- SVO blocks -->
+    <div class="svo-display">
+      <div class="svo-block subj-block">
+        <div class="svo-letter">S</div>
+        <div class="svo-role">Subject</div>
+        <div class="svo-desc">Who/what performs the action</div>
+        <div class="svo-example">The cat</div>
+      </div>
+      <div class="svo-block verb-block">
+        <div class="svo-letter">V</div>
+        <div class="svo-role">Verb</div>
+        <div class="svo-desc">The action or state</div>
+        <div class="svo-example">chased</div>
+      </div>
+      <div class="svo-block obj-block">
+        <div class="svo-letter">O</div>
+        <div class="svo-role">Object</div>
+        <div class="svo-desc">Who/what receives the action</div>
+        <div class="svo-example">the mouse</div>
+      </div>
+    </div>
+
+    <!-- Syntax Tree -->
+    <div class="section-title">Phrase Structure Tree</div>
+    <div class="tree-container">
+      <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" style="max-width:700px; margin:0 auto; display:block;">
+        <!-- S -->
+        <text x="350" y="20" text-anchor="middle" font-weight="700" font-size="16" fill="var(--accent)">S</text>
+
+        <!-- S -> NP VP -->
+        <line x1="350" y1="25" x2="170" y2="55" stroke="var(--tree-line)" stroke-width="1.5"/>
+        <line x1="350" y1="25" x2="480" y2="55" stroke="var(--tree-line)" stroke-width="1.5"/>
+
+        <!-- NP (subject) -->
+        <rect x="130" y="48" width="80" height="26" rx="6" fill="var(--subj-bg)" stroke="var(--subj)" stroke-width="1.5"/>
+        <text x="170" y="66" text-anchor="middle" font-weight="700" font-size="13" fill="var(--subj)">NP</text>
+
+        <!-- VP -->
+        <rect x="440" y="48" width="80" height="26" rx="6" fill="var(--verb-bg)" stroke="var(--verb)" stroke-width="1.5"/>
+        <text x="480" y="66" text-anchor="middle" font-weight="700" font-size="13" fill="var(--verb)">VP</text>
+
+        <!-- NP -> Det N -->
+        <line x1="170" y1="74" x2="120" y2="105" stroke="var(--tree-line)" stroke-width="1.2"/>
+        <line x1="170" y1="74" x2="220" y2="105" stroke="var(--tree-line)" stroke-width="1.2"/>
+
+        <text x="120" y="118" text-anchor="middle" font-size="11" fill="var(--muted)">Det</text>
+        <text x="220" y="118" text-anchor="middle" font-size="11" fill="var(--muted)">N</text>
+
+        <line x1="120" y1="122" x2="120" y2="145" stroke="var(--tree-line)" stroke-width="1"/>
+        <line x1="220" y1="122" x2="220" y2="145" stroke="var(--tree-line)" stroke-width="1"/>
+
+        <text x="120" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="var(--subj)">The</text>
+        <text x="220" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="var(--subj)">cat</text>
+
+        <!-- VP -> V NP -->
+        <line x1="480" y1="74" x2="400" y2="105" stroke="var(--tree-line)" stroke-width="1.2"/>
+        <line x1="480" y1="74" x2="560" y2="105" stroke="var(--tree-line)" stroke-width="1.2"/>
+
+        <text x="400" y="118" text-anchor="middle" font-size="11" fill="var(--muted)">V</text>
+        <rect x="520" y="100" width="80" height="22" rx="5" fill="var(--obj-bg)" stroke="var(--obj)" stroke-width="1"/>
+        <text x="560" y="116" text-anchor="middle" font-weight="600" font-size="11" fill="var(--obj)">NP</text>
+
+        <line x1="400" y1="122" x2="400" y2="145" stroke="var(--tree-line)" stroke-width="1"/>
+        <text x="400" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="var(--verb)">chased</text>
+
+        <!-- Object NP -> Det N -->
+        <line x1="560" y1="122" x2="520" y2="155" stroke="var(--tree-line)" stroke-width="1"/>
+        <line x1="560" y1="122" x2="600" y2="155" stroke="var(--tree-line)" stroke-width="1"/>
+
+        <text x="520" y="168" text-anchor="middle" font-size="11" fill="var(--muted)">Det</text>
+        <text x="600" y="168" text-anchor="middle" font-size="11" fill="var(--muted)">N</text>
+
+        <line x1="520" y1="172" x2="520" y2="195" stroke="var(--tree-line)" stroke-width="1"/>
+        <line x1="600" y1="172" x2="600" y2="195" stroke="var(--tree-line)" stroke-width="1"/>
+
+        <text x="520" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="var(--obj)">the</text>
+        <text x="600" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="var(--obj)">mouse</text>
+
+        <!-- Rule annotations -->
+        <text x="350" y="240" text-anchor="middle" font-size="10" fill="var(--muted)">S &rarr; NP + VP | VP &rarr; V + NP | NP &rarr; Det + N</text>
+      </svg>
+    </div>
+
+    <!-- Departures from SVO -->
+    <div class="section-title">Every Departure from SVO Carries Meaning</div>
+    <table class="departure-table">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Order</th>
+          <th>Example</th>
+          <th>Function</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Declarative (default)</td>
+          <td style="color:var(--subj);">S</td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span style="color:var(--subj)">S</span> <span style="color:var(--verb)">V</span> <span style="color:var(--obj)">O</span></td>
+          <td>"The cat chased the mouse."</td>
+          <td>Neutral statement</td>
+        </tr>
+        <tr>
+          <td>Yes/no question</td>
+          <td><span style="color:var(--verb)">Aux</span> <span style="color:var(--subj)">S</span> <span style="color:var(--verb)">V</span> <span style="color:var(--obj)">O</span></td>
+          <td>"Did the cat chase the mouse?"</td>
+          <td>Question (SAI + do-support)</td>
+        </tr>
+        <tr>
+          <td>Wh-question</td>
+          <td><span style="color:var(--obj)">Wh</span> <span style="color:var(--verb)">Aux</span> <span style="color:var(--subj)">S</span> <span style="color:var(--verb)">V</span></td>
+          <td>"What did the cat chase?"</td>
+          <td>Information question (wh-movement)</td>
+        </tr>
+        <tr>
+          <td>Passive</td>
+          <td><span style="color:var(--obj)">O</span> <span style="color:var(--verb)">be+V</span> (by <span style="color:var(--subj)">S</span>)</td>
+          <td>"The mouse was chased (by the cat)."</td>
+          <td>Patient promotion / agent demotion</td>
+        </tr>
+        <tr>
+          <td>Topicalization</td>
+          <td><span style="color:var(--obj)">O</span> <span style="color:var(--subj)">S</span> <span style="color:var(--verb)">V</span></td>
+          <td>"The mouse, the cat chased."</td>
+          <td>Topic prominence / contrast</td>
+        </tr>
+        <tr>
+          <td>Cleft</td>
+          <td>It <span style="color:var(--verb)">be</span> <span style="color:var(--subj)">X</span> who/that...</td>
+          <td>"It was the cat that chased the mouse."</td>
+          <td>Focus on specific element</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="history-note">
+      <strong>Why SVO is obligatory:</strong> Old English had flexible word order because case endings marked grammatical roles regardless of position. Viking and Norman contact eroded those endings. By Middle English (~1200-1300), position became the only reliable signal of who-did-what-to-whom. English traded morphological flexibility for syntactic rigidity -- SVO is the result of a thousand years of structural compensation.
+    </div>
+  </div>
+
+  <div class="pattern-note">
+    <strong>Pattern:</strong> English SVO order is not just a default -- it is the <em>grammatical backbone</em> that replaced case marking. Every departure from SVO (questions, passives, topicalization, clefts) is a rule-governed operation that changes the meaning or pragmatic function of the sentence. If the word order changes, the communicative intent changes with it.
+  </div>
+
+  <figcaption>
+    <h2>Figure 1 &mdash; English SVO Sentence Structure</h2>
+    <p>English canonical word order is Subject-Verb-Object (SVO), with position serving as the primary signal of grammatical role. The phrase structure tree shows the hierarchical organization: S branches into NP (subject) and VP (verb phrase), and VP contains the verb and its NP complement (object). All departures from SVO are meaningful syntactic operations.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

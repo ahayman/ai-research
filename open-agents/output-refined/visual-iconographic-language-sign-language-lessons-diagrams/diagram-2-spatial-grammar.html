@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial Grammar -- Referent Tracking and Verb Agreement</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  figure {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    max-width: 1000px;
+    width: 100%;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #1a1a2e;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+
+  .signing-space {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 420px;
+    margin: 0 auto 1.5rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(59,130,246,0.03) 0%, rgba(59,130,246,0.08) 100%);
+  }
+  .space-label {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9ca3af;
+    background: #fff;
+    padding: 0 0.5rem;
+  }
+
+  .locus {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  .locus-name {
+    font-size: 1rem;
+  }
+  .locus-label {
+    font-size: 0.65rem;
+    opacity: 0.7;
+    margin-top: 0.1rem;
+  }
+  .locus-john {
+    background: #dbeafe;
+    border: 2.5px solid #2563eb;
+    color: #1e40af;
+    top: 50px;
+    left: 40px;
+  }
+  .locus-mary {
+    background: #fce7f3;
+    border: 2.5px solid #ec4899;
+    color: #be185d;
+    top: 50px;
+    right: 40px;
+  }
+  .locus-signer {
+    background: #f3f4f6;
+    border: 2.5px solid #6b7280;
+    color: #374151;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .locus-book {
+    background: #fef3c7;
+    border: 2.5px solid #d97706;
+    color: #92400e;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75px;
+    height: 75px;
+  }
+
+  /* SVG arrows */
+  .arrow-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .arrow-layer svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .verb-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .verb-card {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    min-width: 200px;
+    flex: 1;
+    max-width: 280px;
+  }
+  .verb-card h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 0.3rem;
+  }
+  .verb-card .verb-desc {
+    font-size: 0.78rem;
+    color: #6c757d;
+    line-height: 1.4;
+  }
+  .verb-card .verb-arrow {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0.3rem 0;
+  }
+  .arrow-blue { color: #2563eb; }
+  .arrow-pink { color: #ec4899; }
+  .arrow-amber { color: #d97706; }
+
+  .transfer-box {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .transfer-box strong {
+    color: #16a34a;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+  }
+  figcaption strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+  figcaption span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e9ecef; }
+    figure { background: #2d2d44; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .diagram-title { color: #e9ecef; }
+    .diagram-subtitle { color: #adb5bd; }
+    figcaption { border-top-color: #3d3d5c; }
+    figcaption strong { color: #e9ecef; }
+    figcaption span { color: #adb5bd; }
+    .signing-space { border-color: #4b5563; background: linear-gradient(180deg, rgba(59,130,246,0.05) 0%, rgba(59,130,246,0.12) 100%); }
+    .space-label { background: #2d2d44; color: #6c757d; }
+    .locus-john { background: rgba(37,99,235,0.2); color: #93c5fd; }
+    .locus-mary { background: rgba(236,72,153,0.2); color: #f9a8d4; }
+    .locus-signer { background: rgba(107,114,128,0.2); color: #d1d5db; }
+    .locus-book { background: rgba(217,119,6,0.2); color: #fcd34d; }
+    .verb-card { border-color: #3d3d5c; }
+    .verb-card h4 { color: #e9ecef; }
+    .verb-card .verb-desc { color: #adb5bd; }
+    .transfer-box { background: rgba(34,197,94,0.08); }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-title">Spatial Grammar -- Referent Tracking and Verb Agreement</div>
+  <div class="diagram-subtitle">How signers use 3D space as a grammatical substrate: establishing spatial loci and directing verbs between them</div>
+
+  <div class="signing-space">
+    <div class="space-label">Signing Space (Top-Down View)</div>
+    <div class="locus locus-john">
+      <span class="locus-name">JOHN</span>
+      <span class="locus-label">locus A (left)</span>
+    </div>
+    <div class="locus locus-mary">
+      <span class="locus-name">MARY</span>
+      <span class="locus-label">locus B (right)</span>
+    </div>
+    <div class="locus locus-book">
+      <span class="locus-name">BOOK</span>
+      <span class="locus-label">locus C</span>
+    </div>
+    <div class="locus locus-signer">
+      <span class="locus-name">SIGNER</span>
+      <span class="locus-label">"I" (center)</span>
+    </div>
+
+    <div class="arrow-layer">
+      <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ah-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2563eb"/></marker>
+          <marker id="ah-pink" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#ec4899"/></marker>
+          <marker id="ah-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#d97706"/></marker>
+        </defs>
+        <!-- JOHN -> MARY: GIVE -->
+        <path d="M 170 95 C 300 60, 430 60, 560 95" stroke="#2563eb" stroke-width="2.5" fill="none" stroke-dasharray="6,3" marker-end="url(#ah-blue)"/>
+        <text x="350" y="55" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">GIVE</text>
+        <!-- MARY -> JOHN: ASK -->
+        <path d="M 560 115 C 430 155, 300 155, 170 115" stroke="#ec4899" stroke-width="2.5" fill="none" stroke-dasharray="6,3" marker-end="url(#ah-pink)"/>
+        <text x="350" y="165" text-anchor="middle" fill="#ec4899" font-size="11" font-weight="600">ASK</text>
+        <!-- SIGNER -> BOOK: LOOK-AT -->
+        <path d="M 350 330 L 350 270" stroke="#d97706" stroke-width="2.5" fill="none" stroke-dasharray="6,3" marker-end="url(#ah-amber)"/>
+        <text x="380" y="305" fill="#d97706" font-size="11" font-weight="600">LOOK-AT</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="verb-examples">
+    <div class="verb-card">
+      <h4>"John gives Mary the book"</h4>
+      <div class="verb-arrow arrow-blue">A ----GIVE----> B</div>
+      <div class="verb-desc">GIVE moves from locus A (John) toward locus B (Mary). Direction encodes who gives to whom -- no separate subject/object words needed.</div>
+    </div>
+    <div class="verb-card">
+      <h4>"Mary asks John"</h4>
+      <div class="verb-arrow arrow-pink">B ----ASK----> A</div>
+      <div class="verb-desc">ASK moves from locus B (Mary) toward locus A (John). Reversing direction reverses the subject-object relationship.</div>
+    </div>
+    <div class="verb-card">
+      <h4>Pronoun = Pointing</h4>
+      <div class="verb-arrow arrow-amber">point -> locus</div>
+      <div class="verb-desc">Pointing toward a locus functions as a pronoun. Point-left = "he/John." Point-right = "she/Mary." No separate pronoun signs needed.</div>
+    </div>
+  </div>
+
+  <div class="transfer-box">
+    <strong>Transfer to 2D visual language:</strong> Space carrying grammatical information is the most transferable concept from sign language. A 2D written visual language could use position on a page to encode subject-object relations -- symbols placed at established reference points, with connector direction encoding who-does-what-to-whom. The principle: spatial position is not decoration, it is grammar.
+  </div>
+
+  <figcaption>
+    <strong>Diagram 2: Spatial Grammar -- Referent Tracking and Verb Agreement</strong>
+    <span>Top-down view of signing space showing three established loci (John, Mary, Book) and the signer at center. Verbs are directed between loci to encode grammatical relations: GIVE moves from subject to object, ASK from asker to askee. This eliminates the need for separate subject/object markers -- spatial direction does the grammatical work. Pointing to a locus functions as a pronoun. Once established, loci persist throughout a discourse. Sources: PMC (One grammar or two?), Handspeak (verb inflection).</span>
+  </figcaption>
+</figure>
+</body>
+</html>
