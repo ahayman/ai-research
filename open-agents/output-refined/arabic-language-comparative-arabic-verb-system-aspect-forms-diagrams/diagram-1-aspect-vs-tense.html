@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aspect vs. Tense -- Two Ways of Encoding Time</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --perfect: #7c3aed;
+    --perfect-bg: #f5f0ff;
+    --imperfect: #2d8a4e;
+    --imperfect-bg: #f0faf0;
+    --english: #0077b6;
+    --english-bg: #e8f4f8;
+    --past: #e63946;
+    --present: #2d8a4e;
+    --future: #d4770b;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --timeline: #aab0c0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --perfect: #a78bfa;
+      --perfect-bg: #1a1030;
+      --imperfect: #5cb87a;
+      --imperfect-bg: #102a18;
+      --english: #5dade2;
+      --english-bg: #102030;
+      --past: #ff6b6b;
+      --present: #5cb87a;
+      --future: #f0c050;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --timeline: #555570;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  /* System comparison */
+  .system-row {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+  .system-card {
+    flex: 1;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 1.2rem;
+  }
+  .system-english { border-color: var(--english); background: var(--english-bg); }
+  .system-arabic { border-color: var(--accent); background: var(--accent-light); }
+  .system-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .system-english .system-label { color: var(--english); }
+  .system-arabic .system-label { color: var(--accent); }
+  .system-question {
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  /* SVG timeline area */
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  /* State boxes for Arabic */
+  .state-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+  .state-box {
+    padding: 1rem 1.5rem;
+    border: 3px solid;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 200px;
+  }
+  .state-perfect { border-color: var(--perfect); background: var(--perfect-bg); }
+  .state-imperfect { border-color: var(--imperfect); background: var(--imperfect-bg); }
+  .state-name { font-weight: 900; font-size: 1.1rem; }
+  .state-perfect .state-name { color: var(--perfect); }
+  .state-imperfect .state-name { color: var(--imperfect); }
+  .state-arabic {
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    font-size: 1.2rem;
+    direction: rtl;
+    margin: 0.3rem 0;
+  }
+  .state-meaning { font-size: 0.82rem; color: var(--muted); }
+  .state-maps { font-size: 0.78rem; margin-top: 0.4rem; padding: 0.3rem; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); }
+
+  /* Mapping table */
+  .map-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+  .map-table th, .map-table td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .map-table th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .map-table .ar { font-family: 'Traditional Arabic', 'Scheherazade', serif; direction: rtl; font-size: 0.95rem; }
+
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+  @media (max-width: 700px) {
+    .system-row, .state-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Two Ways of Encoding Time: English Tense vs. Arabic Aspect</div>
+
+    <div class="system-row">
+      <div class="system-card system-english">
+        <div class="system-label">English: TENSE-Based</div>
+        <div class="system-question">WHEN did it happen?</div>
+        <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;margin:0 auto;display:block;">
+          <!-- Timeline arrow -->
+          <line x1="30" y1="35" x2="370" y2="35" stroke="var(--timeline)" stroke-width="2"/>
+          <polygon points="370,35 360,30 360,40" fill="var(--timeline)"/>
+          <!-- Past -->
+          <circle cx="100" cy="35" r="8" fill="var(--past)"/>
+          <text x="100" y="60" text-anchor="middle" font-size="11" fill="var(--past)" font-weight="700">PAST</text>
+          <text x="100" y="22" text-anchor="middle" font-size="9" fill="var(--muted)">wrote</text>
+          <!-- Present -->
+          <circle cx="200" cy="35" r="8" fill="var(--present)"/>
+          <text x="200" y="60" text-anchor="middle" font-size="11" fill="var(--present)" font-weight="700">PRESENT</text>
+          <text x="200" y="22" text-anchor="middle" font-size="9" fill="var(--muted)">writes</text>
+          <!-- Future -->
+          <circle cx="300" cy="35" r="8" fill="var(--future)"/>
+          <text x="300" y="60" text-anchor="middle" font-size="11" fill="var(--future)" font-weight="700">FUTURE</text>
+          <text x="300" y="22" text-anchor="middle" font-size="9" fill="var(--muted)">will write</text>
+        </svg>
+        <div style="text-align:center;font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Verbs placed ON the timeline. 12 tense-aspect combinations.</div>
+      </div>
+
+      <div class="system-card system-arabic">
+        <div class="system-label">Arabic: ASPECT-Based</div>
+        <div class="system-question">IS it complete?</div>
+        <div class="state-row" style="margin:0.5rem 0;">
+          <div style="padding:0.5rem 1rem;border:2px solid var(--perfect);border-radius:50%;text-align:center;background:var(--perfect-bg);">
+            <div style="font-weight:900;color:var(--perfect);font-size:0.85rem;">COMPLETE</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Perfect</div>
+          </div>
+          <div style="padding:0.5rem 1rem;border:2px solid var(--imperfect);border-radius:50%;text-align:center;background:var(--imperfect-bg);">
+            <div style="font-weight:900;color:var(--imperfect);font-size:0.85rem;">INCOMPLETE</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Imperfect</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Two states. Time from context/particles.</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:1.5rem;">Arabic's Two Stems Map to Multiple English Tenses</div>
+
+    <div class="state-row">
+      <div class="state-box state-perfect">
+        <div class="state-name">Perfect (al-madi)</div>
+        <div class="state-arabic">كَتَبَ</div>
+        <div style="font-style:italic;font-size:0.85rem;">kataba</div>
+        <div class="state-meaning">"Action is COMPLETE"</div>
+        <div class="state-maps">
+          Maps to: he wrote / he has written / he had written
+        </div>
+      </div>
+      <div class="state-box state-imperfect">
+        <div class="state-name">Imperfect (al-mudari')</div>
+        <div class="state-arabic">يَكْتُبُ</div>
+        <div style="font-style:italic;font-size:0.85rem;">yaktubu</div>
+        <div class="state-meaning">"Action is INCOMPLETE"</div>
+        <div class="state-maps">
+          Maps to: he writes / he is writing / he will write
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:1.5rem;">How Arabic Covers English's 12 Tense-Aspect Combinations</div>
+    <table class="map-table">
+      <thead>
+        <tr>
+          <th>English</th>
+          <th>Arabic Strategy</th>
+          <th>Arabic Form</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>He wrote (simple past)</td>
+          <td style="color:var(--perfect);font-weight:600;">Perfect alone</td>
+          <td><span class="ar">كَتَبَ</span> <em>kataba</em></td>
+        </tr>
+        <tr>
+          <td>He writes (simple present)</td>
+          <td style="color:var(--imperfect);font-weight:600;">Imperfect alone</td>
+          <td><span class="ar">يَكْتُبُ</span> <em>yaktubu</em></td>
+        </tr>
+        <tr>
+          <td>He will write (future)</td>
+          <td style="color:var(--imperfect);font-weight:600;">Imperfect + particle</td>
+          <td><span class="ar">سَيَكْتُبُ</span> <em>sa-yaktubu</em></td>
+        </tr>
+        <tr>
+          <td>He was writing (past progressive)</td>
+          <td style="color:var(--imperfect);font-weight:600;">kana + imperfect</td>
+          <td><span class="ar">كانَ يَكْتُبُ</span> <em>kana yaktubu</em></td>
+        </tr>
+        <tr>
+          <td>He has written (present perfect)</td>
+          <td style="color:var(--perfect);font-weight:600;">qad + perfect</td>
+          <td><span class="ar">قَدْ كَتَبَ</span> <em>qad kataba</em></td>
+        </tr>
+        <tr>
+          <td>He had written (past perfect)</td>
+          <td style="color:var(--perfect);font-weight:600;">kana + qad + perfect</td>
+          <td><span class="ar">كانَ قَدْ كَتَبَ</span> <em>kana qad kataba</em></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English needs 12+ distinct tense-aspect constructions (simple, progressive, perfect, perfect progressive x past/present/future), each with its own auxiliary verb sequence. Arabic covers the same semantic space with just <strong>2 stems + a handful of particles</strong>. The system is more compact but equally expressive.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> Arabic encodes <em>completion status</em> in the verb stem and adds <em>time</em> through context or particles. English encodes <em>time</em> directly in verb form and adds <em>completion status</em> through auxiliary verb sequences. Same information, opposite encoding strategies. Arabic is state-first, time-second. English is time-first, state-second.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 1 &mdash; Aspect vs. Tense: Two Ways of Seeing Time</h2>
+    <p>English verbs live on a timeline (past/present/future). Arabic verbs exist in two states (complete/incomplete). Arabic's two stems plus a handful of particles cover the functional range of English's twelve tense-aspect combinations. The core question differs: English asks "when?" while Arabic asks "is it done?"</p>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic Gender Assignment System</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --masc: #0077b6;
+    --masc-bg: #e8f4f8;
+    --fem: #e63946;
+    --fem-bg: #fef3f0;
+    --exception: #d4770b;
+    --exception-bg: #fdf6ec;
+    --english: #6c757d;
+    --english-bg: #f0f0f5;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --tree-line: #aab0c0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --masc: #5dade2;
+      --masc-bg: #102030;
+      --fem: #ff6b6b;
+      --fem-bg: #2a1520;
+      --exception: #f0c050;
+      --exception-bg: #2a2210;
+      --english: #888;
+      --english-bg: #1e1e30;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --tree-line: #555570;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  /* Category cards */
+  .cat-row {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .cat-card {
+    flex: 1;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 0.8rem;
+  }
+  .cat-masc { border-color: var(--masc); background: var(--masc-bg); }
+  .cat-fem { border-color: var(--fem); background: var(--fem-bg); }
+  .cat-except { border-color: var(--exception); background: var(--exception-bg); }
+  .cat-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .cat-masc .cat-title { color: var(--masc); }
+  .cat-fem .cat-title { color: var(--fem); }
+  .cat-except .cat-title { color: var(--exception); }
+  .cat-list { font-size: 0.8rem; padding-left: 1rem; }
+  .cat-list li { margin: 0.15rem 0; }
+  .arabic-text {
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    font-size: 0.95rem;
+    direction: rtl;
+  }
+  .cat-rule {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.4rem;
+  }
+
+  .ta-marbuta {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    background: var(--fem-bg);
+    border: 1px solid var(--fem);
+    border-radius: 4px;
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    font-size: 1.2rem;
+    color: var(--fem);
+    font-weight: 700;
+  }
+
+  /* Flow decision */
+  .flow-box {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    background: var(--accent-light);
+    font-size: 0.85rem;
+  }
+  .flow-box .flow-title { font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.3rem 0;
+  }
+  .flow-num {
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+  @media (max-width: 700px) {
+    .cat-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Arabic Gender Assignment -- How to Know If a Noun is Masculine or Feminine</div>
+
+    <!-- SVG Tree -->
+    <svg viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg" style="max-width:800px;margin:0 auto 1rem;display:block;">
+      <rect x="280" y="5" width="240" height="30" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="400" y="25" text-anchor="middle" font-weight="700" font-size="13" fill="var(--accent)">Arabic Noun -- What gender?</text>
+
+      <line x1="320" y1="35" x2="130" y2="60" stroke="var(--tree-line)" stroke-width="2"/>
+      <line x1="400" y1="35" x2="400" y2="60" stroke="var(--tree-line)" stroke-width="2"/>
+      <line x1="480" y1="35" x2="670" y2="60" stroke="var(--tree-line)" stroke-width="2"/>
+
+      <rect x="30" y="58" width="200" height="28" rx="6" fill="var(--masc-bg)" stroke="var(--masc)" stroke-width="2"/>
+      <text x="130" y="77" text-anchor="middle" font-weight="700" font-size="11" fill="var(--masc)">No marker = MASCULINE</text>
+
+      <rect x="290" y="58" width="220" height="28" rx="6" fill="var(--fem-bg)" stroke="var(--fem)" stroke-width="2"/>
+      <text x="400" y="77" text-anchor="middle" font-weight="700" font-size="11" fill="var(--fem)">Has ta' marbuta (ة) = FEMININE</text>
+
+      <rect x="570" y="58" width="200" height="28" rx="6" fill="var(--exception-bg)" stroke="var(--exception)" stroke-width="2"/>
+      <text x="670" y="77" text-anchor="middle" font-weight="700" font-size="11" fill="var(--exception)">Exceptions (memorize)</text>
+
+      <text x="130" y="105" text-anchor="middle" font-size="9" fill="var(--muted)">Default gender</text>
+      <text x="400" y="105" text-anchor="middle" font-size="9" fill="var(--muted)">Primary marker</text>
+      <text x="670" y="105" text-anchor="middle" font-size="9" fill="var(--muted)">Both directions</text>
+    </svg>
+
+    <div class="cat-row">
+      <div class="cat-card cat-masc">
+        <div class="cat-title">Masculine (default)</div>
+        <div style="text-align:center;margin-bottom:0.3rem;font-size:0.75rem;">No special marker needed</div>
+        <ul class="cat-list">
+          <li><span class="arabic-text">كِتاب</span> <em>kitab</em> "book"</li>
+          <li><span class="arabic-text">بَيْت</span> <em>bayt</em> "house"</li>
+          <li><span class="arabic-text">قَلَم</span> <em>qalam</em> "pen"</li>
+          <li><span class="arabic-text">رَجُل</span> <em>rajul</em> "man"</li>
+        </ul>
+        <div class="cat-rule">Rule: if no feminine marker and not in the exception list, it is masculine.</div>
+      </div>
+
+      <div class="cat-card cat-fem">
+        <div class="cat-title">Feminine (by marker <span class="ta-marbuta">ة</span>)</div>
+        <div style="text-align:center;margin-bottom:0.3rem;font-size:0.75rem;">Ta' marbuta = feminine signal</div>
+        <ul class="cat-list">
+          <li><span class="arabic-text">مَدْرَسة</span> <em>madrasa</em> "school"</li>
+          <li><span class="arabic-text">مَدينة</span> <em>madina</em> "city"</li>
+          <li><span class="arabic-text">مُعَلِّمة</span> <em>mu'allima</em> "teacher (f.)"</li>
+          <li><span class="arabic-text">كَبيرة</span> <em>kabira</em> "big (f.)"</li>
+        </ul>
+        <div class="cat-rule">Rule: ta' marbuta is the most reliable feminine marker.</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:1rem;">Exceptions: The Nouns That Break the Pattern</div>
+    <div class="cat-row">
+      <div class="cat-card cat-except">
+        <div class="cat-title">Feminine WITHOUT ta' marbuta (must memorize)</div>
+        <ul class="cat-list">
+          <li><span class="arabic-text">شَمْس</span> <em>shams</em> "sun" -- celestial</li>
+          <li><span class="arabic-text">أَرْض</span> <em>'ard</em> "earth" -- natural force</li>
+          <li><span class="arabic-text">نار</span> <em>nar</em> "fire" -- natural force</li>
+          <li><span class="arabic-text">ريح</span> <em>rih</em> "wind" -- natural force</li>
+          <li><span class="arabic-text">يَد</span> <em>yad</em> "hand" -- paired body part</li>
+          <li><span class="arabic-text">عَيْن</span> <em>'ayn</em> "eye" -- paired body part</li>
+          <li><span class="arabic-text">أُذُن</span> <em>'udhun</em> "ear" -- paired body part</li>
+          <li><span class="arabic-text">رِجْل</span> <em>rijl</em> "foot" -- paired body part</li>
+        </ul>
+        <div class="cat-rule">Semantic clusters: paired body parts + celestial/natural forces. Proto-Semitic inheritance.</div>
+      </div>
+      <div class="cat-card cat-except">
+        <div class="cat-title">Masculine WITH ta' marbuta (rare)</div>
+        <ul class="cat-list">
+          <li><span class="arabic-text">خَليفة</span> <em>khalifa</em> "caliph"</li>
+          <li><span class="arabic-text">عَلّامة</span> <em>'allama</em> "great scholar"</li>
+          <li><span class="arabic-text">حَمْزة</span> <em>Hamza</em> (male name)</li>
+          <li><span class="arabic-text">مُعاوِية</span> <em>Mu'awiya</em> (male name)</li>
+        </ul>
+        <div class="cat-rule">Mostly titles of inherently male roles and male proper names.</div>
+      </div>
+    </div>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English has <em>no</em> grammatical gender. "The big book," "the big school," "the big teacher" -- nothing changes. English marks natural gender only in pronouns (he/she/they) and a shrinking set of noun pairs (actor/actress). Arabic assigns gender to <em>every</em> noun, including inanimate objects, and that gender triggers agreement on adjectives, verbs, pronouns, and demonstratives.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> Gender assignment is <strong>80% predictable</strong>: has ta' marbuta = feminine, no marker = masculine. The exceptions cluster into learnable semantic groups (paired body parts, natural forces, certain titles). The system is not random -- it has a logic, but that logic requires memorizing the exception clusters.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 1 &mdash; The Arabic Gender Assignment System</h2>
+    <p>Arabic nouns are masculine by default, feminine when marked with ta' marbuta (ة), or exceptionally gendered (feminine without marker for body parts and natural forces; masculine with marker for certain titles). English has no grammatical gender at all.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

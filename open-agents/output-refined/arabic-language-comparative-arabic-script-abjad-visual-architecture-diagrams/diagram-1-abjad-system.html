@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Abjad System: What's Written vs. What's Read</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --consonant-bg: #dcfce7;
+    --consonant-border: #16a34a;
+    --consonant-text: #14532d;
+    --vowel-bg: #fef3c7;
+    --vowel-border: #d97706;
+    --vowel-text: #78350f;
+    --full-bg: #ede9fe;
+    --full-border: #7c3aed;
+    --full-text: #3b0764;
+    --eng-bg: #fce7f3;
+    --eng-border: #db2777;
+    --eng-text: #831843;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --consonant-bg: #064e3b;
+      --consonant-border: #34d399;
+      --consonant-text: #d1fae5;
+      --vowel-bg: #78350f;
+      --vowel-border: #fbbf24;
+      --vowel-text: #fef3c7;
+      --full-bg: #3b0764;
+      --full-border: #a78bfa;
+      --full-text: #e9d5ff;
+      --eng-bg: #831843;
+      --eng-border: #f472b6;
+      --eng-text: #fce7f3;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    overflow-x: auto;
+  }
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    margin: 1.5rem 0 1rem;
+  }
+  .section-title:first-child { margin-top: 0; }
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+  .layer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 2px solid;
+  }
+  .layer-label {
+    min-width: 140px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .layer-content {
+    flex: 1;
+    font-size: 1.2rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    letter-spacing: 0.1em;
+  }
+  .layer-note {
+    font-size: 0.75rem;
+    font-style: italic;
+    min-width: 160px;
+    text-align: right;
+  }
+  .consonant { background: var(--consonant-bg); border-color: var(--consonant-border); color: var(--consonant-text); }
+  .vowel { background: var(--vowel-bg); border-color: var(--vowel-border); color: var(--vowel-text); }
+  .full { background: var(--full-bg); border-color: var(--full-border); color: var(--full-text); }
+  .eng { background: var(--eng-bg); border-color: var(--eng-border); color: var(--eng-text); }
+  .arabic-large {
+    font-size: 2.2rem;
+    text-align: center;
+    padding: 0.5rem;
+    line-height: 1.8;
+    direction: rtl;
+  }
+  .readings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+  .reading-card {
+    padding: 0.8rem;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .reading-card .ar { font-size: 1.3rem; direction: rtl; margin-bottom: 0.3rem; }
+  .reading-card .trans { font-weight: 700; font-size: 0.9rem; }
+  .reading-card .meaning { font-size: 0.8rem; color: var(--muted); }
+  .context-arrow {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0.5rem 0;
+  }
+  .compare-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .compare-item {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 2px solid;
+  }
+  .compare-item h4 { margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .compare-item p { font-size: 0.82rem; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="section-title">The Root k-t-b: Three Layers of Representation</div>
+
+    <div class="layer-stack">
+      <div class="layer consonant">
+        <div class="layer-label">Layer 1: Consonants Only</div>
+        <div class="layer-content arabic-large">كتب</div>
+        <div class="layer-note">DEFAULT -- newspapers, books, websites. Reader supplies vowels.</div>
+      </div>
+      <div class="layer vowel">
+        <div class="layer-label">Layer 2: + Vowel Marks</div>
+        <div class="layer-content arabic-large">كَتَبَ</div>
+        <div class="layer-note">MARKED -- Quran, children's books, poetry. All sounds explicit.</div>
+      </div>
+      <div class="layer full">
+        <div class="layer-label">Layer 3: Transcription</div>
+        <div class="layer-content">k-a-t-a-b-a</div>
+        <div class="layer-note">Full pronunciation. "He wrote." (Form I, past, 3rd masc. sing.)</div>
+      </div>
+      <div class="layer eng">
+        <div class="layer-label">ENGLISH: Always full</div>
+        <div class="layer-content">w-r-o-t-e</div>
+        <div class="layer-note">"wrote" -- all letters always present. No optional layer.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Same Consonants, Multiple Readings -- Context Disambiguates</div>
+    <div class="context-arrow">The unvoweled كتب could be any of these -- syntax and context resolve the ambiguity:</div>
+
+    <div class="readings-grid">
+      <div class="reading-card">
+        <div class="ar">كَتَبَ</div>
+        <div class="trans">kataba</div>
+        <div class="meaning">he wrote (active verb)</div>
+      </div>
+      <div class="reading-card">
+        <div class="ar">كُتِبَ</div>
+        <div class="trans">kutiba</div>
+        <div class="meaning">it was written (passive)</div>
+      </div>
+      <div class="reading-card">
+        <div class="ar">كُتُب</div>
+        <div class="trans">kutub</div>
+        <div class="meaning">books (plural noun)</div>
+      </div>
+      <div class="reading-card">
+        <div class="ar">كَاتِب</div>
+        <div class="trans">kaatib</div>
+        <div class="meaning">writer (long vowel visible)</div>
+      </div>
+      <div class="reading-card">
+        <div class="ar">كُتَّاب</div>
+        <div class="trans">kuttaab</div>
+        <div class="meaning">writers / Quranic school</div>
+      </div>
+    </div>
+
+    <div class="section-title">Why This Works for Arabic but Not English</div>
+    <div class="compare-box">
+      <div class="compare-item consonant">
+        <h4>Arabic: "ktb" in context</h4>
+        <p>The root k-t-b constrains meaning to the WRITING domain. Syntax disambiguates the specific form. In running text, ambiguity rate is very low. Skilled readers are actually FASTER without vowel marks.</p>
+      </div>
+      <div class="compare-item eng">
+        <h4>English: "bt" without vowels?</h4>
+        <p>Could be: bat, bet, bit, bot, but, bite, boot, bait, beat, boat... English morphology is not root-based, so consonants alone carry insufficient information. Vowels are mandatory.</p>
+      </div>
+    </div>
+  </div>
+  <figcaption>
+    <h2>Figure 1 &mdash; The Abjad System: What's Written vs. What's Read</h2>
+    <p>Arabic text operates in two modes. Default mode (green, Layer 1): only consonants and long vowels are written; short vowels are inferred from root knowledge and context. Marked mode (amber, Layer 2): vowel marks (harakat) are added for the Quran, children's books, and poetry. Purple shows the full transcription. Pink shows English, where all letters are always mandatory. The five reading cards demonstrate how the same unvoweled consonant sequence (k-t-b) maps to different words -- context disambiguates with near-perfect reliability. English cannot omit vowels because its morphology is not root-based.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

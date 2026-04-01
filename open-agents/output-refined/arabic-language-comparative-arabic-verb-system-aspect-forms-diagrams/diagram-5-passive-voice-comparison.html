@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic Internal Passive vs. English Auxiliary Passive</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --active-v: #2d8a4e;
+    --active-bg: #f0faf0;
+    --passive-v: #7c3aed;
+    --passive-bg: #f5f0ff;
+    --consonant: #e63946;
+    --vowel: #0077b6;
+    --english: #0077b6;
+    --english-bg: #e8f4f8;
+    --arabic: #d4770b;
+    --arabic-bg: #fdf6ec;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --active-v: #5cb87a;
+      --active-bg: #102a18;
+      --passive-v: #a78bfa;
+      --passive-bg: #1a1030;
+      --consonant: #ff6b6b;
+      --vowel: #5dade2;
+      --english: #5dade2;
+      --english-bg: #102030;
+      --arabic: #f0c050;
+      --arabic-bg: #2a2210;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  /* Verb decomposition */
+  .compare-row {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+  .compare-panel {
+    flex: 1;
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .panel-arabic { border-color: var(--arabic); background: var(--arabic-bg); }
+  .panel-english { border-color: var(--english); background: var(--english-bg); }
+  .panel-label { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.8rem; }
+  .panel-arabic .panel-label { color: var(--arabic); }
+  .panel-english .panel-label { color: var(--english); }
+
+  /* Letter boxes */
+  .letter-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.2rem;
+    margin: 0.5rem 0;
+  }
+  .letter-box {
+    width: 50px;
+    height: 55px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 2px solid;
+    font-weight: 700;
+  }
+  .letter-consonant { border-color: var(--consonant); background: var(--bg); }
+  .letter-consonant .letter-char { color: var(--consonant); font-size: 1.3rem; }
+  .letter-vowel { border-color: var(--vowel); }
+  .letter-vowel .letter-char { color: var(--vowel); font-size: 1.3rem; }
+  .letter-type { font-size: 0.55rem; color: var(--muted); }
+  .letter-active .letter-vowel { background: var(--active-bg); }
+  .letter-passive .letter-vowel { background: var(--passive-bg); }
+
+  .voice-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+  }
+  .voice-active { color: var(--active-v); }
+  .voice-passive { color: var(--passive-v); }
+
+  .translit { font-style: italic; font-size: 0.85rem; color: var(--muted); }
+  .meaning { font-size: 0.9rem; font-weight: 600; }
+
+  /* English word count */
+  .word-count {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  .word-box {
+    padding: 0.4rem 0.8rem;
+    border: 2px solid var(--english);
+    border-radius: 6px;
+    font-weight: 700;
+    color: var(--english);
+    background: var(--bg);
+  }
+
+  .arrow-down {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin: 0.3rem 0;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem 0;
+  }
+  .metric {
+    text-align: center;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+  }
+  .metric-value { font-size: 2rem; font-weight: 900; }
+  .metric-label { font-size: 0.75rem; color: var(--muted); }
+
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+  @media (max-width: 700px) {
+    .compare-row { flex-direction: column; }
+    .metric-row { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">The Passive Voice -- Internal Change vs. Auxiliary Verb</div>
+
+    <div class="compare-row">
+      <!-- Arabic -->
+      <div class="compare-panel panel-arabic">
+        <div class="panel-label">Arabic: Vowel Change (Internal Passive)</div>
+
+        <div class="voice-label voice-active">Active: "he wrote"</div>
+        <div class="letter-row letter-active">
+          <div class="letter-box letter-consonant"><div class="letter-char">k</div><div class="letter-type">C1</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--active-bg);"><div class="letter-char" style="color:var(--active-v);">a</div><div class="letter-type">vowel</div></div>
+          <div class="letter-box letter-consonant"><div class="letter-char">t</div><div class="letter-type">C2</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--active-bg);"><div class="letter-char" style="color:var(--active-v);">a</div><div class="letter-type">vowel</div></div>
+          <div class="letter-box letter-consonant"><div class="letter-char">b</div><div class="letter-type">C3</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--active-bg);"><div class="letter-char" style="color:var(--active-v);">a</div><div class="letter-type">vowel</div></div>
+        </div>
+        <div class="translit">k-a-t-a-b-a = kataba</div>
+
+        <div class="arrow-down">Consonants stay. Vowels rotate.</div>
+
+        <div class="voice-label voice-passive">Passive: "it was written"</div>
+        <div class="letter-row letter-passive">
+          <div class="letter-box letter-consonant"><div class="letter-char">k</div><div class="letter-type">C1</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--passive-bg);"><div class="letter-char" style="color:var(--passive-v);">u</div><div class="letter-type">vowel</div></div>
+          <div class="letter-box letter-consonant"><div class="letter-char">t</div><div class="letter-type">C2</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--passive-bg);"><div class="letter-char" style="color:var(--passive-v);">i</div><div class="letter-type">vowel</div></div>
+          <div class="letter-box letter-consonant"><div class="letter-char">b</div><div class="letter-type">C3</div></div>
+          <div class="letter-box letter-vowel" style="background:var(--passive-bg);"><div class="letter-char" style="color:var(--passive-v);">a</div><div class="letter-type">vowel</div></div>
+        </div>
+        <div class="translit">k-u-t-i-b-a = kutiba</div>
+
+        <div style="margin-top:0.8rem;font-size:0.82rem;">
+          Vowel shift: <span style="color:var(--active-v);font-weight:700;">a-a-a</span> &rarr; <span style="color:var(--passive-v);font-weight:700;">u-i-a</span><br>
+          <strong>Word count: 1 word &rarr; 1 word</strong>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div class="compare-panel panel-english">
+        <div class="panel-label">English: Auxiliary Addition</div>
+
+        <div class="voice-label voice-active">Active: "he wrote"</div>
+        <div class="word-count">
+          <div class="word-box">wrote</div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);">1 word</div>
+
+        <div class="arrow-down">Add auxiliary "was" + change to participle</div>
+
+        <div class="voice-label voice-passive">Passive: "it was written"</div>
+        <div class="word-count">
+          <div class="word-box">was</div>
+          <div class="word-box">written</div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);">2 words</div>
+
+        <div style="margin-top:0.8rem;font-size:0.82rem;">
+          Strategy: add auxiliary verb + past participle<br>
+          <strong>Word count: 1 word &rarr; 2 words</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:1.5rem;">Word Count Comparison</div>
+    <div class="metric-row">
+      <div class="metric" style="border-color:var(--arabic);">
+        <div class="metric-value" style="color:var(--arabic);">0</div>
+        <div class="metric-label">Extra words Arabic needs for passive</div>
+      </div>
+      <div class="metric" style="border-color:var(--english);">
+        <div class="metric-value" style="color:var(--english);">1</div>
+        <div class="metric-label">Extra words English needs for passive</div>
+      </div>
+    </div>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English passive is <em>analytic</em> -- it adds a new word (the auxiliary "be") and changes the verb to a participle. Arabic passive is <em>synthetic</em> -- it changes the vowels inside the existing word. The consonant skeleton (k-t-b) is unchanged; only the vowels rotate. In unvoweled Arabic script, the active and passive verbs look identical -- only context disambiguates.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> The passive is another <em>pattern</em> applied to the same root consonants. Active perfect = a-a-a between consonants. Passive perfect = u-i-a between consonants. This is the root-and-pattern system in action: the consonants carry the <em>meaning</em> (writing), the vowels carry the <em>grammar</em> (voice). Change the vowels, change the voice. No extra words needed.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 5 &mdash; Arabic Internal Passive vs. English Auxiliary Passive</h2>
+    <p>Arabic forms the passive by changing internal vowels (kataba "he wrote" becomes kutiba "it was written") -- the consonant skeleton stays fixed, and no auxiliary verb is added. English forms the passive by adding the auxiliary "was" plus a participle ("was written"). Arabic's passive is nonconcatenative morphology in action: vowels encode grammar while consonants encode meaning.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

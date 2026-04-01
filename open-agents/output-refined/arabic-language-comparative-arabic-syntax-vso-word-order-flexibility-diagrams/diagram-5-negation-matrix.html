@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic Negation Matrix -- Six Particles for Six Contexts</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --past: #7c3aed;
+    --past-bg: #f5f0ff;
+    --present: #2d8a4e;
+    --present-bg: #f0faf0;
+    --future: #e63946;
+    --future-bg: #fef3f0;
+    --arabic: #d4770b;
+    --arabic-bg: #fdf6ec;
+    --english: #0077b6;
+    --english-bg: #e8f4f8;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+    --highlight: #fef3c7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --past: #a78bfa;
+      --past-bg: #1a1030;
+      --present: #5cb87a;
+      --present-bg: #102a18;
+      --future: #ff6b6b;
+      --future-bg: #2a1520;
+      --arabic: #f0c050;
+      --arabic-bg: #2a2210;
+      --english: #5dade2;
+      --english-bg: #102030;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+      --highlight: #3a3210;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  /* Matrix */
+  .neg-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+  .neg-matrix th, .neg-matrix td {
+    padding: 0.6rem 0.7rem;
+    border: 2px solid var(--border);
+    vertical-align: top;
+  }
+  .neg-matrix th {
+    font-weight: 700;
+    text-align: center;
+  }
+  .col-verbal { min-width: 200px; }
+  .col-nominal { min-width: 200px; }
+  .header-time { text-align: left !important; width: 80px; }
+  .header-verbal { background: var(--accent-light); color: var(--accent); }
+  .header-nominal { background: var(--arabic-bg); color: var(--arabic); }
+
+  .time-past { background: var(--past-bg); color: var(--past); font-weight: 700; }
+  .time-present { background: var(--present-bg); color: var(--present); font-weight: 700; }
+  .time-future { background: var(--future-bg); color: var(--future); font-weight: 700; }
+
+  .particle-name {
+    font-size: 1.1rem;
+    font-weight: 900;
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    direction: rtl;
+  }
+  .particle-translit {
+    font-style: italic;
+    font-weight: 700;
+    margin-top: 0.1rem;
+  }
+  .particle-verb-form {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .particle-example {
+    font-size: 0.78rem;
+    margin-top: 0.3rem;
+    padding: 0.3rem 0.4rem;
+    background: var(--bg);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .particle-example .ar {
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    direction: rtl;
+    display: block;
+  }
+  .cell-empty {
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Special lam highlight */
+  .lam-highlight {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    background: var(--highlight);
+    border: 2px solid var(--past);
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+  .lam-highlight strong { color: var(--past); }
+
+  /* English comparison */
+  .eng-neg {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border: 2px solid var(--english);
+    text-align: center;
+  }
+  .eng-neg .eng-title { color: var(--english); font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .eng-neg .eng-word {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--english);
+  }
+  .eng-neg .eng-note { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Arabic Negation Matrix -- Six Particles for Six Contexts</div>
+
+    <table class="neg-matrix">
+      <thead>
+        <tr>
+          <th class="header-time">Time</th>
+          <th class="header-verbal col-verbal">Verbal Sentence</th>
+          <th class="header-verbal col-verbal">Verbal (special)</th>
+          <th class="header-nominal col-nominal">Nominal Sentence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time-past">PAST</td>
+          <td>
+            <div class="particle-name">لَمْ</div>
+            <div class="particle-translit">lam</div>
+            <div class="particle-verb-form">+ imperfect JUSSIVE mood</div>
+            <div class="particle-example">
+              <span class="ar">لَمْ يَكْتُبْ</span>
+              <em>lam yaktub</em> = "he did not write"
+            </div>
+          </td>
+          <td>
+            <div class="particle-name">لَمّا</div>
+            <div class="particle-translit">lamma</div>
+            <div class="particle-verb-form">+ imperfect JUSSIVE mood</div>
+            <div class="particle-example">
+              <span class="ar">لَمّا يَكْتُبْ</span>
+              <em>lamma yaktub</em> = "he has <strong>not yet</strong> written"
+            </div>
+            <div style="font-size:0.72rem;color:var(--past);margin-top:0.2rem;">Implies future expectation</div>
+          </td>
+          <td class="cell-empty">--</td>
+        </tr>
+        <tr>
+          <td class="time-present">PRESENT</td>
+          <td>
+            <div class="particle-name">لا</div>
+            <div class="particle-translit">la</div>
+            <div class="particle-verb-form">+ imperfect INDICATIVE mood</div>
+            <div class="particle-example">
+              <span class="ar">لا يَكْتُبُ</span>
+              <em>la yaktubu</em> = "he does not write"
+            </div>
+          </td>
+          <td class="cell-empty">--</td>
+          <td>
+            <div class="particle-name">لَيْسَ</div>
+            <div class="particle-translit">laysa</div>
+            <div class="particle-verb-form">conjugated verb (no other verb needed)</div>
+            <div class="particle-example">
+              <span class="ar">لَيْسَ كَبيراً</span>
+              <em>laysa kabir-an</em> = "it is not big"
+            </div>
+            <div style="font-size:0.72rem;color:var(--present);margin-top:0.2rem;">Verb form, present meaning</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="time-future">FUTURE</td>
+          <td>
+            <div class="particle-name">لَنْ</div>
+            <div class="particle-translit">lan</div>
+            <div class="particle-verb-form">+ imperfect SUBJUNCTIVE mood</div>
+            <div class="particle-example">
+              <span class="ar">لَنْ يَكْتُبَ</span>
+              <em>lan yaktuba</em> = "he will not write"
+            </div>
+          </td>
+          <td class="cell-empty">--</td>
+          <td class="cell-empty">--</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="lam-highlight">
+      <strong>The counterintuitive lam:</strong> To negate the past, Arabic uses <em>lam</em> + the <strong>imperfect</strong> (present-form) verb in jussive mood. The verb <em>looks</em> present-tense (<em>yaktub</em>) but <em>means</em> past tense. The negation particle overrides the verb's time reference. Nothing like this exists in English.
+    </div>
+
+    <div class="eng-neg">
+      <div class="eng-title">English Negation (All Contexts)</div>
+      <div class="eng-word">not</div>
+      <div class="eng-note">"did <strong>not</strong> write" / "does <strong>not</strong> write" / "will <strong>not</strong> write" / "is <strong>not</strong> big"<br>One word. Tense carried by auxiliary, not by negation particle.</div>
+    </div>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English has one negation word ("not") and varies the auxiliary verb for tense: did not / does not / will not / is not. Arabic has six negation particles, each encoding tense/aspect information that English puts in the auxiliary. The Arabic negation particle alone tells you the time reference -- before you even hear the verb.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> Arabic negation is a <em>matrix</em> where each cell is defined by the intersection of time (past/present/future) and sentence type (verbal/nominal). Each cell has its own dedicated particle <em>and</em> its own required verb mood. The six particles are not random vocabulary -- they are systematic fills in a structured grid. Learn the grid and the particles organize themselves.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 5 &mdash; The Arabic Negation Matrix</h2>
+    <p>Arabic uses six distinct negation particles, each tied to a specific tense/aspect and sentence type. English uses one word ("not") for all contexts. Each Arabic negation particle encodes time reference information, and some require specific verb moods -- creating a structured grid where tense, sentence type, and negation particle interlock systematically.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

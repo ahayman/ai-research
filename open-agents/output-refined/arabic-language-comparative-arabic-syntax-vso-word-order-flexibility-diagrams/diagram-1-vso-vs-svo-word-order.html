@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic VSO vs. SVO Word Order Comparison</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --verb: #e63946;
+    --verb-bg: #fef3f0;
+    --subj: #2d8a4e;
+    --subj-bg: #f0faf0;
+    --obj: #7c3aed;
+    --obj-bg: #f5f0ff;
+    --arabic: #d4770b;
+    --arabic-bg: #fdf6ec;
+    --english: #0077b6;
+    --english-bg: #e8f4f8;
+    --agree-yes: #2d8a4e;
+    --agree-no: #e63946;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --verb: #ff6b6b;
+      --verb-bg: #2a1520;
+      --subj: #5cb87a;
+      --subj-bg: #102a18;
+      --obj: #a78bfa;
+      --obj-bg: #1a1030;
+      --arabic: #f0c050;
+      --arabic-bg: #2a2210;
+      --english: #5dade2;
+      --english-bg: #102030;
+      --agree-yes: #5cb87a;
+      --agree-no: #ff6b6b;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  /* Order comparison rows */
+  .order-row {
+    display: flex;
+    align-items: stretch;
+    margin: 1rem 0;
+    gap: 0;
+  }
+  .order-label {
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 10px 0 0 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .order-block {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    border: 2px solid;
+    min-width: 140px;
+    position: relative;
+  }
+  .order-block:last-child { border-radius: 0 10px 10px 0; }
+  .block-letter { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+  .block-role { font-size: 0.75rem; font-weight: 600; opacity: 0.8; }
+  .block-arabic { font-size: 1.1rem; font-family: 'Traditional Arabic', 'Scheherazade', serif; direction: rtl; margin-top: 0.3rem; }
+  .block-translit { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+  .block-english { font-size: 0.85rem; font-weight: 600; margin-top: 0.2rem; }
+
+  .v-block { background: var(--verb-bg); border-color: var(--verb); }
+  .v-block .block-letter, .v-block .block-role { color: var(--verb); }
+  .s-block { background: var(--subj-bg); border-color: var(--subj); }
+  .s-block .block-letter, .s-block .block-role { color: var(--subj); }
+  .o-block { background: var(--obj-bg); border-color: var(--obj); }
+  .o-block .block-letter, .o-block .block-role { color: var(--obj); }
+
+  .label-arabic { background: var(--arabic-bg); border: 2px solid var(--arabic); color: var(--arabic); }
+  .label-english { background: var(--english-bg); border: 2px solid var(--english); color: var(--english); }
+
+  /* Agreement badges */
+  .agree-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+    font-size: 0.8rem;
+  }
+  .agree-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .agree-yes { background: #dcfce7; color: var(--agree-yes); }
+  .agree-no { background: #fee2e2; color: var(--agree-no); }
+  @media (prefers-color-scheme: dark) {
+    .agree-yes { background: #0a2a12; }
+    .agree-no { background: #2a0a12; }
+  }
+
+  /* Connector arrow */
+  .agreement-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.3rem 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .pattern-note {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+
+  .section-gap { margin-top: 2rem; }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">Arabic VSO Order (Default) -- Verb First</div>
+    <div class="order-row">
+      <div class="order-label label-arabic">Arabic<br>VSO</div>
+      <div class="order-block v-block" style="border-left:none;">
+        <div class="block-letter">V</div>
+        <div class="block-role">VERB</div>
+        <div class="block-arabic">كَتَبَ</div>
+        <div class="block-translit">katab-a</div>
+        <div class="block-english">wrote (m.sg.!)</div>
+      </div>
+      <div class="order-block s-block">
+        <div class="block-letter">S</div>
+        <div class="block-role">SUBJECT</div>
+        <div class="block-arabic">الطُّلّابُ</div>
+        <div class="block-translit">at-tullab-u</div>
+        <div class="block-english">the students (m.pl.)</div>
+      </div>
+      <div class="order-block o-block">
+        <div class="block-letter">O</div>
+        <div class="block-role">OBJECT</div>
+        <div class="block-arabic">الدَّرْسَ</div>
+        <div class="block-translit">ad-dars-a</div>
+        <div class="block-english">the lesson</div>
+      </div>
+    </div>
+    <div class="agree-row">
+      <span class="agree-badge agree-yes">Gender: agrees (masculine)</span>
+      <span class="agree-badge agree-no">Number: SINGULAR verb for PLURAL subject</span>
+    </div>
+    <div class="agreement-arrow">Verb agrees in gender only -- number is suppressed when verb precedes subject</div>
+
+    <div class="section-gap section-title">Arabic SVO Order (Topicalized) -- Subject First</div>
+    <div class="order-row">
+      <div class="order-label label-arabic">Arabic<br>SVO</div>
+      <div class="order-block s-block" style="border-radius: 0;">
+        <div class="block-letter">S</div>
+        <div class="block-role">SUBJECT</div>
+        <div class="block-arabic">الطُّلّابُ</div>
+        <div class="block-translit">at-tullab-u</div>
+        <div class="block-english">the students (m.pl.)</div>
+      </div>
+      <div class="order-block v-block">
+        <div class="block-letter">V</div>
+        <div class="block-role">VERB</div>
+        <div class="block-arabic">كَتَبوا</div>
+        <div class="block-translit">katab-u</div>
+        <div class="block-english">wrote (m.pl.!)</div>
+      </div>
+      <div class="order-block o-block">
+        <div class="block-letter">O</div>
+        <div class="block-role">OBJECT</div>
+        <div class="block-arabic">الدَّرْسَ</div>
+        <div class="block-translit">ad-dars-a</div>
+        <div class="block-english">the lesson</div>
+      </div>
+    </div>
+    <div class="agree-row">
+      <span class="agree-badge agree-yes">Gender: agrees (masculine)</span>
+      <span class="agree-badge agree-yes">Number: PLURAL verb for PLURAL subject</span>
+    </div>
+    <div class="agreement-arrow">Verb agrees in gender AND number when subject precedes verb</div>
+
+    <div class="section-gap section-title">English SVO (Only Option) -- Fixed Order</div>
+    <div class="order-row">
+      <div class="order-label label-english">English<br>SVO</div>
+      <div class="order-block s-block" style="border-radius: 0;">
+        <div class="block-letter">S</div>
+        <div class="block-role">SUBJECT</div>
+        <div class="block-english" style="font-size:1.1rem;">The students</div>
+      </div>
+      <div class="order-block v-block">
+        <div class="block-letter">V</div>
+        <div class="block-role">VERB</div>
+        <div class="block-english" style="font-size:1.1rem;">wrote</div>
+      </div>
+      <div class="order-block o-block">
+        <div class="block-letter">O</div>
+        <div class="block-role">OBJECT</div>
+        <div class="block-english" style="font-size:1.1rem;">the lesson</div>
+      </div>
+    </div>
+    <div class="agree-row">
+      <span class="agree-badge" style="background:var(--surface);color:var(--muted);border:1px solid var(--border);">Gender: no agreement</span>
+      <span class="agree-badge" style="background:var(--surface);color:var(--muted);border:1px solid var(--border);">Number: no agreement (past tense)</span>
+    </div>
+    <div class="agreement-arrow">"Wrote" is invariant -- no agreement with subject in gender or number</div>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English has exactly one grammatical word order (SVO). The verb "wrote" never changes regardless of subject. Arabic has two word orders, and the verb form <em>changes depending on which order is used</em>. The same sentence "the students wrote the lesson" requires a different verb form in VSO vs. SVO.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> Arabic word order is a <em>two-gear system</em>. VSO is the default gear -- narration, event reporting, verb-focused. SVO is the topicalization gear -- the subject is established as the topic being commented on. The verb form itself tells you which gear is active: singular verb = VSO; fully-agreeing verb = SVO. English has only one gear.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 1 &mdash; Arabic VSO vs. SVO Word Order</h2>
+    <p>Arabic permits both VSO (verb-first, default) and SVO (subject-first, topicalized) word order, but the verb changes form depending on which is used. In VSO, the verb agrees only in gender (singular verb for plural subject). In SVO, the verb agrees in both gender and number. English has fixed SVO with no verb agreement changes.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

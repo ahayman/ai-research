@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Kana/Inna Mirror -- Case-Switching Symmetry</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --nom: #2d8a4e;
+    --nom-bg: #dcfce7;
+    --acc: #e63946;
+    --acc-bg: #fee2e2;
+    --kana: #7c3aed;
+    --kana-bg: #f5f0ff;
+    --inna: #d4770b;
+    --inna-bg: #fdf6ec;
+    --neutral: #6c757d;
+    --neutral-bg: #f0f0f5;
+    --english: #0077b6;
+    --english-bg: #e8f4f8;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent: #6b8aff;
+      --accent-light: #1e2a4a;
+      --nom: #5cb87a;
+      --nom-bg: #0a2a12;
+      --acc: #ff6b6b;
+      --acc-bg: #2a0a12;
+      --kana: #a78bfa;
+      --kana-bg: #1a1030;
+      --inna: #f0c050;
+      --inna-bg: #2a2210;
+      --neutral: #888;
+      --neutral-bg: #1e1e30;
+      --english: #5dade2;
+      --english-bg: #102030;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  /* Mirror layout */
+  .mirror-container {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    margin: 1rem 0;
+  }
+  .mirror-panel {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .mirror-center {
+    min-width: 180px;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0.5rem;
+  }
+  .panel-kana { border-color: var(--kana); background: var(--kana-bg); border-radius: 10px 0 0 10px; }
+  .panel-base { border-color: var(--neutral); background: var(--neutral-bg); border-radius: 0; }
+  .panel-inna { border-color: var(--inna); background: var(--inna-bg); border-radius: 0 10px 10px 0; }
+
+  .panel-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  .panel-kana .panel-title { color: var(--kana); }
+  .panel-base .panel-title { color: var(--neutral); }
+  .panel-inna .panel-title { color: var(--inna); }
+
+  .case-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0.5rem 0;
+  }
+  .case-box {
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 2px solid;
+  }
+  .case-nom { background: var(--nom-bg); border-color: var(--nom); color: var(--nom); }
+  .case-acc { background: var(--acc-bg); border-color: var(--acc); color: var(--acc); }
+  .case-label { font-size: 0.7rem; font-weight: 400; opacity: 0.8; }
+
+  .arabic-text {
+    font-family: 'Traditional Arabic', 'Scheherazade', serif;
+    font-size: 1rem;
+    direction: rtl;
+    margin: 0.3rem 0;
+  }
+  .translit { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+  .meaning { font-size: 0.8rem; margin-top: 0.2rem; }
+
+  /* Arrow indicators */
+  .arrow-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 0.3rem 0;
+  }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.85rem;
+  }
+  .summary-table th, .summary-table td {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .summary-table th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .summary-table .kana-row td:first-child { color: var(--kana); font-weight: 700; }
+  .summary-table .inna-row td:first-child { color: var(--inna); font-weight: 700; }
+
+  .english-compare {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: var(--english-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--english);
+    font-size: 0.85rem;
+  }
+  .english-compare strong { color: var(--english); }
+  .pattern-note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--accent-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 0.85rem;
+  }
+  .pattern-note strong { color: var(--accent); }
+  @media (max-width: 750px) {
+    .mirror-container { flex-direction: column; }
+    .mirror-panel { border-radius: 10px !important; }
+    .mirror-center { max-width: none; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="section-title">The Kana/Inna Mirror -- Opposite Case Effects on Nominal Sentences</div>
+
+    <div class="mirror-container">
+      <!-- Kana panel -->
+      <div class="mirror-panel panel-kana">
+        <div class="panel-title">Kana and Her Sisters (verbs)</div>
+        <div class="arabic-text">كانَ الجَوُّ جَميلاً</div>
+        <div class="translit">kana l-jaww-u jamil-an</div>
+        <div class="meaning">"The weather <strong>was</strong> beautiful"</div>
+        <div class="case-pair" style="margin-top:0.8rem;">
+          <div class="case-box case-nom">Subject: NOM <span class="case-label">(stays)</span><br><span class="arabic-text">الجَوُّ</span> -u</div>
+          <div class="arrow-label">Predicate pushed down</div>
+          <div class="case-box case-acc">Predicate: ACC <span class="case-label">(changed!)</span><br><span class="arabic-text">جَميلاً</span> -an</div>
+        </div>
+      </div>
+
+      <!-- Center / base -->
+      <div class="mirror-center panel-base">
+        <div class="panel-title">Bare Nominal</div>
+        <div class="arabic-text">الجَوُّ جَميلٌ</div>
+        <div class="translit">al-jaww-u jamil-un</div>
+        <div class="meaning">"The weather [is] beautiful"</div>
+        <div class="case-pair" style="margin-top:0.8rem;">
+          <div class="case-box case-nom">Subject: NOM<br>-u</div>
+          <div class="case-box case-nom">Predicate: NOM<br>-un</div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">Both nominative</div>
+      </div>
+
+      <!-- Inna panel -->
+      <div class="mirror-panel panel-inna">
+        <div class="panel-title">Inna and Her Sisters (particles)</div>
+        <div class="arabic-text">إِنَّ الجَوَّ جَميلٌ</div>
+        <div class="translit">inna l-jaww-a jamil-un</div>
+        <div class="meaning">"<strong>Indeed</strong>, the weather is beautiful"</div>
+        <div class="case-pair" style="margin-top:0.8rem;">
+          <div class="case-box case-acc">Subject: ACC <span class="case-label">(changed!)</span><br><span class="arabic-text">الجَوَّ</span> -a</div>
+          <div class="arrow-label">Subject pushed down</div>
+          <div class="case-box case-nom">Predicate: NOM <span class="case-label">(stays)</span><br><span class="arabic-text">جَميلٌ</span> -un</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary table -->
+    <div class="section-title" style="margin-top:1.5rem;">The Mirror Symmetry</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Modifier</th>
+          <th>Subject Case</th>
+          <th>Predicate Case</th>
+          <th>What Changed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;color:var(--neutral);">(none)</td>
+          <td class="case-nom" style="font-weight:600;">Nominative (-u)</td>
+          <td class="case-nom" style="font-weight:600;">Nominative (-un)</td>
+          <td style="color:var(--muted);">Nothing -- baseline</td>
+        </tr>
+        <tr class="kana-row">
+          <td>Kana (verb)</td>
+          <td class="case-nom" style="font-weight:600;">Nominative (-u)</td>
+          <td class="case-acc" style="font-weight:600;">Accusative (-an)</td>
+          <td>Predicate changed</td>
+        </tr>
+        <tr class="inna-row">
+          <td>Inna (particle)</td>
+          <td class="case-acc" style="font-weight:600;">Accusative (-a)</td>
+          <td class="case-nom" style="font-weight:600;">Nominative (-un)</td>
+          <td>Subject changed</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="english-compare">
+      <strong>English comparison:</strong> English has emphasis words ("indeed," "surely") and auxiliary verbs ("was," "became") -- but they never change the grammatical form of nouns or adjectives. In Arabic, <em>kana</em> and <em>inna</em> cause visible morphological changes (case endings shift). English particles are semantically meaningful but syntactically inert; Arabic particles are syntactically active.
+    </div>
+
+    <div class="pattern-note">
+      <strong>The pattern:</strong> <em>Kana</em> pushes the predicate down (NOM to ACC). <em>Inna</em> pushes the subject down (NOM to ACC). They are <strong>exact mirrors</strong>. Learn the rule for one and you know the rule for the other -- just swap which element changes. This mirror symmetry is one of the most elegant structural features of Arabic grammar.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 4 &mdash; The Kana/Inna Mirror Symmetry</h2>
+    <p>Arabic nominal sentences can be modified by "kana and her sisters" (verbs) or "inna and her sisters" (particles). They produce exactly opposite case effects: kana keeps the subject nominative and changes the predicate to accusative; inna changes the subject to accusative and keeps the predicate nominative. A perfect mirror.</p>
+  </figcaption>
+</figure>
+</body>
+</html>
