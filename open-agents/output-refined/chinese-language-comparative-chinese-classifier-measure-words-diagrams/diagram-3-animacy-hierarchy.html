@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animacy Hierarchy: Classifier Selection by Entity Type</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --human: #8b5cf6; --human-bg: #ede9fe;
+    --animal: #e67e22; --animal-bg: #fef3e2;
+    --object: #059669; --object-bg: #d1fae5;
+    --muted: #6c757d; --caption-bg: #f8f9fa; --english: #6366f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --human: #a78bfa; --human-bg: #2e2050;
+      --animal: #f59e0b; --animal-bg: #4a3520;
+      --object: #34d399; --object-bg: #14352d;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e; --english: #818cf8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 900px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .hier-title {
+    text-align: center; font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .hier-sub { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  /* Ladder */
+  .ladder {
+    display: flex; flex-direction: column; gap: 0;
+    max-width: 700px; margin: 0 auto;
+  }
+  .tier {
+    display: grid; grid-template-columns: 100px 1fr; gap: 0;
+    border: 1px solid var(--border); border-bottom: none;
+  }
+  .tier:last-child { border-bottom: 1px solid var(--border); }
+  .tier-rank {
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.82rem; text-align: center;
+    padding: 0.6rem 0.3rem; border-right: 2px solid var(--border);
+  }
+  .tier-content {
+    display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem;
+    flex-wrap: wrap;
+  }
+  .t-human .tier-rank { background: var(--human-bg); color: var(--human); }
+  .t-human .tier-content { background: color-mix(in srgb, var(--human-bg) 50%, var(--bg)); }
+  .t-animal .tier-rank { background: var(--animal-bg); color: var(--animal); }
+  .t-animal .tier-content { background: color-mix(in srgb, var(--animal-bg) 50%, var(--bg)); }
+  .t-object .tier-rank { background: var(--object-bg); color: var(--object); }
+  .t-object .tier-content { background: color-mix(in srgb, var(--object-bg) 50%, var(--bg)); }
+  .cl-badge {
+    display: inline-flex; flex-direction: column; align-items: center;
+    padding: 0.4rem 0.6rem; border-radius: 6px; border: 2px solid;
+    background: var(--bg); min-width: 65px;
+  }
+  .cl-badge .char { font-size: 1.2rem; font-weight: 700; }
+  .cl-badge .py { font-size: 0.7rem; color: var(--muted); font-style: italic; }
+  .cl-badge .role { font-size: 0.68rem; font-weight: 600; }
+  .t-human .cl-badge { border-color: var(--human); }
+  .t-human .cl-badge .char, .t-human .cl-badge .role { color: var(--human); }
+  .t-animal .cl-badge { border-color: var(--animal); }
+  .t-animal .cl-badge .char, .t-animal .cl-badge .role { color: var(--animal); }
+  .t-object .cl-badge { border-color: var(--object); }
+  .t-object .cl-badge .char, .t-object .cl-badge .role { color: var(--object); }
+  .tier-examples { font-size: 0.8rem; color: var(--muted); flex: 1; }
+  /* Arrow between tiers */
+  .tier-arrow {
+    display: flex; justify-content: center; padding: 0.2rem;
+    font-size: 0.75rem; color: var(--muted);
+  }
+  /* Priority rule */
+  .priority-box {
+    margin-top: 1.5rem; padding: 1rem;
+    background: var(--bg); border: 2px solid var(--accent);
+    border-radius: 8px; text-align: center;
+  }
+  .priority-box h4 { color: var(--accent); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .priority-flow {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    flex-wrap: wrap; font-size: 0.9rem;
+  }
+  .pf-step {
+    padding: 0.35rem 0.7rem; border-radius: 5px; font-weight: 700;
+  }
+  .pf-arrow { color: var(--muted); }
+  .pf-human { background: var(--human-bg); color: var(--human); }
+  .pf-animal { background: var(--animal-bg); color: var(--animal); }
+  .pf-func { background: color-mix(in srgb, var(--accent) 15%, var(--bg)); color: var(--accent); }
+  .pf-shape { background: var(--object-bg); color: var(--object); }
+  .pf-ge { background: var(--surface); color: var(--muted); border: 1px dashed var(--muted); }
+  /* English comparison */
+  .en-box {
+    margin-top: 1rem; padding: 0.8rem 1rem;
+    background: color-mix(in srgb, var(--english) 8%, var(--bg));
+    border: 1px solid var(--english); border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  .en-box h4 { color: var(--english); font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .en-parallel { font-weight: 600; color: var(--english); }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="hier-title">Animacy Hierarchy in Chinese Classifiers</div>
+    <div class="hier-sub">Classifier selection tracks animacy and social status -- the more animate, the more specific the classifier</div>
+
+    <div class="ladder">
+      <div class="tier t-human">
+        <div class="tier-rank">Humans<br>(polite)</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">位</span><span class="py">wei</span><span class="role">respectful</span></div>
+          <div class="tier-examples">一位老师 (a teacher) | 一位客人 (a guest) | 一位女士 (a lady)<br>Signals respect and politeness</div>
+        </div>
+      </div>
+      <div class="tier t-human">
+        <div class="tier-rank">Humans<br>(formal)</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">名</span><span class="py">ming</span><span class="role">official</span></div>
+          <div class="tier-examples">三名学生 (three students) | 一名警察 (a police officer)<br>Administrative / official counting</div>
+        </div>
+      </div>
+      <div class="tier t-human">
+        <div class="tier-rank">Humans<br>(neutral)</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">个</span><span class="py">ge</span><span class="role">general</span></div>
+          <div class="cl-badge"><span class="char">口</span><span class="py">kou</span><span class="role">family</span></div>
+          <div class="tier-examples">一个人 (a person) | 一家三口人 (family of 3)<br>口 literally "mouth" -- mouths to feed</div>
+        </div>
+      </div>
+      <div class="tier t-animal">
+        <div class="tier-rank">Large<br>animals</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">头</span><span class="py">tou</span><span class="role">livestock</span></div>
+          <div class="tier-examples">一头牛 (cow) | 一头猪 (pig) | 一头大象 (elephant)<br>Literally "head" -- like English <span class="en-parallel">"head of cattle"</span></div>
+        </div>
+      </div>
+      <div class="tier t-animal">
+        <div class="tier-rank">Horses</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">匹</span><span class="py">pi</span><span class="role">equine</span></div>
+          <div class="tier-examples">一匹马 (a horse)<br>Dedicated classifier for the historically prestigious animal</div>
+        </div>
+      </div>
+      <div class="tier t-animal">
+        <div class="tier-rank">Medium/<br>small</div>
+        <div class="tier-content">
+          <div class="cl-badge"><span class="char">只</span><span class="py">zhi</span><span class="role">individual</span></div>
+          <div class="tier-examples">一只猫 (cat) | 一只狗 (dog) | 一只鸟 (bird) | 一只蝴蝶 (butterfly)<br>Default animal classifier for most creatures</div>
+        </div>
+      </div>
+      <div class="tier t-object">
+        <div class="tier-rank">Objects</div>
+        <div class="tier-content">
+          <div class="tier-examples" style="font-style:italic;">
+            Objects use <b>shape classifiers</b> (条, 张, 颗, 块...) or <b>function classifiers</b> (本, 辆, 台...)<br>
+            Animacy yields to shape/function at the object level
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="priority-box">
+      <h4>Classifier Selection Priority</h4>
+      <div class="priority-flow">
+        <span class="pf-step pf-human">Animacy</span>
+        <span class="pf-arrow">></span>
+        <span class="pf-step pf-func">Function</span>
+        <span class="pf-arrow">></span>
+        <span class="pf-step pf-shape">Shape</span>
+        <span class="pf-arrow">></span>
+        <span class="pf-step pf-ge">个 (default)</span>
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem;">
+        A cat gets 只 (animacy) even though cats are not "long thin" or "flat." Animacy overrides shape.
+      </div>
+    </div>
+
+    <div class="en-box">
+      <h4>English Comparison: No Animacy-Based Counting</h4>
+      <p>English says "three people," "three cats," "three tables" -- the same structure for all. The <b>only</b> surviving trace is <span class="en-parallel">"fifty head of cattle"</span>, which parallels Chinese 五十头牛 exactly. Chinese systematized what English left as an isolated survival.</p>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Animacy Hierarchy: How Chinese Classifiers Track Life and Status</h2>
+    <p>Chinese classifier selection follows a clear hierarchy: humans get social-status classifiers (respectful, formal, neutral), large livestock get 头 ("head"), horses get their own dedicated 匹, and smaller animals get 只. At the object level, shape and function take over. English treats all of these the same: "three X."</p>
+  </figcaption>
+</figure>
+</body>
+</html>

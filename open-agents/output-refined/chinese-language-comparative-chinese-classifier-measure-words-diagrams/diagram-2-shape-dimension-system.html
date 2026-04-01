@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shape Classifiers: The Dimensional System</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --d0: #8b5cf6; --d0-bg: #ede9fe;
+    --d1: #e67e22; --d1-bg: #fef3e2;
+    --d2: #2563eb; --d2-bg: #dbeafe;
+    --d3: #059669; --d3-bg: #d1fae5;
+    --rigid: #ef4444; --flex: #f59e0b;
+    --muted: #6c757d; --caption-bg: #f8f9fa; --english: #6366f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --d0: #a78bfa; --d0-bg: #2e2050;
+      --d1: #f59e0b; --d1-bg: #4a3520;
+      --d2: #6b8aff; --d2-bg: #1e2a4a;
+      --d3: #34d399; --d3-bg: #14352d;
+      --rigid: #f87171; --flex: #fbbf24;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e; --english: #818cf8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .dim-title {
+    text-align: center; font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .dim-subtitle {
+    text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem;
+  }
+  .dim-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+  }
+  .dim-card {
+    border-radius: 8px; padding: 1rem; border: 2px solid;
+  }
+  .d0-card { background: var(--d0-bg); border-color: var(--d0); }
+  .d1-card { background: var(--d1-bg); border-color: var(--d1); }
+  .d2-card { background: var(--d2-bg); border-color: var(--d2); }
+  .d3-card { background: var(--d3-bg); border-color: var(--d3); }
+  .dim-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+  .d0-card .dim-label { color: var(--d0); }
+  .d1-card .dim-label { color: var(--d1); }
+  .d2-card .dim-label { color: var(--d2); }
+  .d3-card .dim-label { color: var(--d3); }
+  .dim-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
+  .cl-entry {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 5px;
+    padding: 0.5rem 0.6rem; margin-bottom: 0.5rem;
+  }
+  .cl-header {
+    display: flex; align-items: baseline; gap: 0.4rem; margin-bottom: 0.3rem;
+  }
+  .cl-char { font-size: 1.3rem; font-weight: 700; }
+  .cl-pinyin { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+  .cl-meaning { font-size: 0.78rem; font-weight: 600; }
+  .cl-examples { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+  .cl-examples span { white-space: nowrap; }
+  /* Sub-distinction box */
+  .distinction-box {
+    margin-top: 1rem; padding: 0.8rem 1rem;
+    background: var(--bg); border: 2px solid var(--d1);
+    border-radius: 6px;
+  }
+  .dist-title { font-weight: 700; color: var(--d1); font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .dist-row {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem;
+    align-items: center; margin-bottom: 0.3rem; font-size: 0.85rem;
+  }
+  .dist-left { text-align: right; }
+  .dist-vs { text-align: center; color: var(--muted); font-weight: 700; }
+  .dist-right { text-align: left; }
+  .dist-tag {
+    display: inline-block; padding: 0.1rem 0.4rem; border-radius: 3px;
+    font-size: 0.72rem; font-weight: 700; color: white;
+  }
+  .tag-flex { background: var(--flex); }
+  .tag-rigid { background: var(--rigid); }
+  .tag-small { background: var(--d0); }
+  .tag-tiny { background: color-mix(in srgb, var(--d0) 70%, black); }
+  /* English comparison */
+  .en-compare {
+    margin-top: 1.5rem; padding: 0.8rem 1rem;
+    background: color-mix(in srgb, var(--english) 8%, var(--bg));
+    border: 1px solid var(--english); border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  .en-compare h4 { color: var(--english); font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .en-traces { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.3rem; }
+  .en-trace {
+    padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.78rem;
+    background: var(--english-bg, #e8e8ff); color: var(--english);
+    border: 1px solid var(--english);
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .legend {
+    display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+    margin-top: 1rem; font-size: 0.78rem; color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="dim-title">Shape Classifiers: Organized by Dimensionality</div>
+    <div class="dim-subtitle">Not arbitrary memorization -- a perceptual system based on how objects look in physical space</div>
+
+    <div class="dim-grid">
+      <!-- 0D -->
+      <div class="dim-card d0-card">
+        <div class="dim-label">0D -- Point / Compact</div>
+        <div class="dim-desc">Small, round, self-contained</div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--d0);">颗</span>
+            <span class="cl-pinyin">ke</span>
+            <span class="cl-meaning">small round</span>
+          </div>
+          <div class="cl-examples">
+            <span>一颗珍珠 pearl</span> |
+            <span>一颗星星 star</span> |
+            <span>一颗牙 tooth</span> |
+            <span>一颗心 heart</span>
+          </div>
+        </div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--d0);">粒</span>
+            <span class="cl-pinyin">li</span>
+            <span class="cl-meaning">tiny grain</span>
+          </div>
+          <div class="cl-examples">
+            <span>一粒米 rice</span> |
+            <span>一粒沙 sand</span> |
+            <span>一粒种子 seed</span> |
+            <span>一粒药 pill</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1D -->
+      <div class="dim-card d1-card">
+        <div class="dim-label">1D -- Line / Elongated</div>
+        <div class="dim-desc">Length >> width or height</div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--flex);">条</span>
+            <span class="cl-pinyin">tiao</span>
+            <span class="cl-meaning">long FLEXIBLE</span>
+            <span class="dist-tag tag-flex">FLEX</span>
+          </div>
+          <div class="cl-examples">
+            <span>一条蛇 snake</span> |
+            <span>一条河 river</span> |
+            <span>一条路 road</span> |
+            <span>一条围巾 scarf</span>
+          </div>
+        </div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--rigid);">根</span>
+            <span class="cl-pinyin">gen</span>
+            <span class="cl-meaning">long RIGID</span>
+            <span class="dist-tag tag-rigid">RIGID</span>
+          </div>
+          <div class="cl-examples">
+            <span>一根筷子 chopstick</span> |
+            <span>一根骨头 bone</span> |
+            <span>一根柱子 pillar</span> |
+            <span>一根香蕉 banana</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2D -->
+      <div class="dim-card d2-card">
+        <div class="dim-label">2D -- Surface / Flat</div>
+        <div class="dim-desc">Area >> thickness</div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--d2);">张</span>
+            <span class="cl-pinyin">zhang</span>
+            <span class="cl-meaning">flat surface</span>
+          </div>
+          <div class="cl-examples">
+            <span>一张纸 paper</span> |
+            <span>一张桌子 table</span> |
+            <span>一张床 bed</span> |
+            <span>一张照片 photo</span> |
+            <span>一张脸 face</span>
+          </div>
+        </div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--d2);">片</span>
+            <span class="cl-pinyin">pian</span>
+            <span class="cl-meaning">thin slice/flake</span>
+          </div>
+          <div class="cl-examples">
+            <span>一片面包 bread slice</span> |
+            <span>一片叶子 leaf</span> |
+            <span>一片药 pill/tab</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D -->
+      <div class="dim-card d3-card">
+        <div class="dim-label">3D -- Volume / Chunk</div>
+        <div class="dim-desc">Solid mass, substantial</div>
+        <div class="cl-entry">
+          <div class="cl-header">
+            <span class="cl-char" style="color:var(--d3);">块</span>
+            <span class="cl-pinyin">kuai</span>
+            <span class="cl-meaning">solid chunk</span>
+          </div>
+          <div class="cl-examples">
+            <span>一块石头 rock</span> |
+            <span>一块肉 meat</span> |
+            <span>一块蛋糕 cake</span> |
+            <span>一块手表 watch</span> |
+            <span>一块钱 yuan/$</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key distinctions -->
+    <div class="distinction-box">
+      <div class="dist-title">Key Sub-Distinctions Within Dimensions</div>
+      <div class="dist-row">
+        <div class="dist-left"><b>条</b> tiao <span class="dist-tag tag-flex">FLEXIBLE</span><br><span style="font-size:0.78rem;color:var(--muted);">snake, river, rope, scarf</span></div>
+        <div class="dist-vs">vs.</div>
+        <div class="dist-right"><b>根</b> gen <span class="dist-tag tag-rigid">RIGID</span><br><span style="font-size:0.78rem;color:var(--muted);">chopstick, bone, pillar</span></div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-left"><b>颗</b> ke <span class="dist-tag tag-small">SMALL ROUND</span><br><span style="font-size:0.78rem;color:var(--muted);">pearl, star, tooth, bullet</span></div>
+        <div class="dist-vs">vs.</div>
+        <div class="dist-right"><b>粒</b> li <span class="dist-tag tag-tiny">TINY GRAIN</span><br><span style="font-size:0.78rem;color:var(--muted);">rice, sand, seed, pill</span></div>
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); text-align:center; margin-top:0.5rem;">
+        Within the same dimension, Chinese distinguishes physical properties (flexible vs. rigid, small vs. tiny) -- finer perceptual resolution than English ever requires.
+      </div>
+    </div>
+
+    <div class="en-compare">
+      <h4>English: Scattered Traces of the Same Perceptual Logic</h4>
+      <p>English has a few shape-based measure expressions, but they are <b>not systematic and not mandatory</b>:</p>
+      <div class="en-traces">
+        <span class="en-trace">"a strand of hair" (1D)</span>
+        <span class="en-trace">"a sheet of paper" (2D)</span>
+        <span class="en-trace">"a slab of concrete" (3D)</span>
+        <span class="en-trace">"a grain of sand" (0D)</span>
+        <span class="en-trace">"a chunk of meat" (3D)</span>
+      </div>
+      <p style="margin-top:0.5rem;">You CAN say these in English -- but you can also say "three papers" or "some sand" without any shape word. Chinese makes the shape classification <b>grammatically mandatory</b> every time you count.</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--d0);"></div> 0D (point/compact)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--d1);"></div> 1D (line/elongated)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--d2);"></div> 2D (surface/flat)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--d3);"></div> 3D (volume/chunk)</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Shape Classifiers: A Perceptual Dimension System</h2>
+    <p>Chinese classifiers organize objects by their dominant physical dimension: 0D (point-like: ke, li), 1D (elongated: tiao flexible, gen rigid), 2D (flat: zhang, pian), 3D (chunky: kuai). Within each dimension, further distinctions capture flexibility, size, and texture. This is not memorization -- it is a coherent perceptual system.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

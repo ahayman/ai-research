@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Semantics | Chinese Language Deep Dive</title>
+<meta name="description" content="How Chinese builds vocabulary from visible parts -- compound formation, morpheme networks, chengyu, and the transparent number system. One morpheme pool vs. English's three historical layers.">
+<style>
+:root {
+  --color-primary: #6366F1;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #4338CA;
+  --color-primary-bg: #EEF2FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #6366F1;
+  --color-link-hover: #4338CA;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #6366F1;
+  --color-takeaway-bg: #EEF2FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+[data-theme="dark"] {
+  --color-primary: #818CF8; --color-primary-light: #C4B5FD; --color-primary-dark: #6366F1; --color-primary-bg: #1E1B4B;
+  --color-text: #E2E8F0; --color-text-secondary: #94A3B8; --color-text-muted: #64748B;
+  --color-bg: #0F172A; --color-bg-alt: #1E293B; --color-bg-sidebar: #1E293B;
+  --color-border: #334155; --color-border-light: #1E293B;
+  --color-heading: #F1F5F9; --color-link: #818CF8; --color-link-hover: #A5B4FC;
+  --color-code-bg: #1E293B; --color-table-stripe: #1E293B; --color-table-header: #334155;
+  --color-takeaway-border: #818CF8; --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1E293B; --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9; --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569; --color-scrollbar-hover: #64748B;
+  --color-success: #34D399; --color-success-bg: #064E3B;
+  --color-warning: #FBBF24; --color-warning-bg: #451A03;
+  --color-danger: #F87171; --color-danger-bg: #450A0A;
+  --color-info: #60A5FA; --color-info-bg: #1E3A5F;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body { font-family: var(--font-sans); font-size: 1rem; line-height: var(--line-height); color: var(--color-text); background: var(--color-bg); -webkit-font-smoothing: antialiased; }
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); position: fixed; top: 0; left: 0; height: 100vh; background: var(--color-bg-sidebar); border-right: 1px solid var(--color-border); overflow-y: auto; z-index: 100; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+.sidebar::-webkit-scrollbar { width: 4px; } .sidebar::-webkit-scrollbar-track { background: transparent; } .sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; } .sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+.sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); background: linear-gradient(135deg, #4338CA 0%, #6366F1 100%); color: #fff; flex-shrink: 0; }
+.sidebar-title { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.sidebar-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; }
+.sidebar-back { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem; font-size: 0.8rem; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid var(--color-border); font-weight: 600; transition: background var(--transition); }
+.sidebar-back:hover { background: var(--color-bg); text-decoration: none; }
+.sidebar-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; }
+.sidebar-nav-section { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-top: 0.5rem; }
+.sidebar-link { display: block; padding: 0.4rem 1.25rem 0.4rem 1.5rem; font-size: 0.82rem; color: var(--color-text-secondary); text-decoration: none; border-left: 3px solid transparent; transition: all var(--transition); line-height: 1.4; }
+.sidebar-link:hover { color: var(--color-primary); background: var(--color-bg); text-decoration: none; }
+.sidebar-link.active { color: var(--color-primary); border-left-color: var(--color-primary); background: var(--color-bg); font-weight: 600; }
+.sidebar-link.sub { padding-left: 2.25rem; font-size: 0.78rem; }
+.sidebar-controls { padding: 0.75rem 1.25rem; border-top: 1px solid var(--color-border); flex-shrink: 0; }
+.theme-toggle { display: flex; align-items: center; gap: 0.5rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer; width: 100%; transition: all var(--transition); }
+.theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.main { flex: 1; margin-left: var(--sidebar-width); min-width: 0; }
+.content { max-width: var(--content-max-width); margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+h1 { font-size: 2.2rem; font-weight: 800; color: var(--color-heading); line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+h1 .subtitle { display: block; font-size: 1rem; font-weight: 500; color: var(--color-text-secondary); margin-top: 0.5rem; letter-spacing: 0; }
+h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-heading); margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--color-border); line-height: 1.3; }
+h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-heading); margin-top: 2rem; margin-bottom: 0.75rem; line-height: 1.3; }
+h4 { font-size: 1.05rem; font-weight: 600; color: var(--color-heading); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+p { margin-bottom: 1rem; color: var(--color-text); }
+a { color: var(--color-link); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+ul, ol { margin: 0 0 1rem 1.5rem; color: var(--color-text); }
+li { margin-bottom: 0.35rem; }
+strong { color: var(--color-heading); }
+em { font-style: italic; }
+blockquote { border-left: 4px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 1.25rem 0; background: var(--color-primary-bg); border-radius: 0 8px 8px 0; font-style: italic; color: var(--color-text-secondary); }
+.table-wrapper { overflow-x: auto; margin: 1rem 0 1.5rem; border-radius: 8px; border: 1px solid var(--color-border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th { background: var(--color-table-header); font-weight: 600; text-align: left; padding: 0.75rem 1rem; color: var(--color-heading); border-bottom: 2px solid var(--color-border); }
+td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+.diagram-container { background: var(--color-diagram-bg); border: 1px solid var(--color-diagram-border); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container iframe { width: 100%; border: none; border-radius: 6px; background: transparent; }
+[data-theme="dark"] .diagram-container iframe { filter: invert(0.88) hue-rotate(180deg); }
+.diagram-caption { text-align: center; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text-muted); font-style: italic; line-height: 1.5; padding: 0 1rem; }
+.callout { border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; border-left: 4px solid; font-size: 0.9rem; }
+.callout-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+.callout-info { border-color: var(--color-info); background: var(--color-info-bg); } .callout-info .callout-title { color: var(--color-info); }
+.callout-warning { border-color: var(--color-warning); background: var(--color-warning-bg); } .callout-warning .callout-title { color: var(--color-warning); }
+.callout-success { border-color: var(--color-success); background: var(--color-success-bg); } .callout-success .callout-title { color: var(--color-success); }
+.takeaway { background: var(--color-takeaway-bg); border: 1px solid var(--color-takeaway-border); border-left: 4px solid var(--color-takeaway-border); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.takeaway-title { font-weight: 700; font-size: 0.85rem; color: var(--color-primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.glossary-term { border-bottom: 1px dashed var(--color-primary); cursor: help; position: relative; color: var(--color-primary); }
+.glossary-term:hover .glossary-def, .glossary-term:focus .glossary-def { display: block; }
+.glossary-def { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--color-tooltip-bg); color: var(--color-tooltip-text); padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.78rem; line-height: 1.4; width: 280px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 400; pointer-events: none; font-style: normal; }
+.glossary-def::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--color-tooltip-bg); }
+.category-nav { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--color-border); gap: 1rem; }
+.category-nav a { padding: 0.75rem 1.25rem; background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: all var(--transition); max-width: 48%; }
+.category-nav a:hover { border-color: var(--color-primary); background: var(--color-primary-bg); text-decoration: none; }
+.prev-category { text-align: left; } .next-category { text-align: right; margin-left: auto; }
+.back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px; background: var(--color-primary); color: #fff; border: none; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 90; transition: all var(--transition); }
+.back-to-top:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+.back-to-top.visible { display: flex; }
+.series-badge { display: inline-block; background: var(--color-primary-bg); color: var(--color-primary); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid var(--color-primary); margin-bottom: 1rem; letter-spacing: 0.03em; }
+.chinese-char { font-size: 1.15em; font-weight: 600; }
+.pinyin { font-style: italic; color: var(--color-text-secondary); }
+@media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .menu-toggle { display: flex; } .main { margin-left: 0; } .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; } h1 { font-size: 1.7rem; } h2 { font-size: 1.3rem; } .category-nav { flex-direction: column; } .category-nav a { max-width: 100%; } }
+@media (max-width: 600px) { .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; } .table-wrapper { font-size: 0.8rem; } th, td { padding: 0.5rem 0.6rem; } }
+@media print { .sidebar, .menu-toggle, .back-to-top, .theme-toggle, .sidebar-controls { display: none !important; } .main { margin-left: 0 !important; } .content { max-width: 100%; padding: 0; } body { font-size: 11pt; color: #000; background: #fff; } h1, h2, h3, h4, strong { color: #000; } p, li, td { color: #222; } a { color: #000; text-decoration: underline; } .diagram-container { break-inside: avoid; border: 1px solid #ccc; } .callout, .takeaway { break-inside: avoid; } .category-nav { break-before: page; } table { font-size: 9pt; } }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Chinese Semantics</div>
+    <div class="sidebar-subtitle">Chinese Language Deep Dive</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#overview" class="sidebar-link">Meaning From Visible Parts</a>
+
+    <div class="sidebar-nav-section">Compound Formation</div>
+    <a href="#compound-types" class="sidebar-link">The Five Compound Types</a>
+    <a href="#coordinate" class="sidebar-link sub">Coordinate</a>
+    <a href="#modifier-head" class="sidebar-link sub">Modifier-Head</a>
+    <a href="#verb-object" class="sidebar-link sub">Verb-Object</a>
+    <a href="#verb-result" class="sidebar-link sub">Verb-Result</a>
+    <a href="#subject-predicate" class="sidebar-link sub">Subject-Predicate</a>
+
+    <div class="sidebar-nav-section">Morpheme Networks</div>
+    <a href="#morpheme-network" class="sidebar-link">Compound Returns</a>
+
+    <div class="sidebar-nav-section">Transparency</div>
+    <a href="#transparency" class="sidebar-link">The Decomposability Advantage</a>
+
+    <div class="sidebar-nav-section">Architecture</div>
+    <a href="#architecture" class="sidebar-link">One Layer vs. Three</a>
+
+    <div class="sidebar-nav-section">Chengyu</div>
+    <a href="#chengyu" class="sidebar-link">Classical-Modern Bridge</a>
+
+    <div class="sidebar-nav-section">Number System</div>
+    <a href="#numbers" class="sidebar-link">Perfect Transparency</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#misconceptions" class="sidebar-link">Common Misconceptions</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Chinese Language Hub</a>
+
+<div class="series-badge">Part 6 of 12</div>
+
+<h1>Chinese Semantics
+  <span class="subtitle">Compound Formation, Chengyu, and the Transparent Number System</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">Chinese builds vocabulary from visible parts &mdash; transparent compounds where meaning is recoverable from the components. One morpheme pool serves all levels of discourse, unlike English's three fragmented historical layers.</p>
+
+<div class="callout callout-success">
+  <div class="callout-title">Validation Status</div>
+  <p style="margin-bottom:0;">This explanation draws on independently validated research. All major claims confirmed. Transparency percentages (~60-70% fully transparent) are approximate and vary by study methodology, which is noted throughout.</p>
+</div>
+
+<!-- ==================== OVERVIEW ==================== -->
+<h2 id="overview">How Meaning Is Built From Visible Parts</h2>
+
+<p>The way Chinese builds its vocabulary is fundamentally different from the way English builds its vocabulary. This difference is not minor. It is architectural &mdash; it shapes how speakers learn words, how they understand unfamiliar words, and how the language scales from everyday conversation to scientific discourse.</p>
+
+<p>English draws words from three historically distinct layers: a Germanic base for everyday concepts (house, hand, water), Latin and French for formal and abstract concepts (residence, manual, aquatic), and Greek for scientific and technical concepts (domestic, chirurgical, hydraulic). These layers are largely opaque to one another. An English speaker who knows "fire" cannot deduce "conflagration" (Latin) or "pyrotechnics" (Greek) from that knowledge.</p>
+
+<p>Chinese takes the opposite approach. It builds the vast majority of its vocabulary through <strong>transparent <span class="glossary-term">compound formation<span class="glossary-def">The process of combining existing morphemes (individual characters) into new words whose meaning is recoverable from the parts. The dominant word-building strategy in Chinese, accounting for 70-80% of vocabulary.</span></span></strong> &mdash; combining existing morphemes into new words whose meaning is recoverable from the parts. The word for "computer" is <span class="chinese-char">&#30005;&#33041;</span> <span class="pinyin">(diannao)</span>, literally "electric-brain." The word for "telephone" is <span class="chinese-char">&#30005;&#35805;</span> <span class="pinyin">(dianhua)</span>, literally "electric-speech." The word for "television" is <span class="chinese-char">&#30005;&#35270;</span> <span class="pinyin">(dianshi)</span>, literally "electric-vision." These are not slang &mdash; they are the standard, formal, only words for these concepts. And they are all built from <span class="chinese-char">&#30005;</span> <span class="pinyin">(dian, "electric")</span>, a character every Chinese speaker learns in elementary school.</p>
+
+<div class="takeaway">
+  <div class="takeaway-title">Key Takeaways</div>
+  <ul style="margin-bottom:0;">
+    <li>70-80% of Chinese vocabulary is built through five systematic compound formation patterns</li>
+    <li>Approximately 60-70% of common compounds are semantically transparent (meaning directly recoverable from parts)</li>
+    <li>Single characters participate in many compounds, creating a "compound returns" effect where each character learned unlocks multiple words</li>
+    <li>Chinese builds ALL vocabulary levels from the same morpheme pool; English fragments across three historical layers</li>
+    <li>The Chinese number system is perfectly regular and base-10 transparent, contrasting with English's irregularity zones</li>
+  </ul>
+</div>
+
+<!-- ==================== COMPOUND TYPES ==================== -->
+<h2 id="compound-types">The Five Compound Types: Productive Patterns</h2>
+
+<p>Chinese compound word formation follows five systematic patterns. These are not historical curiosities &mdash; they are active, productive templates used to coin new words today.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-semantics-compound-formation-diagrams/diagram-1-five-compound-types.html" title="The Five Compound Types: How Chinese Builds Words" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 1: The five compound formation patterns, with Chinese names, formulas, examples, and English parallels. Modifier-Head is the most productive type for modern coinages.</div>
+</div>
+
+<h3 id="coordinate">Type 1: Coordinate Compounds (<span class="chinese-char">&#32852;&#21512;&#24335;</span> <span class="pinyin">lianheshi</span>)</h3>
+<p>Two synonymous or related morphemes joined as equals. Neither modifies the other; they reinforce each other.</p>
+<ul>
+  <li><span class="chinese-char">&#35821;&#35328;</span> <span class="pinyin">(yuyan)</span> "language" = <span class="chinese-char">&#35821;</span> (speech) + <span class="chinese-char">&#35328;</span> (words)</li>
+  <li><span class="chinese-char">&#22269;&#23478;</span> <span class="pinyin">(guojia)</span> "country" = <span class="chinese-char">&#22269;</span> (state) + <span class="chinese-char">&#23478;</span> (family/home)</li>
+  <li><span class="chinese-char">&#36947;&#36335;</span> <span class="pinyin">(daolu)</span> "road/path" = <span class="chinese-char">&#36947;</span> (way) + <span class="chinese-char">&#36335;</span> (road)</li>
+</ul>
+<p>English parallel: "bittersweet" (bitter + sweet), but English coordinate compounds are rare.</p>
+
+<h3 id="modifier-head">Type 2: Modifier-Head Compounds (<span class="chinese-char">&#20559;&#27491;&#24335;</span> <span class="pinyin">pianzhengshi</span>)</h3>
+<p>One <span class="glossary-term">morpheme<span class="glossary-def">The smallest meaningful unit of language. In Chinese, morphemes are typically individual characters, each representing one syllable and (at least) one meaning. Unlike English bound morphemes (un-, -ness), Chinese morphemes are usually free-standing.</span></span> modifies the other. The modifier specifies the type or quality; the head carries the core meaning. This is the most productive type for modern coinages.</p>
+<ul>
+  <li><span class="chinese-char">&#30005;&#33041;</span> <span class="pinyin">(diannao)</span> "computer" = <span class="chinese-char">&#30005;</span> (electric) + <span class="chinese-char">&#33041;</span> (brain)</li>
+  <li><span class="chinese-char">&#28779;&#36710;</span> <span class="pinyin">(huoche)</span> "train" = <span class="chinese-char">&#28779;</span> (fire) + <span class="chinese-char">&#36710;</span> (vehicle)</li>
+  <li><span class="chinese-char">&#22823;&#23398;</span> <span class="pinyin">(daxue)</span> "university" = <span class="chinese-char">&#22823;</span> (big/great) + <span class="chinese-char">&#23398;</span> (study)</li>
+  <li><span class="chinese-char">&#40657;&#26495;</span> <span class="pinyin">(heiban)</span> "blackboard" = <span class="chinese-char">&#40657;</span> (black) + <span class="chinese-char">&#26495;</span> (board)</li>
+</ul>
+<p>English parallel: "sunflower" (sun + flower), "blackboard" (black + board). English has this pattern but uses it far less extensively.</p>
+
+<h3 id="verb-object">Type 3: Verb-Object Compounds (<span class="chinese-char">&#21160;&#23486;&#24335;</span> <span class="pinyin">dongbinshi</span>)</h3>
+<p>A verb with its built-in object. The compound functions as a verb phrase compressed into a word.</p>
+<ul>
+  <li><span class="chinese-char">&#21507;&#39277;</span> <span class="pinyin">(chifan)</span> "eat a meal" = <span class="chinese-char">&#21507;</span> (eat) + <span class="chinese-char">&#39277;</span> (rice/food)</li>
+  <li><span class="chinese-char">&#21809;&#27468;</span> <span class="pinyin">(changge)</span> "sing" = <span class="chinese-char">&#21809;</span> (sing) + <span class="chinese-char">&#27468;</span> (song)</li>
+  <li><span class="chinese-char">&#25918;&#24515;</span> <span class="pinyin">(fangxin)</span> "relax" = <span class="chinese-char">&#25918;</span> (release) + <span class="chinese-char">&#24515;</span> (heart) &mdash; literally "release the heart"</li>
+</ul>
+
+<h3 id="verb-result">Type 4: Verb-Result Compounds (<span class="chinese-char">&#21160;&#34917;&#24335;</span> <span class="pinyin">dongbushi</span>)</h3>
+<p>A verb with its outcome. The second morpheme indicates the result of the action.</p>
+<ul>
+  <li><span class="chinese-char">&#25552;&#39640;</span> <span class="pinyin">(tigao)</span> "improve" = <span class="chinese-char">&#25552;</span> (lift) + <span class="chinese-char">&#39640;</span> (high)</li>
+  <li><span class="chinese-char">&#30475;&#35265;</span> <span class="pinyin">(kanjian)</span> "see" = <span class="chinese-char">&#30475;</span> (look) + <span class="chinese-char">&#35265;</span> (perceive)</li>
+  <li><span class="chinese-char">&#25171;&#30772;</span> <span class="pinyin">(dapo)</span> "break" = <span class="chinese-char">&#25171;</span> (hit) + <span class="chinese-char">&#30772;</span> (broken)</li>
+</ul>
+<p>This pattern connects directly to the syntactic complement system &mdash; many V+R compounds started as productive verb+complement combinations and became lexicalized.</p>
+
+<h3 id="subject-predicate">Type 5: Subject-Predicate Compounds (<span class="chinese-char">&#20027;&#35859;&#24335;</span> <span class="pinyin">zhuweidhi</span>)</h3>
+<p>A miniature sentence frozen as a word. The first morpheme is the subject, the second is the predicate.</p>
+<ul>
+  <li><span class="chinese-char">&#22320;&#38663;</span> <span class="pinyin">(dizhen)</span> "earthquake" = <span class="chinese-char">&#22320;</span> (earth) + <span class="chinese-char">&#38663;</span> (shake) &mdash; "the earth shakes"</li>
+  <li><span class="chinese-char">&#22836;&#30140;</span> <span class="pinyin">(touteng)</span> "headache" = <span class="chinese-char">&#22836;</span> (head) + <span class="chinese-char">&#30140;</span> (ache) &mdash; "the head aches"</li>
+  <li><span class="chinese-char">&#24180;&#36731;</span> <span class="pinyin">(nianqing)</span> "young" = <span class="chinese-char">&#24180;</span> (year) + <span class="chinese-char">&#36731;</span> (light/few) &mdash; "years are light"</li>
+</ul>
+<p>English has one remarkably close parallel: "earthquake" = earth + quake. But Chinese has this as a productive pattern; English has it as an isolated survival.</p>
+
+<!-- ==================== MORPHEME NETWORK ==================== -->
+<h2 id="morpheme-network">The Morpheme Network: Compound Returns</h2>
+
+<p>The power of Chinese compounding comes not just from the patterns but from the <strong><span class="glossary-term">productivity<span class="glossary-def">The ability of a morpheme or pattern to generate new words. In Chinese, a single character like &#30005; (electric) participates in dozens of compounds, each transparent. High productivity means each character you learn unlocks many words.</span></span></strong> of individual morphemes. Single characters participate in dozens or hundreds of compounds, creating rich networks.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-semantics-compound-formation-diagrams/diagram-2-morpheme-network.html" title="Morpheme Networks: One Character, Many Words" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 2: Two morpheme hub networks &mdash; &#30005; (electric) and &#24515; (heart) &mdash; each spawning 10+ compounds. This is the compound returns principle in action.</div>
+</div>
+
+<p>Consider <span class="chinese-char">&#30005;</span> <span class="pinyin">(dian, "electric/electricity")</span>. Learning this one character unlocks:</p>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Compound</th><th>Literal</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><span class="chinese-char">&#30005;&#33041;</span></td><td>electric-brain</td><td>computer</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#35805;</span></td><td>electric-speech</td><td>telephone</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#35270;</span></td><td>electric-vision</td><td>television</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#24433;</span></td><td>electric-shadow</td><td>movie</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#27744;</span></td><td>electric-pool</td><td>battery</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#28783;</span></td><td>electric-lamp</td><td>electric light</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#26799;</span></td><td>electric-ladder</td><td>elevator</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#23376;</span></td><td>electric-particle</td><td>electron</td></tr>
+    <tr><td><span class="chinese-char">&#30005;&#37038;</span></td><td>electric-mail</td><td>email</td></tr>
+    <tr><td><span class="chinese-char">&#38378;&#30005;</span></td><td>flash-electric</td><td>lightning</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>One character, ten words. And <span class="chinese-char">&#24515;</span> <span class="pinyin">(xin, "heart/mind")</span> builds an entire emotional vocabulary: <span class="chinese-char">&#24320;&#24515;</span> (happy, "open-heart"), <span class="chinese-char">&#23567;&#24515;</span> (careful, "small-heart"), <span class="chinese-char">&#25918;&#24515;</span> (at ease, "release-heart"), <span class="chinese-char">&#20260;&#24515;</span> (sad, "injure-heart"), <span class="chinese-char">&#25285;&#24515;</span> (worried, "carry-heart"), <span class="chinese-char">&#32454;&#24515;</span> (meticulous, "fine-heart"), <span class="chinese-char">&#31895;&#24515;</span> (careless, "coarse-heart").</p>
+
+<div class="takeaway">
+  <div class="takeaway-title">The Compound Returns Principle</div>
+  <p style="margin-bottom:0;">Each character you learn combines with all previously known characters. The 100th character might unlock 5 new compounds. The 1,000th character might unlock 50, because it has 999 potential combination partners. Vocabulary acquisition is front-loaded (characters are hard initially) but progressively accelerating. English has productive morphemes too (un-, -ness, -tion), but these are <em>bound</em> morphemes that cannot stand alone. Chinese productive morphemes are <em>free</em> morphemes &mdash; standalone characters with independent meanings.</p>
+</div>
+
+<!-- ==================== TRANSPARENCY ==================== -->
+<h2 id="transparency">Semantic Transparency: The Decomposability Advantage</h2>
+
+<p>How much of a compound's meaning is recoverable from its parts? This is the question of <span class="glossary-term">semantic transparency<span class="glossary-def">The degree to which a compound word's meaning can be derived from its component morphemes. Chinese compounds are remarkably transparent compared to English learned vocabulary, with ~60-70% being fully transparent.</span></span> &mdash; and Chinese compounds are remarkably transparent compared to English learned vocabulary.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-semantics-compound-formation-diagrams/diagram-3-transparency-spectrum.html" title="Semantic Transparency Spectrum: Crystal Clear to Opaque" style="height:550px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 3: The transparency spectrum &mdash; from fully transparent compounds (~60-70%) through partially transparent (~20-25%) to opaque (~10-15%), with English comparison.</div>
+</div>
+
+<h3>Fully Transparent (~60-70% of common compounds)</h3>
+<p>The meaning is directly composable:</p>
+<ul>
+  <li><span class="chinese-char">&#30005;&#33041;</span> (electric + brain) = computer &mdash; immediately understandable</li>
+  <li><span class="chinese-char">&#39134;&#26426;</span> (fly + machine) = airplane &mdash; a machine that flies</li>
+  <li><span class="chinese-char">&#27927;&#34915;&#26426;</span> (wash + clothes + machine) = washing machine &mdash; perfectly transparent</li>
+  <li><span class="chinese-char">&#20912;&#31665;</span> (ice + box) = refrigerator &mdash; an ice box</li>
+</ul>
+
+<h3>Partially Transparent (~20-25%)</h3>
+<p>The meaning is inferrable with some cultural or historical knowledge:</p>
+<ul>
+  <li><span class="chinese-char">&#19996;&#35199;</span> (east + west) = thing/stuff &mdash; the directional meaning has "bleached" (faded)</li>
+  <li><span class="chinese-char">&#39532;&#19978;</span> (horse + on) = immediately &mdash; originally "on horseback" (ready to ride fast)</li>
+  <li><span class="chinese-char">&#20415;&#23452;</span> (convenient + suitable) = cheap &mdash; semantic drift from "convenient" to "cheap"</li>
+</ul>
+
+<h3>Opaque (~10-15%)</h3>
+<p>The meaning is not recoverable from the parts:</p>
+<ul>
+  <li><span class="chinese-char">&#22825;&#30495;</span> (sky + true) = naive/innocent</li>
+  <li><span class="chinese-char">&#31946;&#28034;</span> (paste + confused) = muddled</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-title">The English Contrast</div>
+  <p style="margin-bottom:0;">English word transparency varies dramatically by historical layer. Germanic compounds are transparent ("sunflower," "blackboard"). Latin-derived words are semi-transparent to trained readers ("predict" = pre+dict = "say before"). Greek-derived scientific terms are opaque without specialized training. The critical difference: Chinese transparency uses EVERYDAY morphemes (a child who knows <span class="chinese-char">&#30005;</span> can decompose <span class="chinese-char">&#30005;&#33041;</span>), while English transparency at the learned level requires SPECIALIST knowledge of dead languages.</p>
+</div>
+
+<!-- ==================== ARCHITECTURE ==================== -->
+<h2 id="architecture">Vocabulary Architecture: One Layer vs. Three</h2>
+
+<p>The compound formation system produces a fundamentally different vocabulary architecture from English.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-semantics-compound-formation-diagrams/diagram-4-vocabulary-architecture.html" title="Vocabulary Architecture: Chinese Single-Layer vs. English Three-Layer" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 4: English's three historical layers (Germanic ~25%, Latin/French ~56%, Greek ~6-8%) vs. Chinese's single morpheme pool (~4,000-5,000 characters) serving all vocabulary levels.</div>
+</div>
+
+<h3>English: Three Historical Layers</h3>
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Layer</th><th>Share</th><th>Register</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td>Germanic</td><td>~25%</td><td>Everyday, concrete</td><td>house, hand, water, eat</td></tr>
+    <tr><td>Latin/French</td><td>~56%</td><td>Formal, literary</td><td>residence, consume, commence</td></tr>
+    <tr><td>Greek</td><td>~6-8%</td><td>Scientific, technical</td><td>biology, democracy, photography</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>These layers are largely opaque to one another. Switching from casual to academic English often means switching from Germanic to Latin/Greek vocabulary &mdash; essentially code-switching between historical languages.</p>
+
+<h3>Chinese: One Morpheme Pool</h3>
+<p>Approximately 4,000-5,000 productive morphemes combine to create ALL levels of vocabulary:</p>
+<ul>
+  <li><strong>Everyday:</strong> <span class="chinese-char">&#28779;</span> (fire), <span class="chinese-char">&#27700;</span> (water), <span class="chinese-char">&#30005;</span> (electric), <span class="chinese-char">&#24515;</span> (heart)</li>
+  <li><strong>Formal:</strong> <span class="chinese-char">&#30005;&#35805;</span> (electric-speech = telephone), <span class="chinese-char">&#27665;&#20027;</span> (people-master = democracy)</li>
+  <li><strong>Scientific:</strong> <span class="chinese-char">&#24515;&#29702;&#23398;</span> (heart-principle-study = psychology), <span class="chinese-char">&#29983;&#29289;&#23398;</span> (life-things-study = biology)</li>
+</ul>
+
+<p>The same morphemes appear at every level. There is no "vocabulary ceiling" where advanced words become morphologically opaque, as there is in English when you shift from Germanic to Latin/Greek roots.</p>
+
+<div class="callout callout-info">
+  <div class="callout-title">Case Study: "Fire"</div>
+  <p style="margin-bottom:0;">English uses three unrelated roots: "fire" (Germanic), "conflagration" (Latin), "pyro-" (Greek). Chinese uses one: <span class="chinese-char">&#28779;</span> <span class="pinyin">(huo)</span> appears in <span class="chinese-char">&#28779;&#36710;</span> (train, "fire-vehicle"), <span class="chinese-char">&#28779;&#23665;</span> (volcano, "fire-mountain"), <span class="chinese-char">&#28779;&#28798;</span> (conflagration, "fire-disaster"), <span class="chinese-char">&#28779;&#38149;</span> (hot pot, "fire-pot"), <span class="chinese-char">&#28779;&#28976;</span> (flame, "fire-blaze"). Learn <span class="chinese-char">&#28779;</span> once, use it everywhere.</p>
+</div>
+
+<!-- ==================== CHENGYU ==================== -->
+<h2 id="chengyu">Chengyu: The Bridge Between Classical and Modern</h2>
+
+<p><span class="glossary-term">Chengyu<span class="glossary-def">Four-character idiomatic expressions (&#25104;&#35821;) derived from classical literature, historical events, or philosophical texts. Fixed form, compressed classical grammar, rich with narrative meaning. Used in both formal writing and educated speech.</span></span> (<span class="chinese-char">&#25104;&#35821;</span>) are four-character idiomatic expressions, typically derived from classical literature, historical events, or philosophical texts spanning over 2,000 years. They are one of the most culturally distinctive features of Chinese vocabulary.</p>
+
+<h3>Examples with Stories</h3>
+
+<div class="callout callout-info">
+  <div class="callout-title"><span class="chinese-char">&#23432;&#26666;&#24453;&#20820;</span> <span class="pinyin">(shou zhu dai tu)</span> &mdash; "Guard stump, wait rabbit"</div>
+  <p style="margin-bottom:0;">From a fable: a farmer saw a rabbit crash into a tree stump and die. He sat by the stump forever, waiting for it to happen again. <strong>Meaning:</strong> relying on luck or outdated methods.</p>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title"><span class="chinese-char">&#30011;&#34503;&#28155;&#36275;</span> <span class="pinyin">(hua she tian zu)</span> &mdash; "Draw snake, add feet"</div>
+  <p style="margin-bottom:0;">From a contest: a man finished drawing a snake first but then added feet, losing because snakes have no feet. <strong>Meaning:</strong> ruining something by adding unnecessary detail.</p>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title"><span class="chinese-char">&#30772;&#37340;&#27785;&#33311;</span> <span class="pinyin">(po fu chen zhou)</span> &mdash; "Break pots, sink boats"</div>
+  <p style="margin-bottom:0;">From history: General Xiang Yu destroyed his army's cooking equipment and scuttled their boats before battle, eliminating retreat. <strong>Meaning:</strong> total commitment with no way back.</p>
+</div>
+
+<p>Chengyu serve as a <strong>living bridge between <span class="glossary-term">classical Chinese<span class="glossary-def">&#25991;&#35328;&#25991; (wenyanwen) &mdash; the literary language of pre-modern Chinese writing. Chengyu preserve classical grammatical particles and compressed structures that differ from modern Mandarin grammar.</span></span> and modern Mandarin</strong>. They preserve classical grammatical particles like <span class="chinese-char">&#20043;</span> <span class="pinyin">(zhi)</span> and compressed verb-object structures impossible in modern grammar. Learning chengyu gives modern speakers passive access to classical Chinese patterns.</p>
+
+<p>The closest English parallels are classical allusions: "Achilles' heel," "Trojan horse," "crossing the Rubicon." But English classical allusions are variable-length phrases, used less frequently than chengyu, and come from Greco-Roman rather than the speaker's own cultural tradition.</p>
+
+<!-- ==================== NUMBERS ==================== -->
+<h2 id="numbers">The Transparent Number System</h2>
+
+<p>Chinese numbers are built from a minimal set of morphemes combined with perfect regularity. This is one of the most pattern-satisfying features of the language.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-semantics-compound-formation-diagrams/diagram-5-number-system-comparison.html" title="Number System Transparency: Chinese vs. English" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 5: Chinese perfect compositionality vs. English's three irregularity zones &mdash; 11 words + 1 rule vs. ~28 unique forms before full regularity.</div>
+</div>
+
+<p><strong>The system:</strong> Ten digit morphemes (<span class="chinese-char">&#38646;</span> through <span class="chinese-char">&#20061;</span>) plus multiplier words (<span class="chinese-char">&#21313;</span> ten, <span class="chinese-char">&#30334;</span> hundred, <span class="chinese-char">&#21315;</span> thousand, <span class="chinese-char">&#19975;</span> ten-thousand, <span class="chinese-char">&#20159;</span> hundred-million). Every number name explicitly states its base-10 decomposition.</p>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Number</th><th>Chinese</th><th>Literal</th><th>English</th></tr></thead>
+  <tbody>
+    <tr><td>11</td><td><span class="chinese-char">&#21313;&#19968;</span></td><td>"ten-one"</td><td>"eleven" (opaque)</td></tr>
+    <tr><td>20</td><td><span class="chinese-char">&#20108;&#21313;</span></td><td>"two-ten"</td><td>"twenty" (irregular form)</td></tr>
+    <tr><td>62</td><td><span class="chinese-char">&#20845;&#21313;&#20108;</span></td><td>"six-ten-two"</td><td>"sixty-two"</td></tr>
+    <tr><td>3,456</td><td><span class="chinese-char">&#19977;&#21315;&#22235;&#30334;&#20116;&#21313;&#20845;</span></td><td>"three-thousand-four-hundred-five-ten-six"</td><td>"three thousand four hundred fifty-six"</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>English Irregularities</h3>
+<ul>
+  <li><strong>"Eleven" and "twelve"</strong> give NO indication of 10+1 and 10+2. Completely opaque.</li>
+  <li><strong>"Thirteen" through "nineteen"</strong> REVERSE the digit order (ones before tens: "thir-TEEN" = 3+10) and use irregular forms ("thirteen" not "threeteen," "fifteen" not "fiveteen").</li>
+  <li><strong>"Twenty" through "ninety"</strong> use modified forms ("twenty" not "twoty," "thirty" not "threety").</li>
+</ul>
+
+<div class="takeaway">
+  <div class="takeaway-title">The Practical Consequence</div>
+  <p style="margin-bottom:0;">An English-speaking child must memorize approximately 20 irregular number names (1-20) before the system becomes regular at 21. A Chinese-speaking child needs only 11 words (0-10) and one pattern (A-<span class="chinese-char">&#21313;</span>-B) to count to 99. Research confirms that children learning transparent number systems count higher earlier, make fewer counting errors, and develop understanding of base-10 structure faster.</p>
+</div>
+
+<!-- ==================== MISCONCEPTIONS ==================== -->
+<h2 id="misconceptions">Common Misconceptions</h2>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"Chinese has no word boundaries."</div>
+  <p style="margin-bottom:0;">While Chinese text has no spaces between characters, compound word boundaries are well-defined. Native speakers process language at the morpheme and compound level simultaneously. Word segmentation ambiguity is rare in practice.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"All Chinese words are two syllables."</div>
+  <p style="margin-bottom:0;">Disyllabic compounds dominate (~70-80%), but monosyllabic words (<span class="chinese-char">&#20154;, &#22823;, &#21507;</span>), trisyllabic words (<span class="chinese-char">&#22270;&#20070;&#39302;</span> "library," <span class="chinese-char">&#27927;&#34915;&#26426;</span> "washing machine"), and four-syllable words (including chengyu) all exist. The disyllabic pattern is dominant but not universal.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"Compound meanings are always obvious."</div>
+  <p style="margin-bottom:0;">While Chinese compounds are MORE transparent than English learned vocabulary on average, many compounds have undergone semantic drift. <span class="chinese-char">&#19996;&#35199;</span> (east-west = "thing") is completely opaque. The transparency advantage is real but not absolute.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"The number system proves Chinese is 'better' for math."</div>
+  <p style="margin-bottom:0;">The transparent system is one factor among many. Curriculum, cultural emphasis, teaching methods, and practice time are all significant. Linguistic transparency provides a clearer cognitive framework, but does not determine mathematical ability.</p>
+</div>
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Term</th><th>Chinese</th><th>Definition</th></tr></thead>
+  <tbody>
+    <tr><td>Compound word</td><td><span class="chinese-char">&#21512;&#25104;&#35789;</span> <span class="pinyin">hechengci</span></td><td>Word formed by combining two or more morphemes</td></tr>
+    <tr><td>Morpheme</td><td><span class="chinese-char">&#35821;&#32032;</span> <span class="pinyin">yusu</span></td><td>Smallest meaningful unit (in Chinese, usually one character)</td></tr>
+    <tr><td>Modifier-head compound</td><td><span class="chinese-char">&#20559;&#27491;&#24335;</span> <span class="pinyin">pianzhengshi</span></td><td>One morpheme modifies the other (most productive type)</td></tr>
+    <tr><td>Verb-object compound</td><td><span class="chinese-char">&#21160;&#23486;&#24335;</span> <span class="pinyin">dongbinshi</span></td><td>Verb with built-in object</td></tr>
+    <tr><td>Coordinate compound</td><td><span class="chinese-char">&#32852;&#21512;&#24335;</span> <span class="pinyin">lianheshi</span></td><td>Two equal/synonymous morphemes joined</td></tr>
+    <tr><td>Chengyu</td><td><span class="chinese-char">&#25104;&#35821;</span> <span class="pinyin">chengyu</span></td><td>Four-character idiom from classical Chinese</td></tr>
+    <tr><td>Semantic transparency</td><td><span class="chinese-char">&#35821;&#20041;&#36879;&#26126;&#24230;</span> <span class="pinyin">yuyi toumingdu</span></td><td>Degree to which compound meaning is recoverable from parts</td></tr>
+    <tr><td>Productivity</td><td><span class="chinese-char">&#33021;&#20135;&#24615;</span> <span class="pinyin">nengchanxing</span></td><td>Ability of a morpheme/pattern to generate new words</td></tr>
+    <tr><td>Classical Chinese</td><td><span class="chinese-char">&#25991;&#35328;&#25991;</span> <span class="pinyin">wenyanwen</span></td><td>Literary language of pre-modern writing</td></tr>
+    <tr><td>Vernacular Chinese</td><td><span class="chinese-char">&#30333;&#35805;&#25991;</span> <span class="pinyin">baihuawen</span></td><td>Modern written Chinese based on spoken Mandarin</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SUMMARY ==================== -->
+<h2 id="summary">Summary: The Architectural Advantage</h2>
+
+<p>Chinese vocabulary construction is a system of extraordinary coherence:</p>
+
+<ol>
+  <li><strong>Five productive compound patterns</strong> (coordinate, modifier-head, verb-object, verb-result, subject-predicate) account for 70-80% of all vocabulary.</li>
+  <li><strong>Compound returns</strong> mean each character learned unlocks multiple words, with accelerating returns over time.</li>
+  <li><strong>High semantic transparency</strong> (~60-70% fully transparent) makes unfamiliar compounds decomposable from their parts.</li>
+  <li><strong>One morpheme pool</strong> serves all vocabulary levels &mdash; everyday, formal, and scientific &mdash; unlike English's three fragmented historical layers.</li>
+  <li><strong>Chengyu</strong> bridge 2,000+ years of literary tradition into modern speech, preserving classical grammar in compact four-character forms.</li>
+  <li><strong>Perfect number transparency</strong> makes base-10 structure audible in every number name.</li>
+</ol>
+
+<p>For the pattern-oriented mind, Chinese semantics offers something English cannot: a vocabulary system where the building blocks are visible, the construction rules are regular, and the meaning of words is (mostly) derivable from their parts. The initial investment in learning characters is steep. The returns &mdash; compound returns, literally &mdash; are immense.</p>
+
+<!-- ==================== NAV ==================== -->
+<div class="category-nav">
+  <a href="../chinese-classifier-measure-words/index.html" class="prev-category">&larr; Previous: The Classifier System</a>
+  <a href="../chinese-pragmatics-face-guanxi/index.html" class="next-category">Next: Chinese Pragmatics &rarr;</a>
+</div>
+
+</div>
+</main>
+</div>
+
+<button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<script>
+function toggleTheme() {
+  var body = document.documentElement;
+  var current = body.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  var saved = localStorage.getItem('theme');
+  if (saved) { document.documentElement.setAttribute('data-theme', saved); }
+  else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { document.documentElement.setAttribute('data-theme', 'dark'); }
+})();
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backToTop');
+  if (window.scrollY > 600) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+});
+(function() {
+  var links = document.querySelectorAll('.sidebar-link');
+  var sections = [];
+  links.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      var target = document.querySelector(href);
+      if (target) sections.push({ el: target, link: link });
+    }
+  });
+  function updateActive() {
+    var current = null;
+    var scrollPos = window.scrollY + 100;
+    for (var i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].el.offsetTop <= scrollPos) { current = sections[i]; break; }
+    }
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (current) {
+      current.link.classList.add('active');
+      var nav = document.querySelector('.sidebar-nav');
+      if (nav) {
+        var linkTop = current.link.offsetTop - nav.offsetTop;
+        var navScroll = nav.scrollTop;
+        var navHeight = nav.clientHeight;
+        if (linkTop < navScroll || linkTop > navScroll + navHeight - 40) { nav.scrollTop = linkTop - navHeight / 3; }
+      }
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(function() { updateActive(); ticking = false; }); ticking = true; }
+  });
+  updateActive();
+})();
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) { document.querySelector('.sidebar').classList.remove('open'); }
+  });
+});
+</script>
+
+</body>
+</html>

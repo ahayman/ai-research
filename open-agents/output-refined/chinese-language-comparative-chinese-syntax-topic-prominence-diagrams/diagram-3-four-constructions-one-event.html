@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Four Constructions, One Event: Chinese Perspective Selection</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb; --center: #ef4444; --center-bg: #fef2f2;
+    --svo: #2563eb; --svo-bg: #dbeafe;
+    --ba: #e67e22; --ba-bg: #fef3e2;
+    --bei: #8b5cf6; --bei-bg: #ede9fe;
+    --topic: #059669; --topic-bg: #d1fae5;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+    --english: #6366f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --center: #f87171; --center-bg: #3b1a1a;
+      --svo: #6b8aff; --svo-bg: #1e2a4a;
+      --ba: #f59e0b; --ba-bg: #4a3520;
+      --bei: #a78bfa; --bei-bg: #2e2050;
+      --topic: #34d399; --topic-bg: #14352d;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+      --english: #818cf8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .hub-layout {
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  }
+  .center-event {
+    background: var(--center-bg); border: 3px solid var(--center);
+    border-radius: 50%; width: 180px; height: 180px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 1rem;
+  }
+  .center-event .label { font-size: 0.75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .center-event .event { font-size: 1rem; font-weight: 700; color: var(--center); margin-top: 0.3rem; }
+  .center-event .zh { font-size: 1.1rem; margin-top: 0.2rem; }
+  .spokes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    width: 100%; max-width: 900px;
+  }
+  .spoke-card {
+    border-radius: 8px; padding: 1rem 1.2rem;
+    border: 2px solid var(--border);
+    position: relative;
+  }
+  .spoke-card::before {
+    content: '';
+    position: absolute; top: -1rem; left: 50%;
+    width: 2px; height: 1rem;
+    background: var(--border);
+  }
+  .spoke-number {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.3rem;
+  }
+  .spoke-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .spoke-zh { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .spoke-pinyin { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 0.4rem; }
+  .spoke-gloss { font-size: 0.82rem; margin-bottom: 0.5rem; line-height: 1.4; }
+  .spoke-focus {
+    font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.6rem;
+    border-radius: 4px; display: inline-block;
+  }
+  .spoke-english {
+    font-size: 0.8rem; color: var(--english); margin-top: 0.5rem;
+    font-style: italic;
+  }
+  .card-svo { background: var(--svo-bg); border-color: var(--svo); }
+  .card-svo .spoke-number, .card-svo .spoke-name { color: var(--svo); }
+  .card-svo .spoke-focus { background: var(--svo); color: white; }
+  .card-ba { background: var(--ba-bg); border-color: var(--ba); }
+  .card-ba .spoke-number, .card-ba .spoke-name { color: var(--ba); }
+  .card-ba .spoke-focus { background: var(--ba); color: white; }
+  .card-bei { background: var(--bei-bg); border-color: var(--bei); }
+  .card-bei .spoke-number, .card-bei .spoke-name { color: var(--bei); }
+  .card-bei .spoke-focus { background: var(--bei); color: white; }
+  .card-topic { background: var(--topic-bg); border-color: var(--topic); }
+  .card-topic .spoke-number, .card-topic .spoke-name { color: var(--topic); }
+  .card-topic .spoke-focus { background: var(--topic); color: white; }
+  .pattern-box {
+    margin-top: 1.5rem; padding: 1rem 1.2rem;
+    background: var(--bg); border: 2px dashed var(--accent);
+    border-radius: 8px; font-size: 0.85rem; text-align: center;
+  }
+  .pattern-box strong { color: var(--accent); }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="hub-layout">
+      <div class="center-event">
+        <div class="label">One Event</div>
+        <div class="event">He broke the cup</div>
+        <div class="zh">他打破了杯子</div>
+      </div>
+
+      <div class="spokes">
+        <div class="spoke-card card-svo">
+          <div class="spoke-number">Construction 1</div>
+          <div class="spoke-name">Default SVO</div>
+          <div class="spoke-zh">他 打破 了 杯子</div>
+          <div class="spoke-pinyin">ta dapo le beizi</div>
+          <div class="spoke-gloss">He broke [PERF] cup<br>Word order: <b>S + V + O</b></div>
+          <div class="spoke-focus">Neutral narration</div>
+          <div class="spoke-english">English equivalent: "He broke the cup" -- same structure, same focus</div>
+        </div>
+
+        <div class="spoke-card card-ba">
+          <div class="spoke-number">Construction 2</div>
+          <div class="spoke-name">把 (Ba) Disposal</div>
+          <div class="spoke-zh">他 把 杯子 打破 了</div>
+          <div class="spoke-pinyin">ta ba beizi dapo le</div>
+          <div class="spoke-gloss">He BA cup broke [PERF]<br>Word order: <b>S + 把 + O + V</b></div>
+          <div class="spoke-focus">Agent's action on object</div>
+          <div class="spoke-english">No English equivalent -- "He broke the cup (deliberately, completely)" but English can't front the object this way</div>
+        </div>
+
+        <div class="spoke-card card-bei">
+          <div class="spoke-number">Construction 3</div>
+          <div class="spoke-name">被 (Bei) Passive</div>
+          <div class="spoke-zh">杯子 被 他 打破 了</div>
+          <div class="spoke-pinyin">beizi bei ta dapo le</div>
+          <div class="spoke-gloss">Cup BEI him broke [PERF]<br>Word order: <b>Patient + 被 + (Agent) + V</b></div>
+          <div class="spoke-focus">Object as victim/receiver</div>
+          <div class="spoke-english">English equivalent: "The cup was broken by him" -- passive voice, but Chinese 被 historically implies misfortune</div>
+        </div>
+
+        <div class="spoke-card card-topic">
+          <div class="spoke-number">Construction 4</div>
+          <div class="spoke-name">Topic-Comment</div>
+          <div class="spoke-zh">杯子，他 打破 了</div>
+          <div class="spoke-pinyin">beizi, ta dapo le</div>
+          <div class="spoke-gloss">[TOPIC] Cup, he broke [PERF]<br>Word order: <b>Topic + S + V</b></div>
+          <div class="spoke-focus">Object as topic of discussion</div>
+          <div class="spoke-english">English approximation: "The cup -- he broke it" (marked/unusual in English, natural in Chinese)</div>
+        </div>
+      </div>
+
+      <div class="pattern-box">
+        <strong>The Pattern:</strong> Chinese offers four structural perspectives on one event. Each encodes a different <strong>information structure</strong> -- who or what the sentence is "about."<br>
+        English has only two options (active voice, passive voice). Chinese adds the <strong>把 disposal</strong> and <strong>topic-comment</strong> constructions -- more perspectives, more precision.
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Four Constructions, One Event: Perspective Selection in Chinese</h2>
+    <p>The same event -- "He broke the cup" -- can be expressed four different ways in Chinese, each foregrounding a different participant or perspective. English offers only active and passive voice. Chinese adds 把 (disposal) and topic-comment as additional structural options.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

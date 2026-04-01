@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Transparency Spectrum: Crystal Clear to Opaque</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --clear: #22c55e; --clear-bg: #dcfce7;
+    --partial: #f59e0b; --partial-bg: #fef3e2;
+    --opaque: #ef4444; --opaque-bg: #fef2f2;
+    --muted: #6c757d; --caption-bg: #f8f9fa; --english: #6366f1;
+    --chinese: #e67e22;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --clear: #4ade80; --clear-bg: #14532d;
+      --partial: #fbbf24; --partial-bg: #4a3520;
+      --opaque: #f87171; --opaque-bg: #3b1a1a;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e; --english: #818cf8;
+      --chinese: #f59e0b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; }
+  /* Gradient bar */
+  .gradient-bar {
+    height: 12px; border-radius: 6px; margin-bottom: 0.5rem;
+    background: linear-gradient(to right, var(--clear) 0%, var(--clear) 65%, var(--partial) 75%, var(--partial) 85%, var(--opaque) 95%, var(--opaque) 100%);
+  }
+  .gradient-labels {
+    display: flex; justify-content: space-between; font-size: 0.78rem;
+    font-weight: 700; margin-bottom: 1rem;
+  }
+  .gl-clear { color: var(--clear); }
+  .gl-partial { color: var(--partial); }
+  .gl-opaque { color: var(--opaque); }
+  /* Three zones */
+  .zones { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.8rem; }
+  .zone { border-radius: 8px; padding: 1rem; border: 2px solid; }
+  .z-clear { background: var(--clear-bg); border-color: var(--clear); }
+  .z-partial { background: var(--partial-bg); border-color: var(--partial); }
+  .z-opaque { background: var(--opaque-bg); border-color: var(--opaque); }
+  .zone-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+  .zone-name { font-weight: 700; font-size: 0.95rem; }
+  .z-clear .zone-name { color: var(--clear); }
+  .z-partial .zone-name { color: var(--partial); }
+  .z-opaque .zone-name { color: var(--opaque); }
+  .zone-pct { font-size: 0.82rem; font-weight: 700; }
+  .z-clear .zone-pct { color: var(--clear); }
+  .z-partial .zone-pct { color: var(--partial); }
+  .z-opaque .zone-pct { color: var(--opaque); }
+  .zone-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
+  .ex-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.35rem 0.5rem; margin-bottom: 0.3rem; font-size: 0.82rem;
+  }
+  .ex-item .zh { font-weight: 700; font-size: 0.95rem; }
+  .ex-item .decomp { color: var(--muted); font-size: 0.75rem; }
+  .ex-item .result { font-size: 0.78rem; }
+  /* English comparison bar */
+  .en-section {
+    margin-top: 1.5rem; padding: 1rem;
+    background: color-mix(in srgb, var(--english) 8%, var(--bg));
+    border: 1px solid var(--english); border-radius: 8px;
+  }
+  .en-section h4 { color: var(--english); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .en-bar {
+    height: 12px; border-radius: 6px; margin-bottom: 0.5rem;
+    background: linear-gradient(to right, var(--clear) 0%, var(--clear) 25%, var(--partial) 40%, var(--partial) 55%, var(--opaque) 70%, var(--opaque) 100%);
+  }
+  .en-zones { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; font-size: 0.82rem; }
+  .en-zone { padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); }
+  .en-zone-header { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.3rem; }
+  .en-zone .examples { font-size: 0.78rem; color: var(--muted); }
+  .contrast-note {
+    margin-top: 0.8rem; padding: 0.6rem 0.8rem;
+    background: var(--bg); border: 2px dashed var(--accent);
+    border-radius: 6px; font-size: 0.85rem; text-align: center;
+  }
+  .contrast-note strong { color: var(--accent); }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Semantic Transparency Spectrum: How Decomposable Are Chinese Compounds?</div>
+
+    <div class="gradient-bar"></div>
+    <div class="gradient-labels">
+      <span class="gl-clear">&#x2190; Fully Transparent</span>
+      <span class="gl-partial">Partially Transparent</span>
+      <span class="gl-opaque">Opaque &#x2192;</span>
+    </div>
+
+    <div class="zones">
+      <div class="zone z-clear">
+        <div class="zone-header">
+          <span class="zone-name">Fully Transparent</span>
+          <span class="zone-pct">~60-70%</span>
+        </div>
+        <div class="zone-desc">Meaning directly composable from parts</div>
+        <div class="ex-item"><span class="zh">电脑</span> <span class="decomp">electric + brain</span> <span class="result">= computer &#x2714;</span></div>
+        <div class="ex-item"><span class="zh">飞机</span> <span class="decomp">fly + machine</span> <span class="result">= airplane &#x2714;</span></div>
+        <div class="ex-item"><span class="zh">洗衣机</span> <span class="decomp">wash + clothes + machine</span> <span class="result">= washing machine &#x2714;</span></div>
+        <div class="ex-item"><span class="zh">手机</span> <span class="decomp">hand + machine</span> <span class="result">= mobile phone &#x2714;</span></div>
+        <div class="ex-item"><span class="zh">冰箱</span> <span class="decomp">ice + box</span> <span class="result">= refrigerator &#x2714;</span></div>
+        <div class="ex-item"><span class="zh">生日</span> <span class="decomp">birth + day</span> <span class="result">= birthday &#x2714;</span></div>
+      </div>
+
+      <div class="zone z-partial">
+        <div class="zone-header">
+          <span class="zone-name">Partial</span>
+          <span class="zone-pct">~20-25%</span>
+        </div>
+        <div class="zone-desc">Inferrable with some knowledge</div>
+        <div class="ex-item"><span class="zh">东西</span> <span class="decomp">east + west</span> <span class="result">= thing/stuff (?)</span></div>
+        <div class="ex-item"><span class="zh">马上</span> <span class="decomp">horse + on</span> <span class="result">= immediately (?)</span></div>
+        <div class="ex-item"><span class="zh">便宜</span> <span class="decomp">convenient + suitable</span> <span class="result">= cheap (?)</span></div>
+      </div>
+
+      <div class="zone z-opaque">
+        <div class="zone-header">
+          <span class="zone-name">Opaque</span>
+          <span class="zone-pct">~10-15%</span>
+        </div>
+        <div class="zone-desc">Meaning not recoverable</div>
+        <div class="ex-item"><span class="zh">天真</span> <span class="decomp">sky + true</span> <span class="result">= naive &#x2718;</span></div>
+        <div class="ex-item"><span class="zh">糊涂</span> <span class="decomp">paste + confused</span> <span class="result">= muddled &#x2718;</span></div>
+      </div>
+    </div>
+
+    <div class="en-section">
+      <h4>English Transparency Comparison: Three Historical Layers</h4>
+      <div class="en-bar"></div>
+      <div class="en-zones">
+        <div class="en-zone">
+          <div class="en-zone-header" style="color:var(--clear);">Germanic (~25%)</div>
+          <div>Transparent</div>
+          <div class="examples">"sunflower" "blackbird" "farmhouse"</div>
+        </div>
+        <div class="en-zone">
+          <div class="en-zone-header" style="color:var(--partial);">Latin/French (~56%)</div>
+          <div>Semi-transparent (with training)</div>
+          <div class="examples">"predict" (pre+dict) "incredible" (in+cred+ible)</div>
+        </div>
+        <div class="en-zone">
+          <div class="en-zone-header" style="color:var(--opaque);">Greek (~6-8%)</div>
+          <div>Opaque without specialist knowledge</div>
+          <div class="examples">"photography" "democracy" "biology"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrast-note">
+      <strong>The critical difference:</strong> Chinese transparency uses <strong>everyday morphemes</strong> -- a child who knows 电 (electric) can decompose 电脑 (computer). English transparency requires <strong>specialist knowledge of dead languages</strong> -- a child cannot decompose "computer" (Latin com+putare) without training.
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Semantic Transparency: Chinese vs. English Vocabulary Decomposability</h2>
+    <p>Approximately 60-70% of Chinese compounds are fully transparent (meaning directly composable from parts), with another 20-25% partially transparent. English transparency depends on which historical layer a word comes from: Germanic compounds are transparent, Latin/French words require training, Greek scientific terms are opaque. Chinese uses everyday building blocks at ALL levels; English shifts to foreign roots for formal/technical vocabulary.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

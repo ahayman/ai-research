@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morpheme Networks: One Character, Many Words</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --hub1: #e67e22; --hub1-bg: #fef3e2;
+    --hub2: #ef4444; --hub2-bg: #fef2f2;
+    --spoke: #2563eb; --spoke-bg: #dbeafe;
+    --muted: #6c757d; --caption-bg: #f8f9fa; --english: #6366f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --hub1: #f59e0b; --hub1-bg: #4a3520;
+      --hub2: #f87171; --hub2-bg: #3b1a1a;
+      --spoke: #6b8aff; --spoke-bg: #1e2a4a;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e; --english: #818cf8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .networks { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .network-panel {
+    border-radius: 8px; padding: 1rem; border: 2px solid;
+  }
+  .net1 { background: var(--hub1-bg); border-color: var(--hub1); }
+  .net2 { background: var(--hub2-bg); border-color: var(--hub2); }
+  .hub {
+    text-align: center; margin-bottom: 0.8rem;
+  }
+  .hub-char { font-size: 2.5rem; font-weight: 700; }
+  .net1 .hub-char { color: var(--hub1); }
+  .net2 .hub-char { color: var(--hub2); }
+  .hub-info { font-size: 0.85rem; color: var(--muted); }
+  .hub-meaning { font-size: 1rem; font-weight: 600; }
+  .spokes-list { display: flex; flex-direction: column; gap: 0.3rem; }
+  .spoke-item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 0.5rem;
+    padding: 0.35rem 0.5rem; background: var(--bg); border-radius: 4px;
+    border: 1px solid var(--border); align-items: center; font-size: 0.85rem;
+  }
+  .spoke-compound { font-weight: 700; font-size: 1rem; min-width: 50px; }
+  .spoke-decomp { font-size: 0.78rem; color: var(--muted); }
+  .spoke-meaning { text-align: right; font-size: 0.82rem; }
+  .net1 .spoke-compound { color: var(--hub1); }
+  .net2 .spoke-compound { color: var(--hub2); }
+  /* Compound returns */
+  .returns-box {
+    margin-top: 1.5rem; padding: 1rem;
+    background: var(--bg); border: 2px solid var(--accent);
+    border-radius: 8px; text-align: center;
+  }
+  .returns-box h4 { color: var(--accent); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .returns-flow {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    flex-wrap: wrap; margin-bottom: 0.5rem;
+  }
+  .rf-block {
+    padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700;
+    text-align: center;
+  }
+  .rf-input { background: var(--hub1-bg); color: var(--hub1); border: 2px solid var(--hub1); font-size: 1.5rem; }
+  .rf-arrow { font-size: 1.5rem; color: var(--accent); }
+  .rf-output { background: var(--spoke-bg); color: var(--spoke); border: 2px solid var(--spoke); }
+  .rf-output .big { font-size: 1.3rem; }
+  .rf-output .small { font-size: 0.82rem; }
+  .returns-note { font-size: 0.85rem; color: var(--muted); }
+  /* English compare */
+  .en-compare {
+    margin-top: 1rem; padding: 0.8rem 1rem;
+    background: color-mix(in srgb, var(--english) 8%, var(--bg));
+    border: 1px solid var(--english); border-radius: 6px; font-size: 0.85rem;
+  }
+  .en-compare h4 { color: var(--english); font-size: 0.9rem; margin-bottom: 0.3rem; }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Morpheme Networks: One Character Unlocks Many Words</div>
+    <div class="subtitle">Each character you learn participates in dozens of compounds -- "compound returns" accelerate vocabulary growth</div>
+
+    <div class="networks">
+      <!-- Network 1: 电 -->
+      <div class="network-panel net1">
+        <div class="hub">
+          <div class="hub-char">电</div>
+          <div class="hub-info">dian</div>
+          <div class="hub-meaning">"electric / electricity"</div>
+        </div>
+        <div class="spokes-list">
+          <div class="spoke-item"><span class="spoke-compound">电脑</span><span class="spoke-decomp">electric + brain</span><span class="spoke-meaning">computer</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电话</span><span class="spoke-decomp">electric + speech</span><span class="spoke-meaning">telephone</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电视</span><span class="spoke-decomp">electric + vision</span><span class="spoke-meaning">television</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电影</span><span class="spoke-decomp">electric + shadow</span><span class="spoke-meaning">movie</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电池</span><span class="spoke-decomp">electric + pool</span><span class="spoke-meaning">battery</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电灯</span><span class="spoke-decomp">electric + lamp</span><span class="spoke-meaning">electric light</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电梯</span><span class="spoke-decomp">electric + ladder</span><span class="spoke-meaning">elevator</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电子</span><span class="spoke-decomp">electric + particle</span><span class="spoke-meaning">electron</span></div>
+          <div class="spoke-item"><span class="spoke-compound">电邮</span><span class="spoke-decomp">electric + mail</span><span class="spoke-meaning">email</span></div>
+          <div class="spoke-item"><span class="spoke-compound">闪电</span><span class="spoke-decomp">flash + electric</span><span class="spoke-meaning">lightning</span></div>
+        </div>
+      </div>
+
+      <!-- Network 2: 心 -->
+      <div class="network-panel net2">
+        <div class="hub">
+          <div class="hub-char">心</div>
+          <div class="hub-info">xin</div>
+          <div class="hub-meaning">"heart / mind"</div>
+        </div>
+        <div class="spokes-list">
+          <div class="spoke-item"><span class="spoke-compound">开心</span><span class="spoke-decomp">open + heart</span><span class="spoke-meaning">happy</span></div>
+          <div class="spoke-item"><span class="spoke-compound">小心</span><span class="spoke-decomp">small + heart</span><span class="spoke-meaning">careful</span></div>
+          <div class="spoke-item"><span class="spoke-compound">放心</span><span class="spoke-decomp">release + heart</span><span class="spoke-meaning">at ease</span></div>
+          <div class="spoke-item"><span class="spoke-compound">伤心</span><span class="spoke-decomp">injure + heart</span><span class="spoke-meaning">sad</span></div>
+          <div class="spoke-item"><span class="spoke-compound">担心</span><span class="spoke-decomp">carry + heart</span><span class="spoke-meaning">worried</span></div>
+          <div class="spoke-item"><span class="spoke-compound">细心</span><span class="spoke-decomp">fine + heart</span><span class="spoke-meaning">meticulous</span></div>
+          <div class="spoke-item"><span class="spoke-compound">粗心</span><span class="spoke-decomp">coarse + heart</span><span class="spoke-meaning">careless</span></div>
+          <div class="spoke-item"><span class="spoke-compound">心疼</span><span class="spoke-decomp">heart + ache</span><span class="spoke-meaning">feel sorry for</span></div>
+          <div class="spoke-item"><span class="spoke-compound">心理</span><span class="spoke-decomp">heart + principle</span><span class="spoke-meaning">psychology</span></div>
+          <div class="spoke-item"><span class="spoke-compound">中心</span><span class="spoke-decomp">middle + heart</span><span class="spoke-meaning">center</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="returns-box">
+      <h4>The Compound Returns Principle</h4>
+      <div class="returns-flow">
+        <div class="rf-block rf-input">1 character</div>
+        <div class="rf-arrow">&#x2192;</div>
+        <div class="rf-block rf-output"><div class="big">10+ words</div><div class="small">unlocked</div></div>
+      </div>
+      <div class="returns-note">
+        Each new character combines with ALL previously known characters. Learning accelerates over time -- the 1,000th character unlocks far more words than the 100th because it has more characters to combine with.
+      </div>
+    </div>
+
+    <div class="en-compare">
+      <h4>English Comparison: Why "Compound Returns" Don't Work in English</h4>
+      <p>English has productive affixes ("un-," "-ness," "-tion") but they are <b>bound morphemes</b> -- you cannot use "un-" or "-tion" as standalone words. Chinese productive morphemes are <b>independent characters</b>: 电 IS "electricity" on its own, 心 IS "heart" on its own. Every building block of Chinese vocabulary is a visible, usable, everyday unit. Learning 10 English words gives you exactly 10 words. Learning 10 Chinese characters gives you 10 characters + dozens of compound words.</p>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Morpheme Networks: The Compound Returns Principle</h2>
+    <p>A single Chinese character like 电 (electric) or 心 (heart) participates in 10+ compound words. Each character learned is a key that unlocks a family of vocabulary. This creates accelerating returns: the more characters you know, the more compounds each new character unlocks.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

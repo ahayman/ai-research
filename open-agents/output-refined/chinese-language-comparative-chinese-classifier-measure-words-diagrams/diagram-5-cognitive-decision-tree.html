@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classifier Selection: The Perceptual Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --q: #ef4444; --q-bg: #fef2f2;
+    --anim: #8b5cf6; --anim-bg: #ede9fe;
+    --func: #2563eb; --func-bg: #dbeafe;
+    --shape: #e67e22; --shape-bg: #fef3e2;
+    --gen: #059669; --gen-bg: #d1fae5;
+    --yes: #22c55e; --no: #9ca3af;
+    --muted: #6c757d; --caption-bg: #f8f9fa; --english: #6366f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --q: #f87171; --q-bg: #3b1a1a;
+      --anim: #a78bfa; --anim-bg: #2e2050;
+      --func: #6b8aff; --func-bg: #1e2a4a;
+      --shape: #f59e0b; --shape-bg: #4a3520;
+      --gen: #34d399; --gen-bg: #14352d;
+      --yes: #4ade80; --no: #6b7280;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e; --english: #818cf8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .tree-title {
+    text-align: center; font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .tree-sub { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  /* Decision tree */
+  .dtree { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .dt-start {
+    padding: 0.6rem 1.2rem; border-radius: 50%; border: 3px solid var(--accent);
+    background: var(--bg); font-weight: 700; color: var(--accent);
+    font-size: 0.9rem; text-align: center;
+  }
+  .dt-connector {
+    width: 2px; height: 20px; background: var(--border);
+  }
+  .dt-question {
+    padding: 0.6rem 1rem; border-radius: 8px; border: 2px solid var(--q);
+    background: var(--q-bg); font-weight: 700; font-size: 0.9rem;
+    color: var(--q); text-align: center; max-width: 500px;
+  }
+  .dt-branches {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    width: 100%; max-width: 800px;
+  }
+  .dt-branch {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .dt-answer {
+    padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .dt-yes { background: var(--yes); color: white; }
+  .dt-no { background: var(--no); color: white; }
+  .dt-result {
+    padding: 0.8rem 1rem; border-radius: 8px; border: 2px solid;
+    text-align: center; width: 100%; max-width: 350px;
+  }
+  .dt-result.anim-r { background: var(--anim-bg); border-color: var(--anim); }
+  .dt-result.func-r { background: var(--func-bg); border-color: var(--func); }
+  .dt-result.shape-r { background: var(--shape-bg); border-color: var(--shape); }
+  .dt-result.gen-r { background: var(--gen-bg); border-color: var(--gen); }
+  .dt-result h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .dt-result.anim-r h4 { color: var(--anim); }
+  .dt-result.func-r h4 { color: var(--func); }
+  .dt-result.shape-r h4 { color: var(--shape); }
+  .dt-result.gen-r h4 { color: var(--gen); }
+  .dt-result .examples { font-size: 0.78rem; color: var(--muted); }
+  .dt-result .classifiers { font-size: 1rem; font-weight: 700; margin: 0.2rem 0; }
+  /* Flow layout for multiple levels */
+  .level { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .level-row {
+    display: flex; justify-content: center; gap: 2rem; width: 100%;
+    flex-wrap: wrap;
+  }
+  .sub-tree {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    flex: 0 1 350px;
+  }
+  /* Annotation */
+  .annotation {
+    margin-top: 1.5rem; padding: 1rem;
+    background: var(--bg); border: 2px dashed var(--accent);
+    border-radius: 8px;
+  }
+  .annotation h4 { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; text-align: center; }
+  .ann-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .ann-panel { padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border); }
+  .ann-zh { font-weight: 700; }
+  .ann-en { color: var(--english); font-style: italic; }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="tree-title">How Chinese Speakers Select Classifiers: A Perceptual Decision Tree</div>
+    <div class="tree-sub">This process runs (often unconsciously) every time a noun is counted or specified</div>
+
+    <div class="dtree">
+      <div class="dt-start">Physical Object<br>to Count</div>
+      <div class="dt-connector"></div>
+
+      <!-- Level 1: Alive? -->
+      <div class="dt-question">Is it alive?</div>
+      <div class="dt-connector"></div>
+      <div class="level-row">
+        <!-- YES: Alive -->
+        <div class="sub-tree">
+          <div class="dt-answer dt-yes">YES</div>
+          <div class="dt-connector"></div>
+          <div class="dt-question" style="font-size:0.82rem;">Human or animal?</div>
+          <div class="dt-connector"></div>
+          <div class="level-row" style="gap:0.8rem;">
+            <div class="sub-tree" style="flex:0 1 160px;">
+              <div class="dt-answer dt-yes" style="font-size:0.72rem;">HUMAN</div>
+              <div class="dt-connector" style="height:10px;"></div>
+              <div class="dt-result anim-r">
+                <h4>Human Classifiers</h4>
+                <div class="classifiers">位 名 个</div>
+                <div class="examples">位(polite) 名(formal) 个(neutral)</div>
+              </div>
+            </div>
+            <div class="sub-tree" style="flex:0 1 160px;">
+              <div class="dt-answer dt-no" style="font-size:0.72rem;">ANIMAL</div>
+              <div class="dt-connector" style="height:10px;"></div>
+              <div class="dt-result anim-r">
+                <h4>Animal Classifiers</h4>
+                <div class="classifiers">只 头 匹</div>
+                <div class="examples">只(sm/med) 头(large) 匹(horse)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NO: Not alive -->
+        <div class="sub-tree">
+          <div class="dt-answer dt-no">NO</div>
+          <div class="dt-connector"></div>
+          <div class="dt-question" style="font-size:0.82rem;">Does it have a clear functional category?</div>
+          <div class="dt-connector"></div>
+          <div class="level-row" style="gap:0.8rem;">
+            <div class="sub-tree" style="flex:0 1 160px;">
+              <div class="dt-answer dt-yes" style="font-size:0.72rem;">YES</div>
+              <div class="dt-connector" style="height:10px;"></div>
+              <div class="dt-result func-r">
+                <h4>Function Classifiers</h4>
+                <div class="classifiers">本 辆 台 把 件</div>
+                <div class="examples">book? 本 | vehicle? 辆 | machine? 台</div>
+              </div>
+            </div>
+            <div class="sub-tree" style="flex:0 1 160px;">
+              <div class="dt-answer dt-no" style="font-size:0.72rem;">NO</div>
+              <div class="dt-connector" style="height:10px;"></div>
+              <div class="dt-question" style="font-size:0.78rem; padding:0.4rem;">Prominent shape?</div>
+              <div class="dt-connector" style="height:10px;"></div>
+              <div class="level-row" style="gap:0.5rem;">
+                <div class="sub-tree" style="flex:0 1 140px;">
+                  <div class="dt-answer dt-yes" style="font-size:0.7rem;">YES</div>
+                  <div class="dt-connector" style="height:8px;"></div>
+                  <div class="dt-result shape-r" style="padding:0.5rem;">
+                    <h4 style="font-size:0.82rem;">Shape CL</h4>
+                    <div class="classifiers" style="font-size:0.9rem;">条 张 颗 根 块</div>
+                    <div class="examples">match dimension</div>
+                  </div>
+                </div>
+                <div class="sub-tree" style="flex:0 1 140px;">
+                  <div class="dt-answer dt-no" style="font-size:0.7rem;">NO/UNSURE</div>
+                  <div class="dt-connector" style="height:8px;"></div>
+                  <div class="dt-result gen-r" style="padding:0.5rem;">
+                    <h4 style="font-size:0.82rem;">Default</h4>
+                    <div class="classifiers" style="font-size:1.2rem;">个</div>
+                    <div class="examples">always works!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation">
+      <h4>The Key Insight: Chinese = Explicit Classification, English = Implicit</h4>
+      <div class="ann-grid">
+        <div class="ann-panel" style="background:var(--shape-bg);">
+          <div class="ann-zh">Chinese: 三<span style="color:var(--shape);font-weight:700;">条</span>蛇</div>
+          <div>"three <b>LONG-THIN</b> snake"</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Every count expression is also a classification act -- shape info is MANDATORY</div>
+        </div>
+        <div class="ann-panel" style="background:color-mix(in srgb, var(--english) 8%, var(--bg));">
+          <div class="ann-en">"three snakes"</div>
+          <div>"three [no shape info] snake"</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">English counts without classifying. The speaker implicitly knows snakes are long, but grammar never requires saying so.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Classifiers as Perceptual Ontology: A Grammaticalized Decision Tree</h2>
+    <p>Chinese speakers classify every noun before counting it, following a principled hierarchy: Is it alive? (animacy classifiers) Does it have a clear function? (function classifiers) What shape is it? (shape classifiers) None of the above? (个 default). English speakers make these same perceptual judgments -- but English grammar never requires them to be stated aloud.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

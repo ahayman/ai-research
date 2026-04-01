@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Classifier Slot: Mandatory in Chinese, Absent in English</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb; --chinese: #e67e22; --chinese-bg: #fef3e2;
+    --english: #6366f1; --english-bg: #e8e8ff;
+    --classifier: #ef4444; --classifier-bg: #fef2f2;
+    --number: #2563eb; --noun: #059669;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+    --error: #ef4444; --success: #22c55e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --chinese: #f59e0b; --chinese-bg: #4a3520;
+      --english: #818cf8; --english-bg: #2e2e5a;
+      --classifier: #f87171; --classifier-bg: #3b1a1a;
+      --number: #6b8aff; --noun: #34d399;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+      --error: #f87171; --success: #4ade80;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .section-title {
+    font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.75rem;
+    padding-left: 0.5rem; border-left: 3px solid var(--accent);
+  }
+  .section-title:first-child { margin-top: 0; }
+  /* Slot diagrams */
+  .slot-row {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;
+    padding: 0.5rem; background: var(--bg); border-radius: 6px; border: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .slot-label {
+    font-size: 0.78rem; font-weight: 700; min-width: 70px;
+  }
+  .slot-label.zh-label { color: var(--chinese); }
+  .slot-label.en-label { color: var(--english); }
+  .slot-block {
+    padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem;
+    font-weight: 600; text-align: center; border: 2px solid;
+  }
+  .sb-num { background: color-mix(in srgb, var(--number) 12%, var(--bg)); color: var(--number); border-color: var(--number); }
+  .sb-cl { background: var(--classifier-bg); color: var(--classifier); border-color: var(--classifier); border-style: solid; }
+  .sb-cl-empty {
+    background: var(--classifier-bg); color: var(--classifier); border-color: var(--classifier);
+    border-style: dashed; opacity: 0.5;
+  }
+  .sb-noun { background: color-mix(in srgb, var(--noun) 12%, var(--bg)); color: var(--noun); border-color: var(--noun); }
+  .slot-arrow { color: var(--muted); font-size: 0.9rem; }
+  .slot-result { font-size: 0.85rem; margin-left: 0.3rem; }
+  .slot-note { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+  /* Examples grid */
+  .examples-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .ex-card {
+    padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .ex-card.zh-card { border-left: 3px solid var(--chinese); }
+  .ex-card.en-card { border-left: 3px solid var(--english); }
+  .ex-zh-main { font-size: 1.1rem; font-weight: 600; }
+  .ex-py { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+  .ex-gl { font-size: 0.82rem; }
+  .ex-en-main { font-size: 1rem; font-weight: 600; color: var(--english); }
+  .ex-note { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+  /* Status markers */
+  .status { font-weight: 700; font-size: 0.82rem; }
+  .status-ok { color: var(--success); }
+  .status-err { color: var(--error); text-decoration: line-through; }
+  .status-icon { margin-right: 0.2rem; }
+  /* Overlap section */
+  .overlap-box {
+    margin-top: 1rem; padding: 1rem;
+    background: var(--bg); border: 2px dashed var(--accent);
+    border-radius: 8px;
+  }
+  .overlap-title { font-weight: 700; color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .overlap-row {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem;
+    margin-bottom: 0.4rem; font-size: 0.85rem; align-items: center;
+  }
+  .ol-zh { text-align: right; }
+  .ol-vs { text-align: center; color: var(--muted); font-size: 0.78rem; }
+  .ol-en { text-align: left; color: var(--english); }
+  .ol-note { font-size: 0.78rem; color: var(--muted); font-style: italic; text-align: center; }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="section-title" style="margin-top:0;">The Structural Pattern</div>
+
+    <div class="slot-row">
+      <span class="slot-label zh-label">Chinese:</span>
+      <span class="slot-block sb-num">Number/Demo</span>
+      <span class="slot-arrow">+</span>
+      <span class="slot-block sb-cl">CLASSIFIER</span>
+      <span class="slot-arrow">+</span>
+      <span class="slot-block sb-noun">Noun</span>
+      <span class="slot-note">MANDATORY -- cannot be skipped</span>
+    </div>
+    <div class="slot-row">
+      <span class="slot-label en-label">English:</span>
+      <span class="slot-block sb-num">Number/Demo</span>
+      <span class="slot-arrow">+</span>
+      <span class="slot-block sb-cl-empty">---</span>
+      <span class="slot-arrow">+</span>
+      <span class="slot-block sb-noun">Noun</span>
+      <span class="slot-note">No classifier slot exists</span>
+    </div>
+
+    <div class="section-title">Mandatory vs. Ungrammatical</div>
+    <div class="examples-grid">
+      <div class="ex-card zh-card">
+        <div class="status status-ok"><span class="status-icon">&#x2714;</span> Grammatical</div>
+        <div class="ex-zh-main">三<span style="color:var(--classifier);font-weight:700;">本</span>书</div>
+        <div class="ex-py">san <b>ben</b> shu</div>
+        <div class="ex-gl">three <span style="color:var(--classifier);">CL:volume</span> book</div>
+      </div>
+      <div class="ex-card zh-card">
+        <div class="status status-err"><span class="status-icon">&#x2718;</span> *三书 -- UNGRAMMATICAL</div>
+        <div class="ex-zh-main" style="text-decoration:line-through;opacity:0.5;">三书</div>
+        <div class="ex-py" style="text-decoration:line-through;opacity:0.5;">*san shu</div>
+        <div class="ex-note">Missing classifier = broken Chinese</div>
+      </div>
+      <div class="ex-card zh-card">
+        <div class="status status-ok"><span class="status-icon">&#x2714;</span> Grammatical</div>
+        <div class="ex-zh-main">这<span style="color:var(--classifier);font-weight:700;">只</span>猫</div>
+        <div class="ex-py">zhe <b>zhi</b> mao</div>
+        <div class="ex-gl">this <span style="color:var(--classifier);">CL:animal</span> cat</div>
+      </div>
+      <div class="ex-card en-card">
+        <div class="status status-ok"><span class="status-icon">&#x2714;</span> Grammatical (no classifier needed)</div>
+        <div class="ex-en-main">"three books" / "this cat"</div>
+        <div class="ex-note">Number/demo attaches directly to noun in English</div>
+      </div>
+    </div>
+
+    <div class="section-title">More Patterns: Every Counting Context Requires a Classifier</div>
+    <div class="examples-grid">
+      <div class="ex-card zh-card">
+        <div class="ex-zh-main">哪<span style="color:var(--classifier);">条</span>路？</div>
+        <div class="ex-py">na <b>tiao</b> lu?</div>
+        <div class="ex-gl">which <span style="color:var(--classifier);">CL:long-thin</span> road?</div>
+      </div>
+      <div class="ex-card en-card">
+        <div class="ex-en-main">"Which road?"</div>
+        <div class="ex-note">No shape information conveyed</div>
+      </div>
+      <div class="ex-card zh-card">
+        <div class="ex-zh-main">每<span style="color:var(--classifier);">个</span>人</div>
+        <div class="ex-py">mei <b>ge</b> ren</div>
+        <div class="ex-gl">every <span style="color:var(--classifier);">CL:general</span> person</div>
+      </div>
+      <div class="ex-card en-card">
+        <div class="ex-en-main">"Every person"</div>
+        <div class="ex-note">"every" + noun directly</div>
+      </div>
+    </div>
+
+    <div class="section-title">But Without Number/Demonstrative: No Classifier Needed</div>
+    <div class="examples-grid">
+      <div class="ex-card zh-card">
+        <div class="status status-ok"><span class="status-icon">&#x2714;</span> No classifier</div>
+        <div class="ex-zh-main">我喜欢书</div>
+        <div class="ex-py">wo xihuan shu</div>
+        <div class="ex-gl">"I like books" -- generic, no number = no classifier</div>
+      </div>
+      <div class="ex-card en-card">
+        <div class="ex-en-main">"I like books"</div>
+        <div class="ex-note">Same pattern -- generic reference, no counting</div>
+      </div>
+    </div>
+
+    <div class="overlap-box">
+      <div class="overlap-title">Where English and Chinese Overlap: Mass Noun Measures</div>
+      <div class="overlap-row">
+        <div class="ol-zh">两<span style="color:var(--classifier);">杯</span>水 (liang <b>bei</b> shui)</div>
+        <div class="ol-vs">&#x2194;</div>
+        <div class="ol-en">"two <b>cups of</b> water"</div>
+      </div>
+      <div class="overlap-row">
+        <div class="ol-zh">一<span style="color:var(--classifier);">片</span>面包 (yi <b>pian</b> mianbao)</div>
+        <div class="ol-vs">&#x2194;</div>
+        <div class="ol-en">"a <b>slice of</b> bread"</div>
+      </div>
+      <div class="ol-note">Both languages use measure words for mass/uncountable nouns. But ONLY Chinese extends this to ALL count nouns too.</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>The Classifier Slot: Mandatory in Chinese, Absent in English</h2>
+    <p>Every time a Chinese speaker counts or specifies a noun, a classifier must be inserted between the number/demonstrative and the noun. English has no such slot. The two languages overlap only for mass nouns ("a cup of water"), but Chinese extends the requirement to every countable noun as well.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

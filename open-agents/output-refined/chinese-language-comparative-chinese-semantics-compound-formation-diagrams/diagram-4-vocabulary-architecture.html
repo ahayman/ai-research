@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Architecture: Chinese Single-Layer vs. English Three-Layer</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #2563eb;
+    --chinese: #e67e22; --chinese-bg: #fef3e2;
+    --germ: #22c55e; --germ-bg: #dcfce7;
+    --latin: #f59e0b; --latin-bg: #fef3e2;
+    --greek: #ef4444; --greek-bg: #fef2f2;
+    --english: #6366f1; --english-bg: #e8e8ff;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff;
+      --chinese: #f59e0b; --chinese-bg: #4a3520;
+      --germ: #4ade80; --germ-bg: #14532d;
+      --latin: #fbbf24; --latin-bg: #4a3520;
+      --greek: #f87171; --greek-bg: #3b1a1a;
+      --english: #818cf8; --english-bg: #2e2e5a;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; }
+  .arch-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; }
+  /* English side */
+  .en-arch {
+    border: 2px solid var(--english); border-radius: 8px; overflow: hidden;
+  }
+  .en-arch-title {
+    background: var(--english); color: white; padding: 0.5rem;
+    text-align: center; font-weight: 700; font-size: 0.95rem;
+  }
+  .en-layers { display: flex; flex-direction: column; }
+  .en-layer {
+    padding: 0.8rem; border-bottom: 1px solid var(--border);
+  }
+  .en-layer:last-child { border-bottom: none; }
+  .el-greek { background: var(--greek-bg); }
+  .el-latin { background: var(--latin-bg); }
+  .el-germ { background: var(--germ-bg); }
+  .el-header { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+  .el-name { font-weight: 700; font-size: 0.85rem; }
+  .el-greek .el-name { color: var(--greek); }
+  .el-latin .el-name { color: var(--latin); }
+  .el-germ .el-name { color: var(--germ); }
+  .el-pct { font-size: 0.78rem; font-weight: 700; }
+  .el-greek .el-pct { color: var(--greek); }
+  .el-latin .el-pct { color: var(--latin); }
+  .el-germ .el-pct { color: var(--germ); }
+  .el-desc { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .el-examples { font-size: 0.82rem; }
+  .el-examples b { font-weight: 600; }
+  /* Middle arrow */
+  .vs-arrow {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.5rem; color: var(--accent); font-weight: 700;
+  }
+  .vs-arrow .arrow { font-size: 2rem; }
+  .vs-arrow .label { font-size: 0.78rem; writing-mode: vertical-rl; }
+  /* Chinese side */
+  .zh-arch {
+    border: 2px solid var(--chinese); border-radius: 8px; overflow: hidden;
+  }
+  .zh-arch-title {
+    background: var(--chinese); color: white; padding: 0.5rem;
+    text-align: center; font-weight: 700; font-size: 0.95rem;
+  }
+  .zh-single {
+    background: var(--chinese-bg); padding: 0.8rem;
+  }
+  .zh-layer-label {
+    font-weight: 700; color: var(--chinese); font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+  .zh-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .zh-example-row {
+    display: grid; grid-template-columns: auto 1fr; gap: 0.5rem;
+    margin-bottom: 0.5rem; font-size: 0.85rem; align-items: start;
+  }
+  .zh-level-tag {
+    padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.72rem;
+    font-weight: 700; color: white; text-align: center; min-width: 65px;
+  }
+  .tag-every { background: var(--germ); }
+  .tag-formal { background: var(--latin); }
+  .tag-tech { background: var(--greek); }
+  .zh-examples { font-size: 0.82rem; }
+  /* Fire example */
+  .fire-compare {
+    margin-top: 1.5rem; padding: 1rem;
+    background: var(--bg); border: 2px solid var(--accent);
+    border-radius: 8px;
+  }
+  .fire-title { font-weight: 700; color: var(--accent); font-size: 0.95rem; margin-bottom: 0.8rem; text-align: center; }
+  .fire-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .fire-panel { padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border); }
+  .fire-en { background: var(--english-bg); }
+  .fire-zh { background: var(--chinese-bg); }
+  .fire-panel h5 { font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .fire-en h5 { color: var(--english); }
+  .fire-zh h5 { color: var(--chinese); }
+  .fire-items { font-size: 0.82rem; }
+  .fire-items div { margin-bottom: 0.2rem; }
+  .layer-tag {
+    display: inline-block; font-size: 0.65rem; padding: 0.1rem 0.3rem;
+    border-radius: 2px; font-weight: 700; vertical-align: middle;
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Vocabulary Architecture: English Three-Layer vs. Chinese Single-Layer</div>
+
+    <div class="arch-compare">
+      <!-- English side -->
+      <div class="en-arch">
+        <div class="en-arch-title">English: Three Historical Layers</div>
+        <div class="en-layers">
+          <div class="en-layer el-greek">
+            <div class="el-header"><span class="el-name">Greek (Scientific)</span><span class="el-pct">~6-8%</span></div>
+            <div class="el-desc">Opaque roots, specialist vocabulary</div>
+            <div class="el-examples"><b>biology</b> (bios+logos), <b>democracy</b> (demos+kratos), <b>psychology</b> (psyche+logos)</div>
+          </div>
+          <div class="en-layer el-latin">
+            <div class="el-header"><span class="el-name">Latin/French (Formal)</span><span class="el-pct">~56%</span></div>
+            <div class="el-desc">Semi-transparent, educated register</div>
+            <div class="el-examples"><b>residence</b> vs. house, <b>consume</b> vs. eat, <b>commence</b> vs. begin</div>
+          </div>
+          <div class="en-layer el-germ">
+            <div class="el-header"><span class="el-name">Germanic (Everyday)</span><span class="el-pct">~25%</span></div>
+            <div class="el-desc">Transparent, basic vocabulary</div>
+            <div class="el-examples"><b>house</b>, <b>hand</b>, <b>water</b>, <b>eat</b>, <b>sleep</b>, <b>work</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vs-arrow">
+        <div class="arrow">&#x21C4;</div>
+        <div class="label">CONTRAST</div>
+      </div>
+
+      <!-- Chinese side -->
+      <div class="zh-arch">
+        <div class="zh-arch-title">Chinese: One Morpheme Pool</div>
+        <div class="zh-single">
+          <div class="zh-layer-label">~4,000-5,000 productive morphemes used at ALL levels</div>
+          <div class="zh-desc">The same characters build everyday, formal, AND scientific vocabulary</div>
+
+          <div class="zh-example-row">
+            <span class="zh-level-tag tag-every">Everyday</span>
+            <div class="zh-examples">电 electric, 心 heart, 火 fire, 水 water, 学 study</div>
+          </div>
+          <div class="zh-example-row">
+            <span class="zh-level-tag tag-formal">Formal</span>
+            <div class="zh-examples">电话 (electric-speech) telephone, 民主 (people-master) democracy</div>
+          </div>
+          <div class="zh-example-row">
+            <span class="zh-level-tag tag-tech">Technical</span>
+            <div class="zh-examples">心理学 (heart-principle-study) psychology, 生物学 (life-things-study) biology</div>
+          </div>
+
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem; text-align:center; font-style:italic;">
+            Same morphemes at every level -- no register-based vocabulary ceiling
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fire example -->
+    <div class="fire-compare">
+      <div class="fire-title">Case Study: One Concept, Three English Roots vs. One Chinese Root</div>
+      <div class="fire-grid">
+        <div class="fire-panel fire-en">
+          <h5>English: "Fire" Across Three Layers</h5>
+          <div class="fire-items">
+            <div><b>fire</b> <span class="layer-tag" style="background:var(--germ);color:white;">Germanic</span> -- everyday word</div>
+            <div><b>conflagration</b> <span class="layer-tag" style="background:var(--latin);color:white;">Latin</span> -- formal register</div>
+            <div><b>pyro-</b> <span class="layer-tag" style="background:var(--greek);color:white;">Greek</span> -- scientific (pyrotechnics)</div>
+            <div style="color:var(--muted); font-size:0.78rem; margin-top:0.3rem;">Three unrelated roots for ONE concept -- learners must memorize each independently</div>
+          </div>
+        </div>
+        <div class="fire-panel fire-zh">
+          <h5>Chinese: 火 (huo) Across All Levels</h5>
+          <div class="fire-items">
+            <div><b>火</b> (huo) -- the word for fire</div>
+            <div><b>火车</b> (fire-vehicle) = train</div>
+            <div><b>火山</b> (fire-mountain) = volcano</div>
+            <div><b>火灾</b> (fire-disaster) = conflagration</div>
+            <div><b>火锅</b> (fire-pot) = hot pot</div>
+            <div style="color:var(--muted); font-size:0.78rem; margin-top:0.3rem;">ONE root used everywhere -- learn 火 once, use it in all contexts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Vocabulary Architecture: Why Chinese Scales and English Fragments</h2>
+    <p>English vocabulary has three historical layers (Germanic, Latin/French, Greek) with different roots for the same concepts at different registers. Chinese uses a single pool of ~4,000-5,000 productive morphemes that combine to build ALL vocabulary levels -- everyday, formal, and scientific. The same character (like 火 "fire") works from casual speech to technical writing.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

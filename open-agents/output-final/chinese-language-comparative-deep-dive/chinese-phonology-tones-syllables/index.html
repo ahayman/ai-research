@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Phonology: Tones &amp; Syllables | Chinese Language: A Comparative Deep Dive</title>
+<meta name="description" content="Chinese solves the problem of mapping meanings to sounds vertically through tones, where English solves it horizontally through consonant clusters -- a single architectural choice that explains everything.">
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #DC2626;
+  --color-primary-light: #FCA5A5;
+  --color-primary-dark: #B91C1C;
+  --color-primary-bg: #FEF2F2;
+  --color-accent: #F59E0B;
+  --color-accent-light: #FCD34D;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #DC2626;
+  --color-link-hover: #B91C1C;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #DC2626;
+  --color-takeaway-bg: #FEF2F2;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-chinese: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --color-primary: #F87171;
+  --color-primary-light: #FCA5A5;
+  --color-primary-dark: #DC2626;
+  --color-primary-bg: #450A0A;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-bg: #0F172A;
+  --color-bg-alt: #1E293B;
+  --color-bg-sidebar: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+  --color-heading: #F1F5F9;
+  --color-link: #F87171;
+  --color-link-hover: #FCA5A5;
+  --color-code-bg: #1E293B;
+  --color-table-stripe: #1E293B;
+  --color-table-header: #334155;
+  --color-takeaway-border: #F87171;
+  --color-takeaway-bg: #450A0A;
+  --color-diagram-bg: #1E293B;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9;
+  --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748B;
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #451A03;
+  --color-danger: #F87171;
+  --color-danger-bg: #450A0A;
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A5F;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+.sidebar-title { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.sidebar-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; }
+
+.sidebar-back {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+.sidebar-back:hover { background: var(--color-bg); text-decoration: none; }
+
+.sidebar-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; }
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem; font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+.sidebar-link:hover { color: var(--color-primary); background: var(--color-bg); text-decoration: none; }
+.sidebar-link.active { color: var(--color-primary); border-left-color: var(--color-primary); background: var(--color-bg); font-weight: 600; }
+.sidebar-link.sub { padding-left: 2.25rem; font-size: 0.78rem; }
+
+.sidebar-controls {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+.theme-toggle {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer; width: 100%;
+  transition: all var(--transition);
+}
+.theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  background: var(--color-primary); color: #fff;
+  border: none; border-radius: 8px;
+  width: 40px; height: 40px;
+  font-size: 1.2rem; cursor: pointer;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main { flex: 1; margin-left: var(--sidebar-width); min-width: 0; }
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2; margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+h1 .subtitle {
+  display: block; font-size: 1rem; font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem; letter-spacing: 0;
+}
+h2 {
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem; margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+h3 {
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem; margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+h4 {
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem; margin-bottom: 0.5rem;
+}
+
+p { margin-bottom: 1rem; color: var(--color-text); }
+a { color: var(--color-link); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+ul, ol { margin: 0 0 1rem 1.5rem; color: var(--color-text); }
+li { margin-bottom: 0.35rem; }
+strong { color: var(--color-heading); }
+em { font-style: italic; }
+
+blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding: 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  background: var(--color-primary-bg);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.chinese { font-family: var(--font-chinese); font-size: 1.1em; }
+.ipa { font-family: 'Gentium Plus', 'Noto Sans', 'DejaVu Sans', serif; }
+.pinyin { font-style: italic; }
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th {
+  background: var(--color-table-header);
+  font-weight: 600; text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+}
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.diagram-container iframe { width: 100%; border: none; border-radius: 6px; }
+.diagram-caption {
+  text-align: center;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  padding: 0 1rem;
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-left: 4px solid;
+  font-size: 0.9rem;
+}
+.callout-title {
+  font-weight: 700; font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+.callout-info { border-color: var(--color-info); background: var(--color-info-bg); }
+.callout-info .callout-title { color: var(--color-info); }
+.callout-warning { border-color: var(--color-warning); background: var(--color-warning-bg); }
+.callout-warning .callout-title { color: var(--color-warning); }
+.callout-success { border-color: var(--color-success); background: var(--color-success-bg); }
+.callout-success .callout-title { color: var(--color-success); }
+
+/* ===== Takeaway Boxes ===== */
+.takeaway {
+  background: var(--color-takeaway-bg);
+  border: 1px solid var(--color-takeaway-border);
+  border-left: 4px solid var(--color-takeaway-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+.takeaway-title {
+  font-weight: 700; font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+  color: var(--color-primary);
+}
+.glossary-term:hover .glossary-def,
+.glossary-term:focus .glossary-def { display: block; }
+.glossary-def {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  width: 280px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-weight: 400;
+  pointer-events: none;
+  font-style: normal;
+}
+.glossary-def::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+.category-nav a {
+  padding: 0.75rem 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  max-width: 48%;
+}
+.category-nav a:hover { border-color: var(--color-primary); background: var(--color-primary-bg); text-decoration: none; }
+.prev-category { text-align: left; }
+.next-category { text-align: right; margin-left: auto; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none; border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: none;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 90;
+  transition: all var(--transition);
+}
+.back-to-top:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+.back-to-top.visible { display: flex; }
+
+/* ===== Series Badge ===== */
+.series-badge {
+  display: inline-block;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-primary);
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .category-nav { flex-direction: column; }
+  .category-nav a { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; }
+  .table-wrapper { font-size: 0.8rem; }
+  th, td { padding: 0.5rem 0.6rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .menu-toggle, .back-to-top, .theme-toggle, .sidebar-controls { display: none !important; }
+  .main { margin-left: 0 !important; }
+  .content { max-width: 100%; padding: 0; }
+  body { font-size: 11pt; color: #000; background: #fff; }
+  h1, h2, h3, h4, strong { color: #000; }
+  p, li, td { color: #222; }
+  a { color: #000; text-decoration: underline; }
+  .diagram-container { break-inside: avoid; border: 1px solid #ccc; }
+  .callout, .takeaway { break-inside: avoid; }
+  .category-nav { break-before: page; }
+  table { font-size: 9pt; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Chinese Phonology</div>
+    <div class="sidebar-subtitle">Chinese Language: A Comparative Deep Dive</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Core Architecture</div>
+    <a href="#overview" class="sidebar-link">Pitch as Dictionary</a>
+
+    <div class="sidebar-nav-section">Tones</div>
+    <a href="#four-tones" class="sidebar-link">The Four Tones</a>
+    <a href="#tone-sandhi" class="sidebar-link">Tone Sandhi</a>
+    <a href="#connected-speech" class="sidebar-link sub">Connected Speech</a>
+
+    <div class="sidebar-nav-section">Syllable System</div>
+    <a href="#syllable-structure" class="sidebar-link">Syllable Structure</a>
+    <a href="#consonants" class="sidebar-link sub">Consonant System</a>
+    <a href="#vowels" class="sidebar-link sub">Vowel System</a>
+    <a href="#homophones" class="sidebar-link">Homophones &amp; Pressure</a>
+
+    <div class="sidebar-nav-section">Romanization</div>
+    <a href="#pinyin" class="sidebar-link">Pinyin</a>
+    <a href="#erhua" class="sidebar-link sub">Erhua</a>
+
+    <div class="sidebar-nav-section">Comparative</div>
+    <a href="#cross-linguistic" class="sidebar-link">Among Tonal Languages</a>
+    <a href="#practical" class="sidebar-link">Practical Implications</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#pattern-summary" class="sidebar-link">Pattern Summary</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Chinese Deep Dive Hub</a>
+
+<div class="series-badge">Part 1 &mdash; Chinese Comparative Deep Dive</div>
+
+<h1>Chinese Phonology
+  <span class="subtitle">Tones, Syllables, and Sound System in Contrast with English</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">Chinese solves the problem of mapping meanings to sounds <em>vertically</em> through tonal pitch contours, where English solves it <em>horizontally</em> through consonant clusters &mdash; a single architectural choice that explains tones, homophones, compound words, and the writing system itself.</p>
+
+<div class="takeaway">
+<div class="takeaway-title">Key Takeaways</div>
+<ul style="margin-bottom:0;">
+<li>English permits ~10,000&ndash;15,000 monosyllables through consonant clustering; Mandarin has only ~1,300 tonal syllables, compensating with pitch contours</li>
+<li>Mandarin's four tones are <em>relative</em> pitch shapes, not absolute frequencies &mdash; every English speaker already produces them in intonation</li>
+<li>The aspiration distinction (not voicing) organizes the entire stop/affricate system on a different axis from English</li>
+<li>Tone sandhi rules are categorical and obligatory &mdash; five rules cover all cases with zero exceptions</li>
+<li>Every possible Mandarin syllable fits on a single chart &mdash; a finite, completable system</li>
+</ul>
+</div>
+
+
+<!-- ==================== OVERVIEW ==================== -->
+<h2 id="overview">1. The Core Architecture: Pitch as Dictionary</h2>
+
+<p>Every spoken language faces the same engineering challenge: map an unlimited world of meanings onto a finite set of producible sounds. English and Chinese solve this problem through radically different architectural strategies, and understanding the contrast between them is the single most productive insight for an English speaker approaching Chinese phonology.</p>
+
+<p>English solves the problem <em>horizontally</em>. It permits enormous variety in how consonants and vowels can be sequenced within a single syllable. The word "strengths" packs six consonants around one vowel &mdash; three at the onset (<span class="ipa">/str/</span>) and three at the coda (<span class="ipa">/ngkths/</span>). English allows up to three consonants before a vowel and up to four after it, following the template <strong>(C)(C)(C)V(C)(C)(C)(C)</strong>. This permissive consonant clustering generates roughly 10,000 to 15,000 possible monosyllabic sound combinations. With that many distinct syllable shapes available, English rarely needs any additional mechanism to keep words apart.</p>
+
+<p>Chinese solves the problem <em>vertically</em>. Mandarin permits almost no consonant clustering at all. Every syllable follows the extremely constrained template <strong>(C)(G)V(C) + Tone</strong>, where the optional coda can only be <span class="ipa">/n/</span> or <span class="ipa">/ng/</span> &mdash; never a stop consonant, never a fricative, never a cluster. Without tones, this constraint produces only about 410 distinct syllable shapes &mdash; roughly one-thirtieth of what English has available. To compensate, Mandarin adds a dimension that English entirely lacks: <span class="glossary-term">lexical tone<span class="glossary-def">A specified pitch contour that distinguishes word meaning at the syllable level. Mandarin has four tones plus a neutral tone. English uses pitch for intonation (attitude, grammar) but never for word identity.</span></span>. Each of those 410 base syllables can be spoken with four different pitch contours (plus a neutral tone), multiplying the inventory to approximately 1,300 tonal syllables.</p>
+
+<blockquote>Tones take a compact city of 410 streets and stack four floors on each one.</blockquote>
+
+<p>This trade-off &mdash; horizontal sprawl versus vertical stacking &mdash; is the key pattern. It explains why Chinese has tones, why it has so many homophones, why it needs compound words, why its writing system encodes meaning directly, and why pinyin exists. Everything cascades from this single architectural decision.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-1-four-tones-pitch-contour.html" style="height:550px;" loading="lazy" title="The Four Tones of Mandarin -- Pitch Contour Visualization"></iframe>
+  <div class="diagram-caption"><strong>Figure 1</strong> &mdash; Pitch contours of all four Mandarin tones plus the neutral tone on a 1&ndash;5 pitch scale. English uses the same pitch shapes for attitude; Chinese uses them for dictionary meaning.</div>
+</div>
+
+
+<!-- ==================== FOUR TONES ==================== -->
+<h2 id="four-tones">2. The Four Tones and Neutral Tone</h2>
+
+<p>In English, pitch operates at the sentence level. A rising pitch at the end of "He left?" signals a question. A falling pitch on "He left." signals a statement. The pitch never changes the dictionary meaning of an individual word &mdash; "cat" means "cat" whether you say it with a rising pitch, falling pitch, or monotone. English pitch carries <em>attitude</em> and <em>grammar</em>.</p>
+
+<p>In Mandarin, pitch operates at the syllable level and carries <em>dictionary meaning</em>. The syllable "ma" spoken with four different pitch contours produces four completely unrelated words:</p>
+
+<ul>
+<li><strong>Tone 1 (High Level, 55):</strong> A flat, sustained pitch at the top of the speaker's range. <span class="chinese">&#22920;</span> (<span class="pinyin">ma</span>) = mother. Like the sustained high note when a doctor asks you to say "ahhh."</li>
+<li><strong>Tone 2 (Rising, 35):</strong> A pitch that climbs from mid-range to high. <span class="chinese">&#40635;</span> (<span class="pinyin">ma</span>) = hemp. Like the surprised English "What?" or "Really?"</li>
+<li><strong>Tone 3 (Dipping/Low, 214):</strong> In isolation, the pitch dips from mid-low to low and then rises slightly &mdash; a valley shape. In connected speech, it typically just stays low without the final rise (the "half third tone"). <span class="chinese">&#39532;</span> (<span class="pinyin">ma</span>) = horse. Like the creaky, low "well..." at the start of a reluctant response.</li>
+<li><strong>Tone 4 (Falling, 51):</strong> A sharp, decisive drop from high to low. <span class="chinese">&#39554;</span> (<span class="pinyin">ma</span>) = to scold. Like the emphatic falling pitch of a command: "Stop!" or "No!"</li>
+</ul>
+
+<p>The <span class="glossary-term">neutral tone<span class="glossary-def">An unstressed, shortened syllable whose actual pitch depends on the tone before it. Not a fifth specified contour &mdash; it is determined by context. The question particle &#21527; (ma) carries a neutral tone.</span></span> is not a fifth specified contour but an unstressed, shortened syllable whose actual pitch depends on the tone before it. The numbers in parentheses are <span class="glossary-term">Chao tone-letter values<span class="glossary-def">A 1&ndash;5 pitch scale devised by linguist Y.R. Chao, where 5 is the highest pitch in the speaker's range and 1 is the lowest. These numbers precisely describe tone contours: 55 = high level, 35 = rising, 214 = dipping, 51 = falling.</span></span> on a 1&ndash;5 pitch scale.</p>
+
+<p>The crucial point for a pattern-oriented learner: tones are <em>relative</em>, not absolute. You do not need to hit a specific musical frequency. You need to produce the correct <em>shape</em> &mdash; level, rising, dipping, or falling &mdash; relative to your own natural pitch range. Musical training is not required.</p>
+
+
+<!-- ==================== TONE SANDHI ==================== -->
+<h2 id="tone-sandhi">3. Tone Sandhi: Systematic Exceptions</h2>
+
+<p>When tones combine in connected speech, the physical difficulty of producing certain sequences triggers systematic pitch changes called <span class="glossary-term">tone sandhi<span class="glossary-def">Systematic tone changes in connected speech (&#21464;&#35843;, biandiao). These are entirely predictable rules, not exceptions. Five rules cover all regular sandhi in Mandarin.</span></span>. These are not exceptions to the tone system &mdash; they are a second layer of rules that operates on top of it, and they are entirely predictable.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-3-tone-sandhi-flowchart.html" style="height:600px;" loading="lazy" title="Tone Sandhi Decision Flowchart"></iframe>
+  <div class="diagram-caption"><strong>Figure 2</strong> &mdash; Decision flowchart for applying all Mandarin tone sandhi rules. English stress shift is optional and variable; Mandarin tone sandhi is obligatory and categorical.</div>
+</div>
+
+<p>The most important rule: <strong>when two consecutive third tones appear, the first becomes a second tone.</strong> The greeting <span class="chinese">&#20320;&#22909;</span> (<span class="pinyin">ni hao</span>) is written with two third tones, but spoken as rising-then-dipping. The articulatory reason is simple: producing two consecutive dips requires the tongue and larynx to perform the same low-dip movement twice in rapid succession, which is physiologically awkward.</p>
+
+<p>Before any non-third tone, the third tone loses its rising tail entirely, becoming a short, low dip &mdash; the "half third tone." This truncated form is actually the most common realization of Tone 3 in natural speech.</p>
+
+<p>Two specific words have their own sandhi rules:</p>
+<ul>
+<li><strong><span class="chinese">&#19981;</span> (<span class="pinyin">bu</span>, "not"):</strong> Natively Tone 4, changes to Tone 2 before another Tone 4 syllable. <span class="chinese">&#19981;&#26159;</span> becomes <span class="pinyin">bu shi</span> (rising + falling).</li>
+<li><strong><span class="chinese">&#19968;</span> (<span class="pinyin">yi</span>, "one"):</strong> Natively Tone 1, changes to Tone 2 before Tone 4 and to Tone 4 before Tones 1, 2, or 3.</li>
+</ul>
+
+<div class="callout callout-info">
+<div class="callout-title">English Comparison</div>
+<p style="margin-bottom:0;">English has no tone sandhi because it has no lexical tones. The closest analogue is stress shift &mdash; when two heavily stressed syllables collide, one may lighten (e.g., "THIRteen" alone vs. "thirteen PEOPLE"). But English stress shift is optional; Mandarin tone sandhi is obligatory. Every speaker applies these rules without exception.</p>
+</div>
+
+
+<!-- ==================== CONNECTED SPEECH ==================== -->
+<h3 id="connected-speech">Connected Speech: How Tones Behave in Real Conversation</h3>
+
+<p>The most important reality: <strong>Tone 3 rarely appears in its full form.</strong> The textbook dip-and-rise (214) occurs only in isolation or at the absolute end of a phrase. In all other positions, Tone 3 is either converted to Tone 2 (before another Tone 3) or truncated to a short, low "half third tone." Learners who try to produce the full dip-and-rise on every Tone 3 syllable will sound unnatural.</p>
+
+<p>When three or more Tone 3 syllables chain together, the sandhi application follows syntactic grouping rather than simple left-to-right processing. In <span class="chinese">&#23567;&#32769;&#34382;</span> (<span class="pinyin">xiao lao hu</span>, "small tiger"), the grouping follows the syntax: (<span class="chinese">&#23567;</span>)(<span class="chinese">&#32769;&#34382;</span>). The pattern-oriented learner should recognize that tone sandhi is grammar-sensitive, not merely mechanical.</p>
+
+<p>The neutral tone's behavior provides another systematic pattern. Its pitch is entirely determined by the preceding tone: after Tone 1, it sits mid-low; after Tone 2, it sits mid; after Tone 3, it sits mid-high; after Tone 4, it sits low. This is not random &mdash; it follows a pattern of gravitational pull toward a neutral mid-range.</p>
+
+
+<!-- ==================== SYLLABLE STRUCTURE ==================== -->
+<h2 id="syllable-structure">4. Syllable Structure: The Template That Explains Everything</h2>
+
+<p>Every Mandarin syllable decomposes into two parts: the <span class="glossary-term">initial<span class="glossary-def">The consonant that begins a syllable (&#22768;&#27597;, shengmu). Mandarin has 21 initials organized into clean series by place and manner of articulation.</span></span> (<span class="chinese">&#22768;&#27597;</span> shengmu) and the <span class="glossary-term">final<span class="glossary-def">Everything after the initial: an optional medial glide, the vowel nucleus, and an optional nasal coda (&#38901;&#27597;, yunmu). Mandarin has approximately 35&ndash;38 finals.</span></span> (<span class="chinese">&#38901;&#27597;</span> yunmu). The initial is the optional consonant at the beginning. The final is everything else: an optional medial glide, the vowel nucleus, and an optional nasal coda (<span class="ipa">/n/</span> or <span class="ipa">/ng/</span>).</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-2-syllable-structure-comparison.html" style="height:550px;" loading="lazy" title="Syllable Structure Comparison -- Chinese vs. English"></iframe>
+  <div class="diagram-caption"><strong>Figure 3</strong> &mdash; Side-by-side syllable templates: Chinese (C)(G)V(C)+Tone vs. English (C)(C)(C)V(C)(C)(C)(C). The ratio of ~1,300 vs. ~10,000&ndash;15,000 possible syllables explains the need for tones.</div>
+</div>
+
+<h3 id="consonants">The Consonant System</h3>
+
+<p>Mandarin has 21 initial consonants organized into clean series. The system is built on a pattern that differs fundamentally from English. English distinguishes consonant pairs by <strong>voicing</strong> &mdash; whether the vocal cords vibrate (<span class="ipa">b/p, d/t, g/k, z/s</span>). Mandarin distinguishes consonant pairs by <span class="glossary-term">aspiration<span class="glossary-def">A puff of air that accompanies certain consonants (&#36865;&#27668;, songqi). In Mandarin, ALL stops and affricates are voiceless; the difference is whether they are aspirated (strong puff: p, t, k, c, ch, q) or unaspirated (no puff: b, d, g, z, zh, j).</span></span> &mdash; whether a puff of air accompanies the sound.</p>
+
+<div class="callout callout-warning">
+<div class="callout-title">Critical Distinction</div>
+<p style="margin-bottom:0;">Pinyin "b" is NOT English "b." Pinyin "b" is a voiceless unaspirated <span class="ipa">[p]</span> &mdash; like the "p" in English "spin" where the /p/ has no puff of air. Pinyin "p" is a voiceless aspirated <span class="ipa">[p&#688;]</span> &mdash; like the "p" in English "pin" with a strong puff. Neither Mandarin sound involves voicing.</p>
+</div>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-4-consonant-three-way-contrast.html" style="height:550px;" loading="lazy" title="Initial Consonant System -- Three-Way Place Contrast"></iframe>
+  <div class="diagram-caption"><strong>Figure 4</strong> &mdash; The three sibilant series (dental, retroflex, palatal) form a perfectly symmetrical 3&times;3 grid. Each series occupies strictly complementary vowel environments &mdash; once you know the following vowel, you know which series is possible.</div>
+</div>
+
+<p>The three sibilant series &mdash; dental (<span class="pinyin">z/c/s</span>), <span class="glossary-term">retroflex<span class="glossary-def">Consonants produced with the tongue tip curled back toward the hard palate (&#32728;&#33292;&#38899;, qiao she yin). Mandarin has zh, ch, sh, r. English has post-alveolar consonants in similar positions but does not curl the tongue back as far.</span></span> (<span class="pinyin">zh/ch/sh</span>), and palatal (<span class="pinyin">j/q/x</span>) &mdash; form a perfectly symmetrical 3&times;3 grid. Each series has one unaspirated affricate, one aspirated affricate, and one fricative. They occupy strictly complementary vowel environments: palatals appear ONLY before <span class="ipa">/i/</span> and <span class="ipa">/y/</span>; retroflexes and dentals never appear in those positions.</p>
+
+<h3 id="vowels">The Vowel System</h3>
+
+<p>Mandarin has approximately six basic vowel phonemes: <span class="ipa">/a/, /o/, /e/</span> (realized as <span class="ipa">[&#x0264;]</span>), <span class="ipa">/i/, /u/</span>, and <span class="ipa">/y/</span> (written as "u" in pinyin). This is a smaller inventory than English's approximately 12 monophthongs plus 8 diphthongs, but the Chinese vowels show considerable allophonic variation depending on their phonetic environment.</p>
+
+<p>The vowel <span class="ipa">/e/</span> is realized as <span class="ipa">[&#x0264;]</span> in open syllables, as <span class="ipa">[e]</span> in "ei" and "en," and as something closer to <span class="ipa">[&#x025B;]</span> in "ye" contexts. The pinyin letter "e" maps to at least three distinct surface pronunciations, all predictable from context. This is not irregularity &mdash; it is systematic allophonic variation.</p>
+
+<p>The approximately 35&ndash;38 finals combine simple vowels, compound vowels (diphthongs and triphthongs), and nasal finals. The complete inventory of 21 initials &times; ~35 finals &times; 5 tones yields a theoretical maximum of roughly 3,675 combinations, but many are phonotactically invalid. The actual count of occurring tonal syllables is approximately 1,300.</p>
+
+
+<!-- ==================== HOMOPHONES ==================== -->
+<h2 id="homophones">5. Homophones and the Pressure They Create</h2>
+
+<p>With only about 1,300 distinct tonal syllables serving tens of thousands of morphemes, Mandarin has extraordinary levels of <span class="glossary-term">homophony<span class="glossary-def">Characters/words with identical pronunciation (&#21516;&#38899;&#23383;, tongyinzi). The syllable "shi" in Tone 4 alone maps to dozens of characters: &#26159; (to be), &#20107; (matter), &#23460; (room), &#24066; (city), and many more.</span></span>. The syllable "shi" in Tone 4 alone maps to dozens of characters: <span class="chinese">&#26159;</span> (to be), <span class="chinese">&#20107;</span> (matter), <span class="chinese">&#23460;</span> (room), <span class="chinese">&#24066;</span> (city), <span class="chinese">&#24335;</span> (style), <span class="chinese">&#35797;</span> (to try), and many more.</p>
+
+<p>This pressure creates three cascading consequences that define the language:</p>
+
+<p><strong>First, compound words.</strong> Most modern Chinese words are disyllabic &mdash; two characters combined. <span class="chinese">&#22478;&#24066;</span> (<span class="pinyin">chengshi</span>, city), <span class="chinese">&#24418;&#24335;</span> (<span class="pinyin">xingshi</span>, format), <span class="chinese">&#32771;&#35797;</span> (<span class="pinyin">kaoshi</span>, exam) each contains "shi" but is unambiguous because of the other syllable. Compounding is the primary disambiguation strategy in speech.</p>
+
+<p><strong>Second, context.</strong> In conversation, the topic, the preceding sentences, and shared knowledge eliminate most remaining ambiguity.</p>
+
+<p><strong>Third, the writing system.</strong> Characters provide visual disambiguation &mdash; each character is unique even when pronunciation overlaps. The writing system is not decorative; it is functionally necessary for a language with this level of homophony.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-5-phoneme-inventory-comparison.html" style="height:550px;" loading="lazy" title="Mandarin vs. English Phoneme Inventory Comparison"></iframe>
+  <div class="diagram-caption"><strong>Figure 5</strong> &mdash; Side-by-side phoneme inventory comparison. Chinese as a compact tall building (few streets, many floors via tones) vs. English as a wide flat city (many streets via clusters, no floors).</div>
+</div>
+
+
+<!-- ==================== PINYIN ==================== -->
+<h2 id="pinyin">6. Pinyin: The Bridge Between Systems</h2>
+
+<p><span class="glossary-term">Pinyin<span class="glossary-def">The standard romanization system for Mandarin (&#25340;&#38899;, literally "spell sound"), officially adopted in 1958. It maps the 21 initials and ~35 finals to Latin letter combinations, using diacritical marks over vowels to indicate tones.</span></span> (<span class="chinese">&#25340;&#38899;</span>, literally "spell sound") was officially adopted in 1958 as the standard romanization of Mandarin. It is not a spelling system for Chinese &mdash; it is a parallel phonetic annotation system. Chinese schoolchildren learn it before most characters, and it serves as the primary method for typing Chinese on computers and phones.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-phonology-tones-syllables-diagrams/diagram-6-pinyin-traps.html" style="height:550px;" loading="lazy" title="Pinyin Letter-to-Sound Mapping -- Traps for English Speakers"></iframe>
+  <div class="diagram-caption"><strong>Figure 6</strong> &mdash; Pinyin uses familiar Latin letters but assigns unfamiliar phonetic values to seven critical letters. Learning these seven traps is one of the highest-leverage early investments for an English-speaking learner.</div>
+</div>
+
+<p>For English speakers, pinyin presents a specific trap: it uses familiar Latin letters but assigns unfamiliar phonetic values to several of them. Seven critical letters and combinations diverge significantly:</p>
+
+<div class="table-wrapper">
+<table>
+<tr><th>Pinyin</th><th>Actual Sound (IPA)</th><th>English Wrong Guess</th><th>Production Guide</th></tr>
+<tr><td><strong>c</strong></td><td><span class="ipa">[ts&#688;]</span></td><td>/k/ or /s/</td><td>Like "ts" in "cats" with aspiration</td></tr>
+<tr><td><strong>q</strong></td><td><span class="ipa">[t&#x0255;&#688;]</span></td><td>/kw/</td><td>Like "ch" in "cheese" but tongue forward</td></tr>
+<tr><td><strong>x</strong></td><td><span class="ipa">[&#x0255;]</span></td><td>/ks/</td><td>Like "sh" in "she" but tongue forward</td></tr>
+<tr><td><strong>zh</strong></td><td><span class="ipa">[t&#x0282;]</span></td><td>English "zh"</td><td>Like "j" in "judge" but unvoiced and retroflex</td></tr>
+<tr><td><strong>r</strong></td><td><span class="ipa">[&#x027B;]</span></td><td>English /r/</td><td>Retroflex approximant</td></tr>
+<tr><td><strong>e</strong></td><td><span class="ipa">[&#x0264;]</span></td><td>/i:/ or /e/</td><td>Unrounded mid-back vowel, like "uh" but tighter</td></tr>
+<tr><td><strong>u</strong></td><td><span class="ipa">[y]</span></td><td>English /u:/</td><td>Rounded high front vowel (after j, q, x, y)</td></tr>
+</table>
+</div>
+
+<p>The tone mark placement rule follows a clean pattern: the mark goes on the main vowel, with priority <strong>a &gt; e &gt; o &gt; (i or u, whichever comes second in a diphthong)</strong>.</p>
+
+<h3 id="erhua">Erhua: The Retroflex Suffix</h3>
+
+<p><span class="glossary-term">Erhua<span class="glossary-def">A productive morphological-phonological process (&#20799;&#21270;) that adds a retroflex suffix to syllables, creating diminutive or colloquial forms. Strongly associated with Beijing dialect.</span></span> (<span class="chinese">&#20799;&#21270;</span>) is a productive process that adds a retroflex suffix to syllables. It is strongly associated with Beijing dialect and less common in southern Mandarin or Taiwanese Mandarin. The process causes systematic sound changes: open syllables gain r-coloring (<span class="chinese">&#33457;</span> hua &rarr; <span class="chinese">&#33457;&#20799;</span> huar), <span class="ipa">/n/</span> finals drop and the vowel gains r-coloring (<span class="chinese">&#29609;</span> wan &rarr; <span class="chinese">&#29609;&#20799;</span> war).</p>
+
+
+<!-- ==================== CROSS-LINGUISTIC ==================== -->
+<h2 id="cross-linguistic">7. Cross-Linguistic Perspective</h2>
+
+<p>Mandarin's four tones represent a moderate position within the world's tonal languages. Cantonese has six to nine tones. Thai has five. Vietnamese has six, some involving not just pitch contour but also phonation type (creaky voice, breathy voice). Several West African languages use tone to distinguish grammatical forms as well as lexical meaning.</p>
+
+<p>Within the broader Chinese language family, tone counts vary dramatically. Mandarin's four tones developed from a system of four tonal categories in Middle Chinese (roughly the 7th&ndash;13th centuries), which interacted with the voicing of initial consonants. Cantonese ended up with six tones; Mandarin merged several categories into four. This is a historical instance of the same horizontal-versus-vertical trade-off: Cantonese preserved more tonal distinctions (vertical expansion) while Mandarin compensated with more extensive use of compound words (horizontal expansion).</p>
+
+<p>Mandarin also lost the final stop consonants (<span class="ipa">/p/, /t/, /k/</span>) that Middle Chinese had. These stops survive in Cantonese. The loss further constrained Mandarin's syllable inventory, increasing the homophony pressure that makes tones, compounds, and characters all functionally necessary.</p>
+
+
+<!-- ==================== PRACTICAL ==================== -->
+<h2 id="practical">8. Practical Implications for the English-Speaking Learner</h2>
+
+<p><strong>The tone challenge is perceptual, not productive.</strong> Most English speakers can produce all four Mandarin tones when they understand the pitch shape. The real challenge is <em>hearing</em> tones as lexically meaningful rather than emotionally expressive. Retraining this interpretation typically takes months of focused listening.</p>
+
+<p><strong>The aspiration distinction requires active unlearning.</strong> English speakers must learn to NOT voice the sounds they associate with b, d, g, j, zh, and z. The Mandarin versions are voiceless &mdash; they differ from p, t, k, q, ch, and c only in the absence of aspiration.</p>
+
+<p><strong>The retroflex series is the biggest articulatory challenge.</strong> English has post-alveolar consonants but not true retroflexes. Southern Mandarin speakers often merge retroflexes with dental sibilants, so learners who find retroflexes difficult have a sociolinguistically acceptable fall-back.</p>
+
+<p><strong>Pinyin creates false confidence.</strong> Because pinyin uses familiar Latin letters, English speakers often assume they can read it with English phonetic values. Treating the seven corrections as a high-priority early task prevents fossilized mispronunciations.</p>
+
+<p><strong>The syllable table is a finite, completable resource.</strong> Unlike English, where the space of possible pronunciations is vast, every possible Mandarin syllable can be listed on a single chart. A learner who works through this table systematically has covered the entire phonological space. There is nothing outside the table.</p>
+
+<p><strong>Tone sandhi rules are few and categorical.</strong> Five rules cover all regular sandhi. No ambiguity, no variation, no "it depends on the speaker."</p>
+
+
+<!-- ==================== PATTERN SUMMARY ==================== -->
+<h2 id="pattern-summary">9. The Pattern Summary</h2>
+
+<div class="takeaway">
+<div class="takeaway-title">Architectural Patterns</div>
+<ol style="margin-bottom:0;">
+<li><strong>Few syllable shapes</strong> (no clusters, strict template) create the need for <strong>tones</strong> (vertical multiplication)</li>
+<li>Even with tones, the inventory creates <strong>massive homophony</strong>, driving compound words and a logographic writing system</li>
+<li>The constrained template means syllables are <strong>highly uniform and predictable</strong> &mdash; every possible syllable fits on one chart</li>
+<li>The <strong>aspiration distinction</strong> (not voicing) organizes the entire stop/affricate system on a different axis from English</li>
+<li>The <strong>three sibilant series</strong> form a symmetric 3&times;3 grid with perfectly complementary distribution</li>
+<li><strong>Tone sandhi</strong> rules are categorical and obligatory &mdash; a second layer of predictable pattern</li>
+<li><strong>Pinyin</strong> bridges the gap but contains seven critical letter-value mismatches</li>
+</ol>
+</div>
+
+<p>For a learner who thrives on patterns, Chinese phonology is a remarkably clean system. It has fewer moving parts than English phonology, stricter rules, and a tonal dimension that adds elegant complexity without adding irregularity. The system is compact, systematic, and deeply learnable &mdash; once you see the architecture.</p>
+
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+<tr><th>Term</th><th>Chinese</th><th>Definition</th></tr>
+<tr><td>Tone</td><td><span class="chinese">&#22768;&#35843;</span> (shengdiao)</td><td>A specified pitch contour that distinguishes word meaning at the syllable level</td></tr>
+<tr><td>Initial</td><td><span class="chinese">&#22768;&#27597;</span> (shengmu)</td><td>The consonant that begins a syllable (21 in Mandarin)</td></tr>
+<tr><td>Final</td><td><span class="chinese">&#38901;&#27597;</span> (yunmu)</td><td>Everything after the initial: medial + vowel + optional coda (~35&ndash;38 finals)</td></tr>
+<tr><td>Pinyin</td><td><span class="chinese">&#25340;&#38899;</span> (pinyin)</td><td>The standard romanization system, literally "spell sound"</td></tr>
+<tr><td>Tone sandhi</td><td><span class="chinese">&#21464;&#35843;</span> (biandiao)</td><td>Systematic tone changes in connected speech</td></tr>
+<tr><td>Neutral tone</td><td><span class="chinese">&#36731;&#22768;</span> (qingsheng)</td><td>An unstressed syllable with no fixed pitch contour</td></tr>
+<tr><td>Erhua</td><td><span class="chinese">&#20799;&#21270;</span> (erhua)</td><td>The retroflex suffix that adds r-coloring to syllables</td></tr>
+<tr><td>Aspiration</td><td><span class="chinese">&#36865;&#27668;</span> (songqi)</td><td>The puff of air that distinguishes consonant pairs in Chinese (not voicing)</td></tr>
+<tr><td>Retroflex</td><td><span class="chinese">&#32728;&#33292;&#38899;</span> (qiao she yin)</td><td>Consonants produced with the tongue tip curled back (zh, ch, sh, r)</td></tr>
+<tr><td>Dental sibilant</td><td><span class="chinese">&#24179;&#33292;&#38899;</span> (ping she yin)</td><td>Consonants produced with the tongue tip at the teeth (z, c, s)</td></tr>
+<tr><td>Homophone</td><td><span class="chinese">&#21516;&#38899;&#23383;</span> (tongyinzi)</td><td>Characters/words with identical pronunciation</td></tr>
+</table>
+</div>
+
+
+<!-- ==================== NAV ==================== -->
+<div class="category-nav">
+  <a href="../index.html" class="prev-category">&larr; Back to Hub<br><small>Chinese Deep Dive Overview</small></a>
+  <a href="../chinese-writing-system-characters/index.html" class="next-category">Next: The Chinese Writing System &rarr;<br><small>Characters, Composition &amp; Visual Logic</small></a>
+</div>
+
+<p style="text-align:center;margin-top:2rem;font-size:0.8rem;color:var(--color-text-muted);">Chinese Phonology &mdash; Chinese Language: A Comparative Deep Dive</p>
+
+</div>
+</main>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+
+<script>
+function toggleTheme() {
+  var body = document.documentElement;
+  var current = body.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  var saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backToTop');
+  if (window.scrollY > 600) { btn.classList.add('visible'); }
+  else { btn.classList.remove('visible'); }
+});
+(function() {
+  var links = document.querySelectorAll('.sidebar-link');
+  var sections = [];
+  links.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      var target = document.querySelector(href);
+      if (target) sections.push({ el: target, link: link });
+    }
+  });
+  function updateActive() {
+    var current = null;
+    var scrollPos = window.scrollY + 100;
+    for (var i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].el.offsetTop <= scrollPos) { current = sections[i]; break; }
+    }
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (current) {
+      current.link.classList.add('active');
+      var nav = document.querySelector('.sidebar-nav');
+      if (nav) {
+        var linkTop = current.link.offsetTop - nav.offsetTop;
+        var navScroll = nav.scrollTop;
+        var navHeight = nav.clientHeight;
+        if (linkTop < navScroll || linkTop > navScroll + navHeight - 40) {
+          nav.scrollTop = linkTop - navHeight / 3;
+        }
+      }
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() { updateActive(); ticking = false; });
+      ticking = true;
+    }
+  });
+  updateActive();
+})();
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

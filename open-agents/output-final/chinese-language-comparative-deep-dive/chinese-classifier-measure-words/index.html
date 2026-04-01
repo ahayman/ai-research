@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Classifier System | Chinese Language Deep Dive</title>
+<meta name="description" content="How Chinese classifiers encode a perceptual ontology -- shape, animacy, and function built into every count expression. Mandatory grammar that English lacks entirely for count nouns.">
+<style>
+:root {
+  --color-primary: #6366F1;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #4338CA;
+  --color-primary-bg: #EEF2FF;
+  --color-accent: #06B6D4;
+  --color-accent-light: #67E8F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-sidebar: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-heading: #0F172A;
+  --color-link: #6366F1;
+  --color-link-hover: #4338CA;
+  --color-code-bg: #F1F5F9;
+  --color-table-stripe: #F8FAFC;
+  --color-table-header: #F1F5F9;
+  --color-takeaway-border: #6366F1;
+  --color-takeaway-bg: #EEF2FF;
+  --color-diagram-bg: #FFFFFF;
+  --color-diagram-border: #E2E8F0;
+  --color-tooltip-bg: #1E293B;
+  --color-tooltip-text: #F8FAFC;
+  --color-scrollbar: #CBD5E1;
+  --color-scrollbar-hover: #94A3B8;
+  --color-success: #059669;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-bg: #DBEAFE;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+[data-theme="dark"] {
+  --color-primary: #818CF8; --color-primary-light: #C4B5FD; --color-primary-dark: #6366F1; --color-primary-bg: #1E1B4B;
+  --color-text: #E2E8F0; --color-text-secondary: #94A3B8; --color-text-muted: #64748B;
+  --color-bg: #0F172A; --color-bg-alt: #1E293B; --color-bg-sidebar: #1E293B;
+  --color-border: #334155; --color-border-light: #1E293B;
+  --color-heading: #F1F5F9; --color-link: #818CF8; --color-link-hover: #A5B4FC;
+  --color-code-bg: #1E293B; --color-table-stripe: #1E293B; --color-table-header: #334155;
+  --color-takeaway-border: #818CF8; --color-takeaway-bg: #1E1B4B;
+  --color-diagram-bg: #1E293B; --color-diagram-border: #334155;
+  --color-tooltip-bg: #F1F5F9; --color-tooltip-text: #1E293B;
+  --color-scrollbar: #475569; --color-scrollbar-hover: #64748B;
+  --color-success: #34D399; --color-success-bg: #064E3B;
+  --color-warning: #FBBF24; --color-warning-bg: #451A03;
+  --color-danger: #F87171; --color-danger-bg: #450A0A;
+  --color-info: #60A5FA; --color-info-bg: #1E3A5F;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body { font-family: var(--font-sans); font-size: 1rem; line-height: var(--line-height); color: var(--color-text); background: var(--color-bg); -webkit-font-smoothing: antialiased; }
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); position: fixed; top: 0; left: 0; height: 100vh; background: var(--color-bg-sidebar); border-right: 1px solid var(--color-border); overflow-y: auto; z-index: 100; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+.sidebar::-webkit-scrollbar { width: 4px; } .sidebar::-webkit-scrollbar-track { background: transparent; } .sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; } .sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+.sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); background: linear-gradient(135deg, #4338CA 0%, #6366F1 100%); color: #fff; flex-shrink: 0; }
+.sidebar-title { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.sidebar-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; }
+.sidebar-back { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem; font-size: 0.8rem; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid var(--color-border); font-weight: 600; transition: background var(--transition); }
+.sidebar-back:hover { background: var(--color-bg); text-decoration: none; }
+.sidebar-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; }
+.sidebar-nav-section { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-top: 0.5rem; }
+.sidebar-link { display: block; padding: 0.4rem 1.25rem 0.4rem 1.5rem; font-size: 0.82rem; color: var(--color-text-secondary); text-decoration: none; border-left: 3px solid transparent; transition: all var(--transition); line-height: 1.4; }
+.sidebar-link:hover { color: var(--color-primary); background: var(--color-bg); text-decoration: none; }
+.sidebar-link.active { color: var(--color-primary); border-left-color: var(--color-primary); background: var(--color-bg); font-weight: 600; }
+.sidebar-link.sub { padding-left: 2.25rem; font-size: 0.78rem; }
+.sidebar-controls { padding: 0.75rem 1.25rem; border-top: 1px solid var(--color-border); flex-shrink: 0; }
+.theme-toggle { display: flex; align-items: center; gap: 0.5rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer; width: 100%; transition: all var(--transition); }
+.theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.main { flex: 1; margin-left: var(--sidebar-width); min-width: 0; }
+.content { max-width: var(--content-max-width); margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+h1 { font-size: 2.2rem; font-weight: 800; color: var(--color-heading); line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+h1 .subtitle { display: block; font-size: 1rem; font-weight: 500; color: var(--color-text-secondary); margin-top: 0.5rem; letter-spacing: 0; }
+h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-heading); margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--color-border); line-height: 1.3; }
+h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-heading); margin-top: 2rem; margin-bottom: 0.75rem; line-height: 1.3; }
+h4 { font-size: 1.05rem; font-weight: 600; color: var(--color-heading); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+p { margin-bottom: 1rem; color: var(--color-text); }
+a { color: var(--color-link); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+ul, ol { margin: 0 0 1rem 1.5rem; color: var(--color-text); }
+li { margin-bottom: 0.35rem; }
+strong { color: var(--color-heading); }
+em { font-style: italic; }
+blockquote { border-left: 4px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 1.25rem 0; background: var(--color-primary-bg); border-radius: 0 8px 8px 0; font-style: italic; color: var(--color-text-secondary); }
+.table-wrapper { overflow-x: auto; margin: 1rem 0 1.5rem; border-radius: 8px; border: 1px solid var(--color-border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th { background: var(--color-table-header); font-weight: 600; text-align: left; padding: 0.75rem 1rem; color: var(--color-heading); border-bottom: 2px solid var(--color-border); }
+td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+.diagram-container { background: var(--color-diagram-bg); border: 1px solid var(--color-diagram-border); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container iframe { width: 100%; border: none; border-radius: 6px; background: transparent; }
+[data-theme="dark"] .diagram-container iframe { filter: invert(0.88) hue-rotate(180deg); }
+.diagram-caption { text-align: center; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text-muted); font-style: italic; line-height: 1.5; padding: 0 1rem; }
+.callout { border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; border-left: 4px solid; font-size: 0.9rem; }
+.callout-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+.callout-info { border-color: var(--color-info); background: var(--color-info-bg); } .callout-info .callout-title { color: var(--color-info); }
+.callout-warning { border-color: var(--color-warning); background: var(--color-warning-bg); } .callout-warning .callout-title { color: var(--color-warning); }
+.callout-success { border-color: var(--color-success); background: var(--color-success-bg); } .callout-success .callout-title { color: var(--color-success); }
+.takeaway { background: var(--color-takeaway-bg); border: 1px solid var(--color-takeaway-border); border-left: 4px solid var(--color-takeaway-border); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.takeaway-title { font-weight: 700; font-size: 0.85rem; color: var(--color-primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.glossary-term { border-bottom: 1px dashed var(--color-primary); cursor: help; position: relative; color: var(--color-primary); }
+.glossary-term:hover .glossary-def, .glossary-term:focus .glossary-def { display: block; }
+.glossary-def { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--color-tooltip-bg); color: var(--color-tooltip-text); padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.78rem; line-height: 1.4; width: 280px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 400; pointer-events: none; font-style: normal; }
+.glossary-def::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--color-tooltip-bg); }
+.category-nav { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--color-border); gap: 1rem; }
+.category-nav a { padding: 0.75rem 1.25rem; background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: all var(--transition); max-width: 48%; }
+.category-nav a:hover { border-color: var(--color-primary); background: var(--color-primary-bg); text-decoration: none; }
+.prev-category { text-align: left; } .next-category { text-align: right; margin-left: auto; }
+.back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px; background: var(--color-primary); color: #fff; border: none; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 90; transition: all var(--transition); }
+.back-to-top:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+.back-to-top.visible { display: flex; }
+.series-badge { display: inline-block; background: var(--color-primary-bg); color: var(--color-primary); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid var(--color-primary); margin-bottom: 1rem; letter-spacing: 0.03em; }
+.chinese-char { font-size: 1.15em; font-weight: 600; }
+.pinyin { font-style: italic; color: var(--color-text-secondary); }
+@media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .menu-toggle { display: flex; } .main { margin-left: 0; } .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; } h1 { font-size: 1.7rem; } h2 { font-size: 1.3rem; } .category-nav { flex-direction: column; } .category-nav a { max-width: 100%; } }
+@media (max-width: 600px) { .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; } .table-wrapper { font-size: 0.8rem; } th, td { padding: 0.5rem 0.6rem; } }
+@media print { .sidebar, .menu-toggle, .back-to-top, .theme-toggle, .sidebar-controls { display: none !important; } .main { margin-left: 0 !important; } .content { max-width: 100%; padding: 0; } body { font-size: 11pt; color: #000; background: #fff; } h1, h2, h3, h4, strong { color: #000; } p, li, td { color: #222; } a { color: #000; text-decoration: underline; } .diagram-container { break-inside: avoid; border: 1px solid #ccc; } .callout, .takeaway { break-inside: avoid; } .category-nav { break-before: page; } table { font-size: 9pt; } }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">The Classifier System</div>
+    <div class="sidebar-subtitle">Chinese Language Deep Dive</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#overview" class="sidebar-link">A Grammar of Perception</a>
+
+    <div class="sidebar-nav-section">The Mandatory Slot</div>
+    <a href="#mandatory-slot" class="sidebar-link">Where Classifiers Live</a>
+    <a href="#mass-noun-overlap" class="sidebar-link sub">Mass Noun Overlap</a>
+
+    <div class="sidebar-nav-section">Shape Classifiers</div>
+    <a href="#shape-classifiers" class="sidebar-link">The Perceptual Core</a>
+    <a href="#zero-d" class="sidebar-link sub">0D: Point / Compact</a>
+    <a href="#one-d" class="sidebar-link sub">1D: Line / Elongated</a>
+    <a href="#two-d" class="sidebar-link sub">2D: Surface / Flat</a>
+    <a href="#three-d" class="sidebar-link sub">3D: Volume / Chunk</a>
+
+    <div class="sidebar-nav-section">Animacy Classifiers</div>
+    <a href="#animacy" class="sidebar-link">Life and Social Status</a>
+    <a href="#animacy-hierarchy" class="sidebar-link sub">The Hierarchy</a>
+
+    <div class="sidebar-nav-section">Function Classifiers</div>
+    <a href="#function" class="sidebar-link">What It Does</a>
+
+    <div class="sidebar-nav-section">The Safety Net</div>
+    <a href="#ge" class="sidebar-link">The General Classifier</a>
+
+    <div class="sidebar-nav-section">Cognitive Dimension</div>
+    <a href="#cognitive" class="sidebar-link">Perceptual Ontology</a>
+
+    <div class="sidebar-nav-section">Learner Strategy</div>
+    <a href="#strategy" class="sidebar-link">Practical Layers</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#misconceptions" class="sidebar-link">Common Misconceptions</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+
+  <div class="sidebar-controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span class="theme-icon">&#9790;</span>
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Chinese Language Hub</a>
+
+<div class="series-badge">Part 5 of 12</div>
+
+<h1>The Chinese Classifier System
+  <span class="subtitle">Measure Words as Perceptual Ontology</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">Every time you count something in Chinese, you must classify it &mdash; by shape, animacy, or function. This mandatory grammar encodes a perceptual ontology that English lacks entirely for count nouns.</p>
+
+<div class="callout callout-success">
+  <div class="callout-title">Validation Status</div>
+  <p style="margin-bottom:0;">This explanation draws on independently validated research. All major claims confirmed. One figure required nuancing: the commonly cited "94% of usage" for the general classifier <span class="chinese-char">&#20010;</span> is an approximation that varies by register and methodology. This nuance is incorporated below.</p>
+</div>
+
+<!-- ==================== OVERVIEW ==================== -->
+<h2 id="overview">A Grammar of Perception</h2>
+
+<p>Every time you count something in Chinese, you must classify it. Not just count it &mdash; <em>classify</em> it. You cannot say "three books" the way English does, with the number attached directly to the noun. You must say <span class="chinese-char">&#19977;&#26412;&#20070;</span> <span class="pinyin">(san ben shu)</span>, where <span class="chinese-char">&#26412;</span> <span class="pinyin">(ben)</span> is a <span class="glossary-term">classifier<span class="glossary-def">A word that categorizes a noun by shape, animacy, or function. Mandatory in Chinese between any number/demonstrative and noun. Also called a measure word (&#37327;&#35789;).</span></span> that categorizes the book as a bound volume. You cannot say "this cat." You must say <span class="chinese-char">&#36825;&#21482;&#29483;</span> <span class="pinyin">(zhe zhi mao)</span>, where <span class="chinese-char">&#21482;</span> <span class="pinyin">(zhi)</span> classifies the cat as an individual animal. This is not optional. It is not stylistic. It is a mandatory grammatical requirement.</p>
+
+<p>For the pattern-oriented learner, this system is not a burden &mdash; it is a gift. Because classifiers are not arbitrary labels. They are organized by <strong>shape</strong>, <strong>function</strong>, and <strong>animacy</strong> &mdash; perceptual and categorical properties that follow principled patterns. The classifier <span class="chinese-char">&#26465;</span> <span class="pinyin">(tiao)</span> marks long, thin, flexible things: snakes, rivers, roads, fish, scarves. The classifier <span class="chinese-char">&#24352;</span> <span class="pinyin">(zhang)</span> marks flat things: paper, tables, beds, photos, faces. Once you understand the underlying perceptual logic, you can <em>predict</em> the classifier for most nouns.</p>
+
+<div class="takeaway">
+  <div class="takeaway-title">Key Takeaways</div>
+  <ul style="margin-bottom:0;">
+    <li>Chinese requires a classifier between every number/demonstrative and noun &mdash; English has no equivalent requirement for count nouns</li>
+    <li>Shape classifiers form a coherent dimensional system (0D point, 1D line, 2D surface, 3D volume)</li>
+    <li>Animacy classifiers track a hierarchy from polite human terms down through livestock to small animals</li>
+    <li>The general classifier <span class="chinese-char">&#20010;</span> <span class="pinyin">(ge)</span> is a universal fallback that works for most nouns in casual speech</li>
+    <li>Knowing <span class="chinese-char">&#20010;</span> plus ~20 common classifiers covers the vast majority of daily communication</li>
+  </ul>
+</div>
+
+<!-- ==================== MANDATORY SLOT ==================== -->
+<h2 id="mandatory-slot">The Mandatory Slot: Where Classifiers Live</h2>
+
+<p>The classifier occupies a fixed syntactic position between the number or demonstrative and the noun. This position is structurally mandatory in Chinese and structurally absent in English.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-classifier-measure-words-diagrams/diagram-1-classifier-slot-syntax.html" title="The Classifier Slot: Mandatory in Chinese, Absent in English" style="height:550px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 1: The classifier slot &mdash; mandatory between number/demonstrative and noun in Chinese, entirely absent in English for count nouns.</div>
+</div>
+
+<p><strong>Chinese pattern:</strong> Number/Demonstrative + CLASSIFIER + Noun</p>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Chinese</th><th>Decomposition</th><th>English</th></tr></thead>
+  <tbody>
+    <tr><td><span class="chinese-char">&#19977;&#26412;&#20070;</span></td><td>three + CL:volume + book</td><td>"three books"</td></tr>
+    <tr><td><span class="chinese-char">&#36825;&#21482;&#29483;</span></td><td>this + CL:animal + cat</td><td>"this cat"</td></tr>
+    <tr><td><span class="chinese-char">&#21738;&#26465;&#36335;</span></td><td>which + CL:long-thin + road</td><td>"which road?"</td></tr>
+    <tr><td><span class="chinese-char">&#27599;&#20010;&#20154;</span></td><td>every + CL:general + person</td><td>"every person"</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The rule is absolute: when a number or demonstrative precedes a noun, a classifier MUST intervene. Omitting it produces ungrammatical Chinese. <span class="chinese-char">*&#19977;&#20070;</span> ("three book") is as wrong in Chinese as "*three of book" is in English &mdash; it violates a structural requirement.</p>
+
+<p>But without a number or demonstrative, no classifier is needed: <span class="chinese-char">&#25105;&#21916;&#27426;&#20070;</span> <span class="pinyin">(wo xihuan shu, "I like books")</span> uses no classifier because there is no number. This parallels English exactly &mdash; you only need a classifier when you are counting or specifying.</p>
+
+<h3 id="mass-noun-overlap">Where English and Chinese Converge</h3>
+
+<p>The one area of overlap is <span class="glossary-term">mass nouns<span class="glossary-def">Nouns that refer to uncountable substances (water, rice, information). Both English and Chinese require a measure word to count these.</span></span>. English says "two cups of water" with a measure word; Chinese says <span class="chinese-char">&#20004;&#26479;&#27700;</span> <span class="pinyin">(liang bei shui)</span> with the same structure. For mass nouns, both languages require mediation between number and noun. The difference is that Chinese extends this requirement to ALL nouns, count nouns included.</p>
+
+<!-- ==================== SHAPE CLASSIFIERS ==================== -->
+<h2 id="shape-classifiers">Shape Classifiers: The Perceptual Core</h2>
+
+<p>The most learnable and pattern-rich category of classifiers is shape-based. These classify nouns by their dominant physical dimension &mdash; how they look and feel in space. They form a coherent system organized by <span class="glossary-term">dimensionality<span class="glossary-def">The organizing principle of shape classifiers: 0D (point/compact), 1D (line/elongated), 2D (surface/flat), 3D (volume/chunk). Each dimension has dedicated classifiers.</span></span>.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-classifier-measure-words-diagrams/diagram-2-shape-dimension-system.html" title="Shape Classifiers: The Dimensional System" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 2: Shape classifiers organized by dimensionality &mdash; from 0D compact objects to 3D volumetric chunks, with key sub-distinctions like flexible vs. rigid.</div>
+</div>
+
+<h3 id="zero-d">0D &mdash; Point / Compact</h3>
+<ul>
+  <li><strong><span class="chinese-char">&#39063;</span> <span class="pinyin">(ke)</span></strong>: Small, round, self-contained objects. <span class="chinese-char">&#19968;&#39063;&#29645;&#29664;</span> (pearl), <span class="chinese-char">&#19968;&#39063;&#26143;&#26143;</span> (star), <span class="chinese-char">&#19968;&#39063;&#29273;</span> (tooth), <span class="chinese-char">&#19968;&#39063;&#24515;</span> (heart). Think "bead-sized and round."</li>
+  <li><strong><span class="chinese-char">&#31890;</span> <span class="pinyin">(li)</span></strong>: Tiny, grain-like objects &mdash; smaller than <span class="chinese-char">&#39063;</span>. <span class="chinese-char">&#19968;&#31890;&#31859;</span> (grain of rice), <span class="chinese-char">&#19968;&#31890;&#27801;</span> (grain of sand), <span class="chinese-char">&#19968;&#31890;&#31181;&#23376;</span> (seed). Think "dust-to-grain sized."</li>
+</ul>
+
+<h3 id="one-d">1D &mdash; Line / Elongated</h3>
+<ul>
+  <li><strong><span class="chinese-char">&#26465;</span> <span class="pinyin">(tiao)</span></strong>: Long, thin, <strong>FLEXIBLE</strong>. <span class="chinese-char">&#19968;&#26465;&#34503;</span> (snake), <span class="chinese-char">&#19968;&#26465;&#27827;</span> (river), <span class="chinese-char">&#19968;&#26465;&#36335;</span> (road), <span class="chinese-char">&#19968;&#26465;&#22260;&#24062;</span> (scarf). The key property is flexibility &mdash; things that bend, wind, drape.</li>
+  <li><strong><span class="chinese-char">&#26681;</span> <span class="pinyin">(gen)</span></strong>: Long, thin, <strong>RIGID</strong>. <span class="chinese-char">&#19968;&#26681;&#31607;&#23376;</span> (chopstick), <span class="chinese-char">&#19968;&#26681;&#39592;&#22836;</span> (bone), <span class="chinese-char">&#19968;&#26681;&#26609;&#23376;</span> (pillar). Same proportions as <span class="chinese-char">&#26465;</span>, but stiff rather than flexible.</li>
+</ul>
+
+<div class="callout callout-info">
+  <div class="callout-title">Critical Sub-Distinction</div>
+  <p style="margin-bottom:0;">A rope (<span class="chinese-char">&#26465;</span>) and a stick (<span class="chinese-char">&#26681;</span>) are both long and thin, but the classifier distinguishes flexibility from rigidity. A snake gets <span class="chinese-char">&#26465;</span> because it bends; a chopstick gets <span class="chinese-char">&#26681;</span> because it does not. English has no comparable grammatical distinction.</p>
+</div>
+
+<h3 id="two-d">2D &mdash; Surface / Flat</h3>
+<ul>
+  <li><strong><span class="chinese-char">&#24352;</span> <span class="pinyin">(zhang)</span></strong>: Flat, surface-like objects. <span class="chinese-char">&#19968;&#24352;&#32440;</span> (paper), <span class="chinese-char">&#19968;&#24352;&#26700;&#23376;</span> (table), <span class="chinese-char">&#19968;&#24352;&#24202;</span> (bed), <span class="chinese-char">&#19968;&#24352;&#29031;&#29255;</span> (photo), <span class="chinese-char">&#19968;&#24352;&#33080;</span> (face). The dominant property is a prominent flat surface.</li>
+  <li><strong><span class="chinese-char">&#29255;</span> <span class="pinyin">(pian)</span></strong>: Thin slices or flakes. <span class="chinese-char">&#19968;&#29255;&#38754;&#21253;</span> (bread slice), <span class="chinese-char">&#19968;&#29255;&#21494;&#23376;</span> (leaf). Thinner and more fragment-like than <span class="chinese-char">&#24352;</span>.</li>
+</ul>
+
+<p>The <span class="chinese-char">&#24352;</span> classifier reveals something about how Chinese "sees" objects. A face gets <span class="chinese-char">&#24352;</span> (flat surface) &mdash; suggesting the language conceptualizes the face as a flat expanse. These are not arbitrary assignments; they reflect <span class="glossary-term">perceptual categorization<span class="glossary-def">The cognitive process of sorting objects by their most salient physical properties. Chinese classifiers grammaticalize this process, making it mandatory in every count expression.</span></span> that, once understood, becomes predictable.</p>
+
+<h3 id="three-d">3D &mdash; Volume / Chunk</h3>
+<ul>
+  <li><strong><span class="chinese-char">&#22359;</span> <span class="pinyin">(kuai)</span></strong>: Solid, chunky, three-dimensional. <span class="chinese-char">&#19968;&#22359;&#30707;&#22836;</span> (rock), <span class="chinese-char">&#19968;&#22359;&#32905;</span> (piece of meat), <span class="chinese-char">&#19968;&#22359;&#34507;&#31957;</span> (piece of cake), <span class="chinese-char">&#19968;&#22359;&#25163;&#34920;</span> (wristwatch). Also used for money: <span class="chinese-char">&#19968;&#22359;&#38065;</span> (one yuan &mdash; originally "one lump of silver").</li>
+</ul>
+
+<div class="takeaway">
+  <div class="takeaway-title">The Dimensional System</div>
+  <p style="margin-bottom:0;">The system is not arbitrary. It reflects how humans naturally perceive and categorize physical objects by their most prominent dimension. If something is long and bendy, it is probably <span class="chinese-char">&#26465;</span>. If flat, probably <span class="chinese-char">&#24352;</span>. If a solid chunk, probably <span class="chinese-char">&#22359;</span>. Once the pattern clicks, the classifier system transforms from a memorization task into a recognition task.</p>
+</div>
+
+<!-- ==================== ANIMACY ==================== -->
+<h2 id="animacy">Animacy Classifiers: Life and Social Status</h2>
+
+<p>When a noun refers to a living being, animacy takes priority over shape. You do not classify a cat by its shape; you classify it as an animal with <span class="chinese-char">&#21482;</span> <span class="pinyin">(zhi)</span>. You do not classify a teacher by shape; you classify them as a human with <span class="chinese-char">&#20301;</span> <span class="pinyin">(wei, polite)</span> or <span class="chinese-char">&#20010;</span> <span class="pinyin">(ge, neutral)</span>.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-classifier-measure-words-diagrams/diagram-3-animacy-hierarchy.html" title="Animacy Hierarchy: Classifier Selection by Entity Type" style="height:600px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 3: The animacy hierarchy from most animate to least &mdash; with priority rule: animacy overrides function overrides shape overrides default.</div>
+</div>
+
+<h3 id="animacy-hierarchy">The Hierarchy</h3>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Level</th><th>Classifier</th><th>Scope</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Humans (polite)</td><td><span class="chinese-char">&#20301;</span> <span class="pinyin">wei</span></td><td>Respected persons</td><td><span class="chinese-char">&#19968;&#20301;&#32769;&#24072;</span> (a teacher)</td></tr>
+    <tr><td>Humans (formal)</td><td><span class="chinese-char">&#21517;</span> <span class="pinyin">ming</span></td><td>Official counting</td><td><span class="chinese-char">&#19977;&#21517;&#23398;&#29983;</span> (three students)</td></tr>
+    <tr><td>Humans (neutral)</td><td><span class="chinese-char">&#20010;</span> <span class="pinyin">ge</span></td><td>Default for people</td><td><span class="chinese-char">&#19968;&#20010;&#20154;</span> (a person)</td></tr>
+    <tr><td>Large livestock</td><td><span class="chinese-char">&#22836;</span> <span class="pinyin">tou</span></td><td>Cattle, pigs</td><td><span class="chinese-char">&#19968;&#22836;&#29275;</span> (a cow)</td></tr>
+    <tr><td>Horses</td><td><span class="chinese-char">&#21305;</span> <span class="pinyin">pi</span></td><td>Horses specifically</td><td><span class="chinese-char">&#19968;&#21305;&#39532;</span> (a horse)</td></tr>
+    <tr><td>Small/medium animals</td><td><span class="chinese-char">&#21482;</span> <span class="pinyin">zhi</span></td><td>Cats, dogs, birds</td><td><span class="chinese-char">&#19968;&#21482;&#29483;</span> (a cat)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The priority principle: <strong>animacy overrides shape</strong>. A cat may have a compact body that might suggest <span class="chinese-char">&#39063;</span> or <span class="chinese-char">&#22359;</span>, but because it is a living animal, it gets <span class="chinese-char">&#21482;</span>. A teacher may have any body shape, but because they are a respected human, they get <span class="chinese-char">&#20301;</span>.</p>
+
+<p>English has almost no animacy-based counting. The only trace is the archaic "head of cattle" &mdash; which, remarkably, parallels Chinese <span class="chinese-char">&#22836;</span> exactly in both meaning (head) and function (counting large livestock).</p>
+
+<!-- ==================== FUNCTION ==================== -->
+<h2 id="function">Function Classifiers: What It Does</h2>
+
+<p>For inanimate objects without a strongly prominent shape, classifiers based on function or category are used.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-classifier-measure-words-diagrams/diagram-4-top-classifiers-reference.html" title="The Top 20+ Chinese Classifiers: A Visual Reference" style="height:650px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 4: Complete practical reference of the ~20 most common classifiers organized by category &mdash; shape, animacy, function, and group.</div>
+</div>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Classifier</th><th>Category</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td><span class="chinese-char">&#26412;</span> <span class="pinyin">ben</span></td><td>Bound volumes</td><td>Books, magazines, dictionaries, passports</td></tr>
+    <tr><td><span class="chinese-char">&#36742;</span> <span class="pinyin">liang</span></td><td>Wheeled vehicles</td><td>Cars, bicycles, buses, trucks</td></tr>
+    <tr><td><span class="chinese-char">&#21488;</span> <span class="pinyin">tai</span></td><td>Machines &amp; performances</td><td>Computers, TVs, washing machines, shows</td></tr>
+    <tr><td><span class="chinese-char">&#25226;</span> <span class="pinyin">ba</span></td><td>Things with handles</td><td>Knives, umbrellas, chairs, keys</td></tr>
+    <tr><td><span class="chinese-char">&#20214;</span> <span class="pinyin">jian</span></td><td>Garments &amp; matters</td><td>Clothes, jackets, affairs, events</td></tr>
+    <tr><td><span class="chinese-char">&#25903;</span> <span class="pinyin">zhi</span></td><td>Stick-like implements</td><td>Pens, guns, candles, songs, teams</td></tr>
+    <tr><td><span class="chinese-char">&#26550;</span> <span class="pinyin">jia</span></td><td>Framed structures</td><td>Airplanes, pianos</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The function classifiers reveal an <strong>ontological commitment</strong> embedded in Chinese grammar. When you count cars with <span class="chinese-char">&#36742;</span>, you are not just counting &mdash; you are categorizing the car as a wheeled vehicle. When you count books with <span class="chinese-char">&#26412;</span>, you are categorizing the book as a bound volume. English never forces this categorization; Chinese makes it grammatically mandatory.</p>
+
+<!-- ==================== GE ==================== -->
+<h2 id="ge">The General Classifier <span class="chinese-char">&#20010;</span> <span class="pinyin">(ge)</span>: The Safety Net</h2>
+
+<p>The general classifier <span class="chinese-char">&#20010;</span> <span class="pinyin">(ge)</span> is the universal default. It works for people, abstract concepts, time units, and most common objects. In casual spoken Mandarin, <span class="chinese-char">&#20010;</span> dominates usage &mdash; estimates suggest it may account for approximately 90% of classifier tokens in informal speech, though this figure varies by register and should be treated as an approximation.</p>
+
+<p>For learners, <span class="chinese-char">&#20010;</span> is the safety net. If you do not know the specific classifier for a noun, use <span class="chinese-char">&#20010;</span>. Communication will succeed. <span class="chinese-char">&#19968;&#20010;&#20070;</span> ("one GE book") instead of <span class="chinese-char">&#19968;&#26412;&#20070;</span> ("one BEN book") is understood, though it sounds imprecise &mdash; like saying "a thing of bread" instead of "a loaf of bread" in English.</p>
+
+<div class="callout callout-warning">
+  <div class="callout-title">What &#20010; Cannot Replace</div>
+  <p style="margin-bottom:0;">Mass-measure words (you cannot say <span class="chinese-char">&#19968;&#20010;&#27700;</span>, "one GE water" &mdash; you need <span class="chinese-char">&#19968;&#26479;&#27700;</span>, "one cup water") and paired items (you say <span class="chinese-char">&#19968;&#21452;&#38795;</span>, "one pair shoes," not <span class="chinese-char">&#19968;&#20010;&#38795;</span>).</p>
+</div>
+
+<p>The <span class="glossary-term">neutralization<span class="glossary-def">The loss of perceptual information when a specific classifier is replaced by the general classifier &#20010;. &#19968;&#26465;&#40060; ("one LONG-THIN fish") tells you about the fish's shape; &#19968;&#20010;&#40060; ("one GENERIC fish") does not.</span></span> phenomenon is important: when <span class="chinese-char">&#20010;</span> replaces a specific classifier, the perceptual information that the specific classifier carried is lost. <span class="chinese-char">&#19968;&#26465;&#40060;</span> ("one LONG-THIN fish") tells you something about the fish's shape that <span class="chinese-char">&#19968;&#20010;&#40060;</span> ("one GENERIC fish") does not.</p>
+
+<!-- ==================== COGNITIVE ==================== -->
+<h2 id="cognitive">The Cognitive Dimension: Classifiers as Perceptual Ontology</h2>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/chinese-language-comparative-chinese-classifier-measure-words-diagrams/diagram-5-cognitive-decision-tree.html" title="Classifier Selection: The Perceptual Decision Tree" style="height:550px;" loading="lazy"></iframe>
+  <div class="diagram-caption">Figure 5: The decision tree that (often unconsciously) guides classifier selection &mdash; animacy first, then function, then shape, then default to &#20010;.</div>
+</div>
+
+<p>The classifier system is not just grammar &mdash; it is a <strong>grammaticalized <span class="glossary-term">perceptual ontology<span class="glossary-def">A formal classification of entities based on their physical and functional properties. Chinese classifiers function like a built-in ontology, forcing speakers to categorize every object before counting it.</span></span></strong>. In computer science, an ontology is a formal classification of entities in a domain. The Chinese classifier system functions exactly like this: it forces speakers to classify every object by its physical and functional properties before counting it.</p>
+
+<p>Research in cognitive linguistics (particularly George Lakoff's 1987 <em>Women, Fire, and Dangerous Things</em> and Keith Allan's work on classifiers) has shown that classifier systems reflect cognitively natural categories. Studies suggest that Mandarin speakers who regularly use shape classifiers show enhanced shape-based categorization in non-linguistic tasks compared to English speakers. The classifier system may genuinely influence how Chinese speakers perceive and categorize the physical world &mdash; a <span class="glossary-term">Sapir-Whorf effect<span class="glossary-def">The hypothesis that the structure of a language affects its speakers' worldview or cognition. The classifier system is a case study: does mandatory shape classification change how speakers perceive shapes?</span></span> operating through the grammar of counting.</p>
+
+<p>The decision process follows a priority hierarchy: Is it alive? (use animacy classifiers) &rarr; Does it have a clear function? (use function classifiers) &rarr; What shape is it? (use shape classifiers) &rarr; None of the above? (use <span class="chinese-char">&#20010;</span>).</p>
+
+<p>English speakers make these same perceptual judgments. They know snakes are long and paper is flat. But English grammar never REQUIRES this knowledge to be stated. You can say "three snakes" without acknowledging that snakes are long. Chinese cannot: <span class="chinese-char">&#19977;&#26465;&#34503;</span> ("three LONG-FLEXIBLE snakes") builds the shape description into the counting grammar. Every count expression in Chinese is also a classification act.</p>
+
+<!-- ==================== STRATEGY ==================== -->
+<h2 id="strategy">Practical Strategy for Learners</h2>
+
+<p>The classifier system is often presented as a daunting memorization task. It is not. The practical strategy is layered:</p>
+
+<h3>Layer 1 &mdash; Immediate Communication</h3>
+<p>Learn <span class="chinese-char">&#20010;</span>. It covers nearly everything in casual speech. You can communicate effectively with <span class="chinese-char">&#20010;</span> alone.</p>
+
+<h3>Layer 2 &mdash; Basic Precision</h3>
+<p>Learn ~20-25 common classifiers: the shape classifiers (<span class="chinese-char">&#26465;, &#24352;, &#39063;, &#26681;, &#22359;, &#29255;</span>), the animacy classifiers (<span class="chinese-char">&#21482;, &#22836;, &#20301;</span>), the function classifiers (<span class="chinese-char">&#26412;, &#36742;, &#21488;, &#25226;, &#20214;, &#25903;</span>), and the group classifiers (<span class="chinese-char">&#21452;, &#22871;</span>). Research confirms that about 24 core classifiers account for most actual usage.</p>
+
+<h3>Layer 3 &mdash; Pattern Internalization</h3>
+<p>Understand the dimensional/perceptual system underlying shape classifiers. Once internalized, you can predict the classifier for unfamiliar nouns based on their shape or function.</p>
+
+<h3>Layer 4 &mdash; Cultural Fluency</h3>
+<p>Learn the more specific and literary classifiers (<span class="chinese-char">&#21305;</span> for horses, <span class="chinese-char">&#26550;</span> for airplanes) and understand their cultural resonances. Using the correct specific classifier signals cultural competence in the same way using "a ream of paper" instead of "a bunch of paper" signals register awareness in English.</p>
+
+<!-- ==================== MISCONCEPTIONS ==================== -->
+<h2 id="misconceptions">Common Misconceptions</h2>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"Classifiers are arbitrary and must be memorized for each noun."</div>
+  <p style="margin-bottom:0;">Most classifiers follow principled patterns based on shape, function, or animacy. A learner who understands these patterns can predict the classifier for most nouns. Some specific pairings must be learned (<span class="chinese-char">&#21305;</span> for horses), but the system as a whole is far more regular than it appears.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"You must know the correct classifier for every noun to speak Chinese."</div>
+  <p style="margin-bottom:0;">The general classifier <span class="chinese-char">&#20010;</span> works as a universal fallback. Knowing <span class="chinese-char">&#20010;</span> plus 20-25 common classifiers covers the vast majority of situations.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"Chinese classifiers are like English measure words."</div>
+  <p style="margin-bottom:0;">English measure words are limited to mass nouns and partitive expressions, and are often optional ("two waters" is acceptable informally). Chinese classifiers apply to ALL nouns and are NEVER optional when a number or demonstrative is present. The scope is fundamentally different.</p>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">"&#20010; accounts for exactly 94% of usage."</div>
+  <p style="margin-bottom:0;">This commonly cited figure is an approximation. The actual proportion varies significantly by register (casual speech vs. formal writing), speaker demographics, and measurement methodology. In casual spoken Mandarin, <span class="chinese-char">&#20010;</span> is dominant but the exact percentage is not firmly established.</p>
+</div>
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+  <thead><tr><th>Term</th><th>Chinese</th><th>Definition</th></tr></thead>
+  <tbody>
+    <tr><td>Classifier / Measure word</td><td><span class="chinese-char">&#37327;&#35789;</span> <span class="pinyin">liangci</span></td><td>Word that categorizes a noun; mandatory between number/demonstrative and noun</td></tr>
+    <tr><td>General classifier</td><td><span class="chinese-char">&#20010;</span> <span class="pinyin">ge</span></td><td>Universal default classifier for most nouns in casual speech</td></tr>
+    <tr><td>Count-classifier</td><td><span class="chinese-char">&#21517;&#37327;&#35789;</span> <span class="pinyin">ming liangci</span></td><td>Classifies individual countable objects (<span class="chinese-char">&#26465;, &#24352;, &#21482;</span>, etc.)</td></tr>
+    <tr><td>Verbal classifier</td><td><span class="chinese-char">&#21160;&#37327;&#35789;</span> <span class="pinyin">dong liangci</span></td><td>Measures occurrences of actions (<span class="chinese-char">&#27425;</span> "times," <span class="chinese-char">&#36941;</span> "throughout")</td></tr>
+    <tr><td>Standard measure</td><td><span class="chinese-char">&#24230;&#37327;&#35789;</span> <span class="pinyin">duliang ci</span></td><td>Units of measurement (<span class="chinese-char">&#20844;&#26020;</span> kg, <span class="chinese-char">&#31859;</span> meter)</td></tr>
+    <tr><td>Classifier neutralization</td><td><span class="chinese-char">&#37327;&#35789;&#20013;&#21644;</span> <span class="pinyin">liangci zhonghe</span></td><td>Replacement of a specific classifier with <span class="chinese-char">&#20010;</span>, losing perceptual information</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SUMMARY ==================== -->
+<h2 id="summary">Summary: The System Behind the System</h2>
+
+<p>The Chinese classifier system is not a list of arbitrary assignments to memorize. It is a coherent, principled system that:</p>
+
+<ol>
+  <li><strong>Occupies a mandatory syntactic slot</strong> between numbers/demonstratives and nouns &mdash; a slot English does not have for count nouns.</li>
+  <li><strong>Organizes by dimensionality</strong> for shape: 0D (point), 1D (line), 2D (surface), 3D (volume), with sub-distinctions like flexible vs. rigid.</li>
+  <li><strong>Tracks animacy and social status</strong> for living beings: polite human, formal human, neutral human, large animal, horse, small animal.</li>
+  <li><strong>Categorizes by function</strong> for manufactured objects: books, vehicles, machines, handled implements.</li>
+  <li><strong>Provides a universal fallback</strong> in <span class="chinese-char">&#20010;</span> that enables communication even without specific classifier knowledge.</li>
+  <li><strong>Encodes perceptual categorization</strong> as a grammatical requirement &mdash; making every count expression also a classification act.</li>
+</ol>
+
+<p>For the pattern-oriented mind, this is a system of extraordinary regularity hiding behind an initially overwhelming surface. The key is to see the <em>system</em>, not the individual items.</p>
+
+<!-- ==================== NAV ==================== -->
+<div class="category-nav">
+  <a href="../chinese-syntax-topic-prominence/index.html" class="prev-category">&larr; Previous: Chinese Syntax &amp; Topic-Prominence</a>
+  <a href="../chinese-semantics-compound-formation/index.html" class="next-category">Next: Chinese Semantics &rarr;</a>
+</div>
+
+</div>
+</main>
+</div>
+
+<button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<script>
+function toggleTheme() {
+  var body = document.documentElement;
+  var current = body.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  var saved = localStorage.getItem('theme');
+  if (saved) { document.documentElement.setAttribute('data-theme', saved); }
+  else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { document.documentElement.setAttribute('data-theme', 'dark'); }
+})();
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backToTop');
+  if (window.scrollY > 600) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
+});
+(function() {
+  var links = document.querySelectorAll('.sidebar-link');
+  var sections = [];
+  links.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      var target = document.querySelector(href);
+      if (target) sections.push({ el: target, link: link });
+    }
+  });
+  function updateActive() {
+    var current = null;
+    var scrollPos = window.scrollY + 100;
+    for (var i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].el.offsetTop <= scrollPos) { current = sections[i]; break; }
+    }
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (current) {
+      current.link.classList.add('active');
+      var nav = document.querySelector('.sidebar-nav');
+      if (nav) {
+        var linkTop = current.link.offsetTop - nav.offsetTop;
+        var navScroll = nav.scrollTop;
+        var navHeight = nav.clientHeight;
+        if (linkTop < navScroll || linkTop > navScroll + navHeight - 40) { nav.scrollTop = linkTop - navHeight / 3; }
+      }
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(function() { updateActive(); ticking = false; }); ticking = true; }
+  });
+  updateActive();
+})();
+document.querySelectorAll('.sidebar-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) { document.querySelector('.sidebar').classList.remove('open'); }
+  });
+});
+</script>
+
+</body>
+</html>
