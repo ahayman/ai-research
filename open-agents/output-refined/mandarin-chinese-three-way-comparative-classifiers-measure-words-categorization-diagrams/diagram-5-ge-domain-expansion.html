@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个 Gè Domain Expansion</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --muted: #64748b;
+    --ge: #10b981; --ge-bg: rgba(16,185,129,0.1);
+    --replaced: #f59e0b; --resistant: #f43f5e;
+    --partial: #8b5cf6;
+    --success: #4ade80; --error: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 900px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem;
+  }
+  .title { font-size: 1.1rem; font-weight: 700; text-align: center; margin-bottom: 0.25rem; color: var(--ge); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 0.5rem; }
+  .stat-line { text-align: center; font-size: 0.9rem; color: var(--ge); font-weight: 700; margin-bottom: 1.5rem; }
+  .stat-line span { font-size: 1.6rem; }
+
+  .section-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.6rem; padding-left: 0.5rem;
+    color: var(--accent); border-left: 3px solid var(--accent);
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  /* Zone visualization */
+  .zone-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .zone {
+    border-radius: 8px; padding: 1rem; border: 2px solid; position: relative;
+  }
+  .zone-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+  .zone-icon { font-size: 1.3rem; }
+  .zone-name { font-weight: 700; font-size: 0.88rem; }
+  .zone-desc { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+
+  .zone-replaced {
+    border-color: var(--ge); background: rgba(16,185,129,0.05);
+  }
+  .zone-replaced .zone-name { color: var(--ge); }
+
+  .zone-partial {
+    border-color: var(--partial); background: rgba(139,92,246,0.05);
+  }
+  .zone-partial .zone-name { color: var(--partial); }
+
+  .zone-resistant {
+    border-color: var(--resistant); background: rgba(244,63,94,0.05);
+  }
+  .zone-resistant .zone-name { color: var(--resistant); }
+
+  .zone-item {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.78rem; padding: 0.3rem 0.4rem;
+    border-radius: 4px; margin-bottom: 0.25rem;
+    background: rgba(255,255,255,0.03);
+  }
+  .zone-item .left { display: flex; align-items: center; gap: 0.3rem; }
+  .zone-item .zh { font-weight: 600; font-size: 0.9rem; }
+  .zone-item .py { font-style: italic; color: var(--muted); font-size: 0.72rem; }
+  .zone-item .right { font-size: 0.72rem; }
+  .replacing { color: var(--ge); }
+  .keeps { color: var(--resistant); }
+  .sometimes { color: var(--partial); }
+
+  /* Prototypicality example */
+  .proto-box {
+    margin-top: 1.25rem; padding: 1rem;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .proto-title { font-weight: 700; color: var(--accent); font-size: 0.85rem; margin-bottom: 0.75rem; }
+  .proto-row {
+    display: grid; grid-template-columns: 120px 1fr; gap: 0.5rem;
+    margin-bottom: 0.5rem; align-items: center;
+  }
+  .proto-noun { font-weight: 600; }
+  .proto-bar-wrap {
+    height: 28px; background: rgba(255,255,255,0.03); border-radius: 6px;
+    display: flex; overflow: hidden; position: relative;
+  }
+  .proto-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 600; padding: 0 0.5rem; white-space: nowrap;
+  }
+  .seg-specific { background: rgba(245,158,11,0.2); color: var(--replaced); }
+  .seg-ge { background: rgba(16,185,129,0.2); color: var(--ge); }
+
+  /* Factors */
+  .factors-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem;
+  }
+  .factor {
+    padding: 0.6rem 0.8rem; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 0.8rem;
+  }
+  .factor-name { font-weight: 700; color: var(--accent); font-size: 0.78rem; margin-bottom: 0.2rem; }
+
+  @media (max-width: 700px) {
+    .zone-grid { grid-template-columns: 1fr; }
+    .factors-grid { grid-template-columns: 1fr; }
+    .proto-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">个 Ge Domain Expansion</div>
+  <div class="subtitle">The general classifier is swallowing specialized classifiers in casual Mandarin</div>
+  <div class="stat-line">个 accounts for <span>~87-94%</span> of all classifier tokens in speech</div>
+
+  <div class="zone-grid">
+    <div class="zone zone-replaced">
+      <div class="zone-header">
+        <div class="zone-icon">&#10003;</div>
+        <div class="zone-name">个 Accepted</div>
+      </div>
+      <div class="zone-desc">个 freely replaces the specialized classifier</div>
+      <div class="zone-item"><div class="left"><span class="zh">人</span> <span class="py">person</span></div><div class="right replacing">个 = default</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">问题</span> <span class="py">question</span></div><div class="right replacing">个 = standard</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">苹果</span> <span class="py">apple</span></div><div class="right replacing">个 = natural</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">国家</span> <span class="py">country</span></div><div class="right replacing">个 = common</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">地方</span> <span class="py">place</span></div><div class="right replacing">个 = standard</div></div>
+    </div>
+
+    <div class="zone zone-partial">
+      <div class="zone-header">
+        <div class="zone-icon">~</div>
+        <div class="zone-name">个 Encroaching</div>
+      </div>
+      <div class="zone-desc">个 used in casual speech but specialized CL preferred</div>
+      <div class="zone-item"><div class="left"><span class="zh">沙发</span> <span class="py">sofa</span></div><div class="right sometimes">张~个</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">信</span> <span class="py">letter</span></div><div class="right sometimes">封~个</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">手机</span> <span class="py">phone</span></div><div class="right sometimes">部~个</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">蛋糕</span> <span class="py">cake</span></div><div class="right sometimes">块~个</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">学校</span> <span class="py">school</span></div><div class="right sometimes">所~个</div></div>
+    </div>
+
+    <div class="zone zone-resistant">
+      <div class="zone-header">
+        <div class="zone-icon">&#10007;</div>
+        <div class="zone-name">个 Blocked</div>
+      </div>
+      <div class="zone-desc">Using 个 sounds wrong or loses important meaning</div>
+      <div class="zone-item"><div class="left"><span class="zh">猫</span> <span class="py">cat</span></div><div class="right keeps">只 required</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">车</span> <span class="py">car</span></div><div class="right keeps">辆 required</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">书</span> <span class="py">book</span></div><div class="right keeps">本 required</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">马</span> <span class="py">horse</span></div><div class="right keeps">匹 required</div></div>
+      <div class="zone-item"><div class="left"><span class="zh">纸</span> <span class="py">paper</span></div><div class="right keeps">张 required</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Prototypicality Effect on 个 Acceptance</div>
+  <div class="proto-box">
+    <div class="proto-title">张 zhāng (flat-surface classifier) domain: more prototypical = less 个 accepted</div>
+    <div class="proto-row">
+      <div class="proto-noun">纸 paper</div>
+      <div class="proto-bar-wrap">
+        <div class="proto-seg seg-specific" style="width:95%">张 (95%+)</div>
+        <div class="proto-seg seg-ge" style="width:5%">个</div>
+      </div>
+    </div>
+    <div class="proto-row">
+      <div class="proto-noun">桌子 table</div>
+      <div class="proto-bar-wrap">
+        <div class="proto-seg seg-specific" style="width:80%">张 (~80%)</div>
+        <div class="proto-seg seg-ge" style="width:20%">个</div>
+      </div>
+    </div>
+    <div class="proto-row">
+      <div class="proto-noun">票 ticket</div>
+      <div class="proto-bar-wrap">
+        <div class="proto-seg seg-specific" style="width:65%">张 (~65%)</div>
+        <div class="proto-seg seg-ge" style="width:35%">个</div>
+      </div>
+    </div>
+    <div class="proto-row">
+      <div class="proto-noun">沙发 sofa</div>
+      <div class="proto-bar-wrap">
+        <div class="proto-seg seg-specific" style="width:40%">张 (~40%)</div>
+        <div class="proto-seg seg-ge" style="width:60%">个 (~60%)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">What Drives 个-Generalization?</div>
+  <div class="factors-grid">
+    <div class="factor">
+      <div class="factor-name">Processing Ease</div>
+      个 is shorter, more frequent, and requires less semantic computation than retrieving the correct specialized classifier.
+    </div>
+    <div class="factor">
+      <div class="factor-name">Register Sensitivity</div>
+      Casual speech strongly favors 个; formal writing and educated speech retain specialized classifiers.
+    </div>
+    <div class="factor">
+      <div class="factor-name">Prototypicality Gradient</div>
+      Less prototypical members of a classifier's domain accept 个 more readily than core members.
+    </div>
+    <div class="factor">
+      <div class="factor-name">Generational Change</div>
+      Younger mainland speakers use 个 more broadly; the specialized inventory is effectively shrinking.
+    </div>
+  </div>
+</div>
+<figcaption>Diagram 5 &mdash; 量词个化 (classifier ge-ification): the general classifier 个 is actively expanding its domain, replacing specialized classifiers in casual Mandarin on a prototypicality gradient.</figcaption>
+</figure>
+</body>
+</html>

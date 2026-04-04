@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japanese Loanword Layer in Taiwan Guoyu</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4;
+    --jp: #ef4444; --jp-bg: #fef2f2; --jp-border: #fecaca;
+    --hk-min: #f59e0b; --hk-min-bg: #fffbeb; --hk-min-border: #fde68a;
+    --tw: #22c55e; --tw-bg: #f0fdf4; --tw-border: #bbf7d0;
+    --shared: #6366f1; --shared-bg: #eef2ff; --shared-border: #c7d2fe;
+    --meiji: #8b5cf6; --meiji-bg: #f5f3ff;
+    --muted: #6c757d; --arrow: #94a3b8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --accent: #22d3ee;
+      --jp: #f87171; --jp-bg: #1f1215; --jp-border: #7f1d1d;
+      --hk-min: #fbbf24; --hk-min-bg: #1f1a0a; --hk-min-border: #92400e;
+      --tw: #4ade80; --tw-bg: #0f1f15; --tw-border: #166534;
+      --shared: #818cf8; --shared-bg: #1e1b4b; --shared-border: #3730a3;
+      --meiji: #a78bfa; --meiji-bg: #1e1635;
+      --muted: #94a3b8; --arrow: #64748b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.5;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
+  .subtitle { text-align: center; font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  /* Transmission pathway */
+  .pathway {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.3rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+  .path-node {
+    border-radius: 8px; padding: 0.5rem 0.8rem; text-align: center;
+    font-size: 0.78rem; border: 2px solid;
+  }
+  .pn-jp { background: var(--jp-bg); border-color: var(--jp); }
+  .pn-hk { background: var(--hk-min-bg); border-color: var(--hk-min); }
+  .pn-tw { background: var(--tw-bg); border-color: var(--tw); }
+  .pn-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .pn-jp .pn-label { color: var(--jp); }
+  .pn-hk .pn-label { color: var(--hk-min); }
+  .pn-tw .pn-label { color: var(--tw); }
+  .pn-name { font-weight: 700; font-size: 0.85rem; }
+  .pn-detail { font-size: 0.7rem; color: var(--muted); }
+  .path-arrow { font-size: 1.2rem; color: var(--arrow); font-weight: 700; }
+
+  /* Two-layer display */
+  .layers {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .layer {
+    border-radius: 8px; border: 2px solid; padding: 0.8rem;
+  }
+  .layer-tw { border-color: var(--tw); background: var(--tw-bg); }
+  .layer-shared { border-color: var(--shared); background: var(--shared-bg); }
+  .layer-header {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 0.2rem;
+  }
+  .layer-tw .layer-header { color: var(--tw); }
+  .layer-shared .layer-header { color: var(--shared); }
+  .layer-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .layer-desc { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; line-height: 1.4; }
+
+  .loan-item {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.4rem 0.6rem; margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+  }
+  .loan-item:last-child { margin-bottom: 0; }
+  .li-zh { font-weight: 700; font-size: 1em; }
+  .li-py { font-style: italic; color: var(--muted); font-size: 0.85em; }
+  .li-jp { color: var(--jp); font-size: 0.82em; }
+  .li-en { color: var(--muted); font-size: 0.82em; }
+  .li-path { font-size: 0.7rem; color: var(--arrow); margin-top: 2px; }
+
+  /* Key distinction box */
+  .distinction {
+    margin-top: 1.2rem; padding: 0.8rem 1rem;
+    border-radius: 8px; border: 2px dashed var(--accent);
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+  }
+  .dist-title {
+    font-size: 0.78rem; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;
+  }
+  .dist-text { font-size: 0.82rem; line-height: 1.5; }
+
+  /* Mainland comparison */
+  .mainland-note {
+    margin-top: 1rem; padding: 0.6rem 0.8rem;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    font-size: 0.78rem; color: var(--muted); line-height: 1.4;
+  }
+  .mn-label { font-weight: 700; color: var(--fg); }
+
+  figcaption {
+    text-align: center; margin-top: 0.8rem; font-size: 0.78rem;
+    color: var(--muted); font-style: italic; padding: 0 1rem;
+  }
+
+  @media (max-width: 700px) {
+    .layers { grid-template-columns: 1fr; }
+    .pathway { flex-direction: column; }
+    .path-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">The Japanese Loanword Layer in Taiwan Guoyu</div>
+    <div class="subtitle">Two distinct channels: colonial-era daily life loans (Taiwan only) vs. Meiji-era scholarly coinages (shared)</div>
+
+    <div class="pathway">
+      <div class="path-node pn-jp">
+        <div class="pn-label">Source</div>
+        <div class="pn-name">Japanese</div>
+        <div class="pn-detail">1895&ndash;1945 colonial rule</div>
+      </div>
+      <div class="path-arrow">&rarr;</div>
+      <div class="path-node pn-hk">
+        <div class="pn-label">Intermediary</div>
+        <div class="pn-name">Hokkien (Southern Min)</div>
+        <div class="pn-detail">Daily spoken language in colonial Taiwan</div>
+      </div>
+      <div class="path-arrow">&rarr;</div>
+      <div class="path-node pn-tw">
+        <div class="pn-label">Destination</div>
+        <div class="pn-name">Taiwan Guoyu</div>
+        <div class="pn-detail">Adopted into Mandarin after 1945</div>
+      </div>
+    </div>
+
+    <div class="layers">
+      <div class="layer layer-tw">
+        <div class="layer-header">Taiwan Only</div>
+        <div class="layer-title">Colonial-Era Daily Life Loans</div>
+        <div class="layer-desc">Entered via Hokkien during 50 years of Japanese colonial administration. These are colloquial terms absent from mainland Putonghua.</div>
+
+        <div class="loan-item">
+          <span class="li-zh">便當</span> <span class="li-py">biàndāng</span> = lunchbox
+          <div class="li-jp">from Japanese 弁当 (bentō)</div>
+          <div class="li-path">JP bentō &rarr; Hokkien piān-tong &rarr; Guoyu biàndāng</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">歐巴桑</span> <span class="li-py">ōubāsāng</span> = middle-aged woman
+          <div class="li-jp">from Japanese おばさん (obasan)</div>
+          <div class="li-path">JP obasan &rarr; Hokkien &rarr; Guoyu ōubāsāng</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">阿沙力</span> <span class="li-py">āshālì</span> = straightforward / decisive
+          <div class="li-jp">from Japanese あっさり (assari)</div>
+          <div class="li-path">JP assari &rarr; Hokkien &rarr; Guoyu āshālì</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">運將</span> <span class="li-py">yùnjiàng</span> = taxi driver
+          <div class="li-jp">from Japanese 運転手 (untenshu)</div>
+          <div class="li-path">JP untenshu &rarr; Hokkien ùn-chiáng &rarr; Guoyu yùnjiàng</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">氣氛</span> <span class="li-py">qìfēn</span> = atmosphere/vibe (in emotional sense)
+          <div class="li-jp">from Japanese 気分 (kibun)</div>
+          <div class="li-path">Kanji shared; Taiwan uses with JP nuance</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">看板</span> <span class="li-py">kānbǎn</span> = signboard / bulletin board
+          <div class="li-jp">from Japanese 看板 (kanban)</div>
+          <div class="li-path">Same characters; Taiwan preserves JP usage widely</div>
+        </div>
+      </div>
+
+      <div class="layer layer-shared">
+        <div class="layer-header">Shared (Both Sides)</div>
+        <div class="layer-title">Meiji-Era Scholarly Coinages</div>
+        <div class="layer-desc">Japanese scholars in the 1860s&ndash;1910s coined Chinese-character compounds to translate Western concepts. These were then re-borrowed into Chinese on both sides of the strait.</div>
+
+        <div class="loan-item">
+          <span class="li-zh">社会</span> <span class="li-py">shèhuì</span> = society
+          <div class="li-jp">coined as Japanese 社会 (shakai) from "society"</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">经济</span> <span class="li-py">jīngjì</span> = economy
+          <div class="li-jp">coined as Japanese 経済 (keizai) from "economy"</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">哲学</span> <span class="li-py">zhéxué</span> = philosophy
+          <div class="li-jp">coined as Japanese 哲学 (tetsugaku) from "philosophy"</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">科学</span> <span class="li-py">kēxué</span> = science
+          <div class="li-jp">coined as Japanese 科学 (kagaku) from "science"</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">民主</span> <span class="li-py">mínzhǔ</span> = democracy
+          <div class="li-jp">coined as Japanese 民主 (minshu) from "democracy"</div>
+        </div>
+
+        <div class="loan-item">
+          <span class="li-zh">革命</span> <span class="li-py">gémìng</span> = revolution
+          <div class="li-jp">repurposed by Japanese 革命 (kakumei) for Western "revolution"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="distinction">
+      <div class="dist-title">Critical Distinction</div>
+      <div class="dist-text">
+        The <strong>Meiji scholarly coinages</strong> (right column) are <em>not</em> evidence of Taiwan-specific Japanese influence &mdash; they entered Chinese across the board in the early 20th century, well before 1949. What makes Taiwan unique is the <strong>colonial daily-life layer</strong> (left column): words that entered through Hokkien during 50 years of Japanese administration and have no equivalent in mainland Putonghua. Mainland speakers encountering 便當 or 歐巴桑 would not understand them without context.
+      </div>
+    </div>
+
+    <div class="mainland-note">
+      <span class="mn-label">Mainland equivalent pattern:</span> Where Taiwan has Japanese colonial loans, mainland Putonghua has a (much smaller) Russian loanword layer from the 1950s&ndash;60s Soviet alliance period. Examples: 布拉吉 bùlājí "dress" (from Russian platye) and 列巴 lièbā "bread" (from Russian khleb), though most of these have fallen out of use except in northeast China.
+    </div>
+
+  </div>
+  <figcaption>Figure 4: The two Japanese loanword channels into Chinese. The Meiji scholarly coinages (right) are shared by all Chinese varieties. The colonial daily-life loans (left) are unique to Taiwan and typically entered via Hokkien as an intermediary.</figcaption>
+</figure>
+</body>
+</html>

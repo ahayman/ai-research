@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refusal Ritual Sequences: Chinese vs English</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-dim: #0891b2;
+    --mandarin: #f59e0b; --mandarin-bg: rgba(245,158,11,0.12);
+    --trad: #f43f5e; --trad-bg: rgba(244,63,94,0.08);
+    --english: #8b5cf6; --english-bg: rgba(139,92,246,0.1);
+    --muted: #64748b; --success: #4ade80;
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.1);
+    --blue: #3b82f6; --blue-bg: rgba(59,130,246,0.1);
+    --rose: #f43f5e; --warm: #fb923c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 950px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem; overflow-x: auto;
+  }
+  .title { font-size: 1.15rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  .section-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin: 1.5rem 0 0.6rem; padding-left: 0.5rem; border-left: 3px solid var(--accent);
+    color: var(--accent);
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  /* Sequence flow */
+  .sequence-compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .seq-col {
+    border-radius: 8px; padding: 1rem; border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .seq-lang {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 0.6rem;
+  }
+  .seq-zh .seq-lang { color: var(--mandarin); }
+  .seq-en .seq-lang { color: var(--english); }
+
+  .round {
+    display: flex; gap: 0.5rem; margin-bottom: 0.4rem;
+    align-items: flex-start;
+  }
+  .round-num {
+    flex-shrink: 0; width: 1.6rem; height: 1.6rem;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800; border: 2px solid;
+    margin-top: 0.15rem;
+  }
+  .seq-zh .round-num { border-color: var(--mandarin); color: var(--mandarin); }
+  .seq-en .round-num { border-color: var(--english); color: var(--english); }
+  .round-content { flex: 1; }
+  .round-speaker {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted);
+  }
+  .round-text { font-size: 0.78rem; color: var(--fg); }
+  .round-zh-text { font-weight: 600; }
+  .seq-zh .round-zh-text { color: var(--mandarin); }
+  .round-func {
+    font-size: 0.68rem; color: var(--muted); font-style: italic;
+    padding-left: 0.5rem; border-left: 2px solid rgba(255,255,255,0.06);
+    margin-top: 0.15rem;
+  }
+
+  .round-arrow {
+    text-align: center; color: var(--muted); font-size: 0.8rem;
+    margin: 0.15rem 0; padding-left: 2.1rem;
+  }
+
+  .outcome {
+    padding: 0.5rem 0.75rem; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 600; text-align: center;
+    margin-top: 0.5rem;
+  }
+  .seq-zh .outcome { background: var(--mandarin-bg); color: var(--mandarin); border: 1px solid rgba(245,158,11,0.3); }
+  .seq-en .outcome { background: var(--english-bg); color: var(--english); border: 1px solid rgba(139,92,246,0.3); }
+
+  /* Scenario tabs */
+  .scenarios {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  .scenario-card {
+    padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .scenario-icon { font-size: 1.3rem; margin-bottom: 0.25rem; }
+  .scenario-title { font-size: 0.82rem; font-weight: 700; color: var(--accent); margin-bottom: 0.35rem; }
+  .scenario-zh { font-size: 0.75rem; margin-bottom: 0.15rem; }
+  .scenario-zh strong { color: var(--mandarin); }
+  .scenario-en { font-size: 0.72rem; color: var(--muted); }
+  .scenario-rounds {
+    display: flex; gap: 0.25rem; margin-top: 0.4rem;
+  }
+  .r-dot {
+    width: 0.6rem; height: 0.6rem; border-radius: 50%;
+  }
+  .r-dot-zh { background: var(--mandarin); }
+  .r-dot-en { background: var(--english); }
+  .r-dot-empty { background: transparent; border: 1.5px solid var(--muted); }
+  .round-legend {
+    font-size: 0.62rem; color: var(--muted); margin-top: 0.15rem;
+  }
+
+  /* Cross-cultural pitfall */
+  .pitfall {
+    margin-top: 1.25rem; padding: 1rem; border-radius: 8px;
+    background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.2);
+  }
+  .pitfall-title {
+    font-size: 0.78rem; font-weight: 700; color: var(--rose);
+    margin-bottom: 0.35rem;
+  }
+  .pitfall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .pitfall-item { font-size: 0.75rem; color: var(--fg); }
+  .pitfall-item strong { color: var(--warm); }
+  .pitfall-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); margin-bottom: 0.15rem; }
+
+  @media (max-width: 700px) {
+    .sequence-compare { grid-template-columns: 1fr; }
+    .scenarios { grid-template-columns: 1fr; }
+    .pitfall-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">Refusal Ritual Sequences</div>
+  <div class="subtitle">Chinese multi-round ritualistic refusals vs English single-round hedged refusals</div>
+
+  <div class="section-label">Gift-Giving Scenario</div>
+
+  <div class="sequence-compare">
+    <!-- Chinese sequence -->
+    <div class="seq-col seq-zh">
+      <div class="seq-lang">Mandarin -- Multi-Round Ritual</div>
+
+      <div class="round">
+        <div class="round-num">1</div>
+        <div class="round-content">
+          <div class="round-speaker">Giver</div>
+          <div class="round-text"><span class="round-zh-text">这是给你的，一点小意思。</span></div>
+          <div class="round-text">"This is for you, just a small token."</div>
+          <div class="round-func">Face function: downplay gift to reduce recipient's sense of debt</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="round">
+        <div class="round-num">1</div>
+        <div class="round-content">
+          <div class="round-speaker">Recipient</div>
+          <div class="round-text"><span class="round-zh-text">哎呀，太客气了！不用不用！</span></div>
+          <div class="round-text">"Oh, too polite! No need, no need!"</div>
+          <div class="round-func">Face function: show you're not greedy; demonstrate keqi</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="round">
+        <div class="round-num">2</div>
+        <div class="round-content">
+          <div class="round-speaker">Giver</div>
+          <div class="round-text"><span class="round-zh-text">拿着吧，真的没什么。</span></div>
+          <div class="round-text">"Take it, really it's nothing."</div>
+          <div class="round-func">Face function: insist sincerity; minimize cost</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="round">
+        <div class="round-num">2</div>
+        <div class="round-content">
+          <div class="round-speaker">Recipient</div>
+          <div class="round-text"><span class="round-zh-text">这怎么好意思呢...</span></div>
+          <div class="round-text">"How can I accept this..." (wavering)</div>
+          <div class="round-func">Face function: continue modesty display; test sincerity</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="round">
+        <div class="round-num">3</div>
+        <div class="round-content">
+          <div class="round-speaker">Giver</div>
+          <div class="round-text"><span class="round-zh-text">你不拿我就不高兴了！</span></div>
+          <div class="round-text">"If you don't take it, I'll be upset!"</div>
+          <div class="round-func">Face function: make refusal = face threat to giver</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="outcome">Accepts with: "那太谢谢了!" -- mutual face preserved</div>
+    </div>
+
+    <!-- English sequence -->
+    <div class="seq-col seq-en">
+      <div class="seq-lang">English -- Single-Round Exchange</div>
+
+      <div class="round">
+        <div class="round-num">1</div>
+        <div class="round-content">
+          <div class="round-speaker">Giver</div>
+          <div class="round-text">"I got you something!"</div>
+          <div class="round-func">Direct presentation; enthusiasm is appropriate</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="round">
+        <div class="round-num">1</div>
+        <div class="round-content">
+          <div class="round-speaker">Recipient</div>
+          <div class="round-text">"Oh, thank you! You didn't have to!"</div>
+          <div class="round-func">Accepts on first offer; token acknowledgment of effort</div>
+        </div>
+      </div>
+      <div class="round-arrow">&#8595;</div>
+      <div class="outcome">Accepted immediately -- appreciation expressed directly</div>
+
+      <div style="margin-top:1.5rem; padding:0.75rem; border-radius:6px; background:rgba(139,92,246,0.06); border:1px solid rgba(139,92,246,0.15);">
+        <div style="font-size:0.72rem; font-weight:700; color:var(--english); margin-bottom:0.25rem;">Key Difference</div>
+        <div style="font-size:0.75rem; color:var(--muted);">In English, refusing a gift repeatedly signals genuine reluctance or discomfort. In Chinese, it signals proper manners (keqi). The ritual IS the politeness.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other scenarios -->
+  <div class="section-label">Three Ritual Domains</div>
+  <div class="scenarios">
+
+    <div class="scenario-card">
+      <div class="scenario-icon">&#127873;</div>
+      <div class="scenario-title">Gift Acceptance</div>
+      <div class="scenario-zh"><strong>太客气了！不用不用！</strong></div>
+      <div class="scenario-en">Typical 3-round refusal before accepting</div>
+      <div class="scenario-rounds">
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+      </div>
+      <div class="round-legend">Chinese: 3 rounds</div>
+      <div class="scenario-rounds" style="margin-top:0.15rem;">
+        <div class="r-dot r-dot-en"></div>
+        <div class="r-dot r-dot-empty"></div>
+        <div class="r-dot r-dot-empty"></div>
+      </div>
+      <div class="round-legend">English: 1 round</div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-icon">&#128176;</div>
+      <div class="scenario-title">Bill-Splitting (抢买单)</div>
+      <div class="scenario-zh"><strong>我来我来！今天我请客！</strong></div>
+      <div class="scenario-en">Physical grabbing of the bill; insistence escalates</div>
+      <div class="scenario-rounds">
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+      </div>
+      <div class="round-legend">Chinese: 3-4+ rounds (can get physical)</div>
+      <div class="scenario-rounds" style="margin-top:0.15rem;">
+        <div class="r-dot r-dot-en"></div>
+        <div class="r-dot r-dot-en"></div>
+        <div class="r-dot r-dot-empty"></div>
+        <div class="r-dot r-dot-empty"></div>
+      </div>
+      <div class="round-legend">English: 1-2 rounds ("Let me" / "Are you sure?")</div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-icon">&#128079;</div>
+      <div class="scenario-title">Compliment Deflection</div>
+      <div class="scenario-zh"><strong>哪里哪里，过奖了！</strong></div>
+      <div class="scenario-en">Redirect praise; elevate the other person</div>
+      <div class="scenario-rounds">
+        <div class="r-dot r-dot-zh"></div>
+        <div class="r-dot r-dot-zh"></div>
+      </div>
+      <div class="round-legend">Chinese: 2+ rounds (deflect, redirect)</div>
+      <div class="scenario-rounds" style="margin-top:0.15rem;">
+        <div class="r-dot r-dot-en"></div>
+        <div class="r-dot r-dot-empty"></div>
+      </div>
+      <div class="round-legend">English: 1 round ("Thank you!")</div>
+    </div>
+
+  </div>
+
+  <!-- Cross-cultural pitfalls -->
+  <div class="pitfall">
+    <div class="pitfall-title">Cross-Cultural Collision Points</div>
+    <div class="pitfall-grid">
+      <div class="pitfall-item">
+        <div class="pitfall-label">English speaker in China</div>
+        <strong>Accepts gift on first offer</strong> -- perceived as greedy or lacking manners (没有礼貌). The ritual refusal is expected.
+      </div>
+      <div class="pitfall-item">
+        <div class="pitfall-label">Chinese speaker in English context</div>
+        <strong>Refuses gift three times</strong> -- English giver feels rejected or confused, may give up after first refusal (taking it literally).
+      </div>
+    </div>
+  </div>
+
+</div>
+<figcaption>Chinese refusal rituals follow predictable multi-round algorithms with face-saving functions at each step. English refusals are typically single-round and literal.</figcaption>
+</figure>
+</body>
+</html>

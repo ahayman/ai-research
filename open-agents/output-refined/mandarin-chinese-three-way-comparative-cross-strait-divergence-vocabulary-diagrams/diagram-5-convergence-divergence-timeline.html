@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Strait Convergence/Divergence Timeline</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4;
+    --diverge: #ef4444; --diverge-bg: #fef2f2;
+    --converge: #22c55e; --converge-bg: #f0fdf4;
+    --neutral: #6366f1; --neutral-bg: #eef2ff;
+    --event: #f59e0b;
+    --muted: #6c757d;
+    --track-ml: #ef4444; --track-tw: #22c55e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --accent: #22d3ee;
+      --diverge: #f87171; --diverge-bg: #1f1215;
+      --converge: #4ade80; --converge-bg: #0f1f15;
+      --neutral: #818cf8; --neutral-bg: #1e1b4b;
+      --event: #fbbf24;
+      --muted: #94a3b8;
+      --track-ml: #f87171; --track-tw: #4ade80;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.5;
+  }
+  figure { max-width: 1050px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
+  .subtitle { text-align: center; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.3rem; }
+
+  .legend {
+    display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem;
+    font-size: 0.75rem; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .l-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .ld-diverge { background: var(--diverge); }
+  .ld-converge { background: var(--converge); }
+  .ld-event { background: var(--event); }
+
+  /* Timeline */
+  .timeline { position: relative; padding: 0 0 0 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 12px; top: 0; bottom: 0;
+    width: 3px; background: var(--border);
+  }
+  .era {
+    position: relative; margin-bottom: 1.5rem;
+  }
+  .era:last-child { margin-bottom: 0; }
+  .era-dot {
+    position: absolute; left: -2rem; top: 0.15rem;
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem; font-weight: 800; color: #fff;
+    z-index: 1; transform: translateX(1px);
+  }
+  .ed-diverge { background: var(--diverge); }
+  .ed-converge { background: var(--converge); }
+  .ed-event { background: var(--event); }
+  .ed-neutral { background: var(--neutral); }
+
+  .era-card {
+    border-radius: 8px; padding: 0.7rem 0.9rem; border: 2px solid;
+    background: var(--bg);
+  }
+  .ec-diverge { border-color: var(--diverge); }
+  .ec-converge { border-color: var(--converge); }
+  .ec-event { border-color: var(--event); }
+  .ec-neutral { border-color: var(--neutral); }
+
+  .era-date { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .ec-diverge .era-date { color: var(--diverge); }
+  .ec-converge .era-date { color: var(--converge); }
+  .ec-event .era-date { color: var(--event); }
+  .ec-neutral .era-date { color: var(--neutral); }
+
+  .era-title { font-size: 0.92rem; font-weight: 700; margin: 0.1rem 0 0.3rem; }
+  .era-body { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+  .era-effects {
+    margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+  }
+  .eff-label { font-weight: 700; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
+  .ec-diverge .eff-label { color: var(--diverge); }
+  .ec-converge .eff-label { color: var(--converge); }
+
+  .era-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.3rem; }
+  .era-tag {
+    font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px;
+    font-weight: 600;
+  }
+  .et-vocab { background: color-mix(in srgb, var(--diverge) 12%, var(--bg)); color: var(--diverge); }
+  .et-pronun { background: color-mix(in srgb, var(--neutral) 12%, var(--bg)); color: var(--neutral); }
+  .et-loan { background: color-mix(in srgb, var(--event) 12%, var(--bg)); color: var(--event); }
+  .et-grammar { background: color-mix(in srgb, var(--converge) 12%, var(--bg)); color: var(--converge); }
+  .et-digital { background: color-mix(in srgb, var(--accent) 12%, var(--bg)); color: var(--accent); }
+
+  /* Summary bar */
+  .summary-bar {
+    margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border);
+  }
+  .sb-title { text-align: center; font-size: 0.82rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; }
+  .sb-track {
+    display: flex; height: 24px; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .sb-seg { display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: #fff; }
+  .sbs-diverge { background: var(--diverge); }
+  .sbs-converge { background: var(--converge); }
+  .sbs-mixed { background: var(--neutral); }
+  .sb-labels {
+    display: flex; justify-content: space-between; font-size: 0.68rem;
+    color: var(--muted); margin-top: 0.3rem; padding: 0 0.3rem;
+  }
+
+  figcaption {
+    text-align: center; margin-top: 0.8rem; font-size: 0.78rem;
+    color: var(--muted); font-style: italic; padding: 0 1rem;
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Cross-Strait Language Divergence Timeline</div>
+    <div class="subtitle">From shared standard to independent evolution to partial re-convergence</div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="l-dot ld-diverge"></span> Divergence event</div>
+      <div class="legend-item"><span class="l-dot ld-converge"></span> Convergence event</div>
+      <div class="legend-item"><span class="l-dot ld-event"></span> Key milestone</div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="era">
+        <div class="era-dot ed-event">&bull;</div>
+        <div class="era-card ec-event">
+          <div class="era-date">1949 &mdash; The Split</div>
+          <div class="era-title">Chinese Civil War Ends: ROC Retreats to Taiwan</div>
+          <div class="era-body">A single spoken standard (Beijing-based Mandarin) is effectively divided. Both sides begin independent language planning. The mainland calls it 普通话 Putonghua; Taiwan calls it 國語 Guoyu. Minimal contact begins.</div>
+          <div class="era-tags">
+            <span class="era-tag et-vocab">Vocabulary</span>
+            <span class="era-tag et-pronun">Pronunciation</span>
+            <span class="era-tag et-loan">Loanwords</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-diverge">D</div>
+        <div class="era-card ec-diverge">
+          <div class="era-date">1950s&ndash;1960s &mdash; Maximum Divergence Phase I</div>
+          <div class="era-title">Cold War Isolation + Script Reform</div>
+          <div class="era-body">Mainland: Russian loanwords enter (布拉吉 "dress"); Simplified Chinese script adopted (1956&ndash;64). Political vocabulary proliferates (同志, 人民). Taiwan: Japanese colonial vocabulary retained (便當, 歐巴桑); Traditional script maintained; KMT promotes "standard" Guoyu.</div>
+          <div class="era-effects">
+            <div class="eff-label">Divergence effects</div>
+            Different writing systems &bull; Different political terminology &bull; Different loanword sources (Russian vs. Japanese) &bull; Different standardization bodies making independent decisions
+          </div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-diverge">D</div>
+        <div class="era-card ec-diverge">
+          <div class="era-date">1970s&ndash;1980s &mdash; Maximum Divergence Phase II</div>
+          <div class="era-title">Technology Naming Splits</div>
+          <div class="era-body">Both sides independently coin terms for new technology. Mainland prefers semantic calques (电脑 "electric-brain" for computer); Taiwan is more open to transliterations (維他命 for vitamin). ~2,000 vocabulary differences accumulate by 1987.</div>
+          <div class="era-effects">
+            <div class="eff-label">Divergence effects</div>
+            Incompatible tech vocabulary &bull; Different modal verb preferences solidify &bull; Taiwan sentence-final particles (耶, 喔) become markers of identity
+          </div>
+          <div class="era-tags">
+            <span class="era-tag et-vocab">Vocabulary</span>
+            <span class="era-tag et-loan">Loanwords</span>
+            <span class="era-tag et-grammar">Grammar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-event">&bull;</div>
+        <div class="era-card ec-event">
+          <div class="era-date">1987 &mdash; Turning Point</div>
+          <div class="era-title">Taiwan Lifts Martial Law</div>
+          <div class="era-body">Taiwan's democratization allows cross-strait travel for the first time in 38 years. Indirect communication channels open. Taiwan media becomes accessible on mainland through various channels.</div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-converge">C</div>
+        <div class="era-card ec-converge">
+          <div class="era-date">1990s&ndash;2000s &mdash; Early Convergence</div>
+          <div class="era-title">Media Cross-Pollination</div>
+          <div class="era-body">Taiwan dramas, pop music (Jay Chou, S.H.E.), and variety shows become hugely popular on the mainland. Some Taiwan vocabulary enters mainland awareness (便当 now understood). Cross-strait business travel increases. The 2012 Cross-Strait Common Dictionary (两岸常用词典) is published.</div>
+          <div class="era-effects">
+            <div class="eff-label">Convergence effects</div>
+            Mutual vocabulary awareness grows &bull; Taiwan accent gains cultural prestige &bull; Entertainment vocabulary starts to overlap
+          </div>
+          <div class="era-tags">
+            <span class="era-tag et-vocab">Vocabulary</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-diverge">D</div>
+        <div class="era-card ec-diverge">
+          <div class="era-date">2010s&ndash;present &mdash; New Digital Divergence</div>
+          <div class="era-title">Great Firewall + Platform Ecosystems</div>
+          <div class="era-body">The Great Firewall creates separate digital ecosystems. Mainland: WeChat, Weibo, Douyin, Bilibili. Taiwan: LINE, Facebook, Instagram, YouTube. Platform-specific slang doesn't cross the boundary. 朋友圈 (WeChat Moments) is meaningless in Taiwan; LINE sticker culture is unknown on the mainland.</div>
+          <div class="era-effects">
+            <div class="eff-label">New divergence effects</div>
+            Separate meme cultures &bull; Platform-specific vocabulary &bull; Different internet slang (666 = "awesome" is mainland-specific) &bull; Simplified vs. Traditional in digital spaces
+          </div>
+          <div class="era-tags">
+            <span class="era-tag et-digital">Digital</span>
+            <span class="era-tag et-vocab">Vocabulary</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="era">
+        <div class="era-dot ed-converge">C</div>
+        <div class="era-card ec-converge">
+          <div class="era-date">2020s &mdash; Ongoing</div>
+          <div class="era-title">Simultaneous Convergence and Divergence</div>
+          <div class="era-body">Global English vocabulary creates some convergence (shared tech terms). Mainland cultural exports (Douyin/TikTok trends) reach Taiwan through international platforms. But political tensions also motivate Taiwan speakers to emphasize distinctly Taiwanese language features as identity markers. The net effect is a complex, layered picture: convergence in some domains, new divergence in others.</div>
+          <div class="era-tags">
+            <span class="era-tag et-vocab">Vocabulary</span>
+            <span class="era-tag et-digital">Digital</span>
+            <span class="era-tag et-pronun">Identity</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="summary-bar">
+      <div class="sb-title">Divergence/Convergence Balance Over Time</div>
+      <div class="sb-track">
+        <div class="sb-seg sbs-diverge" style="width:15%;">1949</div>
+        <div class="sb-seg sbs-diverge" style="width:25%;">Max diverge</div>
+        <div class="sb-seg sbs-converge" style="width:15%;">1987</div>
+        <div class="sb-seg sbs-converge" style="width:20%;">Converge</div>
+        <div class="sb-seg sbs-mixed" style="width:25%;">Mixed</div>
+      </div>
+      <div class="sb-labels">
+        <span>1949</span>
+        <span>1970s</span>
+        <span>1987</span>
+        <span>2000s</span>
+        <span>Present</span>
+      </div>
+    </div>
+
+  </div>
+  <figcaption>Figure 5: Timeline of cross-strait Mandarin divergence and convergence. The 1949 split and Cold War produced maximum divergence; the 1987 opening and media exchange created partial convergence; the Great Firewall has produced a new layer of digital-era divergence.</figcaption>
+</figure>
+</body>
+</html>

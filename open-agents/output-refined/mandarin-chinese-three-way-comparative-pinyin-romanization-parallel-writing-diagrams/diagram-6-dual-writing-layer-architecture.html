@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual Writing Layer Architecture: Characters + Pinyin</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --cyan: #06b6d4; --cyan-bg: rgba(6,182,212,0.08); --cyan-border: rgba(6,182,212,0.3);
+    --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.08); --amber-border: rgba(245,158,11,0.3);
+    --rose: #f43f5e; --rose-bg: rgba(244,63,94,0.06); --rose-border: rgba(244,63,94,0.25);
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.08); --emerald-border: rgba(16,185,129,0.3);
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.08);
+    --blue: #3b82f6;
+    --muted: #64748b; --caption-bg: #1e293b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--fg); display: flex; justify-content: center; padding: 1.5rem 0.75rem; line-height: 1.5; }
+  figure { max-width: 920px; width: 100%; }
+  figcaption { text-align: center; margin-top: 1.25rem; padding: 1rem 1.5rem; background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border); }
+  figcaption h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--cyan); }
+  figcaption p { font-size: 0.8rem; color: var(--muted); }
+  .chart-wrapper { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 1.5rem; }
+
+  /* Three-system comparison */
+  .systems-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  @media (max-width: 700px) { .systems-row { grid-template-columns: 1fr; } }
+
+  .system-col { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .system-header { padding: 0.75rem 0.85rem; font-weight: 700; font-size: 0.85rem; text-align: center; }
+  .system-body { padding: 0.85rem; }
+  .system-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; opacity: 0.8; margin-bottom: 0.1rem; }
+
+  .col-mandarin .system-header { background: var(--rose-bg); color: var(--rose); border-bottom: 2px solid var(--rose-border); }
+  .col-taiwan .system-header { background: var(--amber-bg); color: var(--amber); border-bottom: 2px solid var(--amber-border); }
+  .col-english .system-header { background: var(--cyan-bg); color: var(--cyan); border-bottom: 2px solid var(--cyan-border); }
+
+  .layer { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; margin-bottom: 0.5rem; text-align: center; }
+  .layer-primary { background: rgba(255,255,255,0.03); border-color: var(--border); }
+  .layer-secondary { background: var(--bg); border-style: dashed; }
+  .layer-single { background: rgba(255,255,255,0.03); }
+  .layer-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .layer-type { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .layer-example { font-size: 1.1rem; margin-top: 0.3rem; font-weight: 600; }
+  .layer-none { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; text-align: center; background: rgba(0,0,0,0.2); color: var(--muted); font-size: 0.75rem; font-style: italic; }
+
+  .connector { text-align: center; font-size: 0.7rem; color: var(--muted); padding: 0.15rem 0; }
+
+  /* Context usage section */
+  .contexts-section { margin-top: 1.5rem; }
+  .contexts-title { font-size: 0.85rem; font-weight: 700; color: var(--cyan); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+
+  .context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  @media (max-width: 600px) { .context-grid { grid-template-columns: 1fr; } }
+
+  .context-col { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .context-col-header { padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 700; }
+  .col-char .context-col-header { background: var(--rose-bg); color: var(--rose); }
+  .col-pin .context-col-header { background: var(--cyan-bg); color: var(--cyan); }
+
+  .context-list { padding: 0.5rem 0.75rem; }
+  .context-item { display: flex; align-items: flex-start; gap: 0.4rem; padding: 0.3rem 0; font-size: 0.78rem; color: var(--muted); border-bottom: 1px solid rgba(51,65,85,0.5); }
+  .context-item:last-child { border-bottom: none; }
+  .context-icon { font-size: 0.7rem; flex-shrink: 0; margin-top: 0.15rem; }
+
+  /* Interaction diagram */
+  .interaction-section { margin-top: 1.5rem; }
+  .interaction-title { font-size: 0.85rem; font-weight: 700; color: var(--emerald); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+
+  .interaction-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .ruby-demo { text-align: center; margin-bottom: 1rem; }
+  .ruby-char { display: inline-block; text-align: center; margin: 0 0.15rem; }
+  .ruby-pinyin { font-size: 0.7rem; color: var(--cyan); display: block; margin-bottom: 0.1rem; font-style: italic; }
+  .ruby-hanzi { font-size: 1.8rem; color: var(--fg); font-weight: 600; display: block; line-height: 1.2; }
+  .ruby-label { font-size: 0.68rem; color: var(--muted); text-align: center; margin-top: 0.3rem; }
+
+  .flow-demo { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; }
+  .flow-box { padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-align: center; }
+  .flow-thought { background: var(--purple-bg); border: 1px solid rgba(167,139,250,0.3); color: var(--purple); }
+  .flow-pinyin { background: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan); }
+  .flow-ime { background: var(--amber-bg); border: 1px solid var(--amber-border); color: var(--amber); }
+  .flow-char { background: var(--emerald-bg); border: 1px solid var(--emerald-border); color: var(--emerald); font-size: 1rem; }
+  .flow-arrow { color: var(--muted); font-size: 0.9rem; }
+  .flow-label { font-size: 0.6rem; color: var(--muted); display: block; font-weight: 400; }
+
+  /* Character amnesia callout */
+  .amnesia-box { margin-top: 1.5rem; background: var(--rose-bg); border: 1px solid var(--rose-border); border-radius: 10px; padding: 1rem 1.25rem; }
+  .amnesia-title { font-size: 0.85rem; font-weight: 700; color: var(--rose); margin-bottom: 0.4rem; }
+  .amnesia-text { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .amnesia-stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .amnesia-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; text-align: center; flex: 1; min-width: 120px; }
+  .amnesia-stat-value { font-size: 1.3rem; font-weight: 800; color: var(--rose); }
+  .amnesia-stat-label { font-size: 0.65rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+
+    <!-- Three-system comparison -->
+    <div class="systems-row">
+      <!-- Contemporary Mandarin -->
+      <div class="system-col col-mandarin">
+        <div class="system-header">Contemporary Mandarin (PRC)</div>
+        <div class="system-body">
+          <div class="layer layer-primary">
+            <div class="layer-name" style="color:var(--rose);">Character Layer</div>
+            <div class="layer-type">Logographic — Primary</div>
+            <div class="layer-example">中国人民</div>
+          </div>
+          <div class="connector">+ parallel</div>
+          <div class="layer layer-secondary">
+            <div class="layer-name" style="color:var(--cyan);">Pinyin Layer</div>
+            <div class="layer-type">Alphabetic — Auxiliary</div>
+            <div class="layer-example" style="font-size:0.85rem;color:var(--cyan);">zhōngguó rénmín</div>
+          </div>
+          <div style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:0.35rem;">Dual-script architecture</div>
+        </div>
+      </div>
+
+      <!-- Traditional Chinese (Taiwan) -->
+      <div class="system-col col-taiwan">
+        <div class="system-header">Traditional Chinese (Taiwan)</div>
+        <div class="system-body">
+          <div class="layer layer-primary">
+            <div class="layer-name" style="color:var(--amber);">Character Layer</div>
+            <div class="layer-type">Logographic — Primary</div>
+            <div class="layer-example">中國人民</div>
+          </div>
+          <div class="connector">+ parallel</div>
+          <div class="layer layer-secondary">
+            <div class="layer-name" style="color:var(--amber);">Bopomofo Layer</div>
+            <div class="layer-type">Unique symbols — Auxiliary</div>
+            <div class="layer-example" style="font-size:0.9rem;color:var(--amber);">ㄓㄨㄥ ㄍㄨㄛˊ</div>
+          </div>
+          <div style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:0.35rem;">Dual-script (non-Latin)</div>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div class="system-col col-english">
+        <div class="system-header">English</div>
+        <div class="system-body">
+          <div class="layer layer-single">
+            <div class="layer-name" style="color:var(--cyan);">Alphabetic Layer</div>
+            <div class="layer-type">Single system — Encodes both sound and meaning</div>
+            <div class="layer-example" style="font-size:0.9rem;">Chinese people</div>
+          </div>
+          <div class="connector">&nbsp;</div>
+          <div class="layer-none">No secondary phonetic layer needed</div>
+          <div style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:0.35rem;">Single-script architecture</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Where each layer is primary -->
+    <div class="contexts-section">
+      <div class="contexts-title">Where Each Layer Serves as Primary</div>
+      <div class="context-grid">
+        <div class="context-col col-char">
+          <div class="context-col-header">Character Layer (Primary)</div>
+          <div class="context-list">
+            <div class="context-item"><span class="context-icon">&#9679;</span> Books, newspapers, all formal publications</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Street signs, shop names, public signage</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Legal documents, contracts</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Artistic calligraphy, seals</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Digital messages (final output after IME)</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Handwritten notes (when able)</div>
+          </div>
+        </div>
+        <div class="context-col col-pin">
+          <div class="context-col-header">Pinyin Layer (Primary)</div>
+          <div class="context-list">
+            <div class="context-item"><span class="context-icon">&#9679;</span> Children's textbooks (ruby annotations)</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Dictionary pronunciation guides</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> IME input (invisible intermediary)</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> International signage (road signs, airports)</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> ISO/UN geographical names</div>
+            <div class="context-item"><span class="context-icon">&#9679;</span> Foreign language learning materials</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interaction demo -->
+    <div class="interaction-section">
+      <div class="interaction-title">How the Two Layers Interact</div>
+      <div class="interaction-box">
+        <!-- Ruby annotation demo -->
+        <div class="ruby-demo">
+          <div class="ruby-char"><span class="ruby-pinyin">zhōng</span><span class="ruby-hanzi">中</span></div>
+          <div class="ruby-char"><span class="ruby-pinyin">guó</span><span class="ruby-hanzi">国</span></div>
+          <div class="ruby-char"><span class="ruby-pinyin">rén</span><span class="ruby-hanzi">人</span></div>
+          <div class="ruby-char"><span class="ruby-pinyin">mín</span><span class="ruby-hanzi">民</span></div>
+        </div>
+        <div class="ruby-label">Ruby annotation: Pinyin sits above characters in children's textbooks, providing a phonetic scaffold for reading unfamiliar characters</div>
+
+        <!-- IME flow demo -->
+        <div class="flow-demo">
+          <div class="flow-box flow-thought">
+            Thought<br><span class="flow-label">"Chinese people"</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box flow-pinyin">
+            Pinyin<br><span class="flow-label">zhongguorenmin</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box flow-ime">
+            IME<br><span class="flow-label">candidate selection</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box flow-char">
+            中国人民<br><span class="flow-label">final output</span>
+          </div>
+        </div>
+        <div class="ruby-label" style="margin-top:0.5rem;">IME pipeline: Pinyin is the invisible bridge between thought and written character in digital communication</div>
+      </div>
+    </div>
+
+    <!-- Character amnesia -->
+    <div class="amnesia-box">
+      <div class="amnesia-title">The Side Effect: Character Amnesia (提笔忘字)</div>
+      <div class="amnesia-text">
+        The dual-layer architecture creates a cognitive asymmetry. Daily IME use reinforces <strong style="color:var(--emerald);">recognition</strong> (see character, confirm correctness) but atrophies <strong style="color:var(--rose);">recall</strong> (generate character from memory for handwriting). Over time, users can type any character via Pinyin but lose the ability to write many by hand.
+      </div>
+      <div class="amnesia-stats">
+        <div class="amnesia-stat">
+          <div class="amnesia-stat-value">83%</div>
+          <div class="amnesia-stat-label">of adults report trouble<br>writing chars by hand</div>
+        </div>
+        <div class="amnesia-stat">
+          <div class="amnesia-stat-value">~42%</div>
+          <div class="amnesia-stat-label">of characters affected<br>in controlled studies</div>
+        </div>
+        <div class="amnesia-stat">
+          <div class="amnesia-stat-value">1B+</div>
+          <div class="amnesia-stat-label">daily Pinyin IME users<br>reinforcing recognition</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <figcaption>
+    <h2>Diagram 6: Dual Writing Layer Architecture</h2>
+    <p>Contemporary Mandarin uniquely operates with two parallel scripts: the logographic character layer (primary) and the alphabetic Pinyin layer (auxiliary). Taiwan uses Bopomofo instead of Pinyin. English has a single-script architecture. The dual-layer design enables digital input but contributes to character amnesia.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

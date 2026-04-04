@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radical-Based Character Learning Acceleration</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --surface: #1e293b;
+    --border: #334155;
+    --accent: #06b6d4;
+    --muted: #94a3b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 900px; width: 100%; }
+  figcaption { text-align: center; margin-bottom: 1.5rem; }
+  figcaption h2 { font-size: 1.3rem; font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  .stages {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (max-width: 700px) { .stages { grid-template-columns: 1fr 1fr; } }
+
+  .stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+  }
+  .stage-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+  .stage:nth-child(1) .stage-num { color: #ef4444; }
+  .stage:nth-child(2) .stage-num { color: #f59e0b; }
+  .stage:nth-child(3) .stage-num { color: #06b6d4; }
+  .stage:nth-child(4) .stage-num { color: #10b981; }
+
+  .stage-input {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .stage-arrow {
+    font-size: 1.2rem;
+    margin: 0.25rem 0;
+  }
+  .stage:nth-child(1) .stage-arrow { color: #ef4444; }
+  .stage:nth-child(2) .stage-arrow { color: #f59e0b; }
+  .stage:nth-child(3) .stage-arrow { color: #06b6d4; }
+  .stage:nth-child(4) .stage-arrow { color: #10b981; }
+
+  .stage-output {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+  }
+  .stage:nth-child(1) .stage-output { color: #ef4444; }
+  .stage:nth-child(2) .stage-output { color: #f59e0b; }
+  .stage:nth-child(3) .stage-output { color: #06b6d4; }
+  .stage:nth-child(4) .stage-output { color: #10b981; }
+
+  .stage-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .multiplier {
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+  }
+  .stage:nth-child(1) .multiplier { background: #ef4444; }
+  .stage:nth-child(2) .multiplier { background: #f59e0b; color: #000; }
+  .stage:nth-child(3) .multiplier { background: #06b6d4; color: #000; }
+  .stage:nth-child(4) .multiplier { background: #10b981; color: #000; }
+
+  .example-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .example-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .family-root {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .root-char {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #06b6d4;
+    font-family: serif;
+    background: rgba(6, 182, 212, 0.1);
+    border: 2px solid rgba(6, 182, 212, 0.3);
+    border-radius: 8px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .root-info {
+    font-size: 0.85rem;
+  }
+  .root-pinyin { color: var(--muted); font-style: italic; }
+  .family-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .member {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .member .char {
+    font-family: serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .member .meaning { color: var(--muted); font-size: 0.75rem; }
+  .member .radical-hint {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .rh-water { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+  .rh-speech { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+  .rh-heart { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+  .rh-sun { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+  .rh-rice { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+  .rh-eye { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+
+  .compare-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  @media (max-width: 600px) { .compare-bar { grid-template-columns: 1fr; } }
+  .compare-item {
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.84rem;
+  }
+  .compare-item strong { font-size: 0.8rem; }
+  .compare-item.m { border-left: 3px solid #06b6d4; }
+  .compare-item.e { border-left: 3px solid #f59e0b; }
+  .compare-item .label { color: var(--muted); font-size: 0.78rem; }
+</style>
+</head>
+<body>
+<figure>
+  <figcaption>
+    <h2>Radical-Based Character Learning Acceleration</h2>
+    <p>How knowing N radicals + M phonetic components unlocks exponentially more characters</p>
+  </figcaption>
+
+  <div class="stages">
+    <div class="stage">
+      <div class="multiplier">x10</div>
+      <div class="stage-num">Stage 1</div>
+      <div class="stage-input">10 radicals + 10 phonetics</div>
+      <div class="stage-arrow">&#8595;</div>
+      <div class="stage-output">~100</div>
+      <div class="stage-label">characters accessible</div>
+    </div>
+    <div class="stage">
+      <div class="multiplier">x16</div>
+      <div class="stage-num">Stage 2</div>
+      <div class="stage-input">30 radicals + 50 phonetics</div>
+      <div class="stage-arrow">&#8595;</div>
+      <div class="stage-output">~800</div>
+      <div class="stage-label">characters accessible</div>
+    </div>
+    <div class="stage">
+      <div class="multiplier">x20</div>
+      <div class="stage-num">Stage 3: Literacy</div>
+      <div class="stage-input">50 radicals + 100 phonetics</div>
+      <div class="stage-arrow">&#8595;</div>
+      <div class="stage-output">~3,000</div>
+      <div class="stage-label">newspaper literacy</div>
+    </div>
+    <div class="stage">
+      <div class="multiplier">x25+</div>
+      <div class="stage-num">Stage 4: Mastery</div>
+      <div class="stage-input">100 radicals + 200 phonetics</div>
+      <div class="stage-arrow">&#8595;</div>
+      <div class="stage-output">5,000+</div>
+      <div class="stage-label">full literacy</div>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="example-title">Example: The &#38738; qing Phonetic Family</div>
+    <div class="family-root">
+      <div class="root-char">&#38738;</div>
+      <div class="root-info">
+        <strong>&#38738; qing</strong> <span class="root-pinyin">"blue/green/young"</span><br>
+        <span style="color:var(--muted);font-size:0.82rem">One phonetic component &#8594; six characters. Each radical changes the meaning domain:</span>
+      </div>
+    </div>
+    <div class="family-members">
+      <div class="member"><span class="char">&#28165;</span> qing <span class="radical-hint rh-water">&#27700; water</span> <span class="meaning">= clear</span></div>
+      <div class="member"><span class="char">&#35831;</span> qing <span class="radical-hint rh-speech">&#35328; speech</span> <span class="meaning">= invite/please</span></div>
+      <div class="member"><span class="char">&#24773;</span> qing <span class="radical-hint rh-heart">&#24515; heart</span> <span class="meaning">= emotion</span></div>
+      <div class="member"><span class="char">&#26228;</span> qing <span class="radical-hint rh-sun">&#26085; sun</span> <span class="meaning">= sunny/clear</span></div>
+      <div class="member"><span class="char">&#31934;</span> jing <span class="radical-hint rh-rice">&#31859; rice</span> <span class="meaning">= essence/refined</span></div>
+      <div class="member"><span class="char">&#30555;</span> jing <span class="radical-hint rh-eye">&#30446; eye</span> <span class="meaning">= eyeball</span></div>
+    </div>
+  </div>
+
+  <div class="compare-bar">
+    <div class="compare-item m">
+      <strong style="color:#06b6d4">Mandarin Character Learning</strong>
+      <div class="label">Non-linear: each new component multiplies access. The more you know, the faster you learn.</div>
+    </div>
+    <div class="compare-item e">
+      <strong style="color:#f59e0b">English Vocabulary Learning</strong>
+      <div class="label">Mostly linear: Latin/Greek roots help, but most words must be learned individually. No equivalent acceleration.</div>
+    </div>
+  </div>
+</figure>
+</body>
+</html>

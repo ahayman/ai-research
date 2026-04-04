@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Structure Slots: The Mandarin Sentence Template</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --surface: #1e293b;
+    --surface2: #253349;
+    --border: #334155;
+    --accent: #06b6d4;
+    --accent-dim: #0891b2;
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --mandarin: #06b6d4;
+    --mandarin-bg: #0c3644;
+    --english: #a78bfa;
+    --english-bg: #2e2454;
+    --classical: #f59e0b;
+    --classical-bg: #4a3520;
+    --muted: #64748b;
+    --text-secondary: #94a3b8;
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.12);
+    --rose: #f43f5e;
+    --rose-bg: rgba(244, 63, 94, 0.12);
+    --sky: #0ea5e9;
+    --sky-bg: rgba(14, 165, 233, 0.12);
+    --amber: #f59e0b;
+    --amber-bg: rgba(245, 158, 11, 0.12);
+    --pink: #ec4899;
+    --pink-bg: rgba(236, 72, 153, 0.12);
+    --lime: #84cc16;
+    --lime-bg: rgba(132, 204, 22, 0.12);
+    --orange: #f97316;
+    --orange-bg: rgba(249, 115, 22, 0.12);
+    --slate: #94a3b8;
+    --slate-bg: rgba(148, 163, 184, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  figcaption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    overflow-x: auto;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+    padding-left: 0.25rem;
+  }
+
+  /* === Slot Template === */
+  .template-wrap {
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .template-lang {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .template-lang .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .slot-row {
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .slot-box {
+    width: 100%;
+    padding: 0.5rem 0.4rem;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+  }
+  .slot-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.25rem;
+    color: var(--text-secondary);
+  }
+  .slot-opt {
+    font-size: 0.55rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .slot-box .zh { font-size: 0.9rem; }
+  .slot-box .en-text { font-size: 0.78rem; }
+
+  /* Slot colors */
+  .s-topic .slot-box { background: var(--mandarin-bg); color: var(--mandarin); border-color: var(--mandarin); }
+  .s-time .slot-box { background: var(--amber-bg); color: var(--amber); border-color: rgba(245,158,11,0.4); }
+  .s-place .slot-box { background: var(--lime-bg); color: var(--lime); border-color: rgba(132,204,22,0.4); }
+  .s-subject .slot-box { background: var(--sky-bg); color: var(--sky); border-color: rgba(14,165,233,0.4); }
+  .s-adverb .slot-box { background: var(--pink-bg); color: var(--pink); border-color: rgba(236,72,153,0.4); }
+  .s-prep .slot-box { background: var(--orange-bg); color: var(--orange); border-color: rgba(249,115,22,0.4); }
+  .s-verb .slot-box { background: var(--classical-bg); color: var(--classical); border-color: var(--classical); }
+  .s-comp .slot-box { background: var(--success-bg); color: var(--success); border-color: rgba(16,185,129,0.4); }
+  .s-object .slot-box { background: var(--rose-bg); color: var(--rose); border-color: rgba(244,63,94,0.4); }
+  .s-particle .slot-box { background: var(--english-bg); color: var(--english); border-color: rgba(167,139,250,0.4); }
+  .s-aux .slot-box { background: var(--slate-bg); color: var(--slate); border-color: rgba(148,163,184,0.3); }
+  .s-manner .slot-box { background: var(--pink-bg); color: var(--pink); border-color: rgba(236,72,153,0.4); }
+
+  /* Zone bracket */
+  .zone-bracket {
+    display: flex;
+    margin-top: 0.2rem;
+    margin-bottom: 1rem;
+  }
+  .zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 2px solid;
+    padding-top: 0.3rem;
+    margin: 0 2px;
+  }
+  .zone-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .zone-given { border-color: var(--mandarin); }
+  .zone-given .zone-label { color: var(--mandarin); }
+  .zone-new { border-color: var(--rose); }
+  .zone-new .zone-label { color: var(--rose); }
+  .zone-core { border-color: var(--classical); }
+  .zone-core .zone-label { color: var(--classical); }
+
+  /* Arrow between templates */
+  .template-arrow {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 1rem 0;
+    font-weight: 600;
+  }
+
+  /* Filled example */
+  .example-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .example-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .ex-sentence {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .ex-pinyin-line {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 0.2rem;
+  }
+  .ex-english-line {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  /* Contrast callout */
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 650px) {
+    .contrast-grid { grid-template-columns: 1fr; }
+  }
+  .contrast-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .contrast-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .contrast-body {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .contrast-body strong {
+    color: var(--fg);
+  }
+
+  .insight {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 1.5rem;
+  }
+  .insight strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="diagram-title">The Mandarin Sentence Template</div>
+    <div class="diagram-subtitle">Positional slots and information flow: everything before the verb, then the verb, then the result</div>
+
+    <!-- Mandarin template -->
+    <div class="template-wrap">
+      <div class="template-lang" style="color:var(--mandarin)">
+        <span class="dot" style="background:var(--mandarin)"></span> Mandarin Slot Template
+      </div>
+      <div class="slot-row">
+        <div class="slot s-topic">
+          <div class="slot-box">
+            <div class="zh">话题</div>
+            <div>Topic</div>
+          </div>
+          <div class="slot-label">Frame</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-time">
+          <div class="slot-box">
+            <div class="zh">时间</div>
+            <div>Time</div>
+          </div>
+          <div class="slot-label">When</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-place">
+          <div class="slot-box">
+            <div class="zh">地点</div>
+            <div>Place</div>
+          </div>
+          <div class="slot-label">Where</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-subject">
+          <div class="slot-box">
+            <div class="zh">主语</div>
+            <div>Subject</div>
+          </div>
+          <div class="slot-label">Who</div>
+          <div class="slot-opt">droppable</div>
+        </div>
+        <div class="slot s-adverb">
+          <div class="slot-box">
+            <div class="zh">副词</div>
+            <div>Adverb</div>
+          </div>
+          <div class="slot-label">How</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-prep">
+          <div class="slot-box">
+            <div class="zh">介词短语</div>
+            <div>Prep. Phr.</div>
+          </div>
+          <div class="slot-label">With/For</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-verb">
+          <div class="slot-box" style="border-width:2px">
+            <div class="zh">动词</div>
+            <div>VERB</div>
+          </div>
+          <div class="slot-label">Action</div>
+          <div class="slot-opt">core</div>
+        </div>
+        <div class="slot s-comp">
+          <div class="slot-box">
+            <div class="zh">补语</div>
+            <div>Compl.</div>
+          </div>
+          <div class="slot-label">Result</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-object">
+          <div class="slot-box">
+            <div class="zh">宾语</div>
+            <div>Object</div>
+          </div>
+          <div class="slot-label">What</div>
+          <div class="slot-opt">droppable</div>
+        </div>
+        <div class="slot s-particle">
+          <div class="slot-box">
+            <div class="zh">语气词</div>
+            <div>Particle</div>
+          </div>
+          <div class="slot-label">Stance</div>
+          <div class="slot-opt">optional</div>
+        </div>
+      </div>
+      <!-- Zone brackets -->
+      <div style="display:flex;gap:2px;margin-top:0.25rem">
+        <div style="flex:6;border-top:2px solid var(--mandarin);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--mandarin);text-transform:uppercase;letter-spacing:0.06em">Given / Old Information Zone (before verb)</span>
+        </div>
+        <div style="flex:1.5;border-top:2px solid var(--classical);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--classical);text-transform:uppercase;letter-spacing:0.06em">Core</span>
+        </div>
+        <div style="flex:2.5;border-top:2px solid var(--rose);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--rose);text-transform:uppercase;letter-spacing:0.06em">New Info Zone</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="template-arrow">&#8595; Compare with English: adverbials AFTER the verb &#8595;</div>
+
+    <!-- English template -->
+    <div class="template-wrap">
+      <div class="template-lang" style="color:var(--english)">
+        <span class="dot" style="background:var(--english)"></span> English Slot Template
+      </div>
+      <div class="slot-row">
+        <div class="slot s-subject">
+          <div class="slot-box" style="background:var(--english-bg);color:var(--english);border-color:var(--english)">
+            <div class="en-text">Subject</div>
+          </div>
+          <div class="slot-label">Who</div>
+          <div class="slot-opt">required</div>
+        </div>
+        <div class="slot s-aux">
+          <div class="slot-box">
+            <div class="en-text">Auxiliary</div>
+          </div>
+          <div class="slot-label">Tense/Mood</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-adverb">
+          <div class="slot-box">
+            <div class="en-text">Adverb</div>
+          </div>
+          <div class="slot-label">Freq/Deg</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-verb">
+          <div class="slot-box" style="border-width:2px;background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">
+            <div class="en-text">VERB</div>
+          </div>
+          <div class="slot-label">Action</div>
+          <div class="slot-opt">core</div>
+        </div>
+        <div class="slot s-object">
+          <div class="slot-box" style="background:var(--rose-bg);color:var(--rose);border-color:rgba(244,63,94,0.4)">
+            <div class="en-text">Object</div>
+          </div>
+          <div class="slot-label">What</div>
+          <div class="slot-opt">depends</div>
+        </div>
+        <div class="slot s-manner">
+          <div class="slot-box">
+            <div class="en-text">Manner</div>
+          </div>
+          <div class="slot-label">How</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-place">
+          <div class="slot-box" style="background:var(--lime-bg);color:var(--lime);border-color:rgba(132,204,22,0.4)">
+            <div class="en-text">Place</div>
+          </div>
+          <div class="slot-label">Where</div>
+          <div class="slot-opt">optional</div>
+        </div>
+        <div class="slot s-time">
+          <div class="slot-box" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(245,158,11,0.4)">
+            <div class="en-text">Time</div>
+          </div>
+          <div class="slot-label">When</div>
+          <div class="slot-opt">optional</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:2px;margin-top:0.25rem">
+        <div style="flex:3;border-top:2px solid var(--english);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--english);text-transform:uppercase;letter-spacing:0.06em">Subject Zone</span>
+        </div>
+        <div style="flex:2;border-top:2px solid var(--classical);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--classical);text-transform:uppercase;letter-spacing:0.06em">Core</span>
+        </div>
+        <div style="flex:3;border-top:2px solid var(--rose);text-align:center;padding-top:0.2rem">
+          <span style="font-size:0.6rem;font-weight:700;color:var(--rose);text-transform:uppercase;letter-spacing:0.06em">Adverbial Zone (after verb)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filled example -->
+    <div class="example-block">
+      <div class="example-label">Full Template in Action</div>
+      <div class="ex-sentence">
+        <span style="color:var(--mandarin)">那件事</span>，<span style="color:var(--amber)">昨天</span> <span style="color:var(--lime)">在学校</span> <span style="color:var(--sky)">我</span> <span style="color:var(--pink)">很认真地</span> <span style="color:var(--orange)">跟老师</span> <span style="color:var(--classical)">讨论</span><span style="color:var(--success)">完</span>了 <span style="color:var(--english)">吧</span>
+      </div>
+      <div class="ex-pinyin-line">
+        na jian shi, zuotian zai xuexiao wo hen renzhen de gen laoshi taolun wan le ba
+      </div>
+      <div class="ex-english-line">
+        "That matter, yesterday at school I very seriously with the teacher discussed to completion, right?"
+      </div>
+      <div class="slot-row" style="margin-top:0.5rem">
+        <div class="slot s-topic"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">那件事<br><span style="font-size:0.6rem;opacity:0.7">TOPIC</span></div></div>
+        <div class="slot s-time"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">昨天<br><span style="font-size:0.6rem;opacity:0.7">TIME</span></div></div>
+        <div class="slot s-place"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">在学校<br><span style="font-size:0.6rem;opacity:0.7">PLACE</span></div></div>
+        <div class="slot s-subject"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">我<br><span style="font-size:0.6rem;opacity:0.7">SUBJ</span></div></div>
+        <div class="slot s-adverb"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">很认真地<br><span style="font-size:0.6rem;opacity:0.7">MANNER</span></div></div>
+        <div class="slot s-prep"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">跟老师<br><span style="font-size:0.6rem;opacity:0.7">PREP</span></div></div>
+        <div class="slot s-verb"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem;border-width:2px">讨论<br><span style="font-size:0.6rem;opacity:0.7">VERB</span></div></div>
+        <div class="slot s-comp"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">完了<br><span style="font-size:0.6rem;opacity:0.7">COMPL</span></div></div>
+        <div class="slot s-particle"><div class="slot-box" style="padding:0.3rem;font-size:0.7rem">吧<br><span style="font-size:0.6rem;opacity:0.7">PARTICLE</span></div></div>
+      </div>
+    </div>
+
+    <!-- Key contrasts -->
+    <div class="contrast-grid">
+      <div class="contrast-card" style="border-left:3px solid var(--mandarin)">
+        <div class="contrast-title" style="color:var(--mandarin)">Mandarin Principle</div>
+        <div class="contrast-body">
+          <strong>Adverbials BEFORE the verb.</strong> Context first, action second. The listener knows when, where, how, and who before hearing what happened. Information flows from <strong>given/known</strong> (left) to <strong>new</strong> (right).
+        </div>
+      </div>
+      <div class="contrast-card" style="border-left:3px solid var(--english)">
+        <div class="contrast-title" style="color:var(--english)">English Principle</div>
+        <div class="contrast-body">
+          <strong>Adverbials AFTER the verb.</strong> Action first, context second. "I discussed the matter seriously at school yesterday." Subject and verb come first; manner, place, time trail behind.
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>The Mirror Image:</strong> Mandarin and English sentence templates are nearly mirror images of each other. Where Mandarin puts context-setting elements (time, place, manner) BEFORE the verb, English puts them AFTER. This reflects a deep difference in information packaging: Mandarin builds the frame first, then delivers the event; English states the event first, then fills in the details.
+    </div>
+  </div>
+
+  <figcaption>
+    The Mandarin sentence follows a strict positional template: Topic &rarr; Time &rarr; Place &rarr; Subject &rarr; Manner &rarr; Prepositional Phrase &rarr; VERB &rarr; Complement &rarr; Object &rarr; Particle. This "everything before the verb" principle contrasts sharply with English's "everything after the verb" pattern for adverbials.
+  </figcaption>
+</figure>
+</body>
+</html>

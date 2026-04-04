@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tone Pitch Contours: Mandarin vs Cantonese vs English</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;padding:1.5rem;line-height:1.6}
+h2{text-align:center;font-size:1.3rem;margin-bottom:0.3rem;color:#06b6d4}
+.subtitle{text-align:center;font-size:0.85rem;color:#94a3b8;margin-bottom:1.5rem}
+.systems{display:flex;gap:1.25rem;flex-wrap:wrap;justify-content:center}
+.system-panel{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1.25rem;flex:1 1 300px;max-width:420px;min-width:280px}
+.system-panel h3{font-size:0.95rem;font-weight:700;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid #334155}
+.system-panel h3.mandarin{color:#06b6d4}
+.system-panel h3.cantonese{color:#f59e0b}
+.system-panel h3.english{color:#a78bfa}
+canvas{width:100%;border-radius:6px;background:#131c33;display:block;margin-bottom:0.75rem}
+.tone-legend{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem}
+.tone-item{display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#94a3b8;background:rgba(100,116,139,0.1);padding:0.2rem 0.5rem;border-radius:4px}
+.tone-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.insight-box{background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:8px;padding:1rem;margin-top:1.25rem;font-size:0.82rem;color:#94a3b8;line-height:1.65}
+.insight-box strong{color:#06b6d4}
+.pitch-label{font-size:0.7rem;color:#64748b;text-align:right;padding-right:0.3rem}
+</style>
+</head>
+<body>
+<h2>Tone Pitch Contours: Three-Way Comparison</h2>
+<p class="subtitle">How Mandarin, Cantonese, and English use pitch differently</p>
+
+<div class="systems">
+  <!-- Mandarin Panel -->
+  <div class="system-panel">
+    <h3 class="mandarin">Mandarin: 4 Tones + Neutral</h3>
+    <canvas id="mandarinCanvas" height="200"></canvas>
+    <div class="tone-legend">
+      <div class="tone-item"><div class="tone-dot" style="background:#06b6d4"></div>T1 High Level (55)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#10b981"></div>T2 Rising (35)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#f59e0b"></div>T3 Dipping (214)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#ef4444"></div>T4 Falling (51)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#64748b"></div>T0 Neutral</div>
+    </div>
+  </div>
+
+  <!-- Cantonese Panel -->
+  <div class="system-panel">
+    <h3 class="cantonese">Cantonese: 6 Tones (9 Traditional)</h3>
+    <canvas id="cantoneseCanvas" height="200"></canvas>
+    <div class="tone-legend">
+      <div class="tone-item"><div class="tone-dot" style="background:#06b6d4"></div>T1 High Level (55)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#10b981"></div>T2 High Rising (25)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#f59e0b"></div>T3 Mid Level (33)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#ef4444"></div>T4 Low Falling (21)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#a78bfa"></div>T5 Low Rising (23)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#ec4899"></div>T6 Low Level (22)</div>
+    </div>
+  </div>
+
+  <!-- English Panel -->
+  <div class="system-panel">
+    <h3 class="english">English: Intonation (No Lexical Tones)</h3>
+    <canvas id="englishCanvas" height="200"></canvas>
+    <div class="tone-legend">
+      <div class="tone-item"><div class="tone-dot" style="background:#a78bfa"></div>Falling (statement)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#06b6d4"></div>Rising (question)</div>
+      <div class="tone-item"><div class="tone-dot" style="background:#f59e0b"></div>Fall-rise (continuation)</div>
+    </div>
+  </div>
+</div>
+
+<div class="insight-box">
+  <strong>Key Insight:</strong> Mandarin uses 4 distinct pitch contours on individual syllables to distinguish word meaning. Cantonese uses 6 contours (with 3 level tones requiring fine pitch-height distinctions). English uses pitch only at the phrase/sentence level for intonation — never to change word meaning. The more tones a language has, the fewer homophones it produces from a given syllable inventory.
+</div>
+
+<script>
+function drawToneChart(canvasId, tones, gridLabels) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const pad = {top:18, bottom:22, left:32, right:16};
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(100,116,139,0.15)';
+  ctx.lineWidth = 1;
+  for(let i=0;i<=4;i++){
+    const y = pad.top + (plotH/4)*i;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(W-pad.right,y); ctx.stroke();
+  }
+  // Pitch labels
+  ctx.font = '10px -apple-system,sans-serif';
+  ctx.fillStyle = '#64748b';
+  ctx.textAlign = 'right';
+  const labels = ['5','4','3','2','1'];
+  for(let i=0;i<5;i++){
+    ctx.fillText(labels[i], pad.left-6, pad.top+(plotH/4)*i+4);
+  }
+
+  // Draw tones
+  tones.forEach(tone => {
+    ctx.beginPath();
+    ctx.strokeStyle = tone.color;
+    ctx.lineWidth = tone.width || 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if(tone.dash) ctx.setLineDash(tone.dash); else ctx.setLineDash([]);
+
+    const startX = pad.left + tone.startX * plotW;
+    const segW = tone.segWidth * plotW;
+
+    tone.points.forEach((pt, j) => {
+      const x = startX + (j / (tone.points.length-1)) * segW;
+      const y = pad.top + ((5 - pt) / 4) * plotH;
+      if(j===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label
+    if(tone.label){
+      const lastPt = tone.points[tone.points.length-1];
+      const lx = startX + segW + 4;
+      const ly = pad.top + ((5 - lastPt) / 4) * plotH + 3;
+      ctx.font = 'bold 10px -apple-system,sans-serif';
+      ctx.fillStyle = tone.color;
+      ctx.textAlign = 'left';
+      ctx.fillText(tone.label, Math.min(lx, W-pad.right-20), ly);
+    }
+  });
+}
+
+// Mandarin tones
+drawToneChart('mandarinCanvas', [
+  {points:[5,5,5,5,5], color:'#06b6d4', startX:0.02, segWidth:0.16, label:'T1'},
+  {points:[3,3.5,4,4.5,5], color:'#10b981', startX:0.22, segWidth:0.16, label:'T2'},
+  {points:[2.1,1.8,1.2,1,2,3,4], color:'#f59e0b', startX:0.42, segWidth:0.2, label:'T3'},
+  {points:[5,4.2,3,2,1], color:'#ef4444', startX:0.66, segWidth:0.16, label:'T4'},
+  {points:[3,2.5], color:'#64748b', startX:0.86, segWidth:0.08, label:'T0', dash:[3,3], width:1.5}
+]);
+
+// Cantonese tones
+drawToneChart('cantoneseCanvas', [
+  {points:[5,5,5,5], color:'#06b6d4', startX:0.01, segWidth:0.12, label:'T1'},
+  {points:[2,3,4,5], color:'#10b981', startX:0.16, segWidth:0.12, label:'T2'},
+  {points:[3,3,3,3], color:'#f59e0b', startX:0.31, segWidth:0.12, label:'T3'},
+  {points:[2,1.5,1,1], color:'#ef4444', startX:0.46, segWidth:0.12, label:'T4'},
+  {points:[2,2.2,2.5,3], color:'#a78bfa', startX:0.61, segWidth:0.12, label:'T5'},
+  {points:[2,2,2,2], color:'#ec4899', startX:0.76, segWidth:0.12, label:'T6'}
+]);
+
+// English intonation
+drawToneChart('englishCanvas', [
+  {points:[4,3.8,3.5,3,2.5,2,1.5], color:'#a78bfa', startX:0.02, segWidth:0.26, label:'Fall'},
+  {points:[2,2.2,2.8,3.5,4,4.5], color:'#06b6d4', startX:0.35, segWidth:0.26, label:'Rise'},
+  {points:[3.5,3,2.5,2,2.5,3,3.5], color:'#f59e0b', startX:0.68, segWidth:0.26, label:'Fall-rise'}
+]);
+
+window.addEventListener('resize', () => {
+  drawToneChart('mandarinCanvas', [
+    {points:[5,5,5,5,5], color:'#06b6d4', startX:0.02, segWidth:0.16, label:'T1'},
+    {points:[3,3.5,4,4.5,5], color:'#10b981', startX:0.22, segWidth:0.16, label:'T2'},
+    {points:[2.1,1.8,1.2,1,2,3,4], color:'#f59e0b', startX:0.42, segWidth:0.2, label:'T3'},
+    {points:[5,4.2,3,2,1], color:'#ef4444', startX:0.66, segWidth:0.16, label:'T4'},
+    {points:[3,2.5], color:'#64748b', startX:0.86, segWidth:0.08, label:'T0', dash:[3,3], width:1.5}
+  ]);
+  drawToneChart('cantoneseCanvas', [
+    {points:[5,5,5,5], color:'#06b6d4', startX:0.01, segWidth:0.12, label:'T1'},
+    {points:[2,3,4,5], color:'#10b981', startX:0.16, segWidth:0.12, label:'T2'},
+    {points:[3,3,3,3], color:'#f59e0b', startX:0.31, segWidth:0.12, label:'T3'},
+    {points:[2,1.5,1,1], color:'#ef4444', startX:0.46, segWidth:0.12, label:'T4'},
+    {points:[2,2.2,2.5,3], color:'#a78bfa', startX:0.61, segWidth:0.12, label:'T5'},
+    {points:[2,2,2,2], color:'#ec4899', startX:0.76, segWidth:0.12, label:'T6'}
+  ]);
+  drawToneChart('englishCanvas', [
+    {points:[4,3.8,3.5,3,2.5,2,1.5], color:'#a78bfa', startX:0.02, segWidth:0.26, label:'Fall'},
+    {points:[2,2.2,2.8,3.5,4,4.5], color:'#06b6d4', startX:0.35, segWidth:0.26, label:'Rise'},
+    {points:[3.5,3,2.5,2,2.5,3,3.5], color:'#f59e0b', startX:0.68, segWidth:0.26, label:'Fall-rise'}
+  ]);
+});
+</script>
+</body>
+</html>

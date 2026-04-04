@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radical System &amp; Character Architecture | Mandarin Three-Way Comparison</title>
+<meta name="description" content="The internal structure of Chinese writing: how ~214 radicals organize 47,000+ characters into a decomposable system of semantic and phonetic components, and how simplification reshaped this architecture.">
+<style>
+:root {
+  --bg: #0f172a; --bg-alt: #1e293b; --bg-sidebar: #1e293b; --bg-card: #253349;
+  --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
+  --border: #334155; --border-light: #475569;
+  --accent: #06b6d4; --accent-dim: #0891b2; --accent-glow: rgba(6,182,212,0.15); --accent-bg: rgba(6,182,212,0.08);
+  --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.08);
+  --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.08);
+  --rose: #f43f5e; --rose-bg: rgba(244,63,94,0.08);
+  --violet: #8b5cf6; --violet-bg: rgba(139,92,246,0.08);
+  --orange: #f97316;
+  --sidebar-width: 280px;
+  --content-max: 920px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
+  --transition: 0.2s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body { font-family: var(--font); font-size: 1rem; line-height: 1.7; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar-width); position: fixed; top: 0; left: 0; height: 100vh; background: var(--bg-sidebar); border-right: 1px solid var(--border); overflow-y: auto; z-index: 100; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--text3); border-radius: 2px; }
+.sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%); color: #fff; flex-shrink: 0; }
+.sidebar-title { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.sidebar-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; }
+.sidebar-back { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem; font-size: 0.8rem; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--border); font-weight: 600; transition: background var(--transition); }
+.sidebar-back:hover { background: var(--bg); }
+.sidebar-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; }
+.sidebar-nav-section { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-top: 0.5rem; }
+.sidebar-link { display: block; padding: 0.4rem 1.25rem 0.4rem 1.5rem; font-size: 0.82rem; color: var(--text2); text-decoration: none; border-left: 3px solid transparent; transition: all var(--transition); line-height: 1.4; }
+.sidebar-link:hover { color: var(--accent); background: var(--bg); }
+.sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--bg); font-weight: 600; }
+.sidebar-link.sub { padding-left: 2.25rem; font-size: 0.78rem; }
+.main { flex: 1; margin-left: var(--sidebar-width); min-width: 0; }
+.content { max-width: var(--content-max); margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+/* Menu toggle */
+.menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--accent); color: #fff; border: none; border-radius: 8px; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+/* Typography */
+.series-badge { display: inline-block; background: var(--accent-bg); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid var(--accent); margin-bottom: 1rem; letter-spacing: 0.03em; }
+h1 { font-size: 2.2rem; font-weight: 800; color: #f1f5f9; line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+h1 .subtitle { display: block; font-size: 1rem; font-weight: 500; color: var(--text2); margin-top: 0.5rem; letter-spacing: 0; }
+h2 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+h3 { font-size: 1.2rem; font-weight: 600; color: #f1f5f9; margin-top: 2rem; margin-bottom: 0.75rem; }
+h4 { font-size: 1.05rem; font-weight: 600; color: #f1f5f9; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+p { margin-bottom: 1rem; }
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: #67e8f9; text-decoration: underline; }
+ul, ol { margin: 0 0 1rem 1.5rem; }
+li { margin-bottom: 0.35rem; }
+strong { color: #f1f5f9; }
+.chinese { font-size: 1.15em; font-weight: 600; }
+.pinyin { font-style: italic; color: var(--text2); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; border-radius: 8px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th { background: var(--bg-card); font-weight: 600; text-align: left; padding: 0.75rem 1rem; color: #f1f5f9; border-bottom: 2px solid var(--border); }
+td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: rgba(30,41,59,0.5); }
+tr:last-child td { border-bottom: none; }
+
+/* Diagrams */
+.diagram-container { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1.5rem 0; overflow: hidden; }
+.diagram-container iframe { width: 100%; border: none; border-radius: 6px; background: var(--bg); }
+.diagram-caption { text-align: center; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text3); font-style: italic; border-top: 1px solid var(--border); }
+
+/* Callouts */
+.callout { border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; border-left: 4px solid; font-size: 0.9rem; }
+.callout-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+.callout-info { border-color: #3b82f6; background: rgba(59,130,246,0.08); }
+.callout-info .callout-title { color: #60a5fa; }
+.callout-warning { border-color: var(--amber); background: var(--amber-bg); }
+.callout-warning .callout-title { color: var(--amber); }
+.callout-success { border-color: var(--emerald); background: var(--emerald-bg); }
+.callout-success .callout-title { color: var(--emerald); }
+
+/* Takeaway */
+.takeaway { background: var(--accent-bg); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.takeaway-title { font-weight: 700; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Navigation */
+.category-nav { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--border); gap: 1rem; }
+.category-nav a { padding: 0.75rem 1.25rem; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: all var(--transition); max-width: 48%; color: var(--text2); text-decoration: none; }
+.category-nav a:hover { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); text-decoration: none; }
+.prev-cat { text-align: left; }
+.next-cat { text-align: right; margin-left: auto; }
+
+/* Back to top */
+.back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px; background: var(--accent); color: #fff; border: none; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 90; transition: all var(--transition); }
+.back-to-top:hover { transform: translateY(-2px); }
+.back-to-top.visible { display: flex; }
+
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+.stat-card { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; text-align: center; }
+.stat-val { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.7rem; color: var(--text3); margin-top: 0.15rem; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .category-nav { flex-direction: column; }
+  .category-nav a { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media print {
+  .sidebar, .menu-toggle, .back-to-top { display: none !important; }
+  .main { margin-left: 0 !important; }
+  body { color: #000; background: #fff; }
+  h1, h2, h3, h4, strong { color: #000; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Radical System &amp; Character Architecture</div>
+    <div class="sidebar-subtitle">Mandarin Three-Way Comparison</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Contemporary Mandarin Deep Dive</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Overview</div>
+    <a href="#introduction" class="sidebar-link">Introduction</a>
+
+    <div class="sidebar-nav-section">The Radical System</div>
+    <a href="#what-radicals-are" class="sidebar-link">What Radicals Are</a>
+    <a href="#power-law" class="sidebar-link sub">The Power-Law Distribution</a>
+    <a href="#214-to-201" class="sidebar-link sub">214 &rarr; 201 Transition</a>
+
+    <div class="sidebar-nav-section">Character Formation</div>
+    <a href="#six-categories" class="sidebar-link">The Six Categories</a>
+    <a href="#phono-semantic" class="sidebar-link">Phono-Semantic Compounds</a>
+    <a href="#phonetic-reliability" class="sidebar-link sub">Phonetic Reliability</a>
+    <a href="#semantic-transparency" class="sidebar-link sub">Semantic Transparency</a>
+
+    <div class="sidebar-nav-section">Spatial Architecture</div>
+    <a href="#uniform-square" class="sidebar-link">The Uniform Square</a>
+    <a href="#structural-types" class="sidebar-link sub">Structural Types</a>
+    <a href="#positional-variants" class="sidebar-link sub">Positional Variants</a>
+
+    <div class="sidebar-nav-section">Simplification Impact</div>
+    <a href="#simplification" class="sidebar-link">Preserved vs. Damaged</a>
+
+    <div class="sidebar-nav-section">Cross-System Comparison</div>
+    <a href="#comparison" class="sidebar-link">Chinese vs. English Architecture</a>
+    <a href="#same-concept" class="sidebar-link sub">Same Concept, Different Build</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#statistics" class="sidebar-link">Key Statistics</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+<div class="content">
+
+<div class="series-badge">Category 3 of 16</div>
+
+<h1>Radical System &amp; Character Architecture
+<span class="subtitle">The Internal Structure of Chinese Writing</span>
+</h1>
+
+<p>Chinese characters are not arbitrary symbols. Each character is a structured composition built from smaller components, much like how English words can be analyzed into Latin and Greek roots. The system that organizes these components is the <strong>radical system</strong> (<span class="chinese">部首</span>, <span class="pinyin">bushǒu</span>), and the way components combine to form characters follows consistent architectural patterns.</p>
+
+<p>Understanding this internal architecture transforms Chinese characters from seemingly random drawings into a logical, decomposable system &mdash; and reveals a fundamentally different approach to encoding meaning compared to alphabetic writing.</p>
+
+<!-- ======================================= -->
+<h2 id="what-radicals-are">What Radicals Actually Are</h2>
+
+<p>A radical (<span class="chinese">部首</span>, literally "section header") is a visually prominent component of a Chinese character under which that character is listed in dictionaries. Radicals serve two functions simultaneously:</p>
+
+<ol>
+  <li><strong>Organizational</strong>: They group characters for dictionary lookup, similar to how the first letter organizes English words alphabetically</li>
+  <li><strong>Semantic</strong>: They often indicate the meaning domain of the character &mdash; the water radical (<span class="chinese">氵</span>) appears in characters related to liquids, rivers, and wetness; the heart radical (<span class="chinese">忄</span>) appears in characters about emotions and mental states</li>
+</ol>
+
+<p>The standard set is the <strong>214 Kangxi radicals</strong> (<span class="chinese">康熙部首</span>), codified in the Kangxi Dictionary of 1716 and still the international reference standard. The system was first established in the Zihui dictionary of 1615, but gained permanence through its adoption in the imperially commissioned Kangxi Dictionary, which catalogued <strong>47,035 characters</strong> across these 214 radicals.</p>
+
+<!-- Diagram 1: Radical Frequency Pyramid -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-1-radical-frequency-pyramid.html" style="height:750px" loading="lazy" title="Radical Frequency Pyramid"></iframe>
+  <div class="diagram-caption">The 214 Kangxi radicals follow a steep power-law distribution: 10 radicals account for ~23% of all characters</div>
+</div>
+
+<!-- ======================================= -->
+<h3 id="power-law">The Power-Law Distribution</h3>
+
+<p>The 214 radicals are not evenly distributed. Their character counts follow a steep power law:</p>
+
+<ul>
+  <li><strong>Radical 140 <span class="chinese">艸</span> (grass)</strong> heads 1,902 characters &mdash; the most of any radical</li>
+  <li><strong>Radical 138 <span class="chinese">艮</span></strong> heads only 5 characters &mdash; the fewest</li>
+  <li>The <strong>top 10 radicals</strong> account for approximately 23% of all dictionary entries</li>
+  <li>The median radical heads just 64 characters</li>
+</ul>
+
+<div class="takeaway">
+  <div class="takeaway-title">Practical Implication</div>
+  <p style="margin:0">Approximately <strong>50 radicals</strong> cover the vast majority of characters encountered in everyday reading. Learning just a quarter of the total radical set provides coverage of most common Chinese text &mdash; a remarkably efficient entry point into the writing system.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-val">214</div><div class="stat-label">Kangxi Radicals</div></div>
+  <div class="stat-card"><div class="stat-val">47,035</div><div class="stat-label">Characters Catalogued</div></div>
+  <div class="stat-card"><div class="stat-val">1,902</div><div class="stat-label">Max (grass radical)</div></div>
+  <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">Min (gen radical)</div></div>
+  <div class="stat-card"><div class="stat-val">~50</div><div class="stat-label">Radicals for Literacy</div></div>
+</div>
+
+<!-- ======================================= -->
+<h3 id="214-to-201">The 214-to-201 Transition</h3>
+
+<p>In mainland China, the PRC government issued a new standard in 2009: <strong>GF 0011-2009</strong>, the Table of Indexing Chinese Character Components (<span class="chinese">汉字部首表</span>). This standard established <strong>201 principal radicals</strong> plus 100 associated components, replacing the Kangxi set for simplified-character dictionaries.</p>
+
+<p>The transition was driven by practical necessity. Character simplification had created mismatches: radicals like <span class="chinese">釒</span> (traditional metal radical) had been simplified to <span class="chinese">钅</span>, while some obscure Kangxi radicals no longer headed any characters in common use. The changes fell into four categories:</p>
+
+<ul>
+  <li><strong>Removed</strong>: Extremely rare radicals with no modern characters (e.g., <span class="chinese">鬯</span> sacrificial wine, <span class="chinese">龠</span> flute)</li>
+  <li><strong>Simplified</strong>: Traditional radical forms replaced with simplified equivalents (<span class="chinese">釒&rarr;钅</span>, <span class="chinese">訁&rarr;讠</span>, <span class="chinese">飠&rarr;饣</span>)</li>
+  <li><strong>Merged</strong>: Radicals that became visually identical after simplification</li>
+  <li><strong>Added</strong>: 100 associated components to handle edge cases</li>
+</ul>
+
+<!-- Diagram 5: 214 to 201 Transition -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-5-214-to-201-radical-transition.html" style="height:850px" loading="lazy" title="214 to 201 Radical Transition Map"></iframe>
+  <div class="diagram-caption">How China modernized its radical indexing system: the four types of changes from Kangxi (1716) to GF 0011-2009</div>
+</div>
+
+<div class="callout callout-info">
+  <div class="callout-title">Dual-System Reality</div>
+  <p style="margin:0">Taiwan, Hong Kong, and Macau continue to use the 214 Kangxi radicals. The 201-radical system is specific to PRC simplified Chinese dictionaries, creating a situation where serious students of Chinese must be aware of both conventions.</p>
+</div>
+
+<!-- ======================================= -->
+<h2 id="six-categories">The Six Categories of Character Formation</h2>
+
+<p>The classical analysis of how Chinese characters are formed dates to Xu Shen's <strong>Shuowen Jiezi</strong> (100 CE), which proposed six categories (<span class="chinese">六書</span>, <span class="pinyin">liushu</span>):</p>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Category</th><th>Chinese</th><th>Description</th><th>Proportion</th></tr>
+  <tr>
+    <td><strong>Pictographs</strong></td>
+    <td><span class="chinese">象形</span> <span class="pinyin">xiangxing</span></td>
+    <td>Visual representations: <span class="chinese">日</span> sun, <span class="chinese">月</span> moon, <span class="chinese">山</span> mountain</td>
+    <td>~4%</td>
+  </tr>
+  <tr>
+    <td><strong>Simple Ideographs</strong></td>
+    <td><span class="chinese">指事</span> <span class="pinyin">zhǐshi</span></td>
+    <td>Abstract indicators: <span class="chinese">上</span> above, <span class="chinese">下</span> below</td>
+    <td>~1-2%</td>
+  </tr>
+  <tr>
+    <td><strong>Compound Ideographs</strong></td>
+    <td><span class="chinese">會意</span> <span class="pinyin">huiyi</span></td>
+    <td>Combined logic: <span class="chinese">休</span> person+tree = rest; <span class="chinese">明</span> sun+moon = bright</td>
+    <td>~13%</td>
+  </tr>
+  <tr>
+    <td><strong>Phono-Semantic Compounds</strong></td>
+    <td><span class="chinese">形聲</span> <span class="pinyin">xingsheng</span></td>
+    <td>Semantic radical + phonetic component &mdash; the dominant category</td>
+    <td><strong>~80-90%</strong></td>
+  </tr>
+  <tr>
+    <td><strong>Derivative Cognates</strong></td>
+    <td><span class="chinese">轉注</span> <span class="pinyin">zhuǎnzhu</span></td>
+    <td>Interrelated forms with phonetic/semantic affinities</td>
+    <td>Debated</td>
+  </tr>
+  <tr>
+    <td><strong>Loan Characters</strong></td>
+    <td><span class="chinese">假借</span> <span class="pinyin">jiǎjie</span></td>
+    <td>Borrowed for homophonous words: <span class="chinese">來</span> (wheat &rarr; "come")</td>
+    <td>Variable</td>
+  </tr>
+</table>
+</div>
+
+<p>The overwhelming dominance of <strong>phono-semantic compounds</strong> (80-90%) means that understanding this single structural pattern unlocks the vast majority of Chinese characters.</p>
+
+<!-- ======================================= -->
+<h2 id="phono-semantic">The Anatomy of Phono-Semantic Compounds</h2>
+
+<p>A phono-semantic compound (<span class="chinese">形聲字</span>, <span class="pinyin">xingsheng zi</span>) contains two visible sub-parts, each performing a different function:</p>
+
+<ul>
+  <li><strong>Semantic component</strong> (<span class="chinese">義符/形旁</span>): Indicates which meaning domain the character belongs to</li>
+  <li><strong>Phonetic component</strong> (<span class="chinese">聲符/聲旁</span>): Provides a clue about pronunciation</li>
+</ul>
+
+<p>Consider the <span class="chinese">青</span> (<span class="pinyin">qing</span>, "blue-green") phonetic family. The phonetic component <span class="chinese">青</span> appears in multiple characters, each paired with a different semantic radical:</p>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Character</th><th>Semantic Radical</th><th>Meaning</th><th>Pronunciation</th><th>Match Quality</th></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">清</span></td><td><span class="chinese">氵</span> water</td><td>clear, pure</td><td>qing (1st)</td><td style="color:var(--emerald)">Exact</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">请</span></td><td><span class="chinese">讠</span> speech</td><td>to request</td><td>qǐng (3rd)</td><td style="color:var(--amber)">Tone differs</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">情</span></td><td><span class="chinese">忄</span> heart</td><td>emotion</td><td>qing (2nd)</td><td style="color:var(--amber)">Tone differs</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">晴</span></td><td><span class="chinese">日</span> sun</td><td>sunny</td><td>qing (2nd)</td><td style="color:var(--amber)">Tone differs</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">精</span></td><td><span class="chinese">米</span> rice</td><td>essence</td><td>jing (1st)</td><td style="color:var(--rose)">Initial changed</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">睛</span></td><td><span class="chinese">目</span> eye</td><td>eyeball</td><td>jing (1st)</td><td style="color:var(--rose)">Initial changed</td></tr>
+</table>
+</div>
+
+<!-- Diagram 4: Semantic-Phonetic Compound Anatomy -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-4-semantic-phonetic-compound-anatomy.html" style="height:1000px" loading="lazy" title="Semantic-Phonetic Compound Anatomy"></iframe>
+  <div class="diagram-caption">The 青 phonetic family: same sound component, different semantic radicals producing different meanings</div>
+</div>
+
+<!-- ======================================= -->
+<h3 id="phonetic-reliability">Phonetic Reliability: The 25-28% Problem</h3>
+
+<p>The phonetic component's accuracy in predicting modern pronunciation is limited. Research by DeFrancis and others has established:</p>
+
+<ul>
+  <li>Only <strong>25-28%</strong> of phonetic components exactly match the pronunciation of the whole character (including tone)</li>
+  <li>An additional ~38% provide a useful but imperfect hint (same initial consonant, same vowel, or same base syllable with different tone)</li>
+  <li>About <strong>66%</strong> total give some useful phonetic information</li>
+  <li>Roughly <strong>34%</strong> are essentially unhelpful for pronunciation</li>
+</ul>
+
+<div class="callout callout-warning">
+  <div class="callout-title">Why So Unreliable?</div>
+  <p style="margin:0">The phonetic components were selected thousands of years ago when they accurately reflected contemporary pronunciation. Over millennia of sound changes &mdash; particularly the massive shifts between Middle Chinese and Modern Mandarin &mdash; the phonetic fit has eroded. Characters like <span class="chinese">精</span> (jing) and <span class="chinese">清</span> (qing) share the same phonetic <span class="chinese">青</span>, but the initial consonant has diverged; in earlier stages of Chinese, these pronunciations were more similar.</p>
+</div>
+
+<!-- ======================================= -->
+<h3 id="semantic-transparency">Semantic Transparency: The 65% Figure</h3>
+
+<p>Research has found that approximately <strong>65%</strong> of compound characters are semantically transparent &mdash; the semantic radical meaningfully relates to the character's meaning. The relationship is graded:</p>
+
+<ul>
+  <li><strong>High transparency</strong>: <span class="chinese">河</span> (river) contains <span class="chinese">氵</span> (water) &mdash; obvious connection</li>
+  <li><strong>Medium transparency</strong>: <span class="chinese">快</span> (fast/happy) contains <span class="chinese">忄</span> (heart) &mdash; the "happy" meaning connects, but "fast" is less obvious</li>
+  <li><strong>Low transparency</strong>: Some characters' meanings have drifted far from their radical's domain over time</li>
+</ul>
+
+<!-- ======================================= -->
+<h2 id="uniform-square">Spatial Architecture: The Uniform Square</h2>
+
+<p>Every Chinese character &mdash; whether it has 1 stroke or 64 &mdash; must fit within <strong>the same square space</strong>. This constraint drives the entire spatial architecture of the writing system. When multiple components must share this square, they follow standardized arrangement patterns.</p>
+
+<!-- ======================================= -->
+<h3 id="structural-types">Structural Arrangement Types</h3>
+
+<p>A structural analysis by Gao and Kao (2002) of approximately 4,500 high-frequency characters found:</p>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Structure</th><th>Unicode IDC</th><th>Description</th><th>Frequency</th></tr>
+  <tr><td><strong>Left-Right</strong></td><td>&#x2FF0;</td><td>Components side by side horizontally</td><td><strong>~60%+</strong></td></tr>
+  <tr><td><strong>Top-Bottom</strong></td><td>&#x2FF1;</td><td>Components stacked vertically</td><td>~20%</td></tr>
+  <tr><td><strong>Full Enclosure</strong></td><td>&#x2FF4;</td><td>One component surrounds another</td><td>~3-5%</td></tr>
+  <tr><td><strong>Three-side Enclosure</strong></td><td>&#x2FF5; &#x2FF6; &#x2FF7;</td><td>Partial enclosure from various sides</td><td>~3-5%</td></tr>
+  <tr><td><strong>Three Horizontal</strong></td><td>&#x2FF2;</td><td>Three components in a row</td><td>~2-3%</td></tr>
+  <tr><td><strong>Single Component</strong></td><td>&mdash;</td><td>Indivisible characters</td><td>~5-8%</td></tr>
+</table>
+</div>
+
+<p><strong>Left-right structure dominates</strong> because phono-semantic compounds typically place the semantic radical on the left and the phonetic component on the right.</p>
+
+<!-- ======================================= -->
+<h3 id="positional-variants">Positional Variants: The Radical "Work Uniform"</h3>
+
+<p>Because components must share the square, radicals frequently change form depending on their position. The most common transformation is left-side compression, where a radical narrows to fit beside the phonetic component:</p>
+
+<!-- Diagram 3: Positional Variant Gallery -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-3-positional-variant-gallery.html" style="height:950px" loading="lazy" title="Positional Variant Gallery"></iframe>
+  <div class="diagram-caption">Eight major radical transformations showing how radicals compress and reshape to fit different positions</div>
+</div>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Full Form</th><th>Variant</th><th>Meaning</th><th>Position</th><th>Example</th></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">水</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">氵</span></td><td>water</td><td>Left</td><td><span class="chinese">河</span> river, <span class="chinese">海</span> sea</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">人</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">亻</span></td><td>person</td><td>Left</td><td><span class="chinese">你</span> you, <span class="chinese">他</span> he</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">心</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">忄</span></td><td>heart/mind</td><td>Left</td><td><span class="chinese">快</span> fast, <span class="chinese">情</span> emotion</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">手</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">扌</span></td><td>hand</td><td>Left</td><td><span class="chinese">打</span> hit, <span class="chinese">把</span> hold</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">火</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">灬</span></td><td>fire</td><td>Bottom</td><td><span class="chinese">煮</span> cook, <span class="chinese">热</span> hot</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">刀</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">刂</span></td><td>knife</td><td>Right</td><td><span class="chinese">到</span> arrive, <span class="chinese">刻</span> carve</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">犬</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">犭</span></td><td>dog/animal</td><td>Left</td><td><span class="chinese">猫</span> cat, <span class="chinese">狗</span> dog</td></tr>
+  <tr><td><span class="chinese" style="font-size:1.4em">示</span></td><td><span class="chinese" style="font-size:1.4em;color:var(--accent)">礻</span></td><td>spirit/altar</td><td>Left</td><td><span class="chinese">神</span> god, <span class="chinese">福</span> fortune</td></tr>
+</table>
+</div>
+
+<p>These are not different radicals &mdash; they are <strong>the same radical adapted for a different spatial position</strong>. Recognizing these transformations is essential for character analysis and dictionary lookup.</p>
+
+<!-- ======================================= -->
+<h2 id="simplification">Simplification's Impact on Radical Architecture</h2>
+
+<p>Character simplification (1956-1964) had mixed effects on radical transparency.</p>
+
+<h3>Cases Where Transparency Was Preserved</h3>
+
+<p>Many simplifications only affected the radical's visual form, not its identity:</p>
+<ul>
+  <li><span class="chinese">讠</span> is recognized as a simplified form of the speech radical <span class="chinese">言</span></li>
+  <li><span class="chinese">钅</span> is recognized as a simplified form of the metal radical <span class="chinese">金</span></li>
+  <li><span class="chinese">饣</span> is recognized as a simplified form of the food radical <span class="chinese">食</span></li>
+</ul>
+<p>In these cases, the semantic signal remains intact &mdash; readers can still identify the meaning domain.</p>
+
+<h3>Cases Where Transparency Was Damaged</h3>
+
+<p>Some simplifications removed or obscured semantic components entirely:</p>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Traditional</th><th>Simplified</th><th>What Was Lost</th><th>Consequence</th></tr>
+  <tr>
+    <td><span class="chinese" style="font-size:1.3em">愛</span></td>
+    <td><span class="chinese" style="font-size:1.3em">爱</span></td>
+    <td><span class="chinese">心</span> (heart) removed from center</td>
+    <td>The most culturally cited example &mdash; "love without heart"</td>
+  </tr>
+  <tr>
+    <td><span class="chinese" style="font-size:1.3em">電</span></td>
+    <td><span class="chinese" style="font-size:1.3em">电</span></td>
+    <td><span class="chinese">雨</span> (rain) removed from top</td>
+    <td>Severed link to weather family: <span class="chinese">雪</span> snow, <span class="chinese">雷</span> thunder, <span class="chinese">雹</span> hail</td>
+  </tr>
+  <tr>
+    <td><span class="chinese" style="font-size:1.3em">雲</span></td>
+    <td><span class="chinese" style="font-size:1.3em">云</span></td>
+    <td><span class="chinese">雨</span> (rain) removed entirely</td>
+    <td>Lost grouping with other rain-radical weather characters</td>
+  </tr>
+  <tr>
+    <td><span class="chinese" style="font-size:1.3em">龍</span></td>
+    <td><span class="chinese" style="font-size:1.3em">龙</span></td>
+    <td>16 &rarr; 5 strokes</td>
+    <td>Structural detail and pictographic resonance largely erased</td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">False Visual Similarities</div>
+  <p style="margin:0">Some simplifications created misleading visual resemblances between unrelated characters. Characters like <span class="chinese">电</span> (electricity), <span class="chinese">龟</span> (turtle, from <span class="chinese">龜</span>), and others appear to share components after simplification despite having no historical or semantic relationship &mdash; introducing noise into the pattern-recognition process.</p>
+</div>
+
+<!-- Diagram 2: Semantic Field Clustering -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-2-semantic-field-clustering.html" style="height:1100px" loading="lazy" title="Semantic Field Clustering"></iframe>
+  <div class="diagram-caption">Radicals organize into natural meaning domains, reflecting how Chinese culture categorizes the world</div>
+</div>
+
+<!-- ======================================= -->
+<h2 id="comparison">Chinese Radicals vs. English Morphological Building Blocks</h2>
+
+<p>Both Chinese and English build complex words from smaller meaningful units. But the architectural principles are fundamentally different.</p>
+
+<h3>The Critical Difference: Dimensionality</h3>
+
+<p><strong>Chinese</strong> arranges components in <strong>2D space</strong>: the semantic radical might be on the left, top, or surrounding the phonetic component. The character <span class="chinese">清</span> places water (<span class="chinese">氵</span>) on the left and the phonetic (<span class="chinese">青</span>) on the right; <span class="chinese">想</span> (to think) places the phonetic (<span class="chinese">相</span>) on top and the semantic (<span class="chinese">心</span>) on the bottom.</p>
+
+<p><strong>English</strong> arranges morphemes in a <strong>1D string</strong>: "un-comfort-able" places prefix, root, and suffix in strict left-to-right sequence. There is no spatial relationship beyond linear order.</p>
+
+<h3>Dual vs. Single Encoding</h3>
+
+<p>Chinese characters exhibit <strong>dual encoding</strong> &mdash; they simultaneously encode meaning and sound in separate visible sub-parts. The semantic radical tells you <em>what domain</em> the character belongs to, and the phonetic component tells you <em>approximately how to pronounce it</em>. These are visually distinct within the character.</p>
+
+<p>English morphemes typically encode one or the other. The root "bio-" carries meaning (life) but doesn't separately encode sound; the suffix "-tion" encodes a grammatical function and pronunciation but no independent meaning.</p>
+
+<!-- Diagram 6: Character vs Morpheme Architecture -->
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-radical-system-character-architecture-diagrams/diagram-6-character-vs-morpheme-architecture.html" style="height:1100px" loading="lazy" title="Character Architecture vs Morpheme Architecture"></iframe>
+  <div class="diagram-caption">Two systems for building meaning from sub-word parts: Chinese 2D spatial composition vs English 1D linear concatenation</div>
+</div>
+
+<!-- ======================================= -->
+<h3 id="same-concept">Same Concept, Different Build</h3>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Concept</th><th>Chinese Construction</th><th>English Construction</th></tr>
+  <tr>
+    <td><strong>computer</strong></td>
+    <td><span class="chinese">电脑</span> = <span class="chinese">电</span> (electric) + <span class="chinese">脑</span> (brain) = "electric brain"</td>
+    <td>Latin <em>computare</em> (to reckon) + <em>-er</em> (agent)</td>
+  </tr>
+  <tr>
+    <td><strong>telephone</strong></td>
+    <td><span class="chinese">电话</span> = <span class="chinese">电</span> (electric) + <span class="chinese">话</span> (speech) = "electric speech"</td>
+    <td>Greek <em>tele</em> (far) + <em>phone</em> (voice)</td>
+  </tr>
+  <tr>
+    <td><strong>psychology</strong></td>
+    <td><span class="chinese">心理学</span> = <span class="chinese">心</span> (heart) + <span class="chinese">理</span> (principle) + <span class="chinese">学</span> (study)</td>
+    <td>Greek <em>psyche</em> (soul) + <em>logos</em> (study)</td>
+  </tr>
+  <tr>
+    <td><strong>biology</strong></td>
+    <td><span class="chinese">生物学</span> = <span class="chinese">生</span> (life) + <span class="chinese">物</span> (thing) + <span class="chinese">学</span> (study)</td>
+    <td>Greek <em>bio</em> (life) + <em>logos</em> (study)</td>
+  </tr>
+</table>
+</div>
+
+<h3>Productivity Differences</h3>
+
+<p>Modern Chinese <strong>rarely creates entirely new characters</strong>. Instead, it forms new words by combining existing characters: <span class="chinese">电脑</span> ("electric brain" = computer), <span class="chinese">手机</span> ("hand machine" = cellphone). The character inventory is essentially closed &mdash; growth happens at the word level.</p>
+
+<p>English actively coins new words from Latin and Greek morphemes (blog, podcast, biodegradable) and through compounding, blending, and other processes. The morpheme inventory is open and productive.</p>
+
+<!-- ======================================= -->
+<h2 id="statistics">Key Statistics Reference</h2>
+
+<div class="table-wrap">
+<table>
+  <tr><th>Metric</th><th>Value</th></tr>
+  <tr><td>Kangxi radical count</td><td><strong>214</strong></td></tr>
+  <tr><td>PRC standard (2009)</td><td><strong>201</strong> principal + 100 associated</td></tr>
+  <tr><td>Characters in Kangxi Dictionary</td><td><strong>47,035</strong></td></tr>
+  <tr><td>Most prolific radical</td><td><span class="chinese">艸</span> (grass): <strong>1,902</strong> characters</td></tr>
+  <tr><td>Phono-semantic compound proportion</td><td><strong>~80-90%</strong></td></tr>
+  <tr><td>Phonetic exact match rate</td><td><strong>~25-28%</strong></td></tr>
+  <tr><td>Phonetic useful hint rate</td><td><strong>~66%</strong></td></tr>
+  <tr><td>Semantic transparency rate</td><td><strong>~65%</strong></td></tr>
+  <tr><td>Left-right composition</td><td><strong>~60%+</strong> of characters</td></tr>
+  <tr><td>Top-bottom composition</td><td><strong>~20%</strong></td></tr>
+  <tr><td>Top 10 radicals coverage</td><td><strong>~23%</strong> of dictionary</td></tr>
+</table>
+</div>
+
+<div class="takeaway">
+  <div class="takeaway-title">Bottom Line for Learners</div>
+  <p style="margin:0">The radical system and character architecture of Chinese represent one of the most sophisticated approaches to encoding language in written form ever developed. Each character is a small, self-contained structure that simultaneously encodes meaning domain and pronunciation hint within a fixed square space. For pattern-oriented thinkers, the radical system offers a powerful entry point: learning 50 high-frequency radicals provides tools to decompose and partially decode the vast majority of characters encountered in everyday reading.</p>
+</div>
+
+<!-- Navigation -->
+<div class="category-nav">
+  <a href="../writing-system-simplified-traditional-alphabetic/index.html" class="prev-cat">&larr; Previous<br><small>Writing System: Simplified, Traditional &amp; Alphabetic</small></a>
+  <a href="../pinyin-romanization-parallel-writing/index.html" class="next-cat">Next &rarr;<br><small>Pinyin &amp; Romanization: Parallel Writing</small></a>
+</div>
+
+</div><!-- /content -->
+</main>
+
+</div><!-- /layout -->
+
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+
+<script>
+// Scroll spy for sidebar
+const links = document.querySelectorAll('.sidebar-link[href^="#"]');
+const sections = [];
+links.forEach(link => {
+  const id = link.getAttribute('href').slice(1);
+  const el = document.getElementById(id);
+  if (el) sections.push({ el, link });
+});
+
+function updateActive() {
+  let current = sections[0];
+  for (const s of sections) {
+    if (s.el.getBoundingClientRect().top <= 120) current = s;
+  }
+  links.forEach(l => l.classList.remove('active'));
+  if (current) current.link.classList.add('active');
+
+  const btn = document.querySelector('.back-to-top');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+}
+
+window.addEventListener('scroll', updateActive, { passive: true });
+updateActive();
+
+// Close sidebar on mobile when clicking a link
+links.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

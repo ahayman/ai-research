@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typological Scorecard -- Mandarin vs English vs Cantonese</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent: #4361ee;
+    --accent-light: #e8edff;
+    --mandarin: #0891b2;
+    --mandarin-bg: #ecfeff;
+    --english: #7c3aed;
+    --english-bg: #f5f3ff;
+    --cantonese: #d97706;
+    --cantonese-bg: #fffbeb;
+    --same: #059669;
+    --same-bg: #d1fae5;
+    --diff: #dc2626;
+    --diff-bg: #fee2e2;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --fg: #e2e8f0;
+      --surface: #1e293b;
+      --border: #334155;
+      --accent: #06b6d4;
+      --accent-light: #164e63;
+      --mandarin: #22d3ee;
+      --mandarin-bg: #083344;
+      --english: #a78bfa;
+      --english-bg: #1e1b4b;
+      --cantonese: #fbbf24;
+      --cantonese-bg: #451a03;
+      --same: #34d399;
+      --same-bg: #064e3b;
+      --diff: #f87171;
+      --diff-bg: #450a0a;
+      --muted: #94a3b8;
+      --caption-bg: #1e293b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--caption-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  .chart-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 1rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  th, td {
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+  }
+  thead th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  th.param { text-align: left; width: 18%; }
+  td.param {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  .cmn-cell { background: var(--mandarin-bg); }
+  .eng-cell { background: var(--english-bg); }
+  .yue-cell { background: var(--cantonese-bg); }
+  .same-tag {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--same-bg);
+    color: var(--same);
+    border: 1px solid var(--same);
+  }
+  .diff-tag {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--diff-bg);
+    color: var(--diff);
+    border: 1px solid var(--diff);
+  }
+  .section-row td {
+    background: var(--accent-light);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+  }
+  .val { font-weight: 600; }
+  .val-cmn { color: var(--mandarin); }
+  .val-eng { color: var(--english); }
+  .val-yue { color: var(--cantonese); }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+  }
+  .summary-box {
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .summary-box .num { font-size: 1.5rem; font-weight: 800; }
+  .summary-box .label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="param">Parameter</th>
+          <th style="width:20%;color:var(--mandarin)">Mandarin (CMN)</th>
+          <th style="width:20%;color:var(--english)">English (ENG)</th>
+          <th style="width:20%;color:var(--cantonese)">Cantonese (YUE)</th>
+          <th style="width:10%">CMN=ENG?</th>
+          <th style="width:10%">CMN=YUE?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- PHONOLOGY -->
+        <tr class="section-row"><td colspan="6">PHONOLOGY</td></tr>
+        <tr>
+          <td class="param">Lexical tone</td>
+          <td class="cmn-cell"><span class="val val-cmn">4 tones</span></td>
+          <td class="eng-cell"><span class="val val-eng">None</span></td>
+          <td class="yue-cell"><span class="val val-yue">6-9 tones</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+        <tr>
+          <td class="param">Syllable complexity</td>
+          <td class="cmn-cell"><span class="val val-cmn">Simple (C)V(N)</span></td>
+          <td class="eng-cell"><span class="val val-eng">Complex CCCVCCCC</span></td>
+          <td class="yue-cell"><span class="val val-yue">Medium (C)V(C)</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+        <tr>
+          <td class="param">Entering tone (-p/-t/-k)</td>
+          <td class="cmn-cell"><span class="val val-cmn">Lost</span></td>
+          <td class="eng-cell"><span class="val val-eng">N/A</span></td>
+          <td class="yue-cell"><span class="val val-yue">Preserved</span></td>
+          <td>--</td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+
+        <!-- MORPHOLOGY -->
+        <tr class="section-row"><td colspan="6">MORPHOLOGY</td></tr>
+        <tr>
+          <td class="param">Morphological type</td>
+          <td class="cmn-cell"><span class="val val-cmn">Isolating</span></td>
+          <td class="eng-cell"><span class="val val-eng">Moderately analytic</span></td>
+          <td class="yue-cell"><span class="val val-yue">Isolating</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Grammatical gender</td>
+          <td class="cmn-cell"><span class="val val-cmn">None</span></td>
+          <td class="eng-cell"><span class="val val-eng">Natural (pronouns)</span></td>
+          <td class="yue-cell"><span class="val val-yue">None</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Number marking</td>
+          <td class="cmn-cell"><span class="val val-cmn">None (们 optional)</span></td>
+          <td class="eng-cell"><span class="val val-eng">Obligatory (-s/-es)</span></td>
+          <td class="yue-cell"><span class="val val-yue">None (哋 optional)</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Case system</td>
+          <td class="cmn-cell"><span class="val val-cmn">None</span></td>
+          <td class="eng-cell"><span class="val val-eng">Vestigial (pronouns)</span></td>
+          <td class="yue-cell"><span class="val val-yue">None</span></td>
+          <td><span class="same-tag">~SAME</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Agreement</td>
+          <td class="cmn-cell"><span class="val val-cmn">None</span></td>
+          <td class="eng-cell"><span class="val val-eng">Minimal (3sg -s)</span></td>
+          <td class="yue-cell"><span class="val val-yue">None</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+
+        <!-- SYNTAX -->
+        <tr class="section-row"><td colspan="6">SYNTAX</td></tr>
+        <tr>
+          <td class="param">Word order</td>
+          <td class="cmn-cell"><span class="val val-cmn">SVO</span></td>
+          <td class="eng-cell"><span class="val val-eng">SVO</span></td>
+          <td class="yue-cell"><span class="val val-yue">SVO</span></td>
+          <td><span class="same-tag">SAME</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Relative clause</td>
+          <td class="cmn-cell"><span class="val val-cmn">RC-N (prenominal)</span></td>
+          <td class="eng-cell"><span class="val val-eng">N-RC (postnominal)</span></td>
+          <td class="yue-cell"><span class="val val-yue">RC-N (prenominal)</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Topic-prominence</td>
+          <td class="cmn-cell"><span class="val val-cmn">High (TP)</span></td>
+          <td class="eng-cell"><span class="val val-eng">Low (SP)</span></td>
+          <td class="yue-cell"><span class="val val-yue">High (TP)</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Pro-drop</td>
+          <td class="cmn-cell"><span class="val val-cmn">Discourse pro-drop</span></td>
+          <td class="eng-cell"><span class="val val-eng">No pro-drop</span></td>
+          <td class="yue-cell"><span class="val val-yue">Discourse pro-drop</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Serial verb constructions</td>
+          <td class="cmn-cell"><span class="val val-cmn">Productive</span></td>
+          <td class="eng-cell"><span class="val val-eng">Absent</span></td>
+          <td class="yue-cell"><span class="val val-yue">Productive</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Articles</td>
+          <td class="cmn-cell"><span class="val val-cmn">None</span></td>
+          <td class="eng-cell"><span class="val val-eng">the / a / an</span></td>
+          <td class="yue-cell"><span class="val val-yue">CL developing</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+        <tr>
+          <td class="param">Classifiers</td>
+          <td class="cmn-cell"><span class="val val-cmn">Obligatory</span></td>
+          <td class="eng-cell"><span class="val val-eng">None</span></td>
+          <td class="yue-cell"><span class="val val-yue">Obligatory</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+
+        <!-- SEMANTICS & PRAGMATICS -->
+        <tr class="section-row"><td colspan="6">SEMANTICS &amp; PRAGMATICS</td></tr>
+        <tr>
+          <td class="param">Tense vs. aspect</td>
+          <td class="cmn-cell"><span class="val val-cmn">Aspect-primary</span></td>
+          <td class="eng-cell"><span class="val val-eng">Tense + aspect</span></td>
+          <td class="yue-cell"><span class="val val-yue">Aspect-primary</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+        <tr>
+          <td class="param">Sentence-final particles</td>
+          <td class="cmn-cell"><span class="val val-cmn">Moderate</span></td>
+          <td class="eng-cell"><span class="val val-eng">Very limited</span></td>
+          <td class="yue-cell"><span class="val val-yue">Very rich</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+        <tr>
+          <td class="param">Resultative compounds</td>
+          <td class="cmn-cell"><span class="val val-cmn">Highly productive</span></td>
+          <td class="eng-cell"><span class="val val-eng">Limited</span></td>
+          <td class="yue-cell"><span class="val val-yue">Productive</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="same-tag">SAME</span></td>
+        </tr>
+
+        <!-- WRITING -->
+        <tr class="section-row"><td colspan="6">WRITING SYSTEM</td></tr>
+        <tr>
+          <td class="param">Script type</td>
+          <td class="cmn-cell"><span class="val val-cmn">Logographic (simplified)</span></td>
+          <td class="eng-cell"><span class="val val-eng">Alphabetic (Latin)</span></td>
+          <td class="yue-cell"><span class="val val-yue">Logographic (traditional)</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+          <td><span class="diff-tag">DIFF</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="summary-grid">
+      <div class="summary-box">
+        <div class="num" style="color:var(--same)">3</div>
+        <div class="label">CMN = ENG (of 18)</div>
+      </div>
+      <div class="summary-box">
+        <div class="num" style="color:var(--diff)">15</div>
+        <div class="label">CMN ≠ ENG (of 18)</div>
+      </div>
+      <div class="summary-box">
+        <div class="num" style="color:var(--same)">13</div>
+        <div class="label">CMN = YUE (of 18)</div>
+      </div>
+    </div>
+  </div>
+  <figcaption>
+    <h2>Typological Scorecard: 18 Parameters Compared</h2>
+    <p>Mandarin and English agree on only 3 of 18 major typological parameters (word order, case, negation position) -- a match rate of just 17%. Mandarin and Cantonese agree on 13 of 18 (72%), confirming deep shared Sinitic DNA despite surface differences in tones, syllable structure, and sentence-final particles. The Mandarin-English gap is concentrated in morphology, tone, topic-prominence, and clause structure.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

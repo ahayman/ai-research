@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Merger Ambiguity Map</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--violet:#8b5cf6}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.merger-container{max-width:900px;margin:0 auto}
+.merger-row{display:flex;align-items:stretch;gap:0;margin-bottom:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all 0.3s;cursor:pointer}
+.merger-row:hover{border-color:var(--cyan);box-shadow:0 4px 20px rgba(6,182,212,0.12)}
+.merger-row.active{border-color:var(--cyan)}
+.trad-side{flex:1;padding:1rem;display:flex;flex-direction:column;gap:0.4rem;border-right:2px dashed var(--border)}
+.trad-char{display:flex;align-items:center;gap:0.6rem;padding:0.35rem 0.5rem;border-radius:6px;background:rgba(244,63,94,0.06);border:1px solid rgba(244,63,94,0.15);transition:all 0.3s}
+.trad-char:hover{background:rgba(244,63,94,0.12);border-color:rgba(244,63,94,0.3)}
+.trad-char .char{font-size:1.8rem;color:var(--rose);min-width:2.5rem;text-align:center}
+.trad-char .info{font-size:0.78rem;color:var(--text2);line-height:1.3}
+.trad-char .info .pinyin{color:var(--text);font-weight:600}
+.arrow-col{display:flex;align-items:center;justify-content:center;padding:0 1rem;position:relative}
+.arrow-col::before{content:'';position:absolute;top:10%;bottom:10%;left:50%;width:2px;background:linear-gradient(to bottom,var(--rose),var(--cyan))}
+.arrow-col .arrow-icon{background:var(--bg);padding:0.3rem;z-index:1;color:var(--cyan);font-size:1.3rem;font-weight:700}
+.simp-side{display:flex;align-items:center;justify-content:center;padding:1.25rem 1.5rem;min-width:140px}
+.simp-char{text-align:center}
+.simp-char .char{font-size:3rem;color:var(--cyan);line-height:1;margin-bottom:0.25rem}
+.simp-char .label{font-size:0.75rem;color:var(--text3)}
+.detail-panel{display:none;padding:0.75rem 1rem;background:rgba(6,182,212,0.06);border-top:1px solid var(--border);font-size:0.8rem;color:var(--text2);line-height:1.5}
+.merger-row.active .detail-panel{display:block}
+.detail-panel .example{margin-top:0.4rem;padding:0.4rem 0.6rem;background:var(--bg);border-radius:6px;font-size:0.82rem}
+.detail-panel .example .cn{font-size:1.1rem;color:var(--text);margin-bottom:0.15rem}
+.detail-panel .example .en{font-size:0.75rem;color:var(--text3)}
+.merger-wrapper{position:relative}
+.stat-bar{display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 1rem;text-align:center}
+.stat .num{font-size:1.3rem;font-weight:700;color:var(--cyan)}
+.stat .label{font-size:0.7rem;color:var(--text3);margin-top:0.1rem}
+.tag{display:inline-block;font-size:0.65rem;padding:0.15rem 0.4rem;border-radius:4px;font-weight:600}
+.tag-2{background:rgba(245,158,11,0.15);color:var(--amber)}
+.tag-3{background:rgba(139,92,246,0.15);color:var(--violet)}
+.tag-4{background:rgba(244,63,94,0.15);color:var(--rose)}
+</style>
+</head>
+<body>
+<h1>Character Merger Ambiguity Map</h1>
+<p class="subtitle">Traditional &rarr; Simplified many-to-one mappings that create structural ambiguity</p>
+
+<div class="merger-container">
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">髮</span>
+        <div class="info"><span class="pinyin">fa (4th)</span><br>hair</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">發</span>
+        <div class="info"><span class="pinyin">fa (1st)</span><br>develop, emit, send</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">发</div>
+        <div class="label"><span class="tag tag-2">2:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Ambiguity example:</strong> 头发发白 vs. Traditional 頭髮發白 -- "hair turns white." Both 发 characters look identical but derive from different traditional characters with different tones and meanings.
+    <div class="example">
+      <div class="cn">理发 lifa = haircut (from 髮) &nbsp;&bull;&nbsp; 发展 fazhan = develop (from 發)</div>
+      <div class="en">Context disambiguates in practice, but automated conversion requires analysis</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">乾</span>
+        <div class="info"><span class="pinyin">gan (1st)</span><br>dry</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">幹</span>
+        <div class="info"><span class="pinyin">gan (4th)</span><br>do, trunk, main</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">干</span>
+        <div class="info"><span class="pinyin">gan (1st)</span><br>shield, concern</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">干</div>
+        <div class="label"><span class="tag tag-3">3:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Triple merger:</strong> Three distinct traditional characters collapsed into the simplest existing form. The character 干 originally meant "shield" but now carries all three meanings.
+    <div class="example">
+      <div class="cn">干净 ganjing = clean (from 乾) &nbsp;&bull;&nbsp; 干部 ganbu = cadre (from 幹) &nbsp;&bull;&nbsp; 干涉 ganshe = interfere (from 干)</div>
+      <div class="en">Tone differences help in speech but are invisible in writing</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">臺</span>
+        <div class="info"><span class="pinyin">tai (2nd)</span><br>platform, stage</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">檯</span>
+        <div class="info"><span class="pinyin">tai (2nd)</span><br>table, counter</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">颱</span>
+        <div class="info"><span class="pinyin">tai (2nd)</span><br>typhoon</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">台</span>
+        <div class="info"><span class="pinyin">tai (2nd)</span><br>terrace (original)</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">台</div>
+        <div class="label"><span class="tag tag-4">4:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Quadruple merger:</strong> Four traditional characters with the same pronunciation but different semantic fields collapsed into one. Particularly notable because 台灣 (Taiwan) uses this character.
+    <div class="example">
+      <div class="cn">台风 taifeng = typhoon (from 颱) &nbsp;&bull;&nbsp; 台灯 taideng = desk lamp (from 檯) &nbsp;&bull;&nbsp; 舞台 wutai = stage (from 臺)</div>
+      <div class="en">Traditional characters preserve semantic distinctions: 颱 has wind radical 風, 檯 has wood radical 木</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">後</span>
+        <div class="info"><span class="pinyin">hou (4th)</span><br>after, behind, later</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">后</span>
+        <div class="info"><span class="pinyin">hou (4th)</span><br>empress, queen</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">后</div>
+        <div class="label"><span class="tag tag-2">2:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Same tone merger:</strong> Both traditional characters share the same tone, making even spoken context less helpful.
+    <div class="example">
+      <div class="cn">以后 yihou = afterward (from 後) &nbsp;&bull;&nbsp; 皇后 huanghou = empress (from 后)</div>
+      <div class="en">Context resolves easily here -- "empress" appears only in specific historical/cultural contexts</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">面</span>
+        <div class="info"><span class="pinyin">mian (4th)</span><br>face, surface</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">麵</span>
+        <div class="info"><span class="pinyin">mian (4th)</span><br>wheat flour, noodles</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">面</div>
+        <div class="label"><span class="tag tag-2">2:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Semantic radical loss:</strong> Traditional 麵 contains the 麥 (wheat) radical, making the connection to grain/flour visually obvious. Simplified 面 loses this entirely.
+    <div class="example">
+      <div class="cn">面条 miantiao = noodles (from 麵) &nbsp;&bull;&nbsp; 面对 miandui = face/confront (from 面)</div>
+      <div class="en">面包 "bread" (from 麵包) loses the visual wheat connection present in traditional form</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">裏</span>
+        <div class="info"><span class="pinyin">li (3rd)</span><br>inside, inner</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">里</span>
+        <div class="info"><span class="pinyin">li (3rd)</span><br>village, unit of distance</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">里</div>
+        <div class="label"><span class="tag tag-2">2:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Common merger:</strong> The traditional character 裏 contains the "clothing" radical 衣, indicating something wrapped/inside. Simplified 里 uses the simpler existing character.
+    <div class="example">
+      <div class="cn">这里 zheli = here (from 裏) &nbsp;&bull;&nbsp; 公里 gongli = kilometer (from 里)</div>
+      <div class="en">One of the most frequent mergers -- 里 appears in extremely common words</div>
+    </div>
+  </div>
+</div>
+
+<div class="merger-wrapper">
+  <div class="merger-row" onclick="toggleDetail(this)">
+    <div class="trad-side">
+      <div class="trad-char">
+        <span class="char">隻</span>
+        <div class="info"><span class="pinyin">zhi (1st)</span><br>classifier (animals, boats)</div>
+      </div>
+      <div class="trad-char">
+        <span class="char">只</span>
+        <div class="info"><span class="pinyin">zhi (3rd)</span><br>only, merely</div>
+      </div>
+    </div>
+    <div class="arrow-col"><span class="arrow-icon">&rarr;</span></div>
+    <div class="simp-side">
+      <div class="simp-char">
+        <div class="char">只</div>
+        <div class="label"><span class="tag tag-2">2:1 merger</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <strong>Grammatical class merger:</strong> A classifier (measure word) and an adverb merged. Different tones help in speech.
+    <div class="example">
+      <div class="cn">一只猫 yi zhi mao = one cat (from 隻) &nbsp;&bull;&nbsp; 只是 zhishi = only (from 只)</div>
+      <div class="en">The classifier function is grammatically clear from sentence position</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="stat-bar">
+  <div class="stat"><div class="num">~70</div><div class="label">Merged character pairs<br>in the official list</div></div>
+  <div class="stat"><div class="num">2:1</div><div class="label">Most common<br>merger ratio</div></div>
+  <div class="stat"><div class="num">4:1</div><div class="label">Maximum merger<br>(台 = 4 traditional)</div></div>
+  <div class="stat"><div class="num">Context</div><div class="label">Primary disambiguation<br>strategy</div></div>
+</div>
+
+<script>
+function toggleDetail(row){
+  const wrapper=row.closest('.merger-wrapper');
+  const panel=wrapper.querySelector('.detail-panel');
+  const wasActive=row.classList.contains('active');
+  document.querySelectorAll('.merger-row').forEach(r=>r.classList.remove('active'));
+  document.querySelectorAll('.detail-panel').forEach(p=>p.style.display='none');
+  if(!wasActive){
+    row.classList.add('active');
+    panel.style.display='block';
+  }
+}
+</script>
+</body>
+</html>

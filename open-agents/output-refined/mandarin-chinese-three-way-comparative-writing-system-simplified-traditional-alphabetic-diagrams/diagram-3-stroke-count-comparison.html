@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stroke Count Comparison: Three Writing Systems</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--trad-color:#f43f5e;--simp-color:#06b6d4;--eng-color:#f59e0b}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.container{max-width:900px;margin:0 auto}
+.section{margin-bottom:2rem}
+.section-title{font-size:1rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+
+/* Average strokes bar chart */
+.avg-chart{display:flex;gap:1.5rem;justify-content:center;align-items:flex-end;padding:1.5rem;background:var(--bg2);border-radius:10px;border:1px solid var(--border);margin-bottom:0.75rem}
+.bar-group{display:flex;flex-direction:column;align-items:center;gap:0.5rem;flex:1;max-width:200px}
+.bar-track{width:100%;height:200px;background:var(--bg);border-radius:6px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.bar-fill{width:100%;border-radius:6px 6px 0 0;transition:height 1.5s ease;position:relative}
+.bar-fill.trad{background:linear-gradient(to top,rgba(244,63,94,0.3),rgba(244,63,94,0.6));border:1px solid var(--trad-color);border-bottom:none}
+.bar-fill.simp{background:linear-gradient(to top,rgba(6,182,212,0.3),rgba(6,182,212,0.6));border:1px solid var(--simp-color);border-bottom:none}
+.bar-fill.eng{background:linear-gradient(to top,rgba(245,158,11,0.3),rgba(245,158,11,0.6));border:1px solid var(--eng-color);border-bottom:none}
+.bar-value{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:1.3rem;font-weight:700}
+.bar-fill.trad .bar-value{color:var(--trad-color)}
+.bar-fill.simp .bar-value{color:var(--simp-color)}
+.bar-fill.eng .bar-value{color:var(--eng-color)}
+.bar-label{font-size:0.78rem;color:var(--text2);text-align:center;font-weight:600}
+.bar-sublabel{font-size:0.68rem;color:var(--text3);text-align:center}
+.chart-note{font-size:0.75rem;color:var(--text3);text-align:center}
+
+/* Character comparison grid */
+.char-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.75rem}
+.char-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;transition:all 0.3s}
+.char-card:hover{border-color:var(--cyan)}
+.char-card-title{font-size:0.75rem;color:var(--text3);margin-bottom:0.5rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.char-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem}
+.char-row .sys{font-size:0.65rem;width:50px;color:var(--text3);flex-shrink:0}
+.char-row .character{font-size:1.6rem;min-width:2.5rem;text-align:center}
+.char-row .character.trad{color:var(--trad-color)}
+.char-row .character.simp{color:var(--simp-color)}
+.char-row .character.eng{color:var(--eng-color);font-size:1rem}
+.stroke-bar{flex:1;height:16px;background:var(--bg);border-radius:3px;overflow:hidden;position:relative}
+.stroke-fill{height:100%;border-radius:3px;transition:width 1s ease;position:relative}
+.stroke-fill.trad{background:rgba(244,63,94,0.4)}
+.stroke-fill.simp{background:rgba(6,182,212,0.4)}
+.stroke-fill.eng{background:rgba(245,158,11,0.4)}
+.stroke-num{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:0.65rem;font-weight:700;color:var(--text)}
+.reduction-badge{font-size:0.7rem;font-weight:600;color:var(--emerald);margin-left:auto;white-space:nowrap}
+
+/* Distribution chart */
+.dist-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow-x:auto}
+.dist-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
+.dist-label{font-size:0.75rem;color:var(--text2);width:80px;text-align:right;flex-shrink:0}
+.dist-bars{flex:1;display:flex;gap:2px;height:24px;align-items:flex-end}
+.dist-bar{border-radius:2px 2px 0 0;transition:height 1s ease;min-width:12px;position:relative;cursor:pointer}
+.dist-bar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg3);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.65rem;color:var(--text);white-space:nowrap;z-index:10;border:1px solid var(--border)}
+.legend{display:flex;gap:1.25rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:var(--text2)}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.legend-dot.trad{background:var(--trad-color)}
+.legend-dot.simp{background:var(--simp-color)}
+.legend-dot.eng{background:var(--eng-color)}
+@media(max-width:600px){.avg-chart{flex-direction:row;flex-wrap:wrap}.bar-group{max-width:none}}
+</style>
+</head>
+<body>
+<h1>Stroke Count Comparison</h1>
+<p class="subtitle">Traditional Chinese vs. Simplified Chinese vs. English letters -- measuring the visual complexity gap</p>
+
+<div class="container">
+
+<div class="section">
+  <div class="section-title">Average Strokes Per Character/Letter (Frequency-Weighted)</div>
+  <div class="avg-chart">
+    <div class="bar-group">
+      <div class="bar-track">
+        <div class="bar-fill trad" id="bar-trad"><div class="bar-value">12.2</div></div>
+      </div>
+      <div class="bar-label" style="color:var(--trad-color)">Traditional Chinese</div>
+      <div class="bar-sublabel">per character</div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-track">
+        <div class="bar-fill simp" id="bar-simp"><div class="bar-value">9.7</div></div>
+      </div>
+      <div class="bar-label" style="color:var(--simp-color)">Simplified Chinese</div>
+      <div class="bar-sublabel">per character</div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-track">
+        <div class="bar-fill eng" id="bar-eng"><div class="bar-value">2.5</div></div>
+      </div>
+      <div class="bar-label" style="color:var(--eng-color)">English</div>
+      <div class="bar-sublabel">per letter</div>
+    </div>
+  </div>
+  <p class="chart-note">But: 1 Chinese character = 1 morpheme. English needs ~4.7 letters per word, so per-morpheme strokes are closer: ~24 (Trad) vs ~19 (Simp) vs ~12 (English)</p>
+</div>
+
+<div class="section">
+  <div class="section-title">Individual Character Comparisons</div>
+  <div class="char-compare">
+    <div class="char-card">
+      <div class="char-card-title">"dragon"</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">龍</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:55%"><span class="stroke-num">16</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">龙</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:17%"><span class="stroke-num">5</span></div></div><span class="reduction-badge">-69%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">dragon</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:52%"><span class="stroke-num">~15</span></div></div></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-title">"horse"</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">馬</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:34%"><span class="stroke-num">10</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">马</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:10%"><span class="stroke-num">3</span></div></div><span class="reduction-badge">-70%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">horse</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:38%"><span class="stroke-num">~11</span></div></div></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-title">"country"</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">國</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:38%"><span class="stroke-num">11</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">国</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:28%"><span class="stroke-num">8</span></div></div><span class="reduction-badge">-27%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">country</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:55%"><span class="stroke-num">~16</span></div></div></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-title">"side/edge"</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">邊</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:62%"><span class="stroke-num">18</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">边</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:17%"><span class="stroke-num">5</span></div></div><span class="reduction-badge">-72%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">side</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:31%"><span class="stroke-num">~9</span></div></div></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-title">"big" (unchanged)</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">大</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:10%"><span class="stroke-num">3</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">大</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:10%"><span class="stroke-num">3</span></div></div><span class="reduction-badge" style="color:var(--text3)">0%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">big</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:21%"><span class="stroke-num">~6</span></div></div></div>
+    </div>
+    <div class="char-card">
+      <div class="char-card-title">"depression/gloomy"</div>
+      <div class="char-row"><span class="sys">Trad</span><span class="character trad">鬱</span><div class="stroke-bar"><div class="stroke-fill trad" style="width:100%"><span class="stroke-num">29</span></div></div></div>
+      <div class="char-row"><span class="sys">Simp</span><span class="character simp">郁</span><div class="stroke-bar"><div class="stroke-fill simp" style="width:28%"><span class="stroke-num">8</span></div></div><span class="reduction-badge">-72%</span></div>
+      <div class="char-row"><span class="sys">English</span><span class="character eng">gloomy</span><div class="stroke-bar"><div class="stroke-fill eng" style="width:48%"><span class="stroke-num">~14</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Key Statistics</div>
+  <div style="display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1.25rem;text-align:center;flex:1;min-width:150px">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--simp-color)">~20%</div>
+      <div style="font-size:0.75rem;color:var(--text3)">Average stroke reduction<br>across simplified set</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1.25rem;text-align:center;flex:1;min-width:150px">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--trad-color)">29&rarr;8</div>
+      <div style="font-size:0.75rem;color:var(--text3)">Maximum reduction<br>鬱&rarr;郁 (-72%)</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1.25rem;text-align:center;flex:1;min-width:150px">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--eng-color)">26</div>
+      <div style="font-size:0.75rem;color:var(--text3)">English letters vs<br>~3,500 Chinese characters</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1.25rem;text-align:center;flex:1;min-width:150px">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--emerald)">1.5-2x</div>
+      <div style="font-size:0.75rem;color:var(--text3)">Chinese information<br>density vs English</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot trad"></div>Traditional Chinese</div>
+  <div class="legend-item"><div class="legend-dot simp"></div>Simplified Chinese</div>
+  <div class="legend-item"><div class="legend-dot eng"></div>English (approximate strokes)</div>
+</div>
+
+<script>
+function animateBars(){
+  const maxStrokes=16;
+  document.getElementById('bar-trad').style.height=((12.2/maxStrokes)*100)+'%';
+  document.getElementById('bar-simp').style.height=((9.7/maxStrokes)*100)+'%';
+  document.getElementById('bar-eng').style.height=((2.5/maxStrokes)*100)+'%';
+}
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateBars();observer.disconnect();}});
+},{threshold:0.3});
+observer.observe(document.querySelector('.avg-chart'));
+setTimeout(animateBars,300);
+</script>
+</body>
+</html>

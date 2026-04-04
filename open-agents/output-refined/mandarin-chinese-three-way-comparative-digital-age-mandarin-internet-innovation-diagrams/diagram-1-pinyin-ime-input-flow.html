@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinyin IME Input Flow: Two-Stage Writing Process</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-dim: #0891b2; --accent-glow: rgba(6,182,212,0.15);
+    --amber: #f59e0b; --amber-dim: #b45309; --amber-bg: rgba(245,158,11,0.12);
+    --rose: #f43f5e; --rose-bg: rgba(244,63,94,0.1);
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.12);
+    --purple: #8b5cf6; --purple-bg: rgba(139,92,246,0.12);
+    --muted: #64748b; --text-sec: #94a3b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
+  .subtitle { text-align: center; font-size: 0.82rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Flow stages */
+  .flow-container { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+
+  .flow-row {
+    display: flex; align-items: center; gap: 0.75rem; width: 100%;
+    justify-content: center; flex-wrap: wrap;
+  }
+
+  .stage-box {
+    padding: 0.9rem 1.2rem; border-radius: 10px; text-align: center;
+    border: 2px solid; min-width: 150px; position: relative;
+  }
+  .stage-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.3rem;
+  }
+  .stage-content { font-size: 1.1rem; font-weight: 700; }
+  .stage-detail { font-size: 0.75rem; color: var(--text-sec); margin-top: 0.25rem; }
+
+  .stage-input { background: var(--purple-bg); border-color: var(--purple); }
+  .stage-input .stage-label { color: var(--purple); }
+  .stage-input .stage-content { color: var(--purple); font-family: 'Courier New', monospace; }
+
+  .stage-process { background: var(--amber-bg); border-color: var(--amber); }
+  .stage-process .stage-label { color: var(--amber); }
+  .stage-process .stage-content { color: var(--amber); }
+
+  .stage-select { background: var(--accent-glow); border-color: var(--accent); }
+  .stage-select .stage-label { color: var(--accent); }
+  .stage-select .stage-content { color: var(--accent); }
+
+  .stage-output { background: var(--emerald-bg); border-color: var(--emerald); }
+  .stage-output .stage-label { color: var(--emerald); }
+  .stage-output .stage-content { color: var(--emerald); font-size: 1.3rem; }
+
+  .stage-feedback { background: var(--rose-bg); border-color: var(--rose); border-style: dashed; }
+  .stage-feedback .stage-label { color: var(--rose); }
+  .stage-feedback .stage-content { color: var(--rose); font-size: 0.9rem; }
+
+  .arrow { color: var(--muted); font-size: 1.5rem; flex-shrink: 0; }
+  .arrow-down { display: block; text-align: center; color: var(--muted); font-size: 1.5rem; }
+
+  /* Candidate list mockup */
+  .candidate-list {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.6rem 0.8rem; margin-top: 0.5rem; display: inline-block;
+    text-align: left;
+  }
+  .candidate { display: flex; gap: 0.5rem; padding: 0.2rem 0.4rem; font-size: 0.85rem; border-radius: 4px; }
+  .candidate.selected { background: var(--accent-glow); border: 1px solid var(--accent); }
+  .candidate .num { color: var(--muted); font-size: 0.75rem; min-width: 1.2rem; }
+  .candidate .char { font-size: 1rem; }
+  .candidate .py { color: var(--text-sec); font-size: 0.75rem; }
+
+  /* Comparison section */
+  .comparison {
+    margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+  }
+  .comp-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.8rem; text-align: center;
+  }
+  .comp-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+  .comp-title.cn { color: var(--rose); }
+  .comp-title.tw { color: var(--amber); }
+  .comp-title.en { color: var(--accent); }
+  .comp-flow { font-size: 0.78rem; color: var(--text-sec); line-height: 1.5; }
+  .comp-flow .step { margin-bottom: 0.2rem; }
+  .comp-verdict { font-size: 0.72rem; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-weight: 600; }
+
+  /* Feedback loop */
+  .feedback-section {
+    margin-top: 1.5rem; padding: 1rem; background: var(--rose-bg);
+    border: 1px dashed var(--rose); border-radius: 10px;
+  }
+  .feedback-title { font-size: 0.8rem; font-weight: 700; color: var(--rose); margin-bottom: 0.5rem; }
+  .feedback-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .feedback-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.5rem 0.6rem; font-size: 0.78rem;
+  }
+  .feedback-item .icon { margin-right: 0.3rem; }
+  .check { color: var(--emerald); }
+  .cross { color: var(--rose); }
+
+  figcaption {
+    text-align: center; margin-top: 1.25rem; font-size: 0.82rem;
+    color: var(--muted); font-style: italic; padding: 0 1rem; line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    .flow-row { flex-direction: column; }
+    .arrow { transform: rotate(90deg); }
+    .comparison { grid-template-columns: 1fr; }
+    .feedback-items { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-box">
+    <div class="title">Pinyin IME Input Flow</div>
+    <div class="subtitle">The two-stage process that separates phonological encoding from character production</div>
+
+    <div class="flow-container">
+      <!-- Stage 1: Keystroke -->
+      <div class="flow-row">
+        <div class="stage-box stage-input">
+          <div class="stage-label">Stage 1: Phonological Input</div>
+          <div class="stage-content">zhongguo</div>
+          <div class="stage-detail">User types Pinyin on QWERTY keyboard</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="stage-box stage-process">
+          <div class="stage-label">IME Processing</div>
+          <div class="stage-content">Algorithm</div>
+          <div class="stage-detail">Context + frequency + cloud data</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="stage-box stage-select">
+          <div class="stage-label">Stage 2: Character Selection</div>
+          <div class="candidate-list">
+            <div class="candidate selected"><span class="num">1.</span><span class="char">中国</span><span class="py">zhongguuo</span></div>
+            <div class="candidate"><span class="num">2.</span><span class="char">钟国</span><span class="py">zhongguo</span></div>
+            <div class="candidate"><span class="num">3.</span><span class="char">忠国</span><span class="py">zhongguo</span></div>
+            <div class="candidate"><span class="num">4.</span><span class="char">中郭</span><span class="py">zhongguo</span></div>
+          </div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="stage-box stage-output">
+          <div class="stage-label">Final Output</div>
+          <div class="stage-content">中国</div>
+          <div class="stage-detail">Character appears in text</div>
+        </div>
+      </div>
+
+      <!-- What's required vs not -->
+      <div class="feedback-section">
+        <div class="feedback-title">What Pinyin Input Requires vs. Does Not Require</div>
+        <div class="feedback-items">
+          <div class="feedback-item"><span class="icon check">&#10003;</span> Pronunciation knowledge (phonology)</div>
+          <div class="feedback-item"><span class="icon check">&#10003;</span> Character recognition (select from list)</div>
+          <div class="feedback-item"><span class="icon cross">&#10007;</span> Stroke order knowledge</div>
+          <div class="feedback-item"><span class="icon cross">&#10007;</span> Complete orthographic recall</div>
+          <div class="feedback-item"><span class="icon cross">&#10007;</span> Radical decomposition ability</div>
+          <div class="feedback-item"><span class="icon cross">&#10007;</span> Handwriting motor memory</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Three-way comparison -->
+    <div class="comparison">
+      <div class="comp-card">
+        <div class="comp-title cn">PRC / Simplified</div>
+        <div class="comp-flow">
+          <div class="step">Pinyin &rarr; Candidates &rarr; Select</div>
+          <div class="step">Phonology-based input</div>
+          <div class="step">Character recall atrophies</div>
+        </div>
+        <div class="comp-verdict" style="color:var(--rose);">Maximum character amnesia risk</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title tw">Taiwan / Traditional</div>
+        <div class="comp-flow">
+          <div class="step">Zhuyin or Cangjie &rarr; Select</div>
+          <div class="step">Cangjie reinforces structure</div>
+          <div class="step">Zhuyin is phonological but non-Roman</div>
+        </div>
+        <div class="comp-verdict" style="color:var(--amber);">Moderate character amnesia risk</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title en">English</div>
+        <div class="comp-flow">
+          <div class="step">Type letters &rarr; Word appears</div>
+          <div class="step">Same sequence as handwriting</div>
+          <div class="step">Autocorrect slightly erodes spelling</div>
+        </div>
+        <div class="comp-verdict" style="color:var(--emerald);">No structural parallel</div>
+      </div>
+    </div>
+  </div>
+  <figcaption>Pinyin IME creates a two-stage process where phonological encoding and character selection are decoupled from orthographic production. This dissociation has no equivalent in alphabetic writing systems, where typing reinforces the same letter sequences used in handwriting.</figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero Anaphora: Three-Way Explicitness Comparison</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --surface: #1e293b;
+    --surface2: #253349;
+    --border: #334155;
+    --accent: #06b6d4;
+    --accent-dim: #0891b2;
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --mandarin: #06b6d4;
+    --mandarin-bg: #0c3644;
+    --english: #a78bfa;
+    --english-bg: #2e2454;
+    --classical: #f59e0b;
+    --classical-bg: #4a3520;
+    --muted: #64748b;
+    --text-secondary: #94a3b8;
+    --success: #10b981;
+    --rose: #f43f5e;
+    --zero-color: #f97316;
+    --zero-bg: rgba(249, 115, 22, 0.12);
+    --overt-color: #06b6d4;
+    --pronoun-color: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  figcaption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    overflow-x: auto;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+    padding-left: 0.25rem;
+  }
+
+  /* Slot grid — each sentence as a row of reference slots */
+  .slot-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  .slot-table th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .slot-table td {
+    padding: 0.4rem 0.3rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    font-size: 0.8rem;
+  }
+  .slot-table .row-lang {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding-left: 0.5rem;
+    white-space: nowrap;
+    width: 90px;
+  }
+  .slot-table .row-num {
+    font-weight: 700;
+    color: var(--muted);
+    width: 30px;
+    font-size: 0.7rem;
+  }
+
+  .ref-chip {
+    display: inline-block;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ref-overt {
+    background: var(--mandarin-bg);
+    color: var(--mandarin);
+    border: 1px solid var(--mandarin);
+  }
+  .ref-pronoun {
+    background: var(--english-bg);
+    color: var(--english);
+    border: 1px solid rgba(167, 139, 250, 0.4);
+  }
+  .ref-zero {
+    background: var(--zero-bg);
+    color: var(--zero-color);
+    border: 1px dashed var(--zero-color);
+    font-style: italic;
+  }
+  .ref-na {
+    color: var(--muted);
+    font-size: 0.7rem;
+  }
+
+  /* Donut charts */
+  .donut-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 650px) {
+    .donut-row { grid-template-columns: 1fr; }
+  }
+  .donut-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .donut-lang {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+  .donut-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 0.75rem;
+  }
+  .donut-wrap svg {
+    width: 130px;
+    height: 130px;
+    transform: rotate(-90deg);
+  }
+  .donut-wrap .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .donut-center .big-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: block;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+  }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+  .donut-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Spectrum bar */
+  .spectrum-container {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .spectrum-title {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 1rem;
+  }
+  .spectrum-bar {
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+  .spectrum-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .spectrum-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    position: relative;
+    height: 30px;
+  }
+  .spectrum-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  .spectrum-marker .marker-arrow {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .insight {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 1.5rem;
+  }
+  .insight strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="diagram-title">Zero Anaphora: The Silence That Speaks</div>
+    <div class="diagram-subtitle">How much explicit reference each language requires for the same discourse</div>
+
+    <!-- Slot-by-slot comparison table -->
+    <div class="section-label">Reference Slot Analysis: A 5-Sentence Narrative</div>
+    <div style="overflow-x:auto">
+    <table class="slot-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Sent.</th>
+          <th>Subject Ref</th>
+          <th>Object Ref 1</th>
+          <th>Object Ref 2</th>
+          <th>Possessive Ref</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Sentence 1 -->
+        <tr>
+          <td class="row-lang" style="color:var(--mandarin)">Mandarin</td>
+          <td class="row-num">1</td>
+          <td><span class="ref-chip ref-overt">小李</span></td>
+          <td><span class="ref-chip ref-overt">他的猫</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--english)">English</td>
+          <td class="row-num">1</td>
+          <td><span class="ref-chip ref-overt">Xiao Li</span></td>
+          <td><span class="ref-chip ref-overt">his cat</span></td>
+          <td class="ref-na">-</td>
+          <td><span class="ref-chip ref-pronoun">his</span></td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--classical)">Classical</td>
+          <td class="row-num">1</td>
+          <td><span class="ref-chip ref-overt" style="background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">李</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+        </tr>
+        <!-- Sentence 2 -->
+        <tr style="background:rgba(6,182,212,0.03)">
+          <td class="row-lang" style="color:var(--mandarin)">Mandarin</td>
+          <td class="row-num">2</td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr style="background:rgba(167,139,250,0.03)">
+          <td class="row-lang" style="color:var(--english)">English</td>
+          <td class="row-num">2</td>
+          <td><span class="ref-chip ref-pronoun">He</span></td>
+          <td><span class="ref-chip ref-pronoun">it</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr style="background:rgba(245,158,11,0.03)">
+          <td class="row-lang" style="color:var(--classical)">Classical</td>
+          <td class="row-num">2</td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <!-- Sentence 3 -->
+        <tr>
+          <td class="row-lang" style="color:var(--mandarin)">Mandarin</td>
+          <td class="row-num">3</td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td><span class="ref-chip ref-overt">朋友</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--english)">English</td>
+          <td class="row-num">3</td>
+          <td><span class="ref-chip ref-pronoun">He</span></td>
+          <td><span class="ref-chip ref-overt">a friend</span></td>
+          <td><span class="ref-chip ref-pronoun">it</span></td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--classical)">Classical</td>
+          <td class="row-num">3</td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td><span class="ref-chip ref-overt" style="background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">友</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+        </tr>
+        <!-- Sentence 4 -->
+        <tr style="background:rgba(6,182,212,0.03)">
+          <td class="row-lang" style="color:var(--mandarin)">Mandarin</td>
+          <td class="row-num">4</td>
+          <td><span class="ref-chip ref-overt">朋友</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr style="background:rgba(167,139,250,0.03)">
+          <td class="row-lang" style="color:var(--english)">English</td>
+          <td class="row-num">4</td>
+          <td><span class="ref-chip ref-overt">The friend</span></td>
+          <td><span class="ref-chip ref-pronoun">it</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr style="background:rgba(245,158,11,0.03)">
+          <td class="row-lang" style="color:var(--classical)">Classical</td>
+          <td class="row-num">4</td>
+          <td><span class="ref-chip ref-overt" style="background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">友</span></td>
+          <td><span class="ref-chip ref-zero">0</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <!-- Sentence 5 -->
+        <tr>
+          <td class="row-lang" style="color:var(--mandarin)">Mandarin</td>
+          <td class="row-num">5</td>
+          <td><span class="ref-chip ref-overt">小李</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--english)">English</td>
+          <td class="row-num">5</td>
+          <td><span class="ref-chip ref-overt">Xiao Li</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+        <tr>
+          <td class="row-lang" style="color:var(--classical)">Classical</td>
+          <td class="row-num">5</td>
+          <td><span class="ref-chip ref-overt" style="background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">李</span></td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+          <td class="ref-na">-</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Donut Charts -->
+    <div class="section-label">Reference Strategy Distribution (across 5-sentence narrative)</div>
+    <div class="donut-row">
+      <!-- Mandarin donut -->
+      <div class="donut-card" style="border-color:var(--mandarin)">
+        <div class="donut-lang" style="color:var(--mandarin)">Mandarin</div>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 42 42">
+            <!-- Zero: 5/9 = 56% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--zero-color)" stroke-width="5" stroke-dasharray="56 44" stroke-dashoffset="0" opacity="0.85"/>
+            <!-- Overt: 4/9 = 44% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--mandarin)" stroke-width="5" stroke-dasharray="44 56" stroke-dashoffset="-56"/>
+          </svg>
+          <div class="donut-center">
+            <span class="big-num" style="color:var(--zero-color)">56%</span>
+            zeros
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--mandarin)"></div> Overt NPs (4)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--zero-color)"></div> Zero / dropped (5)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--pronoun-color)"></div> Pronouns (0)</div>
+        </div>
+      </div>
+
+      <!-- Classical donut -->
+      <div class="donut-card" style="border-color:var(--classical)">
+        <div class="donut-lang" style="color:var(--classical)">Classical Chinese</div>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 42 42">
+            <!-- Zero: 6/9 = 67% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--zero-color)" stroke-width="5" stroke-dasharray="67 33" stroke-dashoffset="0" opacity="0.85"/>
+            <!-- Overt: 3/9 = 33% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--classical)" stroke-width="5" stroke-dasharray="33 67" stroke-dashoffset="-67"/>
+          </svg>
+          <div class="donut-center">
+            <span class="big-num" style="color:var(--zero-color)">67%</span>
+            zeros
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--classical)"></div> Overt NPs (3)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--zero-color)"></div> Zero / dropped (6)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--pronoun-color)"></div> Pronouns (0)</div>
+        </div>
+      </div>
+
+      <!-- English donut -->
+      <div class="donut-card" style="border-color:var(--english)">
+        <div class="donut-lang" style="color:var(--english)">English</div>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 42 42">
+            <!-- Overt: 4/11 = 36% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--english)" stroke-width="5" stroke-dasharray="36 64" stroke-dashoffset="0"/>
+            <!-- Pronouns: 7/11 = 64% -->
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--pronoun-color)" stroke-width="5" stroke-dasharray="64 36" stroke-dashoffset="-36" opacity="0.6"/>
+          </svg>
+          <div class="donut-center">
+            <span class="big-num" style="color:var(--pronoun-color)">64%</span>
+            pronouns
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--english)"></div> Overt NPs (4)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--zero-color)"></div> Zero / dropped (0)</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--pronoun-color)"></div> Pronouns (7)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explicitness Spectrum -->
+    <div class="spectrum-container">
+      <div class="spectrum-title">Reference Explicitness Spectrum</div>
+      <div class="spectrum-bar">
+        <div class="spectrum-segment" style="flex:1;background:linear-gradient(90deg, var(--classical) 0%, rgba(245,158,11,0.6) 100%)">Most Implicit</div>
+        <div class="spectrum-segment" style="flex:1;background:linear-gradient(90deg, rgba(6,182,212,0.6) 0%, var(--mandarin) 50%, rgba(6,182,212,0.6) 100%)"></div>
+        <div class="spectrum-segment" style="flex:1;background:linear-gradient(90deg, rgba(167,139,250,0.6) 0%, var(--english) 100%)">Most Explicit</div>
+      </div>
+      <div class="spectrum-markers">
+        <div class="spectrum-marker" style="left:10%;color:var(--classical)">
+          <div class="marker-arrow">&#9650;</div>
+          Classical
+        </div>
+        <div class="spectrum-marker" style="left:38%;color:var(--mandarin)">
+          <div class="marker-arrow">&#9650;</div>
+          Mandarin
+        </div>
+        <div class="spectrum-marker" style="left:88%;color:var(--english)">
+          <div class="marker-arrow">&#9650;</div>
+          English
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Why this matters:</strong> Chinese learners of English often produce "zero-subject" errors ("Ø Went to the store yesterday") because their L1 discourse system does not require explicit subjects. Conversely, English speakers learning Chinese often sound stilted by over-using pronouns where zero anaphora is natural. The discourse-level mismatch runs far deeper than any individual grammar rule.
+    </div>
+  </div>
+
+  <figcaption>
+    Chinese is a "radical pro-drop" language (Huang 1984) where both subjects and objects can be freely omitted when recoverable from discourse context. English requires explicit reference in nearly every argument position. Classical Chinese pushed implicit reference to its extreme limit.
+  </figcaption>
+</figure>
+</body>
+</html>

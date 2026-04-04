@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radical Frequency Pyramid</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--cyan-dim:#0891b2;--cyan-glow:rgba(6,182,212,0.15);--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--violet:#8b5cf6;--blue:#3b82f6;--orange:#f97316}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.pyramid-container{max-width:900px;margin:0 auto}
+.tier{margin-bottom:0.5rem;display:flex;align-items:stretch;gap:0.5rem;cursor:pointer;transition:transform 0.2s}
+.tier:hover{transform:translateX(4px)}
+.tier-label{min-width:140px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding-right:0.75rem;text-align:right}
+.tier-name{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em}
+.tier-count{font-size:0.65rem;color:var(--text3)}
+.tier-bar{flex:1;border-radius:8px;padding:0.6rem 0.75rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.25rem;position:relative;overflow:hidden;border:1px solid transparent;transition:border-color 0.3s}
+.tier-bar:hover{border-color:rgba(255,255,255,0.15)}
+.tier-bar::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.12;z-index:0}
+.tier-1 .tier-bar::before{background:linear-gradient(90deg,var(--cyan),var(--cyan-dim))}
+.tier-1 .tier-name{color:var(--cyan)}
+.tier-1 .tier-bar{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.3)}
+.tier-2 .tier-bar::before{background:linear-gradient(90deg,var(--emerald),#059669)}
+.tier-2 .tier-name{color:var(--emerald)}
+.tier-2 .tier-bar{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25)}
+.tier-3 .tier-bar::before{background:linear-gradient(90deg,var(--amber),#d97706)}
+.tier-3 .tier-name{color:var(--amber)}
+.tier-3 .tier-bar{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)}
+.tier-4 .tier-bar::before{background:linear-gradient(90deg,var(--violet),#7c3aed)}
+.tier-4 .tier-name{color:var(--violet)}
+.tier-4 .tier-bar{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.2)}
+.tier-5 .tier-bar::before{background:linear-gradient(90deg,var(--rose),#e11d48)}
+.tier-5 .tier-name{color:var(--rose)}
+.tier-5 .tier-bar{background:rgba(244,63,94,0.06);border-color:rgba(244,63,94,0.15)}
+.rad{display:inline-flex;align-items:center;gap:0.2rem;background:rgba(0,0,0,0.25);border-radius:5px;padding:0.2rem 0.4rem;font-size:0.72rem;position:relative;z-index:1;transition:all 0.2s;cursor:default}
+.rad:hover{background:rgba(0,0,0,0.5);transform:scale(1.1)}
+.rad-char{font-size:1rem;line-height:1}
+.rad-meaning{color:var(--text3);font-size:0.6rem}
+.coverage-bar{max-width:900px;margin:1.5rem auto 0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem}
+.coverage-title{font-size:0.75rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem}
+.bar-track{height:28px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;position:absolute;top:0;left:0;transition:width 1.5s ease}
+.fill-1{background:linear-gradient(90deg,var(--cyan),var(--cyan-dim));z-index:5}
+.fill-2{background:linear-gradient(90deg,var(--emerald),#059669);z-index:4}
+.fill-3{background:linear-gradient(90deg,var(--amber),#d97706);z-index:3}
+.fill-4{background:linear-gradient(90deg,var(--violet),#7c3aed);z-index:2}
+.fill-5{background:linear-gradient(90deg,var(--rose),#e11d48);z-index:1}
+.bar-labels{display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.65rem;color:var(--text3)}
+.coverage-legend{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;font-size:0.7rem}
+.legend-item{display:flex;align-items:center;gap:0.35rem}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.stats-row{max-width:900px;margin:1.25rem auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center}
+.stat-val{font-size:1.5rem;font-weight:700;color:var(--cyan)}
+.stat-label{font-size:0.7rem;color:var(--text3);margin-top:0.2rem}
+.note{max-width:900px;margin:1rem auto 0;font-size:0.7rem;color:var(--text3);text-align:center;font-style:italic}
+@media(max-width:700px){.tier{flex-direction:column}.tier-label{min-width:auto;align-items:flex-start;padding:0 0 0.2rem 0}.stats-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<h1>Radical Frequency Pyramid</h1>
+<p class="subtitle">The 214 Kangxi radicals follow a steep power-law distribution — a few radicals dominate</p>
+
+<div class="pyramid-container">
+
+<div class="tier tier-1">
+  <div class="tier-label">
+    <div class="tier-name">Tier 1: Elite</div>
+    <div class="tier-count">10 radicals &bull; ~23% coverage</div>
+  </div>
+  <div class="tier-bar">
+    <span class="rad"><span class="rad-char">艹</span><span class="rad-meaning">grass 1902</span></span>
+    <span class="rad"><span class="rad-char">氵</span><span class="rad-meaning">water 1200+</span></span>
+    <span class="rad"><span class="rad-char">木</span><span class="rad-meaning">wood 1000+</span></span>
+    <span class="rad"><span class="rad-char">口</span><span class="rad-meaning">mouth 800+</span></span>
+    <span class="rad"><span class="rad-char">扌</span><span class="rad-meaning">hand 700+</span></span>
+    <span class="rad"><span class="rad-char">釒</span><span class="rad-meaning">metal 700+</span></span>
+    <span class="rad"><span class="rad-char">忄</span><span class="rad-meaning">heart 600+</span></span>
+    <span class="rad"><span class="rad-char">亻</span><span class="rad-meaning">person 500+</span></span>
+    <span class="rad"><span class="rad-char">訁</span><span class="rad-meaning">speech 500+</span></span>
+    <span class="rad"><span class="rad-char">虫</span><span class="rad-meaning">insect 400+</span></span>
+  </div>
+</div>
+
+<div class="tier tier-2">
+  <div class="tier-label">
+    <div class="tier-name">Tier 2: Core</div>
+    <div class="tier-count">20 radicals &bull; ~20% coverage</div>
+  </div>
+  <div class="tier-bar">
+    <span class="rad"><span class="rad-char">土</span><span class="rad-meaning">earth</span></span>
+    <span class="rad"><span class="rad-char">女</span><span class="rad-meaning">woman</span></span>
+    <span class="rad"><span class="rad-char">竹</span><span class="rad-meaning">bamboo</span></span>
+    <span class="rad"><span class="rad-char">糸</span><span class="rad-meaning">silk</span></span>
+    <span class="rad"><span class="rad-char">火</span><span class="rad-meaning">fire</span></span>
+    <span class="rad"><span class="rad-char">日</span><span class="rad-meaning">sun</span></span>
+    <span class="rad"><span class="rad-char">目</span><span class="rad-meaning">eye</span></span>
+    <span class="rad"><span class="rad-char">石</span><span class="rad-meaning">stone</span></span>
+    <span class="rad"><span class="rad-char">月</span><span class="rad-meaning">moon</span></span>
+    <span class="rad"><span class="rad-char">刂</span><span class="rad-meaning">knife</span></span>
+    <span class="rad"><span class="rad-char">禾</span><span class="rad-meaning">grain</span></span>
+    <span class="rad"><span class="rad-char">衤</span><span class="rad-meaning">clothes</span></span>
+    <span class="rad"><span class="rad-char">貝</span><span class="rad-meaning">shell</span></span>
+    <span class="rad"><span class="rad-char">田</span><span class="rad-meaning">field</span></span>
+    <span class="rad"><span class="rad-char">犭</span><span class="rad-meaning">animal</span></span>
+    <span class="rad"><span class="rad-char">馬</span><span class="rad-meaning">horse</span></span>
+    <span class="rad"><span class="rad-char">米</span><span class="rad-meaning">rice</span></span>
+    <span class="rad"><span class="rad-char">足</span><span class="rad-meaning">foot</span></span>
+    <span class="rad"><span class="rad-char">山</span><span class="rad-meaning">mountain</span></span>
+    <span class="rad"><span class="rad-char">王</span><span class="rad-meaning">jade</span></span>
+  </div>
+</div>
+
+<div class="tier tier-3">
+  <div class="tier-label">
+    <div class="tier-name">Tier 3: Common</div>
+    <div class="tier-count">20 radicals &bull; ~15% coverage</div>
+  </div>
+  <div class="tier-bar">
+    <span class="rad"><span class="rad-char">力</span><span class="rad-meaning">power</span></span>
+    <span class="rad"><span class="rad-char">门</span><span class="rad-meaning">gate</span></span>
+    <span class="rad"><span class="rad-char">大</span><span class="rad-meaning">big</span></span>
+    <span class="rad"><span class="rad-char">阝</span><span class="rad-meaning">mound</span></span>
+    <span class="rad"><span class="rad-char">雨</span><span class="rad-meaning">rain</span></span>
+    <span class="rad"><span class="rad-char">页</span><span class="rad-meaning">head</span></span>
+    <span class="rad"><span class="rad-char">食</span><span class="rad-meaning">food</span></span>
+    <span class="rad"><span class="rad-char">车</span><span class="rad-meaning">vehicle</span></span>
+    <span class="rad"><span class="rad-char">鸟</span><span class="rad-meaning">bird</span></span>
+    <span class="rad"><span class="rad-char">宀</span><span class="rad-meaning">roof</span></span>
+    <span class="rad"><span class="rad-char">冫</span><span class="rad-meaning">ice</span></span>
+    <span class="rad"><span class="rad-char">疒</span><span class="rad-meaning">illness</span></span>
+    <span class="rad"><span class="rad-char">示</span><span class="rad-meaning">spirit</span></span>
+    <span class="rad"><span class="rad-char">辶</span><span class="rad-meaning">walk</span></span>
+    <span class="rad"><span class="rad-char">弓</span><span class="rad-meaning">bow</span></span>
+    <span class="rad"><span class="rad-char">巾</span><span class="rad-meaning">cloth</span></span>
+    <span class="rad"><span class="rad-char">囗</span><span class="rad-meaning">enclosure</span></span>
+    <span class="rad"><span class="rad-char">穴</span><span class="rad-meaning">cave</span></span>
+    <span class="rad"><span class="rad-char">耳</span><span class="rad-meaning">ear</span></span>
+    <span class="rad"><span class="rad-char">舟</span><span class="rad-meaning">boat</span></span>
+  </div>
+</div>
+
+<div class="tier tier-4">
+  <div class="tier-label">
+    <div class="tier-name">Tier 4: Moderate</div>
+    <div class="tier-count">50 radicals &bull; ~20% coverage</div>
+  </div>
+  <div class="tier-bar">
+    <span class="rad"><span class="rad-char">皮</span><span class="rad-meaning">skin</span></span>
+    <span class="rad"><span class="rad-char">又</span><span class="rad-meaning">again</span></span>
+    <span class="rad"><span class="rad-char">尸</span><span class="rad-meaning">corpse</span></span>
+    <span class="rad"><span class="rad-char">骨</span><span class="rad-meaning">bone</span></span>
+    <span class="rad"><span class="rad-char">鬼</span><span class="rad-meaning">ghost</span></span>
+    <span class="rad"><span class="rad-char">黑</span><span class="rad-meaning">black</span></span>
+    <span class="rad"><span class="rad-char">瓦</span><span class="rad-meaning">tile</span></span>
+    <span class="rad"><span class="rad-char">酉</span><span class="rad-meaning">wine</span></span>
+    <span class="rad" style="color:var(--text3);font-size:0.65rem">... + 42 more</span>
+  </div>
+</div>
+
+<div class="tier tier-5">
+  <div class="tier-label">
+    <div class="tier-name">Tier 5: Rare</div>
+    <div class="tier-count">114 radicals &bull; ~22% coverage</div>
+  </div>
+  <div class="tier-bar">
+    <span class="rad"><span class="rad-char">艮</span><span class="rad-meaning">5 chars</span></span>
+    <span class="rad"><span class="rad-char">鼓</span><span class="rad-meaning">drum</span></span>
+    <span class="rad"><span class="rad-char">鼠</span><span class="rad-meaning">rat</span></span>
+    <span class="rad"><span class="rad-char">龠</span><span class="rad-meaning">flute</span></span>
+    <span class="rad"><span class="rad-char">鬯</span><span class="rad-meaning">herb</span></span>
+    <span class="rad" style="color:var(--text3);font-size:0.65rem">... + 109 more (mostly historical/literary)</span>
+  </div>
+</div>
+
+</div>
+
+<div class="coverage-bar">
+  <div class="coverage-title">Cumulative Coverage of 47,035 Characters</div>
+  <div class="bar-track">
+    <div class="bar-fill fill-1" id="f1"></div>
+    <div class="bar-fill fill-2" id="f2"></div>
+    <div class="bar-fill fill-3" id="f3"></div>
+    <div class="bar-fill fill-4" id="f4"></div>
+    <div class="bar-fill fill-5" id="f5"></div>
+  </div>
+  <div class="bar-labels">
+    <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+  </div>
+  <div class="coverage-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div> Top 10 (~23%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--emerald)"></div> Next 20 (~43%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Next 20 (~58%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div> Next 50 (~78%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rose)"></div> Remaining 114 (100%)</div>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-val">214</div><div class="stat-label">Kangxi Radicals Total</div></div>
+  <div class="stat-card"><div class="stat-val">~50</div><div class="stat-label">Radicals for Daily Literacy</div></div>
+  <div class="stat-card"><div class="stat-val">1,902</div><div class="stat-label">Max Characters (艹 grass)</div></div>
+  <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">Min Characters (艮)</div></div>
+</div>
+
+<p class="note">Character counts from the Kangxi Dictionary (1716). Modern practical frequency differs but follows the same power-law pattern.</p>
+
+<script>
+requestAnimationFrame(()=>{
+  setTimeout(()=>{
+    document.getElementById('f1').style.width='23%';
+    document.getElementById('f2').style.width='43%';
+    document.getElementById('f3').style.width='58%';
+    document.getElementById('f4').style.width='78%';
+    document.getElementById('f5').style.width='100%';
+  },300);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Architecture vs Morpheme Architecture</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--violet:#8b5cf6;--blue:#3b82f6;--orange:#f97316}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+
+.dual-panel{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+.panel-cn::before{background:var(--cyan)}
+.panel-en::before{background:var(--amber)}
+.panel-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
+.panel-flag{font-size:1.3rem}
+.panel-title{font-size:0.9rem;font-weight:700}
+.panel-cn .panel-title{color:var(--cyan)}
+.panel-en .panel-title{color:var(--amber)}
+.panel-subtitle{font-size:0.7rem;color:var(--text3)}
+
+/* Architecture diagrams */
+.arch-demo{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem;margin-bottom:0.75rem}
+.arch-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);margin-bottom:0.5rem}
+
+/* Chinese 2D composition */
+.cn-char-box{display:flex;justify-content:center;margin-bottom:0.5rem}
+.cn-square{width:120px;height:120px;border:2px solid var(--cyan);border-radius:8px;display:grid;grid-template-columns:1fr 1.2fr;overflow:hidden;position:relative}
+.cn-left{display:flex;align-items:center;justify-content:center;border-right:2px dashed rgba(6,182,212,0.3);background:rgba(16,185,129,0.08)}
+.cn-right{display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.08)}
+.cn-left span{font-size:2rem;color:var(--emerald)}
+.cn-right span{font-size:2rem;color:var(--amber)}
+.cn-char-label{text-align:center;font-size:0.75rem;color:var(--text2);margin-top:0.3rem}
+.cn-char-result{text-align:center;font-size:2rem;color:var(--cyan);margin:0.25rem 0}
+
+/* English linear composition */
+.en-word-box{display:flex;justify-content:center;margin-bottom:0.5rem}
+.en-linear{display:flex;align-items:center;gap:0;border:2px solid var(--amber);border-radius:8px;overflow:hidden}
+.en-part{padding:0.5rem 0.6rem;font-size:0.85rem;font-weight:600;text-align:center;min-width:60px}
+.en-prefix{background:rgba(139,92,246,0.12);color:var(--violet);border-right:2px dashed rgba(245,158,11,0.3)}
+.en-root{background:rgba(245,158,11,0.12);color:var(--amber);border-right:2px dashed rgba(245,158,11,0.3)}
+.en-suffix{background:rgba(16,185,129,0.12);color:var(--emerald)}
+.en-word-label{text-align:center;font-size:0.75rem;color:var(--text2);margin-top:0.3rem}
+.en-word-result{text-align:center;font-size:1.1rem;font-weight:700;color:var(--amber);margin:0.25rem 0}
+
+/* Feature comparison table */
+.feature-table{max-width:1000px;margin:1.5rem auto 0}
+.ft-title{font-size:0.85rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem}
+.ft-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:10px;overflow:hidden}
+.ft-cell{background:var(--bg2);padding:0.6rem 0.75rem;font-size:0.78rem}
+.ft-header{background:var(--bg3);font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text2)}
+.ft-feature{color:var(--text2)}
+.ft-cn{color:var(--cyan)}
+.ft-en{color:var(--amber)}
+
+/* Examples section */
+.examples-section{max-width:1000px;margin:1.5rem auto 0}
+.ex-title{font-size:0.85rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.75rem}
+.ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;transition:all 0.3s}
+.ex-card:hover{border-color:var(--cyan)}
+.ex-concept{font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:0.5rem}
+.ex-row{display:flex;gap:0.5rem;margin-bottom:0.4rem}
+.ex-lang{min-width:20px;font-size:0.8rem}
+.ex-content{flex:1}
+.ex-word{font-size:1rem;font-weight:600;margin-bottom:0.15rem}
+.ex-breakdown{font-size:0.7rem;color:var(--text3);line-height:1.4}
+.ex-breakdown .sem{color:var(--emerald)}.ex-breakdown .pho{color:var(--amber)}.ex-breakdown .root{color:var(--amber)}.ex-breakdown .affix{color:var(--violet)}
+
+.note{max-width:1000px;margin:1rem auto 0;font-size:0.7rem;color:var(--text3);text-align:center;font-style:italic}
+@media(max-width:700px){.dual-panel{grid-template-columns:1fr}.ft-grid{grid-template-columns:1fr 1fr 1fr;font-size:0.65rem}.ft-cell{padding:0.4rem 0.5rem}}
+</style>
+</head>
+<body>
+<h1>Chinese Radical Composition vs English Morpheme Architecture</h1>
+<p class="subtitle">Two systems for building meaning from sub-word parts: spatial (2D) vs sequential (1D)</p>
+
+<div class="dual-panel">
+  <div class="panel panel-cn">
+    <div class="panel-header">
+      <div class="panel-title">Chinese: 2D Spatial Composition</div>
+    </div>
+    <div class="panel-subtitle">Semantic radical + phonetic component arranged in 2D space</div>
+
+    <div class="arch-demo">
+      <div class="arch-label">Character: 清 (qīng = clear)</div>
+      <div class="cn-char-box">
+        <div class="cn-square">
+          <div class="cn-left"><span>氵</span></div>
+          <div class="cn-right"><span>青</span></div>
+        </div>
+      </div>
+      <div class="cn-char-label">
+        <span style="color:var(--emerald)">Semantic: water</span> &nbsp;|&nbsp;
+        <span style="color:var(--amber)">Phonetic: qīng</span>
+      </div>
+      <div class="cn-char-result">清</div>
+    </div>
+
+    <div class="arch-demo">
+      <div class="arch-label">Character: 想 (xiǎng = to think)</div>
+      <div class="cn-char-box">
+        <div class="cn-square" style="grid-template-columns:1fr;grid-template-rows:1.2fr 1fr">
+          <div class="cn-left" style="border-right:none;border-bottom:2px dashed rgba(6,182,212,0.3)"><span>相</span></div>
+          <div class="cn-right"><span>心</span></div>
+        </div>
+      </div>
+      <div class="cn-char-label">
+        <span style="color:var(--amber)">Phonetic: xiāng (top)</span> &nbsp;|&nbsp;
+        <span style="color:var(--emerald)">Semantic: heart (bottom)</span>
+      </div>
+      <div class="cn-char-result">想</div>
+    </div>
+  </div>
+
+  <div class="panel panel-en">
+    <div class="panel-header">
+      <div class="panel-title">English: 1D Linear Concatenation</div>
+    </div>
+    <div class="panel-subtitle">Prefix + root + suffix arranged in sequence</div>
+
+    <div class="arch-demo">
+      <div class="arch-label">Word: "uncomfortable"</div>
+      <div class="en-word-box">
+        <div class="en-linear">
+          <div class="en-part en-prefix">un-</div>
+          <div class="en-part en-root">comfort</div>
+          <div class="en-part en-suffix">-able</div>
+        </div>
+      </div>
+      <div class="en-word-label">
+        <span style="color:var(--violet)">Prefix: negation</span> &nbsp;|&nbsp;
+        <span style="color:var(--amber)">Root: ease</span> &nbsp;|&nbsp;
+        <span style="color:var(--emerald)">Suffix: capable of</span>
+      </div>
+      <div class="en-word-result">uncomfortable</div>
+    </div>
+
+    <div class="arch-demo">
+      <div class="arch-label">Word: "biology"</div>
+      <div class="en-word-box">
+        <div class="en-linear">
+          <div class="en-part en-root">bio-</div>
+          <div class="en-part en-root" style="border-right:none">-logy</div>
+        </div>
+      </div>
+      <div class="en-word-label">
+        <span style="color:var(--amber)">Greek: life</span> &nbsp;+&nbsp;
+        <span style="color:var(--amber)">Greek: study of</span>
+      </div>
+      <div class="en-word-result">biology</div>
+    </div>
+  </div>
+</div>
+
+<div class="feature-table">
+  <div class="ft-title">Feature-by-Feature Comparison</div>
+  <div class="ft-grid">
+    <div class="ft-cell ft-header">Feature</div>
+    <div class="ft-cell ft-header" style="color:var(--cyan)">Chinese Radicals</div>
+    <div class="ft-cell ft-header" style="color:var(--amber)">English Morphemes</div>
+
+    <div class="ft-cell ft-feature">Composition</div>
+    <div class="ft-cell ft-cn">2D spatial (left-right, top-bottom, enclosure)</div>
+    <div class="ft-cell ft-en">1D linear (prefix + root + suffix)</div>
+
+    <div class="ft-cell ft-feature">Building blocks</div>
+    <div class="ft-cell ft-cn">~201-214 radicals</div>
+    <div class="ft-cell ft-en">~60+ Latin/Greek roots + hundreds of affixes</div>
+
+    <div class="ft-cell ft-feature">Meaning encoding</div>
+    <div class="ft-cell ft-cn">Semantic radical hints at domain (~65% transparent)</div>
+    <div class="ft-cell ft-en">Root carries core meaning ("bio" = life, "graph" = write)</div>
+
+    <div class="ft-cell ft-feature">Sound encoding</div>
+    <div class="ft-cell ft-cn">Phonetic component hints (~25-28% exact match)</div>
+    <div class="ft-cell ft-en">Spelling represents pronunciation (variably)</div>
+
+    <div class="ft-cell ft-feature">Dual encoding</div>
+    <div class="ft-cell ft-cn">Yes: meaning + sound in separate visible parts</div>
+    <div class="ft-cell ft-en">No: morphemes typically carry one or the other</div>
+
+    <div class="ft-cell ft-feature">Coverage</div>
+    <div class="ft-cell ft-cn">~80-90% are phono-semantic compounds</div>
+    <div class="ft-cell ft-en">~60% have Latin/Greek roots; 90%+ in science</div>
+
+    <div class="ft-cell ft-feature">New coinage</div>
+    <div class="ft-cell ft-cn">Rarely creates new characters; combines existing ones (电脑 = electric + brain = computer)</div>
+    <div class="ft-cell ft-en">Actively coins words (blog, podcast, biodegradable)</div>
+
+    <div class="ft-cell ft-feature">Visual/spatial</div>
+    <div class="ft-cell ft-cn">Meaning is visually embedded in form</div>
+    <div class="ft-cell ft-en">No visual meaning — purely sequential symbols</div>
+  </div>
+</div>
+
+<div class="examples-section">
+  <div class="ex-title">Same Concept, Different Architecture</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-concept">"electricity"</div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--cyan)">ZH</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--cyan)">电 (diàn)</div>
+          <div class="ex-breakdown">Traditional 電: <span class="sem">雨 rain</span> + 申 lightning = electricity. Simplified 电 lost the rain radical.</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--amber)">EN</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--amber)">electricity</div>
+          <div class="ex-breakdown">Greek <span class="root">elektron</span> (amber) + Latin <span class="affix">-icity</span> (state/quality). Named for amber's static charge.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-concept">"computer"</div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--cyan)">ZH</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--cyan)">电脑 (diànnǎo)</div>
+          <div class="ex-breakdown"><span class="sem">电 electric</span> + <span class="sem">脑 brain</span> = "electric brain". Two existing characters combined.</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--amber)">EN</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--amber)">computer</div>
+          <div class="ex-breakdown">Latin <span class="root">computare</span> (to reckon) + <span class="affix">-er</span> (agent). Root: com- (together) + putare (to think).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-concept">"telephone"</div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--cyan)">ZH</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--cyan)">电话 (diànhuà)</div>
+          <div class="ex-breakdown"><span class="sem">电 electric</span> + <span class="sem">话 speech</span> = "electric speech". 话 contains <span class="sem">讠(speech radical)</span>.</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--amber)">EN</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--amber)">telephone</div>
+          <div class="ex-breakdown">Greek <span class="root">tele</span> (far) + <span class="root">phone</span> (voice/sound). Two Greek roots compounded.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-concept">"psychology"</div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--cyan)">ZH</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--cyan)">心理学 (xīnlǐxué)</div>
+          <div class="ex-breakdown"><span class="sem">心 heart/mind</span> + <span class="sem">理 principle</span> + <span class="sem">学 study</span> = "heart-principle study".</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-lang" style="color:var(--amber)">EN</div>
+        <div class="ex-content">
+          <div class="ex-word" style="color:var(--amber)">psychology</div>
+          <div class="ex-breakdown">Greek <span class="root">psyche</span> (soul/mind) + <span class="root">logos</span> (study). Two Greek roots compounded.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="note">Both systems use sub-word building blocks to create meaning. The key difference: Chinese encodes meaning and sound in separate visible components arranged in 2D space, while English concatenates morphemes in a 1D string.</p>
+</body>
+</html>

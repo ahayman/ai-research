@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Transparency Spectrum: From Crystal-Clear to Fully Opaque</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4; --muted: #6c757d;
+    --trans: #059669; --trans-bg: #d1fae5;
+    --semi: #e67e22; --semi-bg: #fef3e2;
+    --opaque: #ef4444; --opaque-bg: #fef2f2;
+    --gradient-start: #059669; --gradient-mid: #e67e22; --gradient-end: #ef4444;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --accent: #06b6d4; --muted: #94a3b8;
+      --trans: #34d399; --trans-bg: #064e3b;
+      --semi: #f59e0b; --semi-bg: #451a03;
+      --opaque: #f87171; --opaque-bg: #450a0a;
+      --gradient-start: #34d399; --gradient-mid: #f59e0b; --gradient-end: #f87171;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1000px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.8rem; }
+
+  /* Gradient bar */
+  .gradient-bar {
+    height: 8px; border-radius: 4px; margin-bottom: 0.3rem;
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+  }
+  .gradient-labels {
+    display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .gl-trans { color: var(--trans); }
+  .gl-semi { color: var(--semi); }
+  .gl-opaque { color: var(--opaque); }
+
+  /* Sections */
+  .spectrum-section { margin-bottom: 1.5rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 0.6rem; padding-bottom: 0.3rem; border-bottom: 2px solid;
+  }
+  .section-header.s-trans { border-color: var(--trans); }
+  .section-header.s-semi { border-color: var(--semi); }
+  .section-header.s-opaque { border-color: var(--opaque); }
+  .section-icon { font-size: 1.1rem; }
+  .section-label { font-weight: 700; font-size: 0.9rem; }
+  .s-trans .section-label { color: var(--trans); }
+  .s-semi .section-label { color: var(--semi); }
+  .s-opaque .section-label { color: var(--opaque); }
+  .section-desc { font-size: 0.75rem; color: var(--muted); }
+
+  .examples-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; }
+  .ex-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.6rem 0.7rem; border-left: 4px solid;
+  }
+  .ex-card.e-trans { border-left-color: var(--trans); }
+  .ex-card.e-semi { border-left-color: var(--semi); }
+  .ex-card.e-opaque { border-left-color: var(--opaque); }
+  .ex-zh { font-size: 1.2rem; font-weight: 700; }
+  .ex-pinyin { font-size: 0.72rem; color: var(--muted); }
+  .ex-decomp {
+    font-size: 0.78rem; margin: 0.2rem 0;
+    padding: 0.15rem 0.35rem; background: var(--surface);
+    border-radius: 4px; display: inline-block;
+  }
+  .ex-arrow { color: var(--accent); font-weight: 700; }
+  .ex-meaning { font-size: 0.82rem; font-weight: 600; }
+  .ex-why { font-size: 0.7rem; color: var(--muted); font-style: italic; margin-top: 0.2rem; }
+
+  /* Comparison row */
+  .comparison-box {
+    margin-top: 1.5rem; padding: 0.9rem 1rem; background: var(--bg);
+    border-radius: 8px; border: 1px solid var(--border);
+  }
+  .comparison-title { font-size: 0.82rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .comp-item { padding: 0.5rem; background: var(--surface); border-radius: 6px; border: 1px solid var(--border); }
+  .comp-lang { font-size: 0.72rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; }
+  .comp-text { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+  .comp-example { font-size: 0.8rem; font-weight: 600; margin-top: 0.15rem; }
+
+  figcaption {
+    margin-top: 1rem; padding: 0.8rem 1rem; background: var(--surface);
+    border-radius: 8px; border: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .examples-grid { grid-template-columns: 1fr; }
+    .comparison-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Semantic Transparency Spectrum</div>
+    <div class="subtitle">How "guessable" is a compound's meaning from its parts?</div>
+
+    <div class="gradient-bar"></div>
+    <div class="gradient-labels">
+      <span class="gl-trans">Fully Transparent</span>
+      <span class="gl-semi">Semi-Transparent</span>
+      <span class="gl-opaque">Opaque</span>
+    </div>
+
+    <!-- Transparent -->
+    <div class="spectrum-section">
+      <div class="section-header s-trans">
+        <span class="section-label">Fully Transparent</span>
+        <span class="section-desc">Meaning is directly derivable from components</span>
+      </div>
+      <div class="examples-grid">
+        <div class="ex-card e-trans">
+          <div class="ex-zh">电话</div>
+          <div class="ex-pinyin">diàn-huà</div>
+          <div class="ex-decomp">electric + speech</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> telephone</div>
+        </div>
+        <div class="ex-card e-trans">
+          <div class="ex-zh">火山</div>
+          <div class="ex-pinyin">huǒ-shān</div>
+          <div class="ex-decomp">fire + mountain</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> volcano</div>
+        </div>
+        <div class="ex-card e-trans">
+          <div class="ex-zh">飞机</div>
+          <div class="ex-pinyin">fēi-jī</div>
+          <div class="ex-decomp">fly + machine</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> airplane</div>
+        </div>
+        <div class="ex-card e-trans">
+          <div class="ex-zh">洗衣机</div>
+          <div class="ex-pinyin">xǐ-yī-jī</div>
+          <div class="ex-decomp">wash + clothes + machine</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> washing machine</div>
+        </div>
+        <div class="ex-card e-trans">
+          <div class="ex-zh">大学</div>
+          <div class="ex-pinyin">dà-xué</div>
+          <div class="ex-decomp">big + learning</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> university</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Semi-Transparent -->
+    <div class="spectrum-section">
+      <div class="section-header s-semi">
+        <span class="section-label">Semi-Transparent</span>
+        <span class="section-desc">Meaning requires metaphorical or cultural knowledge to decode</span>
+      </div>
+      <div class="examples-grid">
+        <div class="ex-card e-semi">
+          <div class="ex-zh">小心</div>
+          <div class="ex-pinyin">xiǎo-xīn</div>
+          <div class="ex-decomp">small + heart</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> be careful</div>
+          <div class="ex-why">Metaphor: a "small heart" is a cautious one</div>
+        </div>
+        <div class="ex-card e-semi">
+          <div class="ex-zh">马路</div>
+          <div class="ex-pinyin">mǎ-lù</div>
+          <div class="ex-decomp">horse + road</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> main road</div>
+          <div class="ex-why">Historical: once a road for horses</div>
+        </div>
+        <div class="ex-card e-semi">
+          <div class="ex-zh">吃醋</div>
+          <div class="ex-pinyin">chī-cù</div>
+          <div class="ex-decomp">eat + vinegar</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> be jealous</div>
+          <div class="ex-why">Cultural idiom from a Tang dynasty anecdote</div>
+        </div>
+        <div class="ex-card e-semi">
+          <div class="ex-zh">小说</div>
+          <div class="ex-pinyin">xiǎo-shuō</div>
+          <div class="ex-decomp">small + talk</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> novel/fiction</div>
+          <div class="ex-why">Classical: "minor narratives" vs. serious discourse</div>
+        </div>
+        <div class="ex-card e-semi">
+          <div class="ex-zh">风流</div>
+          <div class="ex-pinyin">fēng-liú</div>
+          <div class="ex-decomp">wind + flow</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> romantic / talented</div>
+          <div class="ex-why">Metaphor: elegant like wind and water</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opaque -->
+    <div class="spectrum-section">
+      <div class="section-header s-opaque">
+        <span class="section-label">Opaque</span>
+        <span class="section-desc">Meaning cannot be predicted from components — must be memorized</span>
+      </div>
+      <div class="examples-grid">
+        <div class="ex-card e-opaque">
+          <div class="ex-zh">东西</div>
+          <div class="ex-pinyin">dōng-xī</div>
+          <div class="ex-decomp">east + west</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> thing/stuff</div>
+          <div class="ex-why">Etymology debated; completely opaque</div>
+        </div>
+        <div class="ex-card e-opaque">
+          <div class="ex-zh">马虎</div>
+          <div class="ex-pinyin">mǎ-hǔ</div>
+          <div class="ex-decomp">horse + tiger</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> careless</div>
+          <div class="ex-why">Folk etymology involves a faulty painting</div>
+        </div>
+        <div class="ex-card e-opaque">
+          <div class="ex-zh">尴尬</div>
+          <div class="ex-pinyin">gān-gà</div>
+          <div class="ex-decomp">bound + bound</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> embarrassed</div>
+          <div class="ex-why">Neither morpheme has independent meaning</div>
+        </div>
+        <div class="ex-card e-opaque">
+          <div class="ex-zh">蝴蝶</div>
+          <div class="ex-pinyin">hú-dié</div>
+          <div class="ex-decomp">bound + bound</div>
+          <div class="ex-meaning"><span class="ex-arrow">&rarr;</span> butterfly</div>
+          <div class="ex-why">Neither morpheme used independently</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison -->
+    <div class="comparison-box">
+      <div class="comparison-title">Cross-Linguistic Transparency Comparison</div>
+      <div class="comparison-grid">
+        <div class="comp-item">
+          <div class="comp-lang">Mandarin</div>
+          <div class="comp-text">~60-70% of compounds have transparent or semi-transparent meanings</div>
+          <div class="comp-example">洗衣机 = wash-clothes-machine</div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-lang">English</div>
+          <div class="comp-text">Many common words have opaque Latin/Greek roots invisible to speakers</div>
+          <div class="comp-example">"television" = far-vision (Greek/Latin)</div>
+        </div>
+        <div class="comp-item">
+          <div class="comp-lang">Classical Chinese</div>
+          <div class="comp-text">Single-character words were transparent per-character but heavily context-dependent</div>
+          <div class="comp-example">目 mù = eye (single morpheme)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>The semantic transparency spectrum.</strong> Mandarin compounds range from fully transparent (meaning is obvious from parts) to fully opaque (must be memorized as a unit). Research suggests that 60-70% of common compounds are at least partially transparent, giving Mandarin an advantage in vocabulary learnability compared to English, where Latinate and Greek roots are often opaque to the average speaker.
+  </figcaption>
+</figure>
+</body>
+</html>

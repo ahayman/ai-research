@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinyin &amp; Romanization: The Parallel Writing Layer | Contemporary Mandarin: Three-Way Comparison</title>
+<meta name="description" content="Contemporary Mandarin uniquely operates with two parallel writing systems: a logographic character layer and an alphabetic Pinyin layer. This dual-script architecture enables digital input for a billion users but comes with cognitive costs.">
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-primary: #06b6d4;
+  --color-primary-light: #67e8f9;
+  --color-primary-dark: #0891b2;
+  --color-primary-bg: #0c2d3a;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fcd34d;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-bg-sidebar: #1e293b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-heading: #f1f5f9;
+  --color-link: #06b6d4;
+  --color-link-hover: #67e8f9;
+  --color-code-bg: #1e293b;
+  --color-table-stripe: #1e293b;
+  --color-table-header: #334155;
+  --color-takeaway-border: #06b6d4;
+  --color-takeaway-bg: #0c2d3a;
+  --color-diagram-bg: #1e293b;
+  --color-diagram-border: #334155;
+  --color-tooltip-bg: #f1f5f9;
+  --color-tooltip-text: #1e293b;
+  --color-scrollbar: #475569;
+  --color-scrollbar-hover: #64748b;
+  --color-success: #34d399;
+  --color-success-bg: #064e3b;
+  --color-warning: #fbbf24;
+  --color-warning-bg: #451a03;
+  --color-danger: #f87171;
+  --color-danger-bg: #450a0a;
+  --color-info: #60a5fa;
+  --color-info-bg: #1e3a5f;
+  --color-rose: #f43f5e;
+  --color-amber: #f59e0b;
+  --color-emerald: #10b981;
+  --color-purple: #a78bfa;
+  --sidebar-width: 280px;
+  --content-max-width: 920px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-chinese: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --line-height: 1.7;
+  --transition: 0.2s ease;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+.sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+.sidebar-title { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.sidebar-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 0.25rem; }
+
+.sidebar-back {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  transition: background var(--transition);
+}
+.sidebar-back:hover { background: var(--color-bg); text-decoration: none; }
+
+.sidebar-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; }
+.sidebar-nav-section {
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.65rem; font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+.sidebar-link {
+  display: block;
+  padding: 0.4rem 1.25rem 0.4rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.4;
+}
+.sidebar-link:hover { color: var(--color-primary); background: var(--color-bg); text-decoration: none; }
+.sidebar-link.active { color: var(--color-primary); border-left-color: var(--color-primary); background: var(--color-bg); font-weight: 600; }
+.sidebar-link.sub { padding-left: 2.25rem; font-size: 0.78rem; }
+
+/* ===== Mobile Menu ===== */
+.menu-toggle {
+  display: none;
+  position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  background: var(--color-primary); color: #fff;
+  border: none; border-radius: 8px;
+  width: 40px; height: 40px;
+  font-size: 1.2rem; cursor: pointer;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== Main Content ===== */
+.main { flex: 1; margin-left: var(--sidebar-width); min-width: 0; }
+.content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--color-heading);
+  line-height: 1.2; margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+h1 .subtitle {
+  display: block; font-size: 1rem; font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem; letter-spacing: 0;
+}
+h2 {
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--color-heading);
+  margin-top: 3rem; margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  line-height: 1.3;
+}
+h3 {
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 2rem; margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+h4 {
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 1.5rem; margin-bottom: 0.5rem;
+}
+
+p { margin-bottom: 1rem; color: var(--color-text); }
+a { color: var(--color-link); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-link-hover); text-decoration: underline; }
+ul, ol { margin: 0 0 1rem 1.5rem; color: var(--color-text); }
+li { margin-bottom: 0.35rem; }
+strong { color: var(--color-heading); }
+em { font-style: italic; }
+
+blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding: 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  background: var(--color-primary-bg);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.chinese { font-family: var(--font-chinese); font-size: 1.1em; }
+.ipa { font-family: 'Gentium Plus', 'Noto Sans', 'DejaVu Sans', serif; }
+.pinyin { font-style: italic; color: var(--color-primary); }
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th {
+  background: var(--color-table-header);
+  font-weight: 600; text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-heading);
+  border-bottom: 2px solid var(--color-border);
+}
+td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--color-table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+/* ===== Diagrams ===== */
+.diagram-container {
+  background: var(--color-diagram-bg);
+  border: 1px solid var(--color-diagram-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.diagram-container iframe { width: 100%; border: none; border-radius: 6px; }
+.diagram-caption {
+  text-align: center;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  padding: 0 1rem;
+}
+
+/* ===== Callouts ===== */
+.callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-left: 4px solid;
+  font-size: 0.9rem;
+}
+.callout-title {
+  font-weight: 700; font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+.callout-info { border-color: var(--color-info); background: var(--color-info-bg); }
+.callout-info .callout-title { color: var(--color-info); }
+.callout-warning { border-color: var(--color-warning); background: var(--color-warning-bg); }
+.callout-warning .callout-title { color: var(--color-warning); }
+.callout-success { border-color: var(--color-success); background: var(--color-success-bg); }
+.callout-success .callout-title { color: var(--color-success); }
+.callout-danger { border-color: var(--color-danger); background: var(--color-danger-bg); }
+.callout-danger .callout-title { color: var(--color-danger); }
+
+/* ===== Takeaway Boxes ===== */
+.takeaway {
+  background: var(--color-takeaway-bg);
+  border: 1px solid var(--color-takeaway-border);
+  border-left: 4px solid var(--color-takeaway-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+.takeaway-title {
+  font-weight: 700; font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Glossary Tooltips ===== */
+.glossary-term {
+  border-bottom: 1px dashed var(--color-primary);
+  cursor: help;
+  position: relative;
+  color: var(--color-primary);
+}
+.glossary-term:hover .glossary-def,
+.glossary-term:focus .glossary-def { display: block; }
+.glossary-def {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  width: 280px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: 400;
+  pointer-events: none;
+  font-style: normal;
+}
+.glossary-def::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-tooltip-bg);
+}
+
+/* ===== Category Navigation ===== */
+.category-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border);
+  gap: 1rem;
+}
+.category-nav a {
+  padding: 0.75rem 1.25rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  max-width: 48%;
+}
+.category-nav a:hover { border-color: var(--color-primary); background: var(--color-primary-bg); text-decoration: none; }
+.prev-category { text-align: left; }
+.next-category { text-align: right; margin-left: auto; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none; border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: none;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 90;
+  transition: all var(--transition);
+}
+.back-to-top:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+.back-to-top.visible { display: flex; }
+
+/* ===== Series Badge ===== */
+.series-badge {
+  display: inline-block;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-primary);
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .main { margin-left: 0; }
+  .content { padding: 2rem 1.25rem 3rem; padding-top: 4rem; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .category-nav { flex-direction: column; }
+  .category-nav a { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .content { padding: 1.5rem 1rem 2rem; padding-top: 4rem; }
+  .table-wrapper { font-size: 0.8rem; }
+  th, td { padding: 0.5rem 0.6rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .sidebar, .menu-toggle, .back-to-top { display: none !important; }
+  .main { margin-left: 0 !important; }
+  .content { max-width: 100%; padding: 0; }
+  body { font-size: 11pt; color: #000; background: #fff; }
+  h1, h2, h3, h4, strong { color: #000; }
+  p, li, td { color: #222; }
+  a { color: #000; text-decoration: underline; }
+  .diagram-container { break-inside: avoid; border: 1px solid #ccc; }
+  .callout, .takeaway { break-inside: avoid; }
+  .category-nav { break-before: page; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<div class="layout">
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">Pinyin &amp; Romanization</div>
+    <div class="sidebar-subtitle">Contemporary Mandarin: Three-Way Comparison</div>
+  </div>
+
+  <a href="../index.html" class="sidebar-back">&larr; Back to Deep Dive Hub</a>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">Core Concept</div>
+    <a href="#overview" class="sidebar-link">The Dual-Script Architecture</a>
+
+    <div class="sidebar-nav-section">Pinyin Structure</div>
+    <a href="#syllable" class="sidebar-link">Syllable Architecture</a>
+    <a href="#initials" class="sidebar-link sub">21 Initials</a>
+    <a href="#finals" class="sidebar-link sub">36 Finals</a>
+    <a href="#tones" class="sidebar-link sub">Tone Diacritics</a>
+    <a href="#complement" class="sidebar-link sub">Complementary Distribution</a>
+
+    <div class="sidebar-nav-section">Comparisons</div>
+    <a href="#bopomofo" class="sidebar-link">Pinyin vs. Bopomofo</a>
+    <a href="#history" class="sidebar-link">Romanization History</a>
+    <a href="#traps" class="sidebar-link">Traps for English Speakers</a>
+
+    <div class="sidebar-nav-section">Digital Impact</div>
+    <a href="#ime" class="sidebar-link">The IME Revolution</a>
+    <a href="#amnesia" class="sidebar-link">Character Amnesia</a>
+
+    <div class="sidebar-nav-section">Education &amp; Comparison</div>
+    <a href="#literacy" class="sidebar-link">Literacy Scaffolding</a>
+    <a href="#three-way" class="sidebar-link">Three-Way Architecture</a>
+
+    <div class="sidebar-nav-section">Reference</div>
+    <a href="#takeaways" class="sidebar-link">Key Takeaways</a>
+    <a href="#glossary" class="sidebar-link">Glossary</a>
+  </nav>
+</aside>
+
+<!-- ===== Main Content ===== -->
+<main class="main">
+<div class="content">
+
+<a href="../index.html" style="display:inline-block;margin-bottom:1.5rem;font-size:0.85rem;font-weight:600;color:var(--color-primary);">&larr; Back to Three-Way Comparison Hub</a>
+
+<div class="series-badge">Category 4 &mdash; Contemporary Mandarin: Three-Way Structural Comparison</div>
+
+<h1>Pinyin &amp; Romanization
+  <span class="subtitle">The Parallel Writing Layer That Changed How a Billion People Type</span>
+</h1>
+
+<p style="font-size:1.05rem;color:var(--color-text-secondary);margin-bottom:2rem;">Contemporary Mandarin is the only major world language that routinely operates with <em>two parallel writing systems simultaneously</em> &mdash; a logographic character layer and an alphabetic Pinyin layer. This dual-script architecture has no equivalent in English and differs structurally from Taiwan's Bopomofo approach. It is arguably the most consequential writing-system innovation of the 20th century.</p>
+
+<div class="takeaway">
+<div class="takeaway-title">Key Takeaways</div>
+<ul style="margin-bottom:0;">
+<li>Pinyin uses Latin letters but assigns them values based on Mandarin phonology, not English &mdash; many letters sound nothing like their English equivalents</li>
+<li>The consonant pairs b/p, d/t, g/k represent an <em>aspiration</em> contrast (puff of air), not a voicing contrast as in English &mdash; this is the single most important phonological trap</li>
+<li>Pinyin and Bopomofo encode the <em>exact same</em> sounds &mdash; the choice between them is political and practical, not linguistic</li>
+<li>Over 1 billion people use Pinyin IME daily, making it the world's most-used romanization system &mdash; even though the Pinyin itself is never visible in the final output</li>
+<li>The dual-layer architecture enables efficient digital input but contributes to character amnesia (&#25552;&#31508;&#24536;&#23383;) &mdash; 83% of adults report trouble writing characters by hand</li>
+</ul>
+</div>
+
+
+<!-- ==================== OVERVIEW ==================== -->
+<h2 id="overview">1. The Core Architecture: Two Scripts, One Language</h2>
+
+<p>Hanyu Pinyin (<span class="chinese">&#27721;&#35821;&#25340;&#38899;</span>, literally "Han language spell-sound") is the official romanization system of the People's Republic of China. Adopted on 11 February 1958 at the Fifth Session of the 1st National People's Congress, it was developed by a committee led by <span class="glossary-term">Zhou Youguang<span class="glossary-def">&#21608;&#26377;&#20809; (1906&ndash;2017), economist and linguist often called the "father of Pinyin." Led the committee that designed the system. Died at age 111.</span></span> (<span class="chinese">&#21608;&#26377;&#20809;</span>, 1906&ndash;2017), often called the "father of Pinyin."</p>
+
+<p>What makes Pinyin structurally unique is that it creates a <strong>dual-script architecture</strong>: Contemporary Mandarin operates with two parallel writing systems &mdash; the logographic character layer and the alphabetic Pinyin layer &mdash; each serving distinct functions. Traditional Chinese writing in Taiwan uses a non-Latin phonetic system (Bopomofo) instead, while English has a single writing system where the alphabet directly encodes both pronunciation and meaning.</p>
+
+<p>Pinyin is now an international standard (ISO 7098, first adopted 1982, revised 2015) and was adopted by the United Nations in 1986 for romanizing Chinese geographical and personal names. It is the primary input method used by over a billion people for smartphone and computer text entry via <span class="glossary-term">Input Method Editors<span class="glossary-def">IME (&#36755;&#20837;&#27861;): Software that converts Pinyin keystrokes into Chinese characters. The user types phonetic input and selects from a ranked candidate list. Major platforms include Sogou Pinyin, Microsoft Pinyin, and Apple's native IME.</span></span> (IMEs), making it arguably the most-used romanization system in human history.</p>
+
+<div class="callout callout-info">
+<div class="callout-title">What Pinyin Is Not</div>
+<p style="margin-bottom:0;">Pinyin is not "Chinese written in English letters." It is a precisely designed phonetic notation system that exploits Mandarin's phonological structure to assign Latin letters to Chinese sounds. Many letter-sound correspondences differ dramatically from English. Nor was Pinyin designed to replace characters &mdash; the 1958 adoption explicitly positioned it as an auxiliary tool for teaching pronunciation, promoting Putonghua, and facilitating international communication.</p>
+</div>
+
+
+<!-- ==================== SYLLABLE ARCHITECTURE ==================== -->
+<h2 id="syllable">2. The Architecture of a Pinyin Syllable</h2>
+
+<p>Every Mandarin syllable follows a fixed template:</p>
+
+<blockquote><strong>(Initial) + (Medial) + Nucleus + (Coda) + Tone</strong></blockquote>
+
+<p>For example: <span class="pinyin">zhu&#257;ng</span> = zh (initial) + u (medial) + a (nucleus) + ng (coda) + Tone 1. The initial is optional (zero-initial syllables exist: <span class="pinyin">&#257;</span>, <span class="pinyin">&#233;r</span>). The coda can only be -n, -ng, or -r (in erhua). This generates approximately 410 distinct syllables without tones, expanding to roughly 1,300 with tones &mdash; a remarkably compact inventory compared to English's ~15,000+ possible syllables.</p>
+
+<h3 id="initials">2.1 The 21 Initials: Aspiration, Not Voicing</h3>
+
+<p>The 21 initials are organized into six groups by place of articulation. The single most important phonological fact for English speakers: the pairs b/p, d/t, g/k, z/c, zh/ch, and j/q represent an <strong>aspirated vs. unaspirated</strong> contrast, NOT a voiced vs. voiceless contrast as in English.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-1-pinyin-initial-final-chart.html" style="height:750px;" loading="lazy" title="Complete Pinyin Initial Chart with Aspiration Pairs"></iframe>
+  <div class="diagram-caption"><strong>Figure 1</strong> &mdash; The 21 Pinyin initials organized by place of articulation, with aspirated/unaspirated pairs highlighted. The three sibilant series (dental, retroflex, palatal) are in complementary distribution.</div>
+</div>
+
+<div class="callout callout-warning">
+<div class="callout-title">Critical Distinction</div>
+<p style="margin-bottom:0;">Pinyin <strong>"b"</strong> is NOT English "b." Pinyin "b" = <span class="ipa">[p]</span> (voiceless unaspirated, like the "p" in "spy" after the "s"). Pinyin <strong>"p"</strong> = <span class="ipa">[p&#688;]</span> (voiceless aspirated, like the "p" in "pie" with a puff of air). Neither Mandarin sound involves voicing. Hold a piece of paper before your mouth: "p" makes it flutter, "b" does not.</p>
+</div>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Group</th><th>Initials</th><th>IPA</th><th>Key Feature</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Labials</strong></td><td>b, p, m, f</td><td><span class="ipa">[p, p&#688;, m, f]</span></td><td>Lips together</td></tr>
+<tr><td><strong>Alveolars</strong></td><td>d, t, n, l</td><td><span class="ipa">[t, t&#688;, n, l]</span></td><td>Tongue tip to ridge</td></tr>
+<tr><td><strong>Velars</strong></td><td>g, k, h</td><td><span class="ipa">[k, k&#688;, x]</span></td><td>Back of mouth</td></tr>
+<tr><td><strong>Dental sibilants</strong></td><td>z, c, s</td><td><span class="ipa">[ts, ts&#688;, s]</span></td><td>Tongue tip to teeth</td></tr>
+<tr><td><strong>Retroflexes</strong></td><td>zh, ch, sh, r</td><td><span class="ipa">[t&#642;, t&#642;&#688;, &#642;, &#635;]</span></td><td>Tongue curled back</td></tr>
+<tr><td><strong>Palatals</strong></td><td>j, q, x</td><td><span class="ipa">[t&#597;, t&#597;&#688;, &#597;]</span></td><td>Tongue blade to hard palate</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="finals">2.2 The 36 Finals</h3>
+
+<p>The finals comprise everything after the initial: a possible medial glide, the vowel nucleus, and an optional nasal coda. The standard count is 36 finals organized into three categories:</p>
+
+<ul>
+<li><strong>6 simple finals:</strong> a, o, e, i, u, &uuml;</li>
+<li><strong>13 compound finals:</strong> ai, ei, ao, ou, ia, ie, ua, uo, &uuml;e, iao, iou, uai, uei</li>
+<li><strong>17 nasal finals:</strong> an, en, in, un, &uuml;n, ian, uan, &uuml;an, uen, ang, eng, ing, ong, iang, uang, ueng, iong</li>
+</ul>
+
+<p>A special spelling note: some finals are written differently when combined with initials vs. standing alone. The final <em>iou</em> becomes <em>iu</em>, <em>uei</em> becomes <em>ui</em>, and <em>uen</em> becomes <em>un</em>. The &uuml; loses its dots after j, q, x (where it cannot be confused with plain u) but keeps them after n and l (where the distinction matters: <span class="pinyin">n&uuml;</span> "female" vs. <span class="pinyin">nu</span> "effort").</p>
+
+<h3 id="tones">2.3 Tone Diacritics: The Vertical Dimension</h3>
+
+<p>Mandarin has four lexical tones plus a neutral tone, marked by diacritics placed above vowels:</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tone</th><th>Mark</th><th>Name</th><th>Contour</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>1</strong></td><td style="font-size:1.3rem;color:#f43f5e;">&#257;</td><td>High level (<span class="chinese">&#38452;&#24179;</span>)</td><td>Sustained high pitch (55)</td><td><span class="chinese">&#22920;</span> m&#257; "mother"</td></tr>
+<tr><td><strong>2</strong></td><td style="font-size:1.3rem;color:#f59e0b;">&#225;</td><td>Rising (<span class="chinese">&#38451;&#24179;</span>)</td><td>Mid to high (35)</td><td><span class="chinese">&#40635;</span> m&#225; "hemp"</td></tr>
+<tr><td><strong>3</strong></td><td style="font-size:1.3rem;color:#06b6d4;">&#462;</td><td>Dipping (<span class="chinese">&#19978;&#22768;</span>)</td><td>Falls then rises (214)</td><td><span class="chinese">&#39532;</span> m&#462; "horse"</td></tr>
+<tr><td><strong>4</strong></td><td style="font-size:1.3rem;color:#a78bfa;">&#224;</td><td>Falling (<span class="chinese">&#21435;&#22768;</span>)</td><td>Sharp drop (51)</td><td><span class="chinese">&#39554;</span> m&#224; "scold"</td></tr>
+<tr><td><strong>5</strong></td><td style="font-size:1.3rem;color:#64748b;">a</td><td>Neutral (<span class="chinese">&#36731;&#22768;</span>)</td><td>Short, unstressed</td><td><span class="chinese">&#21527;</span> ma (question particle)</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>Tone mark placement follows a priority rule:</strong> a &gt; o &gt; e &gt; i &gt; u &gt; &uuml; (the mark goes on the highest-priority vowel present). In "iu" and "ui" combinations, the mark goes on the second vowel. When a mark is placed on "i," its dot is removed.</p>
+
+<h3 id="complement">2.4 Complementary Distribution: Why the Letter Choices Work</h3>
+
+<p>A key design insight of Pinyin exploits <span class="glossary-term">complementary distribution<span class="glossary-def">A phonological pattern where two sounds never occur in the same vowel environment. In Mandarin, the palatal series (j, q, x) occurs ONLY before high front vowels (i, &uuml;), while dental and retroflex series NEVER occur before them. This means the sounds can never be confused.</span></span> among the three sibilant series:</p>
+
+<ul>
+<li><strong>Palatals</strong> (j, q, x) occur <em>only</em> before high front vowels (i, &uuml;)</li>
+<li><strong>Dental sibilants</strong> (z, c, s) and <strong>retroflexes</strong> (zh, ch, sh) <em>never</em> occur before i or &uuml;</li>
+</ul>
+
+<p>This means Pinyin can use otherwise-puzzling letter assignments like "q" for <span class="ipa">[t&#597;&#688;]</span> and "x" for <span class="ipa">[&#597;]</span> without any ambiguity &mdash; the following vowel always disambiguates. This is one of Pinyin's most elegant design features, though it is exactly what makes the system confusing for English speakers who expect q = /kw/ and x = /ks/.</p>
+
+
+<!-- ==================== BOPOMOFO ==================== -->
+<h2 id="bopomofo">3. Pinyin vs. Bopomofo: Two Solutions, One Sound System</h2>
+
+<p>Both mainland China and Taiwan face the same structural challenge: Chinese characters do not transparently encode pronunciation. Both developed phonetic notation systems to solve this &mdash; but made fundamentally different design choices.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-2-pinyin-vs-bopomofo.html" style="height:900px;" loading="lazy" title="Pinyin vs. Bopomofo Complete Mapping"></iframe>
+  <div class="diagram-caption"><strong>Figure 2</strong> &mdash; Complete parallel mapping between Pinyin and Bopomofo. Both systems encode the identical Mandarin sound inventory. The difference is purely notational: Latin letters vs. purpose-built symbols derived from ancient Chinese characters.</div>
+</div>
+
+<p><strong>Bopomofo</strong> (<span class="chinese">&#12549;&#12550;&#12551;&#12552;</span>, also called Zhuyin Fuhao <span class="chinese">&#27880;&#38899;&#31526;&#21495;</span>) was created in 1913 by the Republic of China government. It consists of 37 unique symbols derived from simplified forms of ancient Chinese characters (primarily seal script), designed by Zhang Binglin (<span class="chinese">&#31456;&#22826;&#28814;</span>). The name comes from its first four symbols: &#12549; (b), &#12550; (p), &#12551; (m), &#12552; (f).</p>
+
+<h3>The Design Trade-off</h3>
+
+<p>This represents a genuine engineering trade-off:</p>
+
+<ul>
+<li><strong>Pinyin (Latin letters)</strong>: High global accessibility &mdash; leverages the world's most widely known alphabet. But high L1 interference &mdash; English speakers mispronounce c, q, x, zh, and r because the Latin letters trigger English pronunciation expectations.</li>
+<li><strong>Bopomofo (unique symbols)</strong>: Zero L1 interference &mdash; the symbols have no prior associations, so learners develop "clean" pronunciation without English contamination. But low international accessibility &mdash; requires learning 37 new symbols with no pre-existing familiarity.</li>
+</ul>
+
+<p>Taiwanese teachers frequently report that students who learn Zhuyin first develop cleaner pronunciation, particularly on the retroflex sounds (&#12563; &#12564; &#12565; &#12566;) and palatal sounds (&#12560; &#12561; &#12562;) that have no direct English equivalent. This is the phonetic purity advantage of non-Latin notation.</p>
+
+<div class="callout callout-info">
+<div class="callout-title">The Political Dimension</div>
+<p style="margin-bottom:0;">The split between Pinyin and Bopomofo is largely political. After the PRC was established in 1949, Zhou Enlai's committee spent three years attempting non-Latin alternatives before concluding that the Latin alphabet was most practical for international communication. Taiwan, having established Bopomofo since 1918, retained it. Taiwan adopted Hanyu Pinyin for romanized place-name signage in 2009, but Bopomofo remains the primary system for education and keyboard input.</p>
+</div>
+
+
+<!-- ==================== ROMANIZATION HISTORY ==================== -->
+<h2 id="history">4. 150 Years of Romanization: From Wade-Giles to ISO Standard</h2>
+
+<p>Pinyin did not emerge in a vacuum. It was preceded by a century of romanization attempts, each reflecting different political contexts and linguistic philosophies.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-3-romanization-timeline.html" style="height:1050px;" loading="lazy" title="Romanization Systems Timeline (1859-2009)"></iframe>
+  <div class="diagram-caption"><strong>Figure 3</strong> &mdash; 150 years of Chinese romanization systems. The same word "Beijing" (&#21271;&#20140;) looks dramatically different in each system, illustrating why standardization was essential.</div>
+</div>
+
+<h3>Wade-Giles (1859/1892)</h3>
+<p>Thomas Wade created the first major English-language romanization in his 1859 Mandarin textbook; Herbert Giles completed it in his 1892 dictionary. Wade-Giles used apostrophes to mark aspiration (p'/p, t'/t, k'/k) and was the dominant system in the English-speaking world for nearly a century. Legacy names survive: "Peking" (Beijing), "Taoism" (Daoism), "Mao Tse-tung" (Mao Zedong), "Chiang Kai-shek" (Jiang Jieshi).</p>
+
+<h3>Postal Romanization (1906)</h3>
+<p>The Qing dynasty postal service standardized Chinese place names for international mail, creating a hybrid system mixing Wade-Giles, local dialect pronunciations, and convention. This produced names like "Peking" (from a Nanjing dialect form), "Canton" (Guangzhou), and "Amoy" (Xiamen) &mdash; forms that persist in English despite being phonologically inaccurate for Mandarin.</p>
+
+<h3>Gwoyeu Romatzyh (1928)</h3>
+<p>The first official government romanization, created by the linguist Y.R. Chao (<span class="chinese">&#36213;&#20803;&#20219;</span>) and others. Its unique innovation: encoding tones through spelling variation rather than diacritics (e.g., "ma, ma, maa, mah" for tones 1&ndash;4). Intellectually elegant but too complex for mass adoption. Pinyin's designers drew heavily on GR's letter assignments while simplifying the tone-marking system.</p>
+
+<h3>Why Pinyin Won</h3>
+<p>Pinyin succeeded where earlier systems failed because it struck a balance between internal consistency, learnability, and international compatibility. Diacritics for tones kept the base spelling simple. The exploitation of complementary distribution allowed creative letter assignments that work perfectly within the system's logic. And the PRC's political commitment to the system &mdash; making it mandatory in education and eventually achieving ISO and UN standardization &mdash; gave it the institutional backing that earlier systems lacked.</p>
+
+
+<!-- ==================== TRAPS ==================== -->
+<h2 id="traps">5. Pinyin Traps for English Speakers</h2>
+
+<p>Because Pinyin uses Latin letters, English speakers inevitably project English pronunciation habits onto them. This creates a set of predictable and well-documented pronunciation traps.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-5-pinyin-traps-english-speakers.html" style="height:1100px;" loading="lazy" title="Pinyin Letter Traps for English Speakers"></iframe>
+  <div class="diagram-caption"><strong>Figure 4</strong> &mdash; The "safe zone" (letters that roughly match English) vs. the "danger zone" (consonants and vowels where English instincts will mislead you). The aspiration trap applies to six consonant pairs.</div>
+</div>
+
+<h3>The Most Dangerous Letters</h3>
+
+<p>These Pinyin letters sound nothing like their English equivalents:</p>
+
+<ul>
+<li><strong>c</strong> = <span class="ipa">[ts&#688;]</span> &mdash; NOT /k/ or /s/, but "ts" as in ca<u>ts</u>, with a puff of air</li>
+<li><strong>q</strong> = <span class="ipa">[t&#597;&#688;]</span> &mdash; NOT /kw/ as in "queen," but "ch" as in <u>ch</u>eese with the tongue forward</li>
+<li><strong>x</strong> = <span class="ipa">[&#597;]</span> &mdash; NOT /ks/ as in "fox," but "sh" as in <u>sh</u>e with the tongue forward</li>
+<li><strong>zh</strong> = <span class="ipa">[t&#642;]</span> &mdash; NOT the voiced "zh" in "measure," but an unvoiced sound with the tongue curled back</li>
+<li><strong>r</strong> = <span class="ipa">[&#635;]</span> &mdash; NOT English /r/ as in "red," but a retroflex approximant with the tongue curled back</li>
+<li><strong>e</strong> = <span class="ipa">[&#612;]</span> &mdash; NOT /i:/ as in "be" or /&#603;/ as in "bed," but a back unrounded vowel</li>
+<li><strong>&uuml;</strong> = <span class="ipa">[y]</span> &mdash; NOT /u:/ as in "blue," but the French "u" or German "&uuml;" (round lips, say "ee")</li>
+</ul>
+
+<div class="callout callout-danger">
+<div class="callout-title">The Aspiration Trap (Most Important)</div>
+<p style="margin-bottom:0;">Six consonant pairs look like voiced/voiceless (as in English b/p, d/t, g/k) but are actually <em>unaspirated/aspirated</em>. Pinyin "b" = <span class="ipa">[p]</span>, Pinyin "p" = <span class="ipa">[p&#688;]</span>. Both are voiceless. The difference is the puff of air, not vocal cord vibration. This applies to: b/p, d/t, g/k, j/q, z/c, zh/ch.</p>
+</div>
+
+
+<!-- ==================== IME ==================== -->
+<h2 id="ime">6. The IME Revolution: How a Billion People Type</h2>
+
+<p>The most profound practical impact of Pinyin in the 21st century is its role as the dominant input method for typing Chinese on digital devices. The Pinyin IME has fundamentally transformed how Chinese is written.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-4-ime-input-flowchart.html" style="height:1050px;" loading="lazy" title="Pinyin IME Input Process Flowchart"></iframe>
+  <div class="diagram-caption"><strong>Figure 5</strong> &mdash; The Pinyin IME pipeline: phonetic input on a QWERTY keyboard is converted to characters through AI-powered candidate selection. Pinyin is the invisible bridge between thought and written character.</div>
+</div>
+
+<h3>The IME Process</h3>
+
+<ol>
+<li><strong>User types Pinyin</strong> on a standard QWERTY keyboard (tones usually omitted in daily use)</li>
+<li><strong>IME segments</strong> the raw letter string into possible syllable sequences</li>
+<li><strong>Candidate characters</strong> are generated and ranked by frequency, context, user history, and AI prediction</li>
+<li><strong>User selects</strong> the correct character(s) from the candidate list (or accepts the top prediction)</li>
+<li><strong>Characters replace</strong> the Pinyin input &mdash; only characters appear in the final text</li>
+</ol>
+
+<p>This means Pinyin is the <em>invisible intermediary</em> between the user's thought and the written character. In daily use, most Chinese digital communication passes through Pinyin even though the final output contains no Pinyin at all.</p>
+
+<h3>Modern IME Features</h3>
+
+<p>Contemporary Pinyin IME systems (Sogou Pinyin, launched 2006, is the market leader) include:</p>
+
+<ul>
+<li><strong>Predictive text:</strong> AI-powered prediction of entire phrases and sentences based on context</li>
+<li><strong>Abbreviation input:</strong> Typing just the first letter of each syllable for common phrases (e.g., "zg" produces <span class="chinese">&#20013;&#22269;</span>, "bjdx" produces <span class="chinese">&#21271;&#20140;&#22823;&#23398;</span>)</li>
+<li><strong>Cloud dictionaries:</strong> Continuously updated vocabulary including trending slang and neologisms</li>
+<li><strong>Fuzzy matching:</strong> Tolerance for common typing errors and regional pronunciation variations</li>
+<li><strong>Contextual ranking:</strong> The same Pinyin input produces different character candidates depending on surrounding text</li>
+</ul>
+
+<p>Skilled Pinyin IME users typically achieve 60&ndash;120 characters per minute. With AI-assisted prediction (where the system completes entire phrases from partial input), effective speeds can be considerably higher.</p>
+
+<div class="callout callout-info">
+<div class="callout-title">The Homophone Problem</div>
+<p style="margin-bottom:0;">Why can't Pinyin simply replace characters? Consider: the syllable "sh&igrave;" without tones maps to over 80 different characters (&#26159; "is," &#21313; "ten," &#26102; "time," &#20107; "matter," &#30707; "stone," &#24066; "city," and dozens more). Tones reduce this somewhat, but even with tones, massive homophony remains. Characters are not an optional decoration &mdash; they are structurally necessary for disambiguation. This is why Pinyin serves as an <em>input</em> method rather than a replacement writing system.</p>
+</div>
+
+
+<!-- ==================== CHARACTER AMNESIA ==================== -->
+<h2 id="amnesia">7. Character Amnesia: The Cognitive Cost</h2>
+
+<p>The dual-script architecture that makes Pinyin IME so powerful comes with a documented cognitive cost: <strong>character amnesia</strong> (<span class="chinese">&#25552;&#31508;&#24536;&#23383;</span>, <span class="pinyin">t&iacute; b&#464; w&agrave;ng z&igrave;</span>, literally "pick up pen, forget character").</p>
+
+<h3>The Recognition-Recall Asymmetry</h3>
+
+<p>Pinyin IME is fundamentally a <strong>recognition</strong> task: the user types phonetic input and recognizes the correct character from a candidate list. Handwriting, by contrast, requires <strong>recall</strong> &mdash; generating the character's strokes from memory without visual prompts. Daily IME use heavily reinforces the recognition pathway while the recall pathway atrophies.</p>
+
+<h3>The Evidence</h3>
+
+<ul>
+<li>A 2010 China Youth Daily survey of 2,072 people found that <strong>83%</strong> reported trouble writing characters by hand (self-reported)</li>
+<li>Controlled mega-study analyses of university students found character amnesia affects approximately <strong>42% of characters</strong> and occurs about <strong>6% of the time</strong></li>
+<li>Contributing factors: lower character frequency, later age of acquisition, higher stroke count, less regular spelling, less imageable meaning</li>
+</ul>
+
+<h3>A Structural Problem, Not a Moral Failing</h3>
+
+<p>Character amnesia is not caused by laziness or educational decline &mdash; it is a structural consequence of the dual-layer architecture. When the Pinyin layer handles the phonetic-to-character conversion computationally (via IME), the neural pathways for manual character production lose reinforcement. This is analogous to how GPS navigation can degrade spatial memory, or how calculator use can weaken mental arithmetic.</p>
+
+<p>The phenomenon has prompted cultural responses including the popular TV show "Chinese Character Dictation Conference" (<span class="chinese">&#20013;&#22269;&#27721;&#23383;&#21548;&#20889;&#22823;&#20250;</span>, 2013) and various government initiatives to promote handwriting.</p>
+
+<div class="callout callout-warning">
+<div class="callout-title">Three-Way Comparison</div>
+<p style="margin-bottom:0;">English speakers also experience "spelling amnesia" (relying on autocorrect), but the effect is far less dramatic because the alphabet directly encodes sound &mdash; even with degraded spelling recall, you can produce a recognizable approximation. In Chinese, if you cannot recall a character's structure, you literally cannot write the word at all. The logographic writing system makes the recall task categorically more demanding.</p>
+</div>
+
+
+<!-- ==================== LITERACY ==================== -->
+<h2 id="literacy">8. Pinyin in Literacy Education</h2>
+
+<p>In mainland China, Pinyin plays a crucial scaffolding role in early literacy. Children learn Pinyin during the first 6&ndash;8 weeks of Grade 1 (age 6&ndash;7), before beginning systematic character instruction.</p>
+
+<h3>The Scaffolding Function</h3>
+
+<p>Pinyin enables children to read any Pinyin-annotated text before learning the underlying characters, look up unfamiliar characters in dictionaries, develop phonological awareness of Mandarin's sound system, and self-correct regional dialect pronunciation. Research shows that Pinyin knowledge and character recognition develop reciprocally: Pinyin helps children decode character pronunciation, and growing character knowledge deepens their understanding of the Pinyin system.</p>
+
+<h3>Ruby Annotations</h3>
+
+<p>In children's textbooks, Pinyin appears as small text above each character, known as "ruby annotation." This visual pairing creates an explicit link between the phonetic and logographic layers, allowing children to read texts containing unfamiliar characters. The annotations are gradually removed as students' character knowledge grows.</p>
+
+<h3>The Dual-Edged Sword</h3>
+
+<p>Research suggests the presence of Pinyin annotations can divert attention away from analyzing a character's orthographic structure (its radicals, components, and stroke patterns). This creates a pedagogical tension: Pinyin aids reading fluency but may slow deep learning of character structure if children rely on it too heavily. Effective instruction balances Pinyin scaffolding with deliberate attention to character composition.</p>
+
+
+<!-- ==================== THREE-WAY ==================== -->
+<h2 id="three-way">9. Three-Way Structural Comparison</h2>
+
+<p>The Pinyin layer creates a writing-system architecture that is genuinely unique among major world languages.</p>
+
+<div class="diagram-container">
+  <iframe src="../../../output-refined/mandarin-chinese-three-way-comparative-pinyin-romanization-parallel-writing-diagrams/diagram-6-dual-writing-layer-architecture.html" style="height:1100px;" loading="lazy" title="Dual Writing Layer Architecture Comparison"></iframe>
+  <div class="diagram-caption"><strong>Figure 6</strong> &mdash; Three-way architectural comparison: Contemporary Mandarin (characters + Pinyin), Traditional Chinese / Taiwan (characters + Bopomofo), and English (single alphabet). Only Mandarin operates with a Latin-based parallel writing layer.</div>
+</div>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>Contemporary Mandarin (PRC)</th><th>Traditional Chinese (Taiwan)</th><th>English</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Number of scripts</strong></td><td>2 (characters + Pinyin)</td><td>2 (characters + Bopomofo)</td><td>1 (alphabet)</td></tr>
+<tr><td><strong>Primary script</strong></td><td>Simplified characters</td><td>Traditional characters</td><td>Latin alphabet</td></tr>
+<tr><td><strong>Phonetic auxiliary</strong></td><td>Pinyin (Latin-based)</td><td>Bopomofo (unique symbols)</td><td>None needed</td></tr>
+<tr><td><strong>Digital input pathway</strong></td><td>Pinyin &rarr; IME &rarr; Characters</td><td>Bopomofo &rarr; IME &rarr; Characters</td><td>Direct alphabetic typing</td></tr>
+<tr><td><strong>International standardization</strong></td><td>ISO 7098, UN standard</td><td>Domestic use only</td><td>N/A (native alphabet)</td></tr>
+<tr><td><strong>Character amnesia risk</strong></td><td>High (recognition-based IME)</td><td>High (recognition-based IME)</td><td>Low (spelling degradation only)</td></tr>
+<tr><td><strong>L1 pronunciation interference</strong></td><td>High (Latin letters mislead)</td><td>None (unique symbols)</td><td>N/A</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The Unique Position of Contemporary Mandarin</h3>
+
+<p>Contemporary Mandarin's dual-layer architecture creates a unique configuration:</p>
+
+<ol>
+<li><strong>Two scripts, one language:</strong> Functional literacy requires competence in both characters and Pinyin</li>
+<li><strong>Different scripts for different functions:</strong> Characters for reading and formal writing; Pinyin for input, annotation, and international use</li>
+<li><strong>The invisible Pinyin layer:</strong> In digital communication, Pinyin mediates between thought and text but leaves no trace in the final output</li>
+<li><strong>Recognition-recall split:</strong> The architecture enables efficient digital input but structurally undermines handwriting ability</li>
+</ol>
+
+<p>Neither Traditional Chinese (with Bopomofo) nor English faces this exact structural configuration. Taiwan shares the recognition-based IME issue but avoids the L1 interference problem. English has a single-layer architecture that eliminates the recognition-recall split entirely. Contemporary Mandarin's combination of logographic characters, Latin-alphabet phonetic input, and computational mediation is genuinely novel in the history of writing systems.</p>
+
+
+<!-- ==================== TAKEAWAYS ==================== -->
+<h2 id="takeaways">10. Key Takeaways</h2>
+
+<div class="takeaway">
+<div class="takeaway-title">Summary</div>
+<ol style="margin-bottom:0;">
+<li><strong>Pinyin is not "Chinese in English letters"</strong> &mdash; it exploits Mandarin's phonological structure (including complementary distribution) to assign Latin letters to Chinese sounds in an internally consistent way. Many correspondences differ dramatically from English.</li>
+<li><strong>The aspiration distinction is fundamental</strong> &mdash; Pinyin's consonant pairs represent unaspirated/aspirated, not voiced/voiceless. This is the single most important phonological fact for English speakers.</li>
+<li><strong>Pinyin and Bopomofo encode the same sounds</strong> &mdash; the choice between them is political and practical, not linguistic. Pinyin optimizes for international accessibility; Bopomofo optimizes for pronunciation accuracy.</li>
+<li><strong>Pinyin is the invisible backbone of digital Chinese</strong> &mdash; over a billion people use Pinyin IME daily, making it the most-used romanization system in history, even though it is never visible in the final output.</li>
+<li><strong>The dual-layer architecture has cognitive costs</strong> &mdash; character amnesia is a structural consequence of recognition-based IME input, not a moral or educational failing.</li>
+<li><strong>Contemporary Mandarin is uniquely dual-scripted</strong> &mdash; its parallel character/Pinyin architecture is structurally distinct from both Taiwan's character/Bopomofo system and English's single-alphabet approach.</li>
+</ol>
+</div>
+
+
+<!-- ==================== GLOSSARY ==================== -->
+<h2 id="glossary">Glossary</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Term</th><th>Definition</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Pinyin</strong> (<span class="chinese">&#25340;&#38899;</span>)</td><td>The official romanization system for Mandarin in the PRC, using Latin letters with tone diacritics. Formally: Hanyu Pinyin (<span class="chinese">&#27721;&#35821;&#25340;&#38899;</span>).</td></tr>
+<tr><td><strong>Bopomofo</strong> (<span class="chinese">&#12549;&#12550;&#12551;&#12552;</span>)</td><td>Taiwan's phonetic notation system using 37 symbols derived from ancient Chinese characters. Also called Zhuyin Fuhao (<span class="chinese">&#27880;&#38899;&#31526;&#21495;</span>).</td></tr>
+<tr><td><strong>Initial</strong> (<span class="chinese">&#22768;&#27597;</span>)</td><td>The consonant onset of a Mandarin syllable. Mandarin has 21 initials.</td></tr>
+<tr><td><strong>Final</strong> (<span class="chinese">&#38901;&#27597;</span>)</td><td>The vowel nucleus plus optional coda of a Mandarin syllable. Standard count: 36.</td></tr>
+<tr><td><strong>IME</strong></td><td>Input Method Editor (<span class="chinese">&#36755;&#20837;&#27861;</span>) &mdash; software that converts Pinyin keystrokes into Chinese characters via candidate selection.</td></tr>
+<tr><td><strong>Character amnesia</strong></td><td><span class="chinese">&#25552;&#31508;&#24536;&#23383;</span> (t&iacute; b&#464; w&agrave;ng z&igrave;) &mdash; inability to write characters by hand despite being able to recognize them, attributed to IME dependence.</td></tr>
+<tr><td><strong>Aspiration</strong></td><td>A puff of air accompanying certain consonants (<span class="chinese">&#36865;&#27668;</span>). The primary consonant distinction in Mandarin (not voicing as in English).</td></tr>
+<tr><td><strong>Complementary distribution</strong></td><td>A phonological pattern where sounds never occur in the same vowel environment, allowing Pinyin to reuse letters without ambiguity.</td></tr>
+<tr><td><strong>Wade-Giles</strong></td><td>Earlier romanization system (1859/1892) using apostrophes for aspiration. Source of legacy names like "Peking" and "Mao Tse-tung."</td></tr>
+<tr><td><strong>Gwoyeu Romatzyh</strong></td><td>1928 romanization that encoded tones through spelling variations rather than diacritics. First official Chinese government romanization.</td></tr>
+<tr><td><strong>Ruby annotation</strong></td><td>Small Pinyin text placed above characters in children's textbooks as a pronunciation guide.</td></tr>
+</tbody>
+</table>
+</div>
+
+
+<!-- ==================== NAVIGATION ==================== -->
+<div class="category-nav">
+  <a href="../radical-system-character-architecture/index.html" class="prev-category">&larr; Previous: Radical System &amp; Character Architecture</a>
+  <a href="../grammar-morphology-isolating-extreme/index.html" class="next-category">Next: Grammar &amp; Morphology &rarr;</a>
+</div>
+
+</div>
+</main>
+</div>
+
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+
+<script>
+// Back to top button
+const backBtn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  backBtn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Active sidebar link on scroll
+const sections = document.querySelectorAll('h2[id], h3[id]');
+const sidebarLinks = document.querySelectorAll('.sidebar-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.getAttribute('id');
+      const link = document.querySelector(`.sidebar-link[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Close mobile sidebar on link click
+sidebarLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialect Endangerment Funnel</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4;
+    --danger: #ef4444; --danger-bg: #fef2f2;
+    --warning: #f59e0b; --warning-bg: #fef3c7;
+    --safe: #22c55e; --safe-bg: #dcfce7;
+    --muted: #6c757d;
+    --funnel-1: #22c55e; --funnel-2: #84cc16; --funnel-3: #f59e0b;
+    --funnel-4: #f97316; --funnel-5: #ef4444; --funnel-6: #dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --danger-bg: #3b1a1a; --warning-bg: #4a3520; --safe-bg: #14532d;
+      --muted: #94a3b8;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--fg); display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6; }
+  figure { max-width: 960px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-container { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; }
+  .title { font-size: 1.15rem; font-weight: 700; text-align: center; margin-bottom: 0.25rem; }
+  .subtitle { font-size: 0.85rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  /* Case study cards */
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-top: 1.25rem; margin-bottom: 0.5rem; padding-left: 0.5rem; border-left: 3px solid var(--accent); }
+
+  /* Funnel visualization */
+  .funnel { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 1.5rem; }
+  .funnel-step { display: flex; align-items: center; justify-content: center; text-align: center; padding: 0.6rem 1rem; font-size: 0.82rem; font-weight: 600; color: #fff; position: relative; border-radius: 4px; margin-bottom: 2px; }
+  .funnel-arrow { color: var(--muted); font-size: 0.8rem; margin: 0.15rem 0; }
+  .funnel-detail { font-size: 0.68rem; font-weight: 400; opacity: 0.9; margin-left: 0.5rem; }
+
+  /* Case study grid */
+  .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  @media (max-width: 700px) { .case-grid { grid-template-columns: 1fr; } }
+
+  .case-card { padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); }
+  .case-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .case-name { font-weight: 700; font-size: 0.9rem; }
+  .case-status { font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px; color: #fff; }
+  .status-danger { background: var(--danger); }
+  .status-warning { background: var(--warning); }
+  .status-mixed { background: var(--warning); }
+
+  .case-stat { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.78rem; }
+  .case-stat:last-child { border-bottom: none; }
+  .case-stat-label { color: var(--muted); }
+  .case-stat-value { font-weight: 700; }
+  .case-stat-value.danger { color: var(--danger); }
+  .case-stat-value.warning { color: var(--warning); }
+
+  /* Pressure factors */
+  .pressure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+  @media (max-width: 600px) { .pressure-grid { grid-template-columns: 1fr; } }
+  .pressure-item { display: flex; align-items: flex-start; gap: 0.4rem; padding: 0.4rem 0.6rem; background: var(--danger-bg); border-radius: 4px; font-size: 0.78rem; border: 1px solid var(--border); }
+  .pressure-icon { font-size: 0.9rem; flex-shrink: 0; }
+  .pressure-text { font-size: 0.75rem; }
+
+  /* Counter-currents */
+  .counter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+  @media (max-width: 600px) { .counter-grid { grid-template-columns: 1fr; } }
+  .counter-item { display: flex; align-items: flex-start; gap: 0.4rem; padding: 0.4rem 0.6rem; background: var(--safe-bg); border-radius: 4px; font-size: 0.78rem; border: 1px solid var(--border); }
+
+  .insight { background: var(--bg); border: 1px solid var(--accent); border-radius: 6px; padding: 0.75rem 1rem; margin-top: 1.25rem; }
+  .insight-label { font-size: 0.7rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
+  .insight-text { font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-container">
+  <div class="title">Dialect Endangerment Funnel</div>
+  <div class="subtitle">How regional Chinese languages are losing ground — and what pushes back</div>
+
+  <!-- The Funnel -->
+  <div class="funnel">
+    <div class="funnel-step" style="background:var(--funnel-1); width:95%;">Full vitality: all ages, all domains <span class="funnel-detail">Pre-1950s baseline</span></div>
+    <div class="funnel-arrow">&#9660;</div>
+    <div class="funnel-step" style="background:var(--funnel-2); width:82%;">Education domain lost <span class="funnel-detail">Putonghua-only schools (1950s-1990s)</span></div>
+    <div class="funnel-arrow">&#9660;</div>
+    <div class="funnel-step" style="background:var(--funnel-3); width:68%;">Media domain lost <span class="funnel-detail">National TV/internet in Putonghua</span></div>
+    <div class="funnel-arrow">&#9660;</div>
+    <div class="funnel-step" style="background:var(--funnel-4); width:52%;">Workplace domain shifts <span class="funnel-detail">Urban migration, cross-dialect teams</span></div>
+    <div class="funnel-arrow">&#9660;</div>
+    <div class="funnel-step" style="background:var(--funnel-5); width:38%;">Intergenerational break <span class="funnel-detail">Parents use PTH with children</span></div>
+    <div class="funnel-arrow">&#9660;</div>
+    <div class="funnel-step" style="background:var(--funnel-6); width:24%;">Passive knowledge only <span class="funnel-detail">Understand but cannot speak</span></div>
+  </div>
+
+  <!-- Case Studies -->
+  <div class="section-label">Case Studies: Three Languages at Different Stages</div>
+  <div class="case-grid">
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-name">Shanghainese</div>
+        <div class="case-status status-danger">Critical</div>
+      </div>
+      <div class="case-stat"><span class="case-stat-label">Under-18 fluency</span><span class="case-stat-value danger">26%</span></div>
+      <div class="case-stat"><span class="case-stat-label">Age 30-35 fluency</span><span class="case-stat-value">~60%</span></div>
+      <div class="case-stat"><span class="case-stat-label">School ban</span><span class="case-stat-value">1992</span></div>
+      <div class="case-stat"><span class="case-stat-label">Use with strangers</span><span class="case-stat-value danger">&lt;20%</span></div>
+      <div class="case-stat"><span class="case-stat-label">Main cause cited</span><span class="case-stat-value">PTH promotion (72%)</span></div>
+    </div>
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-name">Cantonese</div>
+        <div class="case-status status-warning">Under pressure</div>
+      </div>
+      <div class="case-stat"><span class="case-stat-label">Speakers</span><span class="case-stat-value">~85 million</span></div>
+      <div class="case-stat"><span class="case-stat-label">Guangzhou schools</span><span class="case-stat-value warning">PTH-medium since 1980s</span></div>
+      <div class="case-stat"><span class="case-stat-label">2010 protests</span><span class="case-stat-value">Mass demonstrations</span></div>
+      <div class="case-stat"><span class="case-stat-label">HK PMIC policy</span><span class="case-stat-value warning">Controversial</span></div>
+      <div class="case-stat"><span class="case-stat-label">Cultural capital</span><span class="case-stat-value">High (music, film)</span></div>
+    </div>
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-name">Hokkien (Taiwan)</div>
+        <div class="case-status status-mixed">Reviving</div>
+      </div>
+      <div class="case-stat"><span class="case-stat-label">Home use</span><span class="case-stat-value">81.9%</span></div>
+      <div class="case-stat"><span class="case-stat-label">Suppression era</span><span class="case-stat-value">1949-1987</span></div>
+      <div class="case-stat"><span class="case-stat-label">Legal status (2019)</span><span class="case-stat-value" style="color:var(--safe)">National language</span></div>
+      <div class="case-stat"><span class="case-stat-label">School classes</span><span class="case-stat-value" style="color:var(--safe)">Compulsory primary</span></div>
+      <div class="case-stat"><span class="case-stat-label">Trend</span><span class="case-stat-value">Active revitalization</span></div>
+    </div>
+  </div>
+
+  <!-- Pressure factors -->
+  <div class="section-label">Factors Accelerating Decline</div>
+  <div class="pressure-grid">
+    <div class="pressure-item"><span class="pressure-icon">&#127979;</span><div class="pressure-text"><strong>Education:</strong> Putonghua-only instruction mandated nationwide</div></div>
+    <div class="pressure-item"><span class="pressure-icon">&#128250;</span><div class="pressure-text"><strong>Media:</strong> National TV, internet, social media in Putonghua</div></div>
+    <div class="pressure-item"><span class="pressure-icon">&#127961;</span><div class="pressure-text"><strong>Urbanization:</strong> Rural-to-city migration breaks dialect chains</div></div>
+    <div class="pressure-item"><span class="pressure-icon">&#128141;</span><div class="pressure-text"><strong>Marriage:</strong> Cross-dialect couples default to PTH with children</div></div>
+    <div class="pressure-item"><span class="pressure-icon">&#128241;</span><div class="pressure-text"><strong>Digital:</strong> Pinyin input produces PTH; no standard input for dialects</div></div>
+    <div class="pressure-item"><span class="pressure-icon">&#128172;</span><div class="pressure-text"><strong>Stigma:</strong> "Speak PTH, be civilized" campaigns</div></div>
+  </div>
+
+  <!-- Counter-currents -->
+  <div class="section-label">Counter-Currents: Forces Pushing Back</div>
+  <div class="counter-grid">
+    <div class="counter-item"><span class="pressure-icon">&#127926;</span><div class="pressure-text"><strong>Cultural revival:</strong> Cantonese pop, Shanghainese preservation projects</div></div>
+    <div class="counter-item"><span class="pressure-icon">&#128187;</span><div class="pressure-text"><strong>Internet dialect culture:</strong> Dialect humor and memes on Douyin/Bilibili</div></div>
+    <div class="counter-item"><span class="pressure-icon">&#128220;</span><div class="pressure-text"><strong>Policy shift:</strong> 2015 Language Resources Protection Project</div></div>
+    <div class="counter-item"><span class="pressure-icon">&#127463;</span><div class="pressure-text"><strong>Local pride:</strong> Regional identity movements, especially Guangdong</div></div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">The Pattern</div>
+    <div class="insight-text">The funnel operates through <strong>domain contraction</strong>: each domain lost (school, media, workplace) narrows the contexts where dialect is used, until only family remains. Once intergenerational transmission breaks — parents speaking Putonghua to children — the language enters terminal decline within 2-3 generations.</div>
+  </div>
+</div>
+<figcaption>The endangerment funnel: how regional Chinese languages lose domains progressively, illustrated with three case studies at different stages</figcaption>
+</figure>
+</body>
+</html>

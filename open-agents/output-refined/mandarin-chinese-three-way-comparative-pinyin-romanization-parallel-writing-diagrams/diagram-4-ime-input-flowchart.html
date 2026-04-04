@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinyin IME Input Process Flowchart</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --cyan: #06b6d4; --cyan-bg: rgba(6,182,212,0.1); --cyan-border: rgba(6,182,212,0.3);
+    --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.1); --amber-border: rgba(245,158,11,0.3);
+    --rose: #f43f5e; --rose-bg: rgba(244,63,94,0.08);
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.1); --emerald-border: rgba(16,185,129,0.3);
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.1);
+    --muted: #64748b; --caption-bg: #1e293b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--fg); display: flex; justify-content: center; padding: 1.5rem 0.75rem; line-height: 1.5; }
+  figure { max-width: 900px; width: 100%; }
+  figcaption { text-align: center; margin-top: 1.25rem; padding: 1rem 1.5rem; background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border); }
+  figcaption h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--cyan); }
+  figcaption p { font-size: 0.8rem; color: var(--muted); }
+  .chart-wrapper { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 1.5rem; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-step { width: 100%; max-width: 500px; position: relative; }
+  .flow-arrow { display: flex; flex-direction: column; align-items: center; padding: 0.5rem 0; }
+  .flow-arrow .arrow-line { width: 2px; height: 20px; background: var(--border); }
+  .flow-arrow .arrow-head { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); }
+  .flow-arrow.cyan .arrow-line { background: var(--cyan); }
+  .flow-arrow.cyan .arrow-head { border-top-color: var(--cyan); }
+  .flow-arrow.amber .arrow-line { background: var(--amber); }
+  .flow-arrow.amber .arrow-head { border-top-color: var(--amber); }
+  .flow-arrow.emerald .arrow-line { background: var(--emerald); }
+  .flow-arrow.emerald .arrow-head { border-top-color: var(--emerald); }
+
+  .step-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; text-align: center; position: relative; }
+  .step-box.highlight { border-color: var(--cyan-border); background: var(--cyan-bg); }
+  .step-box.input { border-color: var(--amber-border); background: var(--amber-bg); }
+  .step-box.output { border-color: var(--emerald-border); background: var(--emerald-bg); }
+  .step-box.decision { border-color: var(--purple); background: var(--purple-bg); transform: none; border-radius: 10px; }
+
+  .step-num { position: absolute; top: -0.5rem; left: 1rem; font-size: 0.6rem; font-weight: 800; padding: 0.1rem 0.5rem; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .num-cyan { background: var(--cyan); color: var(--bg); }
+  .num-amber { background: var(--amber); color: var(--bg); }
+  .num-emerald { background: var(--emerald); color: var(--bg); }
+  .num-purple { background: var(--purple); color: var(--bg); }
+
+  .step-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .step-title.cyan { color: var(--cyan); }
+  .step-title.amber { color: var(--amber); }
+  .step-title.emerald { color: var(--emerald); }
+  .step-title.purple { color: var(--purple); }
+
+  .step-detail { font-size: 0.82rem; color: var(--muted); }
+  .step-example { display: inline-block; margin-top: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.3rem 0.6rem; font-family: 'SF Mono', Consolas, monospace; font-size: 0.8rem; }
+  .step-example .pinyin-text { color: var(--amber); font-weight: 600; }
+  .step-example .char-text { color: var(--emerald); font-weight: 700; font-size: 1rem; }
+  .step-example .arrow { color: var(--muted); margin: 0 0.3rem; }
+
+  .branch { display: flex; gap: 1rem; width: 100%; max-width: 600px; margin-top: 0; }
+  .branch-path { flex: 1; text-align: center; }
+  .branch-label { font-size: 0.7rem; font-weight: 700; color: var(--muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .branch-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem; font-size: 0.78rem; color: var(--muted); }
+  .branch-box.yes { border-color: var(--emerald-border); }
+  .branch-box.no { border-color: rgba(244,63,94,0.3); }
+
+  .feedback-loop { border: 1px dashed rgba(167,139,250,0.4); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; max-width: 500px; width: 100%; }
+  .feedback-label { font-size: 0.7rem; color: var(--purple); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; text-align: center; }
+  .feedback-text { font-size: 0.78rem; color: var(--muted); text-align: center; }
+
+  .side-note { max-width: 600px; width: 100%; background: var(--bg); border: 1px solid rgba(244,63,94,0.3); border-radius: 8px; padding: 0.85rem 1rem; margin-top: 1.25rem; font-size: 0.82rem; text-align: left; }
+  .side-note strong { color: var(--rose); }
+  .side-note .stat { color: var(--amber); font-weight: 700; }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <div class="flow">
+
+      <!-- Step 1: Think -->
+      <div class="flow-step">
+        <div class="step-box">
+          <span class="step-num num-cyan">Step 1</span>
+          <div class="step-title cyan">User Thinks of a Word</div>
+          <div class="step-detail">Mental representation: meaning + sound</div>
+          <div class="step-example">Want to type: "China" = <span class="char-text">中国</span> = zhōngguó</div>
+        </div>
+      </div>
+      <div class="flow-arrow cyan"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+      <!-- Step 2: Type Pinyin -->
+      <div class="flow-step">
+        <div class="step-box input">
+          <span class="step-num num-amber">Step 2</span>
+          <div class="step-title amber">Type Pinyin on QWERTY Keyboard</div>
+          <div class="step-detail">Tones usually omitted in daily use</div>
+          <div class="step-example"><span class="pinyin-text">z h o n g g u o</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow amber"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+      <!-- Step 3: IME Segments -->
+      <div class="flow-step">
+        <div class="step-box highlight">
+          <span class="step-num num-cyan">Step 3</span>
+          <div class="step-title cyan">IME Segments into Syllables</div>
+          <div class="step-detail">Engine parses raw letter string into possible syllable boundaries</div>
+          <div class="step-example"><span class="pinyin-text">zhong</span> <span class="arrow">|</span> <span class="pinyin-text">guo</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow cyan"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+      <!-- Step 4: Candidate Generation -->
+      <div class="flow-step">
+        <div class="step-box highlight">
+          <span class="step-num num-cyan">Step 4</span>
+          <div class="step-title cyan">Generate Candidate List</div>
+          <div class="step-detail">Ranked by: frequency + context + user history + AI prediction</div>
+          <div class="step-example">
+            1. <span class="char-text">中国</span> <span class="arrow">|</span>
+            2. <span class="char-text">中锅</span> <span class="arrow">|</span>
+            3. <span class="char-text">终过</span> <span class="arrow">|</span>
+            4. <span class="char-text">忠国</span> ...
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+      <!-- Step 5: Decision -->
+      <div class="flow-step">
+        <div class="step-box decision">
+          <span class="step-num num-purple">Decision</span>
+          <div class="step-title purple">Is Top Candidate Correct?</div>
+        </div>
+      </div>
+      <div style="height:0.5rem;"></div>
+
+      <!-- Branch -->
+      <div class="branch">
+        <div class="branch-path">
+          <div class="branch-label" style="color:var(--emerald);">Yes (most common)</div>
+          <div class="branch-box yes">
+            Press <strong style="color:var(--emerald)">Space</strong> or <strong style="color:var(--emerald)">Enter</strong> to confirm.<br>
+            Many users type entire phrases — IME predicts full sentences.
+          </div>
+        </div>
+        <div class="branch-path">
+          <div class="branch-label" style="color:var(--rose);">No</div>
+          <div class="branch-box no">
+            Scroll candidate list with <strong style="color:var(--rose)">number keys</strong> or <strong style="color:var(--rose)">arrow keys</strong>.<br>
+            Or: add more Pinyin for context, add tones to narrow candidates.
+          </div>
+        </div>
+      </div>
+      <div style="height:0.75rem;"></div>
+      <div class="flow-arrow emerald"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+      <!-- Step 6: Output -->
+      <div class="flow-step">
+        <div class="step-box output">
+          <span class="step-num num-emerald">Output</span>
+          <div class="step-title emerald">Character(s) Inserted into Text</div>
+          <div class="step-detail">Pinyin disappears — only characters remain in the document</div>
+          <div class="step-example"><span class="char-text" style="font-size:1.3rem;">中国</span></div>
+        </div>
+      </div>
+
+      <!-- Feedback Loop -->
+      <div class="feedback-loop">
+        <div class="feedback-label">Feedback Loop</div>
+        <div class="feedback-text">
+          Your selection trains the IME: chosen characters get ranked higher next time. User history, frequency patterns, and AI models continuously refine predictions. Modern systems like Sogou Pinyin also incorporate cloud-based trending vocabulary.
+        </div>
+      </div>
+
+      <!-- Side Note: Abbreviation -->
+      <div class="side-note">
+        <strong>Abbreviation Shortcuts:</strong> Skilled users type only the first letter of each syllable for common phrases:<br>
+        <span class="step-example" style="margin-top:0.3rem;"><span class="pinyin-text">zg</span> <span class="arrow">&rarr;</span> <span class="char-text">中国</span></span>
+        <span class="step-example" style="margin-top:0.3rem;"><span class="pinyin-text">bjdx</span> <span class="arrow">&rarr;</span> <span class="char-text">北京大学</span></span>
+        <span class="step-example" style="margin-top:0.3rem;"><span class="pinyin-text">xnkl</span> <span class="arrow">&rarr;</span> <span class="char-text">新年快乐</span></span>
+        <br><br>
+        <strong>The Hidden Cost:</strong> This process is a <span class="stat">recognition</span> task (see character, confirm it is correct), not a <span class="stat">recall</span> task (generate character from memory). Over time, this asymmetry contributes to <em style="color:var(--rose);">character amnesia</em> (提笔忘字) — the inability to write characters by hand.
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <h2>Diagram 4: Pinyin IME Input Process</h2>
+    <p>How over a billion people type Chinese: Pinyin keystrokes on a QWERTY keyboard are converted to characters through AI-powered candidate selection. The process is a recognition task, not recall — with cognitive consequences.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

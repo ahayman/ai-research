@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Field Clustering of Radicals</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--violet:#8b5cf6;--blue:#3b82f6;--orange:#f97316;--pink:#ec4899;--teal:#14b8a6;--lime:#84cc16;--red:#ef4444;--sky:#38bdf8;--indigo:#6366f1}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.clusters{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem}
+.cluster{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden}
+.cluster:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+.cluster::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+.cluster-icon{font-size:1.8rem;margin-bottom:0.3rem}
+.cluster-name{font-size:0.85rem;font-weight:700;margin-bottom:0.15rem}
+.cluster-en{font-size:0.7rem;color:var(--text3);margin-bottom:0.5rem}
+.radicals-grid{display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.5rem}
+.radical-chip{background:rgba(0,0,0,0.3);border-radius:6px;padding:0.3rem 0.5rem;display:flex;align-items:center;gap:0.25rem;font-size:0.75rem;transition:all 0.2s;cursor:default}
+.radical-chip:hover{background:rgba(0,0,0,0.5);transform:scale(1.05)}
+.rc{font-size:1.15rem;line-height:1}
+.rm{font-size:0.6rem;color:var(--text3)}
+.cluster-examples{font-size:0.7rem;color:var(--text3);line-height:1.5;border-top:1px solid var(--border);padding-top:0.4rem;margin-top:0.3rem}
+.cluster-examples strong{color:var(--text2)}
+
+/* Nature colors */
+.c-water::before{background:var(--cyan)}.c-water .cluster-name{color:var(--cyan)}.c-water .radical-chip:hover{background:rgba(6,182,212,0.2)}
+.c-fire::before{background:var(--orange)}.c-fire .cluster-name{color:var(--orange)}.c-fire .radical-chip:hover{background:rgba(249,115,22,0.2)}
+.c-earth::before{background:var(--amber)}.c-earth .cluster-name{color:var(--amber)}.c-earth .radical-chip:hover{background:rgba(245,158,11,0.2)}
+.c-wood::before{background:var(--emerald)}.c-wood .cluster-name{color:var(--emerald)}.c-wood .radical-chip:hover{background:rgba(16,185,129,0.2)}
+.c-metal::before{background:var(--text2)}.c-metal .cluster-name{color:var(--text2)}.c-metal .radical-chip:hover{background:rgba(148,163,184,0.2)}
+.c-body::before{background:var(--rose)}.c-body .cluster-name{color:var(--rose)}.c-body .radical-chip:hover{background:rgba(244,63,94,0.2)}
+.c-mind::before{background:var(--violet)}.c-mind .cluster-name{color:var(--violet)}.c-mind .radical-chip:hover{background:rgba(139,92,246,0.2)}
+.c-animal::before{background:var(--lime)}.c-animal .cluster-name{color:var(--lime)}.c-animal .radical-chip:hover{background:rgba(132,204,22,0.2)}
+.c-human::before{background:var(--pink)}.c-human .cluster-name{color:var(--pink)}.c-human .radical-chip:hover{background:rgba(236,72,153,0.2)}
+.c-craft::before{background:var(--teal)}.c-craft .cluster-name{color:var(--teal)}.c-craft .radical-chip:hover{background:rgba(20,184,166,0.2)}
+.c-sky::before{background:var(--sky)}.c-sky .cluster-name{color:var(--sky)}.c-sky .radical-chip:hover{background:rgba(56,189,248,0.2)}
+.c-move::before{background:var(--indigo)}.c-move .cluster-name{color:var(--indigo)}.c-move .radical-chip:hover{background:rgba(99,102,241,0.2)}
+
+.wuxing{max-width:1000px;margin:1.25rem auto 0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.wuxing-title{font-size:0.75rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem}
+.wuxing-row{display:flex;justify-content:center;flex-wrap:wrap;gap:0.5rem}
+.wx-item{display:flex;align-items:center;gap:0.3rem;background:var(--bg);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.8rem}
+.wx-char{font-size:1.3rem}
+.wx-label{font-size:0.7rem;color:var(--text2)}
+.wx-arrow{color:var(--text3);font-size:0.9rem}
+.note{max-width:1000px;margin:1rem auto 0;font-size:0.7rem;color:var(--text3);text-align:center;font-style:italic}
+@media(max-width:700px){.clusters{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>Semantic Field Clustering of Radicals</h1>
+<p class="subtitle">Radicals organize into natural meaning domains, reflecting how Chinese culture categorizes the world</p>
+
+<div class="clusters">
+
+<div class="cluster c-water">
+  <div class="cluster-icon">💧</div>
+  <div class="cluster-name">Water & Liquid Domain</div>
+  <div class="cluster-en">Includes rivers, weather, fluids, emotions that "flow"</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">氵</span><span class="rm">water</span></span>
+    <span class="radical-chip"><span class="rc">雨</span><span class="rm">rain</span></span>
+    <span class="radical-chip"><span class="rc">冫</span><span class="rm">ice</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 河 river, 海 sea, 清 clear, 雪 snow, 冷 cold, 泪 tears</div>
+</div>
+
+<div class="cluster c-fire">
+  <div class="cluster-icon">🔥</div>
+  <div class="cluster-name">Fire & Heat Domain</div>
+  <div class="cluster-en">Cooking, burning, light, warmth</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">火</span><span class="rm">fire</span></span>
+    <span class="radical-chip"><span class="rc">灬</span><span class="rm">fire dots</span></span>
+    <span class="radical-chip"><span class="rc">日</span><span class="rm">sun</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 热 hot, 烧 burn, 煮 cook, 烈 fierce, 明 bright, 晴 sunny</div>
+</div>
+
+<div class="cluster c-wood">
+  <div class="cluster-icon">🌿</div>
+  <div class="cluster-name">Plant & Wood Domain</div>
+  <div class="cluster-en">Trees, grasses, grains, bamboo — the largest radical family</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">艹</span><span class="rm">grass</span></span>
+    <span class="radical-chip"><span class="rc">木</span><span class="rm">wood</span></span>
+    <span class="radical-chip"><span class="rc">禾</span><span class="rm">grain</span></span>
+    <span class="radical-chip"><span class="rc">竹</span><span class="rm">bamboo</span></span>
+    <span class="radical-chip"><span class="rc">米</span><span class="rm">rice</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 花 flower, 林 forest, 秋 autumn, 笔 brush, 粉 powder, 药 medicine</div>
+</div>
+
+<div class="cluster c-earth">
+  <div class="cluster-icon">🏔</div>
+  <div class="cluster-name">Earth & Terrain Domain</div>
+  <div class="cluster-en">Land, mountains, stones, fields</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">土</span><span class="rm">earth</span></span>
+    <span class="radical-chip"><span class="rc">山</span><span class="rm">mountain</span></span>
+    <span class="radical-chip"><span class="rc">石</span><span class="rm">stone</span></span>
+    <span class="radical-chip"><span class="rc">田</span><span class="rm">field</span></span>
+    <span class="radical-chip"><span class="rc">穴</span><span class="rm">cave</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 地 ground, 峰 peak, 碑 stele, 界 boundary, 空 empty/sky</div>
+</div>
+
+<div class="cluster c-metal">
+  <div class="cluster-icon">🔧</div>
+  <div class="cluster-name">Metal & Craft Domain</div>
+  <div class="cluster-en">Metals, tools, blades, weaving</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">钅</span><span class="rm">metal</span></span>
+    <span class="radical-chip"><span class="rc">刂</span><span class="rm">knife</span></span>
+    <span class="radical-chip"><span class="rc">糸</span><span class="rm">silk/thread</span></span>
+    <span class="radical-chip"><span class="rc">巾</span><span class="rm">cloth</span></span>
+    <span class="radical-chip"><span class="rc">瓦</span><span class="rm">tile</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 铁 iron, 银 silver, 刻 carve, 纸 paper, 织 weave, 帽 hat</div>
+</div>
+
+<div class="cluster c-body">
+  <div class="cluster-icon">🦴</div>
+  <div class="cluster-name">Body & Senses Domain</div>
+  <div class="cluster-en">Body parts, physical actions, perception</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">扌</span><span class="rm">hand</span></span>
+    <span class="radical-chip"><span class="rc">口</span><span class="rm">mouth</span></span>
+    <span class="radical-chip"><span class="rc">目</span><span class="rm">eye</span></span>
+    <span class="radical-chip"><span class="rc">耳</span><span class="rm">ear</span></span>
+    <span class="radical-chip"><span class="rc">足</span><span class="rm">foot</span></span>
+    <span class="radical-chip"><span class="rc">骨</span><span class="rm">bone</span></span>
+    <span class="radical-chip"><span class="rc">月</span><span class="rm">flesh</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 打 hit, 吃 eat, 看 see, 听 hear, 跑 run, 脑 brain, 肝 liver</div>
+</div>
+
+<div class="cluster c-mind">
+  <div class="cluster-icon">💭</div>
+  <div class="cluster-name">Mind & Speech Domain</div>
+  <div class="cluster-en">Thoughts, emotions, language, knowledge</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">忄</span><span class="rm">heart/mind</span></span>
+    <span class="radical-chip"><span class="rc">讠</span><span class="rm">speech</span></span>
+    <span class="radical-chip"><span class="rc">见</span><span class="rm">see/view</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 情 emotion, 快 fast/happy, 说 speak, 读 read, 认 recognize, 观 observe</div>
+</div>
+
+<div class="cluster c-human">
+  <div class="cluster-icon">👥</div>
+  <div class="cluster-name">Human & Society Domain</div>
+  <div class="cluster-en">People, women, shelter, clothing</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">亻</span><span class="rm">person</span></span>
+    <span class="radical-chip"><span class="rc">女</span><span class="rm">woman</span></span>
+    <span class="radical-chip"><span class="rc">宀</span><span class="rm">roof</span></span>
+    <span class="radical-chip"><span class="rc">衤</span><span class="rm">clothes</span></span>
+    <span class="radical-chip"><span class="rc">贝</span><span class="rm">shell/money</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 他 he, 妈 mom, 家 home, 被 quilt, 财 wealth, 货 goods</div>
+</div>
+
+<div class="cluster c-animal">
+  <div class="cluster-icon">🐾</div>
+  <div class="cluster-name">Animal & Life Domain</div>
+  <div class="cluster-en">Mammals, birds, insects, fish</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">犭</span><span class="rm">animal</span></span>
+    <span class="radical-chip"><span class="rc">虫</span><span class="rm">insect</span></span>
+    <span class="radical-chip"><span class="rc">鸟</span><span class="rm">bird</span></span>
+    <span class="radical-chip"><span class="rc">鱼</span><span class="rm">fish</span></span>
+    <span class="radical-chip"><span class="rc">马</span><span class="rm">horse</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 猫 cat, 蛇 snake, 鸡 chicken, 鲜 fresh, 骑 ride</div>
+</div>
+
+<div class="cluster c-move">
+  <div class="cluster-icon">🚶</div>
+  <div class="cluster-name">Movement & Action Domain</div>
+  <div class="cluster-en">Walking, transport, force, opposition</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">辶</span><span class="rm">walk/road</span></span>
+    <span class="radical-chip"><span class="rc">车</span><span class="rm">vehicle</span></span>
+    <span class="radical-chip"><span class="rc">力</span><span class="rm">power</span></span>
+    <span class="radical-chip"><span class="rc">弓</span><span class="rm">bow</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 道 path/way, 运 transport, 动 move, 张 stretch</div>
+</div>
+
+<div class="cluster c-sky">
+  <div class="cluster-icon">🌙</div>
+  <div class="cluster-name">Sky & Spirit Domain</div>
+  <div class="cluster-en">Weather, time, religion, divination</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">日</span><span class="rm">sun/day</span></span>
+    <span class="radical-chip"><span class="rc">月</span><span class="rm">moon</span></span>
+    <span class="radical-chip"><span class="rc">礻</span><span class="rm">spirit</span></span>
+    <span class="radical-chip"><span class="rc">雨</span><span class="rm">rain</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 时 time, 期 period, 神 god, 祝 wish, 雷 thunder</div>
+</div>
+
+<div class="cluster c-craft">
+  <div class="cluster-icon">🏠</div>
+  <div class="cluster-name">Shelter & Food Domain</div>
+  <div class="cluster-en">Buildings, enclosures, cooking, eating</div>
+  <div class="radicals-grid">
+    <span class="radical-chip"><span class="rc">门</span><span class="rm">gate</span></span>
+    <span class="radical-chip"><span class="rc">囗</span><span class="rm">enclosure</span></span>
+    <span class="radical-chip"><span class="rc">饣</span><span class="rm">food</span></span>
+    <span class="radical-chip"><span class="rc">酉</span><span class="rm">wine</span></span>
+  </div>
+  <div class="cluster-examples"><strong>Characters:</strong> 问 ask, 国 country, 饭 rice/meal, 醉 drunk</div>
+</div>
+
+</div>
+
+<div class="wuxing">
+  <div class="wuxing-title">Connection to the Five Elements (五行 Wuxing)</div>
+  <div class="wuxing-row">
+    <div class="wx-item"><span class="wx-char">木</span><span class="wx-label" style="color:var(--emerald)">Wood</span></div>
+    <span class="wx-arrow">&rarr;</span>
+    <div class="wx-item"><span class="wx-char">火</span><span class="wx-label" style="color:var(--orange)">Fire</span></div>
+    <span class="wx-arrow">&rarr;</span>
+    <div class="wx-item"><span class="wx-char">土</span><span class="wx-label" style="color:var(--amber)">Earth</span></div>
+    <span class="wx-arrow">&rarr;</span>
+    <div class="wx-item"><span class="wx-char">金</span><span class="wx-label" style="color:var(--text2)">Metal</span></div>
+    <span class="wx-arrow">&rarr;</span>
+    <div class="wx-item"><span class="wx-char">水</span><span class="wx-label" style="color:var(--cyan)">Water</span></div>
+    <span class="wx-arrow">&rarr;</span>
+    <div class="wx-item" style="opacity:0.5"><span class="wx-char">木</span><span class="wx-label" style="color:var(--emerald)">Wood</span></div>
+  </div>
+</div>
+
+<p class="note">Some radicals span multiple domains: 月 serves as both "moon" (sky domain) and "flesh/body part" (body domain) depending on character context. Radical 贝 (shell) = money because cowrie shells were ancient Chinese currency.</p>
+</body>
+</html>

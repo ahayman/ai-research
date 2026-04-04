@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animacy Hierarchy in Classifier Selection</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --muted: #64748b;
+    --human: #f59e0b; --high-anim: #f43f5e; --low-anim: #8b5cf6;
+    --inanimate: #3b82f6; --general: #10b981;
+    --success: #4ade80; --error: #f87171; --warn: #fbbf24;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 900px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem;
+  }
+  .title { font-size: 1.1rem; font-weight: 700; text-align: center; margin-bottom: 0.25rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  /* Hierarchy levels */
+  .hierarchy { display: flex; flex-direction: column; gap: 0; }
+  .level {
+    display: grid; grid-template-columns: 180px 1fr 200px;
+    gap: 0.75rem; align-items: stretch;
+    padding: 0.85rem 1rem; border: 1px solid var(--border);
+    background: var(--bg); position: relative;
+  }
+  .level:first-child { border-radius: 8px 8px 0 0; }
+  .level:last-child { border-radius: 0 0 8px 8px; }
+  .level + .level { border-top: none; }
+
+  .level-label { display: flex; flex-direction: column; justify-content: center; }
+  .level-name { font-weight: 700; font-size: 0.9rem; }
+  .level-desc { font-size: 0.72rem; color: var(--muted); }
+  .level-examples { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .classifiers-col { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .cl-tag {
+    padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.82rem;
+    font-weight: 600; border: 1px solid; display: inline-flex;
+    align-items: center; gap: 0.3rem; white-space: nowrap;
+  }
+  .cl-tag .char { font-size: 1rem; }
+  .cl-tag .py { font-size: 0.7rem; font-style: italic; opacity: 0.8; }
+  .cl-tag .note { font-size: 0.68rem; color: var(--muted); }
+
+  .ge-accept { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.2rem; }
+  .ge-verdict { font-weight: 700; font-size: 0.82rem; padding: 0.25rem 0.6rem; border-radius: 4px; text-align: center; }
+  .ge-note { font-size: 0.68rem; color: var(--muted); text-align: center; }
+
+  /* Level colors */
+  .lv-human .level-name { color: var(--human); }
+  .lv-human .cl-tag { border-color: var(--human); background: rgba(245,158,11,0.1); color: var(--human); }
+  .lv-human .ge-verdict { background: rgba(74,222,128,0.15); color: var(--success); }
+
+  .lv-high .level-name { color: var(--high-anim); }
+  .lv-high .cl-tag { border-color: var(--high-anim); background: rgba(244,63,94,0.1); color: var(--high-anim); }
+  .lv-high .ge-verdict { background: rgba(248,113,113,0.15); color: var(--error); }
+
+  .lv-low .level-name { color: var(--low-anim); }
+  .lv-low .cl-tag { border-color: var(--low-anim); background: rgba(139,92,246,0.1); color: var(--low-anim); }
+  .lv-low .ge-verdict { background: rgba(251,191,36,0.12); color: var(--warn); }
+
+  .lv-inanimate .level-name { color: var(--inanimate); }
+  .lv-inanimate .cl-tag { border-color: var(--inanimate); background: rgba(59,130,246,0.1); color: var(--inanimate); }
+  .lv-inanimate .ge-verdict { background: rgba(74,222,128,0.15); color: var(--success); }
+
+  /* Arrow between levels */
+  .arrow-label {
+    text-align: center; font-size: 0.7rem; color: var(--accent); font-weight: 600;
+    padding: 0.15rem 0; letter-spacing: 0.04em;
+    background: var(--surface);
+  }
+
+  /* ERP box */
+  .erp-box {
+    margin-top: 1.25rem; padding: 1rem;
+    background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.2);
+    border-radius: 8px;
+  }
+  .erp-title { font-weight: 700; color: var(--accent); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .erp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .erp-item { font-size: 0.8rem; padding: 0.5rem 0.6rem; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); }
+  .erp-item strong { display: block; margin-bottom: 0.2rem; }
+
+  .header-row {
+    display: grid; grid-template-columns: 180px 1fr 200px; gap: 0.75rem;
+    padding: 0.4rem 1rem; font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  }
+
+  @media (max-width: 700px) {
+    .level { grid-template-columns: 1fr; gap: 0.5rem; }
+    .header-row { display: none; }
+    .ge-accept { align-items: flex-start; flex-direction: row; gap: 0.5rem; }
+    .erp-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">Animacy Hierarchy in Classifier Selection</div>
+  <div class="subtitle">Higher animacy = stricter classifier requirements; lower animacy = more tolerance for general 个 gè</div>
+
+  <div class="header-row">
+    <div>Animacy Level</div>
+    <div>Required Classifiers</div>
+    <div style="text-align:center">个 gè Acceptable?</div>
+  </div>
+
+  <div class="hierarchy">
+    <div class="level lv-human">
+      <div class="level-label">
+        <div class="level-name">Humans</div>
+        <div class="level-desc">People, with social register distinctions</div>
+        <div class="level-examples">老师, 客人, 学生, 人</div>
+      </div>
+      <div class="classifiers-col">
+        <div class="cl-tag"><span class="char">个</span> <span class="py">gè</span> <span class="note">casual</span></div>
+        <div class="cl-tag"><span class="char">位</span> <span class="py">wèi</span> <span class="note">respectful</span></div>
+        <div class="cl-tag"><span class="char">名</span> <span class="py">míng</span> <span class="note">official</span></div>
+        <div class="cl-tag"><span class="char">口</span> <span class="py">kǒu</span> <span class="note">household</span></div>
+      </div>
+      <div class="ge-accept">
+        <div class="ge-verdict">Yes, default</div>
+        <div class="ge-note">个 is the normal human classifier; 位/名 add register</div>
+      </div>
+    </div>
+
+    <div class="level lv-high">
+      <div class="level-label">
+        <div class="level-name">Higher Animals</div>
+        <div class="level-desc">Mammals, birds, larger creatures</div>
+        <div class="level-examples">猫 cat, 狗 dog, 鸟 bird, 狮子 lion</div>
+      </div>
+      <div class="classifiers-col">
+        <div class="cl-tag"><span class="char">只</span> <span class="py">zhī</span> <span class="note">small/general</span></div>
+        <div class="cl-tag"><span class="char">头</span> <span class="py">tóu</span> <span class="note">large livestock</span></div>
+        <div class="cl-tag"><span class="char">匹</span> <span class="py">pǐ</span> <span class="note">horses</span></div>
+      </div>
+      <div class="ge-accept">
+        <div class="ge-verdict">No &mdash; sounds wrong</div>
+        <div class="ge-note">*一个猫 triggers neural mismatch response (ERP data)</div>
+      </div>
+    </div>
+
+    <div class="level lv-low">
+      <div class="level-label">
+        <div class="level-name">Lower Animals</div>
+        <div class="level-desc">Insects, worms, small creatures</div>
+        <div class="level-examples">蚂蚁 ant, 蚯蚓 worm, 章鱼 octopus</div>
+      </div>
+      <div class="classifiers-col">
+        <div class="cl-tag"><span class="char">只</span> <span class="py">zhī</span> <span class="note">default</span></div>
+        <div class="cl-tag"><span class="char">条</span> <span class="py">tiáo</span> <span class="note">if long/wiggly</span></div>
+      </div>
+      <div class="ge-accept">
+        <div class="ge-verdict">Marginal</div>
+        <div class="ge-note">个 tolerated more; no ERP mismatch detected</div>
+      </div>
+    </div>
+
+    <div class="level lv-inanimate">
+      <div class="level-label">
+        <div class="level-name">Inanimate Objects</div>
+        <div class="level-desc">Physical things, abstractions</div>
+        <div class="level-examples">桌子 table, 问题 question</div>
+      </div>
+      <div class="classifiers-col">
+        <div class="cl-tag"><span class="char">张</span> <span class="py">zhāng</span> <span class="note">flat</span></div>
+        <div class="cl-tag"><span class="char">把</span> <span class="py">bǎ</span> <span class="note">handled</span></div>
+        <div class="cl-tag"><span class="char">条</span> <span class="py">tiáo</span> <span class="note">long</span></div>
+        <div class="cl-tag"><span class="char">...</span> <span class="note">shape-based</span></div>
+      </div>
+      <div class="ge-accept">
+        <div class="ge-verdict">Yes, often accepted</div>
+        <div class="ge-note">个 replaces specialized CLs in casual speech</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="erp-box">
+    <div class="erp-title">Neural Evidence: ERP Mismatch Studies</div>
+    <div class="erp-grid">
+      <div class="erp-item">
+        <strong style="color:var(--high-anim)">Higher Animals + 个</strong>
+        Significant N400 mismatch response detected. Pairing 个 with lion or chimpanzee activates semantic violation processing. The brain "knows" these need 只.
+      </div>
+      <div class="erp-item">
+        <strong style="color:var(--low-anim)">Lower Animals + 个</strong>
+        No significant mismatch effect. Pairing 个 with earthworm or octopus does not trigger the same violation. Animacy boundary falls between these levels.
+      </div>
+    </div>
+  </div>
+</div>
+<figcaption>Diagram 3 &mdash; Animacy is a fine-grained hierarchy, not a binary. Higher animals demand specific classifiers; lower animals and objects tolerate the general 个 gè more readily.</figcaption>
+</figure>
+</body>
+</html>

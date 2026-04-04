@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guanxi Network: Concentric Circles of Obligation</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-dim: #0891b2;
+    --mandarin: #f59e0b; --mandarin-bg: rgba(245,158,11,0.12);
+    --trad: #f43f5e; --trad-bg: rgba(244,63,94,0.08);
+    --english: #8b5cf6; --english-bg: rgba(139,92,246,0.1);
+    --muted: #64748b; --success: #4ade80;
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.1);
+    --blue: #3b82f6; --blue-bg: rgba(59,130,246,0.1);
+    --rose: #f43f5e; --warm: #fb923c;
+    --gold: #eab308;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 950px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem;
+  }
+  .title { font-size: 1.15rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+  .section-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin: 1.5rem 0 0.6rem; padding-left: 0.5rem; border-left: 3px solid var(--accent);
+    color: var(--accent);
+  }
+
+  /* Concentric circles visualization */
+  .circles-container {
+    display: flex; justify-content: center; align-items: center;
+    padding: 1rem 0; margin-bottom: 1rem;
+  }
+  .circles-svg { max-width: 500px; width: 100%; height: auto; }
+
+  /* Ring legend */
+  .ring-legend {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .ring-card {
+    padding: 0.65rem; border-radius: 8px; border: 2px solid;
+    text-align: center;
+  }
+  .ring-1 { border-color: var(--rose); background: var(--trad-bg); }
+  .ring-2 { border-color: var(--mandarin); background: var(--mandarin-bg); }
+  .ring-3 { border-color: var(--accent); background: rgba(6,182,212,0.08); }
+  .ring-4 { border-color: var(--muted); background: rgba(100,116,139,0.08); }
+  .ring-label { font-size: 0.72rem; font-weight: 700; margin-bottom: 0.15rem; }
+  .ring-1 .ring-label { color: var(--rose); }
+  .ring-2 .ring-label { color: var(--mandarin); }
+  .ring-3 .ring-label { color: var(--accent); }
+  .ring-4 .ring-label { color: var(--muted); }
+  .ring-zh { font-size: 1rem; font-weight: 700; margin-bottom: 0.1rem; }
+  .ring-1 .ring-zh { color: var(--rose); }
+  .ring-2 .ring-zh { color: var(--mandarin); }
+  .ring-3 .ring-zh { color: var(--accent); }
+  .ring-4 .ring-zh { color: var(--muted); }
+  .ring-en { font-size: 0.68rem; color: var(--muted); }
+  .ring-oblig { font-size: 0.62rem; font-weight: 600; margin-top: 0.2rem; padding: 0.1rem 0.3rem; border-radius: 3px; display: inline-block; }
+  .ring-1 .ring-oblig { background: rgba(244,63,94,0.15); color: var(--rose); }
+  .ring-2 .ring-oblig { background: rgba(245,158,11,0.15); color: var(--mandarin); }
+  .ring-3 .ring-oblig { background: rgba(6,182,212,0.12); color: var(--accent); }
+  .ring-4 .ring-oblig { background: rgba(100,116,139,0.12); color: var(--muted); }
+
+  /* GRX Components */
+  .grx-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .grx-card {
+    padding: 0.75rem; border-radius: 8px; background: var(--bg);
+    border: 1px solid var(--border); text-align: center;
+  }
+  .grx-zh { font-size: 1.3rem; font-weight: 700; }
+  .grx-1 .grx-zh { color: var(--rose); }
+  .grx-2 .grx-zh { color: var(--mandarin); }
+  .grx-3 .grx-zh { color: var(--emerald); }
+  .grx-pinyin { font-size: 0.78rem; font-style: italic; color: var(--muted); }
+  .grx-en { font-size: 0.82rem; font-weight: 600; color: var(--fg); margin: 0.25rem 0; }
+  .grx-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+
+  /* Linguistic markers */
+  .markers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .marker-item {
+    padding: 0.5rem 0.75rem; border-radius: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+  .marker-name { font-weight: 600; color: var(--mandarin); margin-bottom: 0.15rem; }
+  .marker-zh { font-weight: 700; color: var(--fg); }
+  .marker-desc { font-size: 0.72rem; color: var(--muted); }
+
+  /* English comparison */
+  .en-compare {
+    margin-top: 1.25rem; padding: 1rem; border-radius: 8px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .en-col { text-align: center; }
+  .en-col-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem; }
+  .zh-col .en-col-label { color: var(--mandarin); }
+  .en-col-en .en-col-label { color: var(--english); }
+  .en-col-desc { font-size: 0.78rem; color: var(--fg); margin-bottom: 0.25rem; }
+  .en-col-note { font-size: 0.7rem; color: var(--muted); }
+
+  @media (max-width: 700px) {
+    .ring-legend { grid-template-columns: 1fr 1fr; }
+    .grx-grid { grid-template-columns: 1fr; }
+    .markers-grid { grid-template-columns: 1fr; }
+    .en-compare { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">Guanxi: Concentric Circles of Obligation</div>
+  <div class="subtitle">Fei Xiaotong's "differential mode of association" (差序格局) -- relationships radiate outward from self</div>
+
+  <!-- SVG Concentric Circles -->
+  <div class="circles-container">
+    <svg class="circles-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer ring: Strangers -->
+      <circle cx="200" cy="200" r="185" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4" opacity="0.4"/>
+      <circle cx="200" cy="200" r="185" fill="rgba(100,116,139,0.04)"/>
+      <text x="200" y="32" text-anchor="middle" fill="#64748b" font-size="11" font-weight="600">陌生人 Strangers</text>
+      <text x="200" y="46" text-anchor="middle" fill="#64748b" font-size="9" opacity="0.7">No obligation</text>
+
+      <!-- Third ring: Acquaintances -->
+      <circle cx="200" cy="200" r="140" fill="none" stroke="#06b6d4" stroke-width="2.5" opacity="0.5"/>
+      <circle cx="200" cy="200" r="140" fill="rgba(6,182,212,0.05)"/>
+      <text x="200" y="78" text-anchor="middle" fill="#06b6d4" font-size="11" font-weight="600">熟人 Acquaintances</text>
+      <text x="200" y="92" text-anchor="middle" fill="#06b6d4" font-size="9" opacity="0.7">Calculated reciprocity</text>
+
+      <!-- Second ring: Close friends/family -->
+      <circle cx="200" cy="200" r="95" fill="none" stroke="#f59e0b" stroke-width="3" opacity="0.6"/>
+      <circle cx="200" cy="200" r="95" fill="rgba(245,158,11,0.06)"/>
+      <text x="200" y="122" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600">亲友 Close Circle</text>
+      <text x="200" y="136" text-anchor="middle" fill="#f59e0b" font-size="9" opacity="0.7">Strong reciprocal duty</text>
+
+      <!-- Inner ring: Immediate family -->
+      <circle cx="200" cy="200" r="52" fill="none" stroke="#f43f5e" stroke-width="3.5" opacity="0.7"/>
+      <circle cx="200" cy="200" r="52" fill="rgba(244,63,94,0.08)"/>
+      <text x="200" y="188" text-anchor="middle" fill="#f43f5e" font-size="11" font-weight="700">家人</text>
+      <text x="200" y="204" text-anchor="middle" fill="#f43f5e" font-size="10" font-weight="600">Family</text>
+      <text x="200" y="218" text-anchor="middle" fill="#f43f5e" font-size="8" opacity="0.8">Unconditional</text>
+
+      <!-- Self at center -->
+      <circle cx="200" cy="200" r="16" fill="#f43f5e" opacity="0.9"/>
+      <text x="200" y="170" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="800">自己</text>
+      <text x="200" y="170" text-anchor="middle" fill="white" font-size="8" font-weight="700" dy="0">Self</text>
+
+      <!-- Connecting arrows showing guanxi-building -->
+      <line x1="260" y1="200" x2="290" y2="200" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowGold)"/>
+      <text x="310" y="196" fill="#f59e0b" font-size="8" font-weight="600">Building</text>
+      <text x="310" y="208" fill="#f59e0b" font-size="8" font-weight="600">guanxi</text>
+
+      <line x1="140" y1="200" x2="110" y2="200" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrowGray)"/>
+      <text x="55" y="196" fill="#64748b" font-size="8">Losing</text>
+      <text x="55" y="208" fill="#64748b" font-size="8">guanxi</text>
+
+      <defs>
+        <marker id="arrowGold" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M 0 0 L 8 4 L 0 8 Z" fill="#f59e0b"/>
+        </marker>
+        <marker id="arrowGray" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M 0 0 L 8 4 L 0 8 Z" fill="#64748b"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- Ring legend -->
+  <div class="ring-legend">
+    <div class="ring-card ring-1">
+      <div class="ring-zh">家人</div>
+      <div class="ring-label">jiaren</div>
+      <div class="ring-en">Immediate family</div>
+      <div class="ring-oblig">Unconditional</div>
+    </div>
+    <div class="ring-card ring-2">
+      <div class="ring-zh">亲友</div>
+      <div class="ring-label">qinyou</div>
+      <div class="ring-en">Extended family, close friends</div>
+      <div class="ring-oblig">Strong reciprocal</div>
+    </div>
+    <div class="ring-card ring-3">
+      <div class="ring-zh">熟人</div>
+      <div class="ring-label">shuren</div>
+      <div class="ring-en">Acquaintances, colleagues</div>
+      <div class="ring-oblig">Deliberate exchange</div>
+    </div>
+    <div class="ring-card ring-4">
+      <div class="ring-zh">生人</div>
+      <div class="ring-label">shengren</div>
+      <div class="ring-en">Strangers</div>
+      <div class="ring-oblig">No obligation</div>
+    </div>
+  </div>
+
+  <!-- GRX Components -->
+  <div class="section-label">Three Components of Guanxi</div>
+  <div class="grx-grid">
+    <div class="grx-card grx-1">
+      <div class="grx-zh">感情</div>
+      <div class="grx-pinyin">ganqing</div>
+      <div class="grx-en">Emotional Bond</div>
+      <div class="grx-desc">Affective attachment built through shared experiences, time, and genuine care</div>
+    </div>
+    <div class="grx-card grx-2">
+      <div class="grx-zh">人情</div>
+      <div class="grx-pinyin">renqing</div>
+      <div class="grx-en">Moral Obligation</div>
+      <div class="grx-desc">Reciprocal exchange of favors creating indebtedness -- the currency of guanxi</div>
+    </div>
+    <div class="grx-card grx-3">
+      <div class="grx-zh">信任</div>
+      <div class="grx-pinyin">xinren</div>
+      <div class="grx-en">Interpersonal Trust</div>
+      <div class="grx-desc">Reliability built through keeping promises and fulfilling obligations over time</div>
+    </div>
+  </div>
+
+  <!-- Linguistic Markers -->
+  <div class="section-label">How Guanxi Is Encoded in Language</div>
+  <div class="markers-grid">
+    <div class="marker-item">
+      <div class="marker-name">Kinship Extension</div>
+      <div class="marker-zh">哥 / 姐 / 叔 / 阿姨</div>
+      <div class="marker-desc">Calling non-relatives by kinship terms signals "I want to bring you into my inner circle"</div>
+    </div>
+    <div class="marker-item">
+      <div class="marker-name">In-Group Pronoun</div>
+      <div class="marker-zh">我们 (women, "we")</div>
+      <div class="marker-desc">Strategic deployment to include someone in your circle -- powerful guanxi signal</div>
+    </div>
+    <div class="marker-item">
+      <div class="marker-name">Favor Language</div>
+      <div class="marker-zh">帮忙 / 麻烦你 / 拜托</div>
+      <div class="marker-desc">Requesting help creates renqing debt; accepting = strengthening the bond</div>
+    </div>
+    <div class="marker-item">
+      <div class="marker-name">Back-Door Connections</div>
+      <div class="marker-zh">走后门 (zou houmen)</div>
+      <div class="marker-desc">Using guanxi to bypass formal channels -- pervasive in PRC bureaucracy and business</div>
+    </div>
+  </div>
+
+  <!-- English comparison -->
+  <div class="en-compare">
+    <div class="en-col zh-col">
+      <div class="en-col-label">Chinese Guanxi</div>
+      <div class="en-col-desc">Concentric, obligation-weighted</div>
+      <div class="en-col-note">Moral weight; multigenerational; structured reciprocity; different rules per ring</div>
+    </div>
+    <div class="en-col en-col-en">
+      <div class="en-col-label">English "Networking"</div>
+      <div class="en-col-desc">Flat, transaction-oriented</div>
+      <div class="en-col-note">"I owe you one" -- thin version of renqing; compartmentalized; no concentric structure</div>
+    </div>
+  </div>
+
+</div>
+<figcaption>Fei Xiaotong's differential mode of association (1947): Chinese social structure radiates outward from self with decreasing obligation at each ring -- a fundamentally different model from Western networking.</figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morpheme Pivot Networks: How Key Morphemes Generate Word Families</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4; --muted: #6c757d;
+    --hub1: #e67e22; --hub1-bg: #fef3e2;
+    --hub2: #8b5cf6; --hub2-bg: #ede9fe;
+    --hub3: #059669; --hub3-bg: #d1fae5;
+    --link: #94a3b8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --accent: #06b6d4; --muted: #94a3b8;
+      --hub1: #f59e0b; --hub1-bg: #451a03;
+      --hub2: #a78bfa; --hub2-bg: #2e1065;
+      --hub3: #34d399; --hub3-bg: #064e3b;
+      --link: #475569;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .network-section { margin-bottom: 2rem; }
+  .network-section:last-child { margin-bottom: 0; }
+
+  .hub-row { display: flex; align-items: flex-start; gap: 1rem; }
+  .hub-node {
+    flex-shrink: 0; width: 100px; height: 100px;
+    border-radius: 50%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; border: 3px solid;
+    position: relative;
+  }
+  .hub-node.h1 { background: var(--hub1-bg); border-color: var(--hub1); }
+  .hub-node.h2 { background: var(--hub2-bg); border-color: var(--hub2); }
+  .hub-node.h3 { background: var(--hub3-bg); border-color: var(--hub3); }
+  .hub-zh { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+  .h1 .hub-zh { color: var(--hub1); }
+  .h2 .hub-zh { color: var(--hub2); }
+  .h3 .hub-zh { color: var(--hub3); }
+  .hub-pinyin { font-size: 0.7rem; color: var(--muted); }
+  .hub-meaning { font-size: 0.68rem; color: var(--muted); }
+
+  .spoke-area { flex: 1; }
+  .spoke-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .spoke-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .spoke-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.35rem 0.55rem; font-size: 0.8rem; display: flex; flex-direction: column;
+    min-width: 100px;
+  }
+  .spoke-item .sw-zh { font-weight: 700; font-size: 1rem; }
+  .spoke-item .sw-pinyin { font-size: 0.68rem; color: var(--muted); }
+  .spoke-item .sw-en { font-size: 0.72rem; }
+  .spoke-item .sw-lit { font-size: 0.66rem; color: var(--muted); font-style: italic; }
+
+  .h1 ~ .spoke-area .spoke-label { color: var(--hub1); }
+  .hub-row:nth-child(1) .spoke-label,
+  .network-section:nth-child(1) .spoke-label { color: var(--hub1); }
+  .network-section:nth-child(2) .spoke-label { color: var(--hub2); }
+  .network-section:nth-child(3) .spoke-label { color: var(--hub3); }
+
+  .insight-box {
+    margin-top: 1.5rem; padding: 0.9rem 1rem; background: var(--bg);
+    border-radius: 8px; border: 1px solid var(--border);
+    display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  }
+  .insight-stat { text-align: center; min-width: 130px; }
+  .insight-stat .num { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+  .insight-stat .label { font-size: 0.72rem; color: var(--muted); }
+  .insight-text { flex: 1; min-width: 200px; font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  .divider { height: 1px; background: var(--border); margin: 0.5rem 0; }
+
+  figcaption {
+    margin-top: 1rem; padding: 0.8rem 1rem; background: var(--surface);
+    border-radius: 8px; border: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+  }
+  @media (max-width: 700px) {
+    .hub-row { flex-direction: column; align-items: center; }
+    .hub-node { width: 80px; height: 80px; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Morpheme Pivot Networks</div>
+    <div class="subtitle">A single productive morpheme generates dozens of compounds, creating systematic word families</div>
+
+    <!-- 电 diàn network -->
+    <div class="network-section">
+      <div class="hub-row">
+        <div class="hub-node h1">
+          <div class="hub-zh">电</div>
+          <div class="hub-pinyin">diàn</div>
+          <div class="hub-meaning">electricity</div>
+        </div>
+        <div class="spoke-area">
+          <div class="spoke-label">电 diàn as modifier (electric + X)</div>
+          <div class="spoke-grid">
+            <div class="spoke-item">
+              <div class="sw-zh">电话</div>
+              <div class="sw-pinyin">diànhuà</div>
+              <div class="sw-lit">electric-speech</div>
+              <div class="sw-en">telephone</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电脑</div>
+              <div class="sw-pinyin">diànnǎo</div>
+              <div class="sw-lit">electric-brain</div>
+              <div class="sw-en">computer</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电视</div>
+              <div class="sw-pinyin">diànshì</div>
+              <div class="sw-lit">electric-vision</div>
+              <div class="sw-en">television</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电影</div>
+              <div class="sw-pinyin">diànyǐng</div>
+              <div class="sw-lit">electric-shadow</div>
+              <div class="sw-en">film/movie</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电梯</div>
+              <div class="sw-pinyin">diàntī</div>
+              <div class="sw-lit">electric-stairs</div>
+              <div class="sw-en">elevator</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电池</div>
+              <div class="sw-pinyin">diànchí</div>
+              <div class="sw-lit">electric-pool</div>
+              <div class="sw-en">battery</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电子</div>
+              <div class="sw-pinyin">diànzǐ</div>
+              <div class="sw-lit">electric-particle</div>
+              <div class="sw-en">electronic</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">电报</div>
+              <div class="sw-pinyin">diànbào</div>
+              <div class="sw-lit">electric-report</div>
+              <div class="sw-en">telegram</div>
+            </div>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <div class="spoke-label">电 diàn as head (X + electric)</div>
+            <div class="spoke-grid">
+              <div class="spoke-item">
+                <div class="sw-zh">充电</div>
+                <div class="sw-pinyin">chōngdiàn</div>
+                <div class="sw-lit">fill-electricity</div>
+                <div class="sw-en">recharge</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">停电</div>
+                <div class="sw-pinyin">tíngdiàn</div>
+                <div class="sw-lit">stop-electricity</div>
+                <div class="sw-en">power outage</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">来电</div>
+                <div class="sw-pinyin">láidiàn</div>
+                <div class="sw-lit">come-electricity</div>
+                <div class="sw-en">incoming call</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 学 xué network -->
+    <div class="network-section">
+      <div class="hub-row">
+        <div class="hub-node h2">
+          <div class="hub-zh">学</div>
+          <div class="hub-pinyin">xué</div>
+          <div class="hub-meaning">study / -ology</div>
+        </div>
+        <div class="spoke-area">
+          <div class="spoke-label">学 xué as head (X-ology / X-study)</div>
+          <div class="spoke-grid">
+            <div class="spoke-item">
+              <div class="sw-zh">科学</div>
+              <div class="sw-pinyin">kēxué</div>
+              <div class="sw-lit">branch-study</div>
+              <div class="sw-en">science</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">数学</div>
+              <div class="sw-pinyin">shùxué</div>
+              <div class="sw-lit">number-study</div>
+              <div class="sw-en">mathematics</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">化学</div>
+              <div class="sw-pinyin">huàxué</div>
+              <div class="sw-lit">transform-study</div>
+              <div class="sw-en">chemistry</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">文学</div>
+              <div class="sw-pinyin">wénxué</div>
+              <div class="sw-lit">writing-study</div>
+              <div class="sw-en">literature</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">医学</div>
+              <div class="sw-pinyin">yīxué</div>
+              <div class="sw-lit">medicine-study</div>
+              <div class="sw-en">medical science</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">语言学</div>
+              <div class="sw-pinyin">yǔyánxué</div>
+              <div class="sw-lit">language-study</div>
+              <div class="sw-en">linguistics</div>
+            </div>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <div class="spoke-label">学 xué as modifier (study/school + X)</div>
+            <div class="spoke-grid">
+              <div class="spoke-item">
+                <div class="sw-zh">学生</div>
+                <div class="sw-pinyin">xuéshēng</div>
+                <div class="sw-lit">study-person</div>
+                <div class="sw-en">student</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">学校</div>
+                <div class="sw-pinyin">xuéxiào</div>
+                <div class="sw-lit">study-school</div>
+                <div class="sw-en">school</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">学者</div>
+                <div class="sw-pinyin">xuézhě</div>
+                <div class="sw-lit">study-person</div>
+                <div class="sw-en">scholar</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 机 jī network -->
+    <div class="network-section">
+      <div class="hub-row">
+        <div class="hub-node h3">
+          <div class="hub-zh">机</div>
+          <div class="hub-pinyin">jī</div>
+          <div class="hub-meaning">machine</div>
+        </div>
+        <div class="spoke-area">
+          <div class="spoke-label">机 jī as head (X-machine)</div>
+          <div class="spoke-grid">
+            <div class="spoke-item">
+              <div class="sw-zh">飞机</div>
+              <div class="sw-pinyin">fēijī</div>
+              <div class="sw-lit">fly-machine</div>
+              <div class="sw-en">airplane</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">手机</div>
+              <div class="sw-pinyin">shǒujī</div>
+              <div class="sw-lit">hand-machine</div>
+              <div class="sw-en">cellphone</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">计算机</div>
+              <div class="sw-pinyin">jìsuànjī</div>
+              <div class="sw-lit">calculate-machine</div>
+              <div class="sw-en">computer</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">洗衣机</div>
+              <div class="sw-pinyin">xǐyījī</div>
+              <div class="sw-lit">wash-clothes-machine</div>
+              <div class="sw-en">washing machine</div>
+            </div>
+            <div class="spoke-item">
+              <div class="sw-zh">打印机</div>
+              <div class="sw-pinyin">dǎyìnjī</div>
+              <div class="sw-lit">hit-print-machine</div>
+              <div class="sw-en">printer</div>
+            </div>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <div class="spoke-label">机 jī as modifier (machine/mechanism + X)</div>
+            <div class="spoke-grid">
+              <div class="spoke-item">
+                <div class="sw-zh">机器</div>
+                <div class="sw-pinyin">jīqì</div>
+                <div class="sw-lit">mechanism-tool</div>
+                <div class="sw-en">machine</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">机场</div>
+                <div class="sw-pinyin">jīchǎng</div>
+                <div class="sw-lit">machine-field</div>
+                <div class="sw-en">airport</div>
+              </div>
+              <div class="spoke-item">
+                <div class="sw-zh">机会</div>
+                <div class="sw-pinyin">jīhuì</div>
+                <div class="sw-lit">mechanism-meeting</div>
+                <div class="sw-en">opportunity</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-stat">
+        <div class="num">~1,500</div>
+        <div class="label">common morphemes</div>
+      </div>
+      <div class="insight-stat">
+        <div class="num">30,000+</div>
+        <div class="label">accessible compounds</div>
+      </div>
+      <div class="insight-text">
+        Mandarin's morpheme pivot system means vocabulary grows <em>combinatorially</em>. Learning one new morpheme doesn't add one word — it unlocks an entire family. This makes Mandarin vocabulary acquisition increasingly efficient as your morpheme base grows.
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Morpheme pivot networks.</strong> Three of Mandarin's most productive morphemes shown with their compound families. Each morpheme can function as either modifier or head, generating different semantic results. The morpheme 电 diàn alone appears in over 50 common compounds. Compare with English, where "tele-" (Greek), "electr-" (Greek), and "-phone" (Greek) are opaque borrowed roots rather than transparent native morphemes.
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Pinyin Initial-Final Chart</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-light: #0e2a32;
+    --asp: #f59e0b; --asp-bg: rgba(245,158,11,0.1); --asp-border: rgba(245,158,11,0.3);
+    --unasp: #06b6d4; --unasp-bg: rgba(6,182,212,0.1); --unasp-border: rgba(6,182,212,0.3);
+    --nasal: #a78bfa; --nasal-bg: rgba(167,139,250,0.1);
+    --other: #94a3b8;
+    --muted: #64748b; --caption-bg: #1e293b;
+    --valid: rgba(6,182,212,0.06); --empty: transparent;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; background: var(--bg); color: var(--fg); display: flex; justify-content: center; padding: 1.5rem 0.75rem; line-height: 1.5; }
+  figure { max-width: 1100px; width: 100%; }
+  figcaption { text-align: center; margin-top: 1.25rem; padding: 1rem 1.5rem; background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border); }
+  figcaption h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--accent); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  figcaption p { font-size: 0.8rem; color: var(--muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .chart-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 1.25rem; }
+  h3 { font-size: 0.9rem; font-weight: 700; color: var(--accent); margin-bottom: 0.75rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; font-size: 0.75rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid; }
+  .swatch-asp { background: var(--asp-bg); border-color: var(--asp-border); }
+  .swatch-unasp { background: var(--unasp-bg); border-color: var(--unasp-border); }
+  .swatch-nasal { background: var(--nasal-bg); border-color: rgba(167,139,250,0.3); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+  th, td { padding: 0.3rem 0.2rem; text-align: center; border: 1px solid var(--border); white-space: nowrap; min-width: 32px; }
+  th { background: rgba(6,182,212,0.12); color: var(--accent); font-weight: 700; font-size: 0.75rem; position: sticky; top: 0; }
+  th.group-header { background: rgba(6,182,212,0.2); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  td.row-header { background: rgba(6,182,212,0.08); color: var(--accent); font-weight: 600; text-align: left; padding-left: 0.5rem; font-size: 0.75rem; position: sticky; left: 0; z-index: 1; }
+  td.asp { background: var(--asp-bg); color: var(--asp); font-weight: 600; }
+  td.unasp { background: var(--unasp-bg); color: var(--unasp); font-weight: 600; }
+  td.nasal { background: var(--nasal-bg); color: var(--nasal); font-weight: 600; }
+  td.other-cell { color: var(--other); }
+  td.empty { background: var(--empty); color: var(--border); }
+  .ipa { font-family: 'Gentium Plus', 'Noto Sans', 'DejaVu Sans', serif; font-size: 0.65rem; color: var(--muted); }
+
+  .section { margin-bottom: 1.5rem; }
+  .initial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+  .initial-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; text-align: center; }
+  .initial-card.asp-card { border-color: var(--asp-border); background: var(--asp-bg); }
+  .initial-card.unasp-card { border-color: var(--unasp-border); background: var(--unasp-bg); }
+  .initial-card.nasal-card { border-color: rgba(167,139,250,0.3); background: var(--nasal-bg); }
+  .initial-letter { font-size: 1.2rem; font-weight: 800; }
+  .initial-letter.asp-letter { color: var(--asp); }
+  .initial-letter.unasp-letter { color: var(--unasp); }
+  .initial-letter.nasal-letter { color: var(--nasal); }
+  .initial-letter.other-letter { color: var(--other); }
+  .initial-ipa { font-size: 0.7rem; color: var(--muted); font-family: 'Gentium Plus', 'Noto Sans', serif; margin-top: 0.15rem; }
+  .initial-type { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  .group-label { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; padding-left: 0.25rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  .pair-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .pair-box { display: flex; align-items: center; gap: 0.25rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+  .pair-vs { color: var(--muted); font-size: 0.65rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .asp-tag { color: var(--asp); font-weight: 700; }
+  .unasp-tag { color: var(--unasp); font-weight: 700; }
+
+  .note-box { background: var(--bg); border: 1px solid var(--asp-border); border-radius: 6px; padding: 0.75rem; margin-top: 1rem; font-size: 0.8rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .note-box strong { color: var(--asp); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="chart-wrapper">
+    <h3>The 21 Pinyin Initials — Organized by Place of Articulation</h3>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch swatch-unasp"></div> Unaspirated</div>
+      <div class="legend-item"><div class="legend-swatch swatch-asp"></div> Aspirated</div>
+      <div class="legend-item"><div class="legend-swatch swatch-nasal"></div> Nasal / Lateral</div>
+    </div>
+
+    <!-- Labials -->
+    <div class="group-label">Labials (lips)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">b</span> <span class="ipa">[p]</span> <span class="pair-vs">vs</span> <span class="asp-tag">p</span> <span class="ipa">[pʰ]</span></div>
+      <div class="pair-box"><span class="nasal-letter" style="font-weight:700">m</span> <span class="ipa">[m]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">f</span> <span class="ipa">[f]</span></div>
+    </div>
+
+    <!-- Alveolars -->
+    <div class="group-label">Alveolars (tongue tip to ridge)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">d</span> <span class="ipa">[t]</span> <span class="pair-vs">vs</span> <span class="asp-tag">t</span> <span class="ipa">[tʰ]</span></div>
+      <div class="pair-box"><span class="nasal-letter" style="font-weight:700">n</span> <span class="ipa">[n]</span></div>
+      <div class="pair-box"><span class="nasal-letter" style="font-weight:700">l</span> <span class="ipa">[l]</span></div>
+    </div>
+
+    <!-- Velars -->
+    <div class="group-label">Velars (back of mouth)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">g</span> <span class="ipa">[k]</span> <span class="pair-vs">vs</span> <span class="asp-tag">k</span> <span class="ipa">[kʰ]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">h</span> <span class="ipa">[x]</span></div>
+    </div>
+
+    <!-- Dental Sibilants -->
+    <div class="group-label">Dental Sibilants (tongue tip to teeth)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">z</span> <span class="ipa">[ts]</span> <span class="pair-vs">vs</span> <span class="asp-tag">c</span> <span class="ipa">[tsʰ]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">s</span> <span class="ipa">[s]</span></div>
+    </div>
+
+    <!-- Retroflexes -->
+    <div class="group-label">Retroflexes (tongue curled back)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">zh</span> <span class="ipa">[tʂ]</span> <span class="pair-vs">vs</span> <span class="asp-tag">ch</span> <span class="ipa">[tʂʰ]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">sh</span> <span class="ipa">[ʂ]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">r</span> <span class="ipa">[ɻ]</span></div>
+    </div>
+
+    <!-- Palatals -->
+    <div class="group-label">Palatals (tongue blade to hard palate)</div>
+    <div class="pair-row">
+      <div class="pair-box"><span class="unasp-tag">j</span> <span class="ipa">[tɕ]</span> <span class="pair-vs">vs</span> <span class="asp-tag">q</span> <span class="ipa">[tɕʰ]</span></div>
+      <div class="pair-box"><span class="other-letter" style="font-weight:700;color:var(--other)">x</span> <span class="ipa">[ɕ]</span></div>
+    </div>
+
+    <div class="note-box">
+      <strong>Key Insight for English Speakers:</strong> Pinyin b, d, g, z, zh, j are NOT voiced like English "b, d, g." They are <em>voiceless unaspirated</em> — like the consonants in English "spy, sty, sky" (after the "s"). Their partners p, t, k, c, ch, q are <em>voiceless aspirated</em> — with a puff of air, like English "pie, tie, kite." The opposition is <strong>aspiration</strong>, not voicing.
+    </div>
+
+    <h3 style="margin-top:1.5rem;">Complementary Distribution: Three Sibilant Series</h3>
+    <table style="max-width:600px;">
+      <thead>
+        <tr>
+          <th>Series</th>
+          <th>Unaspirated</th>
+          <th>Aspirated</th>
+          <th>Fricative</th>
+          <th>Occurs Before</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-header">Dental</td>
+          <td class="unasp">z [ts]</td>
+          <td class="asp">c [tsʰ]</td>
+          <td class="other-cell">s [s]</td>
+          <td style="font-size:0.7rem;color:var(--muted)">a, e, u, o (NOT i, ü)</td>
+        </tr>
+        <tr>
+          <td class="row-header">Retroflex</td>
+          <td class="unasp">zh [tʂ]</td>
+          <td class="asp">ch [tʂʰ]</td>
+          <td class="other-cell">sh [ʂ] + r [ɻ]</td>
+          <td style="font-size:0.7rem;color:var(--muted)">a, e, u, o, -i (NOT i, ü)</td>
+        </tr>
+        <tr>
+          <td class="row-header">Palatal</td>
+          <td class="unasp">j [tɕ]</td>
+          <td class="asp">q [tɕʰ]</td>
+          <td class="other-cell">x [ɕ]</td>
+          <td style="font-size:0.7rem;color:var(--muted)">ONLY i, ü (and combinations)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.75rem; color:var(--muted); margin-top:0.5rem; font-family:-apple-system,sans-serif;">
+      These three series are in <strong style="color:var(--accent)">complementary distribution</strong> — they never contrast in the same vowel environment. This is why Pinyin can reuse letters (z/j, c/q, s/x) without ambiguity.
+    </p>
+  </div>
+
+  <figcaption>
+    <h2>Diagram 1: The 21 Pinyin Initials with Aspiration Pairs</h2>
+    <p>Aspirated/unaspirated opposition (NOT voiced/voiceless) is the fundamental consonant distinction in Mandarin. The three sibilant series (dental, retroflex, palatal) are in complementary distribution.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

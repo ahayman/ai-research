@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Architecture Comparison: Three Systems of Word-Building</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #06b6d4; --muted: #6c757d;
+    --mandarin: #06b6d4; --mandarin-bg: #e0f7fa;
+    --english: #8b5cf6; --english-bg: #ede9fe;
+    --classical: #e67e22; --classical-bg: #fef3e2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+      --accent: #06b6d4; --muted: #94a3b8;
+      --mandarin: #22d3ee; --mandarin-bg: #083344;
+      --english: #a78bfa; --english-bg: #2e1065;
+      --classical: #f59e0b; --classical-bg: #451a03;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; overflow-x: auto;
+  }
+  .title { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--accent); margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+  .lang-col { border-radius: 10px; border: 2px solid; padding: 1rem; }
+  .lc-mandarin { border-color: var(--mandarin); background: var(--mandarin-bg); }
+  .lc-english { border-color: var(--english); background: var(--english-bg); }
+  .lc-classical { border-color: var(--classical); background: var(--classical-bg); }
+
+  .lang-header { text-align: center; margin-bottom: 0.8rem; }
+  .lang-name { font-size: 1rem; font-weight: 800; }
+  .lc-mandarin .lang-name { color: var(--mandarin); }
+  .lc-english .lang-name { color: var(--english); }
+  .lc-classical .lang-name { color: var(--classical); }
+  .lang-sub { font-size: 0.72rem; color: var(--muted); }
+
+  .strat-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.5rem 0.6rem; margin-bottom: 0.5rem;
+  }
+  .strat-name { font-size: 0.78rem; font-weight: 700; }
+  .strat-pct {
+    font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.3rem;
+    border-radius: 3px; margin-left: 0.3rem;
+  }
+  .lc-mandarin .strat-pct { background: var(--mandarin-bg); color: var(--mandarin); }
+  .lc-english .strat-pct { background: var(--english-bg); color: var(--english); }
+  .lc-classical .strat-pct { background: var(--classical-bg); color: var(--classical); }
+  .strat-bar { height: 6px; border-radius: 3px; margin: 0.3rem 0; background: var(--border); }
+  .strat-bar-fill { height: 100%; border-radius: 3px; }
+  .lc-mandarin .strat-bar-fill { background: var(--mandarin); }
+  .lc-english .strat-bar-fill { background: var(--english); }
+  .lc-classical .strat-bar-fill { background: var(--classical); }
+  .strat-examples { font-size: 0.72rem; color: var(--muted); }
+
+  .word-len-row {
+    margin-top: 1.5rem; padding: 1rem;
+    background: var(--bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .wl-title { font-size: 0.82rem; font-weight: 700; color: var(--accent); margin-bottom: 0.7rem; text-align: center; }
+  .wl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+  .wl-item { text-align: center; }
+  .wl-blocks { display: flex; justify-content: center; gap: 4px; margin-bottom: 0.3rem; }
+  .wl-block {
+    width: 30px; height: 30px; border-radius: 5px; display: flex;
+    align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;
+    border: 2px solid;
+  }
+  .wlb-m { background: var(--mandarin-bg); border-color: var(--mandarin); color: var(--mandarin); }
+  .wlb-e { background: var(--english-bg); border-color: var(--english); color: var(--english); }
+  .wlb-c { background: var(--classical-bg); border-color: var(--classical); color: var(--classical); }
+  .wl-label { font-size: 0.72rem; color: var(--muted); }
+  .wl-avg { font-size: 0.82rem; font-weight: 700; }
+  .lc-mandarin .wl-avg, .wl-item:nth-child(1) .wl-avg { color: var(--mandarin); }
+  .wl-item:nth-child(2) .wl-avg { color: var(--english); }
+  .wl-item:nth-child(3) .wl-avg { color: var(--classical); }
+
+  /* Neologism row */
+  .neo-row {
+    margin-top: 1rem; padding: 0.8rem 1rem;
+    background: var(--bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .neo-title { font-size: 0.82rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+  .neo-examples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .neo-item { padding: 0.4rem 0.5rem; background: var(--surface); border-radius: 6px; border: 1px solid var(--border); }
+  .neo-concept { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 0.2rem; }
+  .neo-word { font-size: 0.82rem; font-weight: 600; }
+  .neo-note { font-size: 0.68rem; color: var(--muted); font-style: italic; }
+
+  figcaption {
+    margin-top: 1rem; padding: 0.8rem 1rem; background: var(--surface);
+    border-radius: 8px; border: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+  }
+  @media (max-width: 800px) {
+    .three-col, .wl-grid, .neo-examples { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="title">Vocabulary Architecture: Three Systems Compared</div>
+    <div class="subtitle">How Mandarin, English, and Classical Chinese each build their word stocks</div>
+
+    <div class="three-col">
+      <!-- Modern Mandarin -->
+      <div class="lang-col lc-mandarin">
+        <div class="lang-header">
+          <div class="lang-name">Modern Mandarin</div>
+          <div class="lang-sub">Compounding-dominant</div>
+        </div>
+
+        <div class="strat-item">
+          <div class="strat-name">Compounding <span class="strat-pct">~80%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:80%"></div></div>
+          <div class="strat-examples">电脑, 火车, 手机, 大学</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Semi-affixation <span class="strat-pct">~10%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:10%"></div></div>
+          <div class="strat-examples">-化, -性, -者, 可-, 非-</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Borrowing <span class="strat-pct">~5%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:5%"></div></div>
+          <div class="strat-examples">沙发, 咖啡, 巧克力</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Other <span class="strat-pct">~5%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:5%"></div></div>
+          <div class="strat-examples">Abbreviation, blending, reduplication</div>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div class="lang-col lc-english">
+        <div class="lang-header">
+          <div class="lang-name">English</div>
+          <div class="lang-sub">Borrowing-dominant</div>
+        </div>
+
+        <div class="strat-item">
+          <div class="strat-name">Latin/French loans <span class="strat-pct">~58%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:58%"></div></div>
+          <div class="strat-examples">television, revolution, telephone</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Germanic roots <span class="strat-pct">~26%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:26%"></div></div>
+          <div class="strat-examples">house, water, good, come</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Affixation <span class="strat-pct">variable</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:35%"></div></div>
+          <div class="strat-examples">un-, re-, -tion, -ness, -able</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Compounding <span class="strat-pct">moderate</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:20%"></div></div>
+          <div class="strat-examples">blackboard, sunflower, laptop</div>
+        </div>
+      </div>
+
+      <!-- Classical Chinese -->
+      <div class="lang-col lc-classical">
+        <div class="lang-header">
+          <div class="lang-name">Classical Chinese</div>
+          <div class="lang-sub">Monosyllabic-dominant</div>
+        </div>
+
+        <div class="strat-item">
+          <div class="strat-name">Monosyllabic roots <span class="strat-pct">~90%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:90%"></div></div>
+          <div class="strat-examples">見, 言, 國, 山, 火, 人</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Semantic extension <span class="strat-pct">primary</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:60%"></div></div>
+          <div class="strat-examples">走 walk &rarr; run; 走 &rarr; leave</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Context dependence <span class="strat-pct">high</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:70%"></div></div>
+          <div class="strat-examples">Same character, different meaning by context</div>
+        </div>
+        <div class="strat-item">
+          <div class="strat-name">Early compounds <span class="strat-pct">~10%</span></div>
+          <div class="strat-bar"><div class="strat-bar-fill" style="width:10%"></div></div>
+          <div class="strat-examples">天下 tiānxià (under heaven = realm)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Average word length -->
+    <div class="word-len-row">
+      <div class="wl-title">Average Word Length (in syllables)</div>
+      <div class="wl-grid">
+        <div class="wl-item">
+          <div class="wl-blocks">
+            <div class="wl-block wlb-m">电</div>
+            <div class="wl-block wlb-m">脑</div>
+          </div>
+          <div class="wl-avg">2.0 - 2.5 syllables</div>
+          <div class="wl-label">Modern Mandarin</div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-blocks">
+            <div class="wl-block wlb-e">com</div>
+            <div class="wl-block wlb-e">pu</div>
+            <div class="wl-block wlb-e">ter</div>
+          </div>
+          <div class="wl-avg">1.0 - 3.0 syllables</div>
+          <div class="wl-label">English (highly variable)</div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-blocks">
+            <div class="wl-block wlb-c">目</div>
+          </div>
+          <div class="wl-avg">1.0 - 1.2 syllables</div>
+          <div class="wl-label">Classical Chinese</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Neologism comparison -->
+    <div class="neo-row">
+      <div class="neo-title">How Each System Creates "Computer"</div>
+      <div class="neo-examples">
+        <div class="neo-item">
+          <div class="neo-concept">Mandarin</div>
+          <div class="neo-word">电脑 diàn-nǎo</div>
+          <div class="neo-note">electric + brain (transparent calque)</div>
+        </div>
+        <div class="neo-item">
+          <div class="neo-concept">English</div>
+          <div class="neo-word">computer</div>
+          <div class="neo-note">Latin computare + -er suffix (semi-opaque)</div>
+        </div>
+        <div class="neo-item">
+          <div class="neo-concept">Classical Chinese</div>
+          <div class="neo-word">N/A</div>
+          <div class="neo-note">Concept did not exist; would require new coinage or extension</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Three fundamentally different vocabulary architectures.</strong> Modern Mandarin builds words by combining transparent morphemes. English draws from a vast pool of borrowed roots (Latin, French, Greek) plus native Germanic stock and productive affixation. Classical Chinese relied on monosyllabic roots with heavy polysemy and context-dependence. The shift from Classical to Modern Mandarin — driven by phonological simplification that increased homophones — is one of the most dramatic vocabulary restructurings in linguistic history.
+  </figcaption>
+</figure>
+</body>
+</html>

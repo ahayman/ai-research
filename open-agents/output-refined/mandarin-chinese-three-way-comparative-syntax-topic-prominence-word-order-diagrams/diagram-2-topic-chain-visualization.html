@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Chains: One Topic Governs Multiple Clauses</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --surface: #1e293b;
+    --surface2: #253349;
+    --border: #334155;
+    --accent: #06b6d4;
+    --accent-dim: #0891b2;
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --mandarin: #06b6d4;
+    --mandarin-bg: #0c3644;
+    --english: #a78bfa;
+    --english-bg: #2e2454;
+    --classical: #f59e0b;
+    --classical-bg: #4a3520;
+    --muted: #64748b;
+    --text-secondary: #94a3b8;
+    --success: #10b981;
+    --rose: #f43f5e;
+    --zero-color: #f97316;
+    --zero-bg: rgba(249, 115, 22, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  figcaption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    overflow-x: auto;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  /* Chain visualization */
+  .chain-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .chain-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .chain-label .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .mandarin-chain .chain-label { color: var(--mandarin); }
+  .mandarin-chain .dot { background: var(--mandarin); }
+  .english-chain .chain-label { color: var(--english); }
+  .english-chain .dot { background: var(--english); }
+  .classical-chain .chain-label { color: var(--classical); }
+  .classical-chain .dot { background: var(--classical); }
+
+  /* Clause rows */
+  .clause-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .clause-num {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--muted);
+    width: 20px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .word-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .chip-topic {
+    background: var(--mandarin-bg);
+    color: var(--mandarin);
+    border: 1px solid var(--mandarin);
+  }
+  .chip-zero {
+    background: var(--zero-bg);
+    color: var(--zero-color);
+    border: 1px dashed var(--zero-color);
+    font-style: italic;
+    font-size: 0.75rem;
+  }
+  .chip-verb {
+    background: var(--classical-bg);
+    color: var(--classical);
+  }
+  .chip-obj {
+    background: rgba(244, 63, 94, 0.1);
+    color: var(--rose);
+  }
+  .chip-adv {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+  }
+  .chip-subj {
+    background: var(--english-bg);
+    color: var(--english);
+  }
+  .chip-pronoun {
+    background: rgba(167, 139, 250, 0.15);
+    color: var(--english);
+    border: 1px solid rgba(167, 139, 250, 0.4);
+  }
+  .chip-plain {
+    background: var(--surface2);
+    color: var(--fg);
+  }
+  .clause-translation {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-left: 24px;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Chain connector line */
+  .chain-connector {
+    position: absolute;
+    left: 2.8rem;
+    top: 4.5rem;
+    bottom: 2rem;
+    width: 3px;
+    border-radius: 2px;
+  }
+  .mandarin-chain .chain-connector {
+    background: linear-gradient(180deg, var(--mandarin) 0%, rgba(6, 182, 212, 0.1) 100%);
+  }
+  .classical-chain .chain-connector {
+    background: linear-gradient(180deg, var(--classical) 0%, rgba(245, 158, 11, 0.1) 100%);
+  }
+
+  /* Stats comparison */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+  .stat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-lang {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .stat-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+  .stat-bar-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    width: 50px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .stat-bar-track {
+    flex: 1;
+    height: 14px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .stat-bar-count {
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .insight {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 1.5rem;
+  }
+  .insight strong { color: var(--accent); }
+
+  .legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .legend-chip {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="diagram-title">Topic Chains: One Topic, Multiple Clauses</div>
+    <div class="diagram-subtitle">How Mandarin tracks reference across discourse without repeating the referent</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-chip" style="background:var(--mandarin)"></div> Overt Topic</div>
+      <div class="legend-item"><div class="legend-chip" style="background:var(--zero-color); border:1px dashed var(--zero-color)"></div> Zero (dropped)</div>
+      <div class="legend-item"><div class="legend-chip" style="background:var(--english)"></div> Pronoun</div>
+      <div class="legend-item"><div class="legend-chip" style="background:var(--classical)"></div> Verb</div>
+      <div class="legend-item"><div class="legend-chip" style="background:var(--rose);opacity:0.6"></div> Object</div>
+    </div>
+
+    <!-- Mandarin Topic Chain -->
+    <div class="chain-block mandarin-chain" style="position:relative">
+      <div class="chain-label"><span class="dot"></span> Mandarin Topic Chain</div>
+      <div class="chain-connector"></div>
+
+      <div class="clause-row">
+        <div class="clause-num">1</div>
+        <div class="word-chip chip-topic">小王</div>
+        <div class="word-chip chip-adv">昨天</div>
+        <div class="word-chip chip-verb">去了</div>
+        <div class="word-chip chip-obj">商店</div>
+      </div>
+      <div class="clause-translation">"Xiao Wang yesterday went to the store,"</div>
+
+      <div class="clause-row">
+        <div class="clause-num">2</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-verb">买了</div>
+        <div class="word-chip chip-obj">一些水果</div>
+      </div>
+      <div class="clause-translation">"[0] bought some fruit,"</div>
+
+      <div class="clause-row">
+        <div class="clause-num">3</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-adv">回来以后</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-adv">就</div>
+        <div class="word-chip chip-verb">做饭了</div>
+      </div>
+      <div class="clause-translation">"[0] after coming back, [0] then cooked."</div>
+
+      <div class="clause-row">
+        <div class="clause-num">4</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-verb">吃完</div>
+        <div class="word-chip chip-adv">以后</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-adv">就</div>
+        <div class="word-chip chip-verb">睡觉了</div>
+      </div>
+      <div class="clause-translation">"[0] after finishing eating, [0] then went to sleep."</div>
+    </div>
+
+    <!-- English equivalent -->
+    <div class="chain-block english-chain">
+      <div class="chain-label"><span class="dot"></span> English Equivalent (pronouns required)</div>
+
+      <div class="clause-row">
+        <div class="clause-num">1</div>
+        <div class="word-chip chip-subj">Xiao Wang</div>
+        <div class="word-chip chip-verb">went to</div>
+        <div class="word-chip chip-obj">the store</div>
+        <div class="word-chip chip-plain">yesterday.</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">2</div>
+        <div class="word-chip chip-pronoun">He</div>
+        <div class="word-chip chip-verb">bought</div>
+        <div class="word-chip chip-obj">some fruit.</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">3</div>
+        <div class="word-chip chip-plain">After</div>
+        <div class="word-chip chip-pronoun">he</div>
+        <div class="word-chip chip-verb">came back,</div>
+        <div class="word-chip chip-pronoun">he</div>
+        <div class="word-chip chip-verb">cooked dinner.</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">4</div>
+        <div class="word-chip chip-plain">After</div>
+        <div class="word-chip chip-pronoun">he</div>
+        <div class="word-chip chip-verb">finished eating,</div>
+        <div class="word-chip chip-pronoun">he</div>
+        <div class="word-chip chip-verb">went to sleep.</div>
+      </div>
+    </div>
+
+    <!-- Classical Chinese equivalent -->
+    <div class="chain-block classical-chain" style="position:relative">
+      <div class="chain-label"><span class="dot"></span> Classical Chinese (maximal compression)</div>
+      <div class="chain-connector"></div>
+
+      <div class="clause-row">
+        <div class="clause-num">1</div>
+        <div class="word-chip chip-topic" style="background:var(--classical-bg);color:var(--classical);border-color:var(--classical)">王</div>
+        <div class="word-chip chip-verb">赴市</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">2</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-verb">购果</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">3</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-verb">归而炊</div>
+      </div>
+
+      <div class="clause-row">
+        <div class="clause-num">4</div>
+        <div class="word-chip chip-zero">0</div>
+        <div class="word-chip chip-verb">食毕而寝</div>
+      </div>
+      <div class="clause-translation">Monosyllabic, maximal zero anaphora, no grammatical particles</div>
+    </div>
+
+    <!-- Reference counting stats -->
+    <div class="section-label" style="margin-top:1.5rem">Reference Count Comparison (same narrative)</div>
+    <div class="stats-grid">
+      <div class="stat-card" style="border-color:var(--mandarin)">
+        <div class="stat-lang" style="color:var(--mandarin)">Mandarin</div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Overt</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:17%;background:var(--mandarin)"></div></div>
+          <div class="stat-bar-count" style="color:var(--mandarin)">1</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Zeros</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:83%;background:var(--zero-color)"></div></div>
+          <div class="stat-bar-count" style="color:var(--zero-color)">5</div>
+        </div>
+      </div>
+      <div class="stat-card" style="border-color:var(--classical)">
+        <div class="stat-lang" style="color:var(--classical)">Classical Chinese</div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Overt</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:17%;background:var(--classical)"></div></div>
+          <div class="stat-bar-count" style="color:var(--classical)">1</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Zeros</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:100%;background:var(--zero-color)"></div></div>
+          <div class="stat-bar-count" style="color:var(--zero-color)">3</div>
+        </div>
+      </div>
+      <div class="stat-card" style="border-color:var(--english)">
+        <div class="stat-lang" style="color:var(--english)">English</div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Overt</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:17%;background:var(--english)"></div></div>
+          <div class="stat-bar-count" style="color:var(--english)">1</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Pronouns</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:83%;background:rgba(167,139,250,0.7)"></div></div>
+          <div class="stat-bar-count" style="color:var(--english)">5</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">Zeros</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:0%"></div></div>
+          <div class="stat-bar-count" style="color:var(--muted)">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Topic Chain Principle:</strong> In Mandarin, once a topic is established, it governs all subsequent clauses until a new topic replaces it. Where English fills every subject slot with a pronoun ("he, he, he..."), Mandarin leaves those slots empty — the chain itself carries the reference. Classical Chinese pushes this even further, compressing entire narratives into chains of monosyllabic verb phrases.
+    </div>
+  </div>
+
+  <figcaption>
+    Topic chains are a defining feature of Chinese discourse organization (Tsao 1977). The topic is stated once and then "carried" through multiple clauses via zero anaphora, creating cohesive paragraph-level structures without explicit reference to the topic in each clause.
+  </figcaption>
+</figure>
+</body>
+</html>

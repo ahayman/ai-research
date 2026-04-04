@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shape-Based Classifier System</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --muted: #64748b;
+    --d1flex: #f59e0b; --d1rigid: #f97316; --d2flat: #3b82f6;
+    --d3round: #10b981; --handle: #ec4899; --chunk: #8b5cf6;
+    --slice: #14b8a6; --bound: #6366f1; --bundle: #eab308;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 960px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem;
+  }
+  .title { font-size: 1.1rem; font-weight: 700; text-align: center; margin-bottom: 0.25rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  .dimension-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 0.75rem;
+  }
+  .dim-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; border-top: 3px solid var(--accent); position: relative;
+    transition: transform 0.2s ease;
+  }
+  .dim-card:hover { transform: translateY(-2px); }
+  .dim-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .dim-icon {
+    width: 44px; height: 44px; border-radius: 8px; display: flex;
+    align-items: center; justify-content: center; font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .dim-char { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+  .dim-pinyin { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+  .dim-label { font-size: 0.82rem; font-weight: 700; }
+  .dim-logic { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; padding: 0.35rem 0.5rem; background: rgba(6,182,212,0.06); border-radius: 4px; }
+  .dim-examples { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .dim-ex {
+    font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  }
+  .dim-ex .zh { font-weight: 600; }
+  .dim-ex .en { color: var(--muted); }
+
+  /* Color coding per dimension */
+  .dim-1dflex { border-top-color: var(--d1flex); }
+  .dim-1dflex .dim-icon { background: rgba(245,158,11,0.15); color: var(--d1flex); }
+  .dim-1dflex .dim-char { color: var(--d1flex); }
+  .dim-1dflex .dim-label { color: var(--d1flex); }
+
+  .dim-1drigid { border-top-color: var(--d1rigid); }
+  .dim-1drigid .dim-icon { background: rgba(249,115,22,0.15); color: var(--d1rigid); }
+  .dim-1drigid .dim-char { color: var(--d1rigid); }
+  .dim-1drigid .dim-label { color: var(--d1rigid); }
+
+  .dim-2dflat { border-top-color: var(--d2flat); }
+  .dim-2dflat .dim-icon { background: rgba(59,130,246,0.15); color: var(--d2flat); }
+  .dim-2dflat .dim-char { color: var(--d2flat); }
+  .dim-2dflat .dim-label { color: var(--d2flat); }
+
+  .dim-3dround { border-top-color: var(--d3round); }
+  .dim-3dround .dim-icon { background: rgba(16,185,129,0.15); color: var(--d3round); }
+  .dim-3dround .dim-char { color: var(--d3round); }
+  .dim-3dround .dim-label { color: var(--d3round); }
+
+  .dim-handle { border-top-color: var(--handle); }
+  .dim-handle .dim-icon { background: rgba(236,72,153,0.15); color: var(--handle); }
+  .dim-handle .dim-char { color: var(--handle); }
+  .dim-handle .dim-label { color: var(--handle); }
+
+  .dim-chunk { border-top-color: var(--chunk); }
+  .dim-chunk .dim-icon { background: rgba(139,92,246,0.15); color: var(--chunk); }
+  .dim-chunk .dim-char { color: var(--chunk); }
+  .dim-chunk .dim-label { color: var(--chunk); }
+
+  .dim-slice { border-top-color: var(--slice); }
+  .dim-slice .dim-icon { background: rgba(20,184,166,0.15); color: var(--slice); }
+  .dim-slice .dim-char { color: var(--slice); }
+  .dim-slice .dim-label { color: var(--slice); }
+
+  .dim-bound { border-top-color: var(--bound); }
+  .dim-bound .dim-icon { background: rgba(99,102,241,0.15); color: var(--bound); }
+  .dim-bound .dim-char { color: var(--bound); }
+  .dim-bound .dim-label { color: var(--bound); }
+
+  .dim-bundle { border-top-color: var(--bundle); }
+  .dim-bundle .dim-icon { background: rgba(234,179,8,0.15); color: var(--bundle); }
+  .dim-bundle .dim-char { color: var(--bundle); }
+  .dim-bundle .dim-label { color: var(--bundle); }
+
+  .insight-bar {
+    margin-top: 1.25rem; padding: 0.85rem 1rem;
+    background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.2);
+    border-radius: 8px; font-size: 0.82rem; color: var(--fg); line-height: 1.55;
+  }
+  .insight-bar strong { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .dimension-grid { grid-template-columns: 1fr; }
+    .diagram-box { padding: 1.25rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">Shape-Based Classifier System</div>
+  <div class="subtitle">How Mandarin classifiers encode physical dimensions of objects</div>
+
+  <div class="dimension-grid">
+    <div class="dim-card dim-1dflex">
+      <div class="dim-header">
+        <div class="dim-icon">~</div>
+        <div>
+          <div class="dim-char">条 <span class="dim-pinyin">tiáo</span></div>
+          <div class="dim-label">1D: Long & Flexible</div>
+        </div>
+      </div>
+      <div class="dim-logic">Extended in one dimension, can bend or flow</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">蛇</span> <span class="en">snake</span></span>
+        <span class="dim-ex"><span class="zh">河</span> <span class="en">river</span></span>
+        <span class="dim-ex"><span class="zh">路</span> <span class="en">road</span></span>
+        <span class="dim-ex"><span class="zh">裤子</span> <span class="en">pants</span></span>
+        <span class="dim-ex"><span class="zh">鱼</span> <span class="en">fish</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-1drigid">
+      <div class="dim-header">
+        <div class="dim-icon">|</div>
+        <div>
+          <div class="dim-char">根 <span class="dim-pinyin">gēn</span></div>
+          <div class="dim-label">1D: Long & Rigid</div>
+        </div>
+      </div>
+      <div class="dim-logic">Extended in one dimension, stiff and unbending</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">筷子</span> <span class="en">chopstick</span></span>
+        <span class="dim-ex"><span class="zh">针</span> <span class="en">needle</span></span>
+        <span class="dim-ex"><span class="zh">柱子</span> <span class="en">pillar</span></span>
+        <span class="dim-ex"><span class="zh">香蕉</span> <span class="en">banana</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-2dflat">
+      <div class="dim-header">
+        <div class="dim-icon">&#9645;</div>
+        <div>
+          <div class="dim-char">张 <span class="dim-pinyin">zhāng</span></div>
+          <div class="dim-label">2D: Flat Surface</div>
+        </div>
+      </div>
+      <div class="dim-logic">Extended in two dimensions, presents a surface</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">纸</span> <span class="en">paper</span></span>
+        <span class="dim-ex"><span class="zh">桌子</span> <span class="en">table</span></span>
+        <span class="dim-ex"><span class="zh">床</span> <span class="en">bed</span></span>
+        <span class="dim-ex"><span class="zh">票</span> <span class="en">ticket</span></span>
+        <span class="dim-ex"><span class="zh">脸</span> <span class="en">face</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-3dround">
+      <div class="dim-header">
+        <div class="dim-icon">&#9679;</div>
+        <div>
+          <div class="dim-char">颗 <span class="dim-pinyin">kē</span></div>
+          <div class="dim-label">3D: Small & Round</div>
+        </div>
+      </div>
+      <div class="dim-logic">Compact, roughly spherical, granular</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">星星</span> <span class="en">star</span></span>
+        <span class="dim-ex"><span class="zh">珍珠</span> <span class="en">pearl</span></span>
+        <span class="dim-ex"><span class="zh">子弹</span> <span class="en">bullet</span></span>
+        <span class="dim-ex"><span class="zh">心</span> <span class="en">heart</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-handle">
+      <div class="dim-header">
+        <div class="dim-icon">&#9995;</div>
+        <div>
+          <div class="dim-char">把 <span class="dim-pinyin">bǎ</span></div>
+          <div class="dim-label">Gripped / Handled</div>
+        </div>
+      </div>
+      <div class="dim-logic">Object you grasp by a handle or grip</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">刀</span> <span class="en">knife</span></span>
+        <span class="dim-ex"><span class="zh">伞</span> <span class="en">umbrella</span></span>
+        <span class="dim-ex"><span class="zh">椅子</span> <span class="en">chair</span></span>
+        <span class="dim-ex"><span class="zh">扇子</span> <span class="en">fan</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-chunk">
+      <div class="dim-header">
+        <div class="dim-icon">&#11035;</div>
+        <div>
+          <div class="dim-char">块 <span class="dim-pinyin">kuài</span></div>
+          <div class="dim-label">Chunks & Pieces</div>
+        </div>
+      </div>
+      <div class="dim-logic">Solid chunk, irregular piece, or block</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">石头</span> <span class="en">stone</span></span>
+        <span class="dim-ex"><span class="zh">肉</span> <span class="en">meat</span></span>
+        <span class="dim-ex"><span class="zh">蛋糕</span> <span class="en">cake</span></span>
+        <span class="dim-ex"><span class="zh">手表</span> <span class="en">watch</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-slice">
+      <div class="dim-header">
+        <div class="dim-icon">&#9649;</div>
+        <div>
+          <div class="dim-char">片 <span class="dim-pinyin">piàn</span></div>
+          <div class="dim-label">Thin Slices & Expanses</div>
+        </div>
+      </div>
+      <div class="dim-logic">Flat and thin, a slice or broad area</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">叶子</span> <span class="en">leaf</span></span>
+        <span class="dim-ex"><span class="zh">面包</span> <span class="en">bread (slice)</span></span>
+        <span class="dim-ex"><span class="zh">草地</span> <span class="en">lawn</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-bound">
+      <div class="dim-header">
+        <div class="dim-icon">&#128214;</div>
+        <div>
+          <div class="dim-char">本 <span class="dim-pinyin">běn</span></div>
+          <div class="dim-label">Bound Volumes</div>
+        </div>
+      </div>
+      <div class="dim-logic">Pages bound together into a volume</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">书</span> <span class="en">book</span></span>
+        <span class="dim-ex"><span class="zh">杂志</span> <span class="en">magazine</span></span>
+        <span class="dim-ex"><span class="zh">字典</span> <span class="en">dictionary</span></span>
+      </div>
+    </div>
+
+    <div class="dim-card dim-bundle">
+      <div class="dim-header">
+        <div class="dim-icon">&#127803;</div>
+        <div>
+          <div class="dim-char">束 <span class="dim-pinyin">shù</span></div>
+          <div class="dim-label">Bundles & Clusters</div>
+        </div>
+      </div>
+      <div class="dim-logic">Multiple items gathered or bound together</div>
+      <div class="dim-examples">
+        <span class="dim-ex"><span class="zh">花</span> <span class="en">flowers</span></span>
+        <span class="dim-ex"><span class="zh">光</span> <span class="en">light (beam)</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-bar">
+    <strong>Embodied Cognition:</strong> Classifiers encode how humans physically perceive and interact with objects. A rope (条) is categorized by its <em>linear flexibility</em>; a table (张) by its <em>flat surface</em>; a knife (把) by the fact that you <em>grip its handle</em>. English leaves these perceptual distinctions implicit.
+  </div>
+</div>
+<figcaption>Diagram 2 &mdash; Shape and physical dimension are the primary semantic principles governing Mandarin classifier selection, encoding a perceptual ontology of the physical world.</figcaption>
+</figure>
+</body>
+</html>

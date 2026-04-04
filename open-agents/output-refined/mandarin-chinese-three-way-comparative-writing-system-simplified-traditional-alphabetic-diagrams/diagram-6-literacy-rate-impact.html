@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Literacy Rates and Character Simplification</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#253349;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--cyan:#06b6d4;--amber:#f59e0b;--rose:#f43f5e;--emerald:#10b981;--violet:#8b5cf6;--blue:#3b82f6}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:1.5rem;min-height:100vh}
+h1{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:0.3rem;color:var(--cyan)}
+.subtitle{text-align:center;font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.container{max-width:900px;margin:0 auto}
+
+/* Chart area */
+.chart-wrapper{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;position:relative}
+.chart-title{font-size:0.9rem;font-weight:700;margin-bottom:1rem;text-align:center}
+
+.chart{position:relative;height:320px;margin:0 3rem 2rem 3.5rem}
+.y-axis{position:absolute;left:-3.5rem;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between}
+.y-label{font-size:0.7rem;color:var(--text3);text-align:right;width:2.5rem}
+.x-axis{position:absolute;bottom:-1.5rem;left:0;right:0;display:flex;justify-content:space-between}
+.x-label{font-size:0.65rem;color:var(--text3);text-align:center;transform:rotate(-35deg);transform-origin:top left;white-space:nowrap}
+.grid-line{position:absolute;left:0;right:0;height:1px;background:var(--border);opacity:0.5}
+
+/* Data points and lines */
+.data-point{position:absolute;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);z-index:5;cursor:pointer;transition:all 0.3s}
+.data-point:hover{transform:translate(-50%,-50%) scale(1.4)}
+.data-point::after{content:attr(data-label);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;background:var(--bg3);padding:0.15rem 0.4rem;border-radius:4px}
+.data-point:hover::after{opacity:1}
+.data-point.mainland{background:var(--cyan);border:2px solid var(--cyan)}
+.data-point.mainland::after{color:var(--cyan)}
+.data-point.taiwan{background:var(--rose);border:2px solid var(--rose)}
+.data-point.taiwan::after{color:var(--rose)}
+
+.line-segment{position:absolute;height:2px;transform-origin:left center;z-index:3}
+.line-segment.mainland{background:var(--cyan)}
+.line-segment.taiwan{background:var(--rose)}
+
+/* Event markers */
+.event-marker{position:absolute;bottom:0;width:1px;background:var(--amber);opacity:0.6;z-index:2}
+.event-marker .event-label{position:absolute;top:-8px;left:4px;font-size:0.6rem;color:var(--amber);white-space:nowrap;transform:rotate(-45deg);transform-origin:bottom left}
+
+/* Analysis section */
+.analysis{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:700px){.analysis{grid-template-columns:1fr}}
+.analysis-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.analysis-title{font-size:0.8rem;font-weight:700;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem}
+.analysis-card.pro .analysis-title{color:var(--emerald)}
+.analysis-card.con .analysis-title{color:var(--amber)}
+.analysis-list{list-style:none;font-size:0.8rem;color:var(--text2);line-height:1.6}
+.analysis-list li{padding-left:1rem;position:relative;margin-bottom:0.3rem}
+.analysis-list li::before{content:'';position:absolute;left:0;top:0.55rem;width:6px;height:6px;border-radius:50%}
+.analysis-card.pro .analysis-list li::before{background:var(--emerald)}
+.analysis-card.con .analysis-list li::before{background:var(--amber)}
+
+.verdict{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center}
+.verdict-title{font-size:1rem;font-weight:700;color:var(--cyan);margin-bottom:0.5rem}
+.verdict-text{font-size:0.85rem;color:var(--text2);line-height:1.6;max-width:700px;margin:0 auto}
+
+.legend{display:flex;gap:1.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+</style>
+</head>
+<body>
+<h1>Literacy Rates and Character Simplification</h1>
+<p class="subtitle">Did simplification drive literacy? Comparing mainland China (simplified) with Taiwan (traditional)</p>
+
+<div class="container">
+
+<div class="chart-wrapper">
+  <div class="chart-title">Literacy Rate Over Time: Mainland China vs. Taiwan</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Mainland China (Simplified)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rose)"></div>Taiwan (Traditional)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber);width:6px;height:6px"></div>Script reform events</div>
+  </div>
+  <div class="chart" id="chart">
+    <!-- Grid lines at 0%, 20%, 40%, 60%, 80%, 100% -->
+    <div class="grid-line" style="top:0%"></div>
+    <div class="grid-line" style="top:20%"></div>
+    <div class="grid-line" style="top:40%"></div>
+    <div class="grid-line" style="top:60%"></div>
+    <div class="grid-line" style="top:80%"></div>
+    <div class="grid-line" style="top:100%"></div>
+
+    <!-- Y-axis labels -->
+    <div class="y-axis">
+      <div class="y-label">100%</div>
+      <div class="y-label">80%</div>
+      <div class="y-label">60%</div>
+      <div class="y-label">40%</div>
+      <div class="y-label">20%</div>
+      <div class="y-label">0%</div>
+    </div>
+  </div>
+</div>
+
+<div class="analysis">
+  <div class="analysis-card pro">
+    <div class="analysis-title">Arguments FOR Simplification Impact</div>
+    <ul class="analysis-list">
+      <li>Reduced stroke counts make characters faster to write and potentially easier to memorize</li>
+      <li>Lower barrier to entry for initial character learning in rural areas</li>
+      <li>Faster handwriting speed reduces fatigue in lengthy writing tasks</li>
+      <li>Simplified forms were already in common handwritten use -- formalization reduced confusion</li>
+    </ul>
+  </div>
+  <div class="analysis-card con">
+    <div class="analysis-title">Arguments AGAINST Simplification as Key Factor</div>
+    <ul class="analysis-list">
+      <li>Taiwan achieved 96%+ literacy with traditional characters -- no simplification needed</li>
+      <li>Japan uses a mix of simplified and traditional kanji; literacy rates match China's</li>
+      <li>Scholars attribute gains primarily to expanded compulsory education and rural campaigns</li>
+      <li>Character mergers created new ambiguities that complicate learning</li>
+      <li>The Second Round (1977) failed despite even more simplification -- suggesting a limit</li>
+    </ul>
+  </div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-title">The Scholarly Consensus</div>
+  <div class="verdict-text">
+    Character simplification was one component of a multi-pronged literacy campaign, but <strong>expanded access to compulsory education</strong> was the primary driver of literacy improvements. Taiwan's success with traditional characters demonstrates that simplification is neither necessary nor sufficient for mass literacy. The correlation between simplification timing and literacy gains is confounded by simultaneous massive investments in rural schooling.
+  </div>
+</div>
+
+</div>
+
+<script>
+const chartEl=document.getElementById('chart');
+const chartWidth=chartEl.offsetWidth;
+const chartHeight=chartEl.offsetHeight;
+
+// Timeline: 1949-2020
+const yearMin=1945;
+const yearMax=2025;
+const yearRange=yearMax-yearMin;
+
+function xPos(year){return((year-yearMin)/yearRange)*100+'%';}
+function yPos(literacy){return(100-literacy)+'%';}
+
+// Mainland China data points (approximate literacy rates)
+const mainland=[
+  {year:1949,lit:20,label:'1949: 20%'},
+  {year:1957,lit:40,label:'1957: ~40%'},
+  {year:1964,lit:48,label:'1964: ~48%'},
+  {year:1978,lit:75,label:'1978: ~75%'},
+  {year:1982,lit:65,label:'1982: 65%'}, // re-measured with stricter definition
+  {year:1990,lit:78,label:'1990: ~78%'},
+  {year:2000,lit:91,label:'2000: ~91%'},
+  {year:2010,lit:95,label:'2010: ~95%'},
+  {year:2020,lit:97,label:'2020: ~97%'},
+];
+
+// Taiwan data points (approximate literacy rates)
+const taiwan=[
+  {year:1949,lit:45,label:'1949: ~45%'},
+  {year:1960,lit:68,label:'1960: ~68%'},
+  {year:1970,lit:82,label:'1970: ~82%'},
+  {year:1980,lit:90,label:'1980: ~90%'},
+  {year:1990,lit:94,label:'1990: ~94%'},
+  {year:2000,lit:96,label:'2000: ~96%'},
+  {year:2010,lit:98,label:'2010: ~98%'},
+  {year:2020,lit:99,label:'2020: ~99%'},
+];
+
+// Create data points and lines
+function createSeries(data,cls){
+  data.forEach((d,i)=>{
+    const dot=document.createElement('div');
+    dot.className='data-point '+cls;
+    dot.style.left=xPos(d.year);
+    dot.style.top=yPos(d.lit);
+    dot.setAttribute('data-label',d.label);
+    chartEl.appendChild(dot);
+    // Line to next point
+    if(i<data.length-1){
+      const next=data[i+1];
+      const x1=((d.year-yearMin)/yearRange)*chartWidth;
+      const y1=((100-d.lit)/100)*chartHeight;
+      const x2=((next.year-yearMin)/yearRange)*chartWidth;
+      const y2=((100-next.lit)/100)*chartHeight;
+      const len=Math.sqrt((x2-x1)**2+(y2-y1)**2);
+      const angle=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+      const line=document.createElement('div');
+      line.className='line-segment '+cls;
+      line.style.left=x1+'px';
+      line.style.top=y1+'px';
+      line.style.width=len+'px';
+      line.style.transform='rotate('+angle+'deg)';
+      chartEl.appendChild(line);
+    }
+  });
+}
+
+createSeries(mainland,'mainland');
+createSeries(taiwan,'taiwan');
+
+// Event markers
+const events=[
+  {year:1956,label:'1956 Simplification'},
+  {year:1964,label:'1964 General List'},
+  {year:1977,label:'1977 2nd Round (failed)'},
+  {year:1986,label:'1986 Rescinded'},
+];
+events.forEach(e=>{
+  const marker=document.createElement('div');
+  marker.className='event-marker';
+  marker.style.left=xPos(e.year);
+  marker.style.height='100%';
+  marker.innerHTML='<div class="event-label">'+e.label+'</div>';
+  chartEl.appendChild(marker);
+});
+
+// X-axis labels
+const xLabels=[1950,1960,1970,1980,1990,2000,2010,2020];
+const xAxisEl=document.createElement('div');
+xAxisEl.className='x-axis';
+xLabels.forEach(yr=>{
+  const label=document.createElement('div');
+  label.className='x-label';
+  label.textContent=yr;
+  label.style.left=xPos(yr);
+  label.style.position='absolute';
+  xAxisEl.appendChild(label);
+});
+chartEl.appendChild(xAxisEl);
+</script>
+</body>
+</html>

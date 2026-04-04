@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Order Flexibility Map: SVO and Beyond</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --surface: #1e293b;
+    --surface2: #253349;
+    --border: #334155;
+    --accent: #06b6d4;
+    --accent-dim: #0891b2;
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --mandarin: #06b6d4;
+    --mandarin-bg: #0c3644;
+    --english: #a78bfa;
+    --english-bg: #2e2454;
+    --classical: #f59e0b;
+    --classical-bg: #4a3520;
+    --muted: #64748b;
+    --text-secondary: #94a3b8;
+    --success: #10b981;
+    --rose: #f43f5e;
+    --rose-bg: rgba(244, 63, 94, 0.12);
+    --amber: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  figcaption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    overflow-x: auto;
+  }
+  .diagram-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .diagram-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  /* Central hub layout */
+  .hub-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Center node */
+  .center-node {
+    background: var(--mandarin-bg);
+    border: 2px solid var(--mandarin);
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+  }
+  .center-node .order-label {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--mandarin);
+    letter-spacing: 0.15em;
+  }
+  .center-node .order-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  .center-node .order-example {
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 0.3rem;
+  }
+  .center-node .order-example .zh {
+    font-weight: 700;
+  }
+
+  /* Branches */
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+  @media (max-width: 700px) {
+    .branches { grid-template-columns: 1fr; }
+  }
+
+  .branch-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .branch-osv::before { background: var(--success); }
+  .branch-sov::before { background: var(--amber); }
+  .branch-passive::before { background: var(--rose); }
+  .branch-vcopy::before { background: var(--english); }
+
+  .branch-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .branch-order {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  .branch-osv .branch-order { color: var(--success); }
+  .branch-sov .branch-order { color: var(--amber); }
+  .branch-passive .branch-order { color: var(--rose); }
+  .branch-vcopy .branch-order { color: var(--english); }
+
+  .branch-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .branch-trigger {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    background: var(--surface2);
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .branch-trigger strong {
+    color: var(--fg);
+  }
+
+  .branch-example {
+    margin-top: 0.5rem;
+  }
+  .ex-zh {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 0.15rem;
+  }
+  .ex-pinyin {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 0.15rem;
+  }
+  .ex-en {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* Parse highlights within examples */
+  .h-s { color: var(--mandarin); font-weight: 700; }
+  .h-v { color: var(--classical); font-weight: 700; }
+  .h-o { color: var(--rose); font-weight: 700; }
+  .h-marker { color: var(--amber); font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+
+  .branch-conditions {
+    margin-top: 0.6rem;
+    font-size: 0.73rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .branch-conditions li {
+    margin-left: 1.2rem;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Availability badges */
+  .avail-row {
+    display: flex;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .avail-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .avail-mandarin {
+    background: var(--mandarin-bg);
+    color: var(--mandarin);
+  }
+  .avail-classical {
+    background: var(--classical-bg);
+    color: var(--classical);
+  }
+  .avail-english {
+    background: var(--english-bg);
+    color: var(--english);
+  }
+  .avail-no {
+    background: var(--surface2);
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  /* Arrow connectors */
+  .arrow-down {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--mandarin);
+    opacity: 0.6;
+  }
+
+  /* Flexibility comparison */
+  .flex-compare {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 600px) {
+    .flex-compare { grid-template-columns: 1fr; }
+  }
+  .flex-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    text-align: center;
+  }
+  .flex-lang {
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+  .flex-meter {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    margin-bottom: 0.3rem;
+  }
+  .flex-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+  .flex-dot.active { opacity: 1; }
+  .flex-dot.inactive { opacity: 0.15; }
+  .flex-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+  }
+
+  .insight {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 1.5rem;
+  }
+  .insight strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <div class="diagram-title">Word Order Flexibility Map</div>
+    <div class="diagram-subtitle">SVO as the gravitational center, with systematic deviations</div>
+
+    <div class="hub-layout">
+      <!-- Center: SVO -->
+      <div class="center-node">
+        <div class="order-label">S V O</div>
+        <div class="order-desc">Basic / Unmarked Word Order</div>
+        <div class="order-example">
+          <span class="zh"><span class="h-s">我</span> <span class="h-v">看了</span> <span class="h-o">那本书</span></span>
+        </div>
+        <div class="order-example" style="font-size:0.78rem;color:var(--muted)">
+          wo kan le na ben shu &mdash; "I read that book"
+        </div>
+      </div>
+
+      <div class="arrow-down">&#9661; Pragmatic / Grammatical Triggers &#9661;</div>
+
+      <!-- Branches -->
+      <div class="branches">
+        <!-- OSV: Topicalization -->
+        <div class="branch-card branch-osv">
+          <div class="branch-header">
+            <div class="branch-order">O S V</div>
+            <div class="branch-name">Topicalization</div>
+          </div>
+          <div class="branch-trigger"><strong>Trigger:</strong> Promoting old/given information to topic position</div>
+          <div class="branch-example">
+            <div class="ex-zh"><span class="h-o">那本书</span>，<span class="h-s">我</span> <span class="h-v">看了</span></div>
+            <div class="ex-pinyin">na ben shu, wo kan le</div>
+            <div class="ex-en">"That book, I've read [it]"</div>
+          </div>
+          <div class="branch-conditions">
+            <ul>
+              <li>Object must be definite/specific</li>
+              <li>Sets the discourse frame</li>
+              <li>No grammatical marker required — position alone signals topic</li>
+            </ul>
+          </div>
+          <div class="avail-row">
+            <span class="avail-badge avail-mandarin">Mandarin</span>
+            <span class="avail-badge avail-classical">Classical</span>
+            <span class="avail-badge avail-no">English (very marked)</span>
+          </div>
+        </div>
+
+        <!-- SOV: Ba construction -->
+        <div class="branch-card branch-sov">
+          <div class="branch-header">
+            <div class="branch-order">S 把O V</div>
+            <div class="branch-name">Ba Construction (Disposal)</div>
+          </div>
+          <div class="branch-trigger"><strong>Trigger:</strong> Expressing what happens to a definite, affected object</div>
+          <div class="branch-example">
+            <div class="ex-zh"><span class="h-s">我</span> <span class="h-marker">把</span> <span class="h-o">那本书</span> <span class="h-v">看完了</span></div>
+            <div class="ex-pinyin">wo ba na ben shu kan wan le</div>
+            <div class="ex-en">"I [took] that book [and] finished reading [it]"</div>
+          </div>
+          <div class="branch-conditions">
+            <ul>
+              <li>Object must be definite/specific</li>
+              <li>Verb must have resultative/directional complement</li>
+              <li>Implies disposal / affectedness / change of state</li>
+              <li><strong>把</strong> is a grammaticalized preposition, not found in Classical Chinese</li>
+            </ul>
+          </div>
+          <div class="avail-row">
+            <span class="avail-badge avail-mandarin">Mandarin</span>
+            <span class="avail-badge avail-no">Classical (not yet developed)</span>
+            <span class="avail-badge avail-no">English (no equivalent)</span>
+          </div>
+        </div>
+
+        <!-- Passive: Bei construction -->
+        <div class="branch-card branch-passive">
+          <div class="branch-header">
+            <div class="branch-order">O 被S V</div>
+            <div class="branch-name">Bei Construction (Passive)</div>
+          </div>
+          <div class="branch-trigger"><strong>Trigger:</strong> Patient as topic; traditionally adversative/negative</div>
+          <div class="branch-example">
+            <div class="ex-zh"><span class="h-o">那本书</span> <span class="h-marker">被</span> <span class="h-s">我</span> <span class="h-v">看完了</span></div>
+            <div class="ex-pinyin">na ben shu bei wo kan wan le</div>
+            <div class="ex-en">"That book was finished-reading by me"</div>
+          </div>
+          <div class="branch-conditions">
+            <ul>
+              <li>Traditionally implies something <em>unfortunate</em> happened to the patient</li>
+              <li>Modern usage increasingly neutral (English influence)</li>
+              <li>Classical equivalents: 见 (jian), 为...所 (wei...suo) — also adversative</li>
+            </ul>
+          </div>
+          <div class="avail-row">
+            <span class="avail-badge avail-mandarin">Mandarin (被)</span>
+            <span class="avail-badge avail-classical">Classical (见/为...所)</span>
+            <span class="avail-badge avail-english">English (be + past part.)</span>
+          </div>
+        </div>
+
+        <!-- Verb Copying -->
+        <div class="branch-card branch-vcopy">
+          <div class="branch-header">
+            <div class="branch-order">S V O V-de C</div>
+            <div class="branch-name">Verb Copying (Manner/Degree)</div>
+          </div>
+          <div class="branch-trigger"><strong>Trigger:</strong> Adding manner or degree complement to a VO compound</div>
+          <div class="branch-example">
+            <div class="ex-zh"><span class="h-s">他</span> <span class="h-v">跑步</span> <span class="h-v">跑</span>得很快</div>
+            <div class="ex-pinyin">ta paobu pao de hen kuai</div>
+            <div class="ex-en">"He runs-steps runs very fast" (He runs very fast)</div>
+          </div>
+          <div class="branch-conditions">
+            <ul>
+              <li>Required when verb + object is a compound and a complement is needed</li>
+              <li>Verb appears twice: once with object, once with complement</li>
+              <li>No equivalent structure in English or Classical Chinese</li>
+            </ul>
+          </div>
+          <div class="avail-row">
+            <span class="avail-badge avail-mandarin">Mandarin</span>
+            <span class="avail-badge avail-no">Classical (no)</span>
+            <span class="avail-badge avail-no">English (no)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flexibility comparison -->
+    <div class="flex-compare">
+      <div class="flex-card" style="border-color:var(--mandarin)">
+        <div class="flex-lang" style="color:var(--mandarin)">Mandarin</div>
+        <div class="flex-meter">
+          <div class="flex-dot active" style="background:var(--mandarin)"></div>
+          <div class="flex-dot active" style="background:var(--mandarin)"></div>
+          <div class="flex-dot active" style="background:var(--mandarin)"></div>
+          <div class="flex-dot active" style="background:var(--mandarin)"></div>
+          <div class="flex-dot inactive" style="background:var(--mandarin)"></div>
+        </div>
+        <div class="flex-label">High flexibility: SVO + OSV + SOV(把) + Passive(被) + V-copy</div>
+      </div>
+      <div class="flex-card" style="border-color:var(--classical)">
+        <div class="flex-lang" style="color:var(--classical)">Classical Chinese</div>
+        <div class="flex-meter">
+          <div class="flex-dot active" style="background:var(--classical)"></div>
+          <div class="flex-dot active" style="background:var(--classical)"></div>
+          <div class="flex-dot active" style="background:var(--classical)"></div>
+          <div class="flex-dot inactive" style="background:var(--classical)"></div>
+          <div class="flex-dot inactive" style="background:var(--classical)"></div>
+        </div>
+        <div class="flex-label">Moderate: SVO + OSV(focus/negation) + Passive(见/为所)</div>
+      </div>
+      <div class="flex-card" style="border-color:var(--english)">
+        <div class="flex-lang" style="color:var(--english)">English</div>
+        <div class="flex-meter">
+          <div class="flex-dot active" style="background:var(--english)"></div>
+          <div class="flex-dot active" style="background:var(--english)"></div>
+          <div class="flex-dot inactive" style="background:var(--english)"></div>
+          <div class="flex-dot inactive" style="background:var(--english)"></div>
+          <div class="flex-dot inactive" style="background:var(--english)"></div>
+        </div>
+        <div class="flex-label">Low: SVO + Passive only (topicalization very marked)</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Pattern Insight:</strong> Mandarin's word order flexibility is not random — each variation is triggered by specific pragmatic conditions (topicalization, disposal, adversative passivization). The 把 construction is a uniquely Mandarin innovation absent from both Classical Chinese and English. English compensates for its rigid word order through prosodic stress and cleft constructions.
+    </div>
+  </div>
+
+  <figcaption>
+    While all three languages share SVO as their basic word order, they diverge dramatically in how freely and through what mechanisms they can deviate from it. Mandarin has the richest set of grammaticalized alternatives, each serving distinct information-structural functions.
+  </figcaption>
+</figure>
+</body>
+</html>

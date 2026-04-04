@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politeness Strategy Comparison: Chinese vs English</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-dim: #0891b2;
+    --mandarin: #f59e0b; --mandarin-bg: rgba(245,158,11,0.12);
+    --trad: #f43f5e; --trad-bg: rgba(244,63,94,0.08);
+    --english: #8b5cf6; --english-bg: rgba(139,92,246,0.1);
+    --muted: #64748b; --success: #4ade80;
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.1);
+    --blue: #3b82f6; --blue-bg: rgba(59,130,246,0.1);
+    --rose: #f43f5e; --warm: #fb923c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 950px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem; overflow-x: auto;
+  }
+  .title { font-size: 1.15rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  /* Main comparison layout */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .system-card {
+    border-radius: 10px; padding: 1.25rem; border: 2px solid;
+  }
+  .sys-zh { border-color: var(--mandarin); background: var(--mandarin-bg); }
+  .sys-en { border-color: var(--english); background: var(--english-bg); }
+
+  .sys-header { margin-bottom: 0.75rem; }
+  .sys-lang { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .sys-zh .sys-lang { color: var(--mandarin); }
+  .sys-en .sys-lang { color: var(--english); }
+  .sys-title { font-size: 1rem; font-weight: 700; color: var(--fg); }
+  .sys-framework { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+  .orientation {
+    padding: 0.6rem 0.8rem; border-radius: 6px;
+    background: rgba(0,0,0,0.2); margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .orient-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .orient-value { font-size: 0.95rem; font-weight: 700; margin-top: 0.15rem; }
+  .sys-zh .orient-value { color: var(--mandarin); }
+  .sys-en .orient-value { color: var(--english); }
+
+  .strat-list { list-style: none; padding: 0; }
+  .strat-item {
+    padding: 0.45rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.8rem;
+  }
+  .strat-item:last-child { border-bottom: none; }
+  .strat-name { font-weight: 600; }
+  .sys-zh .strat-name { color: var(--mandarin); }
+  .sys-en .strat-name { color: var(--english); }
+  .strat-desc { color: var(--muted); font-size: 0.75rem; }
+
+  /* Gu's Maxims */
+  .maxims-section {
+    margin-top: 1rem; padding: 0.75rem;
+    border-radius: 6px; background: rgba(0,0,0,0.15);
+  }
+  .maxim-label {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--mandarin); margin-bottom: 0.5rem;
+  }
+  .maxim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; }
+  .maxim {
+    padding: 0.35rem 0.5rem; border-radius: 5px;
+    background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+    font-size: 0.72rem;
+  }
+  .maxim-zh { font-weight: 700; color: var(--mandarin); }
+  .maxim-en { color: var(--muted); }
+
+  /* Dimension comparison table */
+  .dim-table {
+    width: 100%; border-collapse: collapse;
+    margin-top: 1.25rem; font-size: 0.78rem;
+  }
+  .dim-table th {
+    background: var(--bg); padding: 0.5rem 0.75rem;
+    text-align: left; font-weight: 700; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
+  }
+  .dim-table th:nth-child(1) { color: var(--accent); width: 22%; }
+  .dim-table th:nth-child(2) { color: var(--mandarin); }
+  .dim-table th:nth-child(3) { color: var(--trad); }
+  .dim-table th:nth-child(4) { color: var(--english); }
+  .dim-table td {
+    padding: 0.45rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .dim-table tr:nth-child(even) td { background: rgba(0,0,0,0.1); }
+  .dim-label { font-weight: 600; color: var(--accent); }
+
+  /* Context spectrum */
+  .context-section {
+    margin-top: 1.25rem; padding: 1rem; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .context-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .spectrum {
+    height: 2.5rem; border-radius: 6px; overflow: hidden;
+    background: linear-gradient(to right, var(--mandarin), var(--accent), var(--english));
+    position: relative; margin-bottom: 0.35rem;
+  }
+  .spec-marker {
+    position: absolute; top: 0; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; padding: 0 0.5rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .spec-zh { left: 8%; color: #fff; }
+  .spec-jp { left: 30%; color: #fff; font-size: 0.65rem; }
+  .spec-tw { left: 22%; color: #fff; font-size: 0.65rem; }
+  .spec-en { right: 8%; color: #fff; }
+  .spec-de { right: 22%; color: #fff; font-size: 0.65rem; }
+  .spec-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.68rem; color: var(--muted);
+  }
+
+  @media (max-width: 700px) {
+    .compare-grid { grid-template-columns: 1fr; }
+    .maxim-grid { grid-template-columns: 1fr; }
+    .dim-table { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">Politeness Strategy Comparison</div>
+  <div class="subtitle">Chinese involvement-oriented warmth vs English autonomy-oriented restraint</div>
+
+  <div class="compare-grid">
+    <!-- Chinese system -->
+    <div class="system-card sys-zh">
+      <div class="sys-header">
+        <div class="sys-lang">Chinese (PRC Mandarin)</div>
+        <div class="sys-title">Involvement / Warmth System</div>
+        <div class="sys-framework">Gu Yueguo (1990) -- Limao framework</div>
+      </div>
+
+      <div class="orientation">
+        <div class="orient-label">Core Orientation</div>
+        <div class="orient-value">Relational &amp; Network-Centered</div>
+      </div>
+
+      <ul class="strat-list">
+        <li class="strat-item">
+          <span class="strat-name">Self-Denigration</span>
+          <div class="strat-desc">Lower self to elevate other: 哪里哪里 (nali nali), 过奖了 (guojiang le)</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Attitudinal Warmth</span>
+          <div class="strat-desc">Show care through insistence: food-plying, bill-fighting, gift-pressing</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Appropriate Address</span>
+          <div class="strat-desc">Kinship terms signal closeness: 哥 (ge), 姐 (jie), 阿姨 (ayi)</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Ritual Performance</span>
+          <div class="strat-desc">Multi-round refusals, keqi sequences, modesty displays</div>
+        </li>
+      </ul>
+
+      <div class="maxims-section">
+        <div class="maxim-label">Gu's Four Maxims of Limao</div>
+        <div class="maxim-grid">
+          <div class="maxim"><span class="maxim-zh">谦虚</span> <span class="maxim-en">Self-Denigration Maxim</span></div>
+          <div class="maxim"><span class="maxim-zh">称呼</span> <span class="maxim-en">Address Maxim</span></div>
+          <div class="maxim"><span class="maxim-zh">得体</span> <span class="maxim-en">Tact Maxim</span></div>
+          <div class="maxim"><span class="maxim-zh">慷慨</span> <span class="maxim-en">Generosity Maxim</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- English system -->
+    <div class="system-card sys-en">
+      <div class="sys-header">
+        <div class="sys-lang">English</div>
+        <div class="sys-title">Independence / Restraint System</div>
+        <div class="sys-framework">Brown &amp; Levinson (1987) -- Face Theory</div>
+      </div>
+
+      <div class="orientation">
+        <div class="orient-label">Core Orientation</div>
+        <div class="orient-value">Individual &amp; Autonomy-Centered</div>
+      </div>
+
+      <ul class="strat-list">
+        <li class="strat-item">
+          <span class="strat-name">Positive Politeness</span>
+          <div class="strat-desc">Show liking, common ground: "Great job!", "We should..."</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Negative Politeness</span>
+          <div class="strat-desc">Minimize imposition: "Would you mind...", "I'm sorry to bother..."</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Off-Record / Indirect</span>
+          <div class="strat-desc">Hints and implicature: "It's cold in here" (= close the window)</div>
+        </li>
+        <li class="strat-item">
+          <span class="strat-name">Hedging &amp; Mitigation</span>
+          <div class="strat-desc">Soften assertions: "kind of," "sort of," "I think maybe..."</div>
+        </li>
+      </ul>
+
+      <div class="maxims-section" style="background:rgba(139,92,246,0.06);">
+        <div class="maxim-label" style="color:var(--english);">B&amp;L Face Wants</div>
+        <div class="maxim-grid">
+          <div class="maxim" style="background:rgba(139,92,246,0.08); border-color:rgba(139,92,246,0.2);">
+            <span class="maxim-zh" style="color:var(--english);">Positive Face</span> <span class="maxim-en">Desire to be liked</span>
+          </div>
+          <div class="maxim" style="background:rgba(139,92,246,0.08); border-color:rgba(139,92,246,0.2);">
+            <span class="maxim-zh" style="color:var(--english);">Negative Face</span> <span class="maxim-en">Desire for autonomy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimension comparison -->
+  <table class="dim-table">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th>PRC Mandarin</th>
+        <th>Classical Chinese</th>
+        <th>English</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim-label">Compliment response</td>
+        <td>Deflect: "哪里哪里" (where, where)</td>
+        <td>Elaborate humble: "过奖, 愧不敢当"</td>
+        <td>Accept: "Thank you!"</td>
+      </tr>
+      <tr>
+        <td class="dim-label">Request form</td>
+        <td>Indirect + relationship framing</td>
+        <td>Highly indirect + self-deprecation</td>
+        <td>"Could you please..." (hedged)</td>
+      </tr>
+      <tr>
+        <td class="dim-label">Refusal form</td>
+        <td>Multi-round ritual; rarely explicit "no"</td>
+        <td>Oblique; poetic circumlocution</td>
+        <td>"Sorry, I can't" (single round)</td>
+      </tr>
+      <tr>
+        <td class="dim-label">Imposition view</td>
+        <td>Care = warmth, not imposition</td>
+        <td>Care = ritual duty (li)</td>
+        <td>Care can = imposition on autonomy</td>
+      </tr>
+      <tr>
+        <td class="dim-label">Silence</td>
+        <td>Comfortable; implies thought</td>
+        <td>Valued (jun zi: the gentleman is slow to speak)</td>
+        <td>Awkward; signals communication failure</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- High/Low context spectrum -->
+  <div class="context-section">
+    <div class="context-title">Hall's Context Spectrum (1976)</div>
+    <div class="spectrum">
+      <span class="spec-marker spec-zh">Chinese</span>
+      <span class="spec-marker spec-jp">Japanese</span>
+      <span class="spec-marker spec-de">German</span>
+      <span class="spec-marker spec-en">American English</span>
+    </div>
+    <div class="spec-labels">
+      <span>HIGH-CONTEXT (implicit, relational)</span>
+      <span>LOW-CONTEXT (explicit, direct)</span>
+    </div>
+  </div>
+
+</div>
+<figcaption>Chinese politeness maximizes involvement and warmth within relationships; English politeness maximizes respect for individual autonomy. Neither is "more polite" -- they operate on different axes.</figcaption>
+</figure>
+</body>
+</html>

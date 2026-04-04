@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dual Face System: Mianzi vs Lian</title>
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --surface: #1e293b; --border: #334155;
+    --accent: #06b6d4; --accent-dim: #0891b2;
+    --mandarin: #f59e0b; --mandarin-bg: rgba(245,158,11,0.12);
+    --trad: #f43f5e; --trad-bg: rgba(244,63,94,0.1);
+    --english: #8b5cf6; --english-bg: rgba(139,92,246,0.1);
+    --muted: #64748b; --success: #4ade80; --warm: #fb923c;
+    --rose: #f43f5e; --rose-bg: rgba(244,63,94,0.08);
+    --emerald: #10b981; --emerald-bg: rgba(16,185,129,0.1);
+    --gold: #eab308; --gold-bg: rgba(234,179,8,0.1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 1.5rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 920px; width: 100%; }
+  figcaption { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.5rem; overflow-x: auto;
+  }
+  .title { font-size: 1.15rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; color: var(--accent); }
+  .subtitle { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+
+  /* Two-column face layout */
+  .face-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .face-card {
+    border-radius: 10px; padding: 1.25rem; border: 2px solid;
+    position: relative;
+  }
+  .face-mianzi { border-color: var(--mandarin); background: var(--mandarin-bg); }
+  .face-lian { border-color: var(--rose); background: var(--rose-bg); }
+  .face-header {
+    display: flex; align-items: baseline; gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .face-char { font-size: 2rem; font-weight: 700; }
+  .face-mianzi .face-char { color: var(--mandarin); }
+  .face-lian .face-char { color: var(--rose); }
+  .face-pinyin { font-size: 0.85rem; font-style: italic; color: var(--muted); }
+  .face-meaning { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .face-mianzi .face-meaning { color: var(--mandarin); }
+  .face-lian .face-meaning { color: var(--rose); }
+  .face-desc { font-size: 0.82rem; color: var(--fg); margin-bottom: 0.75rem; opacity: 0.9; }
+
+  .props { list-style: none; padding: 0; }
+  .props li {
+    font-size: 0.78rem; padding: 0.3rem 0; color: var(--fg);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; gap: 0.4rem;
+  }
+  .props li:last-child { border-bottom: none; }
+  .prop-icon { flex-shrink: 0; width: 1.2rem; text-align: center; }
+
+  /* Expressions grid */
+  .expr-section { margin-top: 1rem; }
+  .expr-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 0.5rem;
+    padding-left: 0.5rem; border-left: 3px solid;
+  }
+  .face-mianzi .expr-label { color: var(--mandarin); border-color: var(--mandarin); }
+  .face-lian .expr-label { color: var(--rose); border-color: var(--rose); }
+  .expr-grid { display: grid; gap: 0.35rem; }
+  .expr {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 0.6rem; border-radius: 5px;
+    background: rgba(0,0,0,0.2); font-size: 0.78rem;
+  }
+  .expr-zh { font-weight: 700; white-space: nowrap; }
+  .face-mianzi .expr-zh { color: var(--mandarin); }
+  .face-lian .expr-zh { color: var(--rose); }
+  .expr-en { color: var(--muted); font-size: 0.75rem; }
+
+  /* VS divider */
+  .vs-badge {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--surface); border: 2px solid var(--accent);
+    border-radius: 50%; width: 2.5rem; height: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.8rem; color: var(--accent);
+    z-index: 10;
+  }
+  .face-grid-wrapper { position: relative; }
+
+  /* English comparison */
+  .comparison-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  .comp-card {
+    padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); text-align: center;
+  }
+  .comp-lang {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.35rem;
+  }
+  .lang-zh { color: var(--mandarin); }
+  .lang-trad { color: var(--trad); }
+  .lang-en { color: var(--english); }
+  .comp-model { font-size: 0.82rem; font-weight: 600; color: var(--fg); margin-bottom: 0.25rem; }
+  .comp-detail { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+
+  /* Severity scale */
+  .severity {
+    margin-top: 1.25rem; padding: 1rem; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .severity-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .severity-bar {
+    display: flex; align-items: center; gap: 0; border-radius: 6px; overflow: hidden;
+    height: 2.5rem; position: relative;
+  }
+  .sev-seg {
+    flex: 1; height: 100%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 600; text-align: center; line-height: 1.2;
+    padding: 0 0.3rem;
+  }
+  .sev-1 { background: rgba(16,185,129,0.2); color: var(--emerald); }
+  .sev-2 { background: rgba(245,158,11,0.2); color: var(--mandarin); }
+  .sev-3 { background: rgba(251,146,60,0.25); color: var(--warm); }
+  .sev-4 { background: rgba(244,63,94,0.25); color: var(--rose); }
+  .sev-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.65rem; color: var(--muted); margin-top: 0.3rem;
+    padding: 0 0.25rem;
+  }
+
+  @media (max-width: 700px) {
+    .face-grid { grid-template-columns: 1fr; }
+    .comparison-row { grid-template-columns: 1fr; }
+    .vs-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<div class="diagram-box">
+  <div class="title">The Dual Face System: Two Independent Dimensions</div>
+  <div class="subtitle">Chinese splits "face" into social prestige and moral integrity -- English treats it as one concept</div>
+
+  <div class="face-grid-wrapper">
+    <div class="vs-badge">vs</div>
+    <div class="face-grid">
+
+      <!-- MIANZI -->
+      <div class="face-card face-mianzi">
+        <div class="face-header">
+          <span class="face-char">面子</span>
+          <span class="face-pinyin">mianzi</span>
+        </div>
+        <div class="face-meaning">Social Face / Prestige</div>
+        <div class="face-desc">Reputation achieved through success, status, wealth, connections. A social currency that can be earned, given, borrowed, or lost.</div>
+        <ul class="props">
+          <li><span class="prop-icon">+</span> Can be <strong>given</strong> to others (showing respect publicly)</li>
+          <li><span class="prop-icon">+</span> Can be <strong>borrowed</strong> (associating with high-status people)</li>
+          <li><span class="prop-icon">-</span> Can be <strong>lost</strong> (public embarrassment, failure)</li>
+          <li><span class="prop-icon">=</span> Is <strong>transactional</strong> and quantifiable</li>
+        </ul>
+
+        <div class="expr-section">
+          <div class="expr-label">Key Expressions</div>
+          <div class="expr-grid">
+            <div class="expr">
+              <span class="expr-zh">给面子</span>
+              <span class="expr-en">gei mianzi -- "give face" (honor someone)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">丢面子</span>
+              <span class="expr-en">diu mianzi -- "lose face" (be embarrassed)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">有面子</span>
+              <span class="expr-en">you mianzi -- "have face" (have prestige)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">不给面子</span>
+              <span class="expr-en">bu gei mianzi -- "not give face" (snub)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIAN -->
+      <div class="face-card face-lian">
+        <div class="face-header">
+          <span class="face-char">脸</span>
+          <span class="face-pinyin">lian</span>
+        </div>
+        <div class="face-meaning">Moral Face / Integrity</div>
+        <div class="face-desc">Moral standing recognized by the community. Earned through ethical conduct, keeping promises, fulfilling obligations regardless of hardship.</div>
+        <ul class="props">
+          <li><span class="prop-icon">+</span> <strong>Earned</strong> through moral conduct over time</li>
+          <li><span class="prop-icon">-</span> Lost through <strong>moral failure</strong> (lying, betrayal)</li>
+          <li><span class="prop-icon">!</span> Loss is <strong>devastating</strong> -- implies shamelessness</li>
+          <li><span class="prop-icon">=</span> Is <strong>moral</strong> and binary (you have it or you don't)</li>
+        </ul>
+
+        <div class="expr-section">
+          <div class="expr-label">Key Expressions</div>
+          <div class="expr-grid">
+            <div class="expr">
+              <span class="expr-zh">不要脸</span>
+              <span class="expr-en">bu yao lian -- "doesn't want face" (shameless)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">丢脸</span>
+              <span class="expr-en">diu lian -- "lose face" (moral disgrace)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">脸皮厚</span>
+              <span class="expr-en">lian pi hou -- "thick-skinned" (shameless)</span>
+            </div>
+            <div class="expr">
+              <span class="expr-zh">没脸见人</span>
+              <span class="expr-en">mei lian jian ren -- "no face to see people"</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Severity scale -->
+  <div class="severity">
+    <div class="severity-title">Severity of Face Loss</div>
+    <div class="severity-bar">
+      <div class="sev-seg sev-1">Minor<br>mianzi loss</div>
+      <div class="sev-seg sev-2">Significant<br>mianzi loss</div>
+      <div class="sev-seg sev-3">Lian<br>threatened</div>
+      <div class="sev-seg sev-4">Lian lost<br>(devastating)</div>
+    </div>
+    <div class="sev-labels">
+      <span>Small social slip</span>
+      <span>Public humiliation</span>
+      <span>Moral accusation</span>
+      <span>"Bu yao lian"</span>
+    </div>
+  </div>
+
+  <!-- Three-way comparison -->
+  <div class="comparison-row">
+    <div class="comp-card">
+      <div class="comp-lang lang-zh">PRC Mandarin</div>
+      <div class="comp-model">Dual Face (mianzi + lian)</div>
+      <div class="comp-detail">Relational, network-embedded. Face is a social currency within guanxi. Two independent axes: prestige and morality.</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-lang lang-trad">Classical Chinese</div>
+      <div class="comp-model">Confucian Li + De</div>
+      <div class="comp-detail">Same dual system rooted in ritual propriety (li) and moral virtue (de). Elaborate honorific/humble forms encoded the hierarchy.</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-lang lang-en">English</div>
+      <div class="comp-model">Unitary Face (Goffman)</div>
+      <div class="comp-detail">Single concept: projected self-image. Brown &amp; Levinson split into positive (liked) and negative (not imposed upon) -- both individual-centered.</div>
+    </div>
+  </div>
+
+</div>
+<figcaption>The Chinese dual-face system (Hu Hsien-chin, 1944) distinguishes social prestige from moral integrity -- a split English conflates into one concept.</figcaption>
+</figure>
+</body>
+</html>
