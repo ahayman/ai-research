@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regularity Comparison Scorecard</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de: #ef4444;
+    --de-bg: #fef2f2;
+    --en: #3b82f6;
+    --en-bg: #eff6ff;
+    --fr: #8b5cf6;
+    --fr-bg: #f5f3ff;
+    --ar: #10b981;
+    --ar-bg: #ecfdf5;
+    --zh: #f59e0b;
+    --zh-bg: #fffbeb;
+    --muted: #6c757d;
+    --win: #10b981;
+    --win-bg: #ecfdf5;
+    --accent: #f59e0b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de: #f87171;
+      --de-bg: #2a1515;
+      --en: #60a5fa;
+      --en-bg: #1e293b;
+      --fr: #a78bfa;
+      --fr-bg: #1e1535;
+      --ar: #34d399;
+      --ar-bg: #132e24;
+      --zh: #fbbf24;
+      --zh-bg: #2a2510;
+      --muted: #9a9ab0;
+      --win: #34d399;
+      --win-bg: #132e24;
+      --accent: #fbbf24;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .tagline {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--de);
+    margin-bottom: 2rem;
+  }
+
+  /* Language color key */
+  .lang-key {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .lk-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .lk-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* Scorecard table */
+  .scorecard {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-bottom: 1.5rem;
+  }
+  .scorecard th {
+    padding: 0.6rem 0.5rem;
+    text-align: center;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+  }
+  .scorecard th:first-child { text-align: left; min-width: 140px; }
+  .scorecard td {
+    padding: 0.6rem 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .scorecard td:first-child {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .scorecard .col-de { color: var(--de); }
+  .scorecard .col-en { color: var(--en); }
+  .scorecard .col-fr { color: var(--fr); }
+  .scorecard .col-ar { color: var(--ar); }
+  .scorecard .col-zh { color: var(--zh); }
+
+  .bar-cell {
+    position: relative;
+  }
+  .bar-bg {
+    height: 22px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: #fff;
+    min-width: 24px;
+    margin: 0 auto;
+    transition: width 0.3s;
+  }
+  .bar-de { background: var(--de); }
+  .bar-en { background: var(--en); }
+  .bar-fr { background: var(--fr); }
+  .bar-ar { background: var(--ar); }
+  .bar-zh { background: var(--zh); }
+  .bar-na {
+    background: var(--border);
+    color: var(--muted);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .winner-cell {
+    font-weight: 800;
+    font-size: 0.82rem;
+  }
+  .winner-de { color: var(--de); }
+  .winner-en { color: var(--en); }
+  .winner-ar { color: var(--ar); }
+  .winner-zh { color: var(--zh); }
+  .winner-tie { color: var(--muted); }
+
+  /* Pattern learner fit */
+  .fit-section {
+    margin-top: 1.5rem;
+  }
+  .fit-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    text-align: center;
+    color: var(--accent);
+  }
+  .fit-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+  }
+  @media (max-width: 700px) {
+    .fit-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .fit-card {
+    border-radius: 10px;
+    padding: 0.8rem;
+    text-align: center;
+    border: 2px solid var(--border);
+  }
+  .fit-card.fit-de { border-color: var(--de); background: var(--de-bg); }
+  .fit-card.fit-en { border-color: var(--en); background: var(--en-bg); }
+  .fit-card.fit-fr { border-color: var(--fr); background: var(--fr-bg); }
+  .fit-card.fit-ar { border-color: var(--ar); background: var(--ar-bg); }
+  .fit-card.fit-zh { border-color: var(--zh); background: var(--zh-bg); }
+  .fit-lang {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+  .fit-de .fit-lang { color: var(--de); }
+  .fit-en .fit-lang { color: var(--en); }
+  .fit-fr .fit-lang { color: var(--fr); }
+  .fit-ar .fit-lang { color: var(--ar); }
+  .fit-zh .fit-lang { color: var(--zh); }
+  .fit-score {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .fit-de .fit-score { color: var(--de); }
+  .fit-en .fit-score { color: var(--en); }
+  .fit-fr .fit-score { color: var(--fr); }
+  .fit-ar .fit-score { color: var(--ar); }
+  .fit-zh .fit-score { color: var(--zh); }
+  .fit-label { font-size: 0.72rem; color: var(--muted); }
+  .fit-reason { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .callout {
+    margin-top: 1.5rem;
+    background: var(--de-bg);
+    border: 2px solid var(--de);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+  }
+  .callout-title {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--de);
+    margin-bottom: 0.3rem;
+  }
+  .callout-text {
+    font-size: 0.9rem;
+  }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Regularity Comparison Scorecard</h2>
+  <p class="subtitle">German vs. English vs. French vs. Arabic vs. Chinese across key dimensions of linguistic regularity</p>
+  <p class="tagline">German looks harder but IS more systematic</p>
+
+  <div class="lang-key">
+    <div class="lk-item"><span class="lk-dot" style="background:var(--de);"></span> German</div>
+    <div class="lk-item"><span class="lk-dot" style="background:var(--en);"></span> English</div>
+    <div class="lk-item"><span class="lk-dot" style="background:var(--fr);"></span> French</div>
+    <div class="lk-item"><span class="lk-dot" style="background:var(--ar);"></span> Arabic</div>
+    <div class="lk-item"><span class="lk-dot" style="background:var(--zh);"></span> Chinese</div>
+  </div>
+
+  <table class="scorecard">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="col-de">German</th>
+        <th class="col-en">English</th>
+        <th class="col-fr">French</th>
+        <th class="col-ar">Arabic</th>
+        <th class="col-zh">Chinese</th>
+        <th>Winner</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Spelling (reading)</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:95%;">~95%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:65%;">~65%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:85%;">~85%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:99%;">~99%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-na" style="width:30%;">N/A</div></td>
+        <td class="winner-cell winner-ar">Arabic</td>
+      </tr>
+      <tr>
+        <td>Spelling (writing)</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:88%;">~88%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:55%;">~55%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:65%;">~65%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:95%;">~95%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-na" style="width:30%;">N/A</div></td>
+        <td class="winner-cell winner-ar">Arabic</td>
+      </tr>
+      <tr>
+        <td>Verb regularity</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:85%;">~85%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:65%;">~65%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:70%;">~70%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:95%;">~95%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-zh" style="width:100%;">100%</div></td>
+        <td class="winner-cell winner-zh">Chinese</td>
+      </tr>
+      <tr>
+        <td>Word order predictability</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:92%;">Strict</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:70%;">Loose</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:82%;">Fixed</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:72%;">Alt.</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-zh" style="width:75%;">SVO+</div></td>
+        <td class="winner-cell winner-de">German</td>
+      </tr>
+      <tr>
+        <td>Gender predictability</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:80%;">~80%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-na" style="width:30%;">N/A</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:78%;">~78%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:88%;">~88%</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-na" style="width:30%;">N/A</div></td>
+        <td class="winner-cell winner-ar">Arabic</td>
+      </tr>
+      <tr>
+        <td>Number system</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:85%;">Regular</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:65%;">Irreg. teens</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:55%;">Vigesimal</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:80%;">Regular</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-zh" style="width:100%;">Perfect</div></td>
+        <td class="winner-cell winner-zh">Chinese</td>
+      </tr>
+      <tr>
+        <td>Agreement marking</td>
+        <td class="bar-cell"><div class="bar-bg bar-de" style="width:90%;">Explicit</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-en" style="width:30%;">Minimal</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-fr" style="width:75%;">Silent</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-ar" style="width:95%;">Complex</div></td>
+        <td class="bar-cell"><div class="bar-bg bar-na" style="width:30%;">None</div></td>
+        <td class="winner-cell winner-de">German</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pattern Learner Fit -->
+  <div class="fit-section">
+    <div class="fit-title">Pattern-Learner Compatibility Score</div>
+    <div class="fit-grid">
+      <div class="fit-card fit-de">
+        <div class="fit-lang">German</div>
+        <div class="fit-score">9/10</div>
+        <div class="fit-label">Excellent</div>
+        <div class="fit-reason">Explicit rules everywhere. Algorithms for gender, case, word order, spelling.</div>
+      </div>
+      <div class="fit-card fit-en">
+        <div class="fit-lang">English</div>
+        <div class="fit-score">5/10</div>
+        <div class="fit-label">Mixed</div>
+        <div class="fit-reason">Simple morphology but irregular spelling, idioms, and hidden rules.</div>
+      </div>
+      <div class="fit-card fit-fr">
+        <div class="fit-lang">French</div>
+        <div class="fit-score">7/10</div>
+        <div class="fit-label">Good</div>
+        <div class="fit-reason">Many rules but more exceptions; silent letters; liaison complexity.</div>
+      </div>
+      <div class="fit-card fit-ar">
+        <div class="fit-lang">Arabic</div>
+        <div class="fit-score">8/10</div>
+        <div class="fit-label">Excellent</div>
+        <div class="fit-reason">Root-pattern morphology is extremely systematic. Unfamiliar but regular.</div>
+      </div>
+      <div class="fit-card fit-zh">
+        <div class="fit-lang">Chinese</div>
+        <div class="fit-score">7/10</div>
+        <div class="fit-label">Good</div>
+        <div class="fit-reason">No conjugation/declension. But tones, characters, and classifiers are new.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Unfamiliar does not equal irregular.</div>
+    <div class="callout-text">German wins or ties with English in 6 of 7 regularity dimensions. Its perceived difficulty comes from <em>unfamiliarity</em> (gender, case, V2 order) -- not from <em>irregularity</em>. A pattern learner who internalizes the algorithms will find German more predictable than English itself.</div>
+  </div>
+
+  <figcaption>
+    <strong>German for Pattern Learners (CAPSTONE) -- Diagram 6 of 6.</strong> A dimension-by-dimension comparison of linguistic regularity across five languages. Bar widths represent approximate regularity percentages where applicable. German outperforms English in spelling, verb regularity, word order predictability, and agreement marking. The pattern-learner compatibility score reflects how well each language rewards systematic, rule-based learning strategies. N/A indicates the dimension does not apply (e.g., Chinese has no alphabetic spelling system; English has no grammatical gender).
+  </figcaption>
+</figure>
+</body>
+</html>

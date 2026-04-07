@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>False Friends Divergence Map -- Shared Roots, Split Meanings</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de-color: #3b82f6;
+    --de-bg: #eff6ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --root-color: #8b5cf6;
+    --root-bg: #f5f3ff;
+    --danger: #e63946;
+    --danger-bg: #fef2f2;
+    --caution: #f59e0b;
+    --caution-bg: #fffbeb;
+    --special: #ec4899;
+    --special-bg: #fdf2f8;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de-color: #60a5fa;
+      --de-bg: #1e293b;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --root-color: #a78bfa;
+      --root-bg: #1e1b3a;
+      --danger: #ff6b6b;
+      --danger-bg: #2a1515;
+      --caution: #fbbf24;
+      --caution-bg: #2a2510;
+      --special: #f472b6;
+      --special-bg: #2a1525;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .fork-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+  }
+  .fork-card {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+  }
+  .fork-de {
+    background: var(--de-bg);
+    padding: 0.6rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .fork-en {
+    background: var(--en-bg);
+    padding: 0.6rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .fork-root {
+    background: var(--root-bg);
+    padding: 0.5rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+    text-align: center;
+  }
+  .fork-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.3rem;
+    font-size: 1.2rem;
+    color: var(--muted);
+    background: var(--surface);
+  }
+  .fork-word {
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+  .fork-de .fork-word { color: var(--de-color); }
+  .fork-en .fork-word { color: var(--en-color); }
+  .fork-meaning {
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .fork-etym {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .fork-root .root-word {
+    font-weight: 800;
+    font-size: 0.82rem;
+    color: var(--root-color);
+  }
+  .fork-root .root-gloss {
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .severity-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-left: 0.2rem;
+    vertical-align: middle;
+  }
+  .severity-tag.skull { background: var(--danger-bg); color: var(--danger); }
+  .severity-tag.warn { background: var(--caution-bg); color: var(--caution); }
+  .severity-tag.pseudo { background: var(--special-bg); color: var(--special); }
+
+  .drift-type {
+    display: inline-block;
+    font-size: 0.58rem;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--root-bg);
+    color: var(--root-color);
+    font-weight: 600;
+    margin-top: 0.2rem;
+  }
+
+  .pattern-box {
+    background: var(--root-bg);
+    border: 2px solid var(--root-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .pattern-box h3 { color: var(--root-color); font-size: 1rem; margin-bottom: 0.5rem; }
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .pattern-item {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .pattern-item strong { color: var(--root-color); }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 750px) {
+    figure { padding: 1.2rem; }
+    .fork-card {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+    }
+    .fork-arrow { display: none; }
+    .fork-root { min-width: unset; flex-direction: row; gap: 0.5rem; padding: 0.4rem 0.6rem; }
+    .pattern-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>False Friends Divergence Map</h2>
+  <p class="subtitle">Shared Proto-Germanic roots, 1,500 years of separate drift, dangerously different modern meanings.</p>
+
+  <div class="fork-list">
+
+    <!-- Gift -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">Gift <span class="severity-tag skull">POISON!</span></div>
+        <div class="fork-meaning">= poison</div>
+        <div class="fork-etym">"a dose given" &rarr; "poisonous dose"</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">*giftiz</div>
+        <div class="root-gloss">Proto-Gmc: "something given"</div>
+        <div class="drift-type">pejoration vs. retention</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">gift</div>
+        <div class="fork-meaning">= present</div>
+        <div class="fork-etym">"something given" &rarr; kept neutral sense</div>
+      </div>
+    </div>
+
+    <!-- bekommen -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">bekommen <span class="severity-tag skull">DANGER</span></div>
+        <div class="fork-meaning">= to receive, to get</div>
+        <div class="fork-etym">"come by" &rarr; kept concrete sense</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">*bi-kweman</div>
+        <div class="root-gloss">Proto-Gmc: "to come to"</div>
+        <div class="drift-type">concrete vs. abstract</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">become</div>
+        <div class="fork-meaning">= to turn into</div>
+        <div class="fork-etym">"come to" &rarr; abstract "come to be"</div>
+      </div>
+    </div>
+
+    <!-- Chef -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">Chef <span class="severity-tag warn">confusing</span></div>
+        <div class="fork-meaning">= boss, supervisor</div>
+        <div class="fork-etym">French "chef" = head person &rarr; kept broad sense</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">Fr. chef</div>
+        <div class="root-gloss">French: "head, leader"</div>
+        <div class="drift-type">broadening vs. narrowing</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">chef</div>
+        <div class="fork-meaning">= professional cook</div>
+        <div class="fork-etym">"chef de cuisine" &rarr; narrowed to kitchen</div>
+      </div>
+    </div>
+
+    <!-- aktuell -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">aktuell <span class="severity-tag warn">confusing</span></div>
+        <div class="fork-meaning">= current, up-to-date</div>
+        <div class="fork-etym">Latin actualis &rarr; temporal "happening now"</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">Lat. actualis</div>
+        <div class="root-gloss">Latin: "relating to acts"</div>
+        <div class="drift-type">temporal vs. ontological</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">actual</div>
+        <div class="fork-meaning">= real, in fact</div>
+        <div class="fork-etym">Latin actualis &rarr; ontological "existing in reality"</div>
+      </div>
+    </div>
+
+    <!-- Gymnasium -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">Gymnasium <span class="severity-tag warn">confusing</span></div>
+        <div class="fork-meaning">= academic high school</div>
+        <div class="fork-etym">"exercise" &rarr; exercise of the MIND</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">Gk. gymnasion</div>
+        <div class="root-gloss">Greek: "place of exercise"</div>
+        <div class="drift-type">intellectual vs. physical</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">gymnasium</div>
+        <div class="fork-meaning">= sports hall</div>
+        <div class="fork-etym">"exercise" &rarr; kept physical exercise sense</div>
+      </div>
+    </div>
+
+    <!-- sensibel -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">sensibel</div>
+        <div class="fork-meaning">= sensitive</div>
+        <div class="fork-etym">Latin sensibilis &rarr; kept "capable of feeling"</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word">Lat. sensibilis</div>
+        <div class="root-gloss">Latin: "capable of feeling"</div>
+        <div class="drift-type">feeling vs. judgment</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">sensible</div>
+        <div class="fork-meaning">= reasonable, practical</div>
+        <div class="fork-etym">"capable of sense" &rarr; "having good sense"</div>
+      </div>
+    </div>
+
+    <!-- Handy -->
+    <div class="fork-card" style="border-color: var(--special);">
+      <div class="fork-de">
+        <div class="fork-word">Handy <span class="severity-tag pseudo">PSEUDO-ANGLICISM</span></div>
+        <div class="fork-meaning">= mobile phone</div>
+        <div class="fork-etym">INVENTED in German -- looks English but isn't</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word" style="color: var(--special);">NO shared root</div>
+        <div class="root-gloss">German coined an English-looking word</div>
+        <div class="drift-type" style="background: var(--special-bg); color: var(--special);">pseudo-anglicism</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">handy</div>
+        <div class="fork-meaning">= useful, convenient</div>
+        <div class="fork-etym">From "hand" + -y = convenient to hand</div>
+      </div>
+    </div>
+
+    <!-- Rat -->
+    <div class="fork-card">
+      <div class="fork-de">
+        <div class="fork-word">Rat</div>
+        <div class="fork-meaning">= advice, council</div>
+        <div class="fork-etym">PGmc *raedaz (counsel)</div>
+      </div>
+      <div class="fork-arrow">&larr;</div>
+      <div class="fork-root">
+        <div class="root-word" style="color: var(--caution);">DIFFERENT roots</div>
+        <div class="root-gloss">*raedaz vs. *rattaz</div>
+        <div class="drift-type" style="background: var(--caution-bg); color: var(--caution);">coincidental lookalike</div>
+      </div>
+      <div class="fork-arrow">&rarr;</div>
+      <div class="fork-en">
+        <div class="fork-word">rat</div>
+        <div class="fork-meaning">= rodent</div>
+        <div class="fork-etym">PGmc *rattaz (the animal)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pattern-box">
+    <h3>Patterns of Semantic Divergence</h3>
+    <div class="pattern-grid">
+      <div class="pattern-item"><strong>Narrowing vs. broadening:</strong> One language narrows while the other keeps the broad sense (Chef: German broad "leader" vs. English narrow "cook")</div>
+      <div class="pattern-item"><strong>Concrete vs. abstract:</strong> One keeps concrete, the other drifts abstract (bekommen: German "receive" vs. English "become")</div>
+      <div class="pattern-item"><strong>Pejoration vs. retention:</strong> One shifts negative, the other stays neutral (Gift: German "poison" vs. English "present")</div>
+      <div class="pattern-item"><strong>Pseudo-anglicisms:</strong> German invents English-looking words with new meanings (Handy, Beamer, Oldtimer, Showmaster)</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 4: False Friends Divergence Map</strong>
+    <span>False friends between German and English are not random coincidences -- they are divergent cognates from shared roots that drifted in different semantic directions over 1,500 years. The divergence follows identifiable patterns: narrowing vs. broadening, pejoration vs. retention, concrete vs. abstract drift. Understanding these drift patterns makes false friends predictable rather than merely memorizable. Special cases include pseudo-anglicisms (German words that look English but were invented in German) and coincidental lookalikes (words from unrelated roots).</span>
+  </figcaption>
+</figure>
+</body>
+</html>

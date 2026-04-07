@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Prefix System as Semantic Algebra</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --ver-color: #f59e0b;
+    --ver-bg: #fffbeb;
+    --zer-color: #e63946;
+    --zer-bg: #fef2f2;
+    --be-color: #8b5cf6;
+    --be-bg: #f5f3ff;
+    --ent-color: #3b82f6;
+    --ent-bg: #eff6ff;
+    --er-color: #10b981;
+    --er-bg: #ecfdf5;
+    --miss-color: #6c757d;
+    --miss-bg: #f0f0f5;
+    --muted: #6c757d;
+    --empty-bg: #f0f0f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --ver-color: #fbbf24;
+      --ver-bg: #2a2510;
+      --zer-color: #ff6b6b;
+      --zer-bg: #2a1515;
+      --be-color: #a78bfa;
+      --be-bg: #1e1b3a;
+      --ent-color: #60a5fa;
+      --ent-bg: #1e293b;
+      --er-color: #34d399;
+      --er-bg: #132e24;
+      --miss-color: #9a9ab0;
+      --miss-bg: #1f1f30;
+      --muted: #9a9ab0;
+      --empty-bg: #151525;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .prefix-legend {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .prefix-key {
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.78rem;
+    border: 1.5px solid;
+  }
+  .prefix-key .pname { font-weight: 800; font-size: 0.9rem; }
+  .prefix-key .pdesc { font-style: italic; }
+  .pk-ver { border-color: var(--ver-color); background: var(--ver-bg); }
+  .pk-ver .pname { color: var(--ver-color); }
+  .pk-zer { border-color: var(--zer-color); background: var(--zer-bg); }
+  .pk-zer .pname { color: var(--zer-color); }
+  .pk-be { border-color: var(--be-color); background: var(--be-bg); }
+  .pk-be .pname { color: var(--be-color); }
+  .pk-ent { border-color: var(--ent-color); background: var(--ent-bg); }
+  .pk-ent .pname { color: var(--ent-color); }
+  .pk-er { border-color: var(--er-color); background: var(--er-bg); }
+  .pk-er .pname { color: var(--er-color); }
+  .pk-miss { border-color: var(--miss-color); background: var(--miss-bg); }
+  .pk-miss .pname { color: var(--miss-color); }
+
+  .matrix-wrap {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    min-width: 750px;
+  }
+  .matrix th {
+    padding: 0.5rem 0.4rem;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: center;
+    vertical-align: bottom;
+  }
+  .matrix th.base-header {
+    color: var(--fg);
+    font-size: 0.82rem;
+  }
+  .matrix th.base-header .base-gloss {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .matrix th.prefix-header { font-weight: 800; font-size: 0.85rem; }
+  .matrix td {
+    padding: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    vertical-align: top;
+  }
+  .matrix tr:last-child td { border-bottom: none; }
+  .cell-word {
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: block;
+  }
+  .cell-meaning {
+    font-size: 0.68rem;
+    color: var(--muted);
+    display: block;
+  }
+  .cell-empty {
+    color: var(--border);
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .r-ver td { background: var(--ver-bg); }
+  .r-ver th.prefix-header { color: var(--ver-color); }
+  .r-zer td { background: var(--zer-bg); }
+  .r-zer th.prefix-header { color: var(--zer-color); }
+  .r-be td { background: var(--be-bg); }
+  .r-be th.prefix-header { color: var(--be-color); }
+  .r-ent td { background: var(--ent-bg); }
+  .r-ent th.prefix-header { color: var(--ent-color); }
+  .r-er td { background: var(--er-bg); }
+  .r-er th.prefix-header { color: var(--er-color); }
+  .r-miss td { background: var(--miss-bg); }
+  .r-miss th.prefix-header { color: var(--miss-color); }
+
+  .en-sidebar {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .en-sidebar h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--muted); }
+  .en-sidebar p { font-size: 0.85rem; color: var(--muted); }
+  .en-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+  }
+  .en-compare-item {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background: var(--empty-bg);
+    border: 1px solid var(--border);
+  }
+  .en-compare-item strong { display: block; margin-bottom: 0.1rem; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .prefix-legend { grid-template-columns: 1fr 1fr; }
+    .en-compare { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Prefix System as Semantic Algebra</h2>
+  <p class="subtitle">prefix + base verb = predictable new meaning. A systematic multiplication table for word-building.</p>
+
+  <div class="prefix-legend">
+    <div class="prefix-key pk-ver"><span class="pname">ver-</span> <span class="pdesc">transformation / astray / completion</span></div>
+    <div class="prefix-key pk-zer"><span class="pname">zer-</span> <span class="pdesc">to pieces / destruction</span></div>
+    <div class="prefix-key pk-be"><span class="pname">be-</span> <span class="pdesc">transitivizes / applies to surface</span></div>
+    <div class="prefix-key pk-ent"><span class="pname">ent-</span> <span class="pdesc">removal / reversal / away from</span></div>
+    <div class="prefix-key pk-er"><span class="pname">er-</span> <span class="pdesc">achievement / emergence</span></div>
+    <div class="prefix-key pk-miss"><span class="pname">miss-</span> <span class="pdesc">wrongly / badly</span></div>
+  </div>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th style="text-align:left;">Prefix</th>
+          <th class="base-header">stehen<span class="base-gloss">to stand</span></th>
+          <th class="base-header">kommen<span class="base-gloss">to come</span></th>
+          <th class="base-header">fallen<span class="base-gloss">to fall</span></th>
+          <th class="base-header">brechen<span class="base-gloss">to break</span></th>
+          <th class="base-header">sprechen<span class="base-gloss">to speak</span></th>
+          <th class="base-header">schlagen<span class="base-gloss">to strike</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="r-ver">
+          <th class="prefix-header" style="text-align:left;">ver-</th>
+          <td><span class="cell-word">verstehen</span><span class="cell-meaning">understand</span></td>
+          <td><span class="cell-word">verkommen</span><span class="cell-meaning">deteriorate</span></td>
+          <td><span class="cell-word">verfallen</span><span class="cell-meaning">decay, expire</span></td>
+          <td><span class="cell-word">verbrechen</span><span class="cell-meaning">commit a crime</span></td>
+          <td><span class="cell-word">versprechen</span><span class="cell-meaning">promise</span></td>
+          <td><span class="cell-word">verschlagen</span><span class="cell-meaning">cunning; blow off course</span></td>
+        </tr>
+        <tr class="r-zer">
+          <th class="prefix-header" style="text-align:left;">zer-</th>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-word">zerfallen</span><span class="cell-meaning">disintegrate</span></td>
+          <td><span class="cell-word">zerbrechen</span><span class="cell-meaning">shatter</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-word">zerschlagen</span><span class="cell-meaning">smash to pieces</span></td>
+        </tr>
+        <tr class="r-be">
+          <th class="prefix-header" style="text-align:left;">be-</th>
+          <td><span class="cell-word">bestehen</span><span class="cell-meaning">consist of; pass (a test)</span></td>
+          <td><span class="cell-word">bekommen</span><span class="cell-meaning">receive, get</span></td>
+          <td><span class="cell-word">befallen</span><span class="cell-meaning">afflict, befall</span></td>
+          <td><span class="cell-word">bebrechen</span><span class="cell-meaning">vomit on (rare)</span></td>
+          <td><span class="cell-word">besprechen</span><span class="cell-meaning">discuss</span></td>
+          <td><span class="cell-word">beschlagen</span><span class="cell-meaning">shoe (a horse); fog up</span></td>
+        </tr>
+        <tr class="r-ent">
+          <th class="prefix-header" style="text-align:left;">ent-</th>
+          <td><span class="cell-word">entstehen</span><span class="cell-meaning">arise, come into being</span></td>
+          <td><span class="cell-word">entkommen</span><span class="cell-meaning">escape</span></td>
+          <td><span class="cell-word">entfallen</span><span class="cell-meaning">slip one's mind</span></td>
+          <td><span class="cell-word">entbrechen</span><span class="cell-meaning">(archaic) break away</span></td>
+          <td><span class="cell-word">entsprechen</span><span class="cell-meaning">correspond to</span></td>
+          <td><span class="cell-empty">---</span></td>
+        </tr>
+        <tr class="r-er">
+          <th class="prefix-header" style="text-align:left;">er-</th>
+          <td><span class="cell-word">erstehen</span><span class="cell-meaning">arise; acquire (auction)</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-word">erbrechen</span><span class="cell-meaning">vomit; break open</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-word">erschlagen</span><span class="cell-meaning">slay, kill by striking</span></td>
+        </tr>
+        <tr class="r-miss">
+          <th class="prefix-header" style="text-align:left;">miss-</th>
+          <td><span class="cell-word">missverstehen</span><span class="cell-meaning">misunderstand</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-word">missfallen</span><span class="cell-meaning">displease</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-empty">---</span></td>
+          <td><span class="cell-empty">---</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="en-sidebar">
+    <h3>How English Handles the Same Work</h3>
+    <p>English lost most of its productive prefixes. It now uses three separate strategies where German uses one prefix system:</p>
+    <div class="en-compare">
+      <div class="en-compare-item">
+        <strong>Latinate prefixes</strong>
+        de-compose, re-construct, dis-connect, pre-determine -- borrowed, not productive
+      </div>
+      <div class="en-compare-item">
+        <strong>Phrasal verbs</strong>
+        break up, break down, break in, break out -- productive, but "up" can mean anything
+      </div>
+      <div class="en-compare-item">
+        <strong>Separate words</strong>
+        "understand" / "misunderstand" / "arise" / "escape" -- no visible pattern connecting them
+      </div>
+      <div class="en-compare-item">
+        <strong>Key difference</strong>
+        German zer- ALWAYS = destruction. English "up" = completion (eat up), destruction (blow up), OR revelation (show up)
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 2: The Prefix System as Semantic Algebra</strong>
+    <span>German inseparable prefixes (ver-, zer-, be-, ent-, er-, miss-) systematically modify base verb meanings in semi-predictable ways. The matrix reveals both the regularity (zer- always means destruction, ent- always means removal) and the gaps (not every prefix combines with every verb). For a pattern-oriented learner, knowing 6 prefixes and a base verb gives you a reasonable guess at any combination -- a semantic multiplication table. English lost its equivalent system and now uses Latinate prefixes, phrasal verbs, and unrelated vocabulary to do the same work less systematically.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Vocabulary Layers vs. Single Layer -- English Strata vs. German Bedrock</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --germanic: #3b82f6;
+    --germanic-bg: #eff6ff;
+    --french: #e63946;
+    --french-bg: #fef2f2;
+    --latin: #f59e0b;
+    --latin-bg: #fffbeb;
+    --de-color: #3b82f6;
+    --de-bg: #eff6ff;
+    --accent: #8b5cf6;
+    --accent-bg: #f5f3ff;
+    --hist: #10b981;
+    --hist-bg: #ecfdf5;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --germanic: #60a5fa;
+      --germanic-bg: #1e293b;
+      --french: #ff6b6b;
+      --french-bg: #2a1515;
+      --latin: #fbbf24;
+      --latin-bg: #2a2510;
+      --de-color: #60a5fa;
+      --de-bg: #1e293b;
+      --accent: #a78bfa;
+      --accent-bg: #1e1b3a;
+      --hist: #34d399;
+      --hist-bg: #132e24;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .strata-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .strata-col h3 {
+    text-align: center;
+    font-size: 1.05rem;
+    margin-bottom: 0.8rem;
+  }
+  .en-col h3 { color: var(--muted); }
+  .de-col h3 { color: var(--de-color); }
+
+  /* English strata */
+  .stratum {
+    border-radius: 10px;
+    padding: 0.7rem 0.8rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.82rem;
+  }
+  .stratum-label {
+    font-weight: 800;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stratum-pct {
+    font-size: 0.68rem;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+  .stratum-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .s-word {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.3);
+  }
+  .stratum-register {
+    font-size: 0.68rem;
+    font-style: italic;
+    margin-top: 0.3rem;
+    opacity: 0.8;
+  }
+
+  .str-latin {
+    background: var(--latin-bg);
+    border: 1.5px solid var(--latin);
+  }
+  .str-latin .stratum-label { color: var(--latin); }
+  .str-french {
+    background: var(--french-bg);
+    border: 1.5px solid var(--french);
+  }
+  .str-french .stratum-label { color: var(--french); }
+  .str-germanic {
+    background: var(--germanic-bg);
+    border: 1.5px solid var(--germanic);
+  }
+  .str-germanic .stratum-label { color: var(--germanic); }
+
+  .en-arrow-label {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 0.15rem 0;
+    font-style: italic;
+  }
+
+  /* German single layer */
+  .de-monolith {
+    border: 2.5px solid var(--de-color);
+    border-radius: 12px;
+    background: var(--de-bg);
+    padding: 1rem;
+  }
+  .de-monolith .stratum-label {
+    color: var(--de-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.78rem;
+  }
+  .de-register-group {
+    margin-bottom: 0.6rem;
+  }
+  .de-register-group .reg-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.2rem;
+  }
+  .de-word-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+  }
+  .de-word {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(59,130,246,0.12);
+    color: var(--de-color);
+    font-weight: 600;
+  }
+  .de-word .gloss {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 0.68rem;
+  }
+  .de-note {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--de-color);
+    font-style: italic;
+    margin-top: 0.6rem;
+    font-weight: 600;
+  }
+
+  /* History bar */
+  .history-bar {
+    background: var(--hist-bg);
+    border: 2px solid var(--hist);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    font-size: 0.82rem;
+  }
+  .history-bar h3 { color: var(--hist); font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .hist-item p { color: var(--muted); font-size: 0.78rem; }
+
+  /* Meat split */
+  .meat-inset {
+    background: var(--accent-bg);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .meat-inset h3 { color: var(--accent); font-size: 0.95rem; margin-bottom: 0.5rem; text-align: center; }
+  .meat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+  }
+  .meat-en-card, .meat-de-card {
+    border-radius: 8px;
+    padding: 0.6rem;
+  }
+  .meat-en-card {
+    border: 1.5px solid var(--french);
+    background: var(--french-bg);
+  }
+  .meat-de-card {
+    border: 1.5px solid var(--de-color);
+    background: var(--de-bg);
+  }
+  .meat-en-card h4 { color: var(--french); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.2rem; }
+  .meat-de-card h4 { color: var(--de-color); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.2rem; }
+  .meat-pair {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.15rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .meat-pair:last-child { border-bottom: none; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  @media (max-width: 750px) {
+    figure { padding: 1.2rem; }
+    .strata-compare { grid-template-columns: 1fr; }
+    .meat-grid { grid-template-columns: 1fr; }
+    .history-bar { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Three Vocabulary Layers vs. Single Layer</h2>
+  <p class="subtitle">English is a geological formation: three etymological strata stacked by history. German is solid bedrock: one layer all the way down.</p>
+
+  <div class="strata-compare">
+    <!-- ENGLISH SIDE -->
+    <div class="strata-col en-col">
+      <h3>English -- Three Strata</h3>
+
+      <div class="stratum str-latin">
+        <div class="stratum-label">
+          Latin / Greek -- Technical & Academic
+          <span class="stratum-pct">~29% + 6%</span>
+        </div>
+        <div class="stratum-words">
+          <span class="s-word">interrogate</span>
+          <span class="s-word">procure</span>
+          <span class="s-word">conflagration</span>
+          <span class="s-word">initiate</span>
+          <span class="s-word">facilitate</span>
+          <span class="s-word">trepidation</span>
+          <span class="s-word">expeditious</span>
+          <span class="s-word">regal</span>
+          <span class="s-word">ascend</span>
+          <span class="s-word">cogitate</span>
+          <span class="s-word">perception</span>
+        </div>
+        <div class="stratum-register">Register: scholarly, scientific, legal, medical</div>
+      </div>
+
+      <div class="en-arrow-label">moving up = new vocabulary layer</div>
+
+      <div class="stratum str-french">
+        <div class="stratum-label">
+          French -- Formal & Professional
+          <span class="stratum-pct">~29%</span>
+        </div>
+        <div class="stratum-words">
+          <span class="s-word">question</span>
+          <span class="s-word">purchase</span>
+          <span class="s-word">flame</span>
+          <span class="s-word">commence</span>
+          <span class="s-word">aid</span>
+          <span class="s-word">terror</span>
+          <span class="s-word">rapid</span>
+          <span class="s-word">royal</span>
+          <span class="s-word">mount</span>
+          <span class="s-word">consider</span>
+          <span class="s-word">vision</span>
+        </div>
+        <div class="stratum-register">Register: formal speech, business, polite discourse</div>
+      </div>
+
+      <div class="en-arrow-label">moving up = new vocabulary layer</div>
+
+      <div class="stratum str-germanic">
+        <div class="stratum-label">
+          Germanic -- Everyday & Casual
+          <span class="stratum-pct">~26%</span>
+        </div>
+        <div class="stratum-words">
+          <span class="s-word">ask</span>
+          <span class="s-word">buy</span>
+          <span class="s-word">fire</span>
+          <span class="s-word">begin</span>
+          <span class="s-word">help</span>
+          <span class="s-word">fear</span>
+          <span class="s-word">fast</span>
+          <span class="s-word">kingly</span>
+          <span class="s-word">rise</span>
+          <span class="s-word">think</span>
+          <span class="s-word">sight</span>
+        </div>
+        <div class="stratum-register">Register: everyday speech, children's language, intimate</div>
+      </div>
+    </div>
+
+    <!-- GERMAN SIDE -->
+    <div class="strata-col de-col">
+      <h3>German -- One Layer</h3>
+
+      <div class="de-monolith">
+        <div class="stratum-label">All Germanic -- Every Register</div>
+
+        <div class="de-register-group">
+          <div class="reg-label">Technical / Academic</div>
+          <div class="de-word-row">
+            <span class="de-word">Wissenschaft <span class="gloss">(science)</span></span>
+            <span class="de-word">Krankenhaus <span class="gloss">(hospital)</span></span>
+            <span class="de-word">Rechtsprechung <span class="gloss">(jurisprudence)</span></span>
+            <span class="de-word">Verantwortung <span class="gloss">(responsibility)</span></span>
+          </div>
+        </div>
+
+        <div class="de-register-group">
+          <div class="reg-label">Formal / Professional</div>
+          <div class="de-word-row">
+            <span class="de-word">Weltanschauung <span class="gloss">(worldview)</span></span>
+            <span class="de-word">Gegenstand <span class="gloss">(object)</span></span>
+            <span class="de-word">Grundsatz <span class="gloss">(principle)</span></span>
+            <span class="de-word">Zusammenhang <span class="gloss">(context)</span></span>
+          </div>
+        </div>
+
+        <div class="de-register-group">
+          <div class="reg-label">Everyday / Casual</div>
+          <div class="de-word-row">
+            <span class="de-word">fragen <span class="gloss">(ask)</span></span>
+            <span class="de-word">kaufen <span class="gloss">(buy)</span></span>
+            <span class="de-word">Feuer <span class="gloss">(fire)</span></span>
+            <span class="de-word">anfangen <span class="gloss">(begin)</span></span>
+            <span class="de-word">helfen <span class="gloss">(help)</span></span>
+            <span class="de-word">Angst <span class="gloss">(fear)</span></span>
+            <span class="de-word">schnell <span class="gloss">(fast)</span></span>
+          </div>
+        </div>
+
+        <div class="de-note">Same morphemes, all registers. Moving up = longer compounds, not new vocabulary.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="history-bar">
+    <div class="hist-item">
+      <h3>Why English Has Three Layers</h3>
+      <p>Norman Conquest (1066) flooded English with French vocabulary. Centuries of Latin scholarly tradition added a third layer. Result: moving up in register = learning an entirely new vocabulary system.</p>
+    </div>
+    <div class="hist-item">
+      <h3>Why German Has One Layer</h3>
+      <p>No comparable contact event. German builds academic, legal, scientific, and philosophical vocabulary from the same Germanic roots as its everyday speech. Result: moving up in register = assembling familiar parts into longer words.</p>
+    </div>
+  </div>
+
+  <div class="meat-inset">
+    <h3>The Meat/Animal Split -- A Microcosm</h3>
+    <div class="meat-grid">
+      <div class="meat-en-card">
+        <h4>English: Two-Layer System</h4>
+        <div class="meat-pair"><span>cow (Germanic)</span><span>beef (French boeuf)</span></div>
+        <div class="meat-pair"><span>pig (Germanic)</span><span>pork (French porc)</span></div>
+        <div class="meat-pair"><span>sheep (Germanic)</span><span>mutton (French mouton)</span></div>
+        <div class="meat-pair"><span>calf (Germanic)</span><span>veal (French veau)</span></div>
+      </div>
+      <div class="meat-de-card">
+        <h4>German: Single-Layer Compounds</h4>
+        <div class="meat-pair"><span>Kuh</span><span>Rindfleisch (cattle-meat)</span></div>
+        <div class="meat-pair"><span>Schwein</span><span>Schweinefleisch (pig-meat)</span></div>
+        <div class="meat-pair"><span>Schaf</span><span>Schaffleisch (sheep-meat)</span></div>
+        <div class="meat-pair"><span>Kalb</span><span>Kalbfleisch (calf-meat)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 3: Three Vocabulary Layers vs. Single Layer</strong>
+    <span>English vocabulary is stratified into three etymological layers -- Germanic (everyday), French (formal), and Latin/Greek (technical) -- a direct consequence of the Norman Conquest. Moving up in register requires learning an entirely different vocabulary. German never experienced a comparable contact event, so it builds all registers from the same Germanic roots. Academic German uses the same morphemes as everyday German, just arranged into more complex compounds. This is arguably the single most important structural difference between the two languages' vocabulary systems.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

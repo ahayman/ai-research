@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Genitive Replacement Spectrum</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #10b981;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #ecfdf5;
+    --formal: #3b82f6;
+    --formal-bg: #eff6ff;
+    --neutral: #8b5cf6;
+    --neutral-bg: #f5f3ff;
+    --colloquial: #f59e0b;
+    --colloquial-bg: #fffbeb;
+    --muted: #6c757d;
+    --arrow: #94a3b8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #34d399;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #132e24;
+      --formal: #60a5fa;
+      --formal-bg: #1e293b;
+      --neutral: #a78bfa;
+      --neutral-bg: #1e1b3a;
+      --colloquial: #fbbf24;
+      --colloquial-bg: #2a2510;
+      --muted: #9a9ab0;
+      --arrow: #4a5568;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Spectrum bar */
+  .spectrum-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0 0.5rem;
+    gap: 0;
+  }
+  .spectrum-segment {
+    height: 8px;
+    flex: 1;
+    max-width: 300px;
+  }
+  .seg-formal { background: linear-gradient(90deg, var(--formal), var(--neutral)); border-radius: 4px 0 0 4px; }
+  .seg-neutral { background: linear-gradient(90deg, var(--neutral), var(--colloquial)); }
+  .seg-colloquial { background: linear-gradient(90deg, var(--colloquial), var(--colloquial)); border-radius: 0 4px 4px 0; }
+
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .spectrum-labels .lbl-formal { color: var(--formal); }
+  .spectrum-labels .lbl-colloquial { color: var(--colloquial); }
+
+  /* Three cards */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 50px 1fr 50px 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 2rem;
+  }
+  .card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .card-formal { border-color: var(--formal); border-top: 4px solid var(--formal); }
+  .card-neutral { border-color: var(--neutral); border-top: 4px solid var(--neutral); }
+  .card-colloquial { border-color: var(--colloquial); border-top: 4px solid var(--colloquial); }
+
+  .card .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    width: fit-content;
+  }
+  .tag-formal { background: var(--formal-bg); color: var(--formal); }
+  .tag-neutral { background: var(--neutral-bg); color: var(--neutral); }
+  .tag-colloquial { background: var(--colloquial-bg); color: var(--colloquial); }
+
+  .card .german-example {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .card .german-example .highlight-formal { color: var(--formal); }
+  .card .german-example .highlight-neutral { color: var(--neutral); }
+  .card .german-example .highlight-colloquial { color: var(--colloquial); }
+
+  .card .gloss {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .card .register {
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .card .mechanism {
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 0.5rem;
+    margin-top: auto;
+  }
+  .card .mechanism strong { color: var(--fg); }
+
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--arrow);
+  }
+
+  /* English parallel */
+  .parallel-box {
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .parallel-box h3 {
+    font-size: 0.9rem;
+    color: var(--accent-en);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .parallel-box h3 .tag-en {
+    background: var(--accent-en-bg);
+    color: var(--accent-en);
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .parallel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.8rem;
+  }
+  .parallel-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.82rem;
+  }
+  .parallel-card .p-era {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent-en);
+    margin-bottom: 0.3rem;
+  }
+  .parallel-card .p-form {
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .parallel-card .p-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Regional bar */
+  .regional-box {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .regional-box h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    text-align: center;
+  }
+  .region-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .region-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+  }
+  .region-bar {
+    flex: 1;
+    height: 28px;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+  }
+  .rb-gen {
+    background: var(--formal);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+  }
+  .rb-von {
+    background: var(--neutral);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+  }
+  .rb-dat {
+    background: var(--colloquial);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* Direction arrow */
+  .direction-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .direction-box .dir-arrow {
+    font-size: 1.4rem;
+    color: var(--accent-de);
+  }
+  .direction-box .dir-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* Sick callout */
+  .sick-callout {
+    background: var(--colloquial-bg);
+    border: 2px solid var(--colloquial);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    font-size: 0.82rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+  .sick-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .sick-callout .s-title {
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .sick-callout .s-text {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 800px) {
+    figure { padding: 1.2rem; }
+    .cards {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .arrow-col {
+      transform: rotate(90deg);
+      padding: 0.3rem;
+    }
+    .parallel-grid { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: white; padding: 0.5rem; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Genitive Replacement Spectrum</h2>
+  <p class="subtitle">Three strategies for expressing possession in German --- from formal written standard to dialectal speech</p>
+
+  <!-- Spectrum bar -->
+  <div class="spectrum-bar">
+    <div class="spectrum-segment seg-formal"></div>
+    <div class="spectrum-segment seg-neutral"></div>
+    <div class="spectrum-segment seg-colloquial"></div>
+  </div>
+  <div class="spectrum-labels">
+    <span class="lbl-formal">Formal Written</span>
+    <span style="color:var(--muted);">Direction of change &#x2192;</span>
+    <span class="lbl-colloquial">Dialectal Spoken</span>
+  </div>
+
+  <!-- Three main cards -->
+  <div class="cards">
+    <!-- Card 1: Genitive -->
+    <div class="card card-formal">
+      <span class="tag tag-formal">Standard Genitive</span>
+      <div class="german-example">das Haus <span class="highlight-formal">des Vaters</span></div>
+      <div class="gloss">lit: the house of-the(GEN) father(GEN)</div>
+      <div class="register" style="color:var(--formal);">Formal written &middot; News &middot; Academic</div>
+      <div class="mechanism">
+        <strong>Mechanism:</strong> Inflectional morphology --- case endings on article (<em>des</em>) and noun (<em>-s</em>) encode possession.
+      </div>
+    </div>
+
+    <div class="arrow-col">&#x2192;</div>
+
+    <!-- Card 2: Von + Dative -->
+    <div class="card card-neutral">
+      <span class="tag tag-neutral">Von + Dative</span>
+      <div class="german-example">das Haus <span class="highlight-neutral">von meinem Vater</span></div>
+      <div class="gloss">lit: the house of my(DAT) father</div>
+      <div class="register" style="color:var(--neutral);">Standard spoken &middot; Informal writing</div>
+      <div class="mechanism">
+        <strong>Mechanism:</strong> Preposition <em>von</em> replaces genitive case --- identical to English "of my father."
+      </div>
+    </div>
+
+    <div class="arrow-col">&#x2192;</div>
+
+    <!-- Card 3: Dative Possessive -->
+    <div class="card card-colloquial">
+      <span class="tag tag-colloquial">Dative Possessive</span>
+      <div class="german-example"><span class="highlight-colloquial">dem Vater sein</span> Haus</div>
+      <div class="gloss">lit: to-the(DAT) father his house</div>
+      <div class="register" style="color:var(--colloquial);">Dialectal &middot; Bavarian &middot; Alemannic &middot; Swabian</div>
+      <div class="mechanism">
+        <strong>Mechanism:</strong> Dative marks possessor + possessive pronoun agrees. No English equivalent survives.
+      </div>
+    </div>
+  </div>
+
+  <!-- Direction of change -->
+  <div class="direction-box">
+    <span class="dir-arrow">&#x25C0;</span>
+    <span class="dir-text">Formal written German holds here</span>
+    <span style="flex:1;"></span>
+    <span class="dir-text">Spoken German is moving this way</span>
+    <span class="dir-arrow">&#x25B6;</span>
+  </div>
+
+  <!-- Regional distribution -->
+  <div class="regional-box">
+    <h3>Regional Distribution of Possessive Strategies</h3>
+    <div class="region-bar-container">
+      <span class="region-label">North</span>
+      <div class="region-bar">
+        <div class="rb-gen" style="width:50%;">Genitive</div>
+        <div class="rb-von" style="width:40%;">von + DAT</div>
+        <div class="rb-dat" style="width:10%;">DAT poss.</div>
+      </div>
+    </div>
+    <div class="region-bar-container">
+      <span class="region-label">Central</span>
+      <div class="region-bar">
+        <div class="rb-gen" style="width:25%;">Genitive</div>
+        <div class="rb-von" style="width:50%;">von + DAT</div>
+        <div class="rb-dat" style="width:25%;">DAT poss.</div>
+      </div>
+    </div>
+    <div class="region-bar-container">
+      <span class="region-label">South</span>
+      <div class="region-bar">
+        <div class="rb-gen" style="width:10%;">Gen.</div>
+        <div class="rb-von" style="width:40%;">von + DAT</div>
+        <div class="rb-dat" style="width:50%;">DAT poss.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- English parallel -->
+  <div class="parallel-box">
+    <h3><span class="tag-en">English Parallel</span> The same shift, completed centuries ago</h3>
+    <div class="parallel-grid">
+      <div class="parallel-card">
+        <div class="p-era">Old English (~900 CE)</div>
+        <div class="p-form">thaes faederes hus</div>
+        <div class="p-note">Inflectional genitive --- case endings on article and noun. Structurally identical to German <em>des Vaters</em>.</div>
+      </div>
+      <div class="parallel-card">
+        <div class="p-era">Middle English (~1300 CE)</div>
+        <div class="p-form">the hous of the fader</div>
+        <div class="p-note">"Of" preposition replaces genitive case. Exact structural parallel to German <em>von meinem Vater</em>.</div>
+      </div>
+      <div class="parallel-card">
+        <div class="p-era">Modern English (today)</div>
+        <div class="p-form">the father's house</div>
+        <div class="p-note">The <em>'s</em> clitic is the sole survivor of the Old English genitive. "Of" phrases remain as alternative.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bastian Sick callout -->
+  <div class="sick-callout">
+    <div class="sick-icon">&#128218;</div>
+    <div>
+      <div class="s-title">"Der Dativ ist dem Genitiv sein Tod" --- Bastian Sick (2004)</div>
+      <div class="s-text">The title of Germany's best-selling grammar book deliberately uses the most colloquial form (dative possessive) where formal grammar demands the genitive. The "correct" version would be: "Der Dativ ist <strong>des Genitivs</strong> Tod." Over 4 million copies sold --- language change as cultural phenomenon.</div>
+    </div>
+  </div>
+
+  <figcaption>
+    Language change does not eliminate meaning --- it redistributes it from inflection to syntax. The possessive relationship stays the same; only the encoding mechanism shifts from morphological to analytical.
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suffix-Gender Prediction Chart</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc-color: #3b82f6;
+    --masc-bg: #eff6ff;
+    --fem-color: #ec4899;
+    --fem-bg: #fdf2f8;
+    --neut-color: #10b981;
+    --neut-bg: #ecfdf5;
+    --warn-color: #f59e0b;
+    --warn-bg: #fffbeb;
+    --muted: #6c757d;
+    --mixed-color: #6b7280;
+    --mixed-bg: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc-color: #60a5fa;
+      --masc-bg: #1e293b;
+      --fem-color: #f472b6;
+      --fem-bg: #2a1525;
+      --neut-color: #34d399;
+      --neut-bg: #132e24;
+      --warn-color: #fbbf24;
+      --warn-bg: #2a2510;
+      --muted: #9a9ab0;
+      --mixed-color: #9ca3af;
+      --mixed-bg: #1f2937;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Accuracy banner */
+  .acc-banner {
+    display: flex;
+    height: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+    border: 2px solid var(--border);
+  }
+  .acc-seg { display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #fff; }
+  .acc-pred { background: linear-gradient(90deg, var(--masc-color), var(--fem-color), var(--neut-color)); width: 75%; }
+  .acc-unpred { background: var(--mixed-color); width: 25%; }
+  .acc-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 2rem; padding: 0 0.5rem; }
+
+  /* Three-column grid */
+  .gender-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .gender-col {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .gender-col.fem { border-color: var(--fem-color); }
+  .gender-col.masc { border-color: var(--masc-color); }
+  .gender-col.neut { border-color: var(--neut-color); }
+  .gender-col h3 { font-size: 0.95rem; margin-bottom: 0.6rem; text-align: center; }
+  .gender-col.fem h3 { color: var(--fem-color); }
+  .gender-col.masc h3 { color: var(--masc-color); }
+  .gender-col.neut h3 { color: var(--neut-color); }
+
+  .suffix-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.8rem;
+  }
+  .suffix-tag {
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    min-width: 62px;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.78rem;
+  }
+  .fem .suffix-tag { background: var(--fem-bg); color: var(--fem-color); }
+  .masc .suffix-tag { background: var(--masc-bg); color: var(--masc-color); }
+  .neut .suffix-tag { background: var(--neut-bg); color: var(--neut-color); }
+  .suffix-ex { color: var(--muted); font-size: 0.72rem; flex: 1; font-style: italic; }
+  .suffix-pct { font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+  .fem .suffix-pct { color: var(--fem-color); }
+  .masc .suffix-pct { color: var(--masc-color); }
+  .neut .suffix-pct { color: var(--neut-color); }
+
+  .pct-100 { opacity: 1; }
+  .pct-high { opacity: 0.85; }
+  .pct-mid { opacity: 0.7; }
+
+  /* Mixed suffixes */
+  .mixed-panel {
+    border: 2px solid var(--warn-color);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    background: var(--warn-bg);
+    margin-bottom: 1.5rem;
+  }
+  .mixed-panel h3 { font-size: 0.95rem; color: var(--warn-color); margin-bottom: 0.5rem; }
+  .mixed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.4rem;
+    font-size: 0.82rem;
+  }
+  .mixed-item { padding: 0.2rem 0; }
+  .mixed-item .suf { font-family: 'Courier New', monospace; font-weight: 700; color: var(--warn-color); }
+
+  /* Tip box */
+  .tip-box {
+    border: 2px solid var(--neut-color);
+    border-radius: 10px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .tip-box strong { color: var(--neut-color); }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 800px) {
+    figure { padding: 1.2rem; }
+    .gender-columns { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Suffix-Gender Prediction Chart</h2>
+  <p class="subtitle">Derivational suffixes predict ~70-80% of German noun genders. The 100%-reliable suffixes are your best allies.</p>
+
+  <!-- Accuracy bar -->
+  <div class="acc-banner">
+    <div class="acc-seg acc-pred">~75% predictable from suffix</div>
+    <div class="acc-seg acc-unpred">~25%</div>
+  </div>
+  <div class="acc-labels">
+    <span>Suffix rules + semantic categories cover most nouns (100%-reliable suffixes in bold below)</span>
+    <span>Memorize individually</span>
+  </div>
+
+  <!-- Three columns -->
+  <div class="gender-columns">
+    <!-- FEMININE (largest) -->
+    <div class="gender-col fem">
+      <h3>Feminine (die) -- Most Rules</h3>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ung</span>
+        <span class="suffix-ex">Zeitung, Ordnung</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-heit</span>
+        <span class="suffix-ex">Freiheit, Gesundheit</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-keit</span>
+        <span class="suffix-ex">M&ouml;glichkeit</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-schaft</span>
+        <span class="suffix-ex">Freundschaft</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ei</span>
+        <span class="suffix-ex">B&auml;ckerei, Polizei</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ie</span>
+        <span class="suffix-ex">Melodie, Philosophie</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ik</span>
+        <span class="suffix-ex">Musik, Politik</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ion</span>
+        <span class="suffix-ex">Nation, Situation</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-t&auml;t</span>
+        <span class="suffix-ex">Universit&auml;t, Qualit&auml;t</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-anz/-enz</span>
+        <span class="suffix-ex">Toleranz, Existenz</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ur</span>
+        <span class="suffix-ex">Natur, Kultur</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-e</span>
+        <span class="suffix-ex">Lampe, Schule</span>
+        <span class="suffix-pct">~90%</span>
+      </div>
+    </div>
+
+    <!-- MASCULINE -->
+    <div class="gender-col masc">
+      <h3>Masculine (der)</h3>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ismus</span>
+        <span class="suffix-ex">Kapitalismus</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ling</span>
+        <span class="suffix-ex">Fr&uuml;hling, Feigling</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-or</span>
+        <span class="suffix-ex">Motor, Doktor</span>
+        <span class="suffix-pct">~98%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-us</span>
+        <span class="suffix-ex">Rhythmus, Zirkus</span>
+        <span class="suffix-pct">~95%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-ant</span>
+        <span class="suffix-ex">Elefant, Praktikant</span>
+        <span class="suffix-pct">~95%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-ist</span>
+        <span class="suffix-ex">Tourist, Optimist</span>
+        <span class="suffix-pct">~95%</span>
+      </div>
+    </div>
+
+    <!-- NEUTER -->
+    <div class="gender-col neut">
+      <h3>Neuter (das)</h3>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-chen</span>
+        <span class="suffix-ex">M&auml;dchen, Br&ouml;tchen</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-lein</span>
+        <span class="suffix-ex">B&uuml;chlein, Fr&auml;ulein</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-um</span>
+        <span class="suffix-ex">Museum, Zentrum</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ium</span>
+        <span class="suffix-ex">Studium, Aquarium</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-ma</span>
+        <span class="suffix-ex">Thema, Klima</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">-tum</span>
+        <span class="suffix-ex">Eigentum, Wachstum</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+      <div class="suffix-row pct-high">
+        <span class="suffix-tag">-ment</span>
+        <span class="suffix-ex">Experiment</span>
+        <span class="suffix-pct">~95%</span>
+      </div>
+      <div class="suffix-row pct-100">
+        <span class="suffix-tag">Verb&rarr;noun</span>
+        <span class="suffix-ex">das Essen, das Lesen</span>
+        <span class="suffix-pct">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mixed / unreliable -->
+  <div class="mixed-panel">
+    <h3>Unreliable Suffixes -- Must Check Each Noun</h3>
+    <div class="mixed-grid">
+      <div class="mixed-item"><span class="suf">-er</span> d<strong>er</strong> Lehrer, but d<strong>ie</strong> Butter, d<strong>as</strong> Fenster</div>
+      <div class="mixed-item"><span class="suf">-el</span> d<strong>er</strong> L&ouml;ffel, d<strong>ie</strong> Sch&uuml;ssel, d<strong>as</strong> Mittel</div>
+      <div class="mixed-item"><span class="suf">-en</span> d<strong>er</strong> Garten, d<strong>ie</strong> Sache -- too common</div>
+      <div class="mixed-item"><span class="suf">-nis</span> d<strong>ie</strong> Kenntnis, d<strong>as</strong> Ergebnis -- mixed</div>
+    </div>
+  </div>
+
+  <!-- Tip -->
+  <div class="tip-box">
+    <strong>Pattern learner strategy:</strong> Memorize the 100%-reliable suffixes first (just 19 rules). These alone correctly predict gender for thousands of derived nouns. Then layer in semantic rules (days = masc., metals = neut., trees = fem.) for additional coverage.
+  </div>
+
+  <figcaption>
+    <strong>Figure 2: Suffix-Gender Prediction Chart</strong>
+    <span>German noun gender is far more predictable than commonly believed. Eleven feminine suffixes are 100% reliable, covering the largest gender category (46% of nouns). Diminutive suffixes -chen and -lein always produce neuter. The -ismus suffix always produces masculine. A learner armed with these rules can predict gender accurately for the majority of derived vocabulary, reducing the "random memorization" problem to a smaller core of underived basic nouns.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

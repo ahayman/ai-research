@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Umlaut as Morphological Multi-Tool -- Four Grammatical Functions</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --hub: #8b5cf6;
+    --hub-bg: #f5f3ff;
+    --plural: #3b82f6;
+    --plural-bg: #eff6ff;
+    --subjunctive: #e63946;
+    --subjunctive-bg: #fef2f2;
+    --comparative: #10b981;
+    --comparative-bg: #ecfdf5;
+    --derivation: #f59e0b;
+    --derivation-bg: #fffbeb;
+    --relic: #6c757d;
+    --relic-bg: #f1f3f5;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --hub: #a78bfa;
+      --hub-bg: #1e1b3a;
+      --plural: #60a5fa;
+      --plural-bg: #1e293b;
+      --subjunctive: #f87171;
+      --subjunctive-bg: #2a1215;
+      --comparative: #34d399;
+      --comparative-bg: #132e24;
+      --derivation: #fbbf24;
+      --derivation-bg: #2a2510;
+      --relic: #9a9ab0;
+      --relic-bg: #1a1a2e;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Hub */
+  .hub-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .hub-circle {
+    background: var(--hub-bg);
+    border: 3px solid var(--hub);
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+  }
+  .hub-label {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--hub);
+  }
+  .hub-transform {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-top: 0.3rem;
+  }
+  .hub-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .hub-arrow-label {
+    font-size: 0.78rem;
+    color: var(--hub);
+    font-weight: 600;
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+
+  /* Spoke grid */
+  .spoke-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .spoke-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    position: relative;
+  }
+  .spoke-card .spoke-badge {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 6px;
+    color: #fff;
+  }
+  .spoke-card h3 {
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.6rem;
+  }
+  .sp-plural { border-color: var(--plural); }
+  .sp-plural .spoke-badge { background: var(--plural); }
+  .sp-plural h3 { color: var(--plural); }
+  .sp-subjunctive { border-color: var(--subjunctive); }
+  .sp-subjunctive .spoke-badge { background: var(--subjunctive); }
+  .sp-subjunctive h3 { color: var(--subjunctive); }
+  .sp-comparative { border-color: var(--comparative); }
+  .sp-comparative .spoke-badge { background: var(--comparative); }
+  .sp-comparative h3 { color: var(--comparative); }
+  .sp-derivation { border-color: var(--derivation); }
+  .sp-derivation .spoke-badge { background: var(--derivation); }
+  .sp-derivation h3 { color: var(--derivation); }
+
+  .transform-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .t-base { font-weight: 400; }
+  .t-arrow { color: var(--muted); font-size: 0.9rem; }
+  .t-result { font-weight: 700; }
+  .t-umlaut {
+    font-weight: 900;
+    font-size: 1rem;
+    padding: 0 2px;
+  }
+  .t-meaning { font-size: 0.72rem; color: var(--muted); margin-left: 0.3rem; }
+
+  .en-compare-inline {
+    margin-top: 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    border: 1px dashed var(--border);
+  }
+  .en-compare-inline .en-label {
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  /* English relics section */
+  .relics-section {
+    border: 2px solid var(--relic);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+    background: var(--relic-bg);
+  }
+  .relics-section h3 {
+    font-size: 0.95rem;
+    color: var(--hub);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .relics-section .relic-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 0.8rem;
+  }
+  .relic-pairs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .relic-pair {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.7rem;
+    text-align: center;
+    background: var(--surface);
+    font-size: 0.82rem;
+  }
+  .relic-pair .rp-base { font-weight: 400; }
+  .relic-pair .rp-arrow { color: var(--muted); margin: 0 0.2rem; }
+  .relic-pair .rp-result { font-weight: 700; color: var(--hub); }
+  .relic-pair .rp-note { display: block; font-size: 0.65rem; color: var(--muted); }
+
+  /* Pattern insight */
+  .insight-box {
+    border: 2px dashed var(--hub);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    background: var(--hub-bg);
+  }
+  .insight-box p { font-size: 0.88rem; font-weight: 600; color: var(--hub); }
+  .insight-box .detail { font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-top: 0.3rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    figure { padding: 1.5rem; }
+    .spoke-grid { grid-template-columns: 1fr; }
+    .hub-circle { width: 160px; height: 160px; }
+    .hub-label { font-size: 0.95rem; }
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Umlaut as Morphological Multi-Tool</h2>
+  <p class="subtitle">One orthographic operation -- two dots indicating vowel fronting -- serves as a grammatical marker across four different domains</p>
+
+  <div class="hub-container">
+    <div class="hub-circle">
+      <div class="hub-label">UMLAUT</div>
+      <div class="hub-transform">a&#8594;&#228; &nbsp; o&#8594;&#246; &nbsp; u&#8594;&#252;</div>
+      <div class="hub-transform">au&#8594;&#228;u</div>
+      <div class="hub-sub">= vowel fronting</div>
+    </div>
+    <div class="hub-arrow-label">same operation, four grammatical domains &#8595;</div>
+  </div>
+
+  <div class="spoke-grid">
+    <!-- Spoke 1: Plurals -->
+    <div class="spoke-card sp-plural">
+      <span class="spoke-badge">PLURAL</span>
+      <h3>Marking Noun Plurals</h3>
+      <div class="transform-row">
+        <span class="t-base">Mutter</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">M<span class="t-umlaut" style="color:var(--plural);">&#252;</span>tter</span>
+        <span class="t-meaning">mother &#8594; mothers</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Haus</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">H<span class="t-umlaut" style="color:var(--plural);">&#228;</span>user</span>
+        <span class="t-meaning">house &#8594; houses</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Mann</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">M<span class="t-umlaut" style="color:var(--plural);">&#228;</span>nner</span>
+        <span class="t-meaning">man &#8594; men</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Fu&#223;</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">F<span class="t-umlaut" style="color:var(--plural);">&#252;</span>&#223;e</span>
+        <span class="t-meaning">foot &#8594; feet</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Buch</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">B<span class="t-umlaut" style="color:var(--plural);">&#252;</span>cher</span>
+        <span class="t-meaning">book &#8594; books</span>
+      </div>
+      <div class="en-compare-inline">
+        <div class="en-label">English strategy</div>
+        Add -s/-es, or irregular: man/men, child/children, ox/oxen, sheep/sheep. No systematic vowel change for plurals.
+      </div>
+    </div>
+
+    <!-- Spoke 2: Subjunctive -->
+    <div class="spoke-card sp-subjunctive">
+      <span class="spoke-badge">SUBJUNCTIVE II</span>
+      <h3>Marking Subjunctive Mood</h3>
+      <div class="transform-row">
+        <span class="t-base">war</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">w<span class="t-umlaut" style="color:var(--subjunctive);">&#228;</span>re</span>
+        <span class="t-meaning">was &#8594; would be</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">hatte</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">h<span class="t-umlaut" style="color:var(--subjunctive);">&#228;</span>tte</span>
+        <span class="t-meaning">had &#8594; would have</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">konnte</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">k<span class="t-umlaut" style="color:var(--subjunctive);">&#246;</span>nnte</span>
+        <span class="t-meaning">could (past) &#8594; could (hyp.)</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">kam</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">k<span class="t-umlaut" style="color:var(--subjunctive);">&#228;</span>me</span>
+        <span class="t-meaning">came &#8594; would come</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">wusste</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">w<span class="t-umlaut" style="color:var(--subjunctive);">&#252;</span>sste</span>
+        <span class="t-meaning">knew &#8594; would know</span>
+      </div>
+      <div class="en-compare-inline">
+        <div class="en-label">English strategy</div>
+        "would" + infinitive: "would be," "would have," "would come." Analytic periphrasis -- no vowel change at all.
+      </div>
+    </div>
+
+    <!-- Spoke 3: Comparative -->
+    <div class="spoke-card sp-comparative">
+      <span class="spoke-badge">COMPARATIVE</span>
+      <h3>Marking Comparative/Superlative</h3>
+      <div class="transform-row">
+        <span class="t-base">alt</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result"><span class="t-umlaut" style="color:var(--comparative);">&#228;</span>lter &#8594; <span class="t-umlaut" style="color:var(--comparative);">&#228;</span>lteste</span>
+        <span class="t-meaning">old &#8594; older &#8594; oldest</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">gro&#223;</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">gr<span class="t-umlaut" style="color:var(--comparative);">&#246;</span>&#223;er &#8594; gr<span class="t-umlaut" style="color:var(--comparative);">&#246;</span>&#223;te</span>
+        <span class="t-meaning">big &#8594; bigger &#8594; biggest</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">jung</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">j<span class="t-umlaut" style="color:var(--comparative);">&#252;</span>nger &#8594; j<span class="t-umlaut" style="color:var(--comparative);">&#252;</span>ngste</span>
+        <span class="t-meaning">young &#8594; younger &#8594; youngest</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">kalt</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">k<span class="t-umlaut" style="color:var(--comparative);">&#228;</span>lter &#8594; k<span class="t-umlaut" style="color:var(--comparative);">&#228;</span>lteste</span>
+        <span class="t-meaning">cold &#8594; colder &#8594; coldest</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">stark</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">st<span class="t-umlaut" style="color:var(--comparative);">&#228;</span>rker &#8594; st<span class="t-umlaut" style="color:var(--comparative);">&#228;</span>rkste</span>
+        <span class="t-meaning">strong &#8594; stronger &#8594; strongest</span>
+      </div>
+      <div class="en-compare-inline">
+        <div class="en-label">English strategy</div>
+        Add -er/-est or use "more"/"most." No vowel change: old/older, big/bigger. Purely suffixal or analytic.
+      </div>
+    </div>
+
+    <!-- Spoke 4: Derivation -->
+    <div class="spoke-card sp-derivation">
+      <span class="spoke-badge">DERIVATION</span>
+      <h3>Marking Word Formation</h3>
+      <div class="transform-row">
+        <span class="t-base">k&#246;nnen</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">K<span class="t-umlaut" style="color:var(--derivation);">&#252;</span>nst</span>
+        <span class="t-meaning">to be able &#8594; art (Kunst)</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">klagen</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">kl<span class="t-umlaut" style="color:var(--derivation);">&#228;</span>glich</span>
+        <span class="t-meaning">to lament &#8594; pitiful</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Stunde</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">st<span class="t-umlaut" style="color:var(--derivation);">&#252;</span>ndlich</span>
+        <span class="t-meaning">hour &#8594; hourly</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">braun</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">br<span class="t-umlaut" style="color:var(--derivation);">&#228;u</span>nlich</span>
+        <span class="t-meaning">brown &#8594; brownish</span>
+      </div>
+      <div class="transform-row">
+        <span class="t-base">Hof</span>
+        <span class="t-arrow">&#8594;</span>
+        <span class="t-result">h<span class="t-umlaut" style="color:var(--derivation);">&#246;</span>flich</span>
+        <span class="t-meaning">court &#8594; polite (courtly)</span>
+      </div>
+      <div class="en-compare-inline">
+        <div class="en-label">English strategy</div>
+        Varied suffixes (-ly, -ish, -ful, -ness) with no vowel fronting: brown/brownish, hour/hourly. No consistent vowel operation.
+      </div>
+    </div>
+  </div>
+
+  <div class="relics-section">
+    <h3>English Still Has Umlaut Fossils -- From the Same Germanic Process</h3>
+    <p class="relic-sub">These English irregular plurals are relics of the same i-mutation (umlaut) that German preserves productively across four grammatical domains.</p>
+    <div class="relic-pairs">
+      <div class="relic-pair">
+        <span class="rp-base">man</span><span class="rp-arrow">&#8594;</span><span class="rp-result">men</span>
+        <span class="rp-note">a &#8594; e (fronting)</span>
+      </div>
+      <div class="relic-pair">
+        <span class="rp-base">foot</span><span class="rp-arrow">&#8594;</span><span class="rp-result">feet</span>
+        <span class="rp-note">oo &#8594; ee (fronting)</span>
+      </div>
+      <div class="relic-pair">
+        <span class="rp-base">tooth</span><span class="rp-arrow">&#8594;</span><span class="rp-result">teeth</span>
+        <span class="rp-note">oo &#8594; ee (fronting)</span>
+      </div>
+      <div class="relic-pair">
+        <span class="rp-base">mouse</span><span class="rp-arrow">&#8594;</span><span class="rp-result">mice</span>
+        <span class="rp-note">ou &#8594; i (fronting)</span>
+      </div>
+      <div class="relic-pair">
+        <span class="rp-base">goose</span><span class="rp-arrow">&#8594;</span><span class="rp-result">geese</span>
+        <span class="rp-note">oo &#8594; ee (fronting)</span>
+      </div>
+      <div class="relic-pair">
+        <span class="rp-base">louse</span><span class="rp-arrow">&#8594;</span><span class="rp-result">lice</span>
+        <span class="rp-note">ou &#8594; i (fronting)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <p>One visual cue (the two dots) tells you a morphological transformation has occurred. The specific transformation is determined by context.</p>
+    <p class="detail">For a pattern learner: umlaut is a single, consistent phonological operation (front the vowel) deployed as a multi-purpose grammatical marker. English fossilized a handful of examples; German kept the whole system alive.</p>
+  </div>
+
+  <figcaption>
+    Germanic i-mutation (umlaut) was originally a phonological process: back vowels were fronted under the influence of /i/ or /j/ in the next syllable. When the conditioning suffixes were lost, the vowel change remained as the sole grammatical marker. German preserved this pattern productively; English retained only a few irregular relics.
+  </figcaption>
+</figure>
+</body>
+</html>

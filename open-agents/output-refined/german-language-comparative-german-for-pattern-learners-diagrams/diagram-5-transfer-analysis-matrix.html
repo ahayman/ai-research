@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Analysis Matrix -- English to German</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --helps: #10b981;
+    --helps-bg: #ecfdf5;
+    --hurts: #ef4444;
+    --hurts-bg: #fef2f2;
+    --new: #f59e0b;
+    --new-bg: #fffbeb;
+    --muted: #6c757d;
+    --accent: #8b5cf6;
+    --accent-bg: #f5f3ff;
+    --partial: #3b82f6;
+    --partial-bg: #eff6ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --helps: #34d399;
+      --helps-bg: #132e24;
+      --hurts: #f87171;
+      --hurts-bg: #2a1515;
+      --new: #fbbf24;
+      --new-bg: #2a2510;
+      --muted: #9a9ab0;
+      --accent: #a78bfa;
+      --accent-bg: #1e1535;
+      --partial: #60a5fa;
+      --partial-bg: #1e293b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+  .dot-helps { background: var(--helps); }
+  .dot-partial { background: var(--partial); }
+  .dot-hurts { background: var(--hurts); }
+  .dot-new { background: var(--new); }
+
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .transfer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .transfer-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 700px) {
+    .transfer-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .tr-feature {
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tr-en, .tr-de {
+    padding: 0.7rem 1rem;
+    border-left: 1px solid var(--border);
+  }
+  @media (max-width: 700px) {
+    .tr-en, .tr-de { border-left: none; border-top: 1px solid var(--border); }
+  }
+  .tr-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .row-helps { background: var(--helps-bg); }
+  .row-helps .tr-feature { color: var(--helps); }
+  .row-partial { background: var(--partial-bg); }
+  .row-partial .tr-feature { color: var(--partial); }
+  .row-hurts { background: var(--hurts-bg); }
+  .row-hurts .tr-feature { color: var(--hurts); }
+  .row-new { background: var(--new-bg); }
+  .row-new .tr-feature { color: var(--new); }
+
+  .mitigation {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 0.3rem;
+  }
+  .mitigation::before {
+    content: "Strategy: ";
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .summary-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  @media (max-width: 700px) {
+    .summary-section { grid-template-columns: 1fr; }
+  }
+  .summary-card {
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .summary-helps { background: var(--helps-bg); border: 2px solid var(--helps); }
+  .summary-hurts { background: var(--hurts-bg); border: 2px solid var(--hurts); }
+  .summary-new { background: var(--new-bg); border: 2px solid var(--new); }
+  .summary-card h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .summary-helps h4 { color: var(--helps); }
+  .summary-hurts h4 { color: var(--hurts); }
+  .summary-new h4 { color: var(--new); }
+  .summary-card .count {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .summary-helps .count { color: var(--helps); }
+  .summary-hurts .count { color: var(--hurts); }
+  .summary-new .count { color: var(--new); }
+  .summary-card .desc { font-size: 0.78rem; color: var(--muted); }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Transfer Analysis Matrix</h2>
+  <p class="subtitle">What helps, what hurts, and what is new when an English speaker learns German</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot dot-helps"></span> Positive transfer</div>
+    <div class="legend-item"><span class="legend-dot dot-partial"></span> Partial transfer</div>
+    <div class="legend-item"><span class="legend-dot dot-hurts"></span> Negative transfer</div>
+    <div class="legend-item"><span class="legend-dot dot-new"></span> No transfer (new)</div>
+  </div>
+
+  <!-- Positive Transfer -->
+  <div class="section-title">
+    <span class="section-icon" style="background:var(--helps);">+</span>
+    Positive Transfer -- What Helps
+  </div>
+  <div class="transfer-grid">
+    <div class="transfer-row row-helps">
+      <div class="tr-feature">Cognate Vocabulary</div>
+      <div class="tr-en"><span class="tr-label">English</span>house, book, water, finger, hand, arm, garden, winter</div>
+      <div class="tr-de"><span class="tr-label">German</span>Haus, Buch, Wasser, Finger, Hand, Arm, Garten, Winter (~60% shared)</div>
+    </div>
+    <div class="transfer-row row-helps">
+      <div class="tr-feature">Modal Verb Syntax</div>
+      <div class="tr-en"><span class="tr-label">English</span>I <strong>can</strong> speak German (modal V2, main verb later)</div>
+      <div class="tr-de"><span class="tr-label">German</span>Ich <strong>kann</strong> Deutsch sprechen (near-identical structure)</div>
+    </div>
+    <div class="transfer-row row-helps">
+      <div class="tr-feature">Strong Verb Ablaut</div>
+      <div class="tr-en"><span class="tr-label">English</span>sing/sang/sung, drink/drank/drunk</div>
+      <div class="tr-de"><span class="tr-label">German</span>singen/sang/gesungen, trinken/trank/getrunken (same vowel shifts)</div>
+    </div>
+    <div class="transfer-row row-helps">
+      <div class="tr-feature">Article Concept</div>
+      <div class="tr-en"><span class="tr-label">English</span>the, a/an (definite vs. indefinite understood)</div>
+      <div class="tr-de"><span class="tr-label">German</span>der/die/das, ein/eine (same function, more forms)</div>
+    </div>
+    <div class="transfer-row row-helps">
+      <div class="tr-feature">Compound Word Parsing</div>
+      <div class="tr-en"><span class="tr-label">English</span>bookshelf = a shelf for books (head-final)</div>
+      <div class="tr-de"><span class="tr-label">German</span>Buchregal = a Regal for Bucher (same principle, longer chains)</div>
+    </div>
+  </div>
+
+  <!-- Partial Transfer -->
+  <div class="section-title">
+    <span class="section-icon" style="background:var(--partial);">~</span>
+    Partial Transfer -- Concept Helps, Details Differ
+  </div>
+  <div class="transfer-grid">
+    <div class="transfer-row row-partial">
+      <div class="tr-feature">Subordinate Clauses</div>
+      <div class="tr-en"><span class="tr-label">English</span>...because I was tired (SVO maintained)</div>
+      <div class="tr-de"><span class="tr-label">German</span>...weil ich mude <strong>war</strong> (verb goes to END)<div class="mitigation">Learn V-final as a single rule; the clause concept transfers perfectly</div></div>
+    </div>
+    <div class="transfer-row row-partial">
+      <div class="tr-feature">Separable Verbs</div>
+      <div class="tr-en"><span class="tr-label">English</span>look up / look the word up (flexible position)</div>
+      <div class="tr-de"><span class="tr-label">German</span>Ich <strong>rufe</strong> dich morgen <strong>an</strong> (prefix ALWAYS at end)<div class="mitigation">Map to Satzklammer -- prefix = right bracket</div></div>
+    </div>
+  </div>
+
+  <!-- Negative Transfer -->
+  <div class="section-title">
+    <span class="section-icon" style="background:var(--hurts);">-</span>
+    Negative Transfer -- What Hinders
+  </div>
+  <div class="transfer-grid">
+    <div class="transfer-row row-hurts">
+      <div class="tr-feature">SVO Assumption</div>
+      <div class="tr-en"><span class="tr-label">English</span>Subject-Verb-Object fixed order</div>
+      <div class="tr-de"><span class="tr-label">German</span>"Gestern <strong>ging</strong> ich..." (V2, not SVO)<div class="mitigation">Internalize V2 as ONE rule: verb is always position 2</div></div>
+    </div>
+    <div class="transfer-row row-hurts">
+      <div class="tr-feature">Spelling Pronunciation</div>
+      <div class="tr-en"><span class="tr-label">English</span>English spelling-sound habits (ch, ei, ie, sch)</div>
+      <div class="tr-de"><span class="tr-label">German</span>German grapheme-phoneme rules are different but ~95% regular<div class="mitigation">Learn the rules once; German spelling is far more consistent than English</div></div>
+    </div>
+    <div class="transfer-row row-hurts">
+      <div class="tr-feature">Directness Mismatch</div>
+      <div class="tr-en"><span class="tr-label">English</span>Indirect hedging ("Would you maybe possibly...")</div>
+      <div class="tr-de"><span class="tr-label">German</span>More direct communication norms<div class="mitigation">German directness is cultural, not rude; calibrate pragmatics separately</div></div>
+    </div>
+  </div>
+
+  <!-- New (No Transfer) -->
+  <div class="section-title">
+    <span class="section-icon" style="background:var(--new);">!</span>
+    No Transfer -- Entirely New Systems
+  </div>
+  <div class="transfer-grid">
+    <div class="transfer-row row-new">
+      <div class="tr-feature">Grammatical Gender</div>
+      <div class="tr-en"><span class="tr-label">English</span>No gender system (only he/she/it)</div>
+      <div class="tr-de"><span class="tr-label">German</span>3 genders: der/die/das for every noun<div class="mitigation">Apply gender prediction algorithm: suffix + semantic + compound rules (~80%)</div></div>
+    </div>
+    <div class="transfer-row row-new">
+      <div class="tr-feature">Case System</div>
+      <div class="tr-en"><span class="tr-label">English</span>Case only in pronouns (I/me/my)</div>
+      <div class="tr-de"><span class="tr-label">German</span>4 cases on articles, adjectives, pronouns<div class="mitigation">Learn articles as case markers; one-marker principle for adjectives</div></div>
+    </div>
+    <div class="transfer-row row-new">
+      <div class="tr-feature">Adjective Declension</div>
+      <div class="tr-en"><span class="tr-label">English</span>Zero adjective inflection ("big dog / big dogs")</div>
+      <div class="tr-de"><span class="tr-label">German</span>Strong/weak/mixed endings based on article context<div class="mitigation">Apply the Einmarkierungsprinzip: one strong ending per noun phrase</div></div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-section">
+    <div class="summary-card summary-helps">
+      <h4>Helps</h4>
+      <div class="count">5</div>
+      <div class="desc">Cognates, modals, ablaut, articles, compounds</div>
+    </div>
+    <div class="summary-card summary-hurts">
+      <h4>Hurts / Partially Hurts</h4>
+      <div class="count">5</div>
+      <div class="desc">SVO, spelling, directness, subordinate clauses, separable verbs</div>
+    </div>
+    <div class="summary-card summary-new">
+      <h4>Entirely New</h4>
+      <div class="count">3</div>
+      <div class="desc">Gender, case, adjective declension -- all have algorithms</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>German for Pattern Learners (CAPSTONE) -- Diagram 5 of 6.</strong> English speakers bring significant advantages to German learning (shared vocabulary, cognate structures, modal syntax). The "new" systems (gender, case, declension) are the ones that seem hardest -- but each has a learnable algorithm. Every mitigation strategy is drawn from a preceding chapter of this deep dive. Color coding: <span style="color:var(--helps);font-weight:700;">green = helps</span>, <span style="color:var(--partial);font-weight:700;">blue = partial</span>, <span style="color:var(--hurts);font-weight:700;">red = hurts</span>, <span style="color:var(--new);font-weight:700;">amber = new</span>.
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adjective Declension Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --strong: #ef4444;
+    --strong-bg: #fef2f2;
+    --weak: #3b82f6;
+    --weak-bg: #eff6ff;
+    --mixed: #f59e0b;
+    --mixed-bg: #fffbeb;
+    --muted: #6c757d;
+    --accent: #8b5cf6;
+    --accent-bg: #f5f3ff;
+    --green: #10b981;
+    --green-bg: #ecfdf5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --strong: #f87171;
+      --strong-bg: #2a1515;
+      --weak: #60a5fa;
+      --weak-bg: #1e293b;
+      --mixed: #fbbf24;
+      --mixed-bg: #2a2510;
+      --muted: #9a9ab0;
+      --accent: #a78bfa;
+      --accent-bg: #1e1535;
+      --green: #34d399;
+      --green-bg: #132e24;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .principle-box {
+    background: var(--green-bg);
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .principle-box .principle-title {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--green);
+    margin-bottom: 0.3rem;
+  }
+  .principle-box .principle-text {
+    font-size: 0.92rem;
+  }
+  .principle-box .principle-german {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+
+  .tree-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .decision-step {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .step-content {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .step-question {
+    background: var(--accent-bg);
+    padding: 0.8rem 1.2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .step-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 600px) {
+    .step-branches { grid-template-columns: 1fr; }
+  }
+  .branch {
+    padding: 1rem 1.2rem;
+  }
+  .branch-yes {
+    border-right: 1px solid var(--border);
+  }
+  @media (max-width: 600px) {
+    .branch-yes { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+  .branch-tag {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+  .branch-tag.yes { color: var(--green); }
+  .branch-tag.no { color: var(--strong); }
+
+  .ending-result {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+  .ending-weak {
+    background: var(--weak-bg);
+    color: var(--weak);
+    border: 1px solid var(--weak);
+  }
+  .ending-strong {
+    background: var(--strong-bg);
+    color: var(--strong);
+    border: 1px solid var(--strong);
+  }
+
+  .sub-decision {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .sub-decision .sub-q { font-weight: 600; margin-bottom: 0.3rem; }
+
+  .tables-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+  @media (max-width: 700px) {
+    .tables-section { grid-template-columns: 1fr; }
+  }
+  .ending-table {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+  .ending-table.weak-table { border-color: var(--weak); }
+  .ending-table.strong-table { border-color: var(--strong); }
+  .table-title {
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .weak-table .table-title { background: var(--weak-bg); color: var(--weak); }
+  .strong-table .table-title { background: var(--strong-bg); color: var(--strong); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th {
+    background: var(--bg);
+    padding: 0.4rem;
+    font-weight: 700;
+    text-align: center;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .cell-e { color: var(--weak); }
+  .cell-en { color: var(--accent); }
+  .cell-er { color: var(--strong); }
+  .cell-es { color: var(--strong); }
+  .cell-em { color: var(--strong); }
+
+  .example-section {
+    margin-top: 2rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+  }
+  .example-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    color: var(--accent);
+  }
+  .example-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.88rem;
+  }
+  .ex-article {
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+  .ex-carrier { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+  .ex-weak-tag { background: var(--weak-bg); color: var(--weak); border: 1px solid var(--weak); }
+  .ex-strong-tag { background: var(--strong-bg); color: var(--strong); border: 1px solid var(--strong); }
+  .ex-explain { color: var(--muted); font-size: 0.8rem; font-style: italic; }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Adjective Declension Decision Tree</h2>
+  <p class="subtitle">The One-Marker Principle: exactly one element in the noun phrase must carry the strong case/gender signal</p>
+
+  <div class="principle-box">
+    <div class="principle-title">The Core Principle (Einmarkierungsprinzip)</div>
+    <div class="principle-text">Somewhere before the noun, <strong>one element must carry a strong ending</strong> that signals case and gender. If the article carries it, the adjective relaxes (weak). If the article does not, the adjective compensates (strong).</div>
+    <div class="principle-german">One strong ending per noun phrase -- that is the entire system.</div>
+  </div>
+
+  <div class="tree-container">
+    <!-- Step 1 -->
+    <div class="decision-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-question">Is there a DEFINITE article (der/die/das) or a der-word (dieser, jeder, welcher)?</div>
+        <div class="step-branches">
+          <div class="branch branch-yes">
+            <div class="branch-tag yes">YES -- article carries the signal</div>
+            <div>The article already has the strong ending.</div>
+            <div class="ending-result ending-weak">Adjective takes WEAK ending</div>
+            <div class="sub-decision">
+              <div class="sub-q">Which weak ending?</div>
+              <div>Nom. singular (all) + Acc. fem/neut: <strong>-e</strong></div>
+              <div>Everything else: <strong>-en</strong></div>
+            </div>
+          </div>
+          <div class="branch">
+            <div class="branch-tag no">NO -- continue to Step 2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="decision-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-question">Is there an INDEFINITE article (ein) or ein-word (mein, kein, dein, sein, ihr, unser, euer)?</div>
+        <div class="step-branches">
+          <div class="branch branch-yes">
+            <div class="branch-tag yes">YES -- check if ein-word shows a distinctive ending</div>
+            <div class="sub-decision">
+              <div class="sub-q">Does the ein-word have a distinctive ending?</div>
+              <div style="margin-top:0.3rem"><strong>YES</strong> (ein<em>e</em>, ein<em>em</em>, ein<em>er</em>, ein<em>en</em>, ein<em>es</em>):</div>
+              <div class="ending-result ending-weak">Adjective: WEAK ending (-e / -en)</div>
+              <div style="margin-top:0.4rem"><strong>NO</strong> (ein_, mein_, kein_ -- zero ending, i.e., nom. masc, nom/acc neut):</div>
+              <div class="ending-result ending-strong">Adjective: STRONG ending (fills the gap)</div>
+              <div style="margin-top:0.3rem;font-size:0.82rem;color:var(--muted);">
+                ein gut<strong>er</strong> Mann (nom. masc -- adjective shows -er)<br>
+                ein gut<strong>es</strong> Buch (nom/acc neut -- adjective shows -es)
+              </div>
+            </div>
+          </div>
+          <div class="branch">
+            <div class="branch-tag no">NO -- continue to Step 3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="decision-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-question">No article at all? (bare adjective + noun)</div>
+        <div class="step-branches">
+          <div class="branch branch-yes" style="border-right:none;">
+            <div class="branch-tag" style="color:var(--strong);">ADJECTIVE BECOMES THE ARTICLE SUBSTITUTE</div>
+            <div class="ending-result ending-strong">Adjective takes STRONG endings throughout</div>
+            <div style="margin-top:0.3rem;font-size:0.85rem;">
+              The adjective carries the full der/die/das endings, acting as the sole case/gender marker.
+            </div>
+            <div style="margin-top:0.3rem;font-size:0.82rem;color:var(--muted);">
+              kalt<strong>er</strong> Kaffee (nom. masc) | kalt<strong>e</strong> Milch (nom. fem) | kalt<strong>es</strong> Wasser (nom. neut)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ending Reference Tables -->
+  <div class="tables-section">
+    <div class="ending-table weak-table">
+      <div class="table-title">Weak Endings (after definite articles / der-words)</div>
+      <table>
+        <tr><th></th><th>Masc</th><th>Fem</th><th>Neut</th><th>Plural</th></tr>
+        <tr><td><strong>Nom</strong></td><td class="cell-e">-e</td><td class="cell-e">-e</td><td class="cell-e">-e</td><td class="cell-en">-en</td></tr>
+        <tr><td><strong>Acc</strong></td><td class="cell-en">-en</td><td class="cell-e">-e</td><td class="cell-e">-e</td><td class="cell-en">-en</td></tr>
+        <tr><td><strong>Dat</strong></td><td class="cell-en">-en</td><td class="cell-en">-en</td><td class="cell-en">-en</td><td class="cell-en">-en</td></tr>
+        <tr><td><strong>Gen</strong></td><td class="cell-en">-en</td><td class="cell-en">-en</td><td class="cell-en">-en</td><td class="cell-en">-en</td></tr>
+      </table>
+    </div>
+    <div class="ending-table strong-table">
+      <div class="table-title">Strong Endings (no article / ein-word gap)</div>
+      <table>
+        <tr><th></th><th>Masc</th><th>Fem</th><th>Neut</th><th>Plural</th></tr>
+        <tr><td><strong>Nom</strong></td><td class="cell-er">-er</td><td class="cell-e">-e</td><td class="cell-es">-es</td><td class="cell-e">-e</td></tr>
+        <tr><td><strong>Acc</strong></td><td class="cell-en">-en</td><td class="cell-e">-e</td><td class="cell-es">-es</td><td class="cell-e">-e</td></tr>
+        <tr><td><strong>Dat</strong></td><td class="cell-em">-em</td><td class="cell-er">-er</td><td class="cell-em">-em</td><td class="cell-en">-en</td></tr>
+        <tr><td><strong>Gen</strong></td><td class="cell-en">-en*</td><td class="cell-er">-er</td><td class="cell-en">-en*</td><td class="cell-er">-er</td></tr>
+      </table>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">
+    *Genitive masc/neut strong: -en (not -es). This is the one "leak" -- the adjective does not fully mirror the article in genitive.
+  </div>
+
+  <!-- Examples -->
+  <div class="example-section">
+    <h3>The Decision Tree in Action</h3>
+    <div class="example-row">
+      <span class="ex-article ex-carrier">der</span> gut<span class="ex-article ex-weak-tag">e</span> Mann
+      <span class="ex-explain">"der" carries the signal, so adjective relaxes to -e (weak, nom. masc)</span>
+    </div>
+    <div class="example-row">
+      <span class="ex-article ex-carrier">die</span> gut<span class="ex-article ex-weak-tag">en</span> Manner
+      <span class="ex-explain">"die" (plural) carries the signal, adjective takes -en (weak, nom. plural)</span>
+    </div>
+    <div class="example-row">
+      ein_ gut<span class="ex-article ex-strong-tag">er</span> Mann
+      <span class="ex-explain">"ein" has no ending (gap!) -- adjective compensates with -er (strong, nom. masc)</span>
+    </div>
+    <div class="example-row">
+      <span class="ex-article ex-carrier">eine</span> gut<span class="ex-article ex-weak-tag">e</span> Frau
+      <span class="ex-explain">"eine" shows distinctive -e ending, so adjective relaxes to -e (weak, nom. fem)</span>
+    </div>
+    <div class="example-row">
+      kalt<span class="ex-article ex-strong-tag">er</span> Kaffee
+      <span class="ex-explain">No article at all -- adjective acts as article substitute: -er (strong, nom. masc)</span>
+    </div>
+    <div class="example-row">
+      mit kalt<span class="ex-article ex-weak-tag">em</span>... wait:
+      mit kalt<span class="ex-article ex-strong-tag">em</span> Wasser
+      <span class="ex-explain">No article + dative neut: adjective carries -em (strong ending)</span>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>German for Pattern Learners (CAPSTONE) -- Diagram 2 of 6.</strong> The adjective declension system that appears to have 48 different forms (3 genders x 4 cases x 4 article types) is actually governed by a single principle: one element per noun phrase must carry the strong case/gender signal. <span style="color:var(--weak);font-weight:700;">Blue = weak endings</span> (article carries the signal). <span style="color:var(--strong);font-weight:700;">Red = strong endings</span> (adjective carries the signal).
+  </figcaption>
+</figure>
+</body>
+</html>

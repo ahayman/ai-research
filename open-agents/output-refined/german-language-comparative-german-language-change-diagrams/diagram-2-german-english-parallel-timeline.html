@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German-English Parallel Change Timeline</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #10b981;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #ecfdf5;
+    --link-color: #8b5cf6;
+    --link-bg: #f5f3ff;
+    --now-color: #f59e0b;
+    --muted: #6c757d;
+    --completed: #10b981;
+    --inprogress: #f59e0b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #34d399;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #132e24;
+      --link-color: #a78bfa;
+      --link-bg: #1e1b3a;
+      --now-color: #fbbf24;
+      --muted: #9a9ab0;
+      --completed: #34d399;
+      --inprogress: #fbbf24;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .insight-bar {
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 0.6rem 1rem;
+    background: var(--link-bg);
+    border-radius: 8px;
+    color: var(--link-color);
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+  .dot-en { background: var(--accent-en); }
+  .dot-de { background: var(--accent-de); }
+  .dot-link { background: var(--link-color); }
+  .dot-now { background: var(--now-color); }
+
+  /* Timeline container */
+  .timeline {
+    position: relative;
+    overflow-x: auto;
+  }
+  .timeline-inner {
+    min-width: 900px;
+    position: relative;
+    padding: 0 1rem;
+  }
+
+  /* Time axis */
+  .time-axis {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border);
+    padding: 0.3rem 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .time-axis span { min-width: 60px; text-align: center; }
+
+  /* Track labels */
+  .track-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    display: inline-block;
+  }
+  .tl-en { background: var(--accent-en-bg); color: var(--accent-en); border: 1px solid var(--accent-en); }
+  .tl-de { background: var(--accent-de-bg); color: var(--accent-de); border: 1px solid var(--accent-de); }
+
+  /* Change bars */
+  .track-row {
+    position: relative;
+    height: 44px;
+    margin: 0.3rem 0;
+  }
+  .change-bar {
+    position: absolute;
+    height: 34px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: white;
+    top: 5px;
+    cursor: default;
+    transition: opacity 0.2s;
+  }
+  .change-bar:hover { opacity: 0.85; }
+  .bar-en { background: var(--accent-en); }
+  .bar-de { background: var(--accent-de); }
+  .bar-de-emerging {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--accent-de),
+      var(--accent-de) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    background-color: var(--accent-de);
+    opacity: 0.75;
+  }
+
+  /* The "NOW" line */
+  .now-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--now-color);
+    z-index: 10;
+  }
+  .now-label {
+    position: absolute;
+    top: -18px;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--now-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* Connecting lines */
+  .connections {
+    margin: 1.5rem 0;
+  }
+  .conn-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    font-size: 0.78rem;
+  }
+  .conn-en {
+    text-align: right;
+    color: var(--accent-en);
+    font-weight: 600;
+  }
+  .conn-de {
+    text-align: left;
+    color: var(--accent-de);
+    font-weight: 600;
+  }
+  .conn-arrow {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--link-color);
+    font-weight: 700;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .conn-offset {
+    background: var(--link-bg);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.68rem;
+  }
+
+  /* Status badges */
+  .status-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+  }
+  .badge-complete { background: var(--accent-en-bg); color: var(--completed); border: 1px solid var(--completed); }
+  .badge-progress { background: var(--accent-de-bg); color: var(--inprogress); border: 1px solid var(--inprogress); }
+
+  /* Tracks wrapper */
+  .tracks-wrapper {
+    position: relative;
+    min-height: 400px;
+  }
+
+  /* Section divider */
+  .section-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 0.8rem 0;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 800px) {
+    figure { padding: 1.2rem; }
+    .change-bar { font-size: 0.62rem; padding: 0 0.4rem; }
+    .conn-row { font-size: 0.7rem; }
+  }
+  @media print {
+    body { background: white; padding: 0.5rem; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>German-English Parallel Change Timeline</h2>
+  <p class="subtitle">The same structural changes, offset by 500--1,000 years</p>
+  <div class="insight-bar">Watching German change today is like watching a time-lapse of the forces that shaped English, replayed in slow motion.</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-en"></div> English (completed)</div>
+    <div class="legend-item"><div class="legend-dot dot-de"></div> German (in progress)</div>
+    <div class="legend-item"><div class="legend-dot dot-link"></div> Structural parallel</div>
+    <div class="legend-item"><div class="legend-dot dot-now"></div> Present day</div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-inner">
+      <!-- Time axis -->
+      <div class="time-axis">
+        <span>800</span><span>1000</span><span>1200</span><span>1400</span><span>1600</span><span>1800</span><span>2000</span>
+      </div>
+
+      <div class="tracks-wrapper">
+        <!-- NOW line - 2026 maps to ~97% of 800-2050 range -->
+        <div class="now-line" style="left: calc(97.6% - 1.5px);">
+          <div class="now-label">2026</div>
+        </div>
+
+        <!-- ENGLISH TRACK -->
+        <div class="track-label tl-en">English Track --- Changes Completed</div>
+
+        <!-- Case loss -->
+        <div class="track-row">
+          <div class="change-bar bar-en" style="left: 16%; width: 32%;" title="Case system collapse: 4 cases to remnants (~1000-1400 CE)">
+            Case System Collapse <span class="status-badge badge-complete">done</span>
+          </div>
+        </div>
+        <!-- Subjunctive -->
+        <div class="track-row">
+          <div class="change-bar bar-en" style="left: 32%; width: 32%;" title="Subjunctive simplification: synthetic to 'would' (~1200-1600 CE)">
+            Subjunctive &#x2192; "would" <span class="status-badge badge-complete">done</span>
+          </div>
+        </div>
+        <!-- Progressive -->
+        <div class="track-row">
+          <div class="change-bar bar-en" style="left: 48%; width: 24%;" title="Progressive grammaticalization: 'be on hunting' to 'be + -ing' (~1400-1700 CE)">
+            Progressive Aspect <span class="status-badge badge-complete">done</span>
+          </div>
+        </div>
+        <!-- Word order -->
+        <div class="track-row">
+          <div class="change-bar bar-en" style="left: 24%; width: 32%;" title="Word order rigidification: flexible to fixed SVO (~1100-1500 CE)">
+            Word Order &#x2192; SVO <span class="status-badge badge-complete">done</span>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- GERMAN TRACK -->
+        <div class="track-label tl-de">German Track --- Changes In Progress</div>
+
+        <!-- Genitive retreat -->
+        <div class="track-row">
+          <div class="change-bar bar-de" style="left: 88%; width: 9.6%;" title="Genitive retreat: von + dative replacing genitive in speech (~1900-present)">
+            Genitive Retreat <span class="status-badge badge-progress">active</span>
+          </div>
+        </div>
+        <!-- KII simplification -->
+        <div class="track-row">
+          <div class="change-bar bar-de" style="left: 80%; width: 17.6%;" title="Konjunktiv II simplification: synthetic to wurde + infinitive (~1800-present)">
+            Konjunktiv II &#x2192; <em>wurde</em> <span class="status-badge badge-progress">active</span>
+          </div>
+        </div>
+        <!-- Am-progressive -->
+        <div class="track-row">
+          <div class="change-bar bar-de-emerging" style="left: 88%; width: 9.6%;" title="Am-progressive emergence: regional to spreading (~1900-present)">
+            Am-Progressive <span class="status-badge badge-progress">emerging</span>
+          </div>
+        </div>
+        <!-- Weil + V2 -->
+        <div class="track-row">
+          <div class="change-bar bar-de-emerging" style="left: 93.6%; width: 4%;" title="Weil + V2 emergence: spoken innovation (~1970s-present)">
+            <em>weil</em> + V2 <span class="status-badge badge-progress">early</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connecting parallels -->
+  <div class="connections">
+    <h3 style="text-align:center; font-size:0.9rem; margin-bottom:0.8rem; color:var(--link-color);">Structural Parallels --- Same Change, Different Century</h3>
+
+    <div class="conn-row">
+      <div class="conn-en">Case collapse (1000-1400)</div>
+      <div class="conn-arrow">&#x2194; <span class="conn-offset">~600 yr offset</span></div>
+      <div class="conn-de">Genitive retreat (1900-now)</div>
+    </div>
+    <div class="conn-row">
+      <div class="conn-en">Subjunctive &#x2192; "would" (1200-1600)</div>
+      <div class="conn-arrow">&#x2194; <span class="conn-offset">~600 yr offset</span></div>
+      <div class="conn-de">KII &#x2192; <em>wurde</em> (1800-now)</div>
+    </div>
+    <div class="conn-row">
+      <div class="conn-en">Progressive "be + -ing" (1400-1700)</div>
+      <div class="conn-arrow">&#x2194; <span class="conn-offset">~500 yr offset</span></div>
+      <div class="conn-de">Am-progressive (1900-now)</div>
+    </div>
+    <div class="conn-row">
+      <div class="conn-en">Word order &#x2192; SVO (1100-1500)</div>
+      <div class="conn-arrow">&#x2194; <span class="conn-offset">~800 yr offset?</span></div>
+      <div class="conn-de"><em>weil</em> + V2 (1970s-now)</div>
+    </div>
+  </div>
+
+  <div style="text-align:center; background:var(--accent-de-bg); border:2px solid var(--accent-de); border-radius:10px; padding:0.8rem; font-size:0.82rem;">
+    <strong>Why the delay?</strong> Germany's strong written standard (reinforced by the Duden since 1880 and universal literacy) acts as a conservative brake. English's changes accelerated after the Norman Conquest (1066) displaced English from official use for ~300 years, allowing spoken change to proceed unchecked.
+  </div>
+
+  <figcaption>
+    English's structural changes are invisible --- fully completed, now just "how English works." German's parallel changes are visible --- in progress, creating variation and debate. Studying German change reveals English's hidden history.
+  </figcaption>
+</figure>
+</body>
+</html>

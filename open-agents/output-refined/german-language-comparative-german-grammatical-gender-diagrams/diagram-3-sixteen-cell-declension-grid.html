@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 16-Cell Declension Grid</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc-color: #3b82f6;
+    --fem-color: #ec4899;
+    --neut-color: #10b981;
+    --plur-color: #8b5cf6;
+    --muted: #6c757d;
+    /* Form colors -- each unique form gets its own color */
+    --f-der: #3b82f6;
+    --f-die: #ec4899;
+    --f-das: #10b981;
+    --f-dem: #f59e0b;
+    --f-den: #8b5cf6;
+    --f-des: #ef4444;
+    --f-der-bg: #eff6ff;
+    --f-die-bg: #fdf2f8;
+    --f-das-bg: #ecfdf5;
+    --f-dem-bg: #fffbeb;
+    --f-den-bg: #f5f3ff;
+    --f-des-bg: #fef2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc-color: #60a5fa;
+      --fem-color: #f472b6;
+      --neut-color: #34d399;
+      --plur-color: #a78bfa;
+      --muted: #9a9ab0;
+      --f-der: #60a5fa;
+      --f-die: #f472b6;
+      --f-das: #34d399;
+      --f-dem: #fbbf24;
+      --f-den: #a78bfa;
+      --f-des: #f87171;
+      --f-der-bg: #1e293b;
+      --f-die-bg: #2a1525;
+      --f-das-bg: #132e24;
+      --f-dem-bg: #2a2510;
+      --f-den-bg: #1e1535;
+      --f-des-bg: #2a1515;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* The grid table */
+  .decl-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    margin-bottom: 1.5rem;
+  }
+  .decl-table th {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    border-radius: 8px;
+  }
+  .decl-table th.col-masc { color: var(--masc-color); background: var(--f-der-bg); }
+  .decl-table th.col-fem { color: var(--fem-color); background: var(--f-die-bg); }
+  .decl-table th.col-neut { color: var(--neut-color); background: var(--f-das-bg); }
+  .decl-table th.col-plur { color: var(--plur-color); background: var(--f-den-bg); }
+  .decl-table th.col-case { color: var(--muted); background: transparent; text-align: right; padding-right: 0.8rem; }
+  .decl-table td {
+    text-align: center;
+    padding: 0.8rem 0.4rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: default;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .decl-table td:hover {
+    transform: scale(1.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .decl-table td .note {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 0.1rem;
+  }
+  /* Form-based coloring */
+  td.form-der { color: var(--f-der); background: var(--f-der-bg); border-color: var(--f-der); }
+  td.form-die { color: var(--f-die); background: var(--f-die-bg); border-color: var(--f-die); }
+  td.form-das { color: var(--f-das); background: var(--f-das-bg); border-color: var(--f-das); }
+  td.form-dem { color: var(--f-dem); background: var(--f-dem-bg); border-color: var(--f-dem); }
+  td.form-den { color: var(--f-den); background: var(--f-den-bg); border-color: var(--f-den); }
+  td.form-des { color: var(--f-des); background: var(--f-des-bg); border-color: var(--f-des); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.82rem; font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    border: 2px solid;
+  }
+  .legend-item.l-der { color: var(--f-der); border-color: var(--f-der); background: var(--f-der-bg); }
+  .legend-item.l-die { color: var(--f-die); border-color: var(--f-die); background: var(--f-die-bg); }
+  .legend-item.l-das { color: var(--f-das); border-color: var(--f-das); background: var(--f-das-bg); }
+  .legend-item.l-dem { color: var(--f-dem); border-color: var(--f-dem); background: var(--f-dem-bg); }
+  .legend-item.l-den { color: var(--f-den); border-color: var(--f-den); background: var(--f-den-bg); }
+  .legend-item.l-des { color: var(--f-des); border-color: var(--f-des); background: var(--f-des-bg); }
+  .legend-item .count { font-size: 0.72rem; opacity: 0.8; }
+
+  /* Pattern insights */
+  .patterns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .pattern-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+  }
+  .pattern-card .p-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pattern-card:nth-child(1) .p-title { color: var(--f-die); }
+  .pattern-card:nth-child(2) .p-title { color: var(--f-dem); }
+  .pattern-card:nth-child(3) .p-title { color: var(--f-den); }
+
+  /* English comparison mini */
+  .en-mini {
+    border: 2px solid var(--muted);
+    border-radius: 10px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .en-mini .big-the {
+    font-size: 2rem; font-weight: 800; margin-bottom: 0.2rem;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .decl-table td { font-size: 1rem; padding: 0.5rem 0.2rem; }
+    .patterns { grid-template-columns: 1fr; }
+    .legend { gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The 16-Cell Declension Grid</h2>
+  <p class="subtitle">4 cases &times; (3 genders + plural) = 16 cells -- but only 6 unique forms. Color reveals the hidden simplicity.</p>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item l-der"><strong>der</strong> <span class="count">&times;4</span></div>
+    <div class="legend-item l-die"><strong>die</strong> <span class="count">&times;4</span></div>
+    <div class="legend-item l-das"><strong>das</strong> <span class="count">&times;2</span></div>
+    <div class="legend-item l-dem"><strong>dem</strong> <span class="count">&times;2</span></div>
+    <div class="legend-item l-den"><strong>den</strong> <span class="count">&times;2</span></div>
+    <div class="legend-item l-des"><strong>des</strong> <span class="count">&times;2</span></div>
+  </div>
+
+  <!-- The Table -->
+  <table class="decl-table">
+    <thead>
+      <tr>
+        <th class="col-case"></th>
+        <th class="col-masc">Masculine</th>
+        <th class="col-fem">Feminine</th>
+        <th class="col-neut">Neuter</th>
+        <th class="col-plur">Plural</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="col-case">Nominative</th>
+        <td class="form-der">der</td>
+        <td class="form-die">die</td>
+        <td class="form-das">das</td>
+        <td class="form-die">die</td>
+      </tr>
+      <tr>
+        <th class="col-case">Accusative</th>
+        <td class="form-den">den</td>
+        <td class="form-die">die</td>
+        <td class="form-das">das</td>
+        <td class="form-die">die</td>
+      </tr>
+      <tr>
+        <th class="col-case">Dative</th>
+        <td class="form-dem">dem</td>
+        <td class="form-der">der</td>
+        <td class="form-dem">dem</td>
+        <td class="form-den">den<span class="note">(+n)</span></td>
+      </tr>
+      <tr>
+        <th class="col-case">Genitive</th>
+        <td class="form-des">des<span class="note">(+s/es)</span></td>
+        <td class="form-der">der</td>
+        <td class="form-des">des<span class="note">(+s/es)</span></td>
+        <td class="form-der">der</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pattern insights -->
+  <div class="patterns">
+    <div class="pattern-card">
+      <div class="p-title">Feminine = Plural (always!)</div>
+      The feminine and plural columns are <strong>identical</strong> in all 4 cases: die, die, der, der. Context and noun form are the only disambiguation.
+    </div>
+    <div class="pattern-card">
+      <div class="p-title">Dative &amp; Genitive merge M+N</div>
+      Masculine and neuter share the same form in dative (<strong>dem</strong>) and genitive (<strong>des</strong>). Only nominative and accusative distinguish all three genders.
+    </div>
+    <div class="pattern-card">
+      <div class="p-title">Only masculine changes in accusative</div>
+      <strong>der &rarr; den</strong> is the only nominative-to-accusative shift. Feminine (die&rarr;die), neuter (das&rarr;das), and plural (die&rarr;die) stay the same.
+    </div>
+  </div>
+
+  <!-- English comparison -->
+  <div class="en-mini">
+    <div class="big-the">the</div>
+    English: one form for all 16 cells. No gender, no case, no number distinction in the article.<br>
+    Old English had the full equivalent: <em>se</em> (m.) / <em>s&#x113;o</em> (f.) / <em>&#x00FE;&#x00E6;t</em> (n.) with case declension.
+  </div>
+
+  <figcaption>
+    <strong>Figure 3: The 16-Cell Declension Grid</strong>
+    <span>The German definite article paradigm appears to have 16 forms but contains only 6 unique words: der, die, das, dem, den, des. Color-coding by form (not by gender) reveals the massive overlap: "der" and "die" each appear 4 times, while the remaining forms each appear twice. Three key patterns reduce the apparent complexity: feminine and plural are always identical; masculine and neuter merge in dative and genitive; only masculine changes between nominative and accusative. English replaced this entire system with a single invariant "the."</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Separable Verb Splitting Diagram</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --prefix: #e63946;
+    --prefix-bg: #fef2f2;
+    --stem: #3b82f6;
+    --stem-bg: #eff6ff;
+    --insert: #f59e0b;
+    --insert-bg: #fffbeb;
+    --bracket: #8b5cf6;
+    --bracket-bg: #f5f3ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --muted: #6c757d;
+    --v2: #2563eb;
+    --vend: #7c3aed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --prefix: #ff6b6b;
+      --prefix-bg: #2a1515;
+      --stem: #60a5fa;
+      --stem-bg: #1e293b;
+      --insert: #fbbf24;
+      --insert-bg: #2a2510;
+      --bracket: #a78bfa;
+      --bracket-bg: #1e1b3a;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --muted: #9a9ab0;
+      --v2: #60a5fa;
+      --vend: #a78bfa;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .base-form {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bracket-bg);
+    border: 2px solid var(--bracket);
+    border-radius: 12px;
+  }
+  .base-form .verb-display {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .base-form .pfx { color: var(--prefix); }
+  .base-form .stm { color: var(--stem); }
+  .base-form .label { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+
+  .scenarios { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .scenario {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    position: relative;
+  }
+  .scenario-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .scenario-label .num {
+    background: var(--bracket);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+  .sentence-display {
+    font-size: 1.15rem;
+    padding: 0.8rem 1rem;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .word {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .word.prefix-part {
+    background: var(--prefix-bg);
+    color: var(--prefix);
+    font-weight: 800;
+    border: 2px solid var(--prefix);
+  }
+  .word.stem-part {
+    background: var(--stem-bg);
+    color: var(--stem);
+    font-weight: 800;
+    border: 2px solid var(--stem);
+  }
+  .word.insert-part {
+    background: var(--insert-bg);
+    color: var(--insert);
+    font-weight: 800;
+    border: 2px solid var(--insert);
+  }
+  .word.combined {
+    background: var(--bracket-bg);
+    color: var(--bracket);
+    font-weight: 800;
+    border: 2px solid var(--bracket);
+  }
+  .word.normal { color: var(--fg); }
+
+  .bracket-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-size: 0.72rem;
+    color: var(--bracket);
+    font-weight: 700;
+    margin-top: 0.3rem;
+  }
+  .bracket-bar .bracket-label {
+    padding: 0.15rem 0.5rem;
+    background: var(--bracket-bg);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .bracket-bar .bracket-line {
+    flex: 1;
+    height: 2px;
+    background: var(--bracket);
+    opacity: 0.4;
+  }
+
+  .scenario-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  .scenario-en {
+    font-size: 0.8rem;
+    color: var(--en-color);
+    margin-top: 0.2rem;
+  }
+
+  .movement-arrow {
+    display: inline-block;
+    color: var(--prefix);
+    font-size: 1.2rem;
+    font-weight: 700;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+    font-size: 0.8rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    border: 2px solid;
+  }
+
+  .en-comparison {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--en-bg);
+    border: 2px solid var(--en-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+  .en-comparison h4 { color: var(--en-color); margin-bottom: 0.5rem; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .sentence-display { font-size: 0.95rem; }
+    .base-form .verb-display { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Separable Verb Splitting</h2>
+  <p class="subtitle">How the prefix detaches, migrates, and reunites depending on clause type.</p>
+
+  <div class="base-form">
+    <div class="verb-display"><span class="pfx">auf</span><span class="stm">machen</span></div>
+    <div class="label">Base form: prefix + stem = one word (to open)</div>
+  </div>
+
+  <div class="scenarios">
+
+    <!-- Scenario 1: Main clause -->
+    <div class="scenario">
+      <div class="scenario-label"><span class="num">1</span> Main Clause (Present / Past)</div>
+      <div class="sentence-display">
+        <span class="word normal">Ich</span>
+        <span class="word stem-part">mache</span>
+        <span class="word normal">die T&uuml;r</span>
+        <span class="word prefix-part">auf</span><span class="word normal">.</span>
+      </div>
+      <div class="bracket-bar">
+        <span class="bracket-label">V2 position</span>
+        <span class="bracket-line"></span>
+        <span class="bracket-label">Satzklammer</span>
+        <span class="bracket-line"></span>
+        <span class="bracket-label">End position</span>
+      </div>
+      <div class="scenario-note">Prefix splits off and flies to the clause-final position, creating the sentence bracket.</div>
+      <div class="scenario-en">English: I open the door.</div>
+    </div>
+
+    <!-- Scenario 2: Subordinate clause -->
+    <div class="scenario">
+      <div class="scenario-label"><span class="num">2</span> Subordinate Clause</div>
+      <div class="sentence-display">
+        <span class="word normal">...weil ich die T&uuml;r</span>
+        <span class="word combined">aufmache</span><span class="word normal">.</span>
+      </div>
+      <div class="scenario-note">In subordinate clauses, the verb goes to the end -- prefix and stem reunite as one word.</div>
+      <div class="scenario-en">English: ...because I open the door.</div>
+    </div>
+
+    <!-- Scenario 3: With modal verb -->
+    <div class="scenario">
+      <div class="scenario-label"><span class="num">3</span> With Modal Verb</div>
+      <div class="sentence-display">
+        <span class="word normal">Ich</span>
+        <span class="word stem-part">will</span>
+        <span class="word normal">die T&uuml;r</span>
+        <span class="word combined">aufmachen</span><span class="word normal">.</span>
+      </div>
+      <div class="scenario-note">Modal takes V2 position; separable verb stays together as an infinitive at the end.</div>
+      <div class="scenario-en">English: I want to open the door.</div>
+    </div>
+
+    <!-- Scenario 4: Past participle -->
+    <div class="scenario">
+      <div class="scenario-label"><span class="num">4</span> Past Participle (Perfekt)</div>
+      <div class="sentence-display">
+        <span class="word normal">Ich habe die T&uuml;r</span>
+        <span class="word prefix-part">auf</span><span class="word insert-part">ge</span><span class="word stem-part">macht</span><span class="word normal">.</span>
+      </div>
+      <div class="scenario-note">The ge- prefix is <strong>inserted between</strong> the separable prefix and the stem.</div>
+      <div class="scenario-en">English: I have opened the door. / I opened the door.</div>
+    </div>
+
+    <!-- Scenario 5: Infinitive with zu -->
+    <div class="scenario">
+      <div class="scenario-label"><span class="num">5</span> Infinitive with <em>zu</em></div>
+      <div class="sentence-display">
+        <span class="word normal">Ich versuche, die T&uuml;r</span>
+        <span class="word prefix-part">auf</span><span class="word insert-part">zu</span><span class="word stem-part">machen</span><span class="word normal">.</span>
+      </div>
+      <div class="scenario-note">The zu particle is also <strong>inserted between</strong> the prefix and stem, mirroring ge-.</div>
+      <div class="scenario-en">English: I try to open the door.</div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--prefix-bg); border-color: var(--prefix);"></div>
+      Separable prefix (auf-)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--stem-bg); border-color: var(--stem);"></div>
+      Verb stem (mach-)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--insert-bg); border-color: var(--insert);"></div>
+      Inserted element (ge- / zu)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--bracket-bg); border-color: var(--bracket);"></div>
+      Reunited (prefix + stem)
+    </div>
+  </div>
+
+  <div class="en-comparison">
+    <h4>English Parallel: Phrasal Verbs</h4>
+    <p>English phrasal verbs (pick up, break down, look into) work similarly -- a particle modifies the base verb. But English keeps the particle as a separate word after the verb: "I <strong>picked</strong> the book <strong>up</strong>." German integrates the prefix into the verb's morphology and sends it to a structurally defined position. German's system is far more productive: a single base verb like <em>kommen</em> generates 10+ prefixed variants (ankommen, aufkommen, auskommen, bekommen, entkommen, mitkommen...).</p>
+  </div>
+
+  <figcaption>
+    <strong>The Satzklammer: Five Splitting Scenarios</strong>
+    <span>The sentence bracket is the architectural frame of German clause structure. The conjugated verb occupies V2; the prefix (or infinitive/participle) occupies the end. Everything else sits in the "middle field" between the brackets.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Transparency Comparison -- German Visible Parts vs. English Opaque Borrowings</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de-color: #3b82f6;
+    --de-bg: #eff6ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --noun-color: #3b82f6;
+    --verb-color: #10b981;
+    --adj-color: #f59e0b;
+    --ghost: #9a9ab0;
+    --ghost-bg: #f0f0f5;
+    --accent: #8b5cf6;
+    --accent-bg: #f5f3ff;
+    --muted: #6c757d;
+    --check: #10b981;
+    --cross: #e63946;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de-color: #60a5fa;
+      --de-bg: #1e293b;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --noun-color: #60a5fa;
+      --verb-color: #34d399;
+      --adj-color: #fbbf24;
+      --ghost: #6a6a80;
+      --ghost-bg: #1a1a28;
+      --accent: #a78bfa;
+      --accent-bg: #1e1b3a;
+      --muted: #9a9ab0;
+      --check: #34d399;
+      --cross: #ff6b6b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .pair-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .pair-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .de-side, .en-side {
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .de-side {
+    background: var(--de-bg);
+    border: 1.5px solid var(--de-color);
+  }
+  .en-side {
+    background: var(--ghost-bg);
+    border: 1.5px solid var(--ghost);
+  }
+  .word-line {
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+  .de-side .word-line { color: var(--de-color); }
+  .en-side .word-line { color: var(--fg); }
+  .morpheme {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .morpheme.noun { background: rgba(59,130,246,0.15); color: var(--noun-color); }
+  .morpheme.verb { background: rgba(16,185,129,0.15); color: var(--verb-color); }
+  .morpheme.adj { background: rgba(245,158,11,0.15); color: var(--adj-color); }
+  .morph-gloss {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .en-etym {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    font-style: italic;
+  }
+  .arrow-col {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+  .decode-tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-left: 0.2rem;
+    vertical-align: middle;
+  }
+  .decode-tag.yes { background: rgba(16,185,129,0.15); color: var(--check); }
+  .decode-tag.no { background: rgba(230,57,70,0.12); color: var(--cross); }
+
+  .header-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .header-row .de-label { color: var(--de-color); }
+  .header-row .en-label { color: var(--ghost); }
+
+  .callout {
+    background: var(--accent-bg);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .callout .big {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .callout p {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .legend {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    font-size: 0.75rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .pair-row { grid-template-columns: 1fr; gap: 0.2rem; }
+    .arrow-col { display: none; }
+    .header-row { grid-template-columns: 1fr; }
+    .header-row .en-label { display: none; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Semantic Transparency Comparison</h2>
+  <p class="subtitle">German compounds = visible equations you can solve. English words = opaque answers you must memorize.</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(59,130,246,0.25);"></div> Noun root</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(16,185,129,0.25);"></div> Verb root</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(245,158,11,0.25);"></div> Adjective</div>
+    <div class="legend-item"><span class="decode-tag yes">decodable</span> Naive speaker can guess</div>
+    <div class="legend-item"><span class="decode-tag no">opaque</span> Requires memorization</div>
+  </div>
+
+  <div class="header-row">
+    <span class="de-label">German -- Transparent Compounds</span>
+    <span></span>
+    <span class="en-label">English -- Opaque Borrowings</span>
+  </div>
+
+  <div class="pair-grid">
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme adj">FERN</span> + <span class="morpheme verb">SEHEN</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">far + see = "far-seeing"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">TELEVISION <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Greek tele- (far) + Latin visio (seeing)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">HAND</span> + <span class="morpheme noun">SCHUH</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">hand + shoe = "hand-shoe"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">GLOVE <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Old Norse glofi -- etymology unclear</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">KRANKEN</span> + <span class="morpheme noun">WAGEN</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">sick-people + wagon = "sick-wagon"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">AMBULANCE <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Latin ambulare (to walk)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">STAUB</span> + <span class="morpheme noun">SAUGER</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">dust + sucker = "dust-sucker"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">VACUUM CLEANER <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Latin vacuum (empty) + clean (Germanic)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">FLUG</span> + <span class="morpheme noun">ZEUG</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">flight + thing/stuff = "flight-thing"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">AIRPLANE <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Greek aer (air) + Latin planus (flat)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme adj">K&Uuml;HL</span> + <span class="morpheme noun">SCHRANK</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">cool + cabinet = "cool-cabinet"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">REFRIGERATOR <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Latin refrigerare (to make cool again)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">ZAHN</span> + <span class="morpheme noun">ARZT</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">tooth + doctor = "tooth-doctor"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">DENTIST <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Latin dens/dentis (tooth)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">SCHILD</span> + <span class="morpheme noun">KR&Ouml;TE</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">shield + toad = "shield-toad"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">TURTLE <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">French tortue from Latin tortus (twisted)</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme adj">NACKT</span> + <span class="morpheme noun">SCHNECKE</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">naked + snail = "naked-snail"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">SLUG <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">Scandinavian slugge -- origin uncertain</div>
+      </div>
+    </div>
+
+    <div class="pair-row">
+      <div class="de-side">
+        <div class="word-line">
+          <span class="morpheme noun">WASSER</span> + <span class="morpheme noun">HAHN</span>
+          <span class="decode-tag yes">decodable</span>
+        </div>
+        <div class="morph-gloss">water + rooster/tap = "water-tap"</div>
+      </div>
+      <div class="arrow-col">=</div>
+      <div class="en-side">
+        <div class="word-line">FAUCET <span class="decode-tag no">opaque</span></div>
+        <div class="en-etym">French fausset (stopper, bung)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="big">Score: German 10/10 decodable vs. English 0/10 decodable</div>
+    <p>A child who knows the component words can guess every German compound above. No amount of English knowledge reveals why a "faucet" is called a faucet. German compounds are equations you can solve; English words are answers you must memorize.</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 1: Semantic Transparency -- German Visible Parts vs. English Opaque Borrowings</strong>
+    <span>German builds vocabulary from recognizable Germanic morphemes, making compound meanings deducible from their parts. English uses opaque Latin, Greek, French, and Norse borrowings whose etymological components are invisible without classical training. This transparency asymmetry is not stylistic -- it fundamentally shapes how learners build vocabulary. Once you know ~200 German root morphemes, you can decode thousands of compounds. English offers no comparable shortcut for its Latinate vocabulary.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German vs. English Compound Orthography</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de-color: #e63946;
+    --de-bg: #fef2f2;
+    --en-color: #3b82f6;
+    --en-bg: #eff6ff;
+    --shared-color: #8b5cf6;
+    --shared-bg: #f5f3ff;
+    --accent: #10b981;
+    --accent-bg: #ecfdf5;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de-color: #f87171;
+      --de-bg: #2a1520;
+      --en-color: #60a5fa;
+      --en-bg: #1e293b;
+      --shared-color: #a78bfa;
+      --shared-bg: #1e1b3a;
+      --accent: #34d399;
+      --accent-bg: #132e24;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Column headers */
+  .col-headers {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr 80px;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  .col-h {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .col-h.de { background: var(--de-bg); color: var(--de-color); border: 1px solid var(--de-color); }
+  .col-h.vs { color: var(--muted); }
+  .col-h.en { background: var(--en-bg); color: var(--en-color); border: 1px solid var(--en-color); }
+  .col-h.count { color: var(--muted); font-size: 0.72rem; }
+
+  /* Comparison rows */
+  .comp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .comp-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr 80px;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .comp-row:nth-child(odd) { background: var(--surface); }
+
+  .de-cell {
+    display: flex;
+    flex-direction: column;
+  }
+  .de-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--de-color);
+    word-break: break-all;
+  }
+  .de-literal {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .vs-cell {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+
+  .en-cell {
+    display: flex;
+    flex-direction: column;
+  }
+  .en-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--en-color);
+  }
+  .en-type {
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .count-cell {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .count-cell .num-de {
+    font-weight: 700;
+    color: var(--de-color);
+  }
+  .count-cell .num-en {
+    font-weight: 700;
+    color: var(--en-color);
+  }
+
+  /* Insight panels */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .insight-panel {
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid;
+  }
+  .insight-panel.de { background: var(--de-bg); border-color: var(--de-color); }
+  .insight-panel.en { background: var(--en-bg); border-color: var(--en-color); }
+  .insight-panel h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .insight-panel.de h3 { color: var(--de-color); }
+  .insight-panel.en h3 { color: var(--en-color); }
+  .insight-panel ul {
+    list-style: none;
+    font-size: 0.82rem;
+  }
+  .insight-panel li {
+    padding: 0.2rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .insight-panel.de li::before {
+    content: '\2713';
+    position: absolute;
+    left: 0;
+    color: var(--de-color);
+    font-weight: 700;
+  }
+  .insight-panel.en li::before {
+    content: '\00d7';
+    position: absolute;
+    left: 0;
+    color: var(--en-color);
+    font-weight: 700;
+  }
+
+  /* Same logic box */
+  .same-logic {
+    background: var(--shared-bg);
+    border: 2px solid var(--shared-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .same-logic h3 {
+    color: var(--shared-color);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .same-logic p { font-size: 0.85rem; }
+  .parse-demo {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .parse-item {
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+  }
+  .parse-item.de { background: var(--de-bg); border: 1px solid var(--de-color); }
+  .parse-item.en { background: var(--en-bg); border: 1px solid var(--en-color); }
+  .parse-arrow { font-weight: 700; }
+  .parse-item.de .parse-arrow { color: var(--de-color); }
+  .parse-item.en .parse-arrow { color: var(--en-color); }
+
+  /* Ambiguity example */
+  .ambiguity-box {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .ambiguity-box h3 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+    text-align: center;
+  }
+  .ambiguity-examples {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .amb-item {
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    background: var(--en-bg);
+    border: 1px solid var(--en-color);
+  }
+  .amb-phrase { font-weight: 700; color: var(--en-color); }
+  .amb-q { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .comp-row { grid-template-columns: 1fr 30px 1fr; }
+    .count-cell { display: none; }
+    .col-headers { grid-template-columns: 1fr 30px 1fr; }
+    .col-h.count { display: none; }
+    .insight-grid { grid-template-columns: 1fr; }
+    .ambiguity-examples { grid-template-columns: 1fr; }
+    .de-word, .en-word { font-size: 0.82rem; }
+  }
+  @media print {
+    body { background: #fff; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>German vs. English Compound Orthography</h2>
+  <p class="subtitle">Same concept, same right-headed logic -- but German writes one word where English writes two or three.</p>
+
+  <!-- Column headers -->
+  <div class="col-headers">
+    <div class="col-h de">German (1 word)</div>
+    <div class="col-h vs"></div>
+    <div class="col-h en">English (1-3+ words)</div>
+    <div class="col-h count">Characters</div>
+  </div>
+
+  <!-- Comparison list -->
+  <div class="comp-list">
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Bushaltestelle</span>
+        <span class="de-literal">bus-stop-place</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">bus stop</span>
+        <span class="en-type">open compound (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">14</span> vs <span class="num-en">7</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Handschuh</span>
+        <span class="de-literal">hand-shoe</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">glove</span>
+        <span class="en-type">single word (no compound)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">9</span> vs <span class="num-en">5</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Staubsauger</span>
+        <span class="de-literal">dust-sucker</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">vacuum cleaner</span>
+        <span class="en-type">open compound (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">11</span> vs <span class="num-en">13</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Krankenversicherung</span>
+        <span class="de-literal">sick-insurance</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">health insurance</span>
+        <span class="en-type">open compound (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">19</span> vs <span class="num-en">15</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Feuerwehrauto</span>
+        <span class="de-literal">fire-defense-car</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">fire truck</span>
+        <span class="en-type">open compound (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">13</span> vs <span class="num-en">9</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Kuehlschrank</span>
+        <span class="de-literal">cool-cabinet</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">refrigerator</span>
+        <span class="en-type">single Latinate word</span>
+      </div>
+      <div class="count-cell"><span class="num-de">12</span> vs <span class="num-en">12</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Krankenwagen</span>
+        <span class="de-literal">sick-wagon</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">ambulance</span>
+        <span class="en-type">single Latinate word</span>
+      </div>
+      <div class="count-cell"><span class="num-de">12</span> vs <span class="num-en">9</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Geburtstagsfeier</span>
+        <span class="de-literal">birth-day-celebration</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">birthday party</span>
+        <span class="en-type">mixed: solid + open (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">16</span> vs <span class="num-en">13</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Geschwindigkeits&shy;begrenzung</span>
+        <span class="de-literal">speed-limitation</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">speed limit</span>
+        <span class="en-type">open compound (2 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">28</span> vs <span class="num-en">10</span></div>
+    </div>
+
+    <div class="comp-row">
+      <div class="de-cell">
+        <span class="de-word">Fussballwelt&shy;meisterschaft</span>
+        <span class="de-literal">foot-ball-world-championship</span>
+      </div>
+      <div class="vs-cell">&harr;</div>
+      <div class="en-cell">
+        <span class="en-word">soccer world championship</span>
+        <span class="en-type">open compound (3 words)</span>
+      </div>
+      <div class="count-cell"><span class="num-de">25</span> vs <span class="num-en">24</span></div>
+    </div>
+  </div>
+
+  <!-- Same logic -->
+  <div class="same-logic">
+    <h3>Same Right-Headed Logic, Different Packaging</h3>
+    <p>Both languages use the same structural principle: the head is on the right. The difference is purely orthographic.</p>
+    <div class="parse-demo">
+      <div class="parse-item de">
+        <span class="parse-arrow">Haus + Tuer</span> = a kind of <strong>Tuer</strong> (door)
+      </div>
+      <div class="parse-item en">
+        <span class="parse-arrow">front + door</span> = a kind of <strong>door</strong>
+      </div>
+    </div>
+    <div class="parse-demo">
+      <div class="parse-item de">
+        <span class="parse-arrow">Feuer + wehr + auto</span> = a kind of <strong>Auto</strong> (car)
+      </div>
+      <div class="parse-item en">
+        <span class="parse-arrow">fire + truck</span> = a kind of <strong>truck</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side-by-side insights -->
+  <div class="insight-grid">
+    <div class="insight-panel de">
+      <h3>German Convention</h3>
+      <ul>
+        <li>Always written as one word</li>
+        <li>Structure is explicit and unambiguous</li>
+        <li>Compound status clear from spelling</li>
+        <li>Stress on first element confirms it</li>
+        <li>Novel compounds instantly recognized as words</li>
+      </ul>
+    </div>
+    <div class="insight-panel en">
+      <h3>English Convention</h3>
+      <ul>
+        <li>Written as 1, 2, or 3 words -- no consistent rule</li>
+        <li>"Hot dog" -- compound noun or adjective + noun?</li>
+        <li>Style guides disagree on spacing</li>
+        <li>Only stress pattern reliably signals compounds</li>
+        <li>Novel noun clusters feel like phrases, not words</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Ambiguity examples -->
+  <div class="ambiguity-box">
+    <h3>English Orthographic Ambiguity -- Is It a Compound?</h3>
+    <div class="ambiguity-examples">
+      <div class="amb-item">
+        <span class="amb-phrase">hot dog</span>
+        <span class="amb-q">Compound noun (food)? Or a dog that is hot?</span>
+      </div>
+      <div class="amb-item">
+        <span class="amb-phrase">high school</span>
+        <span class="amb-q">Compound noun (institution)? Or a tall school building?</span>
+      </div>
+      <div class="amb-item">
+        <span class="amb-phrase">ice cream</span>
+        <span class="amb-q">One concept, but written as two words. Why not "icecream"?</span>
+      </div>
+      <div class="amb-item">
+        <span class="amb-phrase">mother-in-law</span>
+        <span class="amb-q">Hyphenated. Fireplace is solid. Bus stop is open. No rule.</span>
+      </div>
+    </div>
+    <p style="font-size:0.78rem; color:var(--muted); margin-top:0.6rem; text-align:center;">
+      German eliminates this ambiguity entirely. If it is one concept, it is one word. Period.
+    </p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 6: German vs. English Compound Orthography</strong>
+    <span>German and English use the same right-headed compound logic ("bus stop" is a kind of stop, Bushaltestelle is a kind of Stelle), but German always fuses compounds into single orthographic words, while English scatters them across open, hyphenated, and solid forms with no consistent rule. German's convention makes compound status explicit and unambiguous; English's convention can obscure whether "hot dog" or "high school" are compound nouns or adjective-noun phrases. Both systems support unlimited recursive nesting -- German just makes it visible.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

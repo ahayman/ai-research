@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modal Particle System Map</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #10b981;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #ecfdf5;
+    --muted: #6c757d;
+    --soften: #8b5cf6;
+    --soften-bg: #f5f3ff;
+    --contradict: #e63946;
+    --contradict-bg: #fef2f2;
+    --shared: #3b82f6;
+    --shared-bg: #eff6ff;
+    --resign: #6c757d;
+    --resign-bg: #f8f9fa;
+    --concede: #f59e0b;
+    --concede-bg: #fffbeb;
+    --prob: #0ea5e9;
+    --prob-bg: #f0f9ff;
+    --redirect: #14b8a6;
+    --redirect-bg: #f0fdfa;
+    --fear: #d946ef;
+    --fear-bg: #fdf4ff;
+    --interest: #f97316;
+    --interest-bg: #fff7ed;
+    --check: #10b981;
+    --x-mark: #e63946;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #34d399;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #132e24;
+      --muted: #9a9ab0;
+      --soften: #a78bfa;
+      --soften-bg: #1e1b3a;
+      --contradict: #f87171;
+      --contradict-bg: #2a1215;
+      --shared: #60a5fa;
+      --shared-bg: #1e293b;
+      --resign: #9a9ab0;
+      --resign-bg: #1a1a2e;
+      --concede: #fbbf24;
+      --concede-bg: #2a2510;
+      --prob: #38bdf8;
+      --prob-bg: #0c2a3e;
+      --redirect: #2dd4bf;
+      --redirect-bg: #0a2e2a;
+      --fear: #e879f9;
+      --fear-bg: #2a1230;
+      --interest: #fb923c;
+      --interest-bg: #2a1a0a;
+      --check: #34d399;
+      --x-mark: #f87171;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .watermark {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent-de);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+
+  .particle-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .particle-table thead th {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .particle-table tbody td {
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .particle-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+  .func-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin: 1px 2px;
+  }
+  .tag-soften { background: var(--soften-bg); color: var(--soften); }
+  .tag-contradict { background: var(--contradict-bg); color: var(--contradict); }
+  .tag-shared { background: var(--shared-bg); color: var(--shared); }
+  .tag-resign { background: var(--resign-bg); color: var(--resign); border: 1px solid var(--border); }
+  .tag-concede { background: var(--concede-bg); color: var(--concede); }
+  .tag-prob { background: var(--prob-bg); color: var(--prob); }
+  .tag-redirect { background: var(--redirect-bg); color: var(--redirect); }
+  .tag-fear { background: var(--fear-bg); color: var(--fear); }
+  .tag-interest { background: var(--interest-bg); color: var(--interest); }
+
+  .sent-check { color: var(--check); font-weight: 700; }
+  .sent-x { color: var(--x-mark); font-weight: 700; font-size: 0.9em; }
+  .sent-types { white-space: nowrap; }
+
+  .de-example { font-style: italic; }
+  .en-approx { color: var(--accent-en); font-size: 0.78rem; }
+  .tone { font-size: 0.78rem; color: var(--muted); }
+
+  .combo-section {
+    margin-top: 2rem;
+    border: 2px solid var(--soften);
+    border-radius: 12px;
+    padding: 1.2rem;
+    background: var(--soften-bg);
+  }
+  .combo-section h3 { font-size: 1rem; color: var(--soften); margin-bottom: 0.8rem; text-align: center; }
+  .combo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  .combo-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem;
+    background: var(--surface);
+    font-size: 0.82rem;
+  }
+  .combo-card .combo-name { font-weight: 700; color: var(--soften); margin-bottom: 0.2rem; }
+  .combo-card .combo-de { font-style: italic; }
+  .combo-card .combo-en { font-size: 0.78rem; color: var(--accent-en); }
+
+  .en-comparison {
+    margin-top: 2rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-comparison h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-comparison p { font-size: 0.88rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .particle-table { font-size: 0.76rem; }
+    .particle-table thead th { font-size: 0.65rem; }
+    .combo-grid { grid-template-columns: 1fr; }
+    figure { padding: 1.5rem; }
+    .particle-table td:nth-child(4),
+    .particle-table th:nth-child(4) { display: none; }
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Modal Particle System Map</h2>
+  <p class="subtitle">Nine particles that do the pragmatic heavy lifting English distributes across dozens of ad hoc devices</p>
+  <div class="watermark">No direct English equivalents -- a dedicated grammatical class unique to German</div>
+
+  <div style="overflow-x:auto;">
+  <table class="particle-table">
+    <thead>
+      <tr>
+        <th>Particle</th>
+        <th>Core Meaning</th>
+        <th style="min-width:90px;">Sentence Types</th>
+        <th>Example</th>
+        <th>English Approximation</th>
+        <th>Tone</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="particle-name" style="color:var(--contradict);">doch</span><br><span class="func-tag tag-contradict">Contradiction</span></td>
+        <td>Contradicts a negative assumption or expectation</td>
+        <td class="sent-types">
+          <span class="sent-check" title="declarative">D</span>
+          <span class="sent-x" title="not in questions">Q</span>
+          <span class="sent-check" title="imperative">I</span>
+          <span class="sent-check" title="exclamative">E</span>
+        </td>
+        <td><span class="de-example">Das ist doch wahr!</span><br><span class="de-example">Komm doch!</span></td>
+        <td><span class="en-approx">"actually," "do" (emphatic), "come on"</span></td>
+        <td><span class="tone">Insistent, corrective, encouraging</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--soften);">mal</span><br><span class="func-tag tag-soften">Softener</span></td>
+        <td>Casualness, low-pressure, "just this once"</td>
+        <td class="sent-types">
+          <span class="sent-x">D</span>
+          <span class="sent-check">Q</span>
+          <span class="sent-check" title="primarily imperatives">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Schau mal!</span><br><span class="de-example">Kannst du mal helfen?</span></td>
+        <td><span class="en-approx">"just," "for a sec," "why don't you"</span></td>
+        <td><span class="tone">Friendly, casual, no-pressure</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--shared);">ja</span><br><span class="func-tag tag-shared">Shared Knowledge</span></td>
+        <td>Marks info as known, obvious, or mutually established</td>
+        <td class="sent-types">
+          <span class="sent-check">D</span>
+          <span class="sent-x">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-check">E</span>
+        </td>
+        <td><span class="de-example">Das ist ja toll!</span><br><span class="de-example">Du weisst ja, dass...</span></td>
+        <td><span class="en-approx">"you know," "of course," "as we both know"</span></td>
+        <td><span class="tone">Collegial, confirming, sometimes surprised</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--resign);">halt / eben</span><br><span class="func-tag tag-resign">Resignation</span></td>
+        <td>Resigned acceptance -- fact cannot be changed</td>
+        <td class="sent-types">
+          <span class="sent-check">D</span>
+          <span class="sent-x">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Das ist halt so.</span><br><span class="de-example">Das ist eben so.</span></td>
+        <td><span class="en-approx">"just," "simply," "that's the way it is"</span></td>
+        <td><span class="tone">Shrugging, fatalistic, matter-of-fact</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--concede);">schon</span><br><span class="func-tag tag-concede">Concession</span></td>
+        <td>Concedes a point while signaling a "but" is coming; or reassures</td>
+        <td class="sent-types">
+          <span class="sent-check">D</span>
+          <span class="sent-check">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Das mag schon sein, aber...</span><br><span class="de-example">Das wird schon klappen.</span></td>
+        <td><span class="en-approx">"I suppose," "surely," "it'll be fine"</span></td>
+        <td><span class="tone">Conceding, reassuring, rhetorical</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--prob);">wohl</span><br><span class="func-tag tag-prob">Probability</span></td>
+        <td>Educated guess, assumption, uncertainty</td>
+        <td class="sent-types">
+          <span class="sent-check">D</span>
+          <span class="sent-x">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Er ist wohl krank.</span><br><span class="de-example">Das ist wohl wahr.</span></td>
+        <td><span class="en-approx">"probably," "I guess," "presumably"</span></td>
+        <td><span class="tone">Speculative, tentative, hedging</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--redirect);">eigentlich</span><br><span class="func-tag tag-redirect">Redirection</span></td>
+        <td>Gets at underlying truth; softens disagreement; redirects</td>
+        <td class="sent-types">
+          <span class="sent-check">D</span>
+          <span class="sent-check">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Eigentlich hast du nicht recht.</span><br><span class="de-example">Was machst du eigentlich?</span></td>
+        <td><span class="en-approx">"actually," "really," "when you get down to it"</span></td>
+        <td><span class="tone">Probing, gently corrective, curious</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--fear);">etwa</span><br><span class="func-tag tag-fear">Negative Expectation</span></td>
+        <td>Marks a question as something the speaker hopes is NOT the case</td>
+        <td class="sent-types">
+          <span class="sent-x">D</span>
+          <span class="sent-check">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Hast du etwa geschlafen?</span><br><span class="de-example">Ist das etwa wahr?</span></td>
+        <td><span class="en-approx">"surely not," "don't tell me," "by any chance"</span></td>
+        <td><span class="tone">Apprehensive, accusatory, hoping-not</span></td>
+      </tr>
+      <tr>
+        <td><span class="particle-name" style="color:var(--interest);">denn</span><br><span class="func-tag tag-interest">Interest/Impatience</span></td>
+        <td>Marks a question as genuinely interested or slightly impatient</td>
+        <td class="sent-types">
+          <span class="sent-x">D</span>
+          <span class="sent-check">Q</span>
+          <span class="sent-x">I</span>
+          <span class="sent-x">E</span>
+        </td>
+        <td><span class="de-example">Was ist denn los?</span><br><span class="de-example">Wo bist du denn?</span></td>
+        <td><span class="en-approx">"then," "so," emphasis via intonation</span></td>
+        <td><span class="tone">Curious, engaged, mildly impatient</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="text-align:center; margin-top:0.8rem; font-size:0.75rem; color:var(--muted);">
+    Sentence types: <span class="sent-check">D</span> = Declarative &nbsp; <span class="sent-check">Q</span> = Question &nbsp; <span class="sent-check">I</span> = Imperative &nbsp; <span class="sent-check">E</span> = Exclamative &nbsp; | &nbsp; <span style="color:var(--check);">Green</span> = particle can appear &nbsp; <span style="color:var(--x-mark);">Red</span> = particle cannot appear
+  </div>
+
+  <!-- Common Combinations -->
+  <div class="combo-section">
+    <h3>Common Particle Combinations</h3>
+    <div class="combo-grid">
+      <div class="combo-card">
+        <div class="combo-name">doch mal</div>
+        <div class="combo-de">"Komm doch mal vorbei!"</div>
+        <div class="combo-en">= "Do come by sometime!" (overcome hesitation + keep it casual)</div>
+      </div>
+      <div class="combo-card">
+        <div class="combo-name">ja doch</div>
+        <div class="combo-de">"Das habe ich ja doch gesagt!"</div>
+        <div class="combo-en">= "I DID say that, you know!" (shared knowledge + contradiction)</div>
+      </div>
+      <div class="combo-card">
+        <div class="combo-name">ja wohl</div>
+        <div class="combo-de">"Das ist ja wohl klar."</div>
+        <div class="combo-en">= "That should be obvious." (shared knowledge + probability/emphasis)</div>
+      </div>
+      <div class="combo-card">
+        <div class="combo-name">doch mal eben</div>
+        <div class="combo-de">"Kannst du doch mal eben helfen?"</div>
+        <div class="combo-en">= "Could you just quickly help?" (three particles, three layers of softening)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- English Comparison -->
+  <div class="en-comparison">
+    <h4>ENGLISH COMPARISON -- No Equivalent Class</h4>
+    <p>English has no formal grammatical class of modal particles. The pragmatic work German concentrates in 9 dedicated, syntactically identifiable words is distributed in English across: <strong>intonation</strong> ("That IS true"), <strong>hedging words</strong> ("just," "you know," "actually"), <strong>tag questions</strong> ("isn't it?"), <strong>discourse markers</strong> ("well," "so"), and <strong>modal verbs</strong> ("could you possibly...").</p>
+    <p style="margin-top: 0.5rem;"><strong>The pattern:</strong> German has a <em>unified system</em>; English has <em>scattered workarounds</em>. For a pattern learner, the German system is paradoxically <em>easier</em> to master once you recognize it as a single class with learnable rules.</p>
+  </div>
+
+  <figcaption>
+    Modal particles are the single strongest marker of native-like German fluency. Their absence marks a speaker as non-native more reliably than any accent or grammatical error. Each particle has a learnable core meaning and systematic combinatorial behavior.
+  </figcaption>
+</figure>
+</body>
+</html>

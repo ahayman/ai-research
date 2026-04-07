@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strong vs. Weak vs. Mixed Verb Classification Flowchart</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --strong: #8b5cf6;
+    --strong-bg: #f5f3ff;
+    --weak: #10b981;
+    --weak-bg: #ecfdf5;
+    --mixed: #f59e0b;
+    --mixed-bg: #fffbeb;
+    --question: #3b82f6;
+    --question-bg: #eff6ff;
+    --muted: #6c757d;
+    --en-color: #6b7280;
+    --en-bg: #f3f4f6;
+    --yes: #10b981;
+    --no: #e63946;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --strong: #a78bfa;
+      --strong-bg: #1e1b3a;
+      --weak: #34d399;
+      --weak-bg: #132e24;
+      --mixed: #fbbf24;
+      --mixed-bg: #2a2510;
+      --question: #60a5fa;
+      --question-bg: #1e293b;
+      --muted: #9a9ab0;
+      --en-color: #9ca3af;
+      --en-bg: #1f2937;
+      --yes: #34d399;
+      --no: #ff6b6b;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .start-node {
+    background: var(--question-bg);
+    border: 2px solid var(--question);
+    border-radius: 50px;
+    padding: 0.8rem 2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--question);
+  }
+
+  .arrow-down {
+    width: 2px;
+    height: 30px;
+    background: var(--border);
+    position: relative;
+  }
+  .arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--border);
+  }
+
+  .question-node {
+    background: var(--question-bg);
+    border: 2px solid var(--question);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-align: center;
+    max-width: 500px;
+    position: relative;
+  }
+  .question-node::before {
+    content: '?';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--question);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.75rem;
+  }
+
+  .branch-row {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  .branch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .branch-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .branch-label.yes { background: var(--weak-bg); color: var(--yes); }
+  .branch-label.no { background: var(--strong-bg); color: var(--no); }
+
+  .result-card {
+    border: 3px solid;
+    border-radius: 14px;
+    padding: 1.2rem;
+    min-width: 280px;
+    max-width: 340px;
+  }
+  .result-card.strong { border-color: var(--strong); background: var(--strong-bg); }
+  .result-card.weak { border-color: var(--weak); background: var(--weak-bg); }
+  .result-card.mixed { border-color: var(--mixed); background: var(--mixed-bg); }
+
+  .result-title {
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .result-card.strong .result-title { color: var(--strong); }
+  .result-card.weak .result-title { color: var(--weak); }
+  .result-card.mixed .result-title { color: var(--mixed); }
+
+  .result-count {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .result-formula {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.8rem;
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .result-formula .highlight-strong { color: var(--strong); font-weight: 700; }
+  .result-formula .highlight-weak { color: var(--weak); font-weight: 700; }
+  .result-formula .highlight-mixed { color: var(--mixed); font-weight: 700; }
+
+  .example-box {
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+  }
+  .example-box .de { font-weight: 600; }
+  .example-box .en { color: var(--en-color); font-style: italic; font-size: 0.75rem; }
+
+  .default-badge {
+    display: inline-block;
+    background: var(--weak);
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.4rem;
+  }
+
+  .connector-line {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    position: relative;
+  }
+  .connector-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 60%;
+    height: 2px;
+    background: var(--border);
+  }
+  .connector-line .left-drop, .connector-line .right-drop {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 40px;
+    background: var(--border);
+  }
+  .connector-line .left-drop { left: 20%; }
+  .connector-line .right-drop { right: 20%; }
+  .connector-line .left-drop::after, .connector-line .right-drop::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--border);
+  }
+
+  .three-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .en-comparison {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--en-bg);
+    border: 2px solid var(--en-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+  .en-comparison h4 { color: var(--en-color); margin-bottom: 0.5rem; }
+  .en-comparison table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 0.5rem; }
+  .en-comparison th, .en-comparison td { padding: 0.4rem 0.6rem; border: 1px solid var(--border); text-align: left; }
+  .en-comparison th { font-weight: 700; background: var(--bg); font-size: 0.72rem; text-transform: uppercase; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 900px) {
+    .three-results { grid-template-columns: 1fr; }
+    .result-card { min-width: auto; max-width: 100%; }
+    figure { padding: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Strong vs. Weak vs. Mixed</h2>
+  <p class="subtitle">A decision tree for classifying any German verb and predicting its past-tense formation.</p>
+
+  <div class="flowchart">
+    <div class="start-node">Any German Verb</div>
+    <div class="arrow-down"></div>
+
+    <div class="question-node">Does the stem vowel change in the past tense?<br><span style="font-size:0.78rem;color:var(--muted);font-weight:400;">Compare: infinitive stem vs. Pr&auml;teritum stem</span></div>
+
+    <div style="display:flex;width:100%;justify-content:center;gap:0;margin-top:0.3rem;">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+        <div class="branch-label no" style="margin-bottom:0.3rem;">No vowel change</div>
+        <div class="arrow-down" style="height:20px;"></div>
+        <div class="result-card weak" style="max-width:100%;min-width:auto;">
+          <div class="result-title">Weak Verb (Schwaches Verb) <span class="result-count">~thousands</span></div>
+          <div class="result-formula">
+            Past: stem + <span class="highlight-weak">-te</span><br>
+            Participle: <span class="highlight-weak">ge-</span> + stem + <span class="highlight-weak">-t</span>
+          </div>
+          <div class="example-box">
+            <div class="de">machen &rarr; mach<b>te</b> &rarr; <b>ge</b>mach<b>t</b></div>
+            <div class="de">spielen &rarr; spiel<b>te</b> &rarr; <b>ge</b>spiel<b>t</b></div>
+            <div class="en">Parallel: make &rarr; make-d, play &rarr; play-ed</div>
+          </div>
+          <div class="default-badge">Default class -- all new verbs go here</div>
+        </div>
+      </div>
+
+      <div style="flex:1.6;display:flex;flex-direction:column;align-items:center;">
+        <div class="branch-label yes" style="margin-bottom:0.3rem;">Yes, vowel changes</div>
+        <div class="arrow-down" style="height:20px;"></div>
+
+        <div class="question-node" style="max-width:420px;">Does the past tense also add a <strong>-te</strong> dental suffix?</div>
+
+        <div style="display:flex;width:100%;justify-content:center;gap:0;margin-top:0.3rem;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+            <div class="branch-label no" style="margin-bottom:0.3rem;">No -te suffix</div>
+            <div class="arrow-down" style="height:20px;"></div>
+            <div class="result-card strong">
+              <div class="result-title">Strong Verb (Starkes Verb) <span class="result-count">~170</span></div>
+              <div class="result-formula">
+                Past: <span class="highlight-strong">ablaut</span> (vowel change only)<br>
+                Participle: <span class="highlight-strong">ge-</span> + stem + <span class="highlight-strong">-en</span>
+              </div>
+              <div class="example-box">
+                <div class="de">s<b>i</b>ngen &rarr; s<b>a</b>ng &rarr; <b>ge</b>s<b>u</b>ng<b>en</b></div>
+                <div class="de">spr<b>e</b>chen &rarr; spr<b>a</b>ch &rarr; <b>ge</b>spr<b>o</b>ch<b>en</b></div>
+                <div class="en">Parallel: sing/sang/sung, speak/spoke/spoken</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+            <div class="branch-label yes" style="margin-bottom:0.3rem;">Yes, -te suffix too</div>
+            <div class="arrow-down" style="height:20px;"></div>
+            <div class="result-card mixed">
+              <div class="result-title">Mixed Verb (Gemischtes Verb) <span class="result-count">~9</span></div>
+              <div class="result-formula">
+                Past: <span class="highlight-mixed">ablaut</span> + <span class="highlight-mixed">-te</span><br>
+                Participle: <span class="highlight-mixed">ge-</span> + stem + <span class="highlight-mixed">-t</span>
+              </div>
+              <div class="example-box">
+                <div class="de">d<b>e</b>nken &rarr; d<b>a</b>ch<b>te</b> &rarr; <b>ge</b>d<b>a</b>ch<b>t</b></div>
+                <div class="de">br<b>i</b>ngen &rarr; br<b>a</b>ch<b>te</b> &rarr; <b>ge</b>br<b>a</b>ch<b>t</b></div>
+                <div class="en">Parallel: think/thought, bring/brought</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-comparison">
+    <h4>English Parallel -- The Same Three Types</h4>
+    <p>English inherited all three verb classes from Proto-Germanic. The dental suffix in English <em>-ed</em> is cognate with German <em>-te/-t</em>.</p>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>German Example</th><th>English Cognate</th><th>Mechanism</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--strong);font-weight:700;">Strong</td>
+          <td>singen / sang / gesungen</td>
+          <td>sing / sang / sung</td>
+          <td>Vowel change only</td>
+        </tr>
+        <tr>
+          <td style="color:var(--weak);font-weight:700;">Weak</td>
+          <td>machen / machte / gemacht</td>
+          <td>make / made / made</td>
+          <td>Dental suffix only (-te / -ed)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--mixed);font-weight:700;">Mixed</td>
+          <td>denken / dachte / gedacht</td>
+          <td>think / thought / thought</td>
+          <td>Vowel change + dental suffix</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figcaption>
+    <strong>Three Verb Classes: A Two-Question Decision Tree</strong>
+    <span>Two questions classify any German verb: (1) Does the vowel change? (2) Does it add -te? "No + No" = impossible. "No + Yes" = weak. "Yes + No" = strong. "Yes + Yes" = mixed. Weak is the productive default; strong is a closed class of ~170; mixed is a tiny hybrid of ~9.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morphological Synthesis Spectrum</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0a0e1a; color: #e0e0e0; min-height: 100vh; padding: 2rem 1rem; }
+  h1 { text-align: center; font-size: 1.5rem; color: #fff; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; color: #8899bb; font-size: 0.9rem; margin-bottom: 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* Spectrum bar */
+  .spectrum-section { margin-bottom: 2rem; }
+
+  .axis-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #667;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .spectrum-bar {
+    height: 50px;
+    border-radius: 25px;
+    background: linear-gradient(to right, #1a3a5f, #1f4a3a, #3a3a1a, #4a2a1a, #5a1a1a);
+    position: relative;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .lang-marker {
+    position: absolute;
+    top: -8px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .lang-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-bottom: 2px;
+    position: relative;
+    top: 22px;
+    z-index: 2;
+  }
+  .lang-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    position: relative;
+    top: 26px;
+    text-align: center;
+  }
+  .lang-index {
+    font-size: 0.6rem;
+    color: #888;
+    position: relative;
+    top: 26px;
+  }
+
+  /* Language cards below spectrum */
+  .lang-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.8rem;
+    margin-top: 3.5rem;
+  }
+
+  .lang-card {
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .lang-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 4px;
+    height: 100%;
+  }
+
+  .lang-card h3 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .lang-card .type-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .lang-card .sample { font-size: 0.78rem; color: #bbb; line-height: 1.5; margin-bottom: 0.3rem; }
+  .lang-card .sample em { color: #fbbf24; font-style: normal; font-weight: 600; }
+  .lang-card .morph-detail { font-size: 0.7rem; color: #888; }
+
+  .card-chinese { background: linear-gradient(135deg, #0f1f35, #14293f); border: 1px solid rgba(59,130,246,0.3); }
+  .card-chinese::before { background: #3b82f6; }
+  .card-chinese h3 { color: #93c5fd; }
+  .card-chinese .type-label { color: #60a5fa; }
+
+  .card-english { background: linear-gradient(135deg, #0f2535, #14303f); border: 1px solid rgba(34,211,238,0.3); }
+  .card-english::before { background: #22d3ee; }
+  .card-english h3 { color: #a5f3fc; }
+  .card-english .type-label { color: #67e8f9; }
+
+  .card-french { background: linear-gradient(135deg, #1a1f2f, #202a3a); border: 1px solid rgba(139,92,246,0.3); }
+  .card-french::before { background: #8b5cf6; }
+  .card-french h3 { color: #c4b5fd; }
+  .card-french .type-label { color: #a78bfa; }
+
+  .card-german { background: linear-gradient(135deg, #1f1f0f, #2a2a14); border: 2px solid rgba(251,191,36,0.5); }
+  .card-german::before { background: #fbbf24; }
+  .card-german h3 { color: #fde68a; }
+  .card-german .type-label { color: #fbbf24; }
+
+  .card-arabic { background: linear-gradient(135deg, #1f1a0f, #2a2214); border: 1px solid rgba(249,115,22,0.3); }
+  .card-arabic::before { background: #f97316; }
+  .card-arabic h3 { color: #fdba74; }
+  .card-arabic .type-label { color: #fb923c; }
+
+  /* Gap highlight */
+  .gap-section {
+    margin-top: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(135deg, #111827, #1a2332);
+    border: 2px solid rgba(251,191,36,0.3);
+    border-radius: 12px;
+  }
+  .gap-section h3 { color: #fbbf24; font-size: 1rem; margin-bottom: 0.6rem; }
+
+  .gap-visual {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .gap-lang {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .gap-eng { background: rgba(34,211,238,0.15); color: #67e8f9; border: 1px solid rgba(34,211,238,0.3); }
+  .gap-ger { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .gap-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+  }
+  .gap-arrow-line {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(to right, #67e8f9, #fbbf24);
+    position: relative;
+  }
+  .gap-arrow-label {
+    font-size: 0.7rem;
+    color: #fbbf24;
+    margin-top: 0.3rem;
+    white-space: nowrap;
+  }
+
+  .gap-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.4rem;
+  }
+  .gap-feature {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.6rem;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.15);
+    border-radius: 5px;
+    color: #ddd;
+  }
+  .gap-feature strong { color: #fbbf24; }
+
+  /* What each category is */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .type-box {
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .type-box h4 { font-size: 0.75rem; color: #aab; margin-bottom: 0.2rem; }
+  .type-box p { font-size: 0.7rem; color: #777; line-height: 1.4; }
+
+  @media (max-width: 700px) {
+    .lang-cards { grid-template-columns: 1fr; }
+    .gap-features { grid-template-columns: 1fr; }
+    body { padding: 1rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Morphological Synthesis Spectrum</h1>
+<p class="subtitle">Where German and English sit relative to world languages</p>
+
+<div class="container">
+
+  <div class="spectrum-section">
+    <div class="axis-labels">
+      <span>Maximally Analytic</span>
+      <span>Maximally Synthetic</span>
+    </div>
+    <div class="spectrum-bar">
+      <!-- Chinese: ~8% from left -->
+      <div class="lang-marker" style="left:8%">
+        <div class="lang-dot" style="background:#3b82f6"></div>
+        <div class="lang-label" style="color:#93c5fd">Chinese</div>
+        <div class="lang-index">~1.0</div>
+      </div>
+      <!-- English: ~25% -->
+      <div class="lang-marker" style="left:25%">
+        <div class="lang-dot" style="background:#22d3ee"></div>
+        <div class="lang-label" style="color:#a5f3fc">English</div>
+        <div class="lang-index">~1.5-1.7</div>
+      </div>
+      <!-- French: ~38% -->
+      <div class="lang-marker" style="left:38%">
+        <div class="lang-dot" style="background:#8b5cf6"></div>
+        <div class="lang-label" style="color:#c4b5fd">French</div>
+        <div class="lang-index">~1.8-2.0</div>
+      </div>
+      <!-- German: ~46% -->
+      <div class="lang-marker" style="left:46%">
+        <div class="lang-dot" style="background:#fbbf24;width:18px;height:18px;top:20px"></div>
+        <div class="lang-label" style="color:#fde68a;font-size:0.8rem">German</div>
+        <div class="lang-index">~2.0-2.2</div>
+      </div>
+      <!-- Arabic: ~62% -->
+      <div class="lang-marker" style="left:62%">
+        <div class="lang-dot" style="background:#f97316"></div>
+        <div class="lang-label" style="color:#fdba74">Arabic</div>
+        <div class="lang-index">~2.5-3.0</div>
+      </div>
+      <!-- Latin: ~68% -->
+      <div class="lang-marker" style="left:68%">
+        <div class="lang-dot" style="background:#ef4444"></div>
+        <div class="lang-label" style="color:#fca5a5">Latin</div>
+        <div class="lang-index">~2.5-3.0</div>
+      </div>
+      <!-- Turkish: ~78% -->
+      <div class="lang-marker" style="left:78%">
+        <div class="lang-dot" style="background:#ec4899"></div>
+        <div class="lang-label" style="color:#f9a8d4">Turkish</div>
+        <div class="lang-index">~2.5-3.5</div>
+      </div>
+      <!-- Inuktitut: ~92% -->
+      <div class="lang-marker" style="left:92%">
+        <div class="lang-dot" style="background:#a855f7"></div>
+        <div class="lang-label" style="color:#d8b4fe">Inuktitut</div>
+        <div class="lang-index">3.0+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language comparison cards -->
+  <div class="lang-cards">
+    <div class="lang-card card-chinese">
+      <div class="type-label">Isolating / Analytic</div>
+      <h3>Mandarin Chinese</h3>
+      <div class="sample"><em>wo zuotian mai le yi ben shu</em><br>"I yesterday buy PERF one CL book"</div>
+      <div class="morph-detail">7 words for "I bought a book yesterday." One morpheme per word. No inflection. Grammar via word order + particles.</div>
+    </div>
+
+    <div class="lang-card card-english">
+      <div class="type-label">Weakly Synthetic</div>
+      <h3>English</h3>
+      <div class="sample"><em>I bought a book yesterday</em></div>
+      <div class="morph-detail">5 words. "bought" = buy + past (fused). Max 5 verb forms. 2 noun forms. Invariable adjectives. Heavy auxiliary use.</div>
+    </div>
+
+    <div class="lang-card card-french">
+      <div class="type-label">Moderately Synthetic (Verb-Heavy)</div>
+      <h3>French</h3>
+      <div class="sample"><em>J'ai achete un livre hier</em></div>
+      <div class="morph-detail">5 words. 50+ verb forms per verb. 2-gender agreement. Clitic pronouns. More synthesis in verbs; less in nouns than German.</div>
+    </div>
+
+    <div class="lang-card card-german">
+      <div class="type-label">Moderately Synthetic (Fusional)</div>
+      <h3>German</h3>
+      <div class="sample"><em>Ich kaufte gestern ein Buch</em></div>
+      <div class="morph-detail">5 words. "kaufte" encodes past + 1st/3rd sg. "ein" encodes indef + neut + acc. 4 cases, 3 genders, adjective declension, productive compounding.</div>
+    </div>
+
+    <div class="lang-card card-arabic">
+      <div class="type-label">Heavily Synthetic (Nonconcatenative)</div>
+      <h3>Arabic</h3>
+      <div class="sample"><em>ishtaraytu kitaban amsi</em></div>
+      <div class="morph-detail">3 words. "ishtaraytu" = root sh-r-y + Form VIII + 1sg. Root-and-pattern morphology. 10+ verb forms. Dual number. Rich agreement.</div>
+    </div>
+  </div>
+
+  <!-- THE GAP -->
+  <div class="gap-section">
+    <h3>The English-German Gap: Where the Learning Challenges Live</h3>
+    <div class="gap-visual">
+      <span class="gap-lang gap-eng">English ~1.6</span>
+      <div class="gap-arrow">
+        <div class="gap-arrow-line"></div>
+        <div class="gap-arrow-label">This gap = what English lost</div>
+      </div>
+      <span class="gap-lang gap-ger">German ~2.1</span>
+    </div>
+    <div class="gap-features">
+      <div class="gap-feature"><strong>Case system</strong> (4 cases vs. 0)</div>
+      <div class="gap-feature"><strong>Gender</strong> (3 genders vs. 0)</div>
+      <div class="gap-feature"><strong>Adjective declension</strong> (48 slots vs. 0)</div>
+      <div class="gap-feature"><strong>V2 word order</strong> (flexible vs. rigid)</div>
+      <div class="gap-feature"><strong>Article complexity</strong> (16 forms vs. 2)</div>
+      <div class="gap-feature"><strong>Subjunctive</strong> (productive vs. vestigial)</div>
+    </div>
+  </div>
+
+  <!-- Morphological type definitions -->
+  <div class="type-grid">
+    <div class="type-box">
+      <h4>Analytic (Isolating)</h4>
+      <p>One morpheme per word. Grammar via word order, particles, separate function words. Chinese is the canonical example.</p>
+    </div>
+    <div class="type-box">
+      <h4>Fusional</h4>
+      <p>One affix encodes multiple categories simultaneously. German "dem" = dative + masculine + singular. Most Indo-European languages.</p>
+    </div>
+    <div class="type-box">
+      <h4>Agglutinative</h4>
+      <p>Multiple affixes, each encoding one category, strung together transparently. Turkish: ev-ler-im-den = house-PL-my-from.</p>
+    </div>
+    <div class="type-box">
+      <h4>Polysynthetic</h4>
+      <p>Entire sentences packed into single words with many morphemes. Inuktitut can express a full clause as one word.</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

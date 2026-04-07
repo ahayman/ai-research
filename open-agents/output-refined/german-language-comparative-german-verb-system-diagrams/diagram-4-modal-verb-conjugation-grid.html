@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modal Verb Conjugation Grid</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --singular: #e63946;
+    --singular-bg: #fef2f2;
+    --plural: #3b82f6;
+    --plural-bg: #eff6ff;
+    --vowel-change: #f59e0b;
+    --vowel-change-bg: #fffbeb;
+    --zero-end: #8b5cf6;
+    --zero-end-bg: #f5f3ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --muted: #6c757d;
+    --danger: #e63946;
+    --umlaut: #e63946;
+    --umlaut-bg: #fef2f2;
+    --kii: #8b5cf6;
+    --kii-bg: #f5f3ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --singular: #ff6b6b;
+      --singular-bg: #2a1515;
+      --plural: #60a5fa;
+      --plural-bg: #1e293b;
+      --vowel-change: #fbbf24;
+      --vowel-change-bg: #2a2510;
+      --zero-end: #a78bfa;
+      --zero-end-bg: #1e1b3a;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --muted: #9a9ab0;
+      --danger: #ff6b6b;
+      --umlaut: #ff6b6b;
+      --umlaut-bg: #2a1515;
+      --kii: #a78bfa;
+      --kii-bg: #1e1b3a;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .grid-wrapper { overflow-x: auto; }
+
+  table.modal-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 700px;
+  }
+  table.modal-grid th, table.modal-grid td {
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+  }
+  table.modal-grid th {
+    background: var(--surface);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.modal-grid th.modal-header {
+    font-size: 0.9rem;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  table.modal-grid th .meaning {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-transform: none;
+    margin-top: 0.15rem;
+  }
+
+  .vowel-highlight {
+    color: var(--vowel-change);
+    font-weight: 800;
+  }
+  .singular-row td { background: var(--singular-bg); }
+  .plural-row td { background: var(--plural-bg); }
+  .zero-marker {
+    font-size: 0.6rem;
+    color: var(--zero-end);
+    display: block;
+    font-weight: 700;
+  }
+  .false-friend {
+    color: var(--danger);
+    font-weight: 700;
+  }
+  .false-friend-note {
+    font-size: 0.62rem;
+    color: var(--danger);
+    display: block;
+  }
+
+  .row-label {
+    font-weight: 700;
+    white-space: nowrap;
+    background: var(--surface) !important;
+  }
+
+  .section-label {
+    text-align: center;
+    font-weight: 700;
+    padding: 0.6rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .section-label.sing { color: var(--singular); background: var(--singular-bg); }
+  .section-label.plur { color: var(--plural); background: var(--plural-bg); }
+
+  .pattern-boxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .pattern-box {
+    padding: 1rem;
+    border-radius: 10px;
+    border: 2px solid;
+    font-size: 0.82rem;
+  }
+  .pattern-box h4 { margin-bottom: 0.4rem; font-size: 0.88rem; }
+
+  .pattern-box.umlaut-cycle { border-color: var(--umlaut); background: var(--umlaut-bg); }
+  .pattern-box.umlaut-cycle h4 { color: var(--umlaut); }
+
+  .pattern-box.kii-forms { border-color: var(--kii); background: var(--kii-bg); }
+  .pattern-box.kii-forms h4 { color: var(--kii); }
+
+  .cycle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0.3rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+  }
+  .cycle-arrow { color: var(--muted); font-weight: 700; }
+  .cycle-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-left: 0.3rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .en-panel {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--en-bg);
+    border: 2px solid var(--en-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+  .en-panel h4 { color: var(--en-color); margin-bottom: 0.5rem; }
+  .en-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .en-item {
+    padding: 0.4rem 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.78rem;
+  }
+  .en-item .de-word { font-weight: 700; }
+  .en-item .en-word { color: var(--en-color); }
+  .en-item .defective { color: var(--danger); font-size: 0.68rem; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+    font-size: 0.78rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-swatch {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 800px) {
+    figure { padding: 1.2rem; }
+    table.modal-grid { font-size: 0.75rem; }
+    table.modal-grid th, table.modal-grid td { padding: 0.35rem; }
+    .pattern-boxes { grid-template-columns: 1fr; }
+    .en-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Six Modal Verbs -- Present Tense</h2>
+  <p class="subtitle">All modals share the same irregular pattern: singular vowel change, zero ending on 1st/3rd person, identical 1st = 3rd person.</p>
+
+  <div class="grid-wrapper">
+  <table class="modal-grid">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="modal-header">d&uuml;rfen<span class="meaning">may / be allowed</span></th>
+        <th class="modal-header">k&ouml;nnen<span class="meaning">can / be able</span></th>
+        <th class="modal-header">m&ouml;gen<span class="meaning">like / may</span></th>
+        <th class="modal-header">m&uuml;ssen<span class="meaning">must / have to</span></th>
+        <th class="modal-header">sollen<span class="meaning">should / ought</span></th>
+        <th class="modal-header"><span class="false-friend">wollen</span><span class="meaning">want to</span><span class="false-friend-note">&#x26a0; not "will"!</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="7" class="section-label sing">Singular -- vowel changes</td></tr>
+      <tr class="singular-row">
+        <td class="row-label">ich</td>
+        <td>d<span class="vowel-highlight">a</span>rf <span class="zero-marker">(no -e)</span></td>
+        <td>k<span class="vowel-highlight">a</span>nn <span class="zero-marker">(no -e)</span></td>
+        <td>m<span class="vowel-highlight">a</span>g <span class="zero-marker">(no -e)</span></td>
+        <td>m<span class="vowel-highlight">u</span>ss <span class="zero-marker">(no -e)</span></td>
+        <td>soll <span class="zero-marker">(no -e)</span></td>
+        <td><span class="false-friend">w<span class="vowel-highlight">i</span>ll</span> <span class="zero-marker">(no -e)</span></td>
+      </tr>
+      <tr class="singular-row">
+        <td class="row-label">du</td>
+        <td>d<span class="vowel-highlight">a</span>rfst</td>
+        <td>k<span class="vowel-highlight">a</span>nnst</td>
+        <td>m<span class="vowel-highlight">a</span>gst</td>
+        <td>m<span class="vowel-highlight">u</span>sst</td>
+        <td>sollst</td>
+        <td><span class="false-friend">w<span class="vowel-highlight">i</span>llst</span></td>
+      </tr>
+      <tr class="singular-row">
+        <td class="row-label">er/sie/es</td>
+        <td>d<span class="vowel-highlight">a</span>rf <span class="zero-marker">(no -t)</span></td>
+        <td>k<span class="vowel-highlight">a</span>nn <span class="zero-marker">(no -t)</span></td>
+        <td>m<span class="vowel-highlight">a</span>g <span class="zero-marker">(no -t)</span></td>
+        <td>m<span class="vowel-highlight">u</span>ss <span class="zero-marker">(no -t)</span></td>
+        <td>soll <span class="zero-marker">(no -t)</span></td>
+        <td><span class="false-friend">w<span class="vowel-highlight">i</span>ll</span> <span class="zero-marker">(no -t)</span></td>
+      </tr>
+      <tr><td colspan="7" class="section-label plur">Plural -- base vowel restored</td></tr>
+      <tr class="plural-row">
+        <td class="row-label">wir</td>
+        <td>d<span class="vowel-highlight">&uuml;</span>rfen</td>
+        <td>k<span class="vowel-highlight">&ouml;</span>nnen</td>
+        <td>m<span class="vowel-highlight">&ouml;</span>gen</td>
+        <td>m<span class="vowel-highlight">&uuml;</span>ssen</td>
+        <td>sollen</td>
+        <td>wollen</td>
+      </tr>
+      <tr class="plural-row">
+        <td class="row-label">ihr</td>
+        <td>d<span class="vowel-highlight">&uuml;</span>rft</td>
+        <td>k<span class="vowel-highlight">&ouml;</span>nnt</td>
+        <td>m<span class="vowel-highlight">&ouml;</span>gt</td>
+        <td>m<span class="vowel-highlight">&uuml;</span>sst</td>
+        <td>sollt</td>
+        <td>wollt</td>
+      </tr>
+      <tr class="plural-row">
+        <td class="row-label">sie/Sie</td>
+        <td>d<span class="vowel-highlight">&uuml;</span>rfen</td>
+        <td>k<span class="vowel-highlight">&ouml;</span>nnen</td>
+        <td>m<span class="vowel-highlight">&ouml;</span>gen</td>
+        <td>m<span class="vowel-highlight">&uuml;</span>ssen</td>
+        <td>sollen</td>
+        <td>wollen</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="pattern-boxes">
+    <div class="pattern-box umlaut-cycle">
+      <h4>The Umlaut Cycle: Present &rarr; Past &rarr; KII</h4>
+      <div class="cycle-row">
+        k<span class="vowel-highlight">&ouml;</span>nnen <span class="cycle-arrow">&rarr;</span> k<span class="vowel-highlight">o</span>nnte <span class="cycle-arrow">&rarr;</span> k<span class="vowel-highlight">&ouml;</span>nnte
+        <span class="cycle-label">umlaut &rarr; lost &rarr; returns</span>
+      </div>
+      <div class="cycle-row">
+        d<span class="vowel-highlight">&uuml;</span>rfen <span class="cycle-arrow">&rarr;</span> d<span class="vowel-highlight">u</span>rfte <span class="cycle-arrow">&rarr;</span> d<span class="vowel-highlight">&uuml;</span>rfte
+        <span class="cycle-label">umlaut &rarr; lost &rarr; returns</span>
+      </div>
+      <div class="cycle-row">
+        m<span class="vowel-highlight">&uuml;</span>ssen <span class="cycle-arrow">&rarr;</span> m<span class="vowel-highlight">u</span>sste <span class="cycle-arrow">&rarr;</span> m<span class="vowel-highlight">&uuml;</span>sste
+        <span class="cycle-label">umlaut &rarr; lost &rarr; returns</span>
+      </div>
+      <div class="cycle-row">
+        m<span class="vowel-highlight">&ouml;</span>gen <span class="cycle-arrow">&rarr;</span> m<span class="vowel-highlight">o</span>chte <span class="cycle-arrow">&rarr;</span> m<span class="vowel-highlight">&ouml;</span>chte
+        <span class="cycle-label">umlaut &rarr; lost &rarr; returns</span>
+      </div>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:0.4rem;">sollen/sollte/sollte and wollen/wollte/wollte have no umlaut to lose.</p>
+    </div>
+
+    <div class="pattern-box kii-forms">
+      <h4>Konjunktiv II Forms (Polite / Hypothetical)</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem 1rem;font-size:0.82rem;">
+        <div><strong>k&ouml;nnte</strong> = could</div>
+        <div><strong>d&uuml;rfte</strong> = might / could I</div>
+        <div><strong>m&uuml;sste</strong> = would have to</div>
+        <div><strong>m&ouml;chte</strong> = would like</div>
+        <div><strong>sollte</strong> = should (same form)</div>
+        <div><strong>wollte</strong> = wanted (same form)</div>
+      </div>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;"><strong>m&ouml;chte</strong> (would like) is so common it functions as its own verb in everyday speech: "Ich m&ouml;chte ein Bier" (I'd like a beer).</p>
+    </div>
+  </div>
+
+  <div class="en-panel">
+    <h4>English Modals: Same Origin, Now Defective</h4>
+    <p>English modals share the same Pr&auml;teritopräsentia origin (present forms from old past tenses) but have become defective -- no infinitive, no participle, no conjugated forms.</p>
+    <div class="en-grid">
+      <div class="en-item">
+        <div class="de-word">k&ouml;nnen</div>
+        <div class="en-word">can</div>
+        <div class="defective">No: *to can, *canning, *he cans</div>
+      </div>
+      <div class="en-item">
+        <div class="de-word">m&uuml;ssen</div>
+        <div class="en-word">must</div>
+        <div class="defective">No past, no infinitive, no participle</div>
+      </div>
+      <div class="en-item">
+        <div class="de-word">d&uuml;rfen</div>
+        <div class="en-word">may</div>
+        <div class="defective">No: *to may, *maying</div>
+      </div>
+      <div class="en-item">
+        <div class="de-word">sollen</div>
+        <div class="en-word">shall / should</div>
+        <div class="defective">Mostly replaced by "should"</div>
+      </div>
+      <div class="en-item">
+        <div class="de-word">wollen</div>
+        <div class="en-word">want to</div>
+        <div class="defective">&#x26a0; NOT English "will" (= future)</div>
+      </div>
+      <div class="en-item">
+        <div class="de-word">m&ouml;gen</div>
+        <div class="en-word">may / like</div>
+        <div class="defective">English "might" is its KII form</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--singular-bg); border-color: var(--singular);"></div>
+      Singular (vowel shifts)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background: var(--plural-bg); border-color: var(--plural);"></div>
+      Plural (base vowel)
+    </div>
+    <div class="legend-item">
+      <span style="color:var(--vowel-change);font-weight:800;font-size:1.1rem;">a</span>
+      Vowel change highlighted
+    </div>
+    <div class="legend-item">
+      <span style="color:var(--zero-end);font-size:0.72rem;font-weight:700;">(no -e)</span>
+      Zero ending
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Six Modals, One Pattern</strong>
+    <span>All six German modals follow the same template: the singular changes its vowel, 1st = 3rd person (no ending), the plural restores the base vowel. The umlaut disappears in the Pr&auml;teritum and returns in Konjunktiv II. The pattern is uniform -- learn one, know all six.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gender Agreement Propagation Chain</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc-color: #3b82f6;
+    --masc-bg: #eff6ff;
+    --fem-color: #ec4899;
+    --fem-bg: #fdf2f8;
+    --neut-color: #10b981;
+    --neut-bg: #ecfdf5;
+    --en-color: #6b7280;
+    --en-bg: #f3f4f6;
+    --source-color: #f59e0b;
+    --source-bg: #fffbeb;
+    --muted: #6c757d;
+    --arrow-color: #a3a3c2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc-color: #60a5fa;
+      --masc-bg: #1e293b;
+      --fem-color: #f472b6;
+      --fem-bg: #2a1525;
+      --neut-color: #34d399;
+      --neut-bg: #132e24;
+      --en-color: #9ca3af;
+      --en-bg: #1f2937;
+      --source-color: #fbbf24;
+      --source-bg: #2a2510;
+      --muted: #9a9ab0;
+      --arrow-color: #4a4a6a;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Chain row */
+  .chain-section {
+    margin-bottom: 1.8rem;
+  }
+  .chain-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+    padding-left: 0.5rem;
+  }
+  .chain-label.masc { color: var(--masc-color); }
+  .chain-label.fem { color: var(--fem-color); }
+  .chain-label.neut { color: var(--neut-color); }
+  .chain-label.en { color: var(--en-color); }
+
+  .chain-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 0.3rem;
+  }
+  .chain-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+  .chain-node .word {
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: center;
+    border: 2px solid;
+    white-space: nowrap;
+  }
+  .chain-node .role {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+    text-align: center;
+  }
+  .chain-node .ending {
+    font-size: 0.62rem;
+    font-weight: 700;
+    margin-top: 0.1rem;
+    text-align: center;
+  }
+
+  /* Masc chain */
+  .chain-section.masc .chain-node .word {
+    border-color: var(--masc-color);
+    color: var(--masc-color);
+    background: var(--masc-bg);
+  }
+  .chain-section.masc .chain-node .ending { color: var(--masc-color); }
+  .chain-section.masc .chain-node.source .word {
+    border-color: var(--source-color);
+    color: var(--source-color);
+    background: var(--source-bg);
+  }
+  /* Fem chain */
+  .chain-section.fem .chain-node .word {
+    border-color: var(--fem-color);
+    color: var(--fem-color);
+    background: var(--fem-bg);
+  }
+  .chain-section.fem .chain-node .ending { color: var(--fem-color); }
+  .chain-section.fem .chain-node.source .word {
+    border-color: var(--source-color);
+    color: var(--source-color);
+    background: var(--source-bg);
+  }
+  /* Neut chain */
+  .chain-section.neut .chain-node .word {
+    border-color: var(--neut-color);
+    color: var(--neut-color);
+    background: var(--neut-bg);
+  }
+  .chain-section.neut .chain-node .ending { color: var(--neut-color); }
+  .chain-section.neut .chain-node.source .word {
+    border-color: var(--source-color);
+    color: var(--source-color);
+    background: var(--source-bg);
+  }
+  /* En chain */
+  .chain-section.en .chain-node .word {
+    border-color: var(--en-color);
+    color: var(--en-color);
+    background: var(--en-bg);
+  }
+
+  /* Arrow between nodes */
+  .chain-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--arrow-color);
+    min-width: 28px;
+    flex-shrink: 0;
+    padding-bottom: 1.2rem;
+  }
+
+  /* Principle box */
+  .principle-box {
+    border: 2px solid var(--source-color);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    background: var(--source-bg);
+    text-align: center;
+    font-size: 0.88rem;
+  }
+  .principle-box strong { color: var(--source-color); }
+
+  /* Adjective decision */
+  .adj-decision {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .adj-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.8rem;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  .adj-card .adj-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.3rem;
+    color: var(--source-color);
+  }
+  .adj-card code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  /* Count comparison */
+  .count-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 0;
+  }
+  .count-card {
+    border-radius: 12px;
+    padding: 0.8rem;
+    text-align: center;
+    border: 2px solid;
+  }
+  .count-card.de { border-color: var(--masc-color); background: var(--masc-bg); }
+  .count-card.en { border-color: var(--en-color); background: var(--en-bg); }
+  .count-card .big-num { font-size: 2.5rem; font-weight: 800; line-height: 1.1; }
+  .count-card.de .big-num { color: var(--masc-color); }
+  .count-card.en .big-num { color: var(--en-color); }
+  .count-card .desc { font-size: 0.78rem; color: var(--muted); }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .adj-decision { grid-template-columns: 1fr; }
+    .count-row { grid-template-columns: 1fr; }
+    .chain-node { min-width: 80px; }
+    .chain-node .word { font-size: 0.82rem; padding: 0.3rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Gender Agreement Propagation Chain</h2>
+  <p class="subtitle">Gender flows from the noun outward through every element of the noun phrase and beyond into pronouns and relative clauses.</p>
+
+  <!-- MASCULINE chain -->
+  <div class="chain-section masc">
+    <div class="chain-label masc">Masculine: der Tisch (the table)</div>
+    <div class="chain-row">
+      <div class="chain-node source">
+        <span class="word">Tisch</span>
+        <span class="role">Noun (source)</span>
+        <span class="ending">MASC</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">der</span>
+        <span class="role">Article</span>
+        <span class="ending">m. nom.</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">alt<strong>e</strong></span>
+        <span class="role">Adjective (weak)</span>
+        <span class="ending">-e</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">er</span>
+        <span class="role">Pers. pronoun</span>
+        <span class="ending">he/it</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">sein</span>
+        <span class="role">Possessive</span>
+        <span class="ending">his/its</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">der</span>
+        <span class="role">Rel. pronoun</span>
+        <span class="ending">m. nom.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEMININE chain -->
+  <div class="chain-section fem">
+    <div class="chain-label fem">Feminine: die Lampe (the lamp)</div>
+    <div class="chain-row">
+      <div class="chain-node source">
+        <span class="word">Lampe</span>
+        <span class="role">Noun (source)</span>
+        <span class="ending">FEM</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">die</span>
+        <span class="role">Article</span>
+        <span class="ending">f. nom.</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">hell<strong>e</strong></span>
+        <span class="role">Adjective (weak)</span>
+        <span class="ending">-e</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">sie</span>
+        <span class="role">Pers. pronoun</span>
+        <span class="ending">she/it</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">ihr</span>
+        <span class="role">Possessive</span>
+        <span class="ending">her/its</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">die</span>
+        <span class="role">Rel. pronoun</span>
+        <span class="ending">f. nom.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEUTER chain -->
+  <div class="chain-section neut">
+    <div class="chain-label neut">Neuter: das Buch (the book)</div>
+    <div class="chain-row">
+      <div class="chain-node source">
+        <span class="word">Buch</span>
+        <span class="role">Noun (source)</span>
+        <span class="ending">NEUT</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">das</span>
+        <span class="role">Article</span>
+        <span class="ending">n. nom.</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">neu<strong>e</strong></span>
+        <span class="role">Adjective (weak)</span>
+        <span class="ending">-e</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">es</span>
+        <span class="role">Pers. pronoun</span>
+        <span class="ending">it</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">sein</span>
+        <span class="role">Possessive</span>
+        <span class="ending">its</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">das</span>
+        <span class="role">Rel. pronoun</span>
+        <span class="ending">n. nom.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENGLISH chain (grey) -->
+  <div class="chain-section en">
+    <div class="chain-label en">English: the table / the lamp / the book (zero gender marking)</div>
+    <div class="chain-row">
+      <div class="chain-node">
+        <span class="word">table</span>
+        <span class="role">Noun</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">the</span>
+        <span class="role">Article</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">old</span>
+        <span class="role">Adjective</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">it</span>
+        <span class="role">Pronoun</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">its</span>
+        <span class="role">Possessive</span>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+      <div class="chain-node">
+        <span class="word">that</span>
+        <span class="role">Rel. pronoun</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Principle -->
+  <div class="principle-box">
+    <strong>The Redundancy Principle:</strong> Somebody in the noun phrase <em>must</em> signal gender + case. If the article carries the signal (definite article), the adjective relaxes (<strong>weak</strong> endings: -e/-en only). If no article is present, the adjective steps up (<strong>strong</strong> endings: article-like). If the article is ambiguous (ein-), the adjective compensates (<strong>mixed</strong>).
+  </div>
+
+  <!-- Adjective decision -->
+  <div class="adj-decision">
+    <div class="adj-card">
+      <div class="adj-title">Strong (no article)</div>
+      <code>gut<strong>er</strong> Wein</code><br>
+      <span>Adjective mimics article endings</span>
+    </div>
+    <div class="adj-card">
+      <div class="adj-title">Weak (def. article)</div>
+      <code>der gut<strong>e</strong> Wein</code><br>
+      <span>Minimal endings: -e or -en</span>
+    </div>
+    <div class="adj-card">
+      <div class="adj-title">Mixed (indef. article)</div>
+      <code>ein gut<strong>er</strong> Wein</code><br>
+      <span>Strong where ein- is ambiguous</span>
+    </div>
+  </div>
+
+  <!-- Counts -->
+  <div class="count-row">
+    <div class="count-card de">
+      <div class="big-num">6</div>
+      <div class="desc">Gender-agreeing elements in one German sentence: article, adjective(s), pronoun, possessive, relative pronoun -- all encoding masculine, feminine, or neuter.</div>
+    </div>
+    <div class="count-card en">
+      <div class="big-num">0</div>
+      <div class="desc">Gender-agreeing elements in equivalent English. "The old table... it... its... that" -- zero gender encoding on any inanimate noun or its dependents.</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 4: Gender Agreement Propagation Chain</strong>
+    <span>Gender in German is not a local property of the noun alone -- it propagates outward through every determiner, adjective, pronoun, possessive, and relative pronoun in the sentence. A single noun like "der Tisch" (masculine) forces masculine agreement on 5+ downstream elements. The three parallel chains show how masculine (blue), feminine (pink), and neuter (green) each produce distinct forms at every node. English, shown in grey, carries zero gender information through any of these positions for inanimate nouns.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

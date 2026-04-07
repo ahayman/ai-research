@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Du/Sie Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #10b981;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #ecfdf5;
+    --du-color: #10b981;
+    --du-bg: #ecfdf5;
+    --sie-color: #3b82f6;
+    --sie-bg: #eff6ff;
+    --ambig-color: #f59e0b;
+    --ambig-bg: #fffbeb;
+    --danger-color: #e63946;
+    --danger-bg: #fef2f2;
+    --muted: #6c757d;
+    --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #34d399;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #132e24;
+      --du-color: #34d399;
+      --du-bg: #132e24;
+      --sie-color: #60a5fa;
+      --sie-bg: #1e293b;
+      --ambig-color: #fbbf24;
+      --ambig-bg: #2a2510;
+      --danger-color: #f87171;
+      --danger-bg: #2a1215;
+      --muted: #9a9ab0;
+      --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1000px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .connector { color: var(--muted); font-size: 1.2rem; line-height: 1; padding: 0.15rem 0; text-align: center; }
+  .connector-branch { display: flex; justify-content: center; gap: 3rem; width: 100%; }
+  .connector-branch .arm { display: flex; flex-direction: column; align-items: center; }
+  .arm-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .arm-label.yes { color: var(--du-color); }
+  .arm-label.no { color: var(--muted); }
+
+  .node {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.7rem 1.2rem;
+    text-align: center;
+    font-size: 0.88rem;
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+  }
+  .node-start {
+    background: var(--surface);
+    border-color: var(--accent-de);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .node-question {
+    background: var(--surface);
+    border-color: var(--border);
+    font-weight: 600;
+  }
+  .node-du {
+    background: var(--du-bg);
+    border-color: var(--du-color);
+    color: var(--du-color);
+    font-weight: 700;
+    max-width: 200px;
+  }
+  .node-sie {
+    background: var(--sie-bg);
+    border-color: var(--sie-color);
+    color: var(--sie-color);
+    font-weight: 700;
+    max-width: 260px;
+  }
+  .node-default {
+    background: var(--sie-bg);
+    border-color: var(--sie-color);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .example {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+
+  .decision-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .decision-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+  .branch-pair {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.3rem;
+  }
+
+  .safe-rule {
+    margin-top: 1.5rem;
+    background: var(--sie-bg);
+    border: 2px solid var(--sie-color);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .safe-rule .icon { font-size: 1.1rem; margin-right: 0.3rem; }
+
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem 0;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .hybrids {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .hybrid-card {
+    border: 2px solid var(--ambig-color);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.85rem;
+    background: var(--ambig-bg);
+  }
+  .hybrid-card h4 { font-size: 0.92rem; color: var(--ambig-color); margin-bottom: 0.4rem; }
+
+  .special-section {
+    margin-top: 1.5rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .special-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .special-card {
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 0.82rem;
+  }
+  .special-card .label { font-weight: 700; margin-bottom: 0.3rem; }
+
+  .who-offers {
+    margin-top: 1.5rem;
+    border: 2px solid var(--du-color);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .who-offers h4 { color: var(--du-color); margin-bottom: 0.6rem; font-size: 0.95rem; }
+  .offer-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    list-style: none;
+  }
+  .offer-list li {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--du-bg);
+    border-radius: 6px;
+    border-left: 3px solid var(--du-color);
+  }
+
+  .en-comparison {
+    margin-top: 2rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-comparison h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-comparison p { font-size: 0.88rem; }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    .hybrids, .offer-list { grid-template-columns: 1fr; }
+    .special-row { flex-direction: column; }
+    .branch-pair { flex-direction: column; align-items: center; gap: 0.5rem; }
+    figure { padding: 1.5rem; }
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Du/Sie Decision Tree</h2>
+  <p class="subtitle">Every German utterance to "you" forces a binary choice that English abandoned in 1650 -- here is how to make it</p>
+
+  <!-- Main Decision Flow -->
+  <div class="flow">
+    <div class="node node-start">New person or new interaction</div>
+    <div class="connector">|</div>
+
+    <div class="decision-step">
+      <div class="node node-question">Is this person a child (under ~16)?</div>
+      <div class="branch-pair">
+        <div class="arm">
+          <div class="arm-label yes">YES</div>
+          <div class="connector">|</div>
+          <div class="node node-du">Du<div class="example">Wie heisst du?</div></div>
+        </div>
+        <div class="arm">
+          <div class="arm-label no">NO</div>
+          <div class="connector">|</div>
+          <div class="connector" style="font-size:0.75rem; color:var(--muted);">continue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">|</div>
+    <div class="decision-step">
+      <div class="node node-question">Explicitly informal context? (party among peers, student bar, online forum, protest)</div>
+      <div class="branch-pair">
+        <div class="arm">
+          <div class="arm-label yes">YES</div>
+          <div class="connector">|</div>
+          <div class="node node-du">Du<div class="example">Bist du auch Student?</div></div>
+        </div>
+        <div class="arm">
+          <div class="arm-label no">NO</div>
+          <div class="connector">|</div>
+          <div class="connector" style="font-size:0.75rem; color:var(--muted);">continue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">|</div>
+    <div class="decision-step">
+      <div class="node node-question">Tech/startup/creative workplace with established Du-Kultur?</div>
+      <div class="branch-pair">
+        <div class="arm">
+          <div class="arm-label yes">YES</div>
+          <div class="connector">|</div>
+          <div class="node node-du">Du<div class="example">Hast du den PR reviewed?</div></div>
+        </div>
+        <div class="arm">
+          <div class="arm-label no">NO</div>
+          <div class="connector">|</div>
+          <div class="connector" style="font-size:0.75rem; color:var(--muted);">continue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">|</div>
+    <div class="decision-step">
+      <div class="node node-question">Has this person offered you Du?<div class="example">"Wollen wir uns duzen?" / "Ich bin Thomas" (first name = implicit du)</div></div>
+      <div class="branch-pair">
+        <div class="arm">
+          <div class="arm-label yes">YES</div>
+          <div class="connector">|</div>
+          <div class="node node-du">Du (permanent)<div class="example">Once offered, never reverts</div></div>
+        </div>
+        <div class="arm">
+          <div class="arm-label no">NO</div>
+          <div class="connector">|</div>
+          <div class="connector" style="font-size:0.75rem; color:var(--muted);">continue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">|</div>
+    <div class="decision-step">
+      <div class="node node-question">Are you clearly older / higher-status AND want to signal informality?</div>
+      <div class="branch-pair">
+        <div class="arm">
+          <div class="arm-label yes">YES</div>
+          <div class="connector">|</div>
+          <div class="node node-du" style="max-width:260px;">You may offer Du<div class="example">"Du kannst mich duzen"</div></div>
+        </div>
+        <div class="arm">
+          <div class="arm-label no">NO</div>
+          <div class="connector">|</div>
+          <div class="connector" style="font-size:0.75rem; color:var(--muted);">default</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">|</div>
+    <div class="node node-default" style="max-width:420px;">
+      DEFAULT: Sie + Herr/Frau + Surname
+      <div class="example">Guten Tag, Frau Muller. Konnten Sie mir bitte helfen?</div>
+    </div>
+  </div>
+
+  <div class="safe-rule">
+    <span class="icon">&#9432;</span> When in doubt, use Sie -- it is never offensive to be too formal, but premature du can offend.
+  </div>
+
+  <!-- Who Offers Du -->
+  <div class="who-offers">
+    <h4>Who Initiates the Shift to Du?</h4>
+    <ul class="offer-list">
+      <li>The <strong>older</strong> person offers to the younger</li>
+      <li>The <strong>higher-ranking</strong> person offers to the lower</li>
+      <li>A <strong>boss</strong> may offer to employees (never reverse)</li>
+      <li>Traditionally, a <strong>woman</strong> offers to a man (weakening)</li>
+      <li><strong>Long-time employees</strong> may offer to newcomers</li>
+      <li>The shift is <strong>permanent</strong> -- reverting to Sie signals relationship rupture</li>
+    </ul>
+  </div>
+
+  <!-- Hybrid Forms -->
+  <div class="section-title">Hybrid Forms -- When the Binary Feels Too Blunt</div>
+  <div class="hybrids">
+    <div class="hybrid-card">
+      <h4>Hamburger Sie</h4>
+      <strong>First name + Sie conjugation</strong>
+      <div class="example">"Thomas, konnten Sie mir helfen?"</div>
+      <div style="margin-top:0.4rem; font-size:0.82rem;">Warmth without full informality. Common in modern workplaces where neither extreme fits.</div>
+    </div>
+    <div class="hybrid-card">
+      <h4>Munchner Du</h4>
+      <strong>Herr/Frau + Surname + du conjugation</strong>
+      <div class="example">"Herr Muller, kannst du mir das geben?"</div>
+      <div style="margin-top:0.4rem; font-size:0.82rem;">Less common. Attested in Bavaria. Mixes formal address with informal grammar.</div>
+    </div>
+  </div>
+
+  <!-- Power Dynamics Layer -->
+  <div class="section-title">The Power Dynamics Layer</div>
+  <div class="special-section">
+    <div class="special-row">
+      <div class="special-card" style="border-color: var(--danger-color);">
+        <div class="label" style="color: var(--danger-color);">Du of Contempt</div>
+        Using du with a stranger to demean them. A police officer using du with a suspect. Road rage du. Signal: "I consider you beneath formal respect."
+      </div>
+      <div class="special-card" style="border-color: var(--sie-color);">
+        <div class="label" style="color: var(--sie-color);">Sie of Cold Distance</div>
+        A married couple switching from du back to Sie during a fight. A parent using Sie with a child as punishment. Signal: "I am withdrawing intimacy."
+      </div>
+      <div class="special-card" style="border-color: var(--ambig-color);">
+        <div class="label" style="color: var(--ambig-color);">The Transition Ritual</div>
+        <strong>"Wollen wir uns duzen?"</strong> -- An explicit negotiation of relationship change. Proposed by the older or higher-status person. Declining is possible but socially delicate.
+      </div>
+    </div>
+  </div>
+
+  <!-- Pronoun Cascade -->
+  <div class="section-title">The Pronoun Cascade -- Du/Sie Propagates Through Everything</div>
+  <div style="overflow-x:auto;">
+  <table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:0.5rem;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left; padding:0.5rem; font-size:0.75rem; text-transform:uppercase; color:var(--muted);">Function</th>
+        <th style="text-align:left; padding:0.5rem; color:var(--du-color); font-weight:700;">du (informal)</th>
+        <th style="text-align:left; padding:0.5rem; color:var(--sie-color); font-weight:700;">Sie (formal)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:0.4rem 0.5rem;">Subject</td>
+        <td style="padding:0.4rem 0.5rem;">du kommst</td>
+        <td style="padding:0.4rem 0.5rem;">Sie kommen</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:0.4rem 0.5rem;">Accusative</td>
+        <td style="padding:0.4rem 0.5rem;">Ich sehe <strong>dich</strong></td>
+        <td style="padding:0.4rem 0.5rem;">Ich sehe <strong>Sie</strong></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:0.4rem 0.5rem;">Dative</td>
+        <td style="padding:0.4rem 0.5rem;">Ich helfe <strong>dir</strong></td>
+        <td style="padding:0.4rem 0.5rem;">Ich helfe <strong>Ihnen</strong></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:0.4rem 0.5rem;">Possessive</td>
+        <td style="padding:0.4rem 0.5rem;"><strong>dein</strong> Buch</td>
+        <td style="padding:0.4rem 0.5rem;"><strong>Ihr</strong> Buch</td>
+      </tr>
+      <tr>
+        <td style="padding:0.4rem 0.5rem;">Imperative</td>
+        <td style="padding:0.4rem 0.5rem;"><strong>Komm!</strong></td>
+        <td style="padding:0.4rem 0.5rem;"><strong>Kommen Sie!</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="text-align:center; font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">Formal <strong>Sie</strong> and its forms (<strong>Ihnen, Ihr, Ihre</strong>) are always capitalized mid-sentence in writing -- an instant visual register marker.</div>
+
+  <!-- English Comparison -->
+  <div class="en-comparison">
+    <h4>ENGLISH COMPARISON -- The Missing Signal</h4>
+    <p>English lost its T-V distinction when "thou" disappeared by ~1650. Where German encodes social distance in a <strong>binary grammatical signal</strong> (du/Sie) that cascades through verb forms, possessives, cases, and imperatives, English must encode the same information through <strong>implicit strategies</strong>: modal hedging (could/would/might), vocabulary register, passive voice, and tone.</p>
+    <p style="margin-top: 0.5rem;"><strong>The pattern:</strong> German GRAMMATICALIZES social distance that English leaves to PRAGMATIC INFERENCE. For a pattern-oriented mind, German's explicit binary is actually <em>easier</em> to navigate than English's fuzzy gradient.</p>
+  </div>
+
+  <figcaption>
+    Du/Sie is not simply "informal/formal" -- it is a multidimensional social signal encoding intimacy, respect, power, contempt, and group membership. Every second-person utterance in German carries this signal; no English utterance does.
+  </figcaption>
+</figure>
+</body>
+</html>

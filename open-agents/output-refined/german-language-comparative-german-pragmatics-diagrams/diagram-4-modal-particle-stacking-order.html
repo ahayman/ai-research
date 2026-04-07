@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modal Particle Stacking Order</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #10b981;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #ecfdf5;
+    --muted: #6c757d;
+    --slot1: #3b82f6;
+    --slot1-bg: #eff6ff;
+    --slot2: #8b5cf6;
+    --slot2-bg: #f5f3ff;
+    --slot3: #f59e0b;
+    --slot3-bg: #fffbeb;
+    --slot4: #10b981;
+    --slot4-bg: #ecfdf5;
+    --valid: #10b981;
+    --valid-bg: #ecfdf5;
+    --invalid: #e63946;
+    --invalid-bg: #fef2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #34d399;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #132e24;
+      --muted: #9a9ab0;
+      --slot1: #60a5fa;
+      --slot1-bg: #1e293b;
+      --slot2: #a78bfa;
+      --slot2-bg: #1e1b3a;
+      --slot3: #fbbf24;
+      --slot3-bg: #2a2510;
+      --slot4: #34d399;
+      --slot4-bg: #132e24;
+      --valid: #34d399;
+      --valid-bg: #132e24;
+      --invalid: #f87171;
+      --invalid-bg: #2a1215;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1000px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Slot Chain */
+  .slot-chain {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .sentence-frame {
+    display: flex;
+    align-items: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0 0.6rem;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+  .slot {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    min-width: 130px;
+    position: relative;
+  }
+  .slot-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .slot-particles {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+  }
+  .slot-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .slot1 { border-color: var(--slot1); background: var(--slot1-bg); }
+  .slot1 .slot-num, .slot1 .slot-particles { color: var(--slot1); }
+  .slot2 { border-color: var(--slot2); background: var(--slot2-bg); }
+  .slot2 .slot-num, .slot2 .slot-particles { color: var(--slot2); }
+  .slot3 { border-color: var(--slot3); background: var(--slot3-bg); }
+  .slot3 .slot-num, .slot3 .slot-particles { color: var(--slot3); }
+  .slot4 { border-color: var(--slot4); background: var(--slot4-bg); }
+  .slot4 .slot-num, .slot4 .slot-particles { color: var(--slot4); }
+
+  .arrow-connector {
+    display: flex;
+    align-items: center;
+    padding: 0 0.3rem;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+
+  /* Sentence template */
+  .template-section {
+    margin-top: 2rem;
+    border: 2px solid var(--accent-de);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .template-section h3 {
+    font-size: 0.95rem;
+    color: var(--accent-de);
+    margin-bottom: 0.8rem;
+  }
+  .template-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  .template-fixed {
+    font-weight: 700;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .template-slot {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .template-slot.s1 { background: var(--slot1-bg); color: var(--slot1); border: 1px solid var(--slot1); }
+  .template-slot.s2 { background: var(--slot2-bg); color: var(--slot2); border: 1px solid var(--slot2); }
+  .template-slot.s3 { background: var(--slot3-bg); color: var(--slot3); border: 1px solid var(--slot3); }
+  .template-slot.s4 { background: var(--slot4-bg); color: var(--slot4); border: 1px solid var(--slot4); }
+
+  /* Examples */
+  .examples-section {
+    margin-top: 1.5rem;
+  }
+  .examples-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .example-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .example-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+  }
+  .example-card.valid { border-color: var(--valid); }
+  .example-card.invalid { border-color: var(--invalid); }
+  .example-status {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+  }
+  .status-valid { color: var(--valid); }
+  .status-invalid { color: var(--invalid); }
+  .example-sentence {
+    font-size: 0.95rem;
+    font-style: italic;
+    margin-bottom: 0.3rem;
+  }
+  .example-sentence .p1 { color: var(--slot1); font-weight: 700; }
+  .example-sentence .p2 { color: var(--slot2); font-weight: 700; }
+  .example-sentence .p3 { color: var(--slot3); font-weight: 700; }
+  .example-sentence .p4 { color: var(--slot4); font-weight: 700; }
+  .example-translation {
+    font-size: 0.78rem;
+    color: var(--accent-en);
+  }
+  .example-analysis {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .slot-indicator {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    margin: 0 1px;
+  }
+  .si-1 { background: var(--slot1-bg); color: var(--slot1); }
+  .si-2 { background: var(--slot2-bg); color: var(--slot2); }
+  .si-3 { background: var(--slot3-bg); color: var(--slot3); }
+  .si-4 { background: var(--slot4-bg); color: var(--slot4); }
+
+  /* Key insight */
+  .insight-box {
+    margin-top: 2rem;
+    border: 2px solid var(--slot2);
+    border-radius: 12px;
+    padding: 1.2rem;
+    background: var(--slot2-bg);
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  .insight-box h4 { color: var(--slot2); margin-bottom: 0.5rem; }
+
+  .en-comparison {
+    margin-top: 1.5rem;
+    background: var(--accent-en-bg);
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .en-comparison h4 { color: var(--accent-en); margin-bottom: 0.5rem; }
+  .en-comparison p { font-size: 0.88rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .slot-chain { flex-direction: column; align-items: center; }
+    .arrow-connector { transform: rotate(90deg); padding: 0.3rem 0; }
+    .example-grid { grid-template-columns: 1fr; }
+    .template-frame { flex-direction: column; }
+    figure { padding: 1.5rem; }
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Modal Particle Stacking Order</h2>
+  <p class="subtitle">Particles combine in a rigid linear order -- not random, not free, but a learnable hierarchy</p>
+
+  <!-- The Slot Chain -->
+  <div class="slot-chain">
+    <div class="sentence-frame">Verb</div>
+    <div class="arrow-connector">&#8594;</div>
+    <div class="slot slot1">
+      <div class="slot-num">Slot 1 (earliest)</div>
+      <div class="slot-particles">ja &middot; denn</div>
+      <div class="slot-label">Shared knowledge / Interest</div>
+    </div>
+    <div class="arrow-connector">&#8594;</div>
+    <div class="slot slot2">
+      <div class="slot-num">Slot 2</div>
+      <div class="slot-particles">doch &middot; wohl &middot; schon</div>
+      <div class="slot-label">Contradiction / Probability / Concession</div>
+    </div>
+    <div class="arrow-connector">&#8594;</div>
+    <div class="slot slot3">
+      <div class="slot-num">Slot 3</div>
+      <div class="slot-particles">halt &middot; eben</div>
+      <div class="slot-label">Resignation / Acceptance</div>
+    </div>
+    <div class="arrow-connector">&#8594;</div>
+    <div class="slot slot4">
+      <div class="slot-num">Slot 4 (latest)</div>
+      <div class="slot-particles">mal</div>
+      <div class="slot-label">Softener / Casualness</div>
+    </div>
+    <div class="arrow-connector">&#8594;</div>
+    <div class="sentence-frame">... rest</div>
+  </div>
+
+  <div style="text-align:center; font-size:0.78rem; color:var(--muted);">
+    General ordering tendency: <strong>ja</strong> > <strong>doch</strong> > <strong>eben/halt</strong> > <strong>wohl</strong> > <strong>schon</strong> > <strong>mal</strong>
+  </div>
+
+  <!-- Template -->
+  <div class="template-section">
+    <h3>Sentence Template with Particle Slots</h3>
+    <div class="template-frame">
+      <span class="template-fixed">Komm</span>
+      <span class="template-slot s1">[ja / denn]</span>
+      <span class="template-slot s2">[doch / wohl / schon]</span>
+      <span class="template-slot s3">[halt / eben]</span>
+      <span class="template-slot s4">[mal]</span>
+      <span class="template-fixed">her!</span>
+    </div>
+    <div style="font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">
+      Not all combinations are natural -- but when particles do combine, they follow this positional order.
+    </div>
+  </div>
+
+  <!-- Examples -->
+  <div class="examples-section">
+    <h3>Valid vs. Invalid Orderings</h3>
+    <div class="example-grid">
+      <div class="example-card valid">
+        <div class="example-status status-valid">&#10003; VALID</div>
+        <div class="example-sentence">"Komm <span class="p2">doch</span> <span class="p4">mal</span> vorbei!"</div>
+        <div class="example-translation">= "Do come by sometime!" (friendly invitation)</div>
+        <div class="example-analysis"><span class="slot-indicator si-2">Slot 2</span> then <span class="slot-indicator si-4">Slot 4</span> -- correct order: doch before mal</div>
+      </div>
+      <div class="example-card invalid">
+        <div class="example-status status-invalid">&#10007; INVALID</div>
+        <div class="example-sentence">"Komm <span style="color:var(--invalid);text-decoration:line-through;">*mal doch</span> vorbei!"</div>
+        <div class="example-translation">Ungrammatical -- mal cannot precede doch</div>
+        <div class="example-analysis"><span class="slot-indicator si-4">Slot 4</span> then <span class="slot-indicator si-2">Slot 2</span> -- reversed; native speakers reject this</div>
+      </div>
+      <div class="example-card valid">
+        <div class="example-status status-valid">&#10003; VALID</div>
+        <div class="example-sentence">"Das habe ich <span class="p1">ja</span> <span class="p2">doch</span> gesagt!"</div>
+        <div class="example-translation">= "I DID say that, you know!" (shared knowledge + contradiction)</div>
+        <div class="example-analysis"><span class="slot-indicator si-1">Slot 1</span> then <span class="slot-indicator si-2">Slot 2</span> -- correct order: ja before doch</div>
+      </div>
+      <div class="example-card invalid">
+        <div class="example-status status-invalid">&#10007; INVALID</div>
+        <div class="example-sentence">"Das habe ich <span style="color:var(--invalid);text-decoration:line-through;">*doch ja</span> gesagt!"</div>
+        <div class="example-translation">Ungrammatical -- doch cannot precede ja</div>
+        <div class="example-analysis"><span class="slot-indicator si-2">Slot 2</span> then <span class="slot-indicator si-1">Slot 1</span> -- reversed; feels wrong to native ears</div>
+      </div>
+      <div class="example-card valid">
+        <div class="example-status status-valid">&#10003; VALID</div>
+        <div class="example-sentence">"Das ist <span class="p1">ja</span> <span class="p2">wohl</span> klar."</div>
+        <div class="example-translation">= "That should be obvious." (shared knowledge + presumption)</div>
+        <div class="example-analysis"><span class="slot-indicator si-1">Slot 1</span> then <span class="slot-indicator si-2">Slot 2</span> -- correct order: ja before wohl</div>
+      </div>
+      <div class="example-card valid">
+        <div class="example-status status-valid">&#10003; VALID (triple stack)</div>
+        <div class="example-sentence">"Kannst du <span class="p2">doch</span> <span class="p3">eben</span> <span class="p4">mal</span> helfen?"</div>
+        <div class="example-translation">= "Could you just quickly help?" (three layers of nuance)</div>
+        <div class="example-analysis"><span class="slot-indicator si-2">Slot 2</span> <span class="slot-indicator si-3">Slot 3</span> <span class="slot-indicator si-4">Slot 4</span> -- three particles in correct sequential order</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight-box">
+    <h4>The Hidden Grammar Revealed</h4>
+    Modal particles look formless -- they are uninflected, unstressed, and hard to translate. But their stacking order reveals a <strong>rigid internal grammar</strong>. Native speakers never consciously learn these ordering rules, yet they reject violations instantly. For a pattern learner, this is excellent news: the ordering is <em>systematic and predictable</em>, not random.
+  </div>
+
+  <div class="en-comparison">
+    <h4>ENGLISH COMPARISON -- No Equivalent Ordering</h4>
+    <p>English has no systematic particle stacking. The closest might be hedging pile-ups: "Could you maybe just possibly help me for a sec?" -- but these are ad hoc combinations of different grammatical categories (modal verb + adverbs + discourse markers), not a dedicated stacking system with rigid ordering rules. In English, you can rearrange hedges somewhat freely; in German, the particle order is fixed.</p>
+  </div>
+
+  <figcaption>
+    Particle stacking is not random but follows a learnable positional hierarchy: ja/denn (Slot 1) > doch/wohl/schon (Slot 2) > halt/eben (Slot 3) > mal (Slot 4). This hidden grammar is a systematic pattern waiting to be learned.
+  </figcaption>
+</figure>
+</body>
+</html>

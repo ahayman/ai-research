@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognate Vocabulary Heat Map: Reliability by Domain</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0a0e1a; color: #e0e0e0; min-height: 100vh; padding: 2rem 1rem; }
+  h1 { text-align: center; font-size: 1.5rem; color: #fff; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; color: #8899bb; font-size: 0.9rem; margin-bottom: 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .rings-layout { display: flex; flex-direction: column; gap: 0; align-items: center; }
+
+  .ring {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .ring::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 6px;
+    height: 100%;
+  }
+
+  .ring-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .ring-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .ring-title { font-size: 1rem; font-weight: 700; color: #fff; }
+  .ring-reliability { font-size: 0.75rem; color: #aaa; margin-left: auto; }
+
+  .examples-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    background: rgba(0,0,0,0.3);
+  }
+  .pair .eng { font-weight: 600; }
+  .pair .arrow { color: #666; font-size: 0.7rem; }
+  .pair .ger { font-weight: 700; }
+
+  /* Color tiers */
+  .tier-1 { background: linear-gradient(135deg, #0a2a1a, #0f3320); border: 1px solid rgba(34, 197, 94, 0.3); }
+  .tier-1::before { background: #22c55e; }
+  .tier-1 .ring-badge { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(34,197,94,0.4); }
+  .tier-1 .pair .eng { color: #86efac; }
+  .tier-1 .pair .ger { color: #fbbf24; }
+
+  .tier-2 { background: linear-gradient(135deg, #122a14, #1a3a1a); border: 1px solid rgba(74, 222, 128, 0.25); }
+  .tier-2::before { background: #4ade80; }
+  .tier-2 .ring-badge { background: rgba(74,222,128,0.15); color: #86efac; border: 1px solid rgba(74,222,128,0.3); }
+  .tier-2 .pair .eng { color: #a7f3d0; }
+  .tier-2 .pair .ger { color: #fbbf24; }
+
+  .tier-3 { background: linear-gradient(135deg, #1a2a10, #243614); border: 1px solid rgba(163, 230, 53, 0.25); }
+  .tier-3::before { background: #a3e635; }
+  .tier-3 .ring-badge { background: rgba(163,230,53,0.15); color: #bef264; border: 1px solid rgba(163,230,53,0.3); }
+  .tier-3 .pair .eng { color: #d9f99d; }
+  .tier-3 .pair .ger { color: #fbbf24; }
+
+  .tier-4 { background: linear-gradient(135deg, #2a2a0a, #36360f); border: 1px solid rgba(250, 204, 21, 0.25); }
+  .tier-4::before { background: #facc15; }
+  .tier-4 .ring-badge { background: rgba(250,204,21,0.15); color: #fde047; border: 1px solid rgba(250,204,21,0.3); }
+  .tier-4 .pair .eng { color: #fef08a; }
+  .tier-4 .pair .ger { color: #fbbf24; }
+
+  .tier-5 { background: linear-gradient(135deg, #2a1a0a, #362010); border: 1px solid rgba(251, 146, 60, 0.25); }
+  .tier-5::before { background: #fb923c; }
+  .tier-5 .ring-badge { background: rgba(251,146,60,0.15); color: #fdba74; border: 1px solid rgba(251,146,60,0.3); }
+  .tier-5 .pair .eng { color: #fed7aa; }
+  .tier-5 .pair .ger { color: #fbbf24; }
+
+  .tier-6 { background: linear-gradient(135deg, #2a0f0a, #361510); border: 1px solid rgba(239, 68, 68, 0.25); }
+  .tier-6::before { background: #ef4444; }
+  .tier-6 .ring-badge { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .tier-6 .pair .eng { color: #fca5a5; }
+  .tier-6 .pair .ger { color: #fbbf24; }
+
+  .tier-danger { background: linear-gradient(135deg, #2a0a0a, #3d1111); border: 2px solid rgba(239, 68, 68, 0.5); }
+  .tier-danger::before { background: #dc2626; }
+  .tier-danger .ring-badge { background: rgba(239,68,68,0.25); color: #f87171; border: 1px solid rgba(239,68,68,0.5); }
+
+  .false-friend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+  }
+  .false-friend .ger-word { color: #f87171; font-weight: 700; }
+  .false-friend .not-equal { color: #ef4444; font-weight: 800; }
+  .false-friend .eng-trap { color: #fca5a5; text-decoration: line-through; font-size: 0.75rem; }
+  .false-friend .real-meaning { color: #86efac; font-size: 0.75rem; font-style: italic; }
+
+  .connector {
+    width: 2px;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    margin: 0 auto;
+  }
+
+  .explanation-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #111827, #1a2332);
+    border: 1px solid #334155;
+    border-radius: 10px;
+  }
+  .explanation-box h3 { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .explanation-box p { font-size: 0.8rem; color: #888; line-height: 1.6; }
+  .explanation-box strong { color: #ccc; }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.5rem; }
+    .pair { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Cognate Vocabulary Heat Map</h1>
+<p class="subtitle">Reliability by semantic domain -- from near-identical core to misleading false friends</p>
+
+<div class="container">
+  <div class="rings-layout">
+
+    <!-- TIER 1: Body Parts -->
+    <div class="ring tier-1">
+      <div class="ring-header">
+        <span class="ring-badge">95%+ reliable</span>
+        <span class="ring-title">Body Parts</span>
+        <span class="ring-reliability">Oldest vocabulary layer -- near-identical</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">hand</span><span class="arrow">=</span><span class="ger">Hand</span></span>
+        <span class="pair"><span class="eng">finger</span><span class="arrow">=</span><span class="ger">Finger</span></span>
+        <span class="pair"><span class="eng">arm</span><span class="arrow">=</span><span class="ger">Arm</span></span>
+        <span class="pair"><span class="eng">knee</span><span class="arrow">&rarr;</span><span class="ger">Knie</span></span>
+        <span class="pair"><span class="eng">foot</span><span class="arrow">&rarr;</span><span class="ger">Fu&szlig;</span></span>
+        <span class="pair"><span class="eng">heart</span><span class="arrow">&rarr;</span><span class="ger">Herz</span></span>
+        <span class="pair"><span class="eng">nose</span><span class="arrow">&rarr;</span><span class="ger">Nase</span></span>
+        <span class="pair"><span class="eng">lip</span><span class="arrow">&rarr;</span><span class="ger">Lippe</span></span>
+        <span class="pair"><span class="eng">hair</span><span class="arrow">=</span><span class="ger">Haar</span></span>
+        <span class="pair"><span class="eng">nail</span><span class="arrow">&rarr;</span><span class="ger">Nagel</span></span>
+        <span class="pair"><span class="eng">shoulder</span><span class="arrow">&rarr;</span><span class="ger">Schulter</span></span>
+        <span class="pair"><span class="eng">lung</span><span class="arrow">&rarr;</span><span class="ger">Lunge</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- TIER 2: Kinship -->
+    <div class="ring tier-2">
+      <div class="ring-header">
+        <span class="ring-badge">90%+ reliable</span>
+        <span class="ring-title">Kinship Terms</span>
+        <span class="ring-reliability">Core family vocabulary -- very high transparency</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">father</span><span class="arrow">&rarr;</span><span class="ger">Vater</span></span>
+        <span class="pair"><span class="eng">mother</span><span class="arrow">&rarr;</span><span class="ger">Mutter</span></span>
+        <span class="pair"><span class="eng">brother</span><span class="arrow">&rarr;</span><span class="ger">Bruder</span></span>
+        <span class="pair"><span class="eng">sister</span><span class="arrow">&rarr;</span><span class="ger">Schwester</span></span>
+        <span class="pair"><span class="eng">daughter</span><span class="arrow">&rarr;</span><span class="ger">Tochter</span></span>
+        <span class="pair"><span class="eng">son</span><span class="arrow">&rarr;</span><span class="ger">Sohn</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- TIER 3: Numbers -->
+    <div class="ring tier-3">
+      <div class="ring-header">
+        <span class="ring-badge">85%+ reliable</span>
+        <span class="ring-title">Numbers (1-12, hundreds, thousands)</span>
+        <span class="ring-reliability">High reliability -- consonant shift patterns apply predictably</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">one</span><span class="arrow">&rarr;</span><span class="ger">eins</span></span>
+        <span class="pair"><span class="eng">two</span><span class="arrow">&rarr;</span><span class="ger">zwei</span></span>
+        <span class="pair"><span class="eng">three</span><span class="arrow">&rarr;</span><span class="ger">drei</span></span>
+        <span class="pair"><span class="eng">four</span><span class="arrow">&rarr;</span><span class="ger">vier</span></span>
+        <span class="pair"><span class="eng">six</span><span class="arrow">&rarr;</span><span class="ger">sechs</span></span>
+        <span class="pair"><span class="eng">seven</span><span class="arrow">&rarr;</span><span class="ger">sieben</span></span>
+        <span class="pair"><span class="eng">ten</span><span class="arrow">&rarr;</span><span class="ger">zehn</span></span>
+        <span class="pair"><span class="eng">twelve</span><span class="arrow">&rarr;</span><span class="ger">zw&ouml;lf</span></span>
+        <span class="pair"><span class="eng">hundred</span><span class="arrow">&rarr;</span><span class="ger">hundert</span></span>
+        <span class="pair"><span class="eng">thousand</span><span class="arrow">&rarr;</span><span class="ger">tausend</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- TIER 4: Nature + Core Verbs -->
+    <div class="ring tier-4">
+      <div class="ring-header">
+        <span class="ring-badge">75%+ reliable</span>
+        <span class="ring-title">Nature, Animals, Core Verbs & Adjectives</span>
+        <span class="ring-reliability">Strong but shift patterns required for recognition</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">water</span><span class="arrow">&rarr;</span><span class="ger">Wasser</span></span>
+        <span class="pair"><span class="eng">fire</span><span class="arrow">&rarr;</span><span class="ger">Feuer</span></span>
+        <span class="pair"><span class="eng">sun</span><span class="arrow">&rarr;</span><span class="ger">Sonne</span></span>
+        <span class="pair"><span class="eng">wind</span><span class="arrow">=</span><span class="ger">Wind</span></span>
+        <span class="pair"><span class="eng">stone</span><span class="arrow">&rarr;</span><span class="ger">Stein</span></span>
+        <span class="pair"><span class="eng">fish</span><span class="arrow">&rarr;</span><span class="ger">Fisch</span></span>
+        <span class="pair"><span class="eng">come</span><span class="arrow">&rarr;</span><span class="ger">kommen</span></span>
+        <span class="pair"><span class="eng">drink</span><span class="arrow">&rarr;</span><span class="ger">trinken</span></span>
+        <span class="pair"><span class="eng">sing</span><span class="arrow">&rarr;</span><span class="ger">singen</span></span>
+        <span class="pair"><span class="eng">swim</span><span class="arrow">&rarr;</span><span class="ger">schwimmen</span></span>
+        <span class="pair"><span class="eng">old</span><span class="arrow">&rarr;</span><span class="ger">alt</span></span>
+        <span class="pair"><span class="eng">young</span><span class="arrow">&rarr;</span><span class="ger">jung</span></span>
+        <span class="pair"><span class="eng">warm</span><span class="arrow">=</span><span class="ger">warm</span></span>
+        <span class="pair"><span class="eng">green</span><span class="arrow">&rarr;</span><span class="ger">gr&uuml;n</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- TIER 5: Everyday Actions / Household -->
+    <div class="ring tier-5">
+      <div class="ring-header">
+        <span class="ring-badge">50-70% reliable</span>
+        <span class="ring-title">Everyday Objects, Actions, Abstract Basics</span>
+        <span class="ring-reliability">Mixed -- some cognates, some divergences begin</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">house</span><span class="arrow">&rarr;</span><span class="ger">Haus</span></span>
+        <span class="pair"><span class="eng">book</span><span class="arrow">&rarr;</span><span class="ger">Buch</span></span>
+        <span class="pair"><span class="eng">learn</span><span class="arrow">&rarr;</span><span class="ger">lernen</span></span>
+        <span class="pair"><span class="eng">think</span><span class="arrow">&rarr;</span><span class="ger">denken</span></span>
+        <span class="pair"><span class="eng">begin</span><span class="arrow">&rarr;</span><span class="ger">beginnen</span></span>
+        <span class="pair"><span class="eng">freedom</span><span class="arrow">&rarr;</span><span class="ger">Freiheit</span></span>
+        <span class="pair"><span class="eng">gold</span><span class="arrow">=</span><span class="ger">Gold</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- TIER 6: Abstract / Institutional -->
+    <div class="ring tier-6">
+      <div class="ring-header">
+        <span class="ring-badge">LOW reliability</span>
+        <span class="ring-title">Abstract, Institutional, Technical Vocabulary</span>
+        <span class="ring-reliability">English borrowed from French/Latin; German coined from native roots</span>
+      </div>
+      <div class="examples-grid">
+        <span class="pair"><span class="eng">television</span><span class="arrow">&ne;</span><span class="ger">Fernsehen</span></span>
+        <span class="pair"><span class="eng">airplane</span><span class="arrow">&ne;</span><span class="ger">Flugzeug</span></span>
+        <span class="pair"><span class="eng">vocabulary</span><span class="arrow">&ne;</span><span class="ger">Wortschatz</span></span>
+        <span class="pair"><span class="eng">hospital</span><span class="arrow">&ne;</span><span class="ger">Krankenhaus</span></span>
+        <span class="pair"><span class="eng">ambulance</span><span class="arrow">&ne;</span><span class="ger">Krankenwagen</span></span>
+        <span class="pair"><span class="eng">environment</span><span class="arrow">&ne;</span><span class="ger">Umwelt</span></span>
+        <span class="pair"><span class="eng">conscience</span><span class="arrow">&ne;</span><span class="ger">Gewissen</span></span>
+        <span class="pair"><span class="eng">introduction</span><span class="arrow">&ne;</span><span class="ger">Einleitung</span></span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- FALSE FRIENDS -->
+    <div class="ring tier-danger">
+      <div class="ring-header">
+        <span class="ring-badge">DANGER ZONE</span>
+        <span class="ring-title">False Friends -- Cognates That Mislead</span>
+        <span class="ring-reliability">Same root, different meaning -- maximum negative transfer</span>
+      </div>
+      <div class="examples-grid">
+        <span class="false-friend"><span class="ger-word">Gift</span><span class="not-equal">&ne;</span><span class="eng-trap">gift</span><span class="real-meaning">= poison</span></span>
+        <span class="false-friend"><span class="ger-word">bekommen</span><span class="not-equal">&ne;</span><span class="eng-trap">become</span><span class="real-meaning">= to receive</span></span>
+        <span class="false-friend"><span class="ger-word">aktuell</span><span class="not-equal">&ne;</span><span class="eng-trap">actual</span><span class="real-meaning">= current</span></span>
+        <span class="false-friend"><span class="ger-word">Brand</span><span class="not-equal">&ne;</span><span class="eng-trap">brand</span><span class="real-meaning">= fire</span></span>
+        <span class="false-friend"><span class="ger-word">Chef</span><span class="not-equal">&ne;</span><span class="eng-trap">chef</span><span class="real-meaning">= boss</span></span>
+        <span class="false-friend"><span class="ger-word">Gymnasium</span><span class="not-equal">&ne;</span><span class="eng-trap">gym</span><span class="real-meaning">= academic school</span></span>
+        <span class="false-friend"><span class="ger-word">sensibel</span><span class="not-equal">&ne;</span><span class="eng-trap">sensible</span><span class="real-meaning">= sensitive</span></span>
+        <span class="false-friend"><span class="ger-word">eventuell</span><span class="not-equal">&ne;</span><span class="eng-trap">eventually</span><span class="real-meaning">= possibly</span></span>
+        <span class="false-friend"><span class="ger-word">Handy</span><span class="not-equal">&ne;</span><span class="eng-trap">handy</span><span class="real-meaning">= mobile phone</span></span>
+        <span class="false-friend"><span class="ger-word">Fabrik</span><span class="not-equal">&ne;</span><span class="eng-trap">fabric</span><span class="real-meaning">= factory</span></span>
+        <span class="false-friend"><span class="ger-word">Rezept</span><span class="not-equal">&ne;</span><span class="eng-trap">receipt</span><span class="real-meaning">= recipe/prescription</span></span>
+        <span class="false-friend"><span class="ger-word">brav</span><span class="not-equal">&ne;</span><span class="eng-trap">brave</span><span class="real-meaning">= well-behaved</span></span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="explanation-box">
+    <h3>Why the Gradient Exists</h3>
+    <p>The most reliable cognates come from the <strong>oldest vocabulary layer</strong> -- words already present in Proto-Germanic before the languages split. Body parts, kinship, numbers, and nature terms are ancient, stable, and shared. As you move toward abstract, institutional, and technical vocabulary, English systematically borrowed from <strong>French and Latin</strong> (post-1066) while German coined compounds from <strong>native Germanic roots</strong>. This is why "hospital" has no German cognate (it becomes Krankenhaus = "sick-house") while "hand" is identical in both languages. <strong>The older the concept, the more reliable the cognate.</strong></p>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Transparency Spectrum -- German vs. English</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de-color: #e63946;
+    --de-bg: #fef2f2;
+    --en-color: #3b82f6;
+    --en-bg: #eff6ff;
+    --trans-color: #10b981;
+    --trans-bg: #ecfdf5;
+    --partial-color: #f59e0b;
+    --partial-bg: #fffbeb;
+    --meta-color: #8b5cf6;
+    --meta-bg: #f5f3ff;
+    --opaque-color: #6c757d;
+    --opaque-bg: #f0f0f2;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de-color: #f87171;
+      --de-bg: #2a1520;
+      --en-color: #60a5fa;
+      --en-bg: #1e293b;
+      --trans-color: #34d399;
+      --trans-bg: #132e24;
+      --partial-color: #fbbf24;
+      --partial-bg: #2a2510;
+      --meta-color: #a78bfa;
+      --meta-bg: #1e1b3a;
+      --opaque-color: #9a9ab0;
+      --opaque-bg: #252530;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Spectrum bar */
+  .spectrum-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--trans-color), var(--partial-color), var(--meta-color), var(--opaque-color));
+    margin-bottom: 0.3rem;
+  }
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .spectrum-labels span:nth-child(1) { color: var(--trans-color); }
+  .spectrum-labels span:nth-child(2) { color: var(--partial-color); }
+  .spectrum-labels span:nth-child(3) { color: var(--meta-color); }
+  .spectrum-labels span:nth-child(4) { color: var(--opaque-color); }
+
+  /* Language row labels */
+  .lang-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+  }
+  .lang-label.de { background: var(--de-bg); color: var(--de-color); border: 1px solid var(--de-color); }
+  .lang-label.en { background: var(--en-bg); color: var(--en-color); border: 1px solid var(--en-color); }
+
+  /* Comparison section */
+  .comparison-section {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Word pairs */
+  .pair-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+  }
+  .word-pair {
+    border-radius: 10px;
+    padding: 0.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .word-pair::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px 0 0 2px;
+  }
+  /* Transparency zone colors */
+  .word-pair.transparent { background: var(--trans-bg); border: 1px solid var(--trans-color); }
+  .word-pair.transparent::before { background: var(--trans-color); }
+  .word-pair.partial { background: var(--partial-bg); border: 1px solid var(--partial-color); }
+  .word-pair.partial::before { background: var(--partial-color); }
+  .word-pair.metaphorical { background: var(--meta-bg); border: 1px solid var(--meta-color); }
+  .word-pair.metaphorical::before { background: var(--meta-color); }
+  .word-pair.opaque { background: var(--opaque-bg); border: 1px solid var(--opaque-color); }
+  .word-pair.opaque::before { background: var(--opaque-color); }
+
+  .de-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--de-color);
+    display: block;
+  }
+  .literal {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    display: block;
+    margin: 0.15rem 0;
+  }
+  .en-equiv {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--en-color);
+    display: block;
+    padding-top: 0.3rem;
+    border-top: 1px dashed var(--border);
+    margin-top: 0.3rem;
+  }
+  .en-opacity {
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* Insight box */
+  .insight-box {
+    background: var(--de-bg);
+    border: 2px solid var(--de-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  .insight-box h3 {
+    color: var(--de-color);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .insight-box p {
+    font-size: 0.85rem;
+  }
+  .insight-stat {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--trans-color);
+    display: block;
+    margin: 0.3rem 0;
+  }
+
+  /* Center of gravity markers */
+  .cog-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .cog-bar {
+    flex: 1;
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(to right, var(--trans-color), var(--partial-color), var(--meta-color), var(--opaque-color));
+    position: relative;
+  }
+  .cog-marker {
+    position: absolute;
+    top: -6px;
+    width: 16px;
+    height: 42px;
+    border-radius: 4px;
+    border: 3px solid;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+  }
+  .cog-marker.de-marker {
+    left: 18%;
+    border-color: var(--de-color);
+    color: var(--de-color);
+  }
+  .cog-marker.en-marker {
+    left: 62%;
+    border-color: var(--en-color);
+    color: var(--en-color);
+  }
+  .cog-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 50px;
+  }
+  .cog-label.de { color: var(--de-color); }
+  .cog-label.en { color: var(--en-color); text-align: right; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .pair-grid { grid-template-columns: 1fr 1fr; }
+    .cog-marker { font-size: 0.55rem; width: 14px; }
+  }
+  @media (max-width: 450px) {
+    .pair-grid { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: #fff; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Semantic Transparency Spectrum</h2>
+  <p class="subtitle">German compounds reveal their meaning through their parts. English equivalents are often opaque Latinate imports.</p>
+
+  <!-- Spectrum bar -->
+  <div class="spectrum-bar"></div>
+  <div class="spectrum-labels">
+    <span>Fully Transparent</span>
+    <span>Partially Transparent</span>
+    <span>Metaphorical</span>
+    <span>Opaque</span>
+  </div>
+
+  <!-- Transparent zone -->
+  <div class="comparison-section">
+    <span class="lang-label de">Fully Transparent -- meaning = sum of parts</span>
+    <div class="pair-grid">
+      <div class="word-pair transparent">
+        <span class="de-word">Handschuh</span>
+        <span class="literal">"hand-shoe"</span>
+        <span class="en-equiv">glove <span class="en-opacity">-- opaque to English speakers</span></span>
+      </div>
+      <div class="word-pair transparent">
+        <span class="de-word">Zahnarzt</span>
+        <span class="literal">"tooth-doctor"</span>
+        <span class="en-equiv">dentist <span class="en-opacity">-- from Latin dens (tooth)</span></span>
+      </div>
+      <div class="word-pair transparent">
+        <span class="de-word">Staubsauger</span>
+        <span class="literal">"dust-sucker"</span>
+        <span class="en-equiv">vacuum cleaner <span class="en-opacity">-- Latin vacuus (empty)</span></span>
+      </div>
+      <div class="word-pair transparent">
+        <span class="de-word">Krankenwagen</span>
+        <span class="literal">"sick-wagon"</span>
+        <span class="en-equiv">ambulance <span class="en-opacity">-- Latin ambulare (to walk)</span></span>
+      </div>
+      <div class="word-pair transparent">
+        <span class="de-word">Flughafen</span>
+        <span class="literal">"flight-harbor"</span>
+        <span class="en-equiv">airport <span class="en-opacity">-- semi-transparent (air + port)</span></span>
+      </div>
+      <div class="word-pair transparent">
+        <span class="de-word">Fernsehen</span>
+        <span class="literal">"far-seeing"</span>
+        <span class="en-equiv">television <span class="en-opacity">-- Greek tele + Latin visio</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partially transparent / metaphorical -->
+  <div class="comparison-section">
+    <span class="lang-label de" style="background:var(--partial-bg); color:var(--partial-color); border-color:var(--partial-color);">Partially Transparent -- metaphorical but deducible</span>
+    <div class="pair-grid">
+      <div class="word-pair partial">
+        <span class="de-word">Kuehlschrank</span>
+        <span class="literal">"cool-cabinet"</span>
+        <span class="en-equiv">refrigerator <span class="en-opacity">-- Latin refrigerare</span></span>
+      </div>
+      <div class="word-pair partial">
+        <span class="de-word">Fingerhut</span>
+        <span class="literal">"finger-hat"</span>
+        <span class="en-equiv">thimble <span class="en-opacity">-- opaque Old English</span></span>
+      </div>
+      <div class="word-pair partial">
+        <span class="de-word">Schildkroete</span>
+        <span class="literal">"shield-toad"</span>
+        <span class="en-equiv">turtle <span class="en-opacity">-- opaque origin</span></span>
+      </div>
+      <div class="word-pair partial">
+        <span class="de-word">Gluehbirne</span>
+        <span class="literal">"glow-pear"</span>
+        <span class="en-equiv">lightbulb <span class="en-opacity">-- semi-transparent</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metaphorical/cultural -->
+  <div class="comparison-section">
+    <span class="lang-label de" style="background:var(--meta-bg); color:var(--meta-color); border-color:var(--meta-color);">Culturally Embedded -- transparent structure, cultural meaning</span>
+    <div class="pair-grid">
+      <div class="word-pair metaphorical">
+        <span class="de-word">Schadenfreude</span>
+        <span class="literal">"damage-joy"</span>
+        <span class="en-equiv">schadenfreude <span class="en-opacity">-- borrowed! No English word exists</span></span>
+      </div>
+      <div class="word-pair metaphorical">
+        <span class="de-word">Wanderlust</span>
+        <span class="literal">"wander-desire"</span>
+        <span class="en-equiv">wanderlust <span class="en-opacity">-- borrowed into English</span></span>
+      </div>
+      <div class="word-pair metaphorical">
+        <span class="de-word">Zeitgeist</span>
+        <span class="literal">"time-spirit"</span>
+        <span class="en-equiv">zeitgeist <span class="en-opacity">-- borrowed into English</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opaque -->
+  <div class="comparison-section">
+    <span class="lang-label de" style="background:var(--opaque-bg); color:var(--opaque-color); border-color:var(--opaque-color);">Opaque -- meaning not derivable from parts</span>
+    <div class="pair-grid">
+      <div class="word-pair opaque">
+        <span class="de-word">Hochzeit</span>
+        <span class="literal">"high-time" &ne; high time</span>
+        <span class="en-equiv">wedding <span class="en-opacity">-- both equally opaque</span></span>
+      </div>
+      <div class="word-pair opaque">
+        <span class="de-word">Jungfrau</span>
+        <span class="literal">"young-woman" &ne; young woman</span>
+        <span class="en-equiv">virgin <span class="en-opacity">-- Latin virgo</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center of gravity comparison -->
+  <div class="cog-row">
+    <span class="cog-label de">German</span>
+    <div class="cog-bar">
+      <div class="cog-marker de-marker" title="German center of gravity">DE</div>
+      <div class="cog-marker en-marker" title="English center of gravity">EN</div>
+    </div>
+    <span class="cog-label en">English</span>
+  </div>
+  <div style="text-align:center; font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">
+    German's center of gravity sits firmly in the transparent zone. English's center is shifted toward opaque Latinate vocabulary.
+  </div>
+
+  <!-- Key insight -->
+  <div class="insight-box">
+    <h3>The Learner's Advantage</h3>
+    <span class="insight-stat">~500 root morphemes</span>
+    <p>Learning approximately 500 German root morphemes allows a learner to decode <strong>thousands</strong> of compounds they have never encountered before. English's hybrid Germanic-Latinate vocabulary cannot offer the same degree of compositional transparency.</p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 3: Semantic Transparency Spectrum -- German vs. English</strong>
+    <span>German compounds range from fully transparent (Handschuh = "hand-shoe" for glove) to opaque (Hochzeit = "high-time" for wedding), but the center of gravity is dramatically more transparent than English. Where English imports opaque Latinate terms (television, dentist, ambulance, refrigerator), German builds from visible Germanic parts (Fernsehen, Zahnarzt, Krankenwagen, Kuehlschrank). English even borrows German compounds whole (schadenfreude, wanderlust, zeitgeist) when no native English word captures the concept.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

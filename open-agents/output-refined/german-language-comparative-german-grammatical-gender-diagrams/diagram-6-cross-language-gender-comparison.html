@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Language Gender Comparison</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc-color: #3b82f6;
+    --fem-color: #ec4899;
+    --neut-color: #10b981;
+    --de-color: #f59e0b;
+    --de-bg: #fffbeb;
+    --muted: #6c757d;
+    --track-bg: #e5e7eb;
+    --zero-color: #6b7280;
+    --two-color: #8b5cf6;
+    --three-color: #f59e0b;
+    --many-color: #ef4444;
+    --zero-bg: #f3f4f6;
+    --two-bg: #f5f3ff;
+    --three-bg: #fffbeb;
+    --many-bg: #fef2f2;
+    --hist-color: #a78bfa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc-color: #60a5fa;
+      --fem-color: #f472b6;
+      --neut-color: #34d399;
+      --de-color: #fbbf24;
+      --de-bg: #2a2510;
+      --muted: #9a9ab0;
+      --track-bg: #2d2d44;
+      --zero-color: #9ca3af;
+      --two-color: #a78bfa;
+      --three-color: #fbbf24;
+      --many-color: #f87171;
+      --zero-bg: #1f2937;
+      --two-bg: #1e1535;
+      --three-bg: #2a2510;
+      --many-bg: #2a1515;
+      --hist-color: #c4b5fd;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Spectrum track */
+  .spectrum-container { margin-bottom: 2rem; }
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  .spectrum-track {
+    position: relative;
+    height: 14px;
+    background: var(--track-bg);
+    border-radius: 7px;
+    margin-bottom: 0.5rem;
+    overflow: visible;
+  }
+  .spectrum-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 7px;
+    background: linear-gradient(90deg, var(--zero-color), var(--two-color), var(--three-color), var(--many-color));
+  }
+
+  /* Language cards on spectrum */
+  .lang-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .lang-card {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 0.7rem 0.8rem;
+    position: relative;
+  }
+  .lang-card .lang-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+  .lang-card .gender-count {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+  }
+  .lang-card .lang-details {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .lang-card .lang-details strong { color: var(--fg); font-size: 0.75rem; }
+
+  /* Card color by group */
+  .lang-card.zero { border-color: var(--zero-color); }
+  .lang-card.zero .lang-name { color: var(--zero-color); }
+  .lang-card.zero .gender-count { color: var(--zero-color); }
+
+  .lang-card.two { border-color: var(--two-color); }
+  .lang-card.two .lang-name { color: var(--two-color); }
+  .lang-card.two .gender-count { color: var(--two-color); }
+
+  .lang-card.three { border-color: var(--three-color); }
+  .lang-card.three .lang-name { color: var(--three-color); }
+  .lang-card.three .gender-count { color: var(--three-color); }
+
+  .lang-card.many { border-color: var(--many-color); }
+  .lang-card.many .lang-name { color: var(--many-color); }
+  .lang-card.many .gender-count { color: var(--many-color); }
+
+  /* Highlighted card (German) */
+  .lang-card.de-highlight {
+    border-width: 3px;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    background: var(--de-bg);
+  }
+
+  /* Feature comparison table */
+  .feat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.78rem;
+  }
+  .feat-table th {
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 2px solid var(--border);
+  }
+  .feat-table th.feat-label { text-align: left; }
+  .feat-table td {
+    padding: 0.4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .feat-table td.feat-label { text-align: left; font-weight: 600; font-size: 0.75rem; }
+  .feat-table .yes { color: var(--neut-color); font-weight: 700; }
+  .feat-table .no { color: var(--muted); }
+  .feat-table .partial { color: var(--de-color); font-weight: 600; }
+
+  /* Historical arrow */
+  .hist-note {
+    border: 2px dashed var(--hist-color);
+    border-radius: 10px;
+    padding: 0.7rem 1.2rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .hist-note strong { color: var(--hist-color); }
+  .hist-note .arrow { font-size: 1.1rem; margin: 0 0.3rem; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .lang-cards { grid-template-columns: 1fr 1fr; }
+    .feat-table { font-size: 0.68rem; }
+    .feat-table th, .feat-table td { padding: 0.3rem 0.2rem; }
+  }
+  @media (max-width: 500px) {
+    .lang-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Cross-Language Gender Comparison</h2>
+  <p class="subtitle">From zero genders (Chinese, English) through two (French, Arabic) to three (German, Russian) and beyond -- where does German sit?</p>
+
+  <!-- Spectrum -->
+  <div class="spectrum-container">
+    <div class="spectrum-labels">
+      <span>0 genders</span>
+      <span>2 genders</span>
+      <span>3 genders</span>
+      <span>18 noun classes</span>
+    </div>
+    <div class="spectrum-track">
+      <div class="spectrum-fill" style="width: 100%;"></div>
+    </div>
+  </div>
+
+  <!-- Language cards -->
+  <div class="lang-cards">
+    <div class="lang-card zero">
+      <div class="lang-name">Chinese</div>
+      <div class="gender-count">0</div>
+      <div class="lang-details">
+        No grammatical gender. No noun classes. No article agreement.<br>
+        <strong>Pronouns:</strong> &#x4ED6;/&#x5979;/&#x5B83; distinguished only in writing; identical in speech (t&#x101;).
+      </div>
+    </div>
+
+    <div class="lang-card zero">
+      <div class="lang-name">English</div>
+      <div class="gender-count">0</div>
+      <div class="lang-details">
+        Lost all grammatical gender. One article "the" for everything.<br>
+        <strong>Pronouns:</strong> he/she/it track natural gender only. Zero adj/article agreement.
+      </div>
+    </div>
+
+    <div class="lang-card two">
+      <div class="lang-name">French</div>
+      <div class="gender-count">2</div>
+      <div class="lang-details">
+        Masculine (le) / Feminine (la). No neuter. <br>
+        <strong>Agreement:</strong> Article + adjective + past participle. No case system.
+      </div>
+    </div>
+
+    <div class="lang-card two">
+      <div class="lang-name">Arabic</div>
+      <div class="gender-count">2</div>
+      <div class="lang-details">
+        Masculine / Feminine. No neuter.<br>
+        <strong>Unique:</strong> Gender marked on verbs too. Definite article &#x0627;&#x0644; invariant for gender.
+      </div>
+    </div>
+
+    <div class="lang-card three de-highlight">
+      <div class="lang-name">German</div>
+      <div class="gender-count">3</div>
+      <div class="lang-details">
+        Masculine (der) / Feminine (die) / Neuter (das).<br>
+        <strong>Unique:</strong> 16-cell article declension (4 cases &times; 3+pl). Compound gender inheritance. 3 adjective declension types.
+      </div>
+    </div>
+
+    <div class="lang-card three">
+      <div class="lang-name">Russian</div>
+      <div class="gender-count">3</div>
+      <div class="lang-details">
+        Masculine / Feminine / Neuter.<br>
+        <strong>More complex:</strong> 6 cases &times; 3 genders. No articles, but richer noun inflection.
+      </div>
+    </div>
+
+    <div class="lang-card many">
+      <div class="lang-name">Swahili</div>
+      <div class="gender-count">18</div>
+      <div class="lang-details">
+        18 noun classes (not "genders" in the European sense).<br>
+        <strong>Far end:</strong> Prefixes on nouns, verbs, adjectives, demonstratives all agree with noun class.
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature comparison -->
+  <table class="feat-table">
+    <thead>
+      <tr>
+        <th class="feat-label">Feature</th>
+        <th>Chinese</th>
+        <th>English</th>
+        <th>French</th>
+        <th>Arabic</th>
+        <th style="color: var(--de-color);">German</th>
+        <th>Russian</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="feat-label">Gender count</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>2</td>
+        <td><strong style="color: var(--de-color);">3</strong></td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Article varies by gender</td>
+        <td class="no">no article</td>
+        <td class="no">no</td>
+        <td class="yes">le / la</td>
+        <td class="no">no (&#x0627;&#x0644;)</td>
+        <td class="yes">der / die / das</td>
+        <td class="no">no article</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Adjective agreement</td>
+        <td class="no">no</td>
+        <td class="no">no</td>
+        <td class="yes">yes</td>
+        <td class="yes">yes</td>
+        <td class="yes">yes (3 types)</td>
+        <td class="yes">yes</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Gender on verb</td>
+        <td class="no">no</td>
+        <td class="no">no</td>
+        <td class="partial">participle</td>
+        <td class="yes">yes</td>
+        <td class="no">no</td>
+        <td class="partial">past tense</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Case system</td>
+        <td class="no">no</td>
+        <td class="no">vestigial</td>
+        <td class="no">no</td>
+        <td class="partial">3 (formal)</td>
+        <td class="yes">4 cases</td>
+        <td class="yes">6 cases</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Case &times; gender interaction</td>
+        <td class="no">--</td>
+        <td class="no">--</td>
+        <td class="no">--</td>
+        <td class="partial">limited</td>
+        <td class="yes">16-cell grid</td>
+        <td class="yes">18-cell grid</td>
+      </tr>
+      <tr>
+        <td class="feat-label">Compound gender rule</td>
+        <td class="no">N/A</td>
+        <td class="no">N/A</td>
+        <td class="no">rare compounds</td>
+        <td class="no">N/A</td>
+        <td class="yes">Grundwort rule</td>
+        <td class="partial">partial</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Historical note -->
+  <div class="hist-note">
+    <strong>The Indo-European story:</strong>
+    Proto-Indo-European (3 genders)
+    <span class="arrow">&rarr;</span> Proto-Germanic (3 genders)
+    <span class="arrow">&rarr;</span> Old English (3 genders)
+    <span class="arrow">&rarr;</span> <strong>Modern English (0 genders)</strong>
+    <br>
+    German preserved the ancestral system. English is the outlier for having lost it entirely.
+    French reduced from 3 to 2 (Latin neuter merged into masculine).
+  </div>
+
+  <figcaption>
+    <strong>Figure 6: Cross-Language Gender Comparison</strong>
+    <span>German's three-gender system sits at the midpoint of a global spectrum ranging from Chinese (zero grammatical gender, zero agreement) through English (which lost its three genders entirely) and French/Arabic (two genders each) to Swahili (18 noun classes). German is unique among the languages shown for combining a three-gender system with a four-case system, producing the 16-cell article grid and three adjective declension types. The feature table reveals that each language distributes grammatical information differently: Arabic marks gender on verbs (German does not); French lacks cases (German has four); Russian has more cases but no articles. English is the historical outlier, having descended from a three-gender ancestor identical in structure to German.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

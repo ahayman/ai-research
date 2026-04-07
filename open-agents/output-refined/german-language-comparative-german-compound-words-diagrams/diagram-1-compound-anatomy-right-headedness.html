@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compound Anatomy -- The Right-Headedness Rule</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --de-color: #e63946;
+    --de-bg: #fef2f2;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --head-color: #3b82f6;
+    --head-bg: #eff6ff;
+    --mod-color: #f59e0b;
+    --mod-bg: #fffbeb;
+    --link-color: #8b5cf6;
+    --link-bg: #f5f3ff;
+    --gender-color: #ec4899;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --de-color: #f87171;
+      --de-bg: #2a1520;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --head-color: #60a5fa;
+      --head-bg: #1e293b;
+      --mod-color: #fbbf24;
+      --mod-bg: #2a2510;
+      --link-color: #a78bfa;
+      --link-bg: #1e1b3a;
+      --gender-color: #f472b6;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Rule banner */
+  .rule-banner {
+    background: var(--head-bg);
+    border: 2px solid var(--head-color);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .rule-banner .rule-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--head-color);
+  }
+  .rule-banner .rule-detail {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    font-size: 0.8rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Compound anatomy section */
+  .compound-section {
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .compound-section h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  /* Compound word display */
+  .compound-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 1rem;
+  }
+  .segment {
+    padding: 0.5rem 0.7rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    position: relative;
+    text-align: center;
+  }
+  .segment.modifier {
+    background: var(--mod-bg);
+    border: 2px solid var(--mod-color);
+    color: var(--mod-color);
+  }
+  .segment.linker {
+    background: var(--link-bg);
+    border: 2px solid var(--link-color);
+    color: var(--link-color);
+    font-size: 0.95rem;
+    padding: 0.5rem 0.4rem;
+  }
+  .segment.head {
+    background: var(--head-bg);
+    border: 2px solid var(--head-color);
+    color: var(--head-color);
+  }
+  .segment-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 0.15rem;
+  }
+
+  /* Arrow connector */
+  .arrow-down {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--muted);
+    margin: 0.5rem 0;
+  }
+
+  /* Properties row */
+  .properties {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+  }
+  .prop-tag {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .prop-tag.gender {
+    background: var(--head-bg);
+    border: 1px solid var(--head-color);
+    color: var(--head-color);
+  }
+  .prop-tag.category {
+    background: var(--mod-bg);
+    border: 1px solid var(--mod-color);
+    color: var(--mod-color);
+  }
+  .prop-tag.meaning {
+    border: 1px solid var(--border);
+    color: var(--fg);
+  }
+
+  /* English comparison */
+  .english-compare {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--en-bg);
+    border: 1px solid var(--en-color);
+    border-radius: 8px;
+    font-size: 0.82rem;
+  }
+  .en-label {
+    font-weight: 700;
+    color: var(--en-color);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .en-words {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .en-word {
+    padding: 0.2rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--en-color);
+    border-radius: 4px;
+    color: var(--en-color);
+    font-weight: 600;
+  }
+  .en-note {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* Examples grid */
+  .examples-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Recursive nesting showcase */
+  .nesting-demo {
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .nesting-demo h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .nest-levels {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .nest-level {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .nest-level .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: var(--head-bg);
+    color: var(--head-color);
+    flex-shrink: 0;
+  }
+  .nest-word {
+    font-weight: 700;
+    color: var(--de-color);
+  }
+  .nest-meaning {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .nest-arrow {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .examples-grid { grid-template-columns: 1fr; }
+    .segment { font-size: 0.9rem; padding: 0.4rem 0.5rem; }
+    .properties { gap: 0.4rem; }
+    .legend { gap: 0.6rem; font-size: 0.72rem; }
+  }
+  @media print {
+    body { background: #fff; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Compound Anatomy -- The Right-Headedness Rule</h2>
+  <p class="subtitle">In German compounds, the last element (Grundwort) determines everything: gender, plural, and category. All preceding elements (Bestimmungswort) modify it.</p>
+
+  <!-- Rule banner -->
+  <div class="rule-banner">
+    <div class="rule-text">Rechtskoepfigkeit: The HEAD is always on the RIGHT</div>
+    <div class="rule-detail">Gender, plural form, semantic category, and word class all come from the rightmost element.</div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--mod-color);"></div> Bestimmungswort (modifier)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--link-color);"></div> Fugenelement (linker)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--head-color);"></div> Grundwort (head)</div>
+  </div>
+
+  <!-- Example 1: Simple 2-component -->
+  <div class="examples-grid">
+    <div class="compound-section">
+      <h3>2 components -- Haustuer</h3>
+      <div class="compound-display">
+        <div class="segment modifier">Haus<span class="segment-label">das Haus (n.)</span></div>
+        <div class="segment head">tuer<span class="segment-label">die Tuer (f.)</span></div>
+      </div>
+      <div class="properties">
+        <span class="prop-tag gender">die Haustuer -- FEMININE (from Tuer)</span>
+        <span class="prop-tag meaning">front door</span>
+      </div>
+      <div class="english-compare">
+        <span class="en-label">English:</span>
+        <span class="en-words"><span class="en-word">front</span><span class="en-word">door</span></span>
+        <span class="en-note">2 separate words</span>
+      </div>
+    </div>
+
+    <div class="compound-section">
+      <h3>2 components -- Handschuh</h3>
+      <div class="compound-display">
+        <div class="segment modifier">Hand<span class="segment-label">die Hand (f.)</span></div>
+        <div class="segment head">schuh<span class="segment-label">der Schuh (m.)</span></div>
+      </div>
+      <div class="properties">
+        <span class="prop-tag gender">der Handschuh -- MASCULINE (from Schuh)</span>
+        <span class="prop-tag meaning">"hand-shoe" = glove</span>
+      </div>
+      <div class="english-compare">
+        <span class="en-label">English:</span>
+        <span class="en-words"><span class="en-word">glove</span></span>
+        <span class="en-note">opaque single word</span>
+      </div>
+    </div>
+
+    <!-- Example 2: 3-component with linker -->
+    <div class="compound-section">
+      <h3>3 components + linker -- Geburtstag</h3>
+      <div class="compound-display">
+        <div class="segment modifier">Geburt<span class="segment-label">die Geburt (f.)</span></div>
+        <div class="segment linker">s<span class="segment-label">linker</span></div>
+        <div class="segment head">tag<span class="segment-label">der Tag (m.)</span></div>
+      </div>
+      <div class="properties">
+        <span class="prop-tag gender">der Geburtstag -- MASCULINE (from Tag)</span>
+        <span class="prop-tag meaning">"birth-day" = birthday</span>
+      </div>
+      <div class="english-compare">
+        <span class="en-label">English:</span>
+        <span class="en-words"><span class="en-word">birthday</span></span>
+        <span class="en-note">fused -- same logic!</span>
+      </div>
+    </div>
+
+    <div class="compound-section">
+      <h3>2 components -- Biergarten</h3>
+      <div class="compound-display">
+        <div class="segment modifier">Bier<span class="segment-label">das Bier (n.)</span></div>
+        <div class="segment head">garten<span class="segment-label">der Garten (m.)</span></div>
+      </div>
+      <div class="properties">
+        <span class="prop-tag gender">der Biergarten -- MASCULINE (from Garten)</span>
+        <span class="prop-tag meaning">"beer-garden" = beer garden</span>
+      </div>
+      <div class="english-compare">
+        <span class="en-label">English:</span>
+        <span class="en-words"><span class="en-word">beer</span><span class="en-word">garden</span></span>
+        <span class="en-note">2 words, same structure</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Big example: multi-component -->
+  <div class="compound-section" style="margin-top:1rem;">
+    <h3>Multi-component -- Krankenversicherungsgesellschaft</h3>
+    <div class="compound-display">
+      <div class="segment modifier">Kranken<span class="segment-label">sick (adj.)</span></div>
+      <div class="segment modifier">versicherung<span class="segment-label">insurance</span></div>
+      <div class="segment linker">s<span class="segment-label">linker</span></div>
+      <div class="segment head">gesellschaft<span class="segment-label">die Gesellschaft (f.)</span></div>
+    </div>
+    <div class="arrow-down">&darr;</div>
+    <div class="properties">
+      <span class="prop-tag gender">die Krankenversicherungsgesellschaft -- FEMININE (from Gesellschaft)</span>
+      <span class="prop-tag category">Category: company/society</span>
+      <span class="prop-tag meaning">health insurance company</span>
+    </div>
+    <div class="english-compare" style="margin-top:0.5rem;">
+      <span class="en-label">English:</span>
+      <span class="en-words">
+        <span class="en-word">health</span>
+        <span class="en-word">insurance</span>
+        <span class="en-word">company</span>
+      </span>
+      <span class="en-note">3 separate words, same right-headed logic</span>
+    </div>
+  </div>
+
+  <!-- Recursive nesting -->
+  <div class="nesting-demo">
+    <h3>Recursive Nesting -- Compounds Within Compounds</h3>
+    <div class="nest-levels">
+      <div class="nest-level">
+        <span class="step-num">1</span>
+        <span class="nest-word">Fuss + Ball</span>
+        <span class="nest-arrow">&rarr;</span>
+        <span class="nest-word">Fussball</span>
+        <span class="nest-meaning">(soccer)</span>
+      </div>
+      <div class="nest-level">
+        <span class="step-num">2</span>
+        <span class="nest-word">Fussball + Welt</span>
+        <span class="nest-arrow">&rarr;</span>
+        <span class="nest-word">Fussballwelt</span>
+        <span class="nest-meaning">(soccer world)</span>
+      </div>
+      <div class="nest-level">
+        <span class="step-num">3</span>
+        <span class="nest-word">Fussballwelt + Meisterschaft</span>
+        <span class="nest-arrow">&rarr;</span>
+        <span class="nest-word">Fussballweltmeisterschaft</span>
+        <span class="nest-meaning">(soccer world championship)</span>
+      </div>
+      <div class="nest-level" style="font-size:0.78rem; color:var(--muted); margin-top:0.3rem;">
+        Still feminine -- die Meisterschaft determines the gender no matter how many elements precede it.
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Figure 1: Compound Anatomy -- The Right-Headedness Rule</strong>
+    <span>German determinative compounds place the head (Grundwort) on the far right. This element alone determines the compound's grammatical gender, plural form, and semantic category. All preceding elements (Bestimmungswort) serve as modifiers, narrowing the meaning from general to specific. Linking elements (Fugenelemente) appear between components for phonological smoothing. The system is recursive: compounds can nest inside other compounds with no theoretical limit. English uses the same right-headed logic ("bus stop" is a kind of stop) but writes compounds as separate words, obscuring the structural parallelism.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

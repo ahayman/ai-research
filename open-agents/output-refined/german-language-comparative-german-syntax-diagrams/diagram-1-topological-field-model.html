@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Topological Field Model</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #4361ee; --accent-light: #e8edff;
+    --german: #3b82f6; --german-bg: #dbeafe;
+    --english: #ef4444; --english-bg: #fee2e2;
+    --vf: #8b5cf6; --vf-bg: #ede9fe;
+    --lsk: #ef4444; --lsk-bg: #fee2e2;
+    --mf: #6b7280; --mf-bg: #f3f4f6;
+    --rsk: #f59e0b; --rsk-bg: #fef3c7;
+    --nf: #22c55e; --nf-bg: #dcfce7;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --accent-light: #1e2a4a;
+      --german: #60a5fa; --german-bg: #1e3a5f;
+      --english: #f87171; --english-bg: #5c1a1a;
+      --vf: #a78bfa; --vf-bg: #2e1a5e;
+      --lsk: #f87171; --lsk-bg: #5c1a1a;
+      --mf: #9ca3af; --mf-bg: #1f2937;
+      --rsk: #fbbf24; --rsk-bg: #78350f;
+      --nf: #4ade80; --nf-bg: #14532d;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1200px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem 1rem; overflow-x: auto;
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 140px 110px 1fr 160px 160px;
+    gap: 2px;
+    min-width: 760px;
+    margin-bottom: 1.2rem;
+  }
+  .field-header {
+    padding: 0.5rem 0.6rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    border-radius: 6px 6px 0 0;
+  }
+  .field-header.vf { background: var(--vf-bg); color: var(--vf); border-bottom: 3px solid var(--vf); }
+  .field-header.lsk { background: var(--lsk-bg); color: var(--lsk); border-bottom: 3px solid var(--lsk); }
+  .field-header.mf { background: var(--mf-bg); color: var(--mf); border-bottom: 3px solid var(--mf); }
+  .field-header.rsk { background: var(--rsk-bg); color: var(--rsk); border-bottom: 3px solid var(--rsk); }
+  .field-header.nf { background: var(--nf-bg); color: var(--nf); border-bottom: 3px solid var(--nf); }
+
+  .field-sub {
+    font-size: 0.68rem;
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+
+  .row-label {
+    grid-column: 1 / -1;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.6rem 0.6rem 0.2rem;
+    color: var(--german);
+    border-top: 1px solid var(--border);
+    margin-top: 0.4rem;
+  }
+
+  .cell {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 4px;
+    min-height: 44px;
+    line-height: 1.35;
+  }
+  .cell.vf { background: var(--vf-bg); color: var(--vf); font-weight: 600; }
+  .cell.lsk { background: var(--lsk-bg); color: var(--lsk); font-weight: 700; }
+  .cell.mf { background: var(--mf-bg); color: var(--fg); }
+  .cell.rsk { background: var(--rsk-bg); color: var(--rsk); font-weight: 600; }
+  .cell.nf { background: var(--nf-bg); color: var(--nf); font-style: italic; font-size: 0.78rem; }
+  .cell.empty {
+    background: none;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 0.75rem;
+    border: 1px dashed var(--border);
+  }
+
+  .en-row {
+    grid-column: 1 / -1;
+    font-size: 0.78rem;
+    color: var(--english);
+    padding: 0.2rem 0.6rem 0.5rem;
+    font-style: italic;
+  }
+
+  h3.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 1.5rem 0 0.6rem;
+    color: var(--accent);
+  }
+  h3.section-title:first-of-type { margin-top: 0.5rem; }
+
+  .insight-box {
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    font-size: 0.85rem;
+  }
+  .insight-box strong { color: var(--accent); }
+
+  .english-box {
+    margin-top: 1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--english);
+    background: var(--english-bg);
+    font-size: 0.82rem;
+    color: var(--fg);
+  }
+  .english-box strong { color: var(--english); }
+
+  .legend {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    margin-top: 1rem; font-size: 0.8rem; color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+
+    <h3 class="section-title">The Topological Field Model (Feldermodell)</h3>
+    <p style="text-align:center; font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Every German clause maps onto the same five-field template. The only variable is what fills each field.</p>
+
+    <!-- HEADER ROW -->
+    <div class="field-grid">
+      <div class="field-header vf">Vorfeld<span class="field-sub">Pre-field (Position 1)</span></div>
+      <div class="field-header lsk">LSK<span class="field-sub">Left Bracket (Verb/Conj.)</span></div>
+      <div class="field-header mf">Mittelfeld<span class="field-sub">Middle Field</span></div>
+      <div class="field-header rsk">RSK<span class="field-sub">Right Bracket (Non-finite)</span></div>
+      <div class="field-header nf">Nachfeld<span class="field-sub">Post-field</span></div>
+
+      <!-- ROW 1: V2 Declarative -->
+      <div class="row-label">1. V2 Declarative (Main Clause)</div>
+      <div class="cell vf">Morgen</div>
+      <div class="cell lsk">werde</div>
+      <div class="cell mf">ich mit meinem Freund</div>
+      <div class="cell rsk">einkaufen</div>
+      <div class="cell empty">--</div>
+      <div class="en-row">EN: "Tomorrow I will go shopping with my friend."</div>
+
+      <!-- ROW 2: V1 Yes/No Question -->
+      <div class="row-label">2. V1 Yes/No Question</div>
+      <div class="cell empty">(empty)</div>
+      <div class="cell lsk">Gehst</div>
+      <div class="cell mf">du morgen ins Kino</div>
+      <div class="cell empty">--</div>
+      <div class="cell empty">--</div>
+      <div class="en-row">EN: "Are you going to the cinema tomorrow?"</div>
+
+      <!-- ROW 3: V1 Imperative -->
+      <div class="row-label">3. V1 Imperative</div>
+      <div class="cell empty">(empty)</div>
+      <div class="cell lsk">Gib</div>
+      <div class="cell mf">mir das Buch</div>
+      <div class="cell empty">--</div>
+      <div class="cell empty">--</div>
+      <div class="en-row">EN: "Give me the book!"</div>
+
+      <!-- ROW 4: Subordinate Clause -->
+      <div class="row-label">4. Subordinate Clause (verb-final)</div>
+      <div class="cell empty">(empty)</div>
+      <div class="cell lsk" style="font-style:italic;">weil</div>
+      <div class="cell mf">ich morgen mit meinem Freund</div>
+      <div class="cell rsk">einkaufen will</div>
+      <div class="cell empty">--</div>
+      <div class="en-row">EN: "...because I want to go shopping with my friend tomorrow"</div>
+
+      <!-- ROW 5: W-Question -->
+      <div class="row-label">5. W-Question (V2 with question word)</div>
+      <div class="cell vf">Wann</div>
+      <div class="cell lsk">gehst</div>
+      <div class="cell mf">du ins Kino</div>
+      <div class="cell empty">--</div>
+      <div class="cell empty">--</div>
+      <div class="en-row">EN: "When are you going to the cinema?"</div>
+
+      <!-- ROW 6: V2 with Nachfeld -->
+      <div class="row-label">6. V2 with Extraposed Relative Clause</div>
+      <div class="cell vf">Ich</div>
+      <div class="cell lsk">habe</div>
+      <div class="cell mf">das Buch</div>
+      <div class="cell rsk">gelesen</div>
+      <div class="cell nf">das du mir empfohlen hast</div>
+      <div class="en-row">EN: "I have read the book that you recommended to me."</div>
+    </div>
+
+    <!-- UNIFYING PRINCIPLE -->
+    <div class="insight-box">
+      <strong>The Unifying Principle:</strong> All six clause types are the SAME five-field template. The only differences:
+      (1) Is the Vorfeld filled? (V2 yes; V1/subordinate no.)
+      (2) Does the LSK contain a finite verb (V2/V1) or a conjunction (subordinate)?
+      (3) Does the RSK contain the finite verb too? (Only in subordinate clauses.)
+      This is ONE system applied six ways -- not six different rules.
+    </div>
+
+    <div class="english-box">
+      <strong>English Comparison:</strong> English has no equivalent field model. English clauses follow a rigid Subject + Verb + Object + Adverbials pattern.
+      There is no bracket to create a middle field, no Vorfeld to fill with any constituent, and no Nachfeld for systematic extraposition.
+      The topological field model describes an architecture that English simply does not possess.
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--vf-bg);border-color:var(--vf);"></div> Vorfeld (Pre-field)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--lsk-bg);border-color:var(--lsk);"></div> Left Bracket (LSK)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--mf-bg);border-color:var(--mf);"></div> Mittelfeld</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--rsk-bg);border-color:var(--rsk);"></div> Right Bracket (RSK)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--nf-bg);border-color:var(--nf);"></div> Nachfeld (Post-field)</div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 1 -- The Topological Field Model (Feldermodell)</h2>
+    <p>Every German clause -- declarative, question, imperative, subordinate -- maps onto the same five-field template: Vorfeld | Left Bracket | Mittelfeld | Right Bracket | Nachfeld. The model, formalized by Drach (1937) and Hohle (1986), is the single most important framework for understanding German syntax. All clause types are variations of one architecture; the only variable is which field is filled and by what.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

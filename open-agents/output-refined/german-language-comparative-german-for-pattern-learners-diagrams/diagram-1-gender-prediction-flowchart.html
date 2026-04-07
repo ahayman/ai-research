@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gender Prediction Flowchart</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc: #3b82f6;
+    --masc-bg: #eff6ff;
+    --fem: #ec4899;
+    --fem-bg: #fdf2f8;
+    --neut: #10b981;
+    --neut-bg: #ecfdf5;
+    --accent: #f59e0b;
+    --accent-bg: #fffbeb;
+    --muted: #6c757d;
+    --decision: #8b5cf6;
+    --decision-bg: #f5f3ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc: #60a5fa;
+      --masc-bg: #1e293b;
+      --fem: #f472b6;
+      --fem-bg: #2a1525;
+      --neut: #34d399;
+      --neut-bg: #132e24;
+      --accent: #fbbf24;
+      --accent-bg: #2a2510;
+      --muted: #9a9ab0;
+      --decision: #a78bfa;
+      --decision-bg: #1e1535;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .start-node {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    padding: 0.8rem 2rem;
+    border-radius: 40px;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+  .arrow {
+    width: 2px;
+    height: 24px;
+    background: var(--muted);
+    position: relative;
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--muted);
+  }
+
+  .decision-node {
+    background: var(--decision-bg);
+    border: 2px solid var(--decision);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+  }
+  .decision-node .label {
+    font-weight: 700;
+    color: var(--decision);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .decision-node .question {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .branch-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    width: 100%;
+    max-width: 900px;
+    align-items: start;
+  }
+  .branch-yes {
+    text-align: right;
+    padding-right: 1rem;
+  }
+  .branch-no {
+    text-align: left;
+    padding-left: 1rem;
+  }
+  .branch-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+  .branch-yes .branch-label { color: var(--neut); }
+  .branch-no .branch-label { color: var(--fem); }
+  .branch-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .result-card {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .result-masc { background: var(--masc-bg); border-left: 4px solid var(--masc); }
+  .result-fem { background: var(--fem-bg); border-left: 4px solid var(--fem); }
+  .result-neut { background: var(--neut-bg); border-left: 4px solid var(--neut); }
+  .result-card .gender-tag {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+  }
+  .result-masc .gender-tag { color: var(--masc); }
+  .result-fem .gender-tag { color: var(--fem); }
+  .result-neut .gender-tag { color: var(--neut); }
+  .result-card .accuracy {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .level-section {
+    width: 100%;
+    max-width: 950px;
+    margin-top: 1.5rem;
+  }
+  .level-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+  }
+  .level-badge {
+    background: var(--decision);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .level-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .level-accuracy {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .suffix-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  @media (max-width: 700px) {
+    .suffix-grid { grid-template-columns: 1fr; }
+  }
+  .suffix-col {
+    border-radius: 10px;
+    padding: 1rem;
+  }
+  .suffix-col h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .suffix-col.masc-col { background: var(--masc-bg); }
+  .suffix-col.masc-col h4 { color: var(--masc); }
+  .suffix-col.fem-col { background: var(--fem-bg); }
+  .suffix-col.fem-col h4 { color: var(--fem); }
+  .suffix-col.neut-col { background: var(--neut-bg); }
+  .suffix-col.neut-col h4 { color: var(--neut); }
+
+  .suffix-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .suffix-item:last-child { border-bottom: none; }
+  .suffix-name { font-weight: 700; font-family: monospace; font-size: 0.9rem; }
+  .suffix-acc { font-size: 0.75rem; color: var(--muted); }
+  .suffix-ex { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+  .semantic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  @media (max-width: 700px) {
+    .semantic-grid { grid-template-columns: 1fr; }
+  }
+  .semantic-card {
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .semantic-card.masc-sem { background: var(--masc-bg); border-top: 3px solid var(--masc); }
+  .semantic-card.fem-sem { background: var(--fem-bg); border-top: 3px solid var(--fem); }
+  .semantic-card.neut-sem { background: var(--neut-bg); border-top: 3px solid var(--neut); }
+  .semantic-card h4 { font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .semantic-card.masc-sem h4 { color: var(--masc); }
+  .semantic-card.fem-sem h4 { color: var(--fem); }
+  .semantic-card.neut-sem h4 { color: var(--neut); }
+  .semantic-card ul { padding-left: 1rem; font-size: 0.82rem; }
+  .semantic-card li { margin-bottom: 0.15rem; }
+
+  .compound-rule {
+    background: var(--accent-bg);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+  .compound-rule .rule-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent);
+  }
+  .compound-rule .rule-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .compound-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.7rem;
+  }
+  .compound-ex {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.82rem;
+  }
+  .compound-ex .gw { font-weight: 700; }
+
+  .default-box {
+    background: var(--fem-bg);
+    border: 2px dashed var(--fem);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .default-box .def-title {
+    font-weight: 700;
+    color: var(--fem);
+    font-size: 0.95rem;
+  }
+  .default-box .def-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Gender Prediction Algorithm</h2>
+  <p class="subtitle">A hierarchical decision procedure for predicting German noun gender -- from compound structure to suffix rules to semantic categories to statistical default</p>
+
+  <div class="flowchart">
+    <div class="start-node">New German Noun</div>
+    <div class="arrow"></div>
+  </div>
+
+  <!-- LEVEL 0: Compound Check -->
+  <div class="level-section">
+    <div class="level-header">
+      <span class="level-badge">LEVEL 0</span>
+      <span class="level-title">Compound Check</span>
+      <span class="level-accuracy">100% reliable</span>
+    </div>
+    <div class="compound-rule">
+      <div class="rule-text">Is it a compound? Find the LAST element (Grundwort). Use ITS gender.</div>
+      <div class="rule-sub">The Grundwort rule is exceptionless. The last component determines gender for all compounds of any length.</div>
+      <div class="compound-examples">
+        <span class="compound-ex"><span class="gw" style="color:var(--masc)">der</span> Schreib<span class="gw" style="color:var(--masc)">tisch</span> &larr; der Tisch</span>
+        <span class="compound-ex"><span class="gw" style="color:var(--fem)">die</span> Auto<span class="gw" style="color:var(--fem)">bahn</span> &larr; die Bahn</span>
+        <span class="compound-ex"><span class="gw" style="color:var(--neut)">das</span> Rat<span class="gw" style="color:var(--neut)">haus</span> &larr; das Haus</span>
+        <span class="compound-ex"><span class="gw" style="color:var(--fem)">die</span> Geschwindigkeits<span class="gw" style="color:var(--fem)">begrenzung</span> &larr; -ung</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 1: Suffix Rules -->
+  <div class="level-section">
+    <div class="level-header">
+      <span class="level-badge">LEVEL 1</span>
+      <span class="level-title">Suffix Rules</span>
+      <span class="level-accuracy">Covers ~80% of nouns, 90-95% accurate</span>
+    </div>
+    <div class="suffix-grid">
+      <div class="suffix-col fem-col">
+        <h4>die (Feminine)</h4>
+        <div class="suffix-item"><span class="suffix-name">-ung</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-heit</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-keit</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-schaft</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ei</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ie</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ik</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ion/-tion</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-tat</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-anz/-enz</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ur</span><span class="suffix-acc">~95%</span></div>
+      </div>
+      <div class="suffix-col neut-col">
+        <h4>das (Neuter)</h4>
+        <div class="suffix-item"><span class="suffix-name">-chen</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-lein</span><span class="suffix-acc">~100%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ment</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-um</span><span class="suffix-acc">~95%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-nis</span><span class="suffix-acc">~70%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-tum</span><span class="suffix-acc">~90%</span></div>
+        <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--muted);">
+          Note: -nis is ~70% neuter, ~30% feminine (die Kenntnis, die Erlaubnis)
+        </div>
+      </div>
+      <div class="suffix-col masc-col">
+        <h4>der (Masculine)</h4>
+        <div class="suffix-item"><span class="suffix-name">-er (agent)</span><span class="suffix-acc">~85%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ling</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ismus</span><span class="suffix-acc">~99%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ist</span><span class="suffix-acc">~95%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-ant/-ent</span><span class="suffix-acc">~90%</span></div>
+        <div class="suffix-item"><span class="suffix-name">-or</span><span class="suffix-acc">~85%</span></div>
+        <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--muted);">
+          Note: -er exceptions include das Fenster, die Mutter, die Schwester
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2: Semantic Rules -->
+  <div class="level-section">
+    <div class="level-header">
+      <span class="level-badge">LEVEL 2</span>
+      <span class="level-title">Semantic Rules</span>
+      <span class="level-accuracy">Covers remaining nouns</span>
+    </div>
+    <div class="semantic-grid">
+      <div class="semantic-card masc-sem">
+        <h4>der (Masculine)</h4>
+        <ul>
+          <li>Male persons and animals</li>
+          <li>Days, months, seasons</li>
+          <li>Cardinal directions</li>
+          <li>Weather (der Regen, der Wind)</li>
+          <li>Alcoholic drinks (der Wein)</li>
+          <li>Car brands (der BMW)</li>
+        </ul>
+      </div>
+      <div class="semantic-card fem-sem">
+        <h4>die (Feminine)</h4>
+        <ul>
+          <li>Female persons and animals</li>
+          <li>Numbers as nouns (die Eins)</li>
+          <li>Motorcycle brands</li>
+          <li>Many rivers outside Germany</li>
+          <li>Native trees (die Eiche)</li>
+        </ul>
+      </div>
+      <div class="semantic-card neut-sem">
+        <h4>das (Neuter)</h4>
+        <ul>
+          <li>Diminutives (-chen, -lein)</li>
+          <li>Nominalized verbs (das Essen)</li>
+          <li>Letters and colors as nouns</li>
+          <li>Metals (das Gold, das Silber)</li>
+          <li>Ge- collectives (das Gebirge)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 3: Statistical Default -->
+  <div class="level-section">
+    <div class="level-header">
+      <span class="level-badge">LEVEL 3</span>
+      <span class="level-title">Statistical Default</span>
+      <span class="level-accuracy">When nothing else applies</span>
+    </div>
+    <div class="default-box">
+      <div class="def-title">Guess die (feminine) -- 46% of unique German nouns are feminine</div>
+      <div class="def-sub">Masculine: ~34% | Neuter: ~20% | In practice, Levels 0-2 cover ~80% of nouns encountered</div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>German for Pattern Learners (CAPSTONE) -- Diagram 1 of 6.</strong> The gender prediction algorithm reduces rote memorization to a hierarchical decision procedure. Start with compound analysis (100% reliable), then check suffixes (~90-95% accurate), then semantic categories, and only fall back to statistical default for the ~20% of nouns not covered by the first three levels. Color coding: <span style="color:var(--masc);font-weight:700;">blue = masculine (der)</span>, <span style="color:var(--fem);font-weight:700;">pink = feminine (die)</span>, <span style="color:var(--neut);font-weight:700;">green = neuter (das)</span>.
+  </figcaption>
+</figure>
+</body>
+</html>

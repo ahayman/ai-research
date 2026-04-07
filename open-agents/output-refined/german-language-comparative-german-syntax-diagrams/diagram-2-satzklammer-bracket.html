@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Satzklammer (Sentence Bracket)</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a2e; --surface: #f8f9fa; --border: #dee2e6;
+    --accent: #4361ee; --accent-light: #e8edff;
+    --german: #3b82f6; --german-bg: #dbeafe;
+    --english: #ef4444; --english-bg: #fee2e2;
+    --lbracket: #ef4444; --lbracket-bg: #fee2e2;
+    --rbracket: #f59e0b; --rbracket-bg: #fef3c7;
+    --middle: #8b5cf6; --middle-bg: #ede9fe;
+    --muted: #6c757d; --caption-bg: #f8f9fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a; --fg: #e8e8f0; --surface: #1a1a2e; --border: #2d2d44;
+      --accent: #6b8aff; --accent-light: #1e2a4a;
+      --german: #60a5fa; --german-bg: #1e3a5f;
+      --english: #f87171; --english-bg: #5c1a1a;
+      --lbracket: #f87171; --lbracket-bg: #5c1a1a;
+      --rbracket: #fbbf24; --rbracket-bg: #78350f;
+      --middle: #a78bfa; --middle-bg: #2e1a5e;
+      --muted: #9a9ab0; --caption-bg: #1a1a2e;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: flex; justify-content: center; padding: 2rem 1rem; line-height: 1.6;
+  }
+  figure { max-width: 1100px; width: 100%; }
+  .diagram-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.5rem 1rem; overflow-x: auto;
+  }
+  figcaption {
+    text-align: center; margin-top: 1.5rem; padding: 1rem 1.5rem;
+    background: var(--caption-bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  figcaption h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--accent); }
+  figcaption p { font-size: 0.85rem; color: var(--muted); }
+  svg { display: block; margin: 0 auto; }
+
+  h3.section-title {
+    font-size: 1rem; font-weight: 700; text-align: center;
+    margin: 0 0 0.8rem; color: var(--accent);
+  }
+
+  .bracket-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 0.6rem;
+    min-width: 700px;
+    position: relative;
+  }
+  .bracket-label {
+    width: 180px;
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--german);
+    padding-right: 0.8rem;
+    text-align: right;
+  }
+  .bracket-sentence {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    position: relative;
+  }
+  .word-block {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+    border-radius: 5px;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+  }
+  .word-block.subject { background: var(--surface); border: 1px solid var(--border); }
+  .word-block.lbr {
+    background: var(--lbracket-bg); border: 2px solid var(--lbracket);
+    font-weight: 700; color: var(--lbracket);
+  }
+  .word-block.mid {
+    background: var(--middle-bg); border: 1px solid var(--middle);
+    color: var(--fg);
+  }
+  .word-block.rbr {
+    background: var(--rbracket-bg); border: 2px solid var(--rbracket);
+    font-weight: 700; color: var(--rbracket);
+  }
+  .word-block.empty-rbr {
+    background: none; border: 2px dashed var(--border);
+    color: var(--muted); font-style: italic; font-size: 0.75rem;
+  }
+
+  .bracket-arc {
+    position: absolute;
+    top: -18px;
+    border: 2px solid var(--accent);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    height: 16px;
+    z-index: 0;
+  }
+  .bracket-arc-label {
+    position: absolute;
+    top: -34px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .en-equiv {
+    font-size: 0.78rem;
+    color: var(--english);
+    font-style: italic;
+    padding-left: 180px;
+    margin-bottom: 1rem;
+    min-width: 700px;
+  }
+  .en-equiv strong { font-weight: 700; }
+
+  .type-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .stretch-section {
+    margin-top: 1.8rem;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+  }
+  .stretch-section h4 {
+    font-size: 0.9rem; color: var(--accent); margin-bottom: 0.5rem;
+  }
+  .stretch-item {
+    font-size: 0.82rem;
+    margin-bottom: 0.35rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .stretch-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .stretch-meter {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 0.3rem;
+    margin-bottom: 0.2rem;
+  }
+  .stretch-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    opacity: 0.7;
+  }
+  .stretch-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .english-box {
+    margin-top: 1.2rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--english);
+    background: var(--english-bg);
+    font-size: 0.82rem;
+  }
+  .english-box strong { color: var(--english); }
+
+  .legend {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    margin-top: 1rem; font-size: 0.8rem; color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<figure>
+  <div class="diagram-container">
+    <h3 class="section-title">The Satzklammer (Sentence Bracket)</h3>
+    <p style="text-align:center; font-size:0.82rem; color:var(--muted); margin-bottom:1.5rem;">The finite verb (Position 2) and non-finite verb (clause-final) form a bracket enclosing the Mittelfeld -- like two slices of bread with filling between them.</p>
+
+    <!-- BRACKET TYPE 1: Auxiliary + Past Participle -->
+    <div style="min-width:700px;">
+      <div style="padding-left:180px;"><span class="type-badge" style="background:var(--lbracket-bg);color:var(--lbracket);">Auxiliary + Past Participle</span></div>
+      <div class="bracket-row">
+        <div class="bracket-label">Compound Past</div>
+        <div class="bracket-sentence">
+          <div class="word-block subject">Ich</div>
+          <div class="word-block lbr">habe</div>
+          <div class="word-block mid">gestern ein Buch</div>
+          <div class="word-block rbr">gelesen</div>
+          <div style="margin-left:0.3rem;font-size:0.85rem;">.</div>
+        </div>
+      </div>
+      <div class="en-equiv">EN: "I <strong>have read</strong> a book yesterday." -- verb parts adjacent</div>
+    </div>
+
+    <!-- BRACKET TYPE 2: Modal + Infinitive -->
+    <div style="min-width:700px;">
+      <div style="padding-left:180px;"><span class="type-badge" style="background:var(--lbracket-bg);color:var(--lbracket);">Modal + Infinitive</span></div>
+      <div class="bracket-row">
+        <div class="bracket-label">Modal Verb</div>
+        <div class="bracket-sentence">
+          <div class="word-block subject">Ich</div>
+          <div class="word-block lbr">will</div>
+          <div class="word-block mid">morgen nach Berlin</div>
+          <div class="word-block rbr">fahren</div>
+          <div style="margin-left:0.3rem;font-size:0.85rem;">.</div>
+        </div>
+      </div>
+      <div class="en-equiv">EN: "I <strong>want to drive</strong> to Berlin tomorrow." -- verb parts adjacent</div>
+    </div>
+
+    <!-- BRACKET TYPE 3: Separable Verb -->
+    <div style="min-width:700px;">
+      <div style="padding-left:180px;"><span class="type-badge" style="background:var(--lbracket-bg);color:var(--lbracket);">Separable Verb (prefix splits)</span></div>
+      <div class="bracket-row">
+        <div class="bracket-label">Separable Prefix</div>
+        <div class="bracket-sentence">
+          <div class="word-block subject">Ich</div>
+          <div class="word-block lbr">rufe</div>
+          <div class="word-block mid">dich morgen</div>
+          <div class="word-block rbr">an</div>
+          <div style="margin-left:0.3rem;font-size:0.85rem;">.</div>
+        </div>
+      </div>
+      <div class="en-equiv">EN: "I will <strong>call</strong> you tomorrow." -- no splitting</div>
+    </div>
+
+    <!-- BRACKET TYPE 4: Future Tense -->
+    <div style="min-width:700px;">
+      <div style="padding-left:180px;"><span class="type-badge" style="background:var(--lbracket-bg);color:var(--lbracket);">Future Tense (werden + infinitive)</span></div>
+      <div class="bracket-row">
+        <div class="bracket-label">Future Tense</div>
+        <div class="bracket-sentence">
+          <div class="word-block subject">Ich</div>
+          <div class="word-block lbr">werde</div>
+          <div class="word-block mid">das Buch morgen</div>
+          <div class="word-block rbr">lesen</div>
+          <div style="margin-left:0.3rem;font-size:0.85rem;">.</div>
+        </div>
+      </div>
+      <div class="en-equiv">EN: "I <strong>will read</strong> the book tomorrow." -- verb parts adjacent</div>
+    </div>
+
+    <!-- BRACKET TYPE 5: Simple Tense (degenerate) -->
+    <div style="min-width:700px;">
+      <div style="padding-left:180px;"><span class="type-badge" style="background:var(--muted);color:var(--bg);">Simple Tense (degenerate bracket)</span></div>
+      <div class="bracket-row">
+        <div class="bracket-label">Simple Present</div>
+        <div class="bracket-sentence">
+          <div class="word-block subject">Ich</div>
+          <div class="word-block lbr">gehe</div>
+          <div class="word-block mid">nach Hause</div>
+          <div class="word-block empty-rbr">--</div>
+          <div style="margin-left:0.3rem;font-size:0.85rem;">.</div>
+        </div>
+      </div>
+      <div class="en-equiv">EN: "I <strong>go</strong> home." -- same structure (only one verb part exists)</div>
+    </div>
+
+    <!-- BRACKET STRETCHING -->
+    <div class="stretch-section">
+      <h4>How Far Can the Bracket Stretch?</h4>
+      <div class="stretch-item">
+        "Ich <strong style="color:var(--lbracket)">habe</strong> <strong style="color:var(--rbracket)">gelesen</strong>." -- 0 words between brackets
+      </div>
+      <div class="stretch-meter">
+        <div class="stretch-bar" style="width:20px;"></div>
+        <span class="stretch-label">minimal</span>
+      </div>
+
+      <div class="stretch-item">
+        "Ich <strong style="color:var(--lbracket)">habe</strong> ein Buch <strong style="color:var(--rbracket)">gelesen</strong>." -- 2 words
+      </div>
+      <div class="stretch-meter">
+        <div class="stretch-bar" style="width:60px;"></div>
+        <span class="stretch-label">short</span>
+      </div>
+
+      <div class="stretch-item">
+        "Ich <strong style="color:var(--lbracket)">habe</strong> gestern in der Bibliothek ein Buch <strong style="color:var(--rbracket)">gelesen</strong>." -- 6 words
+      </div>
+      <div class="stretch-meter">
+        <div class="stretch-bar" style="width:140px;"></div>
+        <span class="stretch-label">medium</span>
+      </div>
+
+      <div class="stretch-item">
+        "Ich <strong style="color:var(--lbracket)">habe</strong> gestern Nachmittag in der alten Universitatsbibliothek ein sehr interessantes Buch uber die Geschichte der deutschen Sprache <strong style="color:var(--rbracket)">gelesen</strong>." -- 17 words!
+      </div>
+      <div class="stretch-meter">
+        <div class="stretch-bar" style="width:340px;"></div>
+        <span class="stretch-label">the bracket can stretch almost indefinitely</span>
+      </div>
+    </div>
+
+    <div class="english-box">
+      <strong>English Comparison:</strong> English has NO sentence bracket. Verb elements stay together:
+      "I <strong>have read</strong> a very interesting book about the history of the German language" -- "have" and "read" are adjacent.
+      English reveals its verbal content early; German makes you wait for the right bracket. But the left bracket tells you WHAT to wait for -- "habe" signals a past participle is coming. The system is predictable, not chaotic.
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--lbracket-bg);border-color:var(--lbracket);"></div> Left Bracket (finite verb)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--middle-bg);border-color:var(--middle);"></div> Mittelfeld (filling)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--rbracket-bg);border-color:var(--rbracket);"></div> Right Bracket (non-finite)</div>
+  </div>
+
+  <figcaption>
+    <h2>Figure 2 -- The Satzklammer (Sentence Bracket)</h2>
+    <p>German splits verb phrases into a left bracket (finite verb, Position 2) and a right bracket (non-finite verb, clause-final), enclosing the Mittelfeld between them. Five bracket types are shown: auxiliary + participle, modal + infinitive, separable verb, future tense, and the degenerate simple-tense bracket. The bracket can stretch to enclose 17+ words, requiring listeners to hold meaning in memory until the right bracket resolves it -- a fundamentally different parsing strategy from English's verb-adjacent approach.</p>
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Vowel Length Encoding System -- The Four Strategies</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --long: #3b82f6;
+    --long-bg: #eff6ff;
+    --short: #e63946;
+    --short-bg: #fef2f2;
+    --accent-de: #e63946;
+    --accent-en: #3b82f6;
+    --highlight: #8b5cf6;
+    --highlight-bg: #f5f3ff;
+    --muted: #6c757d;
+    --strategy1: #10b981;
+    --strategy2: #f59e0b;
+    --strategy3: #3b82f6;
+    --strategy4: #e63946;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --long: #60a5fa;
+      --long-bg: #1e293b;
+      --short: #f87171;
+      --short-bg: #2a1215;
+      --accent-de: #f87171;
+      --accent-en: #60a5fa;
+      --highlight: #a78bfa;
+      --highlight-bg: #1e1b3a;
+      --muted: #9a9ab0;
+      --strategy1: #34d399;
+      --strategy2: #fbbf24;
+      --strategy3: #60a5fa;
+      --strategy4: #f87171;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Central question */
+  .central-q {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .q-box {
+    display: inline-block;
+    background: var(--highlight-bg);
+    border: 2px solid var(--highlight);
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--highlight);
+  }
+  .arrow-down {
+    font-size: 1.5rem;
+    color: var(--highlight);
+    margin: 0.5rem 0;
+  }
+
+  /* Strategy grid */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .strategy-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    position: relative;
+  }
+  .strategy-card .s-num {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: #fff;
+  }
+  .s1 { border-color: var(--strategy1); }
+  .s1 .s-num { background: var(--strategy1); }
+  .s2 { border-color: var(--strategy2); }
+  .s2 .s-num { background: var(--strategy2); }
+  .s3 { border-color: var(--strategy3); }
+  .s3 .s-num { background: var(--strategy3); }
+  .s4 { border-color: var(--strategy4); }
+  .s4 .s-num { background: var(--strategy4); }
+
+  .strategy-card h3 {
+    font-size: 0.92rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
+  }
+  .s1 h3 { color: var(--strategy1); }
+  .s2 h3 { color: var(--strategy2); }
+  .s3 h3 { color: var(--strategy3); }
+  .s4 h3 { color: var(--strategy4); }
+  .strategy-card .s-signal {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .strategy-card .s-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 0.6rem;
+  }
+  .badge-long { background: var(--long-bg); color: var(--long); }
+  .badge-short { background: var(--short-bg); color: var(--short); }
+
+  .example-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .example-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .example-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .example-table .word { font-weight: 700; }
+  .example-table .ipa { color: var(--muted); font-style: italic; font-size: 0.78rem; }
+  .example-table .meaning { color: var(--muted); font-size: 0.75rem; }
+  .marker-highlight {
+    font-weight: 800;
+    padding: 1px 3px;
+    border-radius: 3px;
+  }
+  .hl-long { background: var(--long-bg); color: var(--long); }
+  .hl-short { background: var(--short-bg); color: var(--short); }
+
+  /* Minimal pairs */
+  .pairs-section {
+    border: 2px solid var(--highlight);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .pairs-section h3 {
+    font-size: 0.95rem;
+    color: var(--highlight);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .pair-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+  }
+  .pair-word {
+    text-align: center;
+    padding: 0.4rem;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+  .pair-long { background: var(--long-bg); color: var(--long); border: 1px solid var(--long); }
+  .pair-short { background: var(--short-bg); color: var(--short); border: 1px solid var(--short); }
+  .pair-vs { color: var(--muted); font-weight: 600; font-size: 0.75rem; }
+  .pair-ipa { font-size: 0.75rem; color: var(--muted); display: block; font-weight: 400; }
+  .pair-meaning { font-size: 0.72rem; color: var(--muted); display: block; font-weight: 400; }
+
+  /* English comparison */
+  .en-compare {
+    border: 2px solid var(--accent-en);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    background: var(--long-bg);
+  }
+  .en-compare h3 { font-size: 0.95rem; color: var(--accent-en); margin-bottom: 0.6rem; }
+  .en-compare .en-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .en-ex {
+    border: 1px solid var(--accent-en);
+    border-radius: 8px;
+    padding: 0.4rem 0.7rem;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .en-ex .en-word { font-weight: 700; }
+  .en-ex .en-ipa { font-size: 0.72rem; color: var(--muted); }
+  .en-ex .en-len { font-size: 0.65rem; font-weight: 700; }
+  .en-ex .en-len.l { color: var(--long); }
+  .en-ex .en-len.s { color: var(--short); }
+  .en-verdict {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--short);
+    text-align: center;
+  }
+
+  /* Convergence box */
+  .convergence {
+    border: 2px dashed var(--strategy1);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .convergence p { font-size: 0.88rem; font-weight: 600; color: var(--strategy1); }
+  .convergence .detail { font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-top: 0.3rem; }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    figure { padding: 1.5rem; }
+    .strategy-grid { grid-template-columns: 1fr; }
+    .pair-row { grid-template-columns: 1fr; gap: 0.2rem; }
+    .pair-vs { text-align: center; }
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>German Vowel Length Encoding System</h2>
+  <p class="subtitle">Four complementary strategies encode whether a vowel is long or short directly in the spelling -- something English cannot do at all</p>
+
+  <div class="central-q">
+    <div class="q-box">How do I know if this vowel is long or short?</div>
+    <div class="arrow-down">&#9660;</div>
+    <div style="font-size:0.82rem;color:var(--muted);">Check the surrounding letters. German spelling tells you.</div>
+  </div>
+
+  <div class="strategy-grid">
+    <!-- Strategy 1: Doubled Vowels -->
+    <div class="strategy-card s1">
+      <span class="s-num">STRATEGY 1</span>
+      <h3>Doubled Vowel = LONG</h3>
+      <div class="s-signal">aa, ee, oo (only these three can double)</div>
+      <span class="s-badge badge-long">LONG VOWEL</span>
+      <table class="example-table">
+        <tr><th>Word</th><th>IPA</th><th>Meaning</th></tr>
+        <tr><td class="word"><span class="marker-highlight hl-long">Aa</span>l</td><td class="ipa">/aːl/</td><td class="meaning">eel</td></tr>
+        <tr><td class="word">S<span class="marker-highlight hl-long">ee</span></td><td class="ipa">/zeː/</td><td class="meaning">sea, lake</td></tr>
+        <tr><td class="word">M<span class="marker-highlight hl-long">oo</span>r</td><td class="ipa">/moːɐ/</td><td class="meaning">moor</td></tr>
+        <tr><td class="word">B<span class="marker-highlight hl-long">oo</span>t</td><td class="ipa">/boːt/</td><td class="meaning">boat</td></tr>
+        <tr><td class="word">S<span class="marker-highlight hl-long">aa</span>t</td><td class="ipa">/zaːt/</td><td class="meaning">seed</td></tr>
+      </table>
+    </div>
+
+    <!-- Strategy 2: Dehnungs-h -->
+    <div class="strategy-card s2">
+      <span class="s-num">STRATEGY 2</span>
+      <h3>Silent h After Vowel = LONG</h3>
+      <div class="s-signal">Dehnungs-h (lengthening h) -- the h is not pronounced</div>
+      <span class="s-badge badge-long">LONG VOWEL</span>
+      <table class="example-table">
+        <tr><th>Word</th><th>IPA</th><th>Meaning</th></tr>
+        <tr><td class="word">fa<span class="marker-highlight hl-long">h</span>ren</td><td class="ipa">/faːʁən/</td><td class="meaning">to drive</td></tr>
+        <tr><td class="word">se<span class="marker-highlight hl-long">h</span>en</td><td class="ipa">/zeːən/</td><td class="meaning">to see</td></tr>
+        <tr><td class="word">U<span class="marker-highlight hl-long">h</span>r</td><td class="ipa">/uːɐ/</td><td class="meaning">clock</td></tr>
+        <tr><td class="word">i<span class="marker-highlight hl-long">h</span>m</td><td class="ipa">/iːm/</td><td class="meaning">him</td></tr>
+        <tr><td class="word">ma<span class="marker-highlight hl-long">h</span>len</td><td class="ipa">/maːlən/</td><td class="meaning">to grind</td></tr>
+      </table>
+    </div>
+
+    <!-- Strategy 3: ie -->
+    <div class="strategy-card s3">
+      <span class="s-num">STRATEGY 3</span>
+      <h3>ie = Always Long /iː/</h3>
+      <div class="s-signal">The most reliable long-vowel indicator in German</div>
+      <span class="s-badge badge-long">LONG /iː/</span>
+      <table class="example-table">
+        <tr><th>Word</th><th>IPA</th><th>Meaning</th></tr>
+        <tr><td class="word">L<span class="marker-highlight hl-long">ie</span>be</td><td class="ipa">/liːbə/</td><td class="meaning">love</td></tr>
+        <tr><td class="word">B<span class="marker-highlight hl-long">ie</span>ne</td><td class="ipa">/biːnə/</td><td class="meaning">bee</td></tr>
+        <tr><td class="word">Sp<span class="marker-highlight hl-long">ie</span>l</td><td class="ipa">/ʃpiːl/</td><td class="meaning">game</td></tr>
+        <tr><td class="word">Fr<span class="marker-highlight hl-long">ie</span>den</td><td class="ipa">/fʁiːdən/</td><td class="meaning">peace</td></tr>
+        <tr><td class="word">Z<span class="marker-highlight hl-long">ie</span>l</td><td class="ipa">/tsiːl/</td><td class="meaning">goal</td></tr>
+      </table>
+    </div>
+
+    <!-- Strategy 4: Doubled Consonant -->
+    <div class="strategy-card s4">
+      <span class="s-num">STRATEGY 4</span>
+      <h3>Doubled Consonant After Vowel = SHORT</h3>
+      <div class="s-signal">The consonant doubles to "close" the syllable, shortening the vowel</div>
+      <span class="s-badge badge-short">SHORT VOWEL</span>
+      <table class="example-table">
+        <tr><th>Word</th><th>IPA</th><th>Meaning</th></tr>
+        <tr><td class="word">Ka<span class="marker-highlight hl-short">mm</span></td><td class="ipa">/kam/</td><td class="meaning">comb</td></tr>
+        <tr><td class="word">Be<span class="marker-highlight hl-short">tt</span></td><td class="ipa">/bɛt/</td><td class="meaning">bed</td></tr>
+        <tr><td class="word">o<span class="marker-highlight hl-short">ff</span>en</td><td class="ipa">/ɔfən/</td><td class="meaning">open</td></tr>
+        <tr><td class="word">Ku<span class="marker-highlight hl-short">ss</span></td><td class="ipa">/kʊs/</td><td class="meaning">kiss</td></tr>
+        <tr><td class="word">Schlu<span class="marker-highlight hl-short">ss</span></td><td class="ipa">/ʃlʊs/</td><td class="meaning">end</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="pairs-section">
+    <h3>Minimal Pairs: Same Letters, Different Length -- Spelling Tells You Which</h3>
+    <div class="pair-row">
+      <div class="pair-word pair-long">
+        kam
+        <span class="pair-ipa">/kaːm/</span>
+        <span class="pair-meaning">"came" (single consonant = long a)</span>
+      </div>
+      <span class="pair-vs">vs.</span>
+      <div class="pair-word pair-short">
+        Ka<span style="font-weight:900;">mm</span>
+        <span class="pair-ipa">/kam/</span>
+        <span class="pair-meaning">"comb" (doubled mm = short a)</span>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="pair-word pair-long">
+        B<span style="font-weight:900;">ee</span>t
+        <span class="pair-ipa">/beːt/</span>
+        <span class="pair-meaning">"flowerbed" (doubled ee = long e)</span>
+      </div>
+      <span class="pair-vs">vs.</span>
+      <div class="pair-word pair-short">
+        Be<span style="font-weight:900;">tt</span>
+        <span class="pair-ipa">/bɛt/</span>
+        <span class="pair-meaning">"bed" (doubled tt = short e)</span>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="pair-word pair-long">
+        Ofen
+        <span class="pair-ipa">/oːfən/</span>
+        <span class="pair-meaning">"oven" (single f before vowel = long o)</span>
+      </div>
+      <span class="pair-vs">vs.</span>
+      <div class="pair-word pair-short">
+        o<span style="font-weight:900;">ff</span>en
+        <span class="pair-ipa">/ɔfən/</span>
+        <span class="pair-meaning">"open" (doubled ff = short o)</span>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="pair-word pair-long">
+        in Ma<span style="font-weight:900;">ß</span>en
+        <span class="pair-ipa">/maːsən/</span>
+        <span class="pair-meaning">"in moderation" (ß = long a)</span>
+      </div>
+      <span class="pair-vs">vs.</span>
+      <div class="pair-word pair-short">
+        in Ma<span style="font-weight:900;">ss</span>en
+        <span class="pair-ipa">/masən/</span>
+        <span class="pair-meaning">"in masses" (ss = short a)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-compare">
+    <h3>English Comparison: No Vowel Length Encoding</h3>
+    <div class="en-examples">
+      <div class="en-ex">
+        <div class="en-word">boot</div>
+        <div class="en-ipa">/buːt/</div>
+        <div class="en-len l">LONG</div>
+      </div>
+      <div class="en-ex">
+        <div class="en-word">book</div>
+        <div class="en-ipa">/bʊk/</div>
+        <div class="en-len s">SHORT</div>
+      </div>
+      <div class="en-ex">
+        <div class="en-word">food</div>
+        <div class="en-ipa">/fuːd/</div>
+        <div class="en-len l">LONG</div>
+      </div>
+      <div class="en-ex">
+        <div class="en-word">foot</div>
+        <div class="en-ipa">/fʊt/</div>
+        <div class="en-len s">SHORT</div>
+      </div>
+      <div class="en-ex">
+        <div class="en-word">put</div>
+        <div class="en-ipa">/pʊt/</div>
+        <div class="en-len s">SHORT</div>
+      </div>
+      <div class="en-ex">
+        <div class="en-word">putt</div>
+        <div class="en-ipa">/pʌt/</div>
+        <div class="en-len s">SHORT</div>
+      </div>
+    </div>
+    <div class="en-verdict">Nothing in English spelling reliably tells you whether a vowel is long or short. You must memorize each word individually.</div>
+  </div>
+
+  <div class="convergence">
+    <p>Four strategies, one system: German spelling encodes vowel length in nearly every word.</p>
+    <p class="detail">A reader can determine vowel length from spelling alone in the vast majority of cases. This is a pronunciation guide built into the orthography -- and one of the most learnable features for pattern seekers.</p>
+  </div>
+
+  <figcaption>
+    German's four vowel-length encoding strategies create an interlocking system. Long vowels are signaled by doubled vowels, Dehnungs-h, or the ie digraph; short vowels are signaled by doubled consonants. English has no comparable mechanism -- vowel length must be learned word by word.
+  </figcaption>
+</figure>
+</body>
+</html>

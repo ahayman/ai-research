@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prefix Derivation Network -- The "kommen" Family</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --center-color: #e63946;
+    --center-bg: #fef2f2;
+    --sep-color: #3b82f6;
+    --sep-bg: #eff6ff;
+    --insep-color: #8b5cf6;
+    --insep-bg: #f5f3ff;
+    --en-color: #10b981;
+    --en-bg: #ecfdf5;
+    --muted: #6c757d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --center-color: #f87171;
+      --center-bg: #2a1520;
+      --sep-color: #60a5fa;
+      --sep-bg: #1e293b;
+      --insep-color: #a78bfa;
+      --insep-bg: #1e1b3a;
+      --en-color: #34d399;
+      --en-bg: #132e24;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Center node */
+  .hub {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .hub-node {
+    display: inline-block;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--center-bg);
+    border: 4px solid var(--center-color);
+    line-height: 130px;
+    text-align: center;
+  }
+  .hub-node .verb {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--center-color);
+    vertical-align: middle;
+    line-height: 1.2;
+    display: inline-block;
+  }
+  .hub-node .verb-sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .hub-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Spokes grid */
+  .spokes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .spoke {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    border: 1px solid;
+  }
+  .spoke.sep {
+    background: var(--sep-bg);
+    border-color: var(--sep-color);
+  }
+  .spoke.insep {
+    background: var(--insep-bg);
+    border-color: var(--insep-color);
+  }
+
+  .prefix-tag {
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+  }
+  .spoke.sep .prefix-tag { color: var(--sep-color); background: var(--surface); border: 1px solid var(--sep-color); }
+  .spoke.insep .prefix-tag { color: var(--insep-color); background: var(--surface); border: 1px solid var(--insep-color); }
+
+  .spoke-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .derived-verb {
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  .spoke.sep .derived-verb { color: var(--sep-color); }
+  .spoke.insep .derived-verb { color: var(--insep-color); }
+  .prefix-meaning {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .en-equiv {
+    font-size: 0.78rem;
+    color: var(--en-color);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* Comparison panel */
+  .comparison-panel {
+    border: 2px solid var(--en-color);
+    background: var(--en-bg);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .comparison-panel h3 {
+    color: var(--en-color);
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    text-align: center;
+  }
+  .comparison-text {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .word-tag {
+    padding: 0.15rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .word-tag.de {
+    background: var(--center-bg);
+    border: 1px solid var(--center-color);
+    color: var(--center-color);
+  }
+  .word-tag.en {
+    background: var(--en-bg);
+    border: 1px solid var(--en-color);
+    color: var(--en-color);
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-box {
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .stat-box .stat-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--center-color);
+  }
+  .stat-box .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .spokes-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr; gap: 0.5rem; }
+    .spoke { grid-template-columns: 60px 1fr; }
+    .en-equiv { grid-column: 1 / -1; text-align: left; padding-top: 0.2rem; border-top: 1px dashed var(--border); }
+  }
+  @media print {
+    body { background: #fff; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Prefix Derivation Network</h2>
+  <p class="subtitle">One verb -- "kommen" (to come) -- generates 16+ distinct verbs through systematic prefixation.</p>
+
+  <!-- Hub -->
+  <div class="hub">
+    <div class="hub-node">
+      <span class="verb">kommen<span class="verb-sub">to come</span></span>
+    </div>
+    <div class="hub-desc">Base verb: one of the most common verbs in German</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-box">
+      <div class="stat-num">16+</div>
+      <div class="stat-label">derived verbs from one root</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">9</div>
+      <div class="stat-label">separable prefix forms</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">5</div>
+      <div class="stat-label">inseparable prefix forms</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sep-color);"></div> Separable prefix (splits in main clause)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--insep-color);"></div> Inseparable prefix (stays attached)</div>
+  </div>
+
+  <!-- Spokes -->
+  <div class="spokes-grid">
+    <div class="spoke sep">
+      <span class="prefix-tag">an-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">ankommen</span>
+        <span class="prefix-meaning">"come to/at"</span>
+      </div>
+      <span class="en-equiv">arrive</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">auf-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">aufkommen</span>
+        <span class="prefix-meaning">"come up"</span>
+      </div>
+      <span class="en-equiv">arise</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">aus-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">auskommen</span>
+        <span class="prefix-meaning">"come out/through"</span>
+      </div>
+      <span class="en-equiv">get by / manage</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">mit-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">mitkommen</span>
+        <span class="prefix-meaning">"come with"</span>
+      </div>
+      <span class="en-equiv">come along</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">nach-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">nachkommen</span>
+        <span class="prefix-meaning">"come after"</span>
+      </div>
+      <span class="en-equiv">follow / comply</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">vor-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">vorkommen</span>
+        <span class="prefix-meaning">"come before"</span>
+      </div>
+      <span class="en-equiv">occur / seem</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">zu-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">zukommen</span>
+        <span class="prefix-meaning">"come toward"</span>
+      </div>
+      <span class="en-equiv">approach / be due</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">ab-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">abkommen</span>
+        <span class="prefix-meaning">"come away from"</span>
+      </div>
+      <span class="en-equiv">deviate / stray</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">her-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">herkommen</span>
+        <span class="prefix-meaning">"come from here"</span>
+      </div>
+      <span class="en-equiv">originate / come from</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">unter-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">unterkommen</span>
+        <span class="prefix-meaning">"come under"</span>
+      </div>
+      <span class="en-equiv">find shelter</span>
+    </div>
+
+    <div class="spoke insep">
+      <span class="prefix-tag">be-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">bekommen</span>
+        <span class="prefix-meaning">"come upon" (inseparable)</span>
+      </div>
+      <span class="en-equiv">receive / get</span>
+    </div>
+
+    <div class="spoke insep">
+      <span class="prefix-tag">ent-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">entkommen</span>
+        <span class="prefix-meaning">"come away from" (inseparable)</span>
+      </div>
+      <span class="en-equiv">escape</span>
+    </div>
+
+    <div class="spoke insep">
+      <span class="prefix-tag">ver-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">verkommen</span>
+        <span class="prefix-meaning">"come wrongly/away" (inseparable)</span>
+      </div>
+      <span class="en-equiv">deteriorate / decay</span>
+    </div>
+
+    <div class="spoke insep">
+      <span class="prefix-tag">um-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">umkommen</span>
+        <span class="prefix-meaning">"come around = fail to return"</span>
+      </div>
+      <span class="en-equiv">perish</span>
+    </div>
+
+    <div class="spoke insep">
+      <span class="prefix-tag">ueber-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">ueberkommen</span>
+        <span class="prefix-meaning">"come over" (inseparable)</span>
+      </div>
+      <span class="en-equiv">overcome</span>
+    </div>
+
+    <div class="spoke sep">
+      <span class="prefix-tag">ein-</span>
+      <div class="spoke-body">
+        <span class="derived-verb">Einkommen</span>
+        <span class="prefix-meaning">"come in" (as noun)</span>
+      </div>
+      <span class="en-equiv">income</span>
+    </div>
+  </div>
+
+  <!-- English comparison -->
+  <div class="comparison-panel">
+    <h3>English Uses Unrelated Words Where German Builds</h3>
+    <div class="comparison-text">
+      German derives all 16 verbs from one recognizable root: <strong>kommen</strong>.<br>
+      English equivalents are mostly unrelated words from different etymological sources.
+    </div>
+    <div class="word-list">
+      <span class="word-tag en">arrive</span>
+      <span class="word-tag en">receive</span>
+      <span class="word-tag en">escape</span>
+      <span class="word-tag en">perish</span>
+      <span class="word-tag en">deteriorate</span>
+      <span class="word-tag en">occur</span>
+      <span class="word-tag en">deviate</span>
+      <span class="word-tag en">overcome</span>
+    </div>
+    <p style="font-size:0.78rem; color:var(--muted); margin-top:0.6rem; text-align:center;">
+      English does have phrasal verbs (come in, come out, come up, come across) that parallel the German system -- but these are notoriously unpredictable. German's prefix meanings follow more identifiable patterns.
+    </p>
+  </div>
+
+  <figcaption>
+    <strong>Figure 5: Prefix Derivation Network -- The "kommen" Family</strong>
+    <span>A single German base verb generates 16+ distinct meanings through systematic prefixation. Separable prefixes (an-, auf-, aus-, mit-, etc.) split from the verb in main clauses; inseparable prefixes (be-, ent-, ver-, um-, ueber-) remain attached. Each prefix carries identifiable semantic tendencies: ent- implies escape/removal, ver- implies deterioration/going astray, be- often adds transitivity. English uses mostly unrelated words for the same meanings (arrive, receive, escape, perish, deteriorate), requiring separate memorization for each concept.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

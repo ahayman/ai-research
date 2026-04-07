@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Order Algorithm -- Satzklammer</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --vorfeld: #8b5cf6;
+    --vorfeld-bg: #f5f3ff;
+    --verb: #ef4444;
+    --verb-bg: #fef2f2;
+    --mittel: #3b82f6;
+    --mittel-bg: #eff6ff;
+    --vend: #f59e0b;
+    --vend-bg: #fffbeb;
+    --conj: #10b981;
+    --conj-bg: #ecfdf5;
+    --muted: #6c757d;
+    --bracket: #f97316;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --vorfeld: #a78bfa;
+      --vorfeld-bg: #1e1535;
+      --verb: #f87171;
+      --verb-bg: #2a1515;
+      --mittel: #60a5fa;
+      --mittel-bg: #1e293b;
+      --vend: #fbbf24;
+      --vend-bg: #2a2510;
+      --conj: #34d399;
+      --conj-bg: #132e24;
+      --muted: #9a9ab0;
+      --bracket: #fb923c;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .bracket-concept {
+    background: var(--bg);
+    border: 2px solid var(--bracket);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .bracket-concept h3 {
+    color: var(--bracket);
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+  .bracket-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 0.8rem 0;
+  }
+  .bv-slot {
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin: 0.15rem;
+  }
+  .bv-vorfeld { background: var(--vorfeld-bg); color: var(--vorfeld); border: 1px solid var(--vorfeld); }
+  .bv-v2 { background: var(--verb-bg); color: var(--verb); border: 2px solid var(--verb); font-size: 0.95rem; }
+  .bv-mittel { background: var(--mittel-bg); color: var(--mittel); border: 1px dashed var(--mittel); min-width: 200px; }
+  .bv-vend { background: var(--vend-bg); color: var(--vend); border: 2px solid var(--vend); font-size: 0.95rem; }
+  .bv-arrow { font-size: 1.2rem; color: var(--muted); margin: 0 0.2rem; }
+  .bracket-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+  .bracket-left { color: var(--verb); font-weight: 700; }
+  .bracket-right { color: var(--vend); font-weight: 700; }
+  .bracket-brace { font-size: 1.3rem; color: var(--bracket); }
+
+  .clause-types {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .clause-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .clause-header {
+    padding: 0.7rem 1.2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .clause-header .tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .clause-main .clause-header { background: var(--verb-bg); }
+  .clause-main .tag { background: var(--verb); }
+  .clause-sub .clause-header { background: var(--conj-bg); }
+  .clause-sub .tag { background: var(--conj); }
+  .clause-q1 .clause-header { background: var(--vorfeld-bg); }
+  .clause-q1 .tag { background: var(--vorfeld); }
+  .clause-wq .clause-header { background: var(--mittel-bg); }
+  .clause-wq .tag { background: var(--mittel); }
+
+  .clause-body {
+    padding: 1rem 1.2rem;
+  }
+
+  .slot-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .slot {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.82rem;
+    border: 1px solid var(--border);
+    text-align: center;
+    min-width: 60px;
+  }
+  .slot-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .slot-vorfeld { background: var(--vorfeld-bg); border-color: var(--vorfeld); }
+  .slot-v2 { background: var(--verb-bg); border-color: var(--verb); font-weight: 700; }
+  .slot-mittel { background: var(--mittel-bg); border-color: var(--mittel); flex-grow: 1; }
+  .slot-vend { background: var(--vend-bg); border-color: var(--vend); font-weight: 700; }
+  .slot-conj { background: var(--conj-bg); border-color: var(--conj); font-weight: 700; }
+
+  .example-line {
+    font-size: 0.88rem;
+    margin-top: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .example-line .de {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  .example-line .en {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+  .v-highlight { color: var(--verb); font-weight: 700; }
+  .ve-highlight { color: var(--vend); font-weight: 700; }
+  .vf-highlight { color: var(--vorfeld); font-weight: 700; }
+  .cj-highlight { color: var(--conj); font-weight: 700; }
+
+  .tekamolo {
+    background: var(--mittel-bg);
+    border: 1px solid var(--mittel);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-top: 1.5rem;
+  }
+  .tekamolo h3 {
+    font-size: 0.95rem;
+    color: var(--mittel);
+    margin-bottom: 0.5rem;
+  }
+  .teka-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .teka-item {
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 2px solid var(--mittel);
+    background: var(--bg);
+  }
+  .teka-arrow { color: var(--muted); font-size: 1.2rem; }
+  .teka-item .abbr {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 400;
+    display: block;
+  }
+
+  .comparison {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  @media (max-width: 600px) {
+    .comparison { grid-template-columns: 1fr; }
+  }
+  .comp-card {
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+  }
+  .comp-de {
+    background: var(--verb-bg);
+    border: 1px solid var(--verb);
+  }
+  .comp-en {
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .comp-card h4 {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+  .comp-de h4 { color: var(--verb); }
+  .comp-en h4 { color: var(--muted); }
+
+  figcaption {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>The Word Order Algorithm</h2>
+  <p class="subtitle">V2 / Verb-Final: two rules that govern all German sentence structure, unified by the Satzklammer (sentence bracket)</p>
+
+  <!-- Bracket Concept -->
+  <div class="bracket-concept">
+    <h3>The Satzklammer (Sentence Bracket)</h3>
+    <p style="font-size:0.9rem;margin-bottom:0.6rem;">Every German sentence creates a frame between the finite verb and the non-finite verb parts. Everything else goes inside.</p>
+    <div class="bracket-visual">
+      <span class="bv-slot bv-vorfeld">Vorfeld</span>
+      <span class="bracket-brace">[</span>
+      <span class="bv-slot bv-v2">FINITE VERB</span>
+      <span class="bv-arrow">&mdash;</span>
+      <span class="bv-slot bv-mittel">Mittelfeld (Te-Ka-Mo-Lo)</span>
+      <span class="bv-arrow">&mdash;</span>
+      <span class="bv-slot bv-vend">NON-FINITE</span>
+      <span class="bracket-brace">]</span>
+    </div>
+    <div class="bracket-label">
+      <span class="bracket-left">Left bracket</span>
+      <span style="color:var(--bracket);">&harr; the bracket frames the middle field &harr;</span>
+      <span class="bracket-right">Right bracket</span>
+    </div>
+  </div>
+
+  <!-- Four Clause Types -->
+  <div class="clause-types">
+
+    <!-- Main Clause -->
+    <div class="clause-card clause-main">
+      <div class="clause-header"><span class="tag">V2</span> Main Clause (Declarative)</div>
+      <div class="clause-body">
+        <div class="slot-row">
+          <div class="slot slot-vorfeld"><span class="slot-label">Vorfeld</span>ONE constituent</div>
+          <div class="slot slot-v2"><span class="slot-label">Position 2</span>FINITE VERB</div>
+          <div class="slot slot-mittel"><span class="slot-label">Mittelfeld</span>Subject (if not in Vorfeld) + Te-Ka-Mo-Lo + Objects</div>
+          <div class="slot slot-vend"><span class="slot-label">End</span>NON-FINITE</div>
+        </div>
+        <div class="example-line">
+          <div class="de"><span class="vf-highlight">Gestern</span> <span class="v-highlight">rief</span> ich leider meine Mutter in Berlin <span class="ve-highlight">an</span>.</div>
+          <div class="en">Yesterday I unfortunately called my mother in Berlin. (rief...an = called, separated prefix)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subordinate Clause -->
+    <div class="clause-card clause-sub">
+      <div class="clause-header"><span class="tag">V-FINAL</span> Subordinate Clause</div>
+      <div class="clause-body">
+        <div class="slot-row">
+          <div class="slot slot-conj"><span class="slot-label">Conjunction</span>weil, dass, wenn...</div>
+          <div class="slot slot-mittel"><span class="slot-label">Middle</span>Subject + Te-Ka-Mo-Lo + Objects</div>
+          <div class="slot slot-vend"><span class="slot-label">End</span>ALL VERBS (non-finite + finite LAST)</div>
+        </div>
+        <div class="example-line">
+          <div class="de">...<span class="cj-highlight">weil</span> ich gestern leider meine Mutter in Berlin <span class="ve-highlight">angerufen habe</span>.</div>
+          <div class="en">...because I yesterday unfortunately my mother in Berlin called have.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yes/No Question -->
+    <div class="clause-card clause-q1">
+      <div class="clause-header"><span class="tag">V1</span> Yes/No Question</div>
+      <div class="clause-body">
+        <div class="slot-row">
+          <div class="slot slot-v2"><span class="slot-label">Position 1</span>FINITE VERB</div>
+          <div class="slot slot-mittel"><span class="slot-label">Mittelfeld</span>Subject + Te-Ka-Mo-Lo + Objects</div>
+          <div class="slot slot-vend"><span class="slot-label">End</span>NON-FINITE</div>
+        </div>
+        <div class="example-line">
+          <div class="de"><span class="v-highlight">Rufst</span> du morgen deine Mutter <span class="ve-highlight">an</span>?</div>
+          <div class="en">Do you call your mother tomorrow? (No do-support needed!)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- W-Question -->
+    <div class="clause-card clause-wq">
+      <div class="clause-header"><span class="tag">W + V2</span> W-Question (wer, was, wo, wann, warum, wie)</div>
+      <div class="clause-body">
+        <div class="slot-row">
+          <div class="slot slot-vorfeld"><span class="slot-label">W-Word</span>wer, was, wo...</div>
+          <div class="slot slot-v2"><span class="slot-label">Position 2</span>FINITE VERB</div>
+          <div class="slot slot-mittel"><span class="slot-label">Mittelfeld</span>Te-Ka-Mo-Lo + Objects</div>
+          <div class="slot slot-vend"><span class="slot-label">End</span>NON-FINITE</div>
+        </div>
+        <div class="example-line">
+          <div class="de"><span class="vf-highlight">Warum</span> <span class="v-highlight">hast</span> du gestern deine Mutter <span class="ve-highlight">angerufen</span>?</div>
+          <div class="en">Why have you yesterday your mother called?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TeKaMoLo -->
+  <div class="tekamolo">
+    <h3>Mittelfeld Order: TeKaMoLo</h3>
+    <div class="teka-row">
+      <div class="teka-item">Te<span class="abbr">Temporal (when?)</span></div>
+      <span class="teka-arrow">&rarr;</span>
+      <div class="teka-item">Ka<span class="abbr">Kausal (why?)</span></div>
+      <span class="teka-arrow">&rarr;</span>
+      <div class="teka-item">Mo<span class="abbr">Modal (how?)</span></div>
+      <span class="teka-arrow">&rarr;</span>
+      <div class="teka-item">Lo<span class="abbr">Lokal (where?)</span></div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;">Default order for adverbials in the middle field. Pronoun objects precede full-noun objects. Dative before accusative (unless pronoun).</p>
+  </div>
+
+  <!-- Comparison -->
+  <div class="comparison">
+    <div class="comp-card comp-de">
+      <h4>German: Two Rules</h4>
+      <ul style="font-size:0.82rem;padding-left:1rem;">
+        <li>Main clause: V2 (verb second)</li>
+        <li>Subordinate clause: Verb-final</li>
+        <li>Question: V1 (verb first)</li>
+        <li>All unified by the Satzklammer</li>
+      </ul>
+    </div>
+    <div class="comp-card comp-en">
+      <h4>English: Multiple Strategies</h4>
+      <ul style="font-size:0.82rem;padding-left:1rem;">
+        <li>Statement: SVO (fixed)</li>
+        <li>Question: do-support + inversion</li>
+        <li>Subordinate: same as main (SVO)</li>
+        <li>No unifying bracket structure</li>
+      </ul>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>German for Pattern Learners (CAPSTONE) -- Diagram 3 of 6.</strong> German word order follows a strict algorithm: V2 in main clauses, verb-final in subordinate clauses, V1 for yes/no questions. The Satzklammer (sentence bracket) is the unifying concept: the finite verb and non-finite parts create a frame around the middle field. Color coding: <span style="color:var(--vorfeld);font-weight:700;">purple = Vorfeld</span>, <span style="color:var(--verb);font-weight:700;">red = finite verb</span>, <span style="color:var(--mittel);font-weight:700;">blue = Mittelfeld</span>, <span style="color:var(--vend);font-weight:700;">amber = non-finite/end</span>, <span style="color:var(--conj);font-weight:700;">green = conjunction</span>.
+  </figcaption>
+</figure>
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orthographic Depth Spectrum -- German vs. English Among European Languages</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --accent-de: #e63946;
+    --accent-en: #3b82f6;
+    --accent-de-bg: #fef2f2;
+    --accent-en-bg: #eff6ff;
+    --shallow: #10b981;
+    --shallow-bg: #ecfdf5;
+    --deep: #e63946;
+    --deep-bg: #fef2f2;
+    --mid: #f59e0b;
+    --mid-bg: #fffbeb;
+    --muted: #6c757d;
+    --highlight: #8b5cf6;
+    --highlight-bg: #f5f3ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --accent-de: #f87171;
+      --accent-en: #60a5fa;
+      --accent-de-bg: #2a1215;
+      --accent-en-bg: #1e293b;
+      --shallow: #34d399;
+      --shallow-bg: #132e24;
+      --deep: #f87171;
+      --deep-bg: #2a1215;
+      --mid: #fbbf24;
+      --mid-bg: #2a2510;
+      --highlight: #a78bfa;
+      --highlight-bg: #1e1b3a;
+      --muted: #9a9ab0;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  /* Spectrum */
+  .spectrum-container {
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.5rem 3.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .spectrum-title { text-align: center; font-size: 0.95rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--highlight); }
+  .spectrum-bar {
+    position: relative;
+    height: 56px;
+    background: linear-gradient(to right, var(--shallow-bg), var(--mid-bg) 50%, var(--deep-bg));
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin: 0 2rem;
+  }
+  .spectrum-gradient-line {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 6px;
+    transform: translateY(-50%);
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--shallow), var(--mid) 50%, var(--deep));
+  }
+  .lang-marker {
+    position: absolute;
+    top: -12px;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+    cursor: default;
+  }
+  .lang-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin: 0 auto 3px;
+    border: 3px solid var(--fg);
+    transition: transform 0.2s;
+  }
+  .lang-marker:hover .lang-dot { transform: scale(1.3); }
+  .lang-name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .lang-marker.de .lang-name { color: var(--accent-de); font-size: 0.82rem; }
+  .lang-marker.en .lang-name { color: var(--accent-en); font-size: 0.82rem; }
+  .lang-pct {
+    font-size: 0.65rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .spectrum-axis {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 2rem 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .spectrum-axis .s-label { color: var(--shallow); }
+  .spectrum-axis .d-label { color: var(--deep); }
+
+  /* Highlight bracket for German */
+  .de-bracket {
+    position: absolute;
+    bottom: -28px;
+    height: 18px;
+    border: 2px solid var(--accent-de);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+  }
+  .de-bracket-label {
+    position: absolute;
+    bottom: -46px;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-de);
+    white-space: nowrap;
+  }
+
+  /* Seymour data */
+  .seymour-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .seymour-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .seymour-card h3 {
+    font-size: 0.92rem;
+    margin-bottom: 0.8rem;
+  }
+  .seymour-card.acquisition h3 { color: var(--highlight); }
+  .seymour-card.pathways h3 { color: var(--mid); }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .bar-label {
+    width: 65px;
+    font-weight: 600;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    transition: width 0.6s ease;
+  }
+  .bar-note { font-size: 0.72rem; color: var(--muted); }
+
+  /* Pathway cards */
+  .pathway-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .pathway-card .pw-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .pathway-card .pw-desc { font-size: 0.78rem; color: var(--muted); }
+  .pathway-card.rule { border-color: var(--shallow); }
+  .pathway-card.rule .pw-title { color: var(--shallow); }
+  .pathway-card.whole { border-color: var(--deep); }
+  .pathway-card.whole .pw-title { color: var(--deep); }
+
+  /* Example comparison */
+  .example-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .example-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .example-card.de { border-color: var(--accent-de); }
+  .example-card.en { border-color: var(--accent-en); }
+  .example-card h4 { font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .example-card.de h4 { color: var(--accent-de); }
+  .example-card.en h4 { color: var(--accent-en); }
+  .ex-word {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+  }
+  .ex-ipa { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .ex-rule {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    font-weight: 600;
+  }
+  .ex-rule.predictable { background: var(--shallow-bg); color: var(--shallow); }
+  .ex-rule.chaotic { background: var(--deep-bg); color: var(--deep); }
+
+  /* Sister languages callout */
+  .sister-callout {
+    border: 2px dashed var(--highlight);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    background: var(--highlight-bg);
+  }
+  .sister-callout p {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--highlight);
+  }
+  .sister-callout .detail {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 0.3rem;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    figure { padding: 1.5rem; }
+    .seymour-section { grid-template-columns: 1fr; }
+    .example-grid { grid-template-columns: 1fr; }
+    .spectrum-bar { margin: 0 0.5rem; }
+    .spectrum-axis { margin: 0.5rem 0.5rem 0; }
+    .lang-name { font-size: 0.65rem; }
+    .lang-pct { font-size: 0.58rem; }
+  }
+  @media print {
+    body { padding: 0; }
+    figure { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Orthographic Depth Spectrum</h2>
+  <p class="subtitle">German and English are sister languages that sit at opposite ends of spelling transparency -- with dramatic consequences for reading acquisition</p>
+
+  <div class="spectrum-container">
+    <div class="spectrum-title">Where European Languages Fall on the Shallow-to-Deep Continuum</div>
+    <div class="spectrum-bar">
+      <div class="spectrum-gradient-line"></div>
+
+      <div class="lang-marker" style="left:6%;">
+        <div class="lang-dot" style="background:var(--shallow);"></div>
+        <div class="lang-name">Finnish</div>
+        <div class="lang-pct">~100%</div>
+      </div>
+      <div class="lang-marker" style="left:14%;">
+        <div class="lang-dot" style="background:var(--shallow);"></div>
+        <div class="lang-name">Italian</div>
+        <div class="lang-pct">~98%</div>
+      </div>
+      <div class="lang-marker" style="left:21%;">
+        <div class="lang-dot" style="background:var(--shallow);"></div>
+        <div class="lang-name">Spanish</div>
+        <div class="lang-pct">~97%</div>
+      </div>
+      <div class="lang-marker de" style="left:34%;">
+        <div class="lang-dot" style="background:var(--accent-de);"></div>
+        <div class="lang-name">German</div>
+        <div class="lang-pct">~90-95%</div>
+        <div class="de-bracket" style="left:-20px;width:40px;"></div>
+      </div>
+      <div class="lang-marker" style="left:52%;">
+        <div class="lang-dot" style="background:var(--mid);"></div>
+        <div class="lang-name">French</div>
+        <div class="lang-pct">~85% read</div>
+      </div>
+      <div class="lang-marker" style="left:68%;">
+        <div class="lang-dot" style="background:#e67e22;"></div>
+        <div class="lang-name">Danish</div>
+        <div class="lang-pct">~75%</div>
+      </div>
+      <div class="lang-marker en" style="left:90%;">
+        <div class="lang-dot" style="background:var(--accent-en);"></div>
+        <div class="lang-name">English</div>
+        <div class="lang-pct">~60-70%</div>
+      </div>
+    </div>
+    <div class="spectrum-axis">
+      <span class="s-label">SHALLOW (transparent) -- rule-based decoding works</span>
+      <span class="d-label">DEEP (opaque) -- must memorize whole words</span>
+    </div>
+  </div>
+
+  <div class="sister-callout">
+    <p>German and English are both West Germanic languages -- yet they sit at opposite ends of the orthographic depth spectrum.</p>
+    <p class="detail">Same language family, radically different spelling systems. German preserved spelling transparency; English absorbed French, Latin, and Norse spellings, creating layers of irregularity.</p>
+  </div>
+
+  <div class="seymour-section">
+    <div class="seymour-card acquisition">
+      <h3>Seymour et al. (2003): Reading Acquisition Speed</h3>
+      <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;">Foundation literacy benchmarks -- time to reach equivalent reading competence, relative to transparent baseline</p>
+
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--shallow);">Finnish</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:38%;background:var(--shallow);">1.0x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--shallow);">Italian</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:38%;background:var(--shallow);">1.0x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--shallow);">Spanish</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:40%;background:var(--shallow);">1.1x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--accent-de);">German</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:42%;background:var(--accent-de);">1.1x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--mid);">French</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:62%;background:var(--mid);">1.6x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:#e67e22;">Danish</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:72%;background:#e67e22;">1.9x</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--accent-en);">English</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:95%;background:var(--accent-en);">2.5x</div>
+        </div>
+      </div>
+      <p class="bar-note" style="margin-top:0.5rem;">English-speaking children take 2.5x longer to reach foundation reading competence compared to children learning transparent orthographies like German.</p>
+    </div>
+
+    <div class="seymour-card pathways">
+      <h3>Two Different Cognitive Pathways</h3>
+      <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;">The Orthographic Depth Hypothesis (Katz &amp; Frost, 1992): shallow and deep orthographies activate fundamentally different reading strategies.</p>
+
+      <div class="pathway-card rule">
+        <div class="pw-title">German: Phonological Decoding</div>
+        <div class="pw-desc">Apply ~24 rules, sound the word out. Works for virtually any word, even words never seen before. The system rewards rule-learning.</div>
+      </div>
+      <div class="pathway-card whole">
+        <div class="pw-title">English: Whole-Word Recognition</div>
+        <div class="pw-desc">Must memorize thousands of words as visual wholes. Rules exist but have hundreds of exceptions. Encountering new words requires guessing.</div>
+      </div>
+
+      <div style="border:1px solid var(--border);border-radius:8px;padding:0.7rem;margin-top:0.5rem;font-size:0.78rem;">
+        <strong style="color:var(--highlight);">Pattern-learner implication:</strong> German's rule-based system is ideal for systematic thinkers. Learn the rules once, apply them everywhere. English forces rote memorization -- an inherently less satisfying strategy for pattern seekers.
+      </div>
+    </div>
+  </div>
+
+  <div class="example-grid">
+    <div class="example-card de">
+      <h4>German: Predictable from Spelling</h4>
+      <div class="ex-word">Straße</div>
+      <div class="ex-ipa">/ʃtʁaːsə/</div>
+      <div class="ex-rule predictable">Every letter follows a rule: st- = /ʃt/, a + ß = long /aː/ + /s/, -e = /ə/</div>
+      <div style="margin-top:0.6rem;font-size:0.78rem;color:var(--muted);">Even this word with the "exotic" ß is 100% decodable by rule.</div>
+    </div>
+    <div class="example-card en">
+      <h4>English: Must Be Memorized</h4>
+      <div class="ex-word" style="font-size:1.3rem;">through / though / thought / tough / cough / bough</div>
+      <div class="ex-ipa" style="font-size:0.8rem;">/θruː/ /ðoʊ/ /θɔːt/ /tʌf/ /kɒf/ /baʊ/</div>
+      <div class="ex-rule chaotic">Same "ough" spelling = 6 different pronunciations. No rule can predict which.</div>
+      <div style="margin-top:0.6rem;font-size:0.78rem;color:var(--muted);">English spelling preserves historical layers from Old English, French, and Latin -- making patterns unreliable.</div>
+    </div>
+  </div>
+
+  <figcaption>
+    Orthographic depth positions based on Seymour et al. (2003) and Katz &amp; Frost (1992). Percentages indicate approximate grapheme-to-phoneme regularity in the reading direction. German achieves near-transparent spelling-to-sound mapping despite using the same Latin alphabet as the deeply opaque English system.
+  </figcaption>
+</figure>
+</body>
+</html>

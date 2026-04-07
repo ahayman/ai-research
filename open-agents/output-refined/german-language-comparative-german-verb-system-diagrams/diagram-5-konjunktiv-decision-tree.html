@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konjunktiv I vs. Konjunktiv II Decision Tree</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --ki: #3b82f6;
+    --ki-bg: #eff6ff;
+    --kii: #8b5cf6;
+    --kii-bg: #f5f3ff;
+    --wuerde: #f59e0b;
+    --wuerde-bg: #fffbeb;
+    --question: #10b981;
+    --question-bg: #ecfdf5;
+    --en-color: #6b7280;
+    --en-bg: #f3f4f6;
+    --muted: #6c757d;
+    --danger: #e63946;
+    --danger-bg: #fef2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --ki: #60a5fa;
+      --ki-bg: #1e293b;
+      --kii: #a78bfa;
+      --kii-bg: #1e1b3a;
+      --wuerde: #fbbf24;
+      --wuerde-bg: #2a2510;
+      --question: #34d399;
+      --question-bg: #132e24;
+      --en-color: #9ca3af;
+      --en-bg: #1f2937;
+      --muted: #9a9ab0;
+      --danger: #ff6b6b;
+      --danger-bg: #2a1515;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1200px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .column-card {
+    border: 3px solid;
+    border-radius: 14px;
+    padding: 1.3rem;
+  }
+  .column-card.ki { border-color: var(--ki); }
+  .column-card.kii { border-color: var(--kii); }
+
+  .column-header {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .column-card.ki .column-header { color: var(--ki); }
+  .column-card.kii .column-header { color: var(--kii); }
+
+  .column-subtitle {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    font-style: italic;
+  }
+
+  .section-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+  .column-card.ki .section-title { color: var(--ki); }
+  .column-card.kii .section-title { color: var(--kii); }
+
+  .formula-box {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+  .column-card.ki .formula-box .highlight { color: var(--ki); font-weight: 700; }
+  .column-card.kii .formula-box .highlight { color: var(--kii); font-weight: 700; }
+
+  .example-line {
+    font-size: 0.82rem;
+    margin: 0.25rem 0;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+  }
+  .column-card.ki .example-line { background: var(--ki-bg); }
+  .column-card.kii .example-line { background: var(--kii-bg); }
+  .example-line .de { font-weight: 600; }
+  .example-line .en { color: var(--en-color); font-style: italic; font-size: 0.78rem; }
+
+  .use-list {
+    list-style: none;
+    padding: 0;
+    font-size: 0.82rem;
+  }
+  .use-list li {
+    padding: 0.25rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .use-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .column-card.ki .use-list li::before { background: var(--ki); }
+  .column-card.kii .use-list li::before { background: var(--kii); }
+
+  .register-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .register-badge.formal { background: var(--ki-bg); color: var(--ki); border: 1px solid var(--ki); }
+  .register-badge.all { background: var(--kii-bg); color: var(--kii); border: 1px solid var(--kii); }
+
+  /* Overlap / substitution zone */
+  .overlap-zone {
+    border: 2px solid var(--wuerde);
+    background: var(--wuerde-bg);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .overlap-zone h3 {
+    color: var(--wuerde);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .overlap-zone p { font-size: 0.85rem; }
+
+  .substitution-example {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    margin: 0.4rem 0;
+    padding: 0.3rem 0.6rem;
+    background: var(--bg);
+    border-radius: 4px;
+  }
+  .sub-arrow { color: var(--wuerde); font-weight: 700; font-size: 1.1rem; }
+  .sub-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* Decision tree */
+  .decision-tree {
+    border: 2px solid var(--question);
+    background: var(--question-bg);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .decision-tree h3 {
+    color: var(--question);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .dt-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .dt-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .dt-q {
+    font-weight: 700;
+    min-width: 260px;
+  }
+  .dt-result {
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .dt-result.ki-r { background: var(--ki-bg); color: var(--ki); border: 1px solid var(--ki); }
+  .dt-result.kii-r { background: var(--kii-bg); color: var(--kii); border: 1px solid var(--kii); }
+  .dt-result.wuerde-r { background: var(--wuerde-bg); color: var(--wuerde); border: 1px solid var(--wuerde); }
+  .dt-arrow { color: var(--question); font-weight: 700; }
+
+  .en-comparison {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--en-bg);
+    border: 2px solid var(--en-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+  .en-comparison h4 { color: var(--en-color); margin-bottom: 0.5rem; }
+  .en-comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .en-comp-item {
+    padding: 0.4rem 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+  .en-comp-item .label { font-weight: 600; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 800px) {
+    .two-columns { grid-template-columns: 1fr; }
+    figure { padding: 1.2rem; }
+    .dt-step { flex-direction: column; align-items: flex-start; }
+    .en-comp-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Konjunktiv I vs. Konjunktiv II</h2>
+  <p class="subtitle">Two living subjunctive moods -- one for reported speech, one for hypothetical reality.</p>
+
+  <div class="two-columns">
+    <!-- KI Column -->
+    <div class="column-card ki">
+      <div class="column-header">Konjunktiv I <span class="register-badge formal">formal / written</span></div>
+      <div class="column-subtitle">Indirect speech -- reporting without committing to truth</div>
+
+      <div class="section-title">Formation</div>
+      <div class="formula-box">
+        Infinitive stem + <span class="highlight">-e, -est, -e, -en, -et, -en</span>
+      </div>
+
+      <div class="section-title">Key forms</div>
+      <div class="formula-box">
+        sein &rarr; <span class="highlight">sei</span> &nbsp;|&nbsp; haben &rarr; <span class="highlight">habe</span> &nbsp;|&nbsp; k&ouml;nnen &rarr; <span class="highlight">k&ouml;nne</span>
+      </div>
+
+      <div class="section-title">Uses</div>
+      <ul class="use-list">
+        <li>Reporting someone else's speech</li>
+        <li>Journalism / news reporting</li>
+        <li>Academic writing</li>
+        <li>Set phrases: "Es lebe der K&ouml;nig!"</li>
+      </ul>
+
+      <div class="section-title">Example</div>
+      <div class="example-line">
+        <div class="de">"Er sagte, er <strong>sei</strong> krank."</div>
+        <div class="en">He said he was [reportedly] sick.</div>
+      </div>
+      <div class="example-line">
+        <div class="de">"Die Wirtschaft <strong>wachse</strong> weiter."</div>
+        <div class="en">The economy was [reportedly] continuing to grow.</div>
+      </div>
+    </div>
+
+    <!-- KII Column -->
+    <div class="column-card kii">
+      <div class="column-header">Konjunktiv II <span class="register-badge all">all registers</span></div>
+      <div class="column-subtitle">Hypothetical, conditional, polite -- the living subjunctive</div>
+
+      <div class="section-title">Formation</div>
+      <div class="formula-box">
+        Pr&auml;teritum stem + <span class="highlight">umlaut</span> + <span class="highlight">-e, -est, -e, -en, -et, -en</span><br>
+        <em>or</em> <span class="highlight">w&uuml;rde</span> + infinitive (periphrastic)
+      </div>
+
+      <div class="section-title">Key forms</div>
+      <div class="formula-box">
+        sein &rarr; <span class="highlight">w&auml;re</span> &nbsp;|&nbsp; haben &rarr; <span class="highlight">h&auml;tte</span> &nbsp;|&nbsp; werden &rarr; <span class="highlight">w&uuml;rde</span>
+      </div>
+
+      <div class="section-title">Uses</div>
+      <ul class="use-list">
+        <li>Hypothetical conditions: "Wenn ich reich w&auml;re..."</li>
+        <li>Wishes: "Ich w&uuml;nschte, ich h&auml;tte..."</li>
+        <li>Polite requests: "K&ouml;nnten Sie...?"</li>
+        <li>Unreal comparisons: "als ob er krank w&auml;re"</li>
+      </ul>
+
+      <div class="section-title">Example</div>
+      <div class="example-line">
+        <div class="de">"Wenn ich reich <strong>w&auml;re</strong>, <strong>w&uuml;rde</strong> ich reisen."</div>
+        <div class="en">If I were rich, I would travel.</div>
+      </div>
+      <div class="example-line">
+        <div class="de">"<strong>K&ouml;nnten</strong> Sie mir helfen?"</div>
+        <div class="en">Could you help me?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlap / w&uuml;rde zone -->
+  <div class="overlap-zone">
+    <h3>The w&uuml;rde Periphrasis &amp; the KI/KII Substitution Rule</h3>
+    <p><strong>Problem:</strong> Most weak verbs have KII forms identical to their Pr&auml;teritum (machte = past tense AND subjunctive -- ambiguous).</p>
+    <p><strong>Solution:</strong> Replace synthetic KII with <strong>w&uuml;rde + infinitive</strong> for all verbs except the most common strong forms.</p>
+
+    <div class="substitution-example">
+      <span style="text-decoration:line-through;color:var(--danger);">Ich machte das</span>
+      <span class="sub-label">ambiguous</span>
+      <span class="sub-arrow">&rarr;</span>
+      <strong>Ich w&uuml;rde das machen</strong>
+      <span class="sub-label">clear KII</span>
+    </div>
+
+    <p style="margin-top:0.6rem;"><strong>Keep synthetic forms for:</strong> w&auml;re, h&auml;tte, w&uuml;rde, k&ouml;nnte, d&uuml;rfte, m&uuml;sste, k&auml;me, g&auml;be, w&uuml;sste, g&auml;be, g&auml;be</p>
+
+    <p style="margin-top:0.6rem;"><strong>KI &rarr; KII substitution:</strong> When KI forms are identical to the indicative (all persons except 3rd sg. for most verbs), use KII instead:</p>
+    <div class="substitution-example">
+      <span style="text-decoration:line-through;color:var(--danger);">Sie sagten, sie <em>haben</em> keine Zeit</span>
+      <span class="sub-label">KI = indicative</span>
+      <span class="sub-arrow">&rarr;</span>
+      <strong>Sie sagten, sie <em>h&auml;tten</em> keine Zeit</strong>
+      <span class="sub-label">KII substitutes</span>
+    </div>
+  </div>
+
+  <!-- Decision Tree -->
+  <div class="decision-tree">
+    <h3>Which Subjunctive Do I Need?</h3>
+    <div class="dt-flow">
+      <div class="dt-step">
+        <span class="dt-q">Are you reporting what someone said?</span>
+        <span class="dt-arrow">&rarr; Yes &rarr;</span>
+        <span class="dt-result ki-r">Konjunktiv I</span>
+      </div>
+      <div class="dt-step">
+        <span class="dt-q">Is the KI form identical to the indicative?</span>
+        <span class="dt-arrow">&rarr; Yes &rarr;</span>
+        <span class="dt-result kii-r">Substitute Konjunktiv II</span>
+      </div>
+      <div class="dt-step">
+        <span class="dt-q">Hypothetical / conditional / wish / polite?</span>
+        <span class="dt-arrow">&rarr; Yes &rarr;</span>
+        <span class="dt-result kii-r">Konjunktiv II</span>
+      </div>
+      <div class="dt-step">
+        <span class="dt-q">Is the KII form ambiguous with Pr&auml;teritum?</span>
+        <span class="dt-arrow">&rarr; Yes &rarr;</span>
+        <span class="dt-result wuerde-r">w&uuml;rde + infinitive</span>
+      </div>
+      <div class="dt-step">
+        <span class="dt-q">Is it a common strong verb (w&auml;re, h&auml;tte, k&ouml;nnte...)?</span>
+        <span class="dt-arrow">&rarr; Yes &rarr;</span>
+        <span class="dt-result kii-r">Use synthetic KII form</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-comparison">
+    <h4>English: The Nearly Extinct Subjunctive</h4>
+    <p>German's two living subjunctives map to surviving English fossils:</p>
+    <div class="en-comp-grid">
+      <div class="en-comp-item">
+        <div class="label">German KII &rarr; English fossil</div>
+        <div>"Wenn ich reich <strong>w&auml;re</strong>" = "If I <strong>were</strong> rich"</div>
+        <div style="color:var(--muted);font-size:0.75rem;">The last productive English subjunctive form</div>
+      </div>
+      <div class="en-comp-item">
+        <div class="label">German KI &rarr; English tense-shift</div>
+        <div>"Er sagte, er <strong>sei</strong> krank" = "He said he <strong>was</strong> sick"</div>
+        <div style="color:var(--muted);font-size:0.75rem;">English uses tense-shifting, not mood-marking</div>
+      </div>
+      <div class="en-comp-item">
+        <div class="label">German w&uuml;rde &rarr; English would</div>
+        <div>"Ich <strong>w&uuml;rde</strong> reisen" = "I <strong>would</strong> travel"</div>
+        <div style="color:var(--muted);font-size:0.75rem;">Both languages periphrastic here</div>
+      </div>
+      <div class="en-comp-item">
+        <div class="label">English fossil KI</div>
+        <div>"I suggest he <strong>go</strong>" / "God <strong>save</strong> the Queen"</div>
+        <div style="color:var(--muted);font-size:0.75rem;">Only ~5 phrases survive; German uses KI daily</div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    <strong>Two Subjunctives: A Living System</strong>
+    <span>German maintains what English lost: KI for reported speech (daily in journalism), KII for hypothetical reality (daily in conversation). The w&uuml;rde periphrasis rescues ambiguous KII forms -- parallel to how English "would" replaced synthetic subjunctives.</span>
+  </figcaption>
+</figure>
+</body>
+</html>

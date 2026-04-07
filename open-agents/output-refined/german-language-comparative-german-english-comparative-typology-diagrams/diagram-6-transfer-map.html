@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Map: Helps / Hurts / New for English Speakers Learning German</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0a0e1a; color: #e0e0e0; min-height: 100vh; padding: 2rem 1rem; }
+  h1 { text-align: center; font-size: 1.5rem; color: #fff; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; color: #8899bb; font-size: 0.9rem; margin-bottom: 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .zones { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  .zone {
+    border-radius: 12px;
+    padding: 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .zone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 4px;
+  }
+
+  .zone-green { background: linear-gradient(180deg, #0a2a1a, #0d1f14); border: 1px solid rgba(34, 197, 94, 0.3); }
+  .zone-green::before { background: linear-gradient(to right, #22c55e, #4ade80); }
+  .zone-red { background: linear-gradient(180deg, #2a0f0f, #1f0d0d); border: 1px solid rgba(239, 68, 68, 0.3); }
+  .zone-red::before { background: linear-gradient(to right, #ef4444, #f87171); }
+  .zone-blue { background: linear-gradient(180deg, #0f1a2a, #0d1420); border: 1px solid rgba(59, 130, 246, 0.3); }
+  .zone-blue::before { background: linear-gradient(to right, #3b82f6, #60a5fa); }
+
+  .zone-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding-top: 0.3rem;
+  }
+  .zone-icon { font-size: 1.3rem; }
+  .zone-title { font-size: 1.1rem; font-weight: 800; }
+  .zone-green .zone-title { color: #4ade80; }
+  .zone-red .zone-title { color: #f87171; }
+  .zone-blue .zone-title { color: #60a5fa; }
+
+  .zone-subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.8rem;
+    font-style: italic;
+  }
+
+  .transfer-item {
+    padding: 0.6rem 0.7rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  .zone-green .transfer-item { background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.15); }
+  .zone-red .transfer-item { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.15); }
+  .zone-blue .transfer-item { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.15); }
+
+  .transfer-item .item-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: #fff;
+  }
+  .transfer-item .item-example {
+    font-size: 0.75rem;
+    color: #999;
+    line-height: 1.4;
+  }
+  .transfer-item .item-example .eng { color: #67e8f9; font-weight: 600; }
+  .transfer-item .item-example .ger { color: #fbbf24; font-weight: 600; }
+  .transfer-item .item-example .wrong { color: #f87171; text-decoration: line-through; }
+  .transfer-item .item-example .right { color: #4ade80; }
+
+  .impact-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.3rem;
+  }
+  .impact-label { font-size: 0.6rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+  .impact-dots { display: flex; gap: 2px; }
+  .impact-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .zone-green .impact-dot.active { background: #4ade80; }
+  .zone-green .impact-dot.inactive { background: rgba(34,197,94,0.2); }
+  .zone-red .impact-dot.active { background: #f87171; }
+  .zone-red .impact-dot.inactive { background: rgba(239,68,68,0.2); }
+  .zone-blue .impact-dot.active { background: #60a5fa; }
+  .zone-blue .impact-dot.inactive { background: rgba(59,130,246,0.2); }
+
+  /* Cross-links */
+  .crosslink-section {
+    margin-top: 1.5rem;
+    padding: 1rem 1.2rem;
+    background: linear-gradient(135deg, #111827, #1a2332);
+    border: 1px solid #334155;
+    border-radius: 10px;
+  }
+  .crosslink-section h3 {
+    font-size: 0.95rem;
+    color: #fbbf24;
+    margin-bottom: 0.8rem;
+  }
+  .crosslink-items { display: flex; flex-direction: column; gap: 0.5rem; }
+  .crosslink {
+    display: grid;
+    grid-template-columns: 1fr 30px 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.7rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+  }
+  .crosslink .from {
+    text-align: right;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+  }
+  .crosslink .from.green { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+  .crosslink .from.red { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .crosslink .arrow-cross { color: #fbbf24; text-align: center; font-weight: 700; }
+  .crosslink .to {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+  }
+  .crosslink .to.red { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .crosslink .to.green { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+  .crosslink .context { font-size: 0.68rem; color: #888; grid-column: 1 / -1; text-align: center; padding-top: 0.2rem; }
+
+  /* Strategy box */
+  .strategy-box {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  .strategy {
+    padding: 0.8rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .strategy h4 { font-size: 0.8rem; margin-bottom: 0.3rem; }
+  .strategy p { font-size: 0.72rem; color: #999; line-height: 1.4; }
+  .strategy-go { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+  .strategy-go h4 { color: #4ade80; }
+  .strategy-warn { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+  .strategy-warn h4 { color: #f87171; }
+  .strategy-learn { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); }
+  .strategy-learn h4 { color: #60a5fa; }
+
+  @media (max-width: 900px) {
+    .zones { grid-template-columns: 1fr; }
+    .strategy-box { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Transfer Map: Helps / Hurts / New</h1>
+<p class="subtitle">For English speakers learning German -- what to leverage, what to unlearn, what to build from scratch</p>
+
+<div class="container">
+
+  <div class="zones">
+
+    <!-- GREEN ZONE: POSITIVE TRANSFER -->
+    <div class="zone zone-green">
+      <div class="zone-header">
+        <span class="zone-title">Positive Transfer</span>
+      </div>
+      <div class="zone-subtitle">English knowledge that directly helps</div>
+
+      <div class="transfer-item">
+        <div class="item-title">Cognate Vocabulary</div>
+        <div class="item-example"><span class="eng">house</span> = <span class="ger">Haus</span>, <span class="eng">water</span> = <span class="ger">Wasser</span>, <span class="eng">finger</span> = <span class="ger">Finger</span>. Hundreds of transparent pairs in core vocabulary.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Modal + Bare Infinitive</div>
+        <div class="item-example"><span class="eng">I can swim</span> = <span class="ger">Ich kann schwimmen</span>. Same syntax, direct mapping.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Strong Verb Ablaut Logic</div>
+        <div class="item-example"><span class="eng">sing/sang/sung</span> = <span class="ger">singen/sang/gesungen</span>. The concept of vowel-changing verbs is already familiar.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Article Concept</div>
+        <div class="item-example"><span class="eng">a book / the book</span> = <span class="ger">ein Buch / das Buch</span>. Article usage transfers, even though German articles are far more complex.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Basic SVO Main Clause</div>
+        <div class="item-example"><span class="eng">I see the dog</span> = <span class="ger">Ich sehe den Hund</span>. Main clause SVO matches initially.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Phrasal Verb / Separable Verb</div>
+        <div class="item-example"><span class="eng">look up</span> maps to <span class="ger">aufschauen</span>, <span class="eng">give back</span> maps to <span class="ger">zuruckgeben</span>.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Compound Word Concept</div>
+        <div class="item-example"><span class="eng">airport</span> ~ <span class="ger">Flughafen</span>. English compounds scaffold understanding of German's more productive system.</div>
+        <div class="impact-bar"><span class="impact-label">Impact</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+    </div>
+
+    <!-- RED ZONE: NEGATIVE TRANSFER -->
+    <div class="zone zone-red">
+      <div class="zone-header">
+        <span class="zone-title">Negative Transfer</span>
+      </div>
+      <div class="zone-subtitle">English habits that actively mislead</div>
+
+      <div class="transfer-item">
+        <div class="item-title">SVO Overgeneralization</div>
+        <div class="item-example"><span class="wrong">*weil ich habe keine Zeit</span> &rarr; <span class="right">weil ich keine Zeit habe</span>. English SVO habit invades German subordinate clauses and V2 contexts.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Gender Blindness</div>
+        <div class="item-example">No intuition for <span class="ger">der/die/das</span>. English speakers cannot "feel" why Madchen (girl) is neuter or Tisch (table) is masculine.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Case Blindness</div>
+        <div class="item-example"><span class="wrong">*Ich sehe der Hund</span> &rarr; <span class="right">Ich sehe den Hund</span>. English encodes roles via position, not morphology. Case markings feel invisible.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">False Friends</div>
+        <div class="item-example"><span class="ger">Gift</span> = poison (not gift). <span class="ger">bekommen</span> = receive (not become). <span class="ger">aktuell</span> = current (not actual). Maximum confidence, minimum accuracy.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Do-Support Habits</div>
+        <div class="item-example"><span class="wrong">*Tust du sprechen Deutsch?</span> &rarr; <span class="right">Sprichst du Deutsch?</span> German uses simple inversion, not periphrastic "do."</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Adjective Invariability</div>
+        <div class="item-example">Expecting <span class="ger">gut</span> to stay "gut" everywhere. Reality: guter, gute, gutes, gutem, guten, depending on case/gender/determiner.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Verb-Final Resistance</div>
+        <div class="item-example">Resisting <span class="ger">...dass ich das Buch gelesen habe</span>. Placing verbs at the end feels "backwards" to English speakers.</div>
+        <div class="impact-bar"><span class="impact-label">Damage</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+    </div>
+
+    <!-- BLUE ZONE: ZERO TRANSFER -->
+    <div class="zone zone-blue">
+      <div class="zone-header">
+        <span class="zone-title">Zero Transfer (New)</span>
+      </div>
+      <div class="zone-subtitle">No English equivalent -- build from scratch</div>
+
+      <div class="transfer-item">
+        <div class="item-title">Modal Particles</div>
+        <div class="item-example"><span class="ger">doch, mal, halt, ja, schon, eben, wohl</span>. Modify pragmatic force without affecting meaning. No English equivalent at all. "Komm <span class="ger">doch mal</span> her!" = untranslatable shade of urgency + casualness.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Adjective Paradigm Choice</div>
+        <div class="item-example">Strong, weak, or mixed? Depends on what precedes: no article = strong, definite = weak, indefinite = mixed. A three-way system with no English parallel.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Gender Assignment Rules</div>
+        <div class="item-example">-ung = feminine, -chen = neuter, -er = often masculine. Partial regularities that must be learned as an entirely new system.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Sentence Bracket Processing</div>
+        <div class="item-example">Hold verb frame open: "Ich <span class="ger">habe</span> gestern ein Buch <span class="ger">gelesen</span>." Must wait for clause-final verb to resolve meaning. Requires new parsing strategy.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Genitive Case</div>
+        <div class="item-example"><span class="ger">des Mannes, der Frau</span>. Plus genitive-governing prepositions: <span class="ger">wegen, trotz, wahrend</span>. No structural equivalent in modern English.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+
+      <div class="transfer-item">
+        <div class="item-title">Konjunktiv I (Indirect Speech)</div>
+        <div class="item-example"><span class="ger">Er sagte, er habe keine Zeit</span>. A dedicated mood for reported speech that English handles with "that" clauses and tense backshift.</div>
+        <div class="impact-bar"><span class="impact-label">Novelty</span><div class="impact-dots"><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot active"></div><div class="impact-dot inactive"></div><div class="impact-dot inactive"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CROSS-LINKS -->
+  <div class="crosslink-section">
+    <h3>The Same Feature Can Help AND Hurt</h3>
+    <div class="crosslink-items">
+      <div class="crosslink">
+        <span class="from green">SVO helps in main clauses</span>
+        <span class="arrow-cross">&harr;</span>
+        <span class="to red">SVO hurts in subordinate clauses</span>
+        <div class="context">"Ich sehe den Hund" (SVO helps) vs. "...weil ich den Hund sehe" (SVO habit produces errors)</div>
+      </div>
+      <div class="crosslink">
+        <span class="from green">Cognates accelerate vocabulary</span>
+        <span class="arrow-cross">&harr;</span>
+        <span class="to red">False friends create confident errors</span>
+        <div class="context">The same mechanism (word similarity) that helps with "Haus/house" traps you with "Gift/poison"</div>
+      </div>
+      <div class="crosslink">
+        <span class="from green">Article concept transfers</span>
+        <span class="arrow-cross">&harr;</span>
+        <span class="to red">Article simplicity misleads</span>
+        <div class="context">Knowing "the/a" helps understand articles exist, but expecting 2 forms when German has 16 causes constant errors</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGY -->
+  <div class="strategy-box">
+    <div class="strategy strategy-go">
+      <h4>Lean Into Green</h4>
+      <p>Use cognates and shared structures for rapid early progress. The green zone gives you a running start that learners of unrelated languages do not get.</p>
+    </div>
+    <div class="strategy strategy-warn">
+      <h4>Build Red Awareness</h4>
+      <p>Actively monitor negative transfer zones. These produce the most persistent fossilized errors. Awareness alone prevents most damage.</p>
+    </div>
+    <div class="strategy strategy-learn">
+      <h4>Accept Blue as Genuinely New</h4>
+      <p>Modal particles, adjective paradigm choice, and gender rules cannot be derived from English. Accept them as new systems requiring immersion and practice.</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

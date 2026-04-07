@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compound Gender Inheritance</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --surface: #f8f9fa;
+    --border: #dee2e6;
+    --masc-color: #3b82f6;
+    --masc-bg: #eff6ff;
+    --masc-block: #dbeafe;
+    --fem-color: #ec4899;
+    --fem-bg: #fdf2f8;
+    --fem-block: #fce7f3;
+    --neut-color: #10b981;
+    --neut-bg: #ecfdf5;
+    --neut-block: #d1fae5;
+    --link-color: #f59e0b;
+    --link-bg: #fffbeb;
+    --muted: #6c757d;
+    --rule-color: #8b5cf6;
+    --rule-bg: #f5f3ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f1a;
+      --fg: #e8e8f0;
+      --surface: #1a1a2e;
+      --border: #2d2d44;
+      --masc-color: #60a5fa;
+      --masc-bg: #1e293b;
+      --masc-block: #1e3a5f;
+      --fem-color: #f472b6;
+      --fem-bg: #2a1525;
+      --fem-block: #4a1535;
+      --neut-color: #34d399;
+      --neut-bg: #132e24;
+      --neut-block: #134e34;
+      --link-color: #fbbf24;
+      --link-bg: #2a2510;
+      --muted: #9a9ab0;
+      --rule-color: #a78bfa;
+      --rule-bg: #1e1535;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  figure {
+    max-width: 1100px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+  }
+  h2 { text-align: center; font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .subtitle { text-align: center; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.8rem; }
+
+  /* Rule banner */
+  .rule-banner {
+    border: 2px solid var(--rule-color);
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    background: var(--rule-bg);
+  }
+  .rule-banner strong { color: var(--rule-color); }
+
+  /* Compound example */
+  .compound-example {
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .compound-example:last-of-type { border-bottom: none; margin-bottom: 1.5rem; padding-bottom: 0; }
+  .compound-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  /* Building blocks row */
+  .blocks-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+  }
+  .block {
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border: 2px solid;
+    text-align: center;
+    min-width: 80px;
+  }
+  .block .article {
+    font-size: 0.68rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.1rem;
+  }
+  .block .noun {
+    font-size: 1.05rem;
+  }
+  .block .en {
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--muted);
+    display: block;
+    margin-top: 0.1rem;
+  }
+  /* Block colors by gender */
+  .block.masc { border-color: var(--masc-color); background: var(--masc-block); color: var(--masc-color); }
+  .block.masc .article { color: var(--masc-color); }
+  .block.fem { border-color: var(--fem-color); background: var(--fem-block); color: var(--fem-color); }
+  .block.fem .article { color: var(--fem-color); }
+  .block.neut { border-color: var(--neut-color); background: var(--neut-block); color: var(--neut-color); }
+  .block.neut .article { color: var(--neut-color); }
+
+  /* Faded block = Bestimmungswort */
+  .block.faded { opacity: 0.5; }
+  /* Highlighted block = Grundwort */
+  .block.highlight {
+    opacity: 1;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+    transform: scale(1.05);
+    position: relative;
+  }
+  .block.highlight::after {
+    content: "GRUNDWORT";
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .block.highlight.masc::after { color: var(--masc-color); }
+  .block.highlight.fem::after { color: var(--fem-color); }
+  .block.highlight.neut::after { color: var(--neut-color); }
+
+  /* Connector (Fugenelement) */
+  .connector {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--link-color);
+    padding: 0 0.15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .connector .fuge-label {
+    font-size: 0.55rem;
+    color: var(--muted);
+  }
+
+  /* Plus sign */
+  .plus {
+    font-size: 1.2rem;
+    color: var(--muted);
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Equals / result */
+  .equals {
+    font-size: 1.2rem;
+    color: var(--muted);
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .result-block {
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    border: 3px solid;
+    text-align: center;
+  }
+  .result-block.masc { border-color: var(--masc-color); background: var(--masc-bg); color: var(--masc-color); }
+  .result-block.fem { border-color: var(--fem-color); background: var(--fem-bg); color: var(--fem-color); }
+  .result-block.neut { border-color: var(--neut-color); background: var(--neut-bg); color: var(--neut-color); }
+  .result-block .r-article { font-size: 0.72rem; display: block; }
+  .result-block .r-en { font-size: 0.68rem; font-weight: 400; color: var(--muted); display: block; }
+
+  /* Fugenelemente note */
+  .fuge-note {
+    border: 2px solid var(--link-color);
+    border-radius: 10px;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.82rem;
+    background: var(--link-bg);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .fuge-note strong { color: var(--link-color); }
+
+  /* Mega compound */
+  .mega-example {
+    border: 2px dashed var(--rule-color);
+    border-radius: 10px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    font-size: 0.88rem;
+    margin-bottom: 0;
+  }
+  .mega-example .mega-word {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    word-break: break-all;
+  }
+  .mega-example .mega-word .last-part { color: var(--neut-color); text-decoration: underline; }
+  .mega-example strong { color: var(--rule-color); }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  figcaption strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
+  figcaption span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 700px) {
+    figure { padding: 1.2rem; }
+    .blocks-row { gap: 0.1rem; }
+    .block { min-width: 60px; padding: 0.35rem 0.5rem; font-size: 0.85rem; }
+    .block .noun { font-size: 0.88rem; }
+    .plus, .equals { padding: 0 0.3rem; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<figure>
+  <h2>Compound Gender Inheritance</h2>
+  <p class="subtitle">German compounds inherit gender from their last component (Grundwort) -- a 100% reliable, exception-free rule.</p>
+
+  <!-- Rule banner -->
+  <div class="rule-banner">
+    <strong>The Grundwort Rule:</strong> Gender of compound = Gender of <strong>LAST</strong> component. Earlier components modify meaning but <strong>never</strong> affect gender.
+  </div>
+
+  <!-- Example 1: das Haus + die Tuer = die Haustuer -->
+  <div class="compound-example">
+    <div class="compound-label">Example 1: neuter + feminine = feminine</div>
+    <div class="blocks-row">
+      <div class="block neut faded">
+        <span class="article">das</span>
+        <span class="noun">Haus</span>
+        <span class="en">house</span>
+      </div>
+      <div class="plus">+</div>
+      <div class="block fem highlight">
+        <span class="article">die</span>
+        <span class="noun">T&uuml;r</span>
+        <span class="en">door</span>
+      </div>
+      <div class="equals">=</div>
+      <div class="result-block fem">
+        <span class="r-article">die</span>
+        Haust&uuml;r
+        <span class="r-en">house door</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 2: der Schuh + das Geschaeft = das Schuhgeschaeft -->
+  <div class="compound-example">
+    <div class="compound-label">Example 2: masculine + neuter = neuter</div>
+    <div class="blocks-row">
+      <div class="block masc faded">
+        <span class="article">der</span>
+        <span class="noun">Schuh</span>
+        <span class="en">shoe</span>
+      </div>
+      <div class="plus">+</div>
+      <div class="block neut highlight">
+        <span class="article">das</span>
+        <span class="noun">Gesch&auml;ft</span>
+        <span class="en">shop</span>
+      </div>
+      <div class="equals">=</div>
+      <div class="result-block neut">
+        <span class="r-article">das</span>
+        Schuhgesch&auml;ft
+        <span class="r-en">shoe shop</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 3: die Hand + der Schuh = der Handschuh -->
+  <div class="compound-example">
+    <div class="compound-label">Example 3: feminine + masculine = masculine</div>
+    <div class="blocks-row">
+      <div class="block fem faded">
+        <span class="article">die</span>
+        <span class="noun">Hand</span>
+        <span class="en">hand</span>
+      </div>
+      <div class="plus">+</div>
+      <div class="block masc highlight">
+        <span class="article">der</span>
+        <span class="noun">Schuh</span>
+        <span class="en">shoe</span>
+      </div>
+      <div class="equals">=</div>
+      <div class="result-block masc">
+        <span class="r-article">der</span>
+        Handschuh
+        <span class="r-en">glove</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 4: die Geburt + s + der Tag = der Geburtstag -->
+  <div class="compound-example">
+    <div class="compound-label">Example 4: feminine + linking -s- + masculine = masculine</div>
+    <div class="blocks-row">
+      <div class="block fem faded">
+        <span class="article">die</span>
+        <span class="noun">Geburt</span>
+        <span class="en">birth</span>
+      </div>
+      <div class="connector">
+        <span>s</span>
+        <span class="fuge-label">linking</span>
+      </div>
+      <div class="block masc highlight">
+        <span class="article">der</span>
+        <span class="noun">Tag</span>
+        <span class="en">day</span>
+      </div>
+      <div class="equals">=</div>
+      <div class="result-block masc">
+        <span class="r-article">der</span>
+        Geburtstag
+        <span class="r-en">birthday</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 5: Three components -->
+  <div class="compound-example">
+    <div class="compound-label">Example 5: three components -- only the LAST matters</div>
+    <div class="blocks-row">
+      <div class="block fem faded">
+        <span class="article">die</span>
+        <span class="noun">Geburt</span>
+        <span class="en">birth</span>
+      </div>
+      <div class="connector">
+        <span>s</span>
+        <span class="fuge-label">linking</span>
+      </div>
+      <div class="block masc faded">
+        <span class="article">der</span>
+        <span class="noun">Tag</span>
+        <span class="en">day</span>
+      </div>
+      <div class="connector">
+        <span>s</span>
+        <span class="fuge-label">linking</span>
+      </div>
+      <div class="block fem highlight">
+        <span class="article">die</span>
+        <span class="noun">Feier</span>
+        <span class="en">celebration</span>
+      </div>
+      <div class="equals">=</div>
+      <div class="result-block fem">
+        <span class="r-article">die</span>
+        Geburtstagsfeier
+        <span class="r-en">birthday party</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fugenelement note -->
+  <div class="fuge-note">
+    <strong>Fugenelemente (linking sounds):</strong> The connecting elements <strong>-s-</strong>, <strong>-n-</strong>, <strong>-en-</strong>, <strong>-er-</strong>, <strong>-e-</strong> between blocks are purely phonological smoothing. They carry <strong>zero</strong> gender information.
+  </div>
+
+  <!-- Mega compound -->
+  <div class="mega-example">
+    <div class="mega-word">Sommernachtstraumforschungs<span class="last-part">zentrum</span></div>
+    <strong>Even novel compounds of arbitrary length follow the rule.</strong><br>
+    The last component is <em>das Zentrum</em> (neuter) &rarr; the entire compound is <strong>das</strong> Sommernachtstraumforschungszentrum (neuter).<br>
+    <span style="color: var(--muted); font-size: 0.78rem;">summer night's dream research center</span>
+  </div>
+
+  <figcaption>
+    <strong>Figure 5: Compound Gender Inheritance</strong>
+    <span>German compound nouns -- which can be arbitrarily long -- always take the gender of their last component (Grundwort). Earlier components (Bestimmungswoerter) are shown faded because they modify meaning but never affect gender. The Grundwort is highlighted and enlarged. This rule is 100% productive and exception-free, meaning any compound's gender can be predicted from a single, simple principle: find the last word, and you know the gender. Connecting sounds (Fugenelemente) between components are phonological only and carry no grammatical information.</span>
+  </figcaption>
+</figure>
+</body>
+</html>
