@@ -92,6 +92,22 @@ Participants can also disagree about which frame is in effect. Goffman calls the
 
 Frame disputes are extremely common in the contexts the Pragmatic Manipulation Sub-Hub covers. Coercive control contexts, family-of-origin contexts, and workplace-bullying contexts very often involve a sustained frame dispute in which one party is trying to impose a frame (*this is normal family life*, *this is normal workplace friction*) and the other party is trying to impose a different frame (*this is abuse*). Frame analysis is the technical vocabulary for that dispute.
 
+### 2.8 Signaling Frame Changes: How Keyings Are Announced
+
+Goffman devoted substantial attention in *Frame Analysis* to how participants actually signal that a key is in effect, because the key cannot operate unless it is recognized. The signaling works through **cues** at many levels simultaneously: vocabulary, prosody, physical orientation, facial expression, gesture, timing, and explicit meta-comments ("I'm joking," "no, seriously," "as a hypothetical," "for the sake of argument"). Goffman used the term *brackets* for the signals that mark the beginning and end of a keying: a shift in tone opens a joke, a return to neutral tone closes it; an announcer's "and now..." opens a performance, the curtain closing or the applause marking the return to primary frame. Every keying has an opening bracket and a closing bracket, even when those brackets are subtle enough that participants do not notice them consciously.
+
+One consequence of this is that *failed signaling produces frame disputes of its own*. If one participant treats an utterance as a joke (keyed frame) while another treats it as serious (primary frame), the brackets have failed -- either they were not present, or they were present but one participant missed them. Goffman's analysis predicts that such failures should be systematically more likely in cross-cultural interaction, in cross-group interaction, and in any setting where the participants do not share the same bracket conventions. This is one of the points where frame analysis speaks directly to the double empathy problem (Milton, 2012; treated in the autism research file): autistic and non-autistic interlocutors often use different bracket conventions for signaling keys, and the resulting frame mismatches are predicted by Goffman's own analysis without any reference to deficit.
+
+Explicit meta-comments are the most overt form of bracket signaling. "Just kidding" closes a playful key. "No, seriously" closes a playful key in order to restore a serious frame. "For the record" opens a formal-statement key inside an informal frame. "Off the record" does the reverse. "I'm asking as a friend" opens a friendship-frame key inside a professional one. Each of these phrases is a metalinguistic device for announcing a frame change or preventing a frame misreading, and the fact that such devices exist in every natural language is evidence of how routine and important frame signaling is. The explicit bracket is typically a repair move, deployed when the implicit brackets have failed or are expected to fail -- which is why explicit meta-comments cluster around high-stakes or ambiguous moments.
+
+### 2.9 Consent, Imposition, and the Ethics of Frame Work
+
+Goffman's analysis is descriptive: he catalogues how frames are transformed without issuing moral judgments on the transformations themselves. But the distinction between benign and exploitative fabrications already implies an ethical axis, and later writers in the frame-analysis tradition have made the axis explicit. The central question is *whether the participants in a framed interaction have consented to the frame that is in effect*. Consent can be explicit (someone announces a frame and the others agree) or tacit (someone behaves as if a frame is in effect and the others accept it), but in either case consent is a necessary condition for a frame to be operating legitimately between the participants.
+
+A frame that has been imposed without consent is structurally different from a frame that has been adopted mutually. Goffman's exploitative fabrications are the strongest form of non-consent -- the target is operating in a frame they would refuse if they knew about it. But non-consent comes in weaker forms too. A frame that has been installed so quickly or so smoothly that the target had no opportunity to refuse is still a non-consensual frame, even if the installer did not deliberately deceive. A frame that has been installed by institutional authority ("this is a disciplinary meeting") can be refused only at high cost, which makes the consent partly coerced. A frame that has been installed by someone with greater social power is similarly consented-to only under conditions that are not freely consent-producing.
+
+This matters for the Pragmatic Manipulation Sub-Hub because most of the manipulation patterns catalogued there involve non-consensual frame installation rather than deliberate fabrication in Goffman's strict sense. The gaslighter does not usually sit down with a plan to install a false frame; they install the frame through a series of small moves that the target does not have the opportunity to refuse at the moment of installation. The DARVO-deploying person does not usually announce "I am now going to install a victim-frame on myself"; they install the frame mid-conversation in a way that leaves the target no clean refusal point. The institutional assessor does not usually acknowledge that the assessment protocol is a frame; they treat it as a measurement procedure, which removes the question of consent from the conversation entirely. Each of these is a consent failure of a slightly different kind, and each requires a different protective response.
+
 ---
 
 ## 3. FILLMORE AND FRAME SEMANTICS
@@ -120,6 +136,16 @@ Fillmore's semantics gives a precise technical basis for the otherwise vague int
 ### 3.4 The FrameNet Project
 
 Fillmore's theoretical work gave rise to **FrameNet** (Ruppenhofer, Ellsworth, Petruck, Johnson, & Scheffczyk, 2016), a computational lexicographic project based at the International Computer Science Institute in Berkeley. FrameNet catalogs thousands of English frames, their roles, and the words that evoke them. It has been extended to other languages and is used in natural language processing, translation, and second-language pedagogy. For the purposes of this category, FrameNet demonstrates that Fillmore's claim is not abstract -- the frames of English can be catalogued in practice, and the entries illustrate how tightly words are bound to the structured scenes they evoke.
+
+### 3.5 Frame Semantics at the Clause Level and in Discourse
+
+Fillmore's frame semantics was originally developed for the lexicon -- how single words evoke structured scenes -- but the apparatus extends naturally to the clause and to longer stretches of discourse. At the clause level, the verb is typically the frame-evoking element, and the other clausal constituents fill the slots of the frame. *The contractor sold the house to a foreign buyer for $800,000* fills the COMMERCIAL_TRANSACTION frame: Seller = the contractor, Goods = the house, Buyer = a foreign buyer, Money = $800,000. The frame tells you what a "complete" sentence of this kind requires: a buyer, a seller, something sold, something given in exchange. Clauses that leave slots unfilled ("The contractor sold the house") are understood as having default or unspecified fillers for the remaining slots; the frame licenses the omission and also licenses the inference that the missing slots are filled in the speaker's understanding even when they are not mentioned.
+
+This clause-level operation of frames has important consequences for interpretation. **Slot inferences** are the default fillers an interpreter supplies when the utterance does not specify. If you hear "she got divorced," you infer there was a previous marriage, a spouse, a legal process, a period of time -- all of these are slots in the DIVORCE frame, and you fill them automatically even though the sentence did not mention them. Slot inferences are why frames are efficient: they let speakers omit the obvious and let hearers reconstruct it without ambiguity. They are also why frame choice is consequential: choosing a different frame would invoke different slots and different default inferences.
+
+At the discourse level, frames coordinate across clauses to produce narrative and argumentative structure. A news story about a crime activates the CRIME frame with its cast (perpetrator, victim, authorities, witnesses, motive, method, consequences). Each subsequent sentence is interpreted as filling one or more slots in that frame, and the story "makes sense" to the extent that the slots get filled in coherent ways. When a sentence does not fit the active frame, hearers either revise the frame (concluding that this is a different kind of story) or treat the sentence as non-cooperative. The same apparatus is at work in ordinary conversation, in court testimony, in medical history-taking, and in workplace complaints. Frame analysis at the discourse level is therefore not a separate project from frame semantics; it is frame semantics applied to longer stretches, with the frame-evoking elements distributed across multiple clauses.
+
+For autistic readers in particular, this clause-and-discourse level frame operation is worth making explicit. Frame semantics predicts that an utterance does not carry only what it says; it carries what its frames default-fill. The speaker who uses the verb *complained* (COMPLAINT frame) has installed a cast and a set of default inferences that the utterance itself does not spell out -- the complainer is positioned as someone with a grievance, the complained-about is positioned as someone who may have done something wrong, and the addressee is positioned as someone in a position to respond. Using *raised an issue* instead evokes a slightly different frame with a different cast. Using *flagged a concern* evokes yet another. The vocabulary choice makes commitments at the frame level that a surface-level content analysis would miss. This is one of the ways that small word choices in institutional documents (educational records, medical charts, HR files) do interpretive work that the text itself does not seem to be doing; the records install frames whose default slot-fillers travel with them into every subsequent reading.
 
 ---
 
@@ -177,6 +203,50 @@ If any of the four answers feels wrong when you examine it explicitly, the frame
 
 Entman's definition also clarifies why framing is hard to resist from inside: when all four functions are being performed simultaneously, arguing against one of them leaves the others in place. You can object to the moral evaluation while still accepting the problem definition and causal diagnosis -- in which case the frame continues to operate. Effective refusal targets the whole package, typically by substituting a different frame rather than contesting components individually.
 
+### 5.4 Working the Four Functions Through Concrete Examples
+
+Entman's framework becomes more useful when worked through specific examples. Consider four descriptions of the same underlying event -- a child is crying in a supermarket because the overhead lighting and noise have exceeded their sensory capacity.
+
+**Frame A (behavioral):** "The child is throwing a tantrum because they're spoiled."
+- Problem definition: bad behavior (a tantrum).
+- Causal diagnosis: the child's disposition and/or the parent's failure to discipline.
+- Moral evaluation: the child and parent are at fault.
+- Treatment recommendation: more discipline, firmer parenting, consequences.
+
+**Frame B (neurological):** "The child is having a sensory overload response to the environment."
+- Problem definition: environmental mismatch (the environment exceeds processing capacity).
+- Causal diagnosis: the sensory inputs of the supermarket interacting with the child's neurological profile.
+- Moral evaluation: no fault; a matter of environmental fit.
+- Treatment recommendation: reduce the inputs, leave the environment, provide sensory regulation supports.
+
+**Frame C (developmental):** "The child is having a normal developmental meltdown."
+- Problem definition: emotional developmental stage.
+- Causal diagnosis: age-appropriate difficulty with self-regulation.
+- Moral evaluation: no fault; developmental.
+- Treatment recommendation: supportive co-regulation, wait it out, normalize.
+
+**Frame D (moral/religious):** "The child is testing limits and needs to learn obedience."
+- Problem definition: defiance.
+- Causal diagnosis: a will-problem requiring correction.
+- Moral evaluation: the child is morally culpable; parent is responsible for correction.
+- Treatment recommendation: discipline, consequences, possibly physical correction.
+
+The same event admits radically different readings at every one of Entman's four levels. Crucially, frames can converge at some levels while diverging at others. Frames B and C agree on the moral evaluation ("no fault") but disagree on the causal diagnosis. Frames A and D agree on moral evaluation ("the child is at fault") but diverge on the specifics of cause. This partial overlap explains why frame disputes are often not winnable by pointing to a single shared premise: the premise that looks shared is anchored to incompatible downstream commitments.
+
+A second worked example. A person does not reply to a text message for two days. Consider the same four functions across three competing frames:
+
+**Frame A ("rude"):** problem = inconsideration; cause = character flaw; moral = they are rude; treatment = confront, escalate, withdraw.
+**Frame B ("busy"):** problem = practical scheduling; cause = competing demands; moral = no fault; treatment = wait, ask when convenient.
+**Frame C ("distressed"):** problem = the person is struggling; cause = something has happened; moral = no fault, concern appropriate; treatment = check in gently.
+
+Each frame is internally coherent; each would dictate a completely different next action; and the same concrete behavior (two days of silence) slots identically into all three. The factual content alone does not select among them. Frame selection is what is happening when readers think they are "interpreting" the behavior.
+
+### 5.5 Entman's Paper in Its Own Moment
+
+Entman's 1993 article appeared at a point when framing research in communication studies was proliferating but fragmented. His goal was explicitly consolidatory: a "fractured paradigm" needed a shared operational definition, and he offered one. The paper has since become the most-cited single definition of framing in media studies, with tens of thousands of citations across political communication, public health communication, social movements research, and the empirical framing-effects literature. Its influence has outpaced Goffman's book in communication studies specifically, though Goffman remains the reference for the sociological and interactional traditions.
+
+One limit of Entman's formulation is that it was developed for analysis of media texts, where the analyst can inspect a fixed artifact and enumerate its framing moves. Applied to live interaction, the four functions still work as a diagnostic, but the "text" is the evolving sequence of utterances and the "frame" may be in flux. For the purposes of this hub, the four-functions check is used both ways -- on fixed artifacts like records, performance reviews, and news articles, and on live-interaction frames -- while recognizing that the live-interaction case requires more judgment and more revision as new moves are made.
+
 ---
 
 ## 6. TANNEN AND INTERACTIVE FRAMES
@@ -224,6 +294,16 @@ Kahneman and Tversky's framing effect is narrower than Goffman's or Lakoff's fra
 
 For the hub's purposes, the framing effect is the experimental cousin of the Goffmanian and Lakoffian framing concepts: it gives a laboratory demonstration of the phenomenon that the more qualitative frame-analytic traditions describe in natural settings.
 
+### 7.3 Prospect Theory, Gain/Loss Framing, and the Cognitive Reality of Frames
+
+The Asian Disease Problem is the most famous example, but Kahneman and Tversky's framing effect is part of a larger theoretical project -- **prospect theory** (Kahneman & Tversky, 1979) -- that gives the framing effect its mechanism. Prospect theory holds that people evaluate outcomes not in terms of final states (as expected-utility theory predicts) but in terms of *changes from a reference point*, with losses weighted more heavily than gains of equivalent magnitude. The consequence for framing is that the same outcome can be encoded as a gain or as a loss depending on which reference point is installed by the frame, and the encoding changes which of the two weighting functions (the loss-side, which is steeper) applies.
+
+The Asian Disease Problem trades on this. The "lives saved" frame anchors the reference point at zero lives saved (the worst possible outcome) and encodes the options as gains from that baseline; the "lives lost" frame anchors the reference point at zero lives lost (the best possible outcome) and encodes the same options as losses from that baseline. Because losses are weighted more heavily, and because loss-framing makes risk-seeking preferable (to avoid the steeper loss), the same options produce opposite choices. The frame is the reference-point-installer, and the reference point is doing all the work.
+
+The implication that matters for this hub is that **frames are cognitively real, not merely communicative**. Kahneman and Tversky did not show that people are being fooled by rhetoric; they showed that people's decision-making machinery operates on the encoded form rather than on the underlying options, and that the encoded form is set by the frame. This is the strongest empirical argument that framing is doing causal work at a cognitive level, not just adding color to otherwise frame-independent judgments. It is also why framing effects have been so productive in behavioral economics: the effect generalizes to insurance decisions (would you pay to avoid a loss vs. would you accept a gain?), to medical decisions (survival-rate framings shift patient choice of treatment even when the options are mathematically identical), to tax compliance, to environmental policy, to retirement savings. Across all of these, the same structural move -- changing the reference point by changing the frame -- produces robust, replicable shifts in choice.
+
+Connection to Goffman and Lakoff. Kahneman and Tversky worked in the very different tradition of experimental psychology and behavioral economics, but their framing effect is conceptually continuous with the sociological and cognitive-linguistic framing traditions. Goffman showed that frames organize interpretation in social interaction; Fillmore showed that frames are installed lexically; Lakoff showed that frames structure political cognition; Kahneman and Tversky showed that frames produce measurable shifts in preference and choice even in purely abstract decision problems. The four traditions use different vocabularies and study different phenomena, but they are converging on the same claim: the container determines how the contents get processed, and the container is almost never neutral.
+
 ---
 
 ## 8. REFRAMING AS TECHNIQUE: WATZLAWICK AND THE PALO ALTO SCHOOL
@@ -262,6 +342,74 @@ Bull and colleagues have studied framing in political interviews, showing how po
 
 Benford and Snow (1988, 2000) developed the concept of **collective action frames** in the social-movement literature. Movements succeed in part by constructing frames that diagnose a problem, identify a cause, and prescribe action in ways that mobilize participation. The framing process is contested: competing movements offer different frames for the same issue (e.g., *reproductive rights* versus *pro-life*), and which frame achieves wider uptake affects mobilization, policy, and public opinion. The social-movement framing literature provides an extended case study of how frame contests play out at scale.
 
+Benford and Snow's (2000) Annual Review synthesis -- *Framing Processes and Social Movements: An Overview and Assessment*, *Annual Review of Sociology* 26, 611-639 -- consolidated fifteen years of social-movement framing research into a tripartite taxonomy of **core framing tasks**:
+
+1. **Diagnostic framing.** Identifying and defining a problem and attributing responsibility for it. The movement has to get the audience to see *that* there is a problem and *who or what* is causing it. Diagnostic framing is where a movement selects which facts become salient and how those facts get packaged into a problem description. The environmental movement's diagnostic framing moved from individual littering (1950s) to corporate pollution (1960s-70s) to systemic climate change (1990s-present), and each shift reorganized both problem and causation.
+2. **Prognostic framing.** Proposing a solution, strategy, or plan of action. Prognostic framing is structurally distinct from diagnostic framing -- a movement can agree on the problem while disagreeing on the remedy, and prognostic disputes often splinter movements long after diagnostic consensus has been reached.
+3. **Motivational framing.** Providing a rationale for engaging in collective action. This is the "call to arms" function: why should this audience, at this moment, act? Motivational framing typically constructs vocabularies of urgency, efficacy, and moral obligation. Without motivational framing, diagnostic and prognostic consensus does not translate into participation.
+
+Benford and Snow also catalogued several secondary concepts that have become workhorses in the literature. **Frame alignment processes** -- frame bridging, frame amplification, frame extension, and frame transformation (originally from Snow, Rochford, Worden, & Benford, 1986) -- describe the moves by which movement organizers get potential supporters' existing frames to connect with movement frames. **Frame resonance** is the property that makes some frames stick and others fail: credibility (does the frame fit observable reality?), commensurability with the audience's cultural narratives, experiential fit, and the empirical credibility of the claims embedded in the frame. **Master frames** are higher-order frames that span multiple movements -- a "rights" frame, an "injustice" frame, a "choice" frame -- and that individual movements inherit and specialize.
+
+The social-movement framing literature is important for this hub for two reasons. First, it shows that Entman's four functions and Benford and Snow's three core tasks are near-isomorphic: problem definition maps to diagnostic framing, causal interpretation to the attribution component of diagnostic framing, moral evaluation runs through both diagnostic and motivational framing, and treatment recommendation maps to prognostic framing. The different vocabularies are converging on the same underlying analytic structure. Second, the neurodiversity movement -- which the hub sits adjacent to -- is itself an instance of collective action framing. The reframe from "autism as disorder" (the diagnostic frame of the DSM) to "autism as human variation" (the diagnostic frame of the neurodiversity movement) is exactly a Benford-and-Snow diagnostic reframe, and the downstream disputes about prognostic framing (what follows from the new diagnostic?) and motivational framing (why should people act on it?) are live inside the autistic community itself.
+
+### 9.4 Gamson and Modigliani: Frames as Interpretive Packages
+
+William Gamson and Andre Modigliani's 1989 article *Media Discourse and Public Opinion on Nuclear Power: A Constructionist Approach* (*American Journal of Sociology* 95(1), 1-37) introduced the concept of the **interpretive package**. A frame, on Gamson and Modigliani's account, does not arrive as a bare proposition. It arrives as a cluster of linked rhetorical elements that travel together and reinforce one another. The package typically includes:
+
+- **Metaphors** -- ways of describing the issue that map it onto a concrete source domain. Nuclear power is a "Pandora's box," a "runaway train," "harnessed energy," "progress."
+- **Exemplars** -- specific cases that stand for the whole. Chernobyl, Three Mile Island, Hiroshima; or, on the other side, the French nuclear program, submarines, medical isotopes.
+- **Catchphrases** -- pithy formulations that can be redeployed across contexts. "Too cheap to meter," "nuclear winter," "clean energy," "energy independence."
+- **Depictions** -- specific portrayals of actors and actions. The brave scientist, the reckless corporation, the concerned mother, the knowledgeable engineer.
+- **Visual images** -- iconic pictures that accompany the frame. Mushroom clouds, cooling towers, radiation symbols, solar panels as alternatives.
+- **Roots** (causal analysis), **consequences**, and **appeals to principle** -- the argumentative backbone that ties the rhetorical elements to a line of reasoning.
+
+The central Gamson-and-Modigliani insight is that *frames come with a ready-made rhetoric kit*. When you pick a frame, you pick not just the interpretation but the whole set of linguistic and visual resources that go with it. This is why frames are so efficient in communication: activating one element of the package tends to activate the others, and the audience supplies what is missing from its own prior exposure.
+
+For the Pragmatic Manipulation Sub-Hub, the concept of the interpretive package is load-bearing. Manipulation patterns are not just individual framing moves; they are packages. DARVO has its catchphrases ("why are you attacking me?" "I'm the real victim here"), its exemplars (the purportedly oppressed offender), and its rhetoric of victimhood. Gaslighting has its catchphrases ("you're imagining things," "that never happened," "you're being crazy"), its exemplars (the purportedly unstable target), and its rhetoric of concern and reasonableness. Recognizing a package -- rather than a single line -- is often what lets a target see that a coherent frame is being installed, not just a throwaway remark.
+
+### 9.5 Iyengar: Episodic vs. Thematic Framing
+
+Shanto Iyengar's *Is Anyone Responsible? How Television Frames Political Issues* (1991) is worth a separate subsection because the distinction it draws -- between **episodic frames** and **thematic frames** -- is applicable far beyond political media and has direct relevance for several patterns in the Pragmatic Manipulation Sub-Hub.
+
+An **episodic frame** presents an issue in terms of individual cases, specific events, or particular people. "Here is one homeless man; here is his story." "Here is one person on benefits; here is what they bought." "Here is one immigrant; here is what they did."
+
+A **thematic frame** presents the same issue in terms of general patterns, aggregate statistics, structural causes, or systemic trends. "Here is the unemployment rate; here are the historical drivers." "Here is the prevalence of disability; here are the structural determinants." "Here is the pattern of discrimination; here are the institutional mechanisms."
+
+Iyengar's experimental research showed that participants exposed to episodic frames were more likely to attribute responsibility to the individual in the story, and participants exposed to thematic frames were more likely to attribute responsibility to systemic factors -- even when the underlying issue was the same. The framing choice determines *where responsibility gets assigned*, which in turn determines what remedies seem appropriate. Episodic frames nudge viewers toward individual-level remedies (fix the person); thematic frames nudge viewers toward systemic remedies (fix the conditions).
+
+The finding has been replicated across many issues and is one of the more robust results in the media-framing literature. The application to individual interactions is direct. A manager who recounts "the specific thing Alex did last Tuesday" is using an episodic frame that isolates Alex and makes Alex's disposition the natural locus of the problem. The same manager could instead recount "the pattern of meetings this quarter" thematically, which would locate the problem in workflows, calendars, or organizational demands. The choice of episodic over thematic framing is almost never announced; it is usually made unconsciously by speakers who default to one or the other. But the choice is consequential, and the target of an episodic frame is often in a position where the only protective move is to make the thematic frame explicit: "let me put this in the context of the pattern across the team."
+
+The Pragmatic Manipulation Sub-Hub's pages on post-meltdown shaming, on educational-settings framing, and on diagnostic weaponization all rely on this episodic-versus-thematic distinction implicitly. Post-meltdown shaming frames the specific meltdown episodically -- one event, one person's behavior -- and thereby hides the thematic context (chronic sensory load, environmental mismatch, the history of unaccommodated difficulty). Bringing the thematic frame back into view is often what the protective reframe is doing.
+
+### 9.6 Lakoff Revisited: *Don't Think of an Elephant!* in Depth
+
+Lakoff's *Don't Think of an Elephant!* (2004) was written as an accessible summary of his *Moral Politics* (1996) work for an audience of activists, organizers, and political communicators frustrated by the apparent dominance of a conservative framing of American political life during the early 2000s. The book's central argument has three moves.
+
+**First**, every political issue arrives inside a frame. There are no frame-free facts in political discourse; the fact is always already packaged. Lakoff treats the image of "tax relief" as a canonical example: *relief* presupposes an affliction from which one is being relieved. Using the phrase *tax relief* installs a frame in which taxes are an affliction. Using the alternative *tax investment* or *tax contribution* would install a different frame. Neither is neutral; the choice of phrase is the choice of frame.
+
+**Second**, frames resist direct negation. "Don't think of an elephant" activates the elephant-frame even as it negates the content. Responding to *tax relief* with "taxes are not an affliction" still runs the *affliction* frame through the negation. Effective frame-refusal therefore requires *substitution*: proposing an alternative frame that reorganizes the same domain in a different way, not denying the original frame while accepting its vocabulary.
+
+**Third**, American political discourse is organized around two competing deep frames rooted in different models of the family. The *strict-father* frame treats the nation as a family requiring authority, discipline, self-reliance, and moral accountability. The *nurturant-parent* frame treats the nation as a family requiring care, empathy, fairness, and collective responsibility. Each deep frame generates a cluster of positions on specific issues -- taxes, welfare, crime, foreign policy -- that look like independent policy stances but are actually downstream consequences of the framing of the underlying domain.
+
+Lakoff's strict-father / nurturant-parent dichotomy has been contested. Empirical work has shown that individual political positions are not always as frame-consistent as Lakoff's theory predicts, and that political coalitions are held together by many factors other than coherent deep frames (partisanship, identity, material interest, cultural affiliation). The binary is also probably too neat for a phenomenon that is more plural in practice. But the methodological insight stands: **policy disagreements are often downstream of frame disagreements, and contesting the policy at the level of specific claims leaves the underlying frame intact.** For the hub's purposes, the lesson is that frame contests and content contests are different kinds of disputes, and that many interpersonal disagreements that present as content disputes are, on inspection, frame disputes in disguise.
+
+A second Lakoff contribution worth noting is the **cognitive reality** of frames. Lakoff and his collaborators in cognitive science (notably Mark Johnson) argue that frames are not merely rhetorical devices. They are cognitively real structures grounded in embodied experience, conceptual metaphor, and neural organization. On this view, installing a frame activates specific neural structures; the frame is not "just words" but a mental schema with cognitive consequences. The strong version of this claim is disputed at the level of specific neuroscience, but the weaker version -- that frames have measurable cognitive effects on attention, memory, inference, and judgment -- is well supported by the behavioral literature (including the Kahneman-and-Tversky framing effect discussed in Section 7). Frames are cognitively real; they change what people notice, remember, and infer.
+
+### 9.7 Frame Alignment, Master Frames, and the Dynamics of Uptake
+
+Snow, Rochford, Worden, and Benford's earlier (1986) paper introduced a typology of **frame alignment processes** -- the moves by which movement organizers (and, by extension, any frame-installer) link their preferred frame to the existing frames of a potential audience:
+
+- **Frame bridging** connects two ideologically compatible but previously unconnected frames. An autistic self-advocacy organization bridging to a disability-rights frame, for example, is linking two movements whose frames were already mutually consistent but not yet actively connected.
+- **Frame amplification** strengthens an existing value or belief that is already present in the audience but is not yet salient. A public-health campaign that amplifies the pre-existing value "protect children" to motivate a new policy is doing frame amplification.
+- **Frame extension** expands the scope of a movement's frame to include issues the audience already cares about even when those issues are not central to the movement's primary concerns. A workplace-safety campaign extending its frame to cover mental health and neurodivergence is doing frame extension.
+- **Frame transformation** is the most ambitious alignment process: changing how the audience interprets an entire domain. The reframe from "autism as tragedy" to "autism as identity" is a transformation, not just a bridging or amplification.
+
+These processes are not purely top-down impositions by organizers. They depend on what the audience will accept, which in turn depends on the frames the audience already holds. A frame that does not align with any existing audience commitment will fail to take hold regardless of how well it is constructed; this is one reason that frame analysis has to include the audience as an active participant, not just as a passive target of rhetoric.
+
+**Master frames** are higher-order frames that span multiple movements or issues and that individual frames inherit structurally. A rights-master-frame, an injustice-master-frame, a choice-master-frame -- each of these provides a template that specific movements can specialize. The civil rights movement's injustice frame became a master frame that subsequent movements (women's liberation, disability rights, gay rights, indigenous rights, neurodiversity) could specialize for their own purposes. Master frames are useful because they come pre-loaded with vocabulary, emotional resonance, and argumentative structure that individual movements would otherwise have to construct from scratch. They are constraining because they commit the movement to a particular way of reading its own situation, and movements that inherit ill-fitting master frames often struggle to articulate their distinctive concerns.
+
+For the hub's purposes, the master-frame concept clarifies one of the structural features of the neurodiversity movement: its inheritance of a civil-rights master frame. The inheritance brings advantages (vocabulary, strategic models, a pre-existing audience sympathetic to rights claims) and costs (a tendency to flatten autistic experience into a single "identity" when autistic experience is in fact highly varied). This is not a critique of the master frame -- it is a description of what inheriting a master frame does, and of the downstream frame work the movement has to do to specialize the inheritance for its own purposes. The same observation applies to the autism-affirming frame that this hub deploys: the frame is a specialization of a broader neurodiversity frame, which is itself a specialization of a broader disability-rights frame, which is itself a specialization of a broader injustice-master-frame. Each layer is doing frame work that the layer below could not do on its own, and each layer constrains what can be said at the layers above it.
+
 ---
 
 ## 10. FRAMES AS INSTITUTIONAL AND RECORD-BASED STRUCTURES
@@ -296,6 +444,12 @@ Goffman's *Frame Analysis* is a work of theoretical sociology, not empirical res
 
 A separate critique, from critical theory and from media sociology, is that Goffman's frame analysis under-theorizes power. Who gets to install a frame is a power question, and the distribution of framing power is not equal. Institutions frame individuals; employers frame employees; assessors frame those assessed; majorities frame minorities; adults frame children. Frame analysis that ignores these asymmetries risks treating all framings as symmetric interpretive negotiations when in practice the outcome is often settled by who has institutional backing. The practical and autism research files foreground this asymmetry explicitly, because for autistic readers the asymmetry is often the load-bearing feature.
 
+Several writers have tried to integrate power into the frame-analytic apparatus without losing its descriptive precision. Bourdieu's (1991) work on symbolic power treats the authority to name situations as a form of capital, unequally distributed, and therefore treats framing power as a special case of the broader sociology of classification. Critical discourse analysts like Fairclough (1989) and Wodak (2001) explicitly foreground the ideological dimension of framing, treating texts as sites where dominant frames are installed, contested, and sometimes subverted. Foucault's (1977, 1978) analyses of disciplinary and biopolitical power are not framed in the vocabulary of frame analysis, but they describe a closely related phenomenon: how institutional practices install categories that shape what kind of subject a person can be. For the hub's purposes, the lesson is that frame analysis is strengthened, not weakened, by integrating power -- and that integration is ongoing work in the broader tradition.
+
+### 11.5 The Constructionist Worry
+
+A related concern, particularly from readers with a realist disposition, is that frame analysis can sound like it is denying that there is any reality underneath the frames. If every description of an event is inside a frame, and if frames are contestable, then the worry is that frame analysis implies a relativism in which no description is more accurate than any other. This is not what frame analysis claims, and it is important for the hub's purposes that this be said clearly. Frame analysis claims that the *interpretation* of events is always frame-mediated; it does not claim that the *events themselves* are frame-constituted. There are facts about what happened (the child cried, the manager said X, the assessment recorded Y). What is frame-mediated is which facts become salient, how they get packaged into a description, what inferences get drawn, and what next-actions get licensed. Two accurate descriptions of the same event can differ because they foreground different facts; neither is necessarily false. But *inaccurate* descriptions are also possible -- descriptions that get the facts wrong, that draw inferences the facts do not support, or that omit facts that are material to interpretation. Frame analysis is fully compatible with the claim that some frames are more accurate than others. The Pragmatic Manipulation Sub-Hub's protective reframes are always claims of greater accuracy, not just preferred alternatives: a meltdown really is a neurological response to overload rather than a deliberate attack, and the evidence for this claim is specifiable in ways that the alternative frame's evidence is not.
+
 ---
 
 ## 12. CROSS-DISCIPLINARY CONNECTIONS
@@ -308,6 +462,60 @@ Frame analysis connects to several adjacent theoretical traditions in ways worth
 - **Conversation analysis** (Sacks, Schegloff, Jefferson). CA shares with frame analysis an interest in how participants signal and recognize the type of activity in progress, though CA tends to work at a finer grain of sequential detail.
 - **Critical discourse analysis** (Fairclough, 1989; Wodak, 2001). CDA foregrounds the ideological and power-laden dimensions of framing, treating frames as sites of political struggle.
 - **Narrative theory**. Narratives install frames over extended stretches of experience; frame analysis and narrative analysis are natural partners and are cross-linked throughout this hub (see Category 12).
+
+---
+
+## 12.5 An Integrative Case Study: A Single Utterance Through Five Frameworks
+
+To show how the several theoretical traditions converge on the same event, consider a single utterance:
+
+*"You're being a little emotional about this."*
+
+Spoken by a manager to an employee during a conversation about a project decision. The employee had raised a concern; the manager's response reframes the concern as a matter of the employee's emotional state.
+
+**Through Bateson's lens (Section 1).** The utterance carries a meta-communicative layer: *the message type is now "talk about how you're feeling," not "talk about the project."* The meta-layer has been shifted without the employee's consent, and the content of the exchange is now being read through the new meta-frame.
+
+**Through Goffman's lens (Section 2).** This is a frame swap -- a covert move from one frame (project-discussion) to a different frame (emotional-state-discussion) without the explicit key-change that a cooperative frame shift would include. It is a fabrication in the weak sense: the employee is being asked to operate in a frame they did not agree to and would not have chosen. The original frame has not been openly closed; it has been replaced.
+
+**Through Fillmore's lens (Section 3).** The word *emotional* installs the EMOTIONAL_STATE frame, which pulls in slots for an emoter, an emotion, and typically a trigger or cause. The utterance positions the employee as the emoter, the unnamed feeling as the emotion, and the project issue as the trigger. The alternative frame -- a PROFESSIONAL_CONCERN frame evoked by words like *concern*, *objection*, *point*, *issue* -- is being displaced at the lexical level by the choice of vocabulary. The employee cannot respond to the utterance without first deciding whether to accept the EMOTIONAL_STATE frame or to contest it.
+
+**Through Lakoff's lens (Section 4).** The utterance mobilizes a deeper frame in which emotionality is the opposite of rationality, and in which rational discussion is the proper mode of professional disagreement. Within this deeper frame, being "emotional" is a disqualification from further participation in the rational discussion. Negating the frame ("I'm not being emotional") runs the frame through the negation; the protective move requires a substitution ("I'm raising a specific concern about [X]; the question is whether the concern is accurate").
+
+**Through Entman's lens (Section 5).** The four functions have all been reassigned in one utterance:
+- Problem definition: the problem is now the employee's emotional state, not the project issue.
+- Causal diagnosis: the cause is the employee's dispositional tendency to be emotional.
+- Moral evaluation: the employee is the one in error (or in excess), and the manager is the reasonable one.
+- Treatment recommendation: the employee should calm down; the original project issue can be set aside.
+
+**Through Tannen's lens (Section 6).** The frame shift is signaled by the prosodic softening ("a little") that installs a diminutive frame, by the second-person pronoun ("you're") that positions the employee as the asymmetric party, and by the gerund ("being") that frames the state as ongoing rather than momentary. Every linguistic detail is doing frame work, and the work is coordinated across multiple levels simultaneously.
+
+**Through Kahneman-Tversky's lens (Section 7).** If the employee now has to choose between pressing the concern (at the risk of being labeled further) and dropping it (at the cost of the project outcome), the framing has shifted the reference point so that pressing the concern is now encoded as a loss (further social cost). Loss-frame encoding produces risk-averse choices, which in this case means backing off -- precisely what the manager's frame was engineered to produce.
+
+**Through Benford-and-Snow's lens (Section 9).** The utterance performs a miniature diagnostic reframe: the problem has been re-diagnosed as located in the employee, not in the project. If the employee were to respond at the level of prognostic framing ("so what should we do about the project?"), they would be implicitly accepting the diagnostic reframe. Effective refusal requires contesting the diagnostic reframe first.
+
+Every framework picks out a different feature of the same utterance, and together they provide an almost exhaustive analysis of what has happened in the exchange. No single framework is sufficient; none is dispensable; and the convergent verdict is that a frame attack has taken place and a protective response is appropriate. This is what the theory is for.
+
+---
+
+## 12.6 Tannen Expanded: Linguistic Markers of Frame Shifts
+
+Tannen's broader discourse-analytic work -- especially *Framing in Discourse* (Tannen, ed., 1993) and the essays in *Conversational Style* (Tannen, 1984) -- identifies a set of linguistic markers that reliably accompany frame shifts in ordinary talk. These markers are important because they are the observable surface of an otherwise cognitive phenomenon: you cannot see a frame change, but you can often see the signals that a frame change is happening.
+
+**Discourse markers** (see also Category 5 of this hub). *Well*, *so*, *anyway*, *actually*, *I mean*, *look*, *listen*, *right*, *okay*, *now* -- each of these has a documented function in signaling a shift in the ongoing discourse. *Anyway* typically closes a digression and returns to a prior frame. *So* typically opens a new sequential slot inside the current frame or, with a tonal shift, opens a new frame entirely. *Actually* typically corrects a prior utterance, which may also involve a frame shift. *Look* or *listen* often opens a serious-frame key inside a playful or casual frame. These markers are one of the primary cues that a frame shift is in progress, and missing them is a way of missing the shift.
+
+**Prosodic shifts.** Pitch range, tempo, volume, and voice quality shift around frame changes. A sudden drop in pitch range often accompanies a shift into a serious frame; a rise in tempo and pitch range often accompanies a shift into a playful or excited frame. Voice quality shifts (breathy to full, relaxed to tight, even to uneven) track shifts between intimate and distant frames. Tannen's and Wallat's (1987) pediatric-examination study documented these shifts in quantitative detail; later work has replicated the finding across many interaction types.
+
+**Pronoun and address shifts.** Moving from *we* to *you*, or from first name to title, or from *you* to *one*, signals a frame shift. The pronoun change is not a content change -- the referents may be unchanged -- but it reorganizes the relational frame and the stance the speaker is taking toward the content.
+
+**Tense and aspect shifts.** A shift from past tense to present tense often opens a narrative-frame key (historical present), even when the content is about the past. A shift from simple past to perfect aspect often shifts the frame from completed event to relevant-to-the-present-moment. These shifts are rarely noticed consciously, but they reorganize what kind of thing the speech is doing.
+
+**Reported speech and voicing.** Quoting someone's words -- especially with a tonal performance of the original speaker's voice -- opens a laminated frame in which the speaker is temporarily inside someone else's frame. Imitations, accents, and voiced characters are all laminations, and the lamination signals a frame shift from direct speech to performed speech.
+
+**Repetitions and paraphrase.** Tannen (1989) documented the role of repetition in conversational framing: repetition of a word or phrase signals that the frame in which the word was first used is being extended or elaborated, while paraphrase signals that the content is being moved to a different frame. The same information in different words is often a frame shift; the same information in the same words is often frame maintenance.
+
+**Pragmatic markers and hedges.** Words like *just*, *like*, *you know*, *sort of*, *kind of*, and *I mean* do frame work beyond their semantic contribution. They soften assertions, open space for revision, and signal that the current utterance is being treated as provisional within a larger frame. Autistic readers often report that these markers feel semantically empty and are therefore easy to ignore; the frame-analytic point is that they are rarely semantically empty, and what they are doing is frame work that the literal content does not carry.
+
+The Tannen-tradition insight is that every one of these signals is happening simultaneously and mostly below conscious attention. Competent listeners integrate the signals automatically; the integration is part of what Vermeulen (2012) calls context-weighting, and what Pellicano and Burr (2012) model as Bayesian prior-driven processing. The practical implication for the hub is that frame shifts are cued by dozens of small signals in parallel, and a listener whose processing weights bottom-up detail over top-down priors may notice individual signals clearly while finding the integration effortful.
 
 ---
 
@@ -334,6 +542,10 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 
 - Bartlett, F. C. (1932). *Remembering: A Study in Experimental and Social Psychology*. Cambridge University Press.
 - Bateson, G. (1972). A theory of play and fantasy. In *Steps to an Ecology of Mind* (pp. 177-193). Chandler.
+- Bourdieu, P. (1991). *Language and Symbolic Power*. Harvard University Press.
+- Foucault, M. (1977). *Discipline and Punish: The Birth of the Prison*. Pantheon.
+- Foucault, M. (1978). *The History of Sexuality, Volume 1: An Introduction*. Pantheon.
+- Wodak, R. (2001). What CDA is about -- a summary of its history, important concepts, and its developments. In R. Wodak & M. Meyer (Eds.), *Methods of Critical Discourse Analysis* (pp. 1-13). Sage.
 - Beck, A. T. (1976). *Cognitive Therapy and the Emotional Disorders*. International Universities Press.
 - Benford, R. D., & Snow, D. A. (2000). Framing processes and social movements: An overview and assessment. *Annual Review of Sociology*, 26, 611-639.
 - Bull, P. (2003). *The Microanalysis of Political Communication: Claptrap and Ambiguity*. Routledge.
@@ -348,6 +560,7 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 - Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row.
 - Gross, J. J. (2002). Emotion regulation: Affective, cognitive, and social consequences. *Psychophysiology*, 39(3), 281-291.
 - Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press.
+- Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica*, 47(2), 263-291.
 - Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458.
 - Lakoff, G. (1996). *Moral Politics: What Conservatives Know That Liberals Don't*. University of Chicago Press.
 - Lakoff, G. (2004). *Don't Think of an Elephant! Know Your Values and Frame the Debate*. Chelsea Green.
@@ -358,7 +571,11 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 - Scheufele, D. A. (1999). Framing as a theory of media effects. *Journal of Communication*, 49(1), 103-122.
 - Schank, R. C., & Abelson, R. P. (1977). *Scripts, Plans, Goals, and Understanding*. Lawrence Erlbaum.
 - Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. *International Social Movement Research*, 1, 197-217.
+- Snow, D. A., Rochford, E. B., Worden, S. K., & Benford, R. D. (1986). Frame alignment processes, micromobilization, and movement participation. *American Sociological Review*, 51(4), 464-481.
+- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power: A constructionist approach. *American Journal of Sociology*, 95(1), 1-37.
+- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Ablex.
 - Tannen, D. (1986). *That's Not What I Meant!*. Ballantine.
+- Tannen, D. (1989). *Talking Voices: Repetition, Dialogue, and Imagery in Conversational Discourse*. Cambridge University Press.
 - Tannen, D. (1990). *You Just Don't Understand: Women and Men in Conversation*. Morrow.
 - Tannen, D. (Ed.) (1993). *Framing in Discourse*. Oxford University Press.
 - Tannen, D., & Wallat, C. (1987). Interactive frames and knowledge schemas in interaction: Examples from a medical examination/interview. *Social Psychology Quarterly*, 50(2), 205-216.

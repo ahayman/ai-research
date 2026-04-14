@@ -314,6 +314,113 @@ British English favors extreme indirectness, embedded in the broader cultural pa
 
 This pattern of saying the opposite of what is meant relies entirely on shared cultural knowledge. British understatement has been described as "a code born of an inherent social awkwardness and a horror of direct communication which is seen as rude, undiplomatic or lacking finesse." For literal processors, this system can be profoundly misleading.
 
+### 2.6 The Beebe, Takahashi & Uliss-Weltz (1990) Refusal Taxonomy in Depth
+
+Earlier in this category, the work of Beebe, Takahashi, and Uliss-Weltz (1990) was introduced as the origin of the hierarchy in Section 2.1. That brief mention does not do justice to the framework's centrality. The full citation is:
+
+> Beebe, L. M., Takahashi, T., & Uliss-Weltz, R. (1990). Pragmatic transfer in ESL refusals. In R. Scarcella, E. Andersen, & S. D. Krashen (Eds.), *Developing Communicative Competence in a Second Language* (pp. 55-73). New York: Newbury House.
+
+This chapter is the **canonical cross-linguistic taxonomy of refusal strategies** in interlanguage pragmatics. Beebe and her colleagues were originally studying *pragmatic transfer* -- the ways Japanese speakers of English as a Second Language carried their native refusal patterns into English -- but the classification scheme they built to do that work escaped the narrow context of its origin. In the thirty-plus years since publication, it has been applied to refusals in dozens of languages (Arabic, Persian, Chinese, Thai, Spanish, Korean, Vietnamese, Turkish, Egyptian Arabic, Jordanian Arabic, Saudi English, and many more) and remains the default framework for anyone doing empirical work on how people say "no" in talk.
+
+The study itself used a **Discourse Completion Test (DCT)** with sixty participants (twenty Japanese speakers responding in Japanese, twenty Japanese speakers responding in English, and twenty American English native speakers). Participants refused requests, invitations, offers, and suggestions across higher-, equal-, and lower-status interlocutors. Beebe et al. found pragmatic transfer at three levels: the **order** (sequence) of refusal moves, the **frequency** of individual moves, and the **intrinsic content** (the tone or stance) of the semantic formulas. The finding that Japanese ESL speakers transferred Japanese refusal patterns into English -- more statements of regret, more indirect forms, fewer direct refusals, and different sensitivity to interlocutor status -- was what made the paper famous. But the taxonomy is what made it useful.
+
+#### 2.6.1 The Three-Level Taxonomy in Full
+
+Beebe et al. classify every identifiable refusal move into one of three broad categories: **Direct**, **Indirect**, or **Adjunct**. Within each category, they name specific semantic formulas -- the recurring word-patterns speakers use. The taxonomy is *descriptive*: it names what speakers actually do, not what anyone thinks they should do.
+
+**I. Direct Refusals**
+
+1. **Performative** -- explicitly naming the refusal act.
+   *"I refuse."*
+2. **Non-performative statement** -- the plain expression of negation.
+   - **"No."**
+   - **Negative willingness / ability**: *"I can't."* / *"I won't."* / *"I don't think so."*
+
+**II. Indirect Refusals** (the largest and most elaborated category)
+
+1. **Statement of regret.** *"I'm sorry..."* / *"I feel terrible..."*
+2. **Wish.** *"I wish I could help you..."*
+3. **Excuse, reason, explanation.** *"My children will be home that night."* / *"I have a headache."*
+4. **Statement of alternative.**
+   - *I can do X instead of Y*: *"I'd rather..."* / *"I'd prefer..."*
+   - *Why don't you do X instead of Y*: *"Why don't you ask someone else?"*
+5. **Set condition for future or past acceptance.** *"If you had asked me earlier, I would have..."*
+6. **Promise of future acceptance.** *"I'll do it next time."* / *"I promise I'll..."* -- note: must use "will" or "promise."
+7. **Statement of principle.** *"I never do business with friends."*
+8. **Statement of philosophy.** *"One can't be too careful."*
+9. **Attempt to dissuade interlocutor.**
+   - *Threat or statement of negative consequences to the requester*: *"I won't be any fun tonight"* as a way to decline an invitation.
+   - *Guilt trip* (e.g., waitress to customers who want to sit a while): *"I can't make a living off people who just order coffee."*
+   - *Criticize the request/requester (statement of negative feeling or opinion); insult/attack*: *"Who do you think you are?"* / *"That's a terrible idea!"*
+   - *Request for help, empathy, and assistance by dropping or holding the request.*
+   - *Let interlocutor off the hook*: *"Don't worry about it."* / *"That's okay."* / *"You don't have to."*
+   - *Self-defense*: *"I'm trying my best."* / *"I'm doing all I can do."*
+10. **Acceptance that functions as a refusal.**
+    - *Unspecific or indefinite reply.*
+    - *Lack of enthusiasm.*
+11. **Avoidance.**
+    - *Nonverbal*: silence, hesitation, doing nothing, physical withdrawal.
+    - *Verbal*: topic switch, joke, repetition of part of the request (*"Monday?"*), postponement (*"I'll think about it."*), hedging (*"Gee, I don't know."* / *"I'm not sure."*).
+
+**III. Adjuncts to Refusals**
+
+Adjuncts are not refusals in themselves -- they cannot stand alone -- but they are the softening, scaffolding material that accompanies the core refusal move.
+
+1. **Statement of positive opinion / feeling / agreement.** *"That's a great idea..."* / *"I'd love to..."*
+2. **Statement of empathy.** *"I realize you are in a difficult situation."*
+3. **Pause fillers.** *"uhh"* / *"well"* / *"oh"* / *"uhm."*
+4. **Gratitude / appreciation.** *"Thank you so much for thinking of me."*
+
+A typical well-formed American English refusal -- *"Oh, that sounds great [adjunct: positive opinion], I'd love to [adjunct: positive feeling], but I'm sorry [indirect: regret], I already have plans that night [indirect: excuse]. Maybe next week? [indirect: alternative]"* -- contains two adjuncts and three indirect refusal moves, and not one direct refusal. That is not an accident. Beebe et al.'s American data showed that adult American English speakers rely overwhelmingly on indirect strategies plus adjuncts, with direct refusals reserved for the closest relationships or for situations where an indirect refusal has already failed to register.
+
+#### 2.6.2 Why the Taxonomy Matters for Autistic Readers
+
+The Beebe framework is especially useful for autistic readers for reasons that have nothing to do with language teaching and everything to do with how the framework is *structured*.
+
+**1. The taxonomy is descriptive, not prescriptive.**
+Beebe et al. did not claim they had found the correct way to refuse. They catalogued what speakers actually do. This is a subtle but load-bearing distinction. Most everyday advice about refusal ("you should always soften," "never just say no," "give a reason") is prescriptive -- it tells you what to do. The taxonomy is something different: a map of moves that exist. A map is not the same as an instruction to take a particular route. Autistic readers who have been taught refusal as a narrow script ("I'm sorry, I can't, I have plans") can use the taxonomy as an *inventory* rather than a rulebook, choosing the moves that fit their actual intention.
+
+**2. Direct refusal is a legitimate category, not a deficit.**
+This is the most important point in this section. Much of the older interlanguage pragmatics literature frames direct refusal as "pragmatic failure" -- the mistake learners make when they have not yet acquired the target culture's indirectness norms. Beebe's own taxonomy treats direct refusal differently. "Direct" is category **I**, coordinate with "Indirect" (category II), not subordinate to it. The two categories sit side-by-side, and the taxonomy as a whole is silent about which is "right." An autistic reader who says *"No, I can't"* is producing a well-formed refusal in category I of the Beebe framework. This is not pragmatic failure. It is a different choice within the same grammar of refusal.
+
+The cross-linguistic variation in Beebe's data makes this point even stronger. Japanese English-learners in Beebe et al.'s sample produced far more indirect refusals and statements of regret than American English speakers did. That was the "pragmatic transfer" the paper was documenting -- but the implicit comparison point was that American English is, relative to Japanese, already more direct. "Directness" is not a fixed property of good refusals; it is a setting on a dial whose position varies by language, culture, relationship, and individual. For autistic readers who have been told that their refusals are "too blunt," the framework offers a precise answer: *blunt compared to whom?*
+
+**3. Adjuncts are separable from the refusal itself.**
+This is the insight that may do the most practical work. In the taxonomy, the softening material -- the *"That's a great idea,"* the *"I'm really sorry,"* the *"uhm, well..."* -- belongs to its own category, **III**. Adjuncts are *additional* to the refusal; they are not the refusal. This means the refusal act can be complete without them.
+
+For an autistic reader, this permission is significant. If producing adjuncts is cognitively expensive -- if forcing a pause filler or a sincere-sounding *"that's such a kind offer"* costs more than the interaction is worth -- the reader can recognize that the core refusal has still been performed. *"No, I can't come Saturday because I have a prior commitment"* contains two complete refusal moves (one direct, one indirect) and zero adjuncts. It is a shorter refusal than an adjunct-heavy version, and it may read as cooler to some neurotypical listeners, but it is not an incomplete or broken refusal in any structural sense. The adjuncts are separate work. Choosing not to perform them is a choice, not a failure.
+
+**4. The taxonomy exposes the scale of options.**
+Some autistic readers have been taught refusal as a tiny menu of scripts: *"I'm sorry, I can't,"* *"Thanks, but no thanks,"* *"I'll have to pass."* Beebe et al. document roughly twenty-five distinct refusal moves, and that count understates the real range (each move can be combined with others, and each has many surface realizations). A reader who has intuitively been producing *"I never lend money"* may not have known this is category II-7 ("statement of principle") and is a recognized, documented strategy used in natural English speech. Giving previously unlabeled intuitions a name can convert them from "things I do that might be wrong" into "moves within a framework."
+
+**5. Cross-linguistic variation is massive.**
+Beebe's central finding was that refusal patterns differ across languages and transfer between them. Subsequent work has shown that every language studied has its own preferred mix: Egyptian Arabic speakers use more elaborate refusal sequences than Americans do (Morkus 2014, 2018). Mexican Spanish speakers use different combinations again (Félix-Brasdefer 2008). Japanese speakers favor indirection to a degree that makes Japanese ESL refusals detectably different from native English ones. Within English there is further variation by region, class, age, and, importantly, by relationship and power. There is no universal right refusal. The "correct" refusal depends on who you are refusing, what relationship you are in, how much power each party holds, and the local expectations of both parties' speech communities. For autistic readers who have been told there is one right way, this empirical point is liberating: the literature does not support that premise.
+
+**6. Connection to manipulation recognition.**
+Several of Beebe's indirect refusal moves can shade into manipulation when used with certain power asymmetries. Category II-9 in particular -- "attempt to dissuade interlocutor" -- contains threats, guilt trips, criticisms of the requester, and self-defense moves. In the context of refusing a reasonable request, a guilt trip (*"I can't say no to you, you're putting me in such a bad position"*) is a documented refusal strategy. In the context of refusing a person's attempt to set a limit, the same move becomes a manipulation technique. The classification does not change; the ethics depends on what is being refused and who has power. This overlaps directly with the manipulation sub-hub's treatment of refusal and limit-setting (see the `manipulation-hub-strategy-refusal-limits-boundaries` page), which addresses the mirror-image problem: how to recognize when someone is using Beebe-style refusal moves to push back against your limit rather than to decline a request.
+
+The taxonomy, in other words, is morally neutral. It names forms. Whether a form is cooperative, defensive, or manipulative is not a property of the form itself but of the surrounding relationship and stakes. Autistic readers working to distinguish ordinary dispreferred-response softening from pressure tactics may find it useful to separate the *move* from its *use*.
+
+#### 2.6.3 Subsequent Research Building on Beebe
+
+The Beebe et al. taxonomy has been the departure point for a large literature. A few of the most cited extensions:
+
+- **Gass, S. M., & Houck, N. (1999).** *Interlanguage Refusals: A Cross-Cultural Study of Japanese-English* (Studies on Language Acquisition 15). Berlin: Mouton de Gruyter. The first book-length treatment of refusal pragmatics, building directly on Beebe and expanding the data with video-recorded interaction rather than relying on DCTs alone.
+- **Nelson, G. L., Carson, J., Al Batal, M., & El Bakary, W. (2002).** "Cross-cultural pragmatics: Strategy use in Egyptian Arabic and American English refusals." *Applied Linguistics, 23*(2), 163-189. Applied the Beebe taxonomy to Egyptian Arabic and found substantially different frequency distributions, especially for status-marked refusals.
+- **Félix-Brasdefer, J. C.** is the most prolific post-Beebe researcher on refusal pragmatics. Key works include *Politeness in Mexico and the United States: A Contrastive Study of the Realization and Perception of Refusals* (2008, John Benjamins, Pragmatics and Beyond New Series 171), which explicitly uses and extends Beebe's categories to Mexican Spanish. Earlier and later articles in the *Journal of Pragmatics*, *Multilingua*, and *Hispania* apply the framework to L2 Spanish learners and to instructional pragmatics. Félix-Brasdefer maintains an ongoing research program at Indiana University's Pragmatics & Discourse group.
+- **Morkus, N.** has published on the realization of refusal in Egyptian Arabic by American learners of Arabic and on negative pragmatic transfer and language proficiency. His 2018 paper in *The Language Learning Journal* -- "Negative pragmatic transfer and language proficiency: American learners of Arabic" -- is the most frequently cited recent extension to Arabic-English pragmatic transfer.
+- **Autism-specific refusal research** is thin but growing. Most of what exists is embedded in broader work on autistic pragmatics (e.g., research emerging from Pearson, Rose, and colleagues, as well as the `manipulation-hub-pattern-pragmatic-packaging-invalidation` page's sources) rather than in dedicated refusal studies. No published work to date has tested Beebe's full taxonomy against autistic English speakers as a distinct population. This is an open research area. In the absence of such evidence, this hub relies on the general principles above -- especially the direct/indirect coordinate structure and the separability of adjuncts -- rather than on claims specific to autistic refusal patterns.
+
+#### 2.6.4 A Methodological Caveat
+
+Beebe et al. used a Discourse Completion Test: participants read a prompt ("Imagine your boss asks you to..."), then wrote what they would say. DCTs are not the same as recorded natural interaction. They capture what people *think* they would say, not always what they actually *do* say. Later work (notably Gass & Houck 1999, and the conversation-analytic tradition more broadly) has shown that natural refusals contain more avoidance, more non-verbal material, more interruption, and more negotiation across multiple turns than DCTs capture. The taxonomy is still the best starting inventory available, but readers should understand that the categories were built from elicited rather than naturally occurring data. Any given real refusal in the wild is likely to combine moves, switch moves partway, and include material (silence, a change of physical position, a text-message delay) that the original study did not record. The taxonomy is a map, not a photograph.
+
+**Cross-links:**
+- **Category 3 (Politeness and Face):** Direct vs. indirect refusal maps onto Brown and Levinson's bald-on-record vs. off-record strategies. Beebe's category I corresponds roughly to bald-on-record; indirect refusals deploy positive and negative politeness; adjuncts are the face-work wrapper.
+- **Category 23 (Framing and Framing Theory):** The choice of which refusal move to use frames the refusal as cooperative, principled, reluctant, or apologetic -- and these frames shape how the refusal is received.
+- **Category 24 (Identity and Stance):** Different refusal moves project different stances (deferential, principled, casual, regretful). An autistic reader may find that certain moves feel more authentic than others; the taxonomy legitimates that choice rather than requiring adoption of the full American adjunct-heavy pattern.
+- **Manipulation sub-hub, `manipulation-hub-strategy-refusal-limits-boundaries`:** Uses Beebe's direct-refusal category to argue that direct limit-setting is a valid pragmatic move, not a deficit, and uses category II-9 to help readers recognize when their own limit is being refused through dissuasion moves.
+
 ---
 
 ## 3. THE PRAGMATICS OF DISAGREEMENT

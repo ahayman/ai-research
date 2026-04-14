@@ -111,6 +111,118 @@ Not every framing move is a frame attack. Most framing is ordinary conversationa
 
 If the answers are no, yes, yes, yes, yes -- you are looking at a frame attack, and contesting it is appropriate. If the answers are mostly the other direction, you are looking at ordinary framing, which is fine.
 
+### 2.5 Worked Example: A Medical Encounter
+
+A patient describes chronic pain and sensory sensitivity to a new clinician. The clinician replies: "A lot of people with anxiety find their physical symptoms improve with a mental health referral."
+
+**The setup.** The patient arrived in a medical-consultation frame: problem = physical symptoms, treatment = medical investigation, role = expert physician.
+
+**The swap.** The clinician has replaced the medical-consultation frame with a psychological-causation frame: problem = anxiety, treatment = mental health referral, role = patient needing psychological support. The original frame has not been refuted; it has been replaced by a different frame in which the physical symptoms are symptoms of something else.
+
+**What the non-swapped frame would have looked like.** A medical engagement with the physical symptoms -- examination, testing, differential diagnosis, ruling out causes. The patient's account would have been treated as data about a physical condition, not as evidence of a psychological one.
+
+**Recovery moves.**
+- Name the swap explicitly: *"I understand that anxiety is relevant for some patients, but I'm asking you to investigate the physical symptoms I described. Can we start with a physical examination?"*
+- Refuse the implicit uptake: do not agree to the characterization of your symptoms as anxiety-driven until a differential has actually been worked.
+- Document in real time: ask for the conversation to be noted in your record, and ask for the physical complaints to be recorded as physical complaints.
+- If the swap is persistent, ask for a second opinion or a referral to a specialist whose frame is more likely to include the physical complaint as a physical complaint.
+
+**Why this is a frame swap rather than ordinary medicine.** Clinicians sometimes do need to raise psychological contributions to physical symptoms, and this is legitimate medicine. The move becomes a frame swap when it replaces the physical investigation rather than supplementing it, when it is made before the physical investigation has begun, and when the patient's objection to the swap is interpreted as further evidence of the psychological frame. The self-sealing test (Section 6.3) is the clearest diagnostic. See the Pragmatic Manipulation Sub-Hub's context-medical-settings page for the fuller treatment.
+
+### 2.6 Worked Example: A Performance Review
+
+A worker sits down for an annual review. The manager opens with: "So this has been a year where we've had to have a lot of conversations about fit. I want to use today to make sure we're aligned on what fit looks like going forward."
+
+**The setup.** The worker arrived in a performance-evaluation frame: problem = reviewing work outputs against goals, treatment = feedback on specific outputs, role = employee whose work is being assessed.
+
+**The swap.** The manager has replaced the performance frame with a "fit" frame: problem = cultural or dispositional compatibility, treatment = aligning the worker's conduct with implicit expectations, role = employee whose fit is in question. The swap is accomplished by a single word (*fit*) doing an enormous amount of frame work. Fit is not performance. Fit is not measurable against goals. Fit is evaluated subjectively and typically assigns the problem to the worker's disposition rather than to their work output.
+
+**What the non-swapped frame would have looked like.** A review of specific outputs against specific goals, with specific examples of what went well and what did not, and with a specific improvement plan tied to measurable targets.
+
+**Recovery moves.**
+- Name the frame: *"I want to make sure I understand -- are we discussing specific performance issues, or are we discussing something about fit? These are different conversations and I want to be clear which one we're having."*
+- Ask for the specifics that the fit frame is obscuring: *"Can you give me the specific examples and the specific expectations I haven't met?"*
+- Refuse the uptake: do not agree to the characterization of the past year as "conversations about fit" unless you remember having had those conversations and agreeing to that characterization at the time.
+- Document: take notes during the review, or ask for written follow-up covering what was discussed.
+
+**Why this matters.** The "fit" frame is a frame that is much harder to contest than a performance frame, because it points to something unspecifiable about the worker rather than to anything they have done. Frame analysis lets you see that the framing choice is doing the work; the conversation's shift into the fit frame is not incidental. See the sub-hub's context-workplace page.
+
+### 2.7 Worked Example: Family Conflict Over a Decision
+
+An adult child has decided not to attend a family gathering. A sibling calls and says: "Mum is devastated. She's been crying all afternoon. I don't know what to tell her. I wish you could just see how much you're hurting her."
+
+**The setup.** The adult child made a personal decision about an event. They arrived in an autonomy frame: problem = choosing how to spend one's own time, treatment = making and communicating the decision, role = adult with their own life.
+
+**The swap.** The sibling has replaced the autonomy frame with a harm frame: problem = the parent's suffering, cause = the adult child's choice, moral = the adult child has hurt the parent, treatment = reverse the decision. The swap is accomplished through a series of moves: the reported emotional state ("devastated," "crying"), the sibling's own helplessness ("I don't know what to tell her"), the verb *hurting* that encodes the child as active agent of harm, and the wish-clause that installs a should-have-done expectation.
+
+**What the non-swapped frame would have looked like.** An acknowledgment that the adult child has the right to choose, possibly combined with an expression of regret or an inquiry into why the decision was made, without any assignment of fault or requirement to reverse the choice.
+
+**Recovery moves.**
+- Name the frame without arguing inside it: *"I understand Mum is upset. I made a decision that I'm not going to reverse, and I'm not going to talk about it as if my decision were the cause of her feelings. Her feelings are her own to manage."*
+- Decline the proxy role: the sibling is asking the adult child to manage the parent's emotional state, which is a role the adult child has not accepted.
+- Substitute a more accurate frame: *"I'm making a choice about how I spend my time. If Mum wants to talk with me directly about it, I'm willing to do that. I'm not willing to have the conversation through you, and I'm not willing to have it in terms of who's hurting whom."*
+- Disengage if the frame is pressed: you are not required to stay in a conversation whose frame you have refused.
+
+**Why this is a frame swap rather than legitimate concern.** Family members do sometimes raise legitimate concerns about each other's decisions, and that is ordinary relational work. The move becomes a frame swap when it replaces the autonomy frame with a harm frame that leaves no acceptable response except reversal, when it routes the conversation through a proxy rather than the affected party, and when any refusal to accept the frame is treated as further evidence of the fault the frame attributes. See the sub-hub's context-family-of-origin page.
+
+### 2.8 Worked Example: A Social Media Thread
+
+A user posts a substantive critique of a popular speaker's claim. A reply quotes the critique and says: "Interesting that you felt the need to attack X personally. It says a lot about you."
+
+**The setup.** The original post was in a content-critique frame: problem = an inaccurate claim, treatment = publishing a correction, role = commenter engaging with the claim.
+
+**The swap.** The reply has installed a personal-attack frame: problem = the character of the critic, treatment = discrediting the critic, role = target of personal animus. The critique has not been addressed; it has been reframed out of relevance.
+
+**What the non-swapped frame would have looked like.** An engagement with the specific content of the critique -- agreeing, disagreeing, providing counter-evidence, or acknowledging the correction.
+
+**Recovery moves.**
+- Do not defend against the personal-attack frame. Defending inside it ("I didn't attack X personally") runs the frame through the negation.
+- Reassert the original frame: *"I made a specific claim about X's claim. The response does not address the claim. Here is the claim again: [restatement]."*
+- Document the frame for later review. Screenshots preserve the exchange in its original context before further reframing layers are added.
+- Decide whether to continue engaging. Social media threads often have large audiences; the reframing move is sometimes aimed at the audience rather than at you, and the protective move may be to make the frame visible to the audience rather than to win a point against the poster.
+
+**Why this matters for autistic readers.** Frame swaps in public writing contexts are often directed at the watching audience as much as at the respondent, and the swap is designed to install a frame in the audience's cognition before the original content can be evaluated. Frame analysis is what lets you see that the move is being made and that the correct response is frame-level rather than content-level. See the sub-hub's context-online-digital page.
+
+### 2.9 Worked Example: A Police Encounter
+
+An autistic adult has been stopped by an officer during a mental-health welfare check. The officer says: "We just want to make sure you're okay. If you cooperate with us, this will go smoothly."
+
+**The setup.** The autistic adult may be in any of several frames: welfare-check frame, detention frame, rights-assertion frame, conversation frame. The frame is crucial because different frames have different legal consequences.
+
+**The swap and its ambiguity.** The officer's words install a welfare-frame ("we want to make sure you're okay") but the presence of the words "cooperate with us" and "go smoothly" also installs a partial detention frame in which non-cooperation is a problem. The two frames are doing different work, and the overlap is deliberate in some training traditions. The autistic adult is being invited to operate in the welfare frame while being subject to rules that belong to the detention frame.
+
+**What a frame-clear version would look like.** An explicit statement of the nature of the encounter: "You are not under arrest but you are being detained for a welfare check, and you have the right to remain silent." Frame-clear encounters are rarer than frame-ambiguous ones, because the ambiguity serves the institutional interest.
+
+**Recovery moves.** This is a situation where the protective moves are sharply constrained and where the priority is safety rather than frame-contestation. The appropriate moves include:
+- Asking the frame-clarifying question calmly: *"Am I being detained? Am I free to leave?"* This is a legal question that should get a legal answer, and the answer clarifies which frame is actually in effect.
+- Complying physically while declining to narrate or explain beyond what is necessary.
+- Requesting an advocate or a legal representative if the encounter escalates.
+- Documenting afterward: contemporaneous notes of what was said, by whom, in what sequence.
+
+**Why frame analysis is limited here.** The officer's frame is backed by physical and legal enforcement power, and contesting the frame during the encounter is dangerous. Frame analysis is useful afterward -- for review, for advocacy, for legal complaint -- and in advance, for preparation. Frame analysis alone is not a substitute for legal advocacy, self-protection, or safety planning. See the sub-hub's context-legal-criminal-justice page and the safety-assessment page.
+
+### 2.10 Worked Example: A Reunion with an Estranged Relative
+
+A family member who had been abusive in the past contacts the adult child and says: "I've been thinking a lot, and I think we should try to put the past behind us. Life is too short."
+
+**The setup.** The adult child has a specific history with this person. They may be in a self-protection frame: problem = managing distance from an unsafe person, treatment = continued limited contact or no contact, role = adult making an informed choice about their own safety.
+
+**The swap.** The relative has installed a reconciliation frame: problem = the estrangement itself, treatment = reconnection, role = adult children obliged to let the past go. The original harm is not addressed; it has been reframed into "the past," which is then framed as an obstacle to the present that should be removed.
+
+**What the non-swapped frame would have looked like.** A specific acknowledgment of what happened, a specific accounting of what the relative has changed, and a specific offer to meet the adult child where they are rather than to invite them into a pre-decided outcome.
+
+**Recovery moves.**
+- Name the swap: *"When you say 'put the past behind us,' you are asking me to stop referring to specific events that I remember clearly. I'm not willing to do that."*
+- Require specificity: *"If you want to talk about the past, we have to talk about specific events and what you think happened. 'Putting it behind us' is not a description of those events."*
+- Refuse the urgency frame: *"Life is too short" is a pressure move, not a reason. The urgency is being deployed to avoid the specifics.
+- Consult your reality-check network before responding. This is one of the situations where outside perspective matters most, because the frame is designed to install urgency that blocks careful consideration.
+
+**Why this is a frame attack.** The reconciliation frame operates by treating the past as a unitary thing ("the past") rather than as specific events, and by treating reconciliation as the default outcome rather than as a possibility that depends on specific conditions. These framings are not ordinary relational work; they are frame moves that foreclose the analysis of specifics. See the sub-hub's can-this-be-repaired page and the strategy-disclosure-decisions page.
+
+### 2.11 A Note on Worked Examples
+
+The six worked examples in Sections 2.2-2.10 are not recipes. Each one depends on specifics (the relationship, the history, the safety considerations, the institutional context, the legal context) that the example cannot capture. What the examples give you is a template for analysis: in each case, the moves are to identify the original frame, identify the frame that has been swapped in, describe what the non-swapped frame would have looked like, and list the recovery moves that are plausible in the specific situation. The analysis transfers; the specifics do not. When you face a situation that resembles one of these examples, the recommendation is to use the analysis as a starting point for your own work, not as a prescription to apply directly.
+
 ---
 
 ## 3. FRAME ATTACKS: THE MANIPULATION-SUB-HUB CATALOG
@@ -194,6 +306,18 @@ The frame being installed is: *the problem is how you said it, not what you said
 
 The frame being installed is: *the way you communicate is the problem; if you communicated normally, there would be no issue*. The move overwrites the content layer with the packaging layer. Like tone policing, this is especially load-bearing in autistic contexts where the packaging layer differs from non-autistic norms. The protective move is to distinguish content from packaging and to insist that the content be addressed regardless of the packaging.
 
+### 3.9b Compliance Trap as Setup Frame
+
+The compliance trap (sub-hub: [manipulation-hub-pattern-compliance-trap](manipulation-hub-pattern-compliance-trap.md)) installs an "obviously reasonable" frame around a request that has downstream consequences the target has not been told about. *"You're not going to object to this small thing, are you?"* is not a question -- it is a frame installation in which the only acceptable response is agreement and in which objection is pre-coded as unreasonable. The frame analysis reveals the compliance trap as a frame move because the frame is doing the work that the content alone cannot. The protective move is refusing the implicit uptake ("I'd like to think about it before agreeing") and requiring the specifics of what is being agreed to before the agreement is given.
+
+### 3.9c Information Asymmetry Exploitation as Frame Asymmetry
+
+Information-asymmetry exploitation (sub-hub: [manipulation-hub-pattern-information-asymmetry-exploitation](manipulation-hub-pattern-information-asymmetry-exploitation.md)) is a frame move in which one party knows something the other does not, and uses the informational advantage to install a frame that the better-informed party would not accept if they shared the information. The frame of "we are having an equal conversation" masks the asymmetry. Frame analysis surfaces the asymmetry by asking what each party knows and what inferences each party is drawing. Protective moves include requesting the information, delaying decisions until information is obtained, and refusing to treat the current conversation as a full consent-producing exchange when the information is not shared.
+
+### 3.9d Emotional Invalidation and Double Bind as Frame Traps
+
+Emotional invalidation combined with the double bind (sub-hub: [manipulation-hub-pattern-emotional-invalidation-double-bind](manipulation-hub-pattern-emotional-invalidation-double-bind.md)) installs a frame in which any emotional response the target has is wrong: showing the emotion is "overreacting," suppressing it is "being cold," describing it verbally is "being dramatic," ignoring it is "repressing." Every available action is pre-coded as a failure. The frame is self-sealing (see Section 6.3 below) and no response from inside the frame is protective. The protective move is refusing the frame at the level of its meta-claim: *"the frame you're using treats every response I could make as wrong. That tells me the frame is the problem, not my response."*
+
 ### 3.10 Bandwagon Isolation as Chorus Frame
 
 The frame being installed is: *everyone agrees with me; you are the outlier*. The chorus may be real, partially real, or fabricated; frame analysis shows that the move is the same in each case, because what is being installed is the *frame of consensus*, not the specific content. The protective move is refusing to grant frame-level authority to an unverifiable chorus, and insisting on speaking with the specific people who are supposedly part of the chorus. See the sub-hub's bandwagon isolation page for the full treatment.
@@ -263,6 +387,29 @@ The Pragmatic Manipulation Sub-Hub flags social-services assessments as one of t
 
 Frame analysis does not by itself win a contested social-services case. What it does is let you see what is happening at the level where the battle is actually occurring. The battle is not about the specific facts; the battle is about which frame is going to be in effect when the facts are read.
 
+### 4.6 Frames in Institutional Writing
+
+Institutional documents do not describe; they frame. This subsection offers a closer look at how institutional genres install frames on their subjects, with examples drawn from four genres that recur in autistic readers' lives.
+
+**Medical records.** A line in a clinical note reads: "Pt reports persistent fatigue. No objective findings. Patient appeared anxious, guarded." Each phrase is doing frame work. *Pt reports* (rather than *the patient has*) installs a report-frame in which the complaint is a statement by the patient rather than a fact about their body. *No objective findings* installs an objective/subjective frame in which the patient's account is not yet evidence. *Anxious, guarded* installs a psychological frame that the next reader will pick up as prior context for interpreting any future complaint. The cumulative effect, across many notes, is a record that positions the patient as unreliable even though no individual sentence has said so. Subsequent clinicians read the patient through the record's frame, and the patient has to work against it without being able to address any specific sentence as false.
+
+**Educational records.** A teacher writes: "Alex disrupted the lesson by refusing to engage with the task. When redirected, Alex became increasingly oppositional and had to be removed from class." The vocabulary choices (*disrupted*, *refusing*, *oppositional*, *removed*) encode the event inside a behavioral-management frame in which the student is the problem, the teacher is acting reasonably, and the remedy is compliance. An equally accurate description of the same event ("Alex was unable to engage with the task because it involved sensory input they could not process; when staff pressed the task, Alex's distress escalated; staff responded by removing Alex from the classroom") would encode the event inside a sensory-accommodation frame in which the environment was the problem and the response was a management failure. The choice of vocabulary is the choice of frame, and the frame will travel with Alex into every subsequent teacher's reading.
+
+**HR documentation.** A performance-improvement-plan memo reads: "Employee has consistently demonstrated difficulty with feedback and an inability to adapt to team norms. Employee's communication style has been the subject of multiple informal conversations." *Consistently demonstrated* installs a pattern frame in which the behavior is stable and trait-like. *Inability to adapt* installs a capacity frame in which the employee cannot rather than does not. *Team norms* installs an implicit-consensus frame in which the norms are settled and the employee is the outlier. *Multiple informal conversations* installs a history frame that does not require specification of what was actually said or when. Each of these framings is contestable in principle; each is difficult to contest in practice because the record has already installed them and the contest would have to be made against the document as a whole rather than against any single sentence.
+
+**Court filings and legal documents.** Legal writing is an especially strong case of frame-installation because the genre requires claims to be stated in declarative form and because subsequent rulings are bound to the frames the filings have installed. A custody filing that describes a parent as "inflexible, difficult to communicate with, and resistant to expert recommendations" is installing a frame that subsequent hearings will operate within; the parent will have to work against the frame in every subsequent appearance. Autistic parents in family court proceedings are particularly vulnerable to this because the traits that get described in the filing are often the same traits that the clinical frame of autism codes as symptoms. The legal frame and the clinical frame compound each other, and contesting either requires specialized advocacy that recognizes the frame-layering explicitly.
+
+**How to read institutional documents frame-first.** When you encounter a document written about you, the protective reading procedure is:
+
+1. Read the document once for content and note what it says factually happened.
+2. Read it a second time for vocabulary choices. Note every word that encodes a judgment (*disrupted*, *refused*, *oppositional*, *consistently*, *inappropriate*, *aggressive*, *non-compliant*). Each of these is a frame cue.
+3. For each frame cue, imagine a neutral-frame alternative. What is the same event if described with different vocabulary?
+4. Note which frames are installed by the vocabulary as a whole. Entman's four functions may apply: what problem is the document defining, what cause is it diagnosing, who is it evaluating morally, what treatment is it recommending?
+5. Decide whether to contest the frame formally (correction request, supplementary documentation, appeal) or to prepare a counter-frame for the next reader to use.
+6. Keep your own contemporaneous notes about the event, so that you have a record of the event inside your own frame that you can refer back to later.
+
+Institutional writing is a place where frame analysis pays off especially well, because institutional writing is both durable and influential, and the frames it installs travel with the subject through many subsequent readings. The sub-hub's strategy-documentation page extends these moves into practical documentation strategies for autistic readers.
+
 ---
 
 ## 5. THE PROTECTIVE TOOLKIT
@@ -313,9 +460,90 @@ Frame analysis is a tool, not a cure. There are situations in which naming the f
 
 Frame analysis gives you clearer vision into what is happening. Clearer vision is almost always useful. But clearer vision is not the same as leverage, and the practical work of responding to a frame attack often requires external resources (legal, advocacy, safety-planning) that frame analysis alone does not provide. Treat this category as one tool in a toolkit, not as the toolkit.
 
+### 5.7 Reframing as a Defensive Move: The Full Toolkit
+
+This subsection consolidates the defensive reframing moves into a single practical catalog. The moves are not mutually exclusive; in any specific situation, several may be appropriate in sequence or in combination.
+
+**Move 1: Naming the frame.** The most basic move. You point at the frame and say what it is. *"The way you're describing this treats me as the one causing the problem. That's not the frame I'd use."* Naming does not refute the frame, but it makes the frame visible, which is often enough to prevent it from running invisibly.
+
+**Move 2: Refusing the frame.** Stronger than naming. You decline to operate inside the frame at all. *"I'm not going to have this conversation as if I were the one on trial here. I'm willing to have a different conversation."* Refusal does not guarantee the other party will follow you out of the frame, but it keeps you out of the defensive-inside-the-frame posture that the frame is usually designed to produce.
+
+**Move 3: Offering an alternative frame.** Following Lakoff's point that negation runs the frame, the most effective defensive move is substitution. You do not say "I'm not X"; you say "what is actually happening is Y." *"I'd describe this differently: I raised a concern about a specific decision, and the response treats the concern as a personality issue. I think the concern is the appropriate thing to discuss."* Alternative frames work best when they are specific, evidence-grounded, and offered as descriptions rather than arguments.
+
+**Move 4: Asking for the frame to be named explicitly.** A diagnostic move that doubles as a defensive one. *"Can you tell me specifically what conversation we're having? Are we reviewing my work performance, discussing a personal matter, or something else?"* This forces the other party to either name the frame (in which case you can evaluate it explicitly) or to refuse to name it (in which case you have documented their refusal). Either outcome is protective.
+
+**Move 5: Documenting the frame for later review.** Any written record -- even a note to yourself after the conversation -- preserves the frame that was in effect, which becomes evidence against subsequent re-framings. When gaslighting is present, this is the most valuable move, because gaslighting operates by reinstalling a different frame over time. Contemporaneous documentation is the anchor that prevents the reinstallation.
+
+**Move 6: Requesting a witness or a third party.** If the conversation is high-stakes and you are in a position to request it, asking that a witness be present changes the frame in a way that is often protective. The presence of a witness makes frame attacks more expensive for the attacker, because the witness is another reader who can later corroborate or contest the frame. Legal advocates, union representatives, autistic peers, and trusted family members can all serve as witnesses.
+
+**Move 7: Disengaging without agreement.** Sometimes the protective move is to leave the conversation without resolving the frame. *"I don't think this is a useful conversation to have right now. I'm going to stop here."* Disengagement is not capitulation -- it is a refusal to continue investing energy in a frame you cannot contest in real time. You can return to the issue later, in writing, with a peer present, or with legal support. The refusal of the moment is a refusal to be drawn into a frame fight you are not equipped to win on the spot.
+
+**Move 8: The internal reframe.** When none of the external moves is available -- when the frame is backed by power you cannot oppose and you have to operate inside it for the moment -- the internal reframe is what remains. You hold the accurate frame in your own mind, knowing that the frame being imposed on you is not the one you have consented to. This is cognitively expensive (see the autism research file's treatment of masking costs) but it is often protective against the gaslighting effect of having an imposed frame also become your own internal frame. The sub-hub's opening protective reframes are designed for this use: single sentences you can hold internally even when you cannot assert them externally.
+
+These eight moves form a ladder. Lower-cost moves (internal reframe, documentation) are appropriate when the situation is asymmetric or dangerous. Higher-cost moves (naming, refusing, substituting, requesting a witness) are appropriate when the situation is more symmetric and when refusal is safer. Which moves are available depends on the specifics, and no single move works universally. The point of having the catalog is to ensure that when a frame is being installed on you, you have more than one option.
+
+### 5.8 The Frame-vs.-Content Disentangling Procedure
+
+One of the most useful uses of frame analysis is disentangling *what is being claimed* from *how it is being framed*. This is a specific skill, and it is worth practicing on low-stakes material before applying it to high-stakes material.
+
+**Step 1. Identify the content claims.** Read or listen for the specific factual claims. What is being asserted about the world? Write these down as bare propositions, stripped of evaluative vocabulary. "The project is not meeting the deadline." "The child cried during the transition." "The meeting ran over." Each bare proposition is a candidate for factual evaluation: true, false, uncertain, partially true.
+
+**Step 2. Identify the frame.** Read or listen again for the vocabulary, emphasis, and rhetorical structure. What frame is the speaker or writer using to interpret the content claims? The frame is doing the work that the bare propositions do not do: it assigns responsibility, proposes a cause, recommends a response, positions the speaker, and positions the target.
+
+**Step 3. Evaluate the content claims separately from the frame.** For each bare proposition, ask whether it is accurate. This is a factual inquiry, separable from the frame. You can agree that the project is not meeting the deadline while disagreeing with the frame that the delay is the fault of any particular team member. You can agree that the child cried while disagreeing with the frame that the crying was a behavioral problem.
+
+**Step 4. Evaluate the frame separately from the content claims.** For the frame, ask whether the interpretation it offers is accurate. Is the problem being defined correctly? Is the cause being diagnosed accurately? Is the moral evaluation defensible? Is the treatment recommendation appropriate? Each of these is a separate question, and it is possible for a frame to be wrong in one of its functions while being right in another.
+
+**Step 5. Respond to frame and content separately.** When you respond, you can agree with the content claims, disagree with the frame, and say so explicitly. *"Yes, the project is behind schedule. I don't agree that the delay is due to my decisions; here is the data on the actual causes."* This kind of response is harder to refuse than either "I agree" or "I disagree" because it carves the argument at the right joint and makes the frame-versus-content distinction explicit.
+
+This procedure is particularly valuable when reading institutional documents, performance reviews, news articles, legal filings, and medical records. The reading that integrates frame and content usually accepts both together and is vulnerable to uncritical uptake of the frame. The disentangling reading separates them and allows each to be evaluated on its own terms. Autistic readers often report that this kind of disentangling is more natural to them than to non-autistic readers, because they are already inclined to read for specific claims rather than for overall tone. The disentangling procedure is a way of making that inclination explicit and using it as a protective skill.
+
+### 5.9 Frames in Media: A Brief Reference
+
+Media framing is not the focus of this hub, but it is worth a brief reference because the theoretical traditions this category draws from (Entman, Iyengar, Gamson and Modigliani) originated primarily in media studies and because many readers encounter framing most visibly in news coverage.
+
+**Episodic vs. thematic framing (Iyengar, 1991).** Episodic frames present issues as specific cases (individual homeless man, specific crime, particular immigrant); thematic frames present issues as patterns (homelessness rate, crime trends, immigration systems). Experimental research shows that episodic frames push viewers toward attributing responsibility to individuals, while thematic frames push viewers toward attributing responsibility to systems. Both frames are usually available for the same story, and the choice of frame is consequential.
+
+**Gain vs. loss framing (Kahneman & Tversky, 1981).** The same options produce different choices depending on whether they are described as gains or losses. Public health messaging about cancer screening, retirement savings, and vaccination show robust framing effects of this kind. The choice of frame can shift population-level behavior without changing any fact.
+
+**Interpretive packages (Gamson & Modigliani, 1989).** Frames in media arrive as clusters of metaphors, exemplars, catchphrases, depictions, and visual images that travel together. When you see a political issue in the news, the vocabulary, images, and examples are rarely arbitrary; they are parts of a package that encodes the frame.
+
+**Episodic frames in autism coverage.** Media coverage of autism has historically been heavy on episodic frames centered on individual families and individual children, often with deficit-emphasizing vocabulary. The thematic frames (prevalence, research, autistic adult experience, systemic supports) have been much less prominent. This framing choice has consequences: it installs a frame in which autism is primarily a child-centered tragedy requiring individual remediation, which differs substantially from the thematic frame of autism as a form of human variation requiring systemic accommodation. The shift toward autistic-adult-led coverage is an instance of frame renegotiation in action.
+
+**Practical reading moves.** When reading news coverage of any issue that affects you, the protective reading moves are: identify the frame in use (episodic? thematic? gain/loss? interpretive package?), identify the alternative frames that could have been used, note what the current frame makes salient and what it hides, and notice the vocabulary choices that install the frame. This is the same procedure as Section 5.8, applied to media texts rather than to interpersonal communication.
+
 ---
 
 ## 6. DIAGNOSTIC RECIPES
+
+### 6.0 The Frame Diagnostic Procedure: A Step-by-Step Walkthrough
+
+Before the quick-check recipes in 6.1-6.5 below, this subsection gives a longer step-by-step diagnostic procedure for working out what frame is in play in a specific interaction. It is slower than the quick checks and is intended for situations important enough to be worth the time -- high-stakes conversations, decisions about whether a pattern is a frame attack, preparation for encounters you expect to be framed, and post-hoc review of conversations that left you disoriented.
+
+**Step 1. Write down the specific utterances.** Before you do any interpretation, write the actual words spoken, in order, with as much accuracy as you can remember. Include tone markers if you remember them ("said quietly," "raised voice," "pause"). Do not paraphrase. The paraphrase is already a frame; writing the words lets you see what was actually there.
+
+**Step 2. List the candidate frames.** For the situation as a whole, list the frames that could plausibly be in play. Do not try to pick one yet. Candidate frames typically include: collaborative problem-solving, performance evaluation, disciplinary action, emotional support, information-seeking, conflict, negotiation, disciplinary action disguised as support, ordinary chat, formal meeting, cross-examination. Write down four or five.
+
+**Step 3. Apply Entman's four functions to each candidate.** For each candidate frame, write out the answers to the four diagnostic questions:
+- What does this frame say the problem is?
+- What does this frame say caused it?
+- Who does this frame say is at fault or in the right?
+- What does this frame say should be done next?
+If two frames produce the same answers to all four, they are the same frame at a different level of abstraction -- merge them. If they produce different answers, they are genuinely different candidates and should stay separate.
+
+**Step 4. Check each candidate against the utterances.** For each frame, ask whether the actual utterances in Step 1 fit the frame. A frame "fits" if the utterances are the kind of things you would expect someone in that frame to say. A frame "fails to fit" if the utterances are things that a person in that frame would not typically say, or would say differently, or would say at a different moment in the interaction.
+
+**Step 5. Check each candidate for self-sealing.** A frame is self-sealing if it interprets objections to it as evidence for it. The classic form: *"if you weren't X, you wouldn't be denying it, so the fact that you're denying it proves you're X."* Self-sealing frames are strong evidence of frame attack rather than ordinary framing. If any candidate frame is self-sealing in the current situation, flag it.
+
+**Step 6. Check the consent record.** For each candidate frame, ask whether you would have agreed to the frame if it had been proposed explicitly at the start. A frame you would have refused if asked is not a frame you have consented to, even if you have tacitly accepted it so far.
+
+**Step 7. Pick the best-fit frame, but hold it provisionally.** Based on the previous steps, identify which frame best accounts for the utterances and the patterns. Do not treat this as final. Frames often shift mid-interaction; the frame that fits the first three turns may not fit the next three.
+
+**Step 8. Identify the alternative frame you would prefer.** If you think the best-fit frame is a frame attack or is inaccurate, write down the frame you think would be more accurate. Use Entman's four functions on the alternative as well, to make sure the alternative is coherent and specifiable.
+
+**Step 9. Decide what to do.** The diagnosis is a precondition for action, not the action itself. Depending on the situation, the action may be naming the frame, refusing it, substituting the alternative, documenting for later review, consulting peers, or none of the above (if refusal would be unsafe). Frame diagnosis does not dictate the response; it makes the response an informed choice rather than a reactive one.
+
+This nine-step procedure is too slow for live interaction. It is not meant for live use. It is meant for preparation, for review, and for the cases where you need to understand what is happening at a level that real-time processing cannot reach. Once you have worked through it several times, the intuitions it produces become available at faster speeds, and live-interaction framing becomes easier to read.
 
 ### 6.1 The Five-Question Frame Audit
 
@@ -349,6 +577,61 @@ Ask: *would this frame read differently if it were being applied to someone else
 ### 6.5 The Three-Conversation Test
 
 A pattern recommended in the sub-hub's miscommunication-vs-manipulation decision framework. If a frame that is being installed on you would be corroborated by three different people who know the situation and have independent vantage points, it is probably approximately accurate. If not, you are probably looking at a frame that exists mainly in the mind of the person installing it. This is not a certain test -- sometimes three people can all be wrong -- but it is a reasonable first-pass check that prevents both false negatives (dismissing real problems as manipulation) and false positives (treating ordinary framing as attack).
+
+### 6.6 Frame-Installation Red Flags: Verbal Markers to Watch For
+
+This section collects specific verbal markers that frequently signal frame-installation attempts. None of these phrases is a frame attack in itself -- most of them appear innocently in ordinary speech -- but each of them is a cue that frame-level work is happening, and the presence of several together in a short span is a stronger signal. The value of the list is that it lets you notice the moves in real time, which is the precondition for any response.
+
+**"You always..." / "You never..."** Overgeneralization as identity installation. The move converts a specific instance into a trait attribution, which installs a frame in which the instance is not a single event but evidence of a pattern that defines the target. The accurate frame would track specific events in specific contexts. The alarm-level phrase is one where the "always" or "never" is followed by a trait attribution the target would not voluntarily endorse ("you always make everything about you," "you never think about anyone else").
+
+**"Everyone knows..." / "Obviously..."** Frame naturalization. These phrases install a frame as the supposed shared ground that everyone already accepts, which makes contesting the frame look like either ignorance or obstinacy. The accurate response is to ask for the evidence for the "everyone knows" claim. Often the claim does not survive the question.
+
+**"I'm just saying..."** Plausible-deniability wrapping. The phrase is usually deployed after a statement that has done significant frame work, and it functions to allow the speaker to disown the frame move if it is contested. *"I'm just saying, you could have handled that differently."* The "just saying" is a disavowal that the statement installs a frame, even as the statement installs the frame. The protective move is to notice that the disavowal does not actually retract the frame.
+
+**"This isn't really about X, it's about Y."** Frame substitution announced explicitly. The move replaces the operative frame with a different one. Sometimes this is legitimate reframing (sometimes a conversation really is about something deeper than the surface topic); sometimes it is a deflection from the original topic into one more favorable to the speaker. The diagnostic question is whether the substitution is in good faith (the new frame makes more sense of the situation) or in self-interest (the new frame changes the subject from something inconvenient to the speaker).
+
+**"You're making this into something it isn't."** Pre-emptive frame refusal deployed against the target. The move installs the frame that the target's interpretation is exaggeration or fabrication, before the target has had a chance to state their interpretation. The accurate response is to ask what, exactly, the speaker thinks the target is making too much of -- the question often exposes that the "making this into" accusation is itself not grounded in anything specific.
+
+**"Let's not make this more complicated than it is."** Frame simplification. The move installs a frame in which the simpler reading of the situation is the correct one, and elaborations are unwelcome complications. Often the simpler reading is the one more favorable to the speaker. The accurate response is to determine whether the complication is genuine (in which case the frame simplification is a frame attack) or spurious (in which case the speaker is right to ask for simplification). Autistic readers are often told they are making things more complicated when they are, in fact, reading the situation more accurately than the speaker who wants it simpler.
+
+**"You know how you get..."** Trait installation in passing. Similar to "you always" but softer, packaged as familiarity rather than as accusation. The move invites the target to agree to a trait attribution ("how you get when you're tired," "how you get when you're anxious," "how you get with strangers") as if it were a shared understanding, which installs the trait as shared ground going forward. Refusing the uptake is protective.
+
+**"We both know..."** False consensus installation. The move pretends that a particular characterization is shared between speaker and target when in fact only the speaker holds it. "We both know you have a problem with authority." The target is being invited to confirm a frame by not objecting. The protective move is to object, explicitly, to the "we both know" claim: "No -- *you* think that. *I* don't agree."
+
+**"With all due respect..."** Frame signaling before a frame attack. The phrase is often followed by a statement that would not be made if respect were actually operative; the "all due respect" is doing the work of allowing the speaker to install a disrespectful frame while claiming to have observed decorum. The alarm is stronger when the phrase is accompanied by an utterance whose content would not typically be framed as respectful.
+
+**"I hate to say this, but..."** Reluctance framing. The move installs a frame in which the speaker is being forced, against their own wishes, to deliver a difficult truth. The frame pre-legitimates the content and pre-positions the target as the one who has made the delivery necessary. The protective question is whether the reluctance is real (sometimes people do genuinely hate to say hard things) or is performed to license the criticism.
+
+**"For your own good..."** Paternalism framing. The move installs a frame in which the speaker's authority over the situation is exercised on behalf of the target's interests. The target is being asked to accept that the speaker knows the target's interests better than the target does. For autistic adults the phrase is especially common in family-of-origin and medical contexts, and is often a precursor to decisions made without consent.
+
+**"Can we just move on?"** Closure demand. The move installs a frame in which the current topic is finished and attempting to continue it is a violation. If deployed by a participant who has not actually resolved the issue from the target's perspective, it is a frame attack: closure is being imposed unilaterally. The protective move is to decline the closure without escalating the conflict: "I understand you want to move on. I'm not done with the topic, and I'd like to finish it."
+
+**"It's not that deep."** Frame dismissal. The move installs a frame in which the target's interpretation is over-reading a situation that was not significant. The phrase is almost always wrong about situations where it is deployed by the person whose behavior is being interpreted: if the situation were not deep, the response would not typically need to dismiss its depth. Alarm is stronger when the phrase is repeated or used to foreclose conversation.
+
+**"I think you're overthinking this."** Cognitive style as frame attack. The move is especially common against autistic targets, where analytical or detailed reading of a situation is framed as a cognitive failing rather than as an accurate analysis. The accurate response is to note that "overthinking" is not itself a diagnostic; the question is whether the thinking is accurate, not whether there is a lot of it.
+
+**"Some people might take that the wrong way."** Diffuse-third-party frame. The move installs a frame in which the speaker is not the one objecting (that would be confrontational) but is merely noting that imagined third parties could object. The imagined third parties are usually the speaker's own objection in disguise. The protective question is whether any specific real person actually holds the view the speaker is imputing to "some people."
+
+**"Don't make me the bad guy here."** Pre-emptive frame refusal. The move installs a frame in which the speaker cannot be the bad guy because the target is being asked not to make them one, and any subsequent complaint reads as the target doing the "making" the speaker has asked them not to do. The accurate response is to note that frame assignment is not a choice being made by the target alone; if the speaker's behavior fits the bad-guy frame, it is the behavior, not the target's response to it, that is producing the frame.
+
+**"I don't want to fight about this."** Conflict-avoidance framing. The move installs a frame in which the current conversation is characterized as a fight, which pre-positions the target's continued engagement as fight-starting. Often deployed when the speaker does not want to address the target's concerns but does not want to appear to be refusing to address them. The accurate response is to distinguish conversation from fight and to continue the conversation without conceding the frame that it is a fight.
+
+**"Why are you always so defensive?"** The self-sealing frame in verbal form. Any response to this is either agreement (which confirms the frame) or disagreement (which can be framed as defensive, also confirming the frame). The move is one of the most explicit self-sealing forms. The only response that does not feed the frame is to name it explicitly: "That's a self-sealing question. I'm not going to answer inside the frame that my response is going to be 'defensive' regardless of its content."
+
+Collectively, this list of phrases is a quick-reference repertoire for noticing frame-installation attempts in real time. Most of the phrases are innocuous in the right context; it is the pattern -- several phrases of this type deployed in a short span, or one phrase of this type deployed in a high-stakes moment -- that is diagnostic. For autistic readers, the value of having the list is that it allows the detection work to happen in a lexical-pattern-matching mode that autistic cognition is often good at, rather than in a diffuse "something feels wrong" mode that is harder to act on.
+
+### 6.7 Putting the Diagnostic Tools Together
+
+The diagnostic recipes in Sections 6.0-6.6 are not a checklist. They are a toolkit, and in any specific situation, some tools are appropriate and others are not. A rough guide to tool selection:
+
+- **For a live situation where you suspect frame-level work is happening and you need to respond quickly.** Use the five-question frame audit (6.1) and the self-sealing test (6.3). Both are fast enough for real-time use.
+- **For a situation where you have time to think.** Use the full nine-step diagnostic procedure (6.0) followed by the frame-vs.-content disentangling procedure (5.8).
+- **For a situation where you are unsure whether something was a frame attack or ordinary framing.** Use the three-conversation test (6.5) to cross-check your interpretation with trusted others, and the opposite-person test (6.4) to check for relationship-driven framing.
+- **For a written document you are about to receive or have just received.** Use the institutional-document reading procedure (from Section 4) combined with the Entman four-function check (6.2).
+- **For a situation where you are feeling something is off but cannot name it.** Use the red-flag phrase list (6.6) to see whether any of the characteristic verbal markers were present. If several were, the "something off" signal is probably tracking actual frame work.
+- **For a situation where you need to respond in writing.** Use the frame-vs.-content disentangling procedure (5.8) to separate what you will agree to from what you will refuse, and draft a response that addresses each separately.
+
+No tool in this kit is a substitute for judgment, and no tool produces a certain diagnosis. What the tools offer is a set of lenses that make the frame-level work visible, so that your response can be an informed choice rather than a reflex. The goal is not to detect frame attacks perfectly; it is to avoid the default state in which frame attacks run invisibly and your response happens inside a frame you did not consent to.
 
 ---
 
@@ -408,6 +691,7 @@ Readers should hold the claims here at the level of confidence appropriate to ea
 - Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58.
 - Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm* (pp. 111-137). Hanshin.
 - Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row.
+- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power: A constructionist approach. *American Journal of Sociology*, 95(1), 1-37.
 - Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press.
 - Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458.
 - Lakoff, G. (2004). *Don't Think of an Elephant! Know Your Values and Frame the Debate*. Chelsea Green.

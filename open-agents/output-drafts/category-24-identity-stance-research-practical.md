@@ -155,6 +155,51 @@ The most reliable stance work is often done outside the conversation that caused
 
 These three forms of out-of-conversation narration together constitute most of what resilient stance work looks like in practice. They are the infrastructure that allows in-conversation refusals, when they happen, to be more than isolated moments.
 
+### 4.4 The Timing of Stance Reclamation
+
+In-the-moment reclamation and later reclamation are not substitutes for each other. They do different things and have different costs, and both are legitimate choices.
+
+**In-the-moment reclamation** is any refusal or re-positioning move made while the original stance move is still being processed by the participants. Its advantages: the event is fresh, the audience is present, and the record being formed in the participants' memories is still malleable. Its costs: it requires real-time processing capacity that the stance-attacked person may not have; it exposes the person to immediate escalation if the assigner doubles down; and it tends to force a binary choice (refuse or accept) at a moment when neither option is fully considered.
+
+**Later reclamation** is any refusal or re-positioning move made after the original interaction has ended. Its advantages: the person has time to think, to write, to consult a reality-check network, and to choose their move deliberately; the cost of a failed refusal is lower because the audience has dispersed; the person can select which audience to perform the reclamation for (the original assigner, a third party, themselves only). Its costs: the original event has had time to consolidate in the participants' memories; the re-opening is costly in itself, because it surfaces the event; and delayed moves can look, to some audiences, like after-the-fact revision rather than genuine correction.
+
+The choice between in-the-moment and later reclamation is not between courage and cowardice. It is a pragmatic choice about where the person's resources are best spent given the specific interaction, the specific audience, and the specific cost of failure. For autistic adults, the pragmatic choice often favors later reclamation because real-time processing capacity is a scarce resource and because the stance attack itself is often designed to consume that resource.
+
+### 4.5 The Witness Problem
+
+Stance moves performed in front of witnesses have different properties from stance moves performed in private.
+
+**Stance assignments made in private** are pragmatically harder to refuse after the fact because there is no external record; the autistic person's version of what happened is inherently contested, with only the assigner's version as the alternative. On the other hand, private stance assignments are easier to walk away from: the exit door is only a decision to leave, and leaving does not require convincing an audience.
+
+**Stance assignments made in front of others** have the opposite structure. The assignment is witnessed, which makes it harder to exit from and harder to refuse in private because the witnesses already have a version of events. But the witnesses are also a resource: they can be consulted later, they can be asked to describe what they saw, and some of them may be willing to support the autistic person's reading of the event even if they did not speak up in the moment.
+
+Witnesses who were present during a stance assignment fall into roughly three categories:
+
+1. **Ratifying witnesses.** People who heard the assignment and accepted it as accurate. These are the worst-case witnesses for the autistic person's later refusal; they consolidate the assignment in the broader social record.
+2. **Neutral witnesses.** People who heard the assignment but did not take a position on it, either because they were not paying attention, because they did not want to get involved, or because they had not yet formed a view. Neutral witnesses can sometimes be recruited later for the autistic person's version, especially if the later consultation is framed as asking for their observation rather than asking them to take sides.
+3. **Sympathetic witnesses.** People who heard the assignment and saw it as unfair or inaccurate. Sympathetic witnesses are the single most important resource for later reclamation, because they can corroborate the autistic person's version in settings where corroboration matters (HR, a family meeting, a therapist, a legal process). The move for the autistic person is to find out who the sympathetic witnesses are as soon as possible after the event and to consolidate their sympathy into explicit testimony before memory erodes.
+
+### 4.6 The Record Problem
+
+Stance assignments that are committed to writing — emails, text messages, performance reviews, chart notes, case files, evaluations, transcripts — have yet another set of properties, and require a different class of refusal moves.
+
+Written assignments are **durable**: they persist past the original conversation, they can be read by people who were not present, and they tend to acquire institutional weight over time. An assignment made in a chart note is read by every subsequent clinician who opens the chart. An assignment made in a performance review is read by every subsequent manager who reviews the employee's history. An assignment made in an evaluation report is read by every subsequent specialist, lawyer, or insurance adjuster who touches the case.
+
+Written assignments are also **decontextualized**: the reader of the record usually does not have access to the conversation or the events that preceded the writing. The reader has only the writer's summary, and the summary is where the stance assignment lives.
+
+Refusing a written assignment requires moves of a specific kind:
+
+- **Written counter-records.** A written response, from the autistic person, that enters the same record-keeping system and is attached to the original assignment. This is the move that institutions are formally supposed to allow — the right to add a statement to a chart, to respond to a performance review in writing, to submit an appeal to an evaluation. The autistic person's written counter-record does not erase the original assignment, but it creates a competing document that subsequent readers will also see.
+- **Requests for specific correction.** When the written assignment contains specific factual errors (a wrong date, a misrepresented statement, a mischaracterized interaction), the autistic person can often request correction of those specific errors even when they cannot challenge the overall framing. Correcting the factual layer is a lower-resistance move than challenging the stance layer, and a corrected factual layer makes the stance layer harder to sustain.
+- **Parallel records.** When the institution's record cannot be corrected, the autistic person can maintain a parallel personal record — a journal, a timeline, a file of copies — that establishes their own version of events contemporaneously. Parallel records matter when later processes (formal complaints, legal action, medical second opinions) need evidence that the events happened as the autistic person remembers them.
+- **Selective future records.** Once a written record has a stance assignment in it, the autistic person's subsequent interactions with the same institution are best conducted with an awareness that whatever they say will be read through the existing record. This can sometimes mean routing new communications through different people, or insisting on written (rather than verbal) exchanges to create a cleaner new record, or obtaining new outside evaluations that enter the record on their own terms.
+
+### 4.7 When Stance Reclamation Is Not Available
+
+A significant portion of the manipulation sub-hub is devoted to this case because it is common and important. Sometimes the structural power asymmetry of a situation makes reclamation impossible: the refusal is absorbed, the counter-record is ignored, the sympathetic witnesses are overruled, and the institution keeps doing what it was going to do. When this happens, the pragmatic theory in Category 24 provides a specific piece of clarity: the absence of reclamation is not a failure of the autistic person's refusal move; it is a feature of the structural situation. The move was pragmatically well-formed; the environment did not support uptake.
+
+When reclamation is not available, the remaining options are in the domain of strategic disengagement rather than stance repair. This is not defeat. It is a recognition that not all interactional environments are ones in which a person's stance work can be productive, and that preserving the person's stance capacity for environments that will honor it is itself a legitimate choice. The manipulation sub-hub's `manipulation-hub-strategy-strategic-disengagement.md` page is where this choice is worked out in detail. Category 24 names the pragmatic theory that makes the choice coherent: stance reclamation is a move that requires a particular kind of environment to land, and when the environment is not that kind, the move's absence is not the person's fault.
+
 ---
 
 ## 5. The Limits of Refusal
@@ -235,6 +280,216 @@ Setting: Medical appointment. The autistic patient reports a physical symptom. T
 **Stance assignment installed**: "This patient's symptom reports are unreliable in the direction of overreporting."
 
 **Possible refusal**: Within-conversation refusal is very limited here, because the chart is not co-authored. Effective refusal in medical settings usually involves: asking for specific symptoms to be documented verbatim; requesting specific tests; bringing a second party; and, when possible, obtaining copies of notes after the fact and submitting written corrections. The pragmatic theory from Category 24 names the move that is happening (testimonial stance assignment); the practical response relies on institutional procedures outside the conversation itself.
+
+### 6.4 Example: Anxious Rather Than Ill
+
+Setting: Medical appointment for a second time. A forty-year-old autistic woman has been reporting escalating abdominal pain for several months. Each visit ends with a variant of: "I think what's happening here is that you're quite anxious about your health. Your labs look fine. Let's talk about stress management and revisit in a few months if things haven't settled."
+
+**Three-layer audit:**
+- **Object**: The patient's abdominal pain reports.
+- **Position of clinician**: Reasonable professional ruling out the more concerning possibilities and offering a benign explanation.
+- **Position offered to patient**: An anxious woman whose pain reports are driven by health anxiety rather than by underlying pathology. Once accepted, this position makes further investigation look like anxious escalation and makes symptom persistence look like the anxiety itself getting worse.
+
+**Evidence being used for the assignment**: The patient's prior psychiatric history (anxiety disorder, noted in the chart), the clinician's reading of her affect during the appointment ("tense, tearful, ruminative" — notably, this is the clinician's read of stance output, not content), the normal screening labs, and the pattern of returning with persistent symptoms.
+
+**What accepting the stance assignment does**: The patient begins to doubt her own interoception. She delays bringing up the next symptom until it is severe. She begins to perform "calm, relaxed" affect at appointments, which further suppresses the stance output that might have flagged a real problem. She avoids specialist referral because she has accepted that the problem is psychological. If the underlying cause is in fact organic, each month of delay produces more damage.
+
+**A stance-refusal or renegotiation move**: The patient arrives at the next appointment with written notes: date and character of pain episodes, what she was doing at onset, what relieved it, what made it worse, what she has ruled out. She says: "I want to be clear that I hear you about the anxiety piece and I'm working on that separately. Today I want to talk about the pain as a physical symptom on its own terms. Here are my notes. Can we look at them as a pain history rather than as an anxiety picture?" This move does not accept the stance assignment, does not directly challenge the clinician's authority, and re-positions the patient as the author of a pain history rather than the object of an anxiety assessment. Whether it works depends on the clinician's flexibility.
+
+**What the interaction looks like without the stance assignment**: The clinician listens to the pain history as a pain history, orders the imaging that would have been routine for a non-autistic patient with the same symptom trajectory, and either finds something or credibly rules it out. The patient leaves with either a diagnosis or an informed negative. Either is better than the limbo of the anxiety frame.
+
+Cross-link: `manipulation-hub-context-medical-settings.md` and the Doherty et al. (2022) and Shaw et al. (2024) literature on diagnostic overshadowing in autistic adults.
+
+### 6.5 Example: Difficult Rather Than Thoughtful
+
+Setting: Workplace team meeting. The autistic employee has raised a specific technical concern about a proposed architectural change. Another engineer says: "Look, I appreciate the detail but we can't relitigate every decision. You're making this harder than it needs to be."
+
+**Three-layer audit:**
+- **Object**: The employee's technical concern.
+- **Position of the other engineer**: A pragmatic team member trying to keep things moving.
+- **Position offered to the employee**: A difficult person who relitigates decisions and slows the team down. Once accepted, this position rewrites the employee's past engagement as a pattern of being difficult rather than as a pattern of being thoughtful.
+
+**Evidence being used**: The fact that the employee has raised concerns before. The fact that the current concern takes time to articulate. The employee's prosodic output during the articulation (likely flatter than the listener expects for a "cooperative" stance). The absence of the social packaging the listener expects around a disagreement.
+
+**What accepting the assignment does**: In subsequent meetings, the employee either suppresses concerns (which removes their technical contribution from the record) or continues to raise them and accumulates more evidence for the "difficult" assignment. Over time, the stance assignment hardens into the employee's reputation, and the reputation starts to shape performance reviews, project assignments, and promotion decisions.
+
+**A refusal move**: "I want to separate two things. One is whether the process allows for concerns at this stage — that's a process question. The other is whether this specific concern is worth the time to discuss — that's a content question. I think they're being collapsed. Can we decide the process question first, and then decide the content question on its own merits?" The move refuses the positioning of "difficult" by refusing the premise that raising a concern is the same as being difficult. It re-positions the employee as someone who wants to sort out how the team works, which is a neutral and defensible position.
+
+**What the interaction looks like without the assignment**: The concern is heard as a technical concern, accepted or rejected on its technical merits, and does not accumulate as character evidence against the employee.
+
+Cross-link: `manipulation-hub-context-workplace.md` and the Romualdez et al. (2021) and Bury et al. (2020) literature on workplace experiences of autistic adults.
+
+### 6.6 Example: Still the Child Rather Than the Adult
+
+Setting: Family dinner. The autistic adult child, age 38, has been living independently for fifteen years, has a job, manages their own finances, and is visiting for the weekend. The parent says, in front of the extended family: "Oh, don't let them near the stove. They've never been good with that kind of thing. Remember when you set the kitchen on fire that one time when you were eleven? We still laugh about that."
+
+**Three-layer audit:**
+- **Object**: The adult child's competence in the kitchen.
+- **Position of parent**: Fond parent telling a familiar family story.
+- **Position offered to the adult child**: Still the child they were at eleven — in this family, not a competent adult.
+
+**Evidence being used**: A single event from 27 years ago, deployed as if it were a stable predicate. The parent's continued authority over the family's narrative. The audience's familiarity with the story, which makes it feel like shared reality rather than like one person's framing.
+
+**What accepting the assignment does**: The adult child stops participating in the kitchen, confirming the story. Their competence outside the family, where they cook for themselves daily without incident, is invisible in this setting. Over repeated visits, the cumulative family record of them is built out of such stories, and the stories are the only version of them the extended family has access to.
+
+**A refusal move**: The adult child waits until after dinner and, in a private moment with a sympathetic relative, says: "I want to mention something that happened earlier. When mom told the stove story, I noticed I started feeling like an eleven-year-old. I'm not eleven. I cook for myself every day. I wanted to say that to someone who knows me now." This is a delayed, third-party stance-reclamation move. It does not confront the parent, which in this family may not be safe or useful. It builds a counter-witness inside the family system who has heard the adult child's version directly.
+
+**What the interaction looks like without the assignment**: The adult child helps with dinner, the kitchen does not catch on fire, and the stove story does not get told. The extended family has a chance to form an impression based on current behavior.
+
+Cross-link: `manipulation-hub-context-family-of-origin.md`.
+
+### 6.7 Example: Lazy Rather Than Struggling
+
+Setting: Classroom. A high school student with an existing autism diagnosis is struggling with an assignment that requires open-ended planning. The teacher says: "You're perfectly capable of doing this. I've seen you do harder things. You're just not applying yourself. If you'd put in half the effort you put into your video games, you'd be fine."
+
+**Three-layer audit:**
+- **Object**: The student's performance on the assignment.
+- **Position of teacher**: Tough-love educator trying to motivate.
+- **Position offered to student**: A capable but lazy student whose performance reflects effort, not ability. Once accepted, the student's struggle becomes moral failure rather than a signal that the assignment design does not match the student's executive function profile.
+
+**Evidence being used**: The student's past successes on different types of tasks (highly structured, narrowly scoped). The teacher's theory of motivation. The absence of an explicit breakdown of where the student is getting stuck.
+
+**What accepting the assignment does**: The student internalizes "I am lazy" and starts to explain all their struggles that way. They stop asking for help because asking feels like admitting the laziness. The original problem (open-ended planning without external scaffolding) is never diagnosed or addressed. In burnout terms, the student's available resources are spent on suppressing the "lazy" self-image rather than on the task.
+
+**A refusal move**: The student says: "I want to show you what's actually happening when I try this. Can I sit with you for ten minutes and walk through what I do when I try to start the assignment? I don't think it's effort. I think there's something specific I'm getting stuck on, and I'd like to find out what it is." This refuses the "lazy" assignment by asking for the underlying mechanism to be examined, and re-positions the student as someone who is asking for help with a specific problem rather than resisting work.
+
+**What the interaction looks like without the assignment**: The teacher and student identify the executive-function barrier, put a scaffold in place, and the work gets done. The student retains an accurate self-image. This is the interaction an IEP is supposed to produce, but it depends on the teacher's willingness to look at the specific problem rather than default to the motivation frame.
+
+Cross-link: `manipulation-hub-context-educational-settings.md`.
+
+### 6.8 Example: Uninterested Rather Than Processing
+
+Setting: A fourth date. After a long dinner at which the autistic person was genuinely interested and engaged, their partner sends a text the next day: "I had a nice time last night but I'm getting the sense you're not that into this. Maybe we should just be friends."
+
+**Three-layer audit:**
+- **Object**: The autistic person's engagement during dinner.
+- **Position of sender**: Disappointed partner offering a graceful exit.
+- **Position offered to recipient**: Someone whose engagement was insufficient, who should probably accept the offer to step back.
+
+**Evidence being used**: Almost certainly the autistic person's stance output during dinner — flatter affect than the partner expected for "into it," longer pauses before responses, a different pattern of eye contact, fewer of the micro-alignment signals the partner's stance vocabulary treats as engagement. Not the content. The content may have been perfectly matched: both parties were engaged with the conversation. But the stance layer read, to the partner, as "not that into this."
+
+**What accepting the assignment does**: The autistic person either accepts the breakup (losing a connection that was real on their side) or explains (running the risk that the explanation sounds like excuse-making, which further confirms the partner's read). There is no clean way out that does not involve explicit stance-level discussion, which most people are not prepared to have on a fourth date.
+
+**A refusal move**: "Can I say one thing before we decide? I was really engaged with you last night. My face and voice don't always show that the way other people's do, and I know that can be confusing. I'd like to talk about it in person if you're open to it. If you're not, I understand." This refuses the assignment by separating content engagement from stance output, and re-positions the autistic person as someone who knows about the stance mismatch rather than as someone pretending the mismatch isn't there.
+
+**What the interaction looks like without the assignment**: The partner reads engagement from content rather than from stance features, and the question of whether the two are interested in each other is decided on the content of the conversation. This is a taller order than it sounds, because most people do not know they are reading stance features rather than content. But it is possible, especially when the partner is told explicitly that the stance features are different and that the content is the more reliable signal.
+
+Cross-link: `manipulation-hub-context-intimate-partner-relationships.md`.
+
+---
+
+## 6A. Stance Audit Checklist
+
+This section collects the questions from sections 1 and 6 into a compact checklist that can be used to audit an ongoing interaction or relationship. The checklist is not a diagnostic instrument. It is a structured way to slow down a conversation that feels wrong and ask what is happening at the stance level.
+
+### 6A.1 The Basic Eight Questions
+
+Work through these in order. Each question can be answered briefly in writing, or internally if writing is not feasible.
+
+1. **Who is being assigned which position here?** Identify the target and the position. Sometimes the target is yourself; sometimes it is someone else in the conversation whose positioning the stance move is trying to change. Sometimes it is a third party not in the room.
+2. **Is the assignment explicit or implicit?** Did the speaker state the position ("you're being difficult") or did they perform it ("we're all having a good time, why are you making this hard")? Implicit assignments are more common and harder to refuse.
+3. **What evidence is being used?** What is the assigner pointing at, or implying they are pointing at? Is it an event, a pattern of events, a character trait, a prior conversation, a stance feature (prosody, affect, gaze)?
+4. **Is the assignment consistent with what I know about myself?** This is the reality-test question. You may or may not be able to answer it quickly. The honest answer sometimes is "partly" or "not right now."
+5. **What does accepting this stance commit me to?** If you accept the position, what will you be expected to do next? What parts of yourself will you have to hide or suppress? What future claims become harder to make once this one is on the record?
+6. **What alternative stance am I entitled to?** Is there a position that describes the same events more accurately? What would it be called? Would you be willing to name it out loud?
+7. **How would I refuse this stance assignment if I chose to?** What specific move — in-conversation, later in writing, via a third party, via documentation — is available right now?
+8. **Who else (if anyone) is present to witness the stance moves?** Witnesses matter both ways. A witness who supports the assignment makes refusal harder. A witness who does not support the assignment, or who can be told about it later, makes refusal more achievable.
+
+### 6A.2 When to Run the Audit
+
+The audit is retrospective. You do not need to run it during the conversation. Most of the time, the useful time to run the audit is after the conversation, when you have room to write and think. Running it in real time is usually too expensive in cognitive load, especially when the stance attack is aimed at the very processing resources you would need to run the audit.
+
+Good times to run the audit:
+
+- When you notice a body-based "something is wrong" signal after an interaction (see §1.3).
+- When you find yourself replaying a conversation and not being able to name what bothered you.
+- When you notice that a pattern of similar conversations is accumulating.
+- When you are preparing for a difficult upcoming conversation and want to pre-identify the stance moves you might be walking into.
+- When you are preparing documentation — either informally, for a reality-check network, or formally, for a complaint or appeal.
+
+### 6A.3 What the Audit Does Not Do
+
+The audit does not:
+
+- Tell you whether the assigner was acting in good or bad faith. Both good-faith and bad-faith assigners can install the same stance moves, and the audit does not distinguish them.
+- Tell you what to do. The audit gives you vocabulary and clarity, not a decision procedure. The decision of whether to refuse, when to refuse, and how to refuse is separate from the decision of whether the assignment is accurate.
+- Guarantee that the refusal will work. As section 5 of this file documents, refusal has structural limits. The audit helps you see clearly; it does not give you leverage you do not have.
+- Substitute for safety planning in coercive contexts. If the pattern is one of ongoing coercive control, the audit is an instrument for understanding it, not an instrument for exiting it. Safety planning lives in the manipulation sub-hub's strategy pages.
+
+### 6A.4 Journaling Variant
+
+Some autistic adults find it useful to run the audit in writing, as a structured journaling practice. A minimal journal entry looks like:
+
+- **What happened** (specific, dated, with actual words if possible)
+- **What I noticed in my body**
+- **Position I was offered**
+- **Evidence they used**
+- **Is it accurate?**
+- **What accepting it would commit me to**
+- **Alternative position I claim**
+- **Move (if any) I want to make**
+
+Over time, such entries accumulate into a record that can be used for several purposes:
+
+- Reality-check networks (you can share specific entries with trusted readers).
+- Documentation for formal processes.
+- Pattern detection — seeing that a set of incidents share a common stance structure even though the events are different.
+- Simply the reclamation work of narrating your own experience in accurate language.
+
+The journaling variant is not a therapeutic technique in the clinical sense. It is a pragmatic tool for maintaining an accurate stance record in environments where the external record is distorted. As with most of the practical advice in this file, its value is less in any individual entry and more in the cumulative discipline of writing such entries over time. A person who has been running the audit for six months has a different relationship to the stance environment than a person who is running it for the first time, because they have a base of prior entries against which to compare the current one, and because the writing itself has trained the person's capacity to notice stance moves as they are happening.
+
+---
+
+## 6B. Preparing for Known-Difficult Interactions
+
+Not all stance work is retrospective. Some of it can be done in advance when the interaction is foreseeable. This section gives a compact protocol for preparing for a difficult upcoming conversation — a specific meeting, appointment, family gathering, or institutional encounter that is likely to involve stance moves the person wants to be ready for.
+
+### 6B.1 Name the Expected Assignments
+
+Before the interaction, list the specific stance assignments that are likely to be made. Use the language of the audit checklist: what position is likely to be offered, what evidence is likely to be used, what accepting it would commit you to. Writing them down in advance turns the in-the-moment surprise into a recognized pattern, which makes detection faster and refusal more considered.
+
+A worked example: before a family gathering, an autistic adult might list: "They will probably ask about my job and read my answer as evasive if I give a short one. They will probably ask about my partner and position me as secretive if I decline to share details. They will probably reference the old family story about me being difficult. They will probably say 'you're so quiet' and read my quietness as sulking." Each of these is a predictable stance move. Naming them in advance moves them from the category of "ambush" to the category of "expected."
+
+### 6B.2 Pre-Plan the Refusal Moves
+
+For each expected assignment, pre-plan a specific refusal move. The move does not need to be elaborate. It needs to be something the person can produce without real-time composition, because real-time composition is what the stance attack is designed to consume.
+
+Examples of pre-planned refusal moves, matched to the expected assignments above:
+
+- For "evasive answer about job": a pre-composed one-sentence description that is short by design and that the person does not need to expand on. "I'm working on a few projects I'm not ready to talk about yet, but it's going well."
+- For "secretive about partner": a boundary that is clear and not negotiable. "We keep that private, thanks." Followed, if needed, by a subject change the person has prepared in advance.
+- For "the old family story": a pre-planned redirect to a current topic. "I don't really tell that one anymore. Did I mention I've started [current activity]?"
+- For "you're so quiet": a pre-planned reframe. "I'm taking it all in. I'm having a good time listening."
+
+None of these refusals requires the person to win the argument. They require the person to have a move ready so that the expected assignment does not consolidate silently into acceptance.
+
+### 6B.3 Pre-Identify the Witnesses
+
+For each expected assignment, pre-identify which people in the room are likely to be ratifying witnesses, which are likely to be neutral, and which are likely to be sympathetic. The sympathetic witnesses are the ones to seek out afterward for reality-check conversations. The ratifying witnesses are the ones to de-prioritize in the attention budget. The neutral witnesses are the ones to monitor for possible later consultation.
+
+This pre-identification helps with the cognitive load of the interaction itself. When the person knows in advance which faces in the room are likely to be supportive, they can orient toward those faces when they need support. When they know which faces are likely to be hostile, they can stop spending energy trying to win those faces over.
+
+### 6B.4 Plan the Exit
+
+For each expected assignment, plan what exit is available. Exits are pragmatic: leaving the room, changing the subject, moving to a different part of the building, taking a break, ending the interaction early. An exit that is pre-planned is a stance-preservation resource; an exit that has to be improvised in the middle of an attack is much harder to execute.
+
+For long interactions (family dinners, all-day meetings, conferences), planning multiple exits at different points of the interaction is more sustainable than planning a single end-point. "I can excuse myself between dinner and dessert"; "I can step outside during the 3 p.m. break"; "I can leave after the presentation and before the Q&A." Each exit is an off-ramp that does not need to be used but is available if needed.
+
+### 6B.5 Plan the Debrief
+
+For each interaction, plan the debrief in advance. Who will you talk to afterward? When? In what setting? The debrief is where the delayed reclamation work happens, and pre-planning it means the delay is not open-ended.
+
+A useful pattern: schedule the debrief conversation for a specific time shortly after the interaction, with a specific person, in a specific setting where the conversation can happen without interruption. Even if the interaction turns out to be fine and the debrief is not needed, having it planned reduces the stance-work budget required to get through the original interaction.
+
+### 6B.6 The Protocol in Short
+
+1. Name the expected assignments.
+2. Pre-plan refusal moves.
+3. Pre-identify witnesses.
+4. Plan exits.
+5. Plan the debrief.
+
+The protocol is short by design. It is meant to be run mentally in five minutes before the interaction, or in writing across an hour if the interaction is high-stakes. Running it does not guarantee a good outcome, and it does not protect against surprises that fall outside the expected pattern. What it does is reduce the number of decisions the person has to make in real time, which is precisely the resource that stance attacks consume.
 
 ---
 
