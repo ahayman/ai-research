@@ -44,7 +44,7 @@ This reframing is powerful for autistic learners: discourse markers are not vagu
 
 Research shows a specific pattern in autistic discourse marker use:
 
-**The "um" vs. "uh" distinction** (Gorman et al., 2016; Lake et al., 2011): Autistic speakers use "uh" at normal rates but use "um" significantly less. This maps onto a crucial functional difference:
+**The "um" vs. "uh" distinction** (Gorman et al., 2016; Irvine, Eigsti & Fein, 2016): Autistic speakers use "uh" at normal rates but use "um" significantly less. This maps onto a crucial functional difference:
 - "Uh" is **speaker-oriented** -- it signals the speaker is having a minor processing delay (self-directed)
 - "Um" is **listener-oriented** -- it signals to the listener that a major delay is coming ("I'm still here, please wait") (other-directed)
 
@@ -376,6 +376,6 @@ A three-tier priority system for learning:
 
 ### Autism Research
 - Gorman, K. et al. (2016). "Uh and Um in Children with ASD or Language Impairment." *Autism Research*.
-- Lake, J. et al. (2011). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers." *J Autism Dev Disord*.
+- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *Journal of Autism and Developmental Disorders*, 46(3), 1061-1070. PMC7536647.
 - Jones, A., Zane, E. & Grossman, R. (2022). "Like, It's Important: Discourse Marker Use by Autistic Children." *PMC*.
 - Zane, E. & Grossman, R. (2021). "Impression Formation of Autistic Speakers." *Autism Research*.

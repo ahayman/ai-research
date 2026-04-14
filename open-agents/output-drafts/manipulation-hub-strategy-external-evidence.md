@@ -19,7 +19,7 @@ External evidence is evidence that exists in systems, documents, or testimony ou
 - **It is harder to dismiss as "just your version."** An email sent by the other person is not "your version" of what they said; it is what they said.
 - **It builds pattern evidence that individual records cannot.** Multiple sources converging on the same pattern are much stronger than any single source.
 - **It is admissible in legal, workplace, and institutional proceedings** in ways that informal journaling is not.
-- **It cannot be dismissed as obsessive note-keeping.** The credibility discount (Lim & Magiati, 2022) sometimes makes your own documentation read as pathological rather than protective. External evidence does not have this problem.
+- **It cannot be dismissed as obsessive note-keeping.** The credibility discount (Lim, Young & Brewer, 2022) sometimes makes your own documentation read as pathological rather than protective. External evidence does not have this problem.
 
 For autistic readers specifically, external evidence is particularly valuable because the credibility discount is real and structural. Your verbal testimony and even your personal records are systematically underweighted by audiences calibrated for neurotypical presentation. Evidence from outside your own perspective bypasses this discount.
 
@@ -28,7 +28,7 @@ The research base for this page:
 - **Employment law practitioner literature** on evidentiary standards for hostile environment claims (synthesized from Title VII case law, EEOC guidance, and employment lawyer practical guides). [ESTABLISHED LEGAL PRACTICE], grounded in evidentiary law rather than RCT evidence.
 - **DV advocacy practice** on evidence gathering for protective orders and criminal proceedings (Campbell Danger Assessment materials, NDVH guidance, specific state-level protective order procedures). [ESTABLISHED PRACTICE].
 - **Digital forensics and evidence preservation literatures** for electronic communications and digital records.
-- **The documentation asymmetry principle** implied by Lim & Magiati (2022) and related credibility-discount research: evidence that does not depend on your verbal presentation is more persuasive than evidence that does.
+- **The documentation asymmetry principle** implied by Lim, Young & Brewer (2022) and related credibility-discount research: evidence that does not depend on your verbal presentation is more persuasive than evidence that does.
 
 *Evidence quality note: This page is about established legal and practitioner practice more than RCT-tested interventions. The practices described are widely used and have passed the tests of legal admissibility and practitioner experience, but they have not been tested as RCT interventions in the way therapy or safety planning have been. Use with that caveat.*
 
@@ -430,7 +430,7 @@ As discussed in several other strategy pages, autistic pattern recognition is a 
 
 ### The credibility discount means external evidence matters more for you
 
-The Lim & Magiati (2022) finding that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth has specific implications for evidence gathering:
+The Lim, Young & Brewer (2022) finding that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth has specific implications for evidence gathering:
 
 - **Your verbal testimony will be systematically underweighted.** This is structural, not something you can fix by being more confident or convincing.
 - **External evidence bypasses this underweighting.** An email from the other person is an email from the other person, regardless of who is reporting it.
@@ -629,7 +629,7 @@ A specific risk: your evidence collection can become a substitute for action. Yo
 - Training Institute on Strangulation Prevention (strangulationtraininginstitute.com) for forensic documentation protocols.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Autism-specific considerations:**
 - Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745.
@@ -672,8 +672,8 @@ A specific risk: your evidence collection can become a substitute for action. Yo
 - **[De-escalation](manipulation-hub-strategy-de-escalation.md)** — evidence gathering does not replace de-escalation in acute moments.
 - **[Finding Professional Support](manipulation-hub-strategy-professional-support.md)** — consultation with professionals is often essential for high-stakes evidence gathering.
 - **[Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md)** — evidence processing has recovery implications that should be managed with care.
-- **Workplace context page (Tier 4, not yet built)** — workplace evidence gathering has specific considerations.
-- **Legal and Criminal Justice context page (Tier 4, not yet built)** — legal evidence gathering has specific considerations.
+- **Workplace context page** — workplace evidence gathering has specific considerations.
+- **Legal and Criminal Justice context page** — legal evidence gathering has specific considerations.
 
 ---
 

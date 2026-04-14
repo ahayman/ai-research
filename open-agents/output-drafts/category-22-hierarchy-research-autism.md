@@ -1,13 +1,15 @@
-# Category 21: Social Hierarchy, Power Dynamics, and Autism
+# Category 22: Social Hierarchy, Power Dynamics, and Autism
 ## Deep Research Document for English Pragmatics Knowledge Base
 
 ---
 
-## 1. "HIERARCHY BLINDNESS" IN AUTISM
+## 1. HIERARCHY PROCESSING DIFFERENCES IN AUTISM
 
-### 1.1 The Term and Concept in the Autistic Community
+### 1.1 The "Hierarchy Blindness" Framing: Community Term, Research Nuance
 
 "Hierarchy blindness" is a term used widely within the autistic community to describe the common autistic experience of not intuitively perceiving, processing, or responding to social hierarchies the way neurotypical individuals do. The term appears across autistic-authored blogs, forums, and advocacy literature, including The Articulate Autistic, The Autistic Boss, NeuroClastic, Wrong Planet forums, and various Medium posts by autistic writers.
+
+**Important caveat about the term**: The community-knowledge label "blindness" can be misleading. The strongest empirical work on autistic rank recognition (Ogawa et al. 2019, covered in §1.2) actually found that autistic children showed *more robust* rank recognition than typically developing peers — but via different neural pathways, relying more on concrete physical features than on implicit social-contextual cues. What the community calls "hierarchy blindness" is more accurately described as a difference in which channels carry the hierarchy signal, combined with reduced automatic weighting of the specific implicit cues non-autistic people use. This hub uses the community term for its experiential clarity while flagging the empirical nuance.
 
 Jaime A. Heidel (The Articulate Autistic) frames it directly: "We have no intuitive concept of social hierarchy." This is described not as a cognitive incapacity but as the absence of an automatic, implicit processing channel. The intuitive concept of social hierarchy that neurotypical people seem to learn as children -- absorbed through social observation, environmental immersion, and implicit pattern extraction -- does not appear to develop the same way in autistic individuals. Instead, many autistic people need to learn the concept of hierarchy *explicitly*, by being directly taught.
 
@@ -280,7 +282,7 @@ PDA (Pathological Demand Avoidance, or as increasingly reframed: Persistent Driv
 
 **Diagnostic status**: PDA has never been included in the DSM or ICD and therefore has no formal diagnostic criteria. However, it is increasingly recognized in clinical practice, particularly in the UK. During autism assessment, a person can be identified as having a "PDA profile" or "demand avoidance traits."
 
-Sources: Autism BC ("Pathological Demand Avoidance Explained"), PDA Society (UK), Newson et al. (2003), PMC4820467 (identifying features using the EDA-Q).
+Sources: Autism BC ("Pathological Demand Avoidance Explained"), PDA Society (UK). The original PDA formulation comes from Newson, Le Maréchal & David (2003) *Archives of Disease in Childhood* 88(7):595-600. The Extreme Demand Avoidance Questionnaire (EDA-Q) is a separate instrument developed by O'Nions, Christie, Gould, Viding & Happé (2014) *Journal of Child Psychology and Psychiatry* (PMC4820467). These two sources are sometimes conflated in summary writing; they are distinct contributions to the PDA literature.
 
 ### 4.2 How Demand Avoidance Interacts with Hierarchical Expectations
 
@@ -417,7 +419,7 @@ Applied to hierarchy:
 
 **Workplace data supporting this**:
 
-**Austin & Peña (2024). "Autism and Employment Challenges: The Double Empathy Problem and Perceptions of an Autistic Employee in the Workplace." PMC11317796.**
+**Szechy, K. A., Turk, P. D., & O'Donnell, L. A. (2024). "Autism and employment challenges: The double empathy problem and perceptions of an autistic employee in the workplace." *Autism in Adulthood*, 6(2), 205-217. PMC11317796.**
 
 - Autistic people who read workplace scenarios were more likely to accurately understand autistic employees (50.7% accurate) compared with non-autistic people (31.2% accurate)
 - The phenomenon of misunderstanding is bilateral: autistic adults often misinterpret employer intentions, and employers often misinterpret autistic worker intentions
@@ -606,11 +608,12 @@ For many autistic individuals, hierarchy feels not just confusing but actively w
 
 9. Sung, C. et al. (2023). "Perspectives on Employer-Initiated Terminations Among Young Adults on the Autism Spectrum." *Journal of Autism and Developmental Disorders*. PMC9838300. https://pmc.ncbi.nlm.nih.gov/articles/PMC9838300/
 
-10. Austin, K. & Peña, E.V. (2024). "Autism and Employment Challenges: The Double Empathy Problem and Perceptions of an Autistic Employee in the Workplace." PMC11317796. https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/
+10. Szechy, K. A., Turk, P. D., & O'Donnell, L. A. (2024). "Autism and employment challenges: The double empathy problem and perceptions of an autistic employee in the workplace." *Autism in Adulthood*, 6(2), 205-217. PMC11317796. https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/
 
 11. Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society*, 27(6), 883-887.
 
-12. Newson, E. et al. (2003). Pathological demand avoidance features -- identifying features using the EDA-Q. PMC4820467. https://pmc.ncbi.nlm.nih.gov/articles/PMC4820467/
+12. Newson, E., Le Maréchal, K., & David, C. (2003). "Pathological demand avoidance syndrome: a necessary distinction within the pervasive developmental disorders." *Archives of Disease in Childhood*, 88(7), 595-600. (Original PDA formulation.)
+13. O'Nions, E., Christie, P., Gould, J., Viding, E., & Happé, F. (2014). "Development of the 'Extreme Demand Avoidance Questionnaire' (EDA-Q): preliminary observations on a trait measure for Pathological Demand Avoidance." *Journal of Child Psychology and Psychiatry*, 55(7), 758-768. PMC4820467. https://pmc.ncbi.nlm.nih.gov/articles/PMC4820467/
 
 ### Community and Advocacy Sources
 

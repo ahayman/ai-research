@@ -122,7 +122,7 @@ Research (Rozenkrantz et al., 2021, MIT) found autistic individuals show reduced
 |-------------|---------|
 | **Conjunction fallacy** | Less likely to judge a conjunction as more probable than either component |
 | **Sunk-cost fallacy** | Significantly lower sunk-cost effect; better at cutting losses |
-| **Framing effects** | 7.66% susceptibility vs. 14.24% in controls (De Martino et al., 2008) |
+| **Framing effects** | Reduced susceptibility compared to non-autistic controls (De Martino, Kumaran, Seymour & Dolan, 2006, *Science*) |
 | **Anchoring** | Reduced influence of irrelevant initial information |
 
 The mechanism: autistic cognition relies more on deliberative (System 2) processing and less on the intuitive (System 1) shortcuts that make neurotypical people vulnerable to heuristic-based fallacies (Brosnan et al., 2016).
@@ -241,7 +241,7 @@ The most powerful use of fallacy knowledge is **internal**: recognizing what's h
 - Walton, D.N. (1995). *A Pragmatic Theory of Fallacy*. University of Alabama Press.
 - Hamblin, C.L. (1970). *Fallacies*. Methuen.
 - Brosnan, M., Lewton, M. & Ashwin, C. (2016). "Reasoning on the Autism Spectrum: A Dual Process Theory Account." *JADD*. PMC4860198.
-- De Martino, B. et al. (2008). "Frames, Biases, and Rational Decision-Making in the Human Brain." *Science*.
+- De Martino, B., Kumaran, D., Seymour, B., & Dolan, R. J. (2006). "Frames, Biases, and Rational Decision-Making in the Human Brain." *Science*, 313(5787), 684-687. PMC2631940. (Note: the 2008 De Martino et al. *Journal of Neuroscience* paper is a different, autism-specific follow-up on amygdala activation; do not conflate with the 2006 *Science* paper on framing-effect reasoning.)
 - Inoue, K. et al. (2023). "Autistic Traits Associated with Dichotomous Thinking Mediated by Intolerance of Uncertainty." *Scientific Reports*.
 - Baron-Cohen, S. (2017). "Autism and Talent: The Cognitive and Neural Basis of Systemizing." *Dialogues in Clinical Neuroscience*. PMC5789212.
 - Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*.

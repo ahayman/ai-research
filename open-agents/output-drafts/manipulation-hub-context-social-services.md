@@ -165,7 +165,7 @@ The paradox operates because **social services assessments are designed to gatek
 
 ### 3.2 The credibility discount in formal assessments
 
-Lim & Magiati (2022) on the credibility discount applies to social services assessments with particular force. Assessors are making formal evaluative judgments under time pressure, and the features that produce the credibility discount in other contexts produce it in this one too:
+Lim, Young & Brewer (2022) on the credibility discount applies to social services assessments with particular force. Assessors are making formal evaluative judgments under time pressure, and the features that produce the credibility discount in other contexts produce it in this one too:
 
 - **Affect that does not match the expected emotional script** for someone reporting hardship is read as evidence the hardship is not real.
 - **Detail and precision in symptom reports** is sometimes read as "rehearsal" or "exaggeration."
@@ -445,7 +445,7 @@ The standing recovery frame applies: **the goal is not to become a more complian
 - The literature on PIP assessments in the UK (Mind, Disability Rights UK).
 
 **The credibility discount in formal assessments:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Disabled parents in family court:**
 - Powell, R. M., et al. Series of papers on disabled parents and the family court system.
@@ -478,14 +478,14 @@ The standing recovery frame applies: **the goal is not to become a more complian
 
 ### Pragmatics categories referenced on this page
 
-- **Frames and Framing (Category 17)** — social services assessments frame the autistic adult in ways that subsequent decisions then operate within. Frame analysis is the technical tool for recognizing the framing as a frame. **One of the most important pragmatics cross-links for this page.** [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — social services systems position the autistic adult, and the position then shapes access to resources, services, and rights. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Implicature (Category 10)** — much social services communication operates through implicature: "we don't think you need that level of support" implicates that asking is unreasonable. [category-10-implicature.md](category-10-implicature.md)
-- **Speech Acts (Category 11)** — applications, requests, refusals, and complaints in social services contexts are speech acts whose institutional function depends on procedural performance. [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — social services assessments frame the autistic adult in ways that subsequent decisions then operate within. Frame analysis is the technical tool for recognizing the framing as a frame. **One of the most important pragmatics cross-links for this page.** [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — social services systems position the autistic adult, and the position then shapes access to resources, services, and rights. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Implicature (Category 2)** — much social services communication operates through implicature: "we don't think you need that level of support" implicates that asking is unreasonable. [category-02-implicature.md](category-02-implicature.md)
+- **Speech Acts (Category 1)** — applications, requests, refusals, and complaints in social services contexts are speech acts whose institutional function depends on procedural performance. [category-01-speech-acts.md](category-01-speech-acts.md)
 - **Register (Category 7)** — social services assessments have specific register expectations that autistic applicants are often penalized for not meeting natively. [category-07-register.md](category-07-register.md)
 - **Common Ground (Category 16)** — case files unilaterally rewrite the common ground of who the autistic adult is and what they need. [category-16-common-ground.md](category-16-common-ground.md)
-- **Cooperative Principle / Grice (Category 12)** — social services interactions often expect cooperation from the autistic adult while not extending it from the agency side. The asymmetry is structural. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
-- **Politeness (Category 6)** — social services contexts often demand politeness from the autistic adult in ways that the credibility discount makes hard to perform; recognizing politeness conventions as conventions is part of the cognitive defense. [category-06-politeness.md](category-06-politeness.md)
+- **Implicature / Cooperative Principle (Category 2)** — social services interactions often expect cooperation from the autistic adult while not extending it from the agency side. The asymmetry is structural. [category-02-implicature.md](category-02-implicature.md)
+- **Politeness (Category 3)** — social services contexts often demand politeness from the autistic adult in ways that the credibility discount makes hard to perform; recognizing politeness conventions as conventions is part of the cognitive defense. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 

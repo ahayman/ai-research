@@ -303,7 +303,7 @@ Because grounding depends on listener feedback (backchannels, acknowledgments), 
 
 ### Autism Research
 - Karin, I. et al. (2025). "Common Ground Generation in ASD."
-- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding." *J Pragmatics*.
+- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. PMC8117104.
 - Cola, M. et al. (2022). "Conversational Adaptation in Autism." PMC9167260.
 - Malkin, L. & Abbot-Smith, K. (2021). "Context-Appropriate Language in Autism." *Autism*.
 - Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.

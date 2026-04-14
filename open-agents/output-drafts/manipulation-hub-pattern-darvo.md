@@ -171,7 +171,7 @@ If some signals are present and some are absent, the responsible position is "I 
 Autistic readers generally pay a higher cost than allistic people to raise a concern in the first place. The reasons are well-documented in the masking and burnout literatures:
 
 - Compliance training installed across childhood that punishes confrontation.
-- The credibility discount (Lim & Magiati 2022) that means confrontations are received less favorably even when calibrated well.
+- The credibility discount (Lim, Young & Brewer 2022) that means confrontations are received less favorably even when calibrated well.
 - The double empathy problem (Milton 2012) that means autistic communicators are read as more confrontational than they intended, even at neutral baseline.
 - The cognitive cost of constructing socially-acceptable phrasing for a concern, particularly when alexithymia makes the underlying feeling hard to name.
 - The social cost when the confrontation is read against the cultural script of "autistic people overreacting."
@@ -281,7 +281,7 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 
 **Apply exit planning when:** the pattern is established, the cost of confrontation has trained you out of confronting, and the original concerns are not being addressed by any other means.
 
-**Do not apply exit planning when:** lethality indicators are present and you have not yet consulted a DV advocate. In high-risk DV contexts, leaving is the most dangerous moment (Campbell 2003: 44% of femicide victims were separating). [Safety Planning](manipulation-hub-strategy-safety-planning.md) and advocate contact must come first.
+**Do not apply exit planning when:** lethality indicators are present and you have not yet consulted a DV advocate. In high-risk DV contexts, leaving is the most dangerous moment (Campbell 2003: 55.2% of femicide victims were estranged or in the process of separating). [Safety Planning](manipulation-hub-strategy-safety-planning.md) and advocate contact must come first.
 
 ### 6.8 Recovery work
 
@@ -351,7 +351,7 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 - Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30.
 
 **The credibility discount (relevant to confrontation cost asymmetry):**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Double empathy problem (relevant to how autistic confrontations are received):**
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
@@ -365,7 +365,7 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 
 **Lethality indicators (relevant when exit planning enters the picture):**
 - Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (44% of femicide victims were in the process of separating.)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (55.2% of femicide victims were estranged or in the process of separating.)
 
 **Disclosure asymmetry (relevant to who hears your account first):**
 - Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association.
@@ -383,14 +383,14 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 
 ### Pragmatics categories referenced on this page
 
-- **Speech Acts (Category 11)** — DARVO is composed of specific speech acts: denial, accusation, reframing, complaint. Recognizing them as acts (rather than as descriptions of reality) is part of the cognitive defense and a useful entry point for the underlying mechanism. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — much of DARVO operates through what is *implied* rather than said. "I find this conversation hostile" implicates that you are being hostile without making the claim directly, which makes it harder to refute. [category-10-implicature.md](category-10-implicature.md)
-- **Politeness (Category 6)** — the attack and reversal phases of DARVO are often wrapped in politeness scaffolding ("I'm sorry, but...") that makes refusing the reframing feel like a politeness violation. Brown & Levinson's face theory gives the underlying mechanism. [category-06-politeness.md](category-06-politeness.md)
+- **Speech Acts (Category 1)** — DARVO is composed of specific speech acts: denial, accusation, reframing, complaint. Recognizing them as acts (rather than as descriptions of reality) is part of the cognitive defense and a useful entry point for the underlying mechanism. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — much of DARVO operates through what is *implied* rather than said. "I find this conversation hostile" implicates that you are being hostile without making the claim directly, which makes it harder to refute. [category-02-implicature.md](category-02-implicature.md)
+- **Politeness (Category 3)** — the attack and reversal phases of DARVO are often wrapped in politeness scaffolding ("I'm sorry, but...") that makes refusing the reframing feel like a politeness violation. Brown & Levinson's face theory gives the underlying mechanism. [category-03-politeness.md](category-03-politeness.md)
 - **Common Ground (Category 16)** — DARVO unilaterally rewrites the common ground of a confrontation in real time. One moment you are raising a concern; the next moment, by the perpetrator's account, you are the one being unreasonable. [category-16-common-ground.md](category-16-common-ground.md)
 - **Presupposition (Category 9)** — the role-reversal phase of DARVO smuggles in a contested claim ("I'm being attacked") as a presupposition of the perpetrator's complaints, rather than as an argued position. [category-09-presupposition.md](category-09-presupposition.md)
-- **Cooperative Principle / Grice (Category 12)** — DARVO is a systematic violation of cooperative communication that the autistic target is being asked to honor unilaterally. Naming the asymmetry in cooperative effort is one of the more clarifying moves. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
-- **Frames and Framing (Category 17)** — DARVO is a frame attack: the perpetrator replaces the frame "we are discussing your behavior" with the frame "we are discussing my mistreatment." Frame analysis gives the technical machinery for naming the swap. [category-17-frames.md](category-17-frames.md)
-- **Repair (Category 18)** — DARVO is the systematic *failure* of conversational repair. Repair is normally bidirectional and good-faith; DARVO is unidirectional and bad-faith. The contrast clarifies what DARVO is doing. [category-18-repair.md](category-18-repair.md)
+- **Implicature / Cooperative Principle (Category 2)** — DARVO is a systematic violation of cooperative communication that the autistic target is being asked to honor unilaterally. Naming the asymmetry in cooperative effort is one of the more clarifying moves. [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — DARVO is a frame attack: the perpetrator replaces the frame "we are discussing your behavior" with the frame "we are discussing my mistreatment." Frame analysis gives the technical machinery for naming the swap. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Conversation Structure / Repair (Category 4)** — DARVO is the systematic *failure* of conversational repair. Repair is normally bidirectional and good-faith; DARVO is unidirectional and bad-faith. The contrast clarifies what DARVO is doing. [category-04-conversation-structure.md](category-04-conversation-structure.md)
 
 ### Other hub pages referenced on this page
 
@@ -415,12 +415,12 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 
 **Other patterns (Tier 3):**
 - [Gaslighting](manipulation-hub-pattern-gaslighting.md) — the chronic background pattern that DARVO often punctuates. The two pages are designed to be read together.
-- Memory Gaslighting (not yet built) — frequently the subject of confrontations that get DARVO'd.
-- Diagnostic Weaponization (not yet built) — autism-specific scripts that bundle DARVO with autism-blame.
-- Post-Meltdown Shaming (not yet built) — the meltdown-as-attack DARVO variant treated in depth.
-- Bandwagon Isolation (not yet built) — the social-scaffolding move that makes DARVO effective with audiences.
+- Memory Gaslighting — frequently the subject of confrontations that get DARVO'd.
+- Diagnostic Weaponization — autism-specific scripts that bundle DARVO with autism-blame.
+- Post-Meltdown Shaming — the meltdown-as-attack DARVO variant treated in depth.
+- Bandwagon Isolation — the social-scaffolding move that makes DARVO effective with audiences.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where DARVO is most lethal and most consequential.
 - Family of Origin — where the DARVO pattern is often installed in childhood and reinforced across decades.
 - Workplace — institutional DARVO in formal complaint procedures.

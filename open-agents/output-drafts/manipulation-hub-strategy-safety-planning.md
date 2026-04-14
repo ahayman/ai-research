@@ -16,7 +16,7 @@ If that description fits your situation, the research base is unambiguous about 
 
 2. **Safety planning is most effective when informed by a structured risk assessment.** Glass et al. (2017) on the MyPlan decision aid found that tailored, danger-informed safety planning outperforms generic plans. The specific instrument is Campbell's Danger Assessment (Campbell et al., 2003, 2009), which is the gold standard but is not a DIY tool — it requires trained administration to produce calibrated risk scores.
 
-3. **"Just leave" is empirically unsafe.** 44% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). The separation period is the single highest-risk window. Safety planning is specifically designed to reduce the risk of this period, not to eliminate it. This is why leaving without a plan is so dangerous and why "the research says you should leave" has to be paired with "the research says how to leave."
+3. **"Just leave" is empirically unsafe.** 55.2% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). The separation period is the single highest-risk window. Safety planning is specifically designed to reduce the risk of this period, not to eliminate it. This is why leaving without a plan is so dangerous and why "the research says you should leave" has to be paired with "the research says how to leave."
 
 **What this page can do:**
 - Orient you to the components of safety planning that the research base supports
@@ -64,7 +64,7 @@ Many people stay in dangerous situations for extended periods — months or year
 
 - **Substance use planning.** Alcohol and drugs reduce your ability to execute safety plans and increase the risk of escalation. This is not a moral statement; it is a practical planning consideration. If substance use is part of the dynamic, safety planning needs to account for it.
 
-- **De-escalation knowledge.** Know what triggers escalation in your specific situation and what has historically de-escalated. This is highly individual and is best worked out with an advocate, but self-knowledge is a starting point. (See the De-escalation strategy page, Tier 2 — not yet built.)
+- **De-escalation knowledge.** Know what triggers escalation in your specific situation and what has historically de-escalated. This is highly individual and is best worked out with an advocate, but self-knowledge is a starting point. (See the [De-escalation strategy page](manipulation-hub-strategy-de-escalation.md) for the detailed treatment.)
 
 ### Phase 2: Safety when preparing to leave
 
@@ -129,14 +129,14 @@ Safety planning is more effective when it is informed by a structured risk asses
 - **It is the gold standard** for IPV lethality risk assessment (Campbell et al., 2003, 2009).
 - **It is not a DIY tool.** The scoring involves weighted multivariate risk factors that produce a calibrated risk score. Self-administration does not produce the same result as trained administration.
 - **Some of the highest-risk indicators deserve awareness** even without a full DA:
-  - Prior non-fatal strangulation (OR 7.48 for femicide; Glass et al., 2008 — see the [Safety Assessment page](manipulation-hub-safety-assessment.md))
-  - Weapon access, especially firearms
-  - Prior threats to kill
-  - Escalating severity over time
-  - Recent separation or attempted separation
-  - Violent jealousy
-  - Forced sex
-  - Abuser suicide threats
+ - Prior non-fatal strangulation (OR 7.48 for femicide; Glass et al., 2008 — see the [Safety Assessment page](manipulation-hub-safety-assessment.md))
+ - Weapon access, especially firearms
+ - Prior threats to kill
+ - Escalating severity over time
+ - Recent separation or attempted separation
+ - Violent jealousy
+ - Forced sex
+ - Abuser suicide threats
 
 If any of these indicators are present in your situation, **safety planning done alone is substantially worse than safety planning done with advocacy.** This is the clearest case for contacting NDVH or an equivalent resource: they can perform the Danger Assessment and use the result to calibrate your safety plan.
 
@@ -377,7 +377,7 @@ Some people, for legitimate reasons, cannot leave their situation in the foresee
 
 1. **Safety planning is most effective when paired with advocacy.** Sullivan & Bybee (1999) RCT evidence is clear. If safety planning applies to your situation, contact a trained advocate — NDVH (1-800-799-7233 in the US) or the equivalent. This is non-negotiable.
 
-2. **"Just leave" is empirically unsafe.** 44% of IPV femicide victims were separating or had separated. Safety planning exists to address this.
+2. **"Just leave" is empirically unsafe.** 55.2% of IPV femicide victims were estranged or had separated. Safety planning exists to address this.
 
 3. **The three phases are not interchangeable.** In-relationship, preparing to leave, and after leaving each have different considerations. A plan that addresses only one phase is incomplete.
 
@@ -464,10 +464,10 @@ Some people, for legitimate reasons, cannot leave their situation in the foresee
 - **[Documentation](manipulation-hub-strategy-documentation.md)** — documentation is a core component of safety planning, not a separate activity.
 - **[Reality-Check Networks](manipulation-hub-strategy-reality-check-networks.md)** — the trusted supporter adaptation draws directly from the reality-check network.
 - **[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md)** — disclosure to advocates is a specific case of the disclosure framework and is central to safety planning.
-- **Strategic Disengagement (Tier 2, not yet built)** — for situations where full safety planning is not applicable but gradual withdrawal is.
-- **De-escalation (Tier 2, not yet built)** — for Phase 1 situations where de-escalation of specific incidents is part of the plan.
-- **Finding Professional Support (Tier 2, not yet built)** — for the specifics of locating and working with advocates.
-- **Intimate Partner Relationships context page (Tier 4, not yet built)** — the context page that will integrate this strategy with specific pattern recognition.
+- **Strategic Disengagement (Tier 2)** — for situations where full safety planning is not applicable but gradual withdrawal is.
+- **De-escalation (Tier 2)** — for Phase 1 situations where de-escalation of specific incidents is part of the plan.
+- **Finding Professional Support (Tier 2)** — for the specifics of locating and working with advocates.
+- **Intimate Partner Relationships context page** — the context page that will integrate this strategy with specific pattern recognition.
 
 ---
 

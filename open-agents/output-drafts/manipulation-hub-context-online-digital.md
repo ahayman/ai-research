@@ -549,7 +549,7 @@ The standing recovery frame applies: **the goal is not to disengage from digital
 - Mann et al. Work on autism and online communication.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Digital security resources:**
 - Electronic Frontier Foundation. Surveillance Self-Defense (ssd.eff.org).
@@ -571,12 +571,12 @@ The standing recovery frame applies: **the goal is not to disengage from digital
 ### Pragmatics categories referenced on this page
 
 - **Common Ground (Category 16)** — online communication has unstable common ground because audiences are uncertain and contexts collapse. Recognizing the common ground problem is part of navigating digital communication. **One of the most important pragmatics cross-links for this page.** [category-16-common-ground.md](category-16-common-ground.md)
-- **Implicature (Category 10)** — much online communication operates through implicature, and autistic communicators sometimes miss or misread the implicit content of online messages. [category-10-implicature.md](category-10-implicature.md)
-- **Speech Acts (Category 11)** — posts, messages, replies, and reports are speech acts whose function depends on platform context. [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Implicature (Category 2)** — much online communication operates through implicature, and autistic communicators sometimes miss or misread the implicit content of online messages. [category-02-implicature.md](category-02-implicature.md)
+- **Speech Acts (Category 1)** — posts, messages, replies, and reports are speech acts whose function depends on platform context. [category-01-speech-acts.md](category-01-speech-acts.md)
 - **Register (Category 7)** — different platforms have different register expectations, and autistic users moving between platforms often face register mismatches. [category-07-register.md](category-07-register.md)
-- **Identity and Stance (Category 19)** — online identities are constructed through stance moves that can be performed differently across platforms; the stance/identity distinction is particularly visible in digital contexts. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Frames and Framing (Category 17)** — online disputes often involve frame attacks; recognizing frames as frames is part of navigating online conflict. [category-17-frames.md](category-17-frames.md)
-- **Politeness (Category 6)** — platform-specific politeness norms vary substantially and are sometimes weaponized against autistic users. [category-06-politeness.md](category-06-politeness.md)
+- **Identity and Stance (Category 24)** — online identities are constructed through stance moves that can be performed differently across platforms; the stance/identity distinction is particularly visible in digital contexts. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Framing and Frame Analysis (Category 23)** — online disputes often involve frame attacks; recognizing frames as frames is part of navigating online conflict. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Politeness (Category 3)** — platform-specific politeness norms vary substantially and are sometimes weaponized against autistic users. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 

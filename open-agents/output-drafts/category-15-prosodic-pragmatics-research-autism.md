@@ -463,7 +463,7 @@ The challenge is not learnability but **automaticity**: applying these rules fas
 
 7. **Wang, A. T., Lee, S. S., Sigman, M., & Dapretto, M. (2006)**. Neural basis of irony comprehension in children with autism: the role of prosody and context. *Brain*, 129(4), 932-943. https://pmc.ncbi.nlm.nih.gov/articles/PMC3713234/
 
-8. **Chien, H. Y. et al. (2022)**. Hyper-Sensitivity to Pitch and Poorer Prosody Processing in Adults With Autism: An ERP Study. *Frontiers in Psychiatry*, 13, 844830. https://pmc.ncbi.nlm.nih.gov/articles/PMC9174755/
+8. **Haigh, S. M. et al. (2022)**. "Hyper-Sensitivity to Pitch and Poorer Prosody Processing in Adults With Autism: An Electrophysiology Study." *Frontiers in Psychiatry*, 13, 844830. https://pmc.ncbi.nlm.nih.gov/articles/PMC9174755/
 
 9. **Grossman, R. B., Bemis, R. H., Skwerer, D. P., & Tager-Flusberg, H. (2010)**. Lexical and affective prosody in children with high-functioning autism. *Journal of Speech, Language, and Hearing Research*, 53(3), 778-793. https://pmc.ncbi.nlm.nih.gov/articles/PMC3538164/
 

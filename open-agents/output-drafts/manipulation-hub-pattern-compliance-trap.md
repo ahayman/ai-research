@@ -249,7 +249,7 @@ The compliance trap consistently misattributes burnout symptoms to one of the th
 
 ### The compliance trap and the credibility discount
 
-Lim & Magiati (2022) showed that autistic adults are perceived as more deceptive and less credible than non-autistic adults, even when telling the truth. The compliance trap interacts with this finding in a particular way: the autistic person who reports that they cannot sustain the demanded masking is met with disbelief proportional to the credibility discount. "You can do it, you're just not trying hard enough" is the predictable response from an audience that already discounts the autistic person's account of their own capacity.
+Lim, Young & Brewer (2022) showed that autistic adults are perceived as more deceptive and less credible than non-autistic adults, even when telling the truth. The compliance trap interacts with this finding in a particular way: the autistic person who reports that they cannot sustain the demanded masking is met with disbelief proportional to the credibility discount. "You can do it, you're just not trying hard enough" is the predictable response from an audience that already discounts the autistic person's account of their own capacity.
 
 The implication is that **the cost of masking is invisible to non-autistic observers, and the autistic person's report of the cost is structurally discounted.** This is one of the cases where having outside witnesses (autistic peers, autism-aware therapists, written documentation) is essential, because the autistic person's own testimony will not be sufficient to interrupt the trap.
 
@@ -464,7 +464,7 @@ The recovery frame worth holding throughout: **the goal is not to mask less in s
 - ASAN (Autistic Self Advocacy Network). Position statements on compliance-based interventions and autistic refusal.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Double empathy problem:**
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
@@ -502,14 +502,14 @@ The recovery frame worth holding throughout: **the goal is not to mask less in s
 
 ### Pragmatics categories referenced on this page
 
-- **Identity and Stance (Category 19)** — the compliance trap is fundamentally an attack on the autistic person's identity position and stance. The demand is not just for behavior change but for a different way of *being*. Reading the identity and stance category gives the underlying pragmatic mechanism. **This is the most important pragmatics cross-link on this page.** [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework underlies many of the masking demands the trap makes. Recognizing that politeness expectations are culturally calibrated and not universally fixed is part of the cognitive defense. [category-06-politeness.md](category-06-politeness.md)
+- **Identity and Stance (Category 24)** — the compliance trap is fundamentally an attack on the autistic person's identity position and stance. The demand is not just for behavior change but for a different way of *being*. Reading the identity and stance category gives the underlying pragmatic mechanism. **This is the most important pragmatics cross-link on this page.** [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework underlies many of the masking demands the trap makes. Recognizing that politeness expectations are culturally calibrated and not universally fixed is part of the cognitive defense. [category-03-politeness.md](category-03-politeness.md)
 - **Register (Category 7)** — much of what the compliance trap demands is register modulation (formal, informal, professional, emotional). Understanding register as a contextual variable rather than a moral test gives a way out of the framing. [category-07-register.md](category-07-register.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act of refusing (legitimate) from the speech act of "failing to comply" (the trap's framing) is part of how you protect refusal as a valid move. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Frames and Framing (Category 17)** — the compliance trap is a frame attack: it replaces "you have legitimate needs that this environment is failing to accommodate" with "you have a personal failing that you should overcome." [category-17-frames.md](category-17-frames.md)
-- **Implicature (Category 10)** — much of the compliance trap operates through what is *implied* about your character rather than said directly about specific behaviors. "If you'd just try harder" implicates that you are not currently trying. [category-10-implicature.md](category-10-implicature.md)
-- **Cooperative Principle / Grice (Category 12)** — the compliance trap is a systematic violation of cooperative communication that the autistic person is being asked to honor unilaterally. The cooperative principle category gives the technical machinery for naming the asymmetry. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
-- **Accommodation (Category 20)** — the pragmatics-of-conversation sense of *accommodation* (adjusting one's speech to one's interlocutor) is bidirectional in the literature, not one-sided. The compliance trap demands one-sided accommodation. [category-20-accommodation.md](category-20-accommodation.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act of refusing (legitimate) from the speech act of "failing to comply" (the trap's framing) is part of how you protect refusal as a valid move. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — the compliance trap is a frame attack: it replaces "you have legitimate needs that this environment is failing to accommodate" with "you have a personal failing that you should overcome." [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Implicature (Category 2)** — much of the compliance trap operates through what is *implied* about your character rather than said directly about specific behaviors. "If you'd just try harder" implicates that you are not currently trying. [category-02-implicature.md](category-02-implicature.md)
+- **Implicature / Cooperative Principle (Category 2)** — the compliance trap is a systematic violation of cooperative communication that the autistic person is being asked to honor unilaterally. The cooperative principle category gives the technical machinery for naming the asymmetry. [category-02-implicature.md](category-02-implicature.md)
+- **Accommodation (Category 20)** — the pragmatics-of-conversation sense of *accommodation* (adjusting one's speech to one's interlocutor) is bidirectional in the literature, not one-sided. The compliance trap demands one-sided accommodation. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 
@@ -538,10 +538,10 @@ The recovery frame worth holding throughout: **the goal is not to mask less in s
 - [Diagnostic Weaponization](manipulation-hub-pattern-diagnostic-weaponization.md) — the compliance trap and diagnostic weaponization reinforce each other; the diagnosis is treated as a thing to be suppressed.
 - [Sensory Gaslighting](manipulation-hub-pattern-sensory-gaslighting.md) — sensory gaslighting denies the data; the compliance trap demands suppression of the response to the data.
 - Post-Meltdown Shaming (next in build order) — meltdowns are often what happens when the compliance trap exhausts the autistic person's capacity, and the shaming that follows is its own pattern.
-- Pragmatic Packaging Invalidation (not yet built) — the broader pattern of which the compliance trap is one form: "you said it wrong (or are wrong) so it doesn't count."
-- Weaponized Accommodations (not yet built) — sometimes the compliance trap is paired with the framing that any accommodation you receive is a debt you owe.
+- Pragmatic Packaging Invalidation — the broader pattern of which the compliance trap is one form: "you said it wrong (or are wrong) so it doesn't count."
+- Weaponized Accommodations — sometimes the compliance trap is paired with the framing that any accommodation you receive is a debt you owe.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Workplace — where the compliance trap has the most direct material consequences (performance reviews, accommodation refusals, "not a team player" feedback, terminations).
 - Family of Origin — where the childhood pipeline is installed.
 - Educational Settings — both K-12 and higher ed; the original installation site for many adults.

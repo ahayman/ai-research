@@ -154,7 +154,7 @@ The stereotype that autistic individuals are "uniformly literal" is contradicted
 
 2. **Particularized implicatures can be intact**: Jary et al. (2025) found autistic adults performed comparably to neurotypicals on BOTH material and behavioural particularized implicatures
 
-3. **Heterogeneity is massive**: The autistic population is highly diverse. Many high-functioning autistic individuals understand scalar implicatures, metaphors, and even irony (Vicente & Falkum, 2023)
+3. **Heterogeneity is massive**: The autistic population is highly diverse. Many autistic individuals with fluent verbal language understand scalar implicatures, metaphors, and even irony (Vicente & Falkum, 2023). Note: older literature often used the term "high-functioning" here; this hub avoids functioning labels in its own voice because they obscure the variation in support needs across contexts and across time.
 
 4. **Offline vs. online performance**: When given time (offline tasks), autistic individuals often perform much better than in real-time conversation, suggesting the bottleneck is processing speed/demands rather than competence
 

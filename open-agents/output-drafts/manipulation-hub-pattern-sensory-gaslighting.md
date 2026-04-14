@@ -447,11 +447,11 @@ For survivors of childhood sensory gaslighting specifically, the recovery work i
 
 - **Common Ground (Category 16)** — sensory gaslighting unilaterally rewrites the common ground to install "the environment is normal" as the shared starting point, when the autistic person's actual perception of the environment is different. **This is the most important pragmatics cross-link on this page.** [category-16-common-ground.md](category-16-common-ground.md)
 - **Presupposition (Category 9)** — sensory gaslighting smuggles in the presupposition that there is a single "real" sensory experience that all observers should share. The presupposition is doing the work, not the surface claim. [category-09-presupposition.md](category-09-presupposition.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act of reporting a sensory experience ("the lights are too bright for me") from the speech act of denying it ("no they aren't") is part of the cognitive defense. Reports and denials are different speech acts, not competing claims about the same fact. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Frames and Framing (Category 17)** — sensory gaslighting is a frame attack: it replaces "you have sensory differences I should accommodate" with "you have a difficult personality I should manage." [category-17-frames.md](category-17-frames.md)
-- **Implicature (Category 10)** — much sensory gaslighting operates through what is *implied* about your character rather than said directly about the sensory environment. "Stop overreacting" implicates that your reaction is voluntary and inappropriate. [category-10-implicature.md](category-10-implicature.md)
-- **Identity and Stance (Category 19)** — sensory gaslighting attacks your identity position as a legitimate knower of your own body and environment. The attack is on stance, not just on perception. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Politeness (Category 6)** — sensory accommodation requests are often refused on politeness grounds ("don't make a scene") that prioritize the comfort of the audience over the access of the autistic person. Brown & Levinson's framework gives the underlying mechanism. [category-06-politeness.md](category-06-politeness.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act of reporting a sensory experience ("the lights are too bright for me") from the speech act of denying it ("no they aren't") is part of the cognitive defense. Reports and denials are different speech acts, not competing claims about the same fact. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — sensory gaslighting is a frame attack: it replaces "you have sensory differences I should accommodate" with "you have a difficult personality I should manage." [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Implicature (Category 2)** — much sensory gaslighting operates through what is *implied* about your character rather than said directly about the sensory environment. "Stop overreacting" implicates that your reaction is voluntary and inappropriate. [category-02-implicature.md](category-02-implicature.md)
+- **Identity and Stance (Category 24)** — sensory gaslighting attacks your identity position as a legitimate knower of your own body and environment. The attack is on stance, not just on perception. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Politeness (Category 3)** — sensory accommodation requests are often refused on politeness grounds ("don't make a scene") that prioritize the comfort of the audience over the access of the autistic person. Brown & Levinson's framework gives the underlying mechanism. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 
@@ -478,11 +478,11 @@ For survivors of childhood sensory gaslighting specifically, the recovery work i
 - [DARVO](manipulation-hub-pattern-darvo.md) — sensory gaslighting often appears alongside DARVO when sensory accommodation requests are met with role reversal ("I'm the one being inconvenienced by your needs").
 - [Tone Policing](manipulation-hub-pattern-tone-policing.md) — closely related; prosodic and affect policing are often paired with sensory gaslighting in the same relationships.
 - [Diagnostic Weaponization](manipulation-hub-pattern-diagnostic-weaponization.md) — sensory gaslighting is one of the patterns most often bundled with diagnostic discounting ("you're just hyperfocused because of your autism").
-- The Compliance Trap (not yet built) — the masking pressure that makes sensory needs invisible to outside observers.
-- Post-Meltdown Shaming (not yet built) — the meltdowns that result from sensory gaslighting often become the material for further shaming.
-- Memory Gaslighting (not yet built) — the retroactive sensory rewrite is a sub-form of memory gaslighting.
+- The Compliance Trap — the masking pressure that makes sensory needs invisible to outside observers.
+- Post-Meltdown Shaming — the meltdowns that result from sensory gaslighting often become the material for further shaming.
+- Memory Gaslighting — the retroactive sensory rewrite is a sub-form of memory gaslighting.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Family of Origin — where childhood sensory gaslighting is installed.
 - Educational Settings — where the K-12 institutional version is installed.
 - Medical Settings — where adult sensory gaslighting affects diagnostic outcomes and treatment.

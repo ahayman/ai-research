@@ -163,7 +163,7 @@ Some warning signs that a professional is not going to serve you well, even if t
 - **They tell you to "trust your gut" without acknowledging alexithymia.** Gut-feeling advice does not work when interoceptive signals are unreliable.
 - **They recommend couples therapy when you describe coercive control.** This is contraindicated (Bograd & Mederos, 1999) and indicates the therapist does not understand DV fundamentals.
 - **They push for a diagnosis you do not want.** A therapist who insists on labels you are not asking for, or who applies labels that do not fit (e.g., labeling autistic traits as BPD features), is not respecting you.
-- **They minimize or disbelieve the credibility discount.** "I'm sure people are just confused; you're very articulate" — this dismisses the structural reality that Lim & Magiati (2022) documented.
+- **They minimize or disbelieve the credibility discount.** "I'm sure people are just confused; you're very articulate" — this dismisses the structural reality that Lim, Young & Brewer (2022) documented.
 
 ### Finding autism-informed options
 
@@ -387,7 +387,7 @@ Every time you explain autism to a clinician, you are doing unpaid emotional lab
 
 Milton's (2012) double empathy problem applies specifically in therapeutic contexts. A neurotypical therapist's interpretation of autistic communication may be systematically off in specific ways:
 
-- **They may read your flat affect as emotional unavailability.** This is the same credibility discount Lim & Magiati (2022) documented, applied to therapeutic interpretation.
+- **They may read your flat affect as emotional unavailability.** This is the same credibility discount Lim, Young & Brewer (2022) documented, applied to therapeutic interpretation.
 - **They may read your directness as resistance or hostility.**
 - **They may interpret your pattern-focused thinking as obsessive.**
 - **They may misread your emotional state generally, because their neurotypical calibration does not match your presentation.**
@@ -519,7 +519,7 @@ Milton's (2012) double empathy problem applies specifically in therapeutic conte
 - Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
 
 **Autism-specific considerations:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
 - Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic.'" *Autism.*
 - Fisher, N., van Diest, C., Leoni, M., & Spain, D. (2023). Delphi survey on EMDR adaptations for autistic adults. *Journal of EMDR Practice and Research* — [PRELIMINARY] clinician-survey level evidence.
@@ -555,8 +555,8 @@ Milton's (2012) double empathy problem applies specifically in therapeutic conte
 - **[Strategic Disengagement](manipulation-hub-strategy-strategic-disengagement.md)** — a therapist or advocate can help you sustain disengagement strategies.
 - **[Refusal, Limit-Setting, and the "Boundaries" Problem](manipulation-hub-strategy-refusal-limits-boundaries.md)** — STAIR and CBT assertiveness training are specific therapeutic approaches relevant to this skill.
 - **[De-escalation](manipulation-hub-strategy-de-escalation.md)** — crisis responders are professionals specifically trained in de-escalation.
-- **Recovery and Post-Traumatic Growth (Tier 2, not yet built)** — ongoing therapy is a core part of recovery for many people.
-- **Medical context page (Tier 4, not yet built)** — medical professionals have specific considerations not fully covered here.
+- **Recovery and Post-Traumatic Growth (Tier 2)** — ongoing therapy is a core part of recovery for many people.
+- **Medical context page** — medical professionals have specific considerations not fully covered here.
 
 ---
 

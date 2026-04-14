@@ -122,7 +122,7 @@ The implication: workplace strategies have to manage both sides of the tradeoff 
 
 ### 3.2 The credibility discount in performance evaluation
 
-Lim & Magiati (2022) documented that autistic adults are perceived as less credible than non-autistic adults across observer studies. In workplace contexts, this discount operates in several specific ways:
+Lim, Young & Brewer (2022) documented that autistic adults are perceived as less credible than non-autistic adults across observer studies. In workplace contexts, this discount operates in several specific ways:
 
 - **Performance reviews read autistic communication features as performance problems.** Flat affect, direct communication, atypical eye contact, and slow real-time processing are read as "not engaged," "abrasive," "not a team player," and "not quick on their feet." The features are about communication style, not performance, but they enter performance reviews as performance issues.
 - **Peer evaluations and 360-degree feedback amplify the discount.** Coworkers without training in autistic communication often produce feedback that is dominated by communication-style impressions rather than by work product evaluation. The autistic worker's actual contributions are sometimes invisible in the feedback while the social impressions are loud.
@@ -606,7 +606,7 @@ The standing recovery frame applies: **the goal is not to become a less autistic
 - Camm-Crosbie, L., Bradley, L., Shaw, R., Baron-Cohen, S., & Cassidy, S. (2019). "'People like me don't get support': Autistic adults' experiences of support and treatment for mental health difficulties, self-injury and suicidality." *Autism* 23(6): 1431–1441. (Workplace mental health context.)
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Masking and burnout in workplace contexts:**
 - Hull, L., et al. (2017). "Putting on My Best Normal: Social Camouflaging in Adults with Autism Spectrum Conditions." PMC5509825.
@@ -651,13 +651,13 @@ The standing recovery frame applies: **the goal is not to become a less autistic
 ### Pragmatics categories referenced on this page
 
 - **Register (Category 7)** — workplace contexts have specific register expectations (professional, polite, deferential to hierarchy) that autistic workers are often penalized for not meeting natively. **One of the most important pragmatics cross-links for this page.** [category-07-register.md](category-07-register.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework underlies the politeness conventions that workplace cultures use to evaluate "professionalism" and "fit." [category-06-politeness.md](category-06-politeness.md)
-- **Speech Acts (Category 11)** — accommodation requests, complaints, refusals, and confirmations are speech acts. The legal framework treats them as speech acts with specific functions and durations. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — much workplace communication operates through implicature: "we'll let you know" implicates rejection; "we have some concerns" implicates discipline; "this isn't really working out" implicates termination. [category-10-implicature.md](category-10-implicature.md)
-- **Frames and Framing (Category 17)** — performance reviews and personnel files frame the worker in ways that subsequent decisions then operate within. Frame analysis is the technical tool for recognizing the framing as a frame. [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — workplace evaluations are stance moves: the employer positions the worker, and the position then shapes opportunity and treatment. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework underlies the politeness conventions that workplace cultures use to evaluate "professionalism" and "fit." [category-03-politeness.md](category-03-politeness.md)
+- **Speech Acts (Category 1)** — accommodation requests, complaints, refusals, and confirmations are speech acts. The legal framework treats them as speech acts with specific functions and durations. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — much workplace communication operates through implicature: "we'll let you know" implicates rejection; "we have some concerns" implicates discipline; "this isn't really working out" implicates termination. [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — performance reviews and personnel files frame the worker in ways that subsequent decisions then operate within. Frame analysis is the technical tool for recognizing the framing as a frame. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — workplace evaluations are stance moves: the employer positions the worker, and the position then shapes opportunity and treatment. [category-24-identity-stance.md](category-24-identity-stance.md)
 - **Common Ground (Category 16)** — workplace expectations are part of the implicit common ground that workers are expected to know without being told. Autistic workers often have to negotiate the common ground explicitly in ways non-autistic colleagues do not. [category-16-common-ground.md](category-16-common-ground.md)
-- **Cooperative Principle / Grice (Category 12)** — the cooperative communication principle is often violated unilaterally in workplace contexts: workers are expected to cooperate, employers are not. Naming the asymmetry is part of the cognitive defense. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Implicature / Cooperative Principle (Category 2)** — the cooperative communication principle is often violated unilaterally in workplace contexts: workers are expected to cooperate, employers are not. Naming the asymmetry is part of the cognitive defense. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 

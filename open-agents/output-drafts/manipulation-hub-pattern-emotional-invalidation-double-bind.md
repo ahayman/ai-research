@@ -89,7 +89,7 @@ For the double bind, the double empathy frame supplies a critical corrective. Th
 
 ### The credibility discount
 
-**Lim and Magiati (2022, PMC8813809)** found that autistic adults are perceived as more deceptive and less credible than non-autistic adults, even when telling the truth, and that this perception is driven in substantial part by affect features that observers read as "off." The credibility discount is the social mechanism by which the affect mismatch is converted into discrediting. [VALIDATED]
+**Lim, Young, and Brewer (2022, PMC8813809)** found that autistic adults are perceived as more deceptive and less credible than non-autistic adults, even when telling the truth, and that this perception is driven in substantial part by affect features that observers read as "off." The credibility discount is the social mechanism by which the affect mismatch is converted into discrediting. [VALIDATED]
 
 Surrounding work by Lim, Young, and Brewer on perceptions of autistic mock-suspects and witnesses in legal contexts supports the broader picture: across settings that matter, autistic affect is read as less trustworthy, and the reading tracks features the speaker does not have voluntary control over. This is the direct empirical substrate for the institutional version of the double bind (section 3.6), in which the affect-reading is formalized into notes, assessments, and decisions with material consequences.
 
@@ -210,7 +210,7 @@ The highest-stakes configuration. Medical, mental health, custody, employment, a
 
 Each of these sentences is the institutional version of one leg of the double bind. "Flat, constricted" is Leg 1. "Disproportionate" is Leg 2. "Odd," "rehearsed," "inappropriate" are Leg 3. In institutional contexts, the sentences are read as clinical observations rather than as calibration judgments, and they carry the weight of the institution. The speaker's ability to contest them is limited. In custody and criminal contexts, the material stakes can be very large.
 
-**The Lim and Magiati (2022)** finding applies directly here. Autistic adults are systematically perceived as less credible and more deceptive than non-autistic adults, and the perception is built on affect features the speaker does not voluntarily control. When this perception is formalized into an institutional record, the record becomes the basis for future decisions, and those decisions reinforce each other across the record.
+**The Lim, Young, and Brewer (2022)** finding applies directly here. Autistic adults are systematically perceived as less credible and more deceptive than non-autistic adults, and the perception is built on affect features the speaker does not voluntarily control. When this perception is formalized into an institutional record, the record becomes the basis for future decisions, and those decisions reinforce each other across the record.
 
 The strategies section discusses the institutional version separately, because the response it requires (documentation, advocacy, channel-shift, request to record) is different from the response that works in a personal relationship.
 
@@ -279,7 +279,7 @@ Each empirical finding in section 2 is a defense against the double bind when it
 - **"My prosody and affect are calibrated differently, and the difference is measurable."** Shriberg, Diehl, Patel. The external display does not map to internal state the way an allistic observer expects, and this is a documented feature of autistic communication, not a personal failure of emotional expression.
 - **"Alexithymia makes my internal self-reporting less automatic, but it does not mean I lack feelings."** Kinnaird et al. The 50% prevalence number is a useful anchor: half of autistic adults share this. Whatever difficulty you have labeling your own states is common enough to be part of the population profile, not a personal defect.
 - **"The cross-neurotype reading gap is bidirectional."** Milton. The allistic reader is not neutral. The failure to understand your affect is at least as much their miscalibration as yours. You are not the only one doing the work of being misread; they are doing it too, from the other side.
-- **"Autistic affect is systematically read as less credible even when it is accurate."** Lim & Magiati. The credibility discount is a feature of the listener, not the speaker. When you feel like something you said was not believed and you cannot figure out why, the credibility discount is often the explanation. It is not that you failed to be sincere enough. It is that the measurement is biased.
+- **"Autistic affect is systematically read as less credible even when it is accurate."** Lim, Young & Brewer. The credibility discount is a feature of the listener, not the speaker. When you feel like something you said was not believed and you cannot figure out why, the credibility discount is often the explanation. It is not that you failed to be sincere enough. It is that the measurement is biased.
 - **"Masking is expensive and not a permanent solution."** Hull et al.; Cook et al.; Raymaker et al. The third leg of the trap is not a bug you can fix by practicing. It is a loan with compounding interest, and the repayment is burnout.
 
 Each of these anchors is something to have available in short form, internally, when the double bind is operating. The speaker who can say, *my affect is calibrated differently, this is measured, this is not my failure*, has a cognitive foothold that the double bind is designed to prevent them from having.
@@ -456,7 +456,7 @@ The strategies above do not require the childhood recognition to function. They 
 
 2. **The "no available expression" mathematical fact is the foundational reframe.** You are not failing to find the right expression. No right expression exists for this test. The test is structurally impossible, and the correct response is to stop accepting it.
 
-3. **The empirical anchors are real and measurable.** Autistic prosody differs from allistic prosody (Shriberg et al. 2001; Diehl et al. 2009; Patel et al. 2020 reviews). Alexithymia is present in approximately 50% of autistic adults (Kinnaird et al. 2019). The double empathy problem means reading failures are bidirectional (Milton 2012; Crompton et al. 2020). Autistic adults are perceived as less credible even when truthful (Lim & Magiati 2022). Masking is expensive and drives burnout (Hull et al. 2017, 2019; Cook et al. 2021; Raymaker et al. 2020).
+3. **The empirical anchors are real and measurable.** Autistic prosody differs from allistic prosody (Shriberg et al. 2001; Diehl et al. 2009; Patel et al. 2020 reviews). Alexithymia is present in approximately 50% of autistic adults (Kinnaird et al. 2019). The double empathy problem means reading failures are bidirectional (Milton 2012; Crompton et al. 2020). Autistic adults are perceived as less credible even when truthful (Lim, Young & Brewer 2022). Masking is expensive and drives burnout (Hull et al. 2017, 2019; Cook et al. 2021; Raymaker et al. 2020).
 
 4. **The alexithymia interaction is the key second-order vulnerability.** When the manipulator supplies a confident label for your internal state and you do not have a confident competing label, the external label tends to win — not because it is accurate but because the fight is not fair. The protective move is not to win the labeling contest on the manipulator's timeline; it is to refuse it and develop your own reading at your own speed.
 
@@ -492,7 +492,7 @@ The strategies above do not require the childhood recognition to function. They 
 - Crompton, C. J., DeBrabander, K., Heasman, B., Milton, D., & Sasson, N. J. (2020). "Double Empathy: Why Autistic People Are Often Misunderstood." *Frontiers for Young Minds* 8: 554875.
 
 **The credibility discount (the social conversion mechanism):**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding work on the perception of autistic mock-suspects and witnesses.
 
 **Masking cost (the third leg, empirically):**
@@ -530,12 +530,12 @@ The strategies above do not require the childhood recognition to function. They 
 
 ### Pragmatics categories referenced on this page
 
-- **Prosody and Paralanguage (Category 4)** — the double bind operates directly on prosodic and paralinguistic features that are largely not under voluntary control. Reading the prosody category clarifies which features can and cannot be modulated on demand and supplies the technical vocabulary for the first and third legs of the trap. **This is the most important pragmatics cross-link on this page.** [category-04-prosody.md](category-04-prosody.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework is the underlying mechanism by which affect expectations are calibrated. Autistic affect is calibrated on a different setting on the same system. [category-06-politeness.md](category-06-politeness.md)
-- **Implicature (Category 10)** — "you don't sound upset" implies "you don't really feel upset" without making the claim directly. The double bind often operates through implicature rather than through explicit claims, which is part of why it is hard to contest. [category-10-implicature.md](category-10-implicature.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act ("I am reporting my internal state") from the external display that accompanies it is one of the most useful cognitive moves against the double bind. The speech act does not depend on the display matching an allistic expectation. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Frames and Framing (Category 17)** — the double bind is a frame attack: the interlocutor replaces "you are reporting your feelings to me and I should listen" with "your display is being evaluated by me and I will tell you what you are feeling." Recognizing the frame replacement is half the defense. [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — the drift from event ("you reacted that way this time") to identity ("you are this kind of person") is the identity-and-stance move the double bind specializes in. The category gives the technical vocabulary for what is happening. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Prosodic Pragmatics (Category 15)** — the double bind operates directly on prosodic and paralinguistic features that are largely not under voluntary control. Reading the prosody category clarifies which features can and cannot be modulated on demand and supplies the technical vocabulary for the first and third legs of the trap. **This is the most important pragmatics cross-link on this page.** [category-15-prosodic-pragmatics.md](category-15-prosodic-pragmatics.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework is the underlying mechanism by which affect expectations are calibrated. Autistic affect is calibrated on a different setting on the same system. [category-03-politeness.md](category-03-politeness.md)
+- **Implicature (Category 2)** — "you don't sound upset" implies "you don't really feel upset" without making the claim directly. The double bind often operates through implicature rather than through explicit claims, which is part of why it is hard to contest. [category-02-implicature.md](category-02-implicature.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act ("I am reporting my internal state") from the external display that accompanies it is one of the most useful cognitive moves against the double bind. The speech act does not depend on the display matching an allistic expectation. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — the double bind is a frame attack: the interlocutor replaces "you are reporting your feelings to me and I should listen" with "your display is being evaluated by me and I will tell you what you are feeling." Recognizing the frame replacement is half the defense. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — the drift from event ("you reacted that way this time") to identity ("you are this kind of person") is the identity-and-stance move the double bind specializes in. The category gives the technical vocabulary for what is happening. [category-24-identity-stance.md](category-24-identity-stance.md)
 
 ### Other hub pages referenced on this page
 
@@ -572,7 +572,7 @@ The strategies above do not require the childhood recognition to function. They 
 - [Information Asymmetry Exploitation](manipulation-hub-pattern-information-asymmetry-exploitation.md) — the manipulator often has more information about the speaker's history and vulnerabilities, and uses the asymmetry to produce labels the speaker cannot effectively contest.
 - Performative Allyship (forthcoming) — a related pattern in which declared support for neurodivergent people coexists with the double bind being applied behind closed doors.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Workplace — where affect observations in performance reviews and HR proceedings can affect employment outcomes.
 - Family of Origin — where the childhood pipeline is installed.
 - Romantic Relationships — where the public-vs-private variant is most common.

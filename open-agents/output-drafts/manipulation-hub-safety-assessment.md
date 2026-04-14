@@ -95,13 +95,13 @@ The following factors appear on Campbell's Danger Assessment as independent risk
 - Controlling most of the victim's daily activities
 - A child in the home who is not biologically the abuser's
 
-**This is not a DIY tool.** The full Danger Assessment includes weighted scoring developed through case-control research with 310 femicide cases and 324 abused controls. Administering it yourself does not give you the calibrated risk score. The value of knowing about it is that (a) if multiple items are present, you are in the population the instrument was designed for, and (b) advocates can administer it properly if you reach out.
+**This is not a DIY tool.** The Danger Assessment's original case-control development (Campbell et al., 2003, *American Journal of Public Health* 93(7):1089-1097) used 220 attempted/completed femicide cases and 343 abused-but-not-killed controls across 11 cities. The subsequent Campbell, Webster & Glass (2009) *Journal of Interpersonal Violence* DA validation paper refined the instrument using a further case-control sample. Administering the instrument yourself does not give you the calibrated risk score. The value of knowing about it is that (a) if multiple items are present, you are in the population the instrument was designed for, and (b) advocates can administer it properly if you reach out.
 
 ### The separation paradox
 
 This is the most counterintuitive finding in the entire safety literature, and it must be stated clearly:
 
-**Leaving is the highest-risk period. 44% of women murdered by an intimate partner had separated or were in the process of leaving.** (Campbell et al., 2003; replicated in Wilson & Daly, 1993, *Violence and Victims* 8(1).)
+**Leaving is the highest-risk period. 55.2% of women murdered by an intimate partner had separated or were in the process of leaving.** (Campbell et al., 2003; replicated in Wilson & Daly, 1993, *Violence and Victims* 8(1).)
 
 This does not mean you should not leave. It means that **"just leave" is empirically unsafe as standalone advice.** Leaving without a safety plan, without advocacy, and without attention to the specific lethality indicators above, is when most intimate partner homicides happen. The strongest research consensus in the field is that leaving needs to be safety-planned, ideally with a trained advocate, ideally informed by a risk assessment.
 
@@ -157,7 +157,7 @@ Standard safety assessment materials have been developed on populations that exc
 
 ### The credibility discount is structural, not personal
 
-Lim & Magiati (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. Your prosody, eye contact, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. This is not a confidence problem you can solve by speaking up more forcefully. It is a structural fact about how your communication will land.
+Lim, Young & Brewer (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. Your prosody, eye contact, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. This is not a confidence problem you can solve by speaking up more forcefully. It is a structural fact about how your communication will land.
 
 **Implications for safety assessment:**
 - Your own assessment of the situation is likely more accurate than others will credit it for being. This is worth knowing.
@@ -283,11 +283,11 @@ This hub is research-grounded content. It cannot:
 
 2. **Lethality indicators change everything.** Prior strangulation is the single strongest predictor of intimate partner femicide (OR 7.48; Glass et al., 2008). If any lethality indicators are present, professional advocacy is essential, not optional.
 
-3. **Leaving is the highest-risk period.** 44% of intimate partner femicide victims had separated or were in the process of leaving (Campbell et al., 2003). "Just leave" is empirically unsafe as standalone advice. Safety planning + advocacy is the evidence-based pathway.
+3. **Leaving is the highest-risk period.** 55.2% of intimate partner femicide victims had separated or were in the process of leaving (Campbell et al., 2003). "Just leave" is empirically unsafe as standalone advice. Safety planning + advocacy is the evidence-based pathway.
 
 4. **Your safety detection works differently.** Alexithymia makes "trust your gut" unreliable. Pattern recognition over time is your compensation. Written records are mechanical necessities for gaslighting resistance, not just good practice.
 
-5. **The credibility discount is structural.** Your presentation will be read against you by people calibrated for neurotypical signals (Lim & Magiati, 2022). This affects which disclosure targets are safe and how you document.
+5. **The credibility discount is structural.** Your presentation will be read against you by people calibrated for neurotypical signals (Lim, Young & Brewer, 2022). This affects which disclosure targets are safe and how you document.
 
 6. **The compliance training problem is a real factor.** "Maybe I'm overreacting" is the exact shape of what you were trained to think. It is not necessarily evidence about the current situation.
 
@@ -330,7 +330,7 @@ Every claim on this page should be traceable to one of the following sources. Th
 
 **Autism-specific application:**
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.*
 - Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.*
 - Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745.

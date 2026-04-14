@@ -478,8 +478,8 @@ De-escalation is one tool among several. Documentation, reality-check networks, 
 - **[Documentation](manipulation-hub-strategy-documentation.md)** — patterns of repeated escalation requiring de-escalation should be documented.
 - **[Strategic Disengagement](manipulation-hub-strategy-strategic-disengagement.md)** — for sustained situations where de-escalation of incidents is not sufficient.
 - **[Refusal, Limit-Setting, and the "Boundaries" Problem](manipulation-hub-strategy-refusal-limits-boundaries.md)** — walking away from a de-escalation attempt that is not working is a specific form of refusal.
-- **Post-Meltdown Shaming pattern page (Tier 3, not yet built)** — the weaponization of triggered meltdowns, which is a specific threat to autistic readers using de-escalation.
-- **Intimate Partner Relationships context page (Tier 4, not yet built)** — de-escalation in IPV contexts has specific safety considerations.
+- **Post-Meltdown Shaming pattern page (Tier 3)** — the weaponization of triggered meltdowns, which is a specific threat to autistic readers using de-escalation.
+- **Intimate Partner Relationships context page** — de-escalation in IPV contexts has specific safety considerations.
 
 ---
 

@@ -203,7 +203,7 @@ The NDVH safety planning framework — established practice since the hotline's 
 
 The Danger Assessment is the **gold-standard, peer-reviewed, empirically validated** risk-assessment instrument in the IPV field. It was developed by Jacquelyn C. Campbell, PhD, RN, FAAN (Anna D. Wolf Chair, Johns Hopkins School of Nursing).
 
-**Development.** Campbell constructed the DA by comparing risk factors present in intimate-partner homicide cases against those present in non-lethal IPV cases. The 11-city case-control study of intimate partner femicide (N=310 femicide cases, 324 abused controls) produced multivariate odds-ratio-weighted risk factors that became the scoring algorithm.
+**Development.** Campbell constructed the DA by comparing risk factors present in intimate-partner homicide cases against those present in non-lethal IPV cases. The original 11-city case-control study of intimate partner femicide (Campbell et al., 2003, *AJPH* 93(7):1089-1097) used **N=220 attempted/completed femicide cases and 343 abused-but-not-killed controls**. The subsequent Campbell, Webster & Glass (2009) Danger Assessment validation paper in *Journal of Interpersonal Violence* used a further case-control sample (N=310 femicide cases, 324 abused controls) to refine the scoring. These multivariate odds-ratio-weighted risk factors became the scoring algorithm.
 
 **Key risk factors on the DA include:**
 - Increasing frequency or severity of physical violence over the past year
@@ -288,7 +288,7 @@ The research base is clear on several boundary conditions:
 
 The research consensus is unambiguous: **leaving is the single most dangerous act a survivor can perform**, in terms of near-term lethality risk.
 
-- **Campbell et al. (2003)** found that **44% of women murdered by an intimate partner had separated or were in the process of leaving**.
+- **Campbell et al. (2003)** found that **55.2% of women murdered by an intimate partner had separated or were in the process of leaving**.
 - Daly, M., Wiseman, K. A., & Wilson, M. I. (1997). "Women with Children Sired by Previous Partners Incur Excess Risk of Uxoricide." *Homicide Studies* 1(1): 61–71. Establishes separation and presence of stepchildren as co-elevating risk factors.
 - Wilson, M., & Daly, M. (1993). "Spousal Homicide Risk and Estrangement." *Violence and Victims* 8(1): 3–16. Canadian homicide data show the estrangement effect clearly.
 - **Adjusted odds ratio of 4.07** for femicide under the combination of high control × separation (Campbell et al., 2003).

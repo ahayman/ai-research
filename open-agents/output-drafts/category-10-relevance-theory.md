@@ -345,6 +345,6 @@ Both frameworks are tools. Use whichever gives you the better answer:
 
 ### Autism and RT
 - Happé, F. (1993). "Communicative Competence and Theory of Mind in Autism: A Test of Relevance Theory." *Cognition*, 48, 101-119.
-- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using RT." *J Pragmatics*, 181, 112-127.
-- Jagoe, C. & Wharton, T. (2021). "The Theory of Relevance and the Theory of Autistic Mind."
+- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. PMC8117104.
+- Williams, G.L. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. (Companion paper to Williams/Wharton/Jagoe 2021.)
 - Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*, 27(6).

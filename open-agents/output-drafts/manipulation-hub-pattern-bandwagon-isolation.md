@@ -81,13 +81,13 @@ Only case (6) is not manipulation, and case (6) is rarer than it appears from in
 
 ### The credibility discount as the social precondition
 
-Lim & Magiati (2022, PMC8813809) demonstrated empirically that autistic adults are perceived as more deceptive and less credible than non-autistic adults *when telling the truth*. This finding is the single most important piece of empirical context for bandwagon isolation, because it establishes that the "chorus" does not need to be carefully constructed in order to land. The audience defaults to the non-autistic version. Observers do not begin from neutrality. They begin from a position that already favors the manipulator's account, and the autistic person trying to push back against the chorus is fighting *both* the chorus *and* the pre-loaded credibility differential.
+Lim, Young & Brewer (2022, PMC8813809) demonstrated empirically that autistic adults are perceived as more deceptive and less credible than non-autistic adults *when telling the truth*. This finding is the single most important piece of empirical context for bandwagon isolation, because it establishes that the "chorus" does not need to be carefully constructed in order to land. The audience defaults to the non-autistic version. Observers do not begin from neutrality. They begin from a position that already favors the manipulator's account, and the autistic person trying to push back against the chorus is fighting *both* the chorus *and* the pre-loaded credibility differential.
 
 This matters for the distinguishing problem in section 4. When a manipulator says *"your friends all think you're overreacting,"* the claim is effective even if the friends have never said anything of the kind, because the claim matches a cultural default the audience already carries. It is also effective when the manipulator has in fact talked to the friends, because the friends' resulting opinions are themselves filtered through the credibility discount. The friends may genuinely believe the manipulator's version — not because the manipulator is more trustworthy, but because the cultural script made the autistic person's alternative account look unreliable before any evidence was weighed.
 
 The practical corollary: **you cannot protect yourself from bandwagon isolation by becoming more credible.** The credibility discount is not a response to anything you did. Masking harder does not close it; articulating more clearly does not close it; producing more evidence closes it only partially. The protective strategies in section 6 are built around the assumption that the credibility gap will not be argued away and must be *worked around* — through documentation, through reality-check networks built carefully from people outside the manipulator's reach, and through refusing to grant authority to claims you cannot verify.
 
-**Primary source:** Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+**Primary source:** Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Evidence quality:** [VALIDATED]. Direct empirical demonstration of the credibility differential.
 
@@ -311,7 +311,7 @@ If some of the bandwagon-isolation signals are present and some are not, the res
 
 ### The pre-loaded credibility discount makes the chorus cheap
 
-Lim & Magiati (2022) is the single most load-bearing empirical fact for this page. The bandwagon chorus does not need to be carefully constructed against an autistic target because the audience already defaults to believing the non-autistic version. A manipulator can claim a chorus and the claim will be absorbed by outside observers — and, in a more insidious way, by the autistic target themselves — because the cultural default that autistic people are unreliable observers pre-licenses the claim. Against a non-autistic target, the manipulator might have to produce some actual social scaffolding to make the bandwagon land. Against an autistic target, the scaffolding is already in place. The cost of the move is lower, and the return is higher.
+Lim, Young & Brewer (2022) is the single most load-bearing empirical fact for this page. The bandwagon chorus does not need to be carefully constructed against an autistic target because the audience already defaults to believing the non-autistic version. A manipulator can claim a chorus and the claim will be absorbed by outside observers — and, in a more insidious way, by the autistic target themselves — because the cultural default that autistic people are unreliable observers pre-licenses the claim. Against a non-autistic target, the manipulator might have to produce some actual social scaffolding to make the bandwagon land. Against an autistic target, the scaffolding is already in place. The cost of the move is lower, and the return is higher.
 
 This has a specific protective implication. **The bandwagon move against you will land with other people even when it is completely fabricated, because the cultural script is doing the work the fabrication should have had to do.** The strategies in section 6 are built around this. You cannot assume that simply telling third parties "that isn't true" will close the gap. You are pushing against a pre-loaded default, and closing it generally requires documentation, specific counter-evidence, and reality-check networks that operate outside the cultural default — which generally means autistic peer networks and trauma-informed professionals, not "normal" third parties.
 
@@ -461,7 +461,7 @@ Bandwagon isolation is one of the patterns most reliably associated with the coe
 
 The specific lethality indicators that should route directly to advocate contact:
 - **Strangulation history.** Glass et al. (2008) found an odds ratio of 7.48 for later attempted homicide after non-fatal strangulation. This is the most diagnostic single indicator.
-- **Separation in progress or contemplated.** Campbell et al. (2003) found 44% of femicide victims were in the process of separating. Safety planning needs to be in place before separation begins.
+- **Separation in progress or contemplated.** Campbell et al. (2003) found 55.2% of femicide victims were estranged or in the process of separating. Safety planning needs to be in place before separation begins.
 - **Escalating threats, weapon access, physical intimidation.**
 - **Pregnancy during the relationship.**
 - **The manipulator has threatened suicide if you leave.**
@@ -505,7 +505,7 @@ Recovery is not "becoming less autistic." It is not "learning to read people bet
 
 3. **The chorus may be real, fabricated, or somewhere in between, and you usually cannot tell from inside the situation.** The protective reframe is that the *function* is the manipulation regardless of whether the chorus exists, and you are not obligated to grant authority to a chorus you cannot verify.
 
-4. **The credibility discount (Lim & Magiati, 2022) makes the chorus cheap to construct against autistic targets.** The audience defaults to the non-autistic version before any evidence is considered. Fabricated bandwagon claims land without the fabrication costs the manipulator would have to pay against a non-autistic target.
+4. **The credibility discount (Lim, Young & Brewer, 2022) makes the chorus cheap to construct against autistic targets.** The audience defaults to the non-autistic version before any evidence is considered. Fabricated bandwagon claims land without the fabrication costs the manipulator would have to pay against a non-autistic target.
 
 5. **The autistic peer cutoff is the highest-leverage variant.** Crompton et al. (2020) established that autistic peer-to-peer communication is unusually effective, which makes the autistic peer network the single most valuable reality-check resource you have — and the single most efficient target for a manipulator to neutralize. If your autistic peers are being framed as "enablers," protect them deliberately rather than pulling away.
 
@@ -534,7 +534,7 @@ Recovery is not "becoming less autistic." It is not "learning to read people bet
 - Domestic Abuse Intervention Programs. "The Power and Control Wheel." theduluthmodel.org.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Autistic peer-to-peer communication:**
 - Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712.
@@ -558,7 +558,7 @@ Recovery is not "becoming less autistic." It is not "learning to read people bet
 
 **Lethality indicators:**
 - Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 44% separation finding.)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 55.2% estrangement finding.)
 
 **Epistemic harm (for the internalization frame):**
 - Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30.
@@ -576,10 +576,10 @@ Recovery is not "becoming less autistic." It is not "learning to read people bet
 
 - **Common Ground (Category 16)** — bandwagon isolation is a unilateral rewriting of the common ground layer concerning "what other people think." Ordinary conversation depends on shared assumptions about the views of absent third parties; the manipulator rewrites those assumptions without consent or verification. The common ground category is the single most directly relevant pragmatics framework for this pattern. [category-16-common-ground.md](category-16-common-ground.md)
 - **Presupposition (Category 9)** — "everyone agrees with me" sentences are packed with presuppositions (that there is a determinable "everyone," that "everyone" has a unified view, that the speaker has reliable access to that view) that are smuggled into the structure of the sentence as if they were already accepted. Recognizing presupposition manipulation is one of the technical defenses. [category-09-presupposition.md](category-09-presupposition.md)
-- **Implicature (Category 10)** — what is implied but not said is where much bandwagon work lives. "I'm just worried — your whole family is worried" implicates a unified family verdict. "Your autistic friends wouldn't tell you" implicates that they see the same problem but are silent. The implicature category provides the machinery for naming what the surface text is doing. [category-10-implicature.md](category-10-implicature.md)
-- **Frames and Framing (Category 17)** — bandwagon isolation is a framing move: the situation is being framed as a you-vs-everyone scenario rather than as a bilateral disagreement. Recognizing the frame as a frame is part of stepping outside it. [category-17-frames-framing.md](category-17-frames-framing.md)
-- **Identity and Stance (Category 19)** — the bandwagon invocation positions you as the lone holdout and the manipulator as the spokesperson for a consensus. The pragmatic category on stance and identity positioning explains how this structural move works. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Speech Acts (Category 11)** — the bandwagon invocation is a specific speech act (reporting, citing, attributing) and recognizing it as an act rather than as a transparent description is part of the cognitive defense. [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Implicature (Category 2)** — what is implied but not said is where much bandwagon work lives. "I'm just worried — your whole family is worried" implicates a unified family verdict. "Your autistic friends wouldn't tell you" implicates that they see the same problem but are silent. The implicature category provides the machinery for naming what the surface text is doing. [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — bandwagon isolation is a framing move: the situation is being framed as a you-vs-everyone scenario rather than as a bilateral disagreement. Recognizing the frame as a frame is part of stepping outside it. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — the bandwagon invocation positions you as the lone holdout and the manipulator as the spokesperson for a consensus. The pragmatic category on stance and identity positioning explains how this structural move works. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Speech Acts (Category 1)** — the bandwagon invocation is a specific speech act (reporting, citing, attributing) and recognizing it as an act rather than as a transparent description is part of the cognitive defense. [category-01-speech-acts.md](category-01-speech-acts.md)
 
 ### Other hub pages referenced on this page
 
@@ -614,13 +614,13 @@ Recovery is not "becoming less autistic." It is not "learning to read people bet
 - [Weaponized Accommodations](manipulation-hub-pattern-weaponized-accommodations.md) — the "they only put up with you because of me" variant is a hybrid of bandwagon isolation and weaponized accommodation.
 - [Memory Gaslighting](manipulation-hub-pattern-memory-gaslighting.md) — bandwagon invocations often back memory disputes: "everyone remembers it the way I do."
 
-**Forthcoming (not yet built):**
+**Forthcoming:**
 - Concern Trolling — adjacent; "everyone is worried about you" is both a bandwagon move and a concern-trolling move.
 - Information Asymmetry Exploitation — adjacent; the opacity of alleged chorus conversations is itself an asymmetry the manipulator exploits.
 - Emotional Invalidation Double Bind — adjacent; the chorus is often invoked to invalidate the emotional response.
 - Performative Allyship — adjacent; the "I'm the only one who will tell you the truth" frame is a performative-allyship move in a specific direction.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where bandwagon isolation is most lethal.
 - Family of Origin — where bandwagon isolation is most often installed in childhood and where the chorus ("your whole family agrees") is hardest to refute.
 - Workplace — where the institutional variant is most common.

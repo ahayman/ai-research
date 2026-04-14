@@ -88,86 +88,86 @@ These are the primary resources for situations involving abuse from an intimate 
 ### United States
 
 - **National Domestic Violence Hotline** — 1-800-799-7233 (SAFE)
-  - Text "START" to 88788
-  - Chat at the hotline website (thehotline.org)
-  - 24/7, free, confidential
-  - Services in 200+ languages via interpreter
-  - Staffed by trained advocates who can safety-plan, assess risk, and connect to local services
-  - **TTY for deaf/hard-of-hearing:** 1-800-787-3224
-  - **Video phone for ASL users:** 1-855-812-1001 (8am–5pm Pacific, Monday–Friday)
+ - Text "START" to 88788
+ - Chat at the hotline website (thehotline.org)
+ - 24/7, free, confidential
+ - Services in 200+ languages via interpreter
+ - Staffed by trained advocates who can safety-plan, assess risk, and connect to local services
+ - **TTY for deaf/hard-of-hearing:** 1-800-787-3224
+ - **Video phone for ASL users:** 1-855-812-1001 (8am–5pm Pacific, Monday–Friday)
 
 - **Love Is Respect** (for teens and young adults, dating abuse) — 1-866-331-9474
-  - Text "LOVEIS" to 22522
-  - Chat available at loveisrespect.org
-  - 24/7, specifically for dating and relationship abuse in ages 13–26
+ - Text "LOVEIS" to 22522
+ - Chat available at loveisrespect.org
+ - 24/7, specifically for dating and relationship abuse in ages 13–26
 
 - **StrongHearts Native Helpline** (for Native Americans and Alaska Natives) — 1-844-762-8483 (1-844-7NATIVE)
-  - Chat available at strongheartshelpline.org
-  - Culturally appropriate advocacy for Native survivors
-  - 24/7, free, anonymous
+ - Chat available at strongheartshelpline.org
+ - Culturally appropriate advocacy for Native survivors
+ - 24/7, free, anonymous
 
 - **Womens Law** (legal information for IPV survivors) — womenslaw.org
-  - Not a hotline, but a research-grade source for state-specific legal information on restraining orders, custody, immigration, etc.
-  - Email hotline with legal questions (response in 5–7 business days)
+ - Not a hotline, but a research-grade source for state-specific legal information on restraining orders, custody, immigration, etc.
+ - Email hotline with legal questions (response in 5–7 business days)
 
 ### United Kingdom
 
 - **National Domestic Abuse Helpline** (run by Refuge) — 0808 2000 247
-  - 24/7, free, confidential, for women experiencing domestic abuse
-  - Webchat available (nationaldahelpline.org.uk)
+ - 24/7, free, confidential, for women experiencing domestic abuse
+ - Webchat available (nationaldahelpline.org.uk)
 
 - **Respect Men's Advice Line** (for male victims of DA) — 0808 801 0327
-  - Monday–Friday 10am–8pm
-  - Webchat and email available (mensadviceline.org.uk)
+ - Monday–Friday 10am–8pm
+ - Webchat and email available (mensadviceline.org.uk)
 
 - **Galop** (LGBT+ Domestic Abuse Helpline) — 0800 999 5428
-  - Monday–Friday 10am–5pm, Wednesdays until 8pm
-  - Specifically for LGBT+ people experiencing abuse
+ - Monday–Friday 10am–5pm, Wednesdays until 8pm
+ - Specifically for LGBT+ people experiencing abuse
 
 - **Karma Nirvana** (honor-based abuse and forced marriage) — 0800 5999 247
-  - Monday–Friday 9am–5pm
+ - Monday–Friday 9am–5pm
 
 ### Canada
 
 - **Assaulted Women's Helpline** (Ontario, with national referrals) — 1-866-863-0511
-  - TTY: 1-866-863-7868
-  - 24/7, multiple languages
-  - Can refer to services in other provinces
+ - TTY: 1-866-863-7868
+ - 24/7, multiple languages
+ - Can refer to services in other provinces
 
 - **Ending Violence Association of Canada** maintains a directory of provincial and territorial services at endingviolencecanada.org
 
 - **Canadian Human Trafficking Hotline** — 1-833-900-1010
-  - 24/7, 200+ languages
-  - For situations involving trafficking, which often overlaps with IPV
+ - 24/7, 200+ languages
+ - For situations involving trafficking, which often overlaps with IPV
 
 ### Australia
 
 - **1800RESPECT** (National Sexual Assault, Domestic and Family Violence Counselling Service) — 1800 737 732
-  - 24/7, free, confidential
-  - Webchat at 1800respect.org.au
-  - For women, men, children, LGBTQ+, and gender-diverse people
+ - 24/7, free, confidential
+ - Webchat at 1800respect.org.au
+ - For women, men, children, LGBTQ+, and gender-diverse people
 
 - **Men's Referral Service** (for men using or experiencing abuse) — 1300 766 491
-  - Monday–Friday 8am–9pm, weekends 9am–5pm
+ - Monday–Friday 8am–9pm, weekends 9am–5pm
 
 ### New Zealand
 
 - **Women's Refuge Crisisline** — 0800 733 843 (0800 REFUGE)
-  - 24/7, free, confidential
+ - 24/7, free, confidential
 
 - **Shine** (domestic abuse) — 0508 744 633
-  - 9am–11pm, seven days
+ - 9am–11pm, seven days
 
 - **It's Not OK** — 0800 456 450
-  - Information line
+ - Information line
 
 ### Ireland
 
 - **Women's Aid 24-Hour Freephone Helpline** — 1800 341 900
-  - 24/7, free
+ - 24/7, free
 
 - **Men's Aid Ireland** — 01-554 3811
-  - Monday–Friday 9am–5pm
+ - Monday–Friday 9am–5pm
 
 ### European Union (general)
 
@@ -189,22 +189,22 @@ These are for situations involving sexual assault, rape, sexual coercion, or chi
 ### United States
 
 - **RAINN (Rape, Abuse & Incest National Network)** — 1-800-656-HOPE (4673)
-  - 24/7, free, confidential
-  - Online chat available at rainn.org
-  - Can connect to local rape crisis centers
+ - 24/7, free, confidential
+ - Online chat available at rainn.org
+ - Can connect to local rape crisis centers
 
 - **National Sexual Violence Resource Center** — nsvrc.org
-  - Not a hotline; a resource organization with extensive guides and referrals
+ - Not a hotline; a resource organization with extensive guides and referrals
 
 ### United Kingdom
 
 - **Rape Crisis England & Wales** — 0808 500 2222
-  - 24/7 from 2024 onward
-  - Chat at rapecrisis.org.uk
+ - 24/7 from 2024 onward
+ - Chat at rapecrisis.org.uk
 
 - **Rape Crisis Scotland** — 08088 01 03 02
-  - Daily 5pm–midnight
-  - Text 07537 410027
+ - Daily 5pm–midnight
+ - Text 07537 410027
 
 - **Nexus NI** (Northern Ireland) — 0808 802 1414
 
@@ -231,77 +231,77 @@ These are for mental health crises, suicidal ideation, or active self-harm. They
 ### United States
 
 - **988 Suicide and Crisis Lifeline** — 988 (call or text)
-  - 24/7, free, confidential
-  - Chat at 988lifeline.org
-  - Press 1 for Veterans Crisis Line
-  - Press 3 for LGBTQI+ support
-  - Press 4 for Spanish
+ - 24/7, free, confidential
+ - Chat at 988lifeline.org
+ - Press 1 for Veterans Crisis Line
+ - Press 3 for LGBTQI+ support
+ - Press 4 for Spanish
 
 - **Crisis Text Line** — Text HOME to 741741
-  - 24/7, free, confidential
+ - 24/7, free, confidential
 
 - **Trans Lifeline** — 1-877-565-8860
-  - Staffed by trans operators. Minimizes mandatory reporting.
-  - English and Spanish
+ - Staffed by trans operators. Minimizes mandatory reporting.
+ - English and Spanish
 
 - **The Trevor Project** (LGBTQ+ youth) — 1-866-488-7386
-  - Text START to 678-678
-  - 24/7, for under-25 LGBTQ+ youth in crisis
+ - Text START to 678-678
+ - 24/7, for under-25 LGBTQ+ youth in crisis
 
 ### United Kingdom
 
 - **Samaritans** — 116 123
-  - 24/7, free, emotional support (not specifically DV but universally available)
-  - Email: jo@samaritans.org
+ - 24/7, free, emotional support (not specifically DV but universally available)
+ - Email: jo@samaritans.org
 
 - **Shout** — Text "SHOUT" to 85258
-  - 24/7 text-only crisis support
+ - 24/7 text-only crisis support
 
 - **Papyrus HOPELINEUK** (for under-35s) — 0800 068 4141
 
 ### Canada
 
 - **Talk Suicide Canada** — 1-833-456-4566
-  - 24/7
-  - Text 45645 (4pm–midnight ET)
+ - 24/7
+ - Text 45645 (4pm–midnight ET)
 
 - **Hope for Wellness Helpline** (Indigenous — First Nations, Inuit, Métis) — 1-855-242-3310
-  - 24/7, with culturally competent counsellors, in English, French, Cree, Ojibway, Inuktitut
+ - 24/7, with culturally competent counsellors, in English, French, Cree, Ojibway, Inuktitut
 
 - **Kids Help Phone** — 1-800-668-6868
-  - Text CONNECT to 686868
-  - 24/7, for children and youth
+ - Text CONNECT to 686868
+ - 24/7, for children and youth
 
 ### Australia
 
 - **Lifeline** — 13 11 14
-  - 24/7, free, confidential
+ - 24/7, free, confidential
 
 - **Beyond Blue** — 1300 22 4636
-  - 24/7, mental health support
+ - 24/7, mental health support
 
 - **Kids Helpline** — 1800 55 1800
-  - 24/7, for ages 5–25
+ - 24/7, for ages 5–25
 
 - **QLife** (LGBTI peer support) — 1800 184 527
-  - 3pm–midnight, seven days
+ - 3pm–midnight, seven days
 
 ### New Zealand
 
 - **Lifeline NZ** — 0800 543 354
-  - 24/7
-  - Text HELP (4357)
+ - 24/7
+ - Text HELP (4357)
 
 - **1737, Need to Talk?** — Call or text 1737
-  - 24/7
+ - 24/7
 
 ### Ireland
 
 - **Samaritans Ireland** — 116 123
-  - 24/7
+ - 24/7
 
 - **Pieta** — 1800 247 247
-  - 24/7, specifically for suicide and self-harm
+ - 24/7, specifically for suicide and self-harm
 
 ---
 
@@ -365,18 +365,18 @@ Workplace situations involve different legal and practical considerations from i
 ### United States
 
 - **EEOC (Equal Employment Opportunity Commission)** — 1-800-669-4000
-  - TTY: 1-800-669-6820
-  - For discrimination, harassment, and retaliation complaints in workplaces with 15+ employees
-  - Statute of limitations varies (typically 180–300 days from incident)
+ - TTY: 1-800-669-6820
+ - For discrimination, harassment, and retaliation complaints in workplaces with 15+ employees
+ - Statute of limitations varies (typically 180–300 days from incident)
 
 - **Workplace Bullying Institute** — workplacebullying.org
-  - Not a crisis line; research-based resources on workplace bullying
-  - Legally actionable only if the bullying crosses into discrimination based on a protected class
+ - Not a crisis line; research-based resources on workplace bullying
+ - Legally actionable only if the bullying crosses into discrimination based on a protected class
 
 - **Job Accommodation Network (JAN)** — askjan.org, 1-800-526-7234
-  - Free, confidential consulting on workplace accommodations under the ADA
-  - Specifically useful for autistic employees navigating accommodation requests
-  - Not crisis-oriented, but highly relevant when pragmatic differences are being weaponized at work
+ - Free, confidential consulting on workplace accommodations under the ADA
+ - Specifically useful for autistic employees navigating accommodation requests
+ - Not crisis-oriented, but highly relevant when pragmatic differences are being weaponized at work
 
 - **State labor boards** — each US state has a labor department that handles wage theft, unfair labor practices, and workplace safety
 - **Your state attorney general's office** — often has consumer protection and workplace complaint units
@@ -384,11 +384,11 @@ Workplace situations involve different legal and practical considerations from i
 ### United Kingdom
 
 - **ACAS (Advisory, Conciliation and Arbitration Service)** — 0300 123 1100
-  - Monday–Friday 8am–6pm
-  - Workplace rights and dispute resolution
+ - Monday–Friday 8am–6pm
+ - Workplace rights and dispute resolution
 
 - **Equality Advisory and Support Service** — 0808 800 0082
-  - For discrimination, harassment, and equality rights
+ - For discrimination, harassment, and equality rights
 
 ### Canada
 
@@ -398,10 +398,10 @@ Workplace situations involve different legal and practical considerations from i
 ### Australia
 
 - **Fair Work Ombudsman** — 13 13 94
-  - Workplace rights, wages, and conditions
+ - Workplace rights, wages, and conditions
 
 - **Australian Human Rights Commission** — 1300 369 711
-  - Discrimination and harassment complaints
+ - Discrimination and harassment complaints
 
 ---
 
@@ -545,7 +545,7 @@ This is a directory, not a research document, and the primary sources are the re
 
 - Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. — the source for the Danger Assessment referenced in the Safety Assessment page.
 - Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. — the finding on attenuated gender protection in autistic samples (cited in Section 7, men-specific resources).
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. — referenced for the credibility discount that affects police and medical encounters.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. — referenced for the credibility discount that affects police and medical encounters.
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
 - Pearson, A., et al. (2022, 2024) — autistic victimization research, for the situational-vulnerability framing used throughout.
 
@@ -595,9 +595,9 @@ This is a directory, not a research document, and the primary sources are the re
 
 - **[Safety Assessment](manipulation-hub-safety-assessment.md)** — the framework for knowing when you need crisis resources vs. when you can use hub strategies.
 - **[Manipulation vs. Miscommunication Decision Framework](manipulation-hub-miscommunication-vs-manipulation.md)** — helps distinguish whether a situation needs advocacy intervention or can be addressed through communication.
-- **Reality-Check Networks (Tier 2, not yet built)** — the complement to professional resources, for everyday pattern-checking when you are not in crisis.
-- **Documentation (Tier 2, not yet built)** — often the first concrete action an advocate will recommend.
-- **Disclosure Decisions (Tier 2, not yet built)** — how to decide what to tell advocates, family, friends, and professionals.
+- **Reality-Check Networks (Tier 2)** — the complement to professional resources, for everyday pattern-checking when you are not in crisis.
+- **Documentation (Tier 2)** — often the first concrete action an advocate will recommend.
+- **Disclosure Decisions (Tier 2)** — how to decide what to tell advocates, family, friends, and professionals.
 
 ---
 

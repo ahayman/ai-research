@@ -19,7 +19,7 @@ This transforms the question. "Should I tell someone?" is not the right question
 
 For autistic readers specifically, disclosure decisions involve additional considerations beyond the general research base:
 
-1. **The credibility discount.** Lim & Magiati (2022, PMC8813809) found autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. Disclosure to a non-autism-informed audience starts at a disadvantage that has nothing to do with the content of what you are disclosing. This affects audience selection.
+1. **The credibility discount.** Lim, Young & Brewer (2022, PMC8813809) found autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. Disclosure to a non-autism-informed audience starts at a disadvantage that has nothing to do with the content of what you are disclosing. This affects audience selection.
 
 2. **Processing differences.** Under the cognitive load of disclosing difficult content, autistic pragmatic processing often becomes more effortful, not less. You may struggle more with nuance, tone, and framing precisely when those things matter most. Pre-planning is not optional; it is compensation for a real processing constraint.
 
@@ -355,7 +355,7 @@ Disclosure of difficult content can trigger overload, especially if the audience
 
 ### The credibility discount affects audience selection
 
-This is worth repeating because it runs through every disclosure decision. Lim & Magiati (2022) documented that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. This has specific implications:
+This is worth repeating because it runs through every disclosure decision. Lim, Young & Brewer (2022) documented that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. This has specific implications:
 
 - **Autistic-informed audiences weight your disclosure more accurately.** They are better first targets.
 - **Documentation amplifies your voice.** In audience contexts where the credibility discount applies, disclosure backed by written records is dramatically more effective than verbal disclosure alone.
@@ -465,7 +465,7 @@ This is a separate category that deserves specific attention. Disclosing to the 
 - "Barriers and Facilitators of Disclosing Domestic Violence to Healthcare Services" (2021). Systematic review. PMC8248429.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Coercive control and disclosure:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
@@ -514,12 +514,12 @@ This is a separate category that deserves specific attention. Disclosing to the 
 - **[Can This Be Repaired?](manipulation-hub-can-this-be-repaired.md)** — disclosure to the person causing harm is a specific version of this question.
 - **[Documentation](manipulation-hub-strategy-documentation.md)** — disclosure backed by documentation is dramatically more effective than verbal disclosure alone.
 - **[Reality-Check Networks](manipulation-hub-strategy-reality-check-networks.md)** — the first and safest disclosure audience for most purposes.
-- **Safety Planning (Tier 2, not yet built)** — disclosure is often a component of broader safety planning.
-- **Strategic Disengagement (Tier 2, not yet built)** — disclosure decisions affect and are affected by disengagement decisions.
-- **Finding Professional Support (Tier 2, not yet built)** — how to find the audiences this page discusses.
-- **Workplace context page (Tier 4, not yet built)** — specific disclosure considerations for workplace situations.
-- **Medical context page (Tier 4, not yet built)** — specific disclosure considerations for medical contexts.
-- **Legal context page (Tier 4, not yet built)** — specific disclosure considerations for legal proceedings.
+- **Safety Planning (Tier 2)** — disclosure is often a component of broader safety planning.
+- **Strategic Disengagement (Tier 2)** — disclosure decisions affect and are affected by disengagement decisions.
+- **Finding Professional Support (Tier 2)** — how to find the audiences this page discusses.
+- **Workplace context page** — specific disclosure considerations for workplace situations.
+- **Medical context page** — specific disclosure considerations for medical contexts.
+- **Legal context page** — specific disclosure considerations for legal proceedings.
 
 ---
 

@@ -43,7 +43,7 @@ Every pragmatic system covered in this hub creates a potential vulnerability whe
 
 Philosopher Miranda Fricker (2007) identified two forms of epistemic injustice that are directly relevant:
 
-**Testimonial injustice**: Your credibility is deflated because of who you are. Research confirms this happens to autistic people. Autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth (Lim & Magiati, 2022, PMC8813809). Your different eye contact, prosody, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. You are telling the truth and being read as lying.
+**Testimonial injustice**: Your credibility is deflated because of who you are. Research confirms this happens to autistic people. Autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth (Lim, Young & Brewer, 2022, PMC8813809). Your different eye contact, prosody, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. You are telling the truth and being read as lying.
 
 **Hermeneutical injustice**: The concepts and language needed to describe your experience don't exist in the mainstream, or are controlled by people who don't share your experience. When you try to explain sensory overload to a doctor who has no framework for it, or try to explain autistic burnout to an employer who thinks you're just "not trying hard enough," you face hermeneutical injustice.
 
@@ -997,7 +997,7 @@ This category draws on and connects to every other category in the hub:
 - Freyd, J.J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32.
 - Harsey, S.J., Zurbriggen, E.L., & Freyd, J.J. (2017). Perpetrator responses to victim confrontation: DARVO and victim self-blame. *Journal of Aggression, Maltreatment & Trauma*, 26(6), 644-663.
 - Harsey, S.J. & Freyd, J.J. (2023). The influence of deny, attack, reverse victim and offender and insincere apologies on perceptions of sexual assault. *Journal of Interpersonal Violence*.
-- Lim, A. & Magiati, I. (2022). [Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/). *Journal of Autism and Developmental Disorders*, 52, 490-507.
+- Lim, A., Young, R. L., & Brewer, N. (2022). [Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/). *Journal of Autism and Developmental Disorders*, 52, 490-507.
 - Douglas, S. & Sedgewick, F. (2024). [Experiences of interpersonal victimization and abuse among autistic people](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/). *Autism*, 28(6), 1464-1476.
 - Hull, L., et al. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
 - Cage, E. & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911.

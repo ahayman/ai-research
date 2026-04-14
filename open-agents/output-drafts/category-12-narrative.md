@@ -329,7 +329,7 @@ In these contexts, the autistic preference for detailed, precise, comprehensive 
 - Ochs, E. & Capps, L. (2001). *Living Narrative*. Harvard University Press.
 
 ### Autism and Narrative
-- Baixauli, I. et al. (2016). Meta-analysis of narrative in autism. *J Pragmatics*.
+- Baixauli, I., Colomer, C., Roselló, B., & Miranda, A. (2016). "Narratives of children with high-functioning autism spectrum disorder: A meta-analysis." *Research in Developmental Disabilities*, 59, 234-254.
 - Geelhand, P. et al. (2020). "Narrative Production in Autistic Adults." *J Pragmatics*, 164.
 - Harvey, M. et al. (2025). "Narrative Abilities of Autistic Adolescents." *Autism Research*.
 - Hilviu, D. et al. (2023). "CPT and Narrative Skills in ASD." *J Psycholinguistic Research*.

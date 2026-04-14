@@ -28,9 +28,9 @@ Sweet (2019), drawing on interviews with women in domestic violence shelters, de
 
 The key insight is that gaslighting is *power-laden*. It is not symmetrical. Two people in equal positions denying each other's accounts is a disagreement. One person, holding more credibility and more social backing, systematically rewriting another person's account, is gaslighting. The asymmetry is what makes the rewriting succeed.
 
-For the autism hub, the structural fact is that *neurotype functions analogously to gender* in this framework. The cultural script "autistic people misread social situations, miss sarcasm, take things too literally, get overwhelmed and misperceive, can't read intent" is a pre-loaded credibility discount. It does not need to be invoked explicitly. It is there in the audience's head before any conversation begins. (See Lim & Magiati, 2022, for the empirical demonstration that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*.)
+For the autism hub, the structural fact is that *neurotype functions analogously to gender* in this framework. The cultural script "autistic people misread social situations, miss sarcasm, take things too literally, get overwhelmed and misperceive, can't read intent" is a pre-loaded credibility discount. It does not need to be invoked explicitly. It is there in the audience's head before any conversation begins. (See Lim, Young & Brewer, 2022, for the empirical demonstration that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*.)
 
-**Evidence quality:** Sweet's framework is [VALIDATED] as a sociological model, with strong uptake (299+ citations as of 2023) and convergent qualitative support. The application to neurotype as a structural axis is [EXTRAPOLATED], but it is a strong extrapolation supported by Lim & Magiati's credibility discount findings and by the autistic community literature on diagnostic and pragmatic discrediting.
+**Evidence quality:** Sweet's framework is [VALIDATED] as a sociological model, with strong uptake (299+ citations as of 2023) and convergent qualitative support. The application to neurotype as a structural axis is [EXTRAPOLATED], but it is a strong extrapolation supported by Lim, Young & Brewer's credibility discount findings and by the autistic community literature on diagnostic and pragmatic discrediting.
 
 ### Abramson's philosophical refinement
 
@@ -193,7 +193,7 @@ If some of the gaslighting signals are present and some are absent, the responsi
 
 ### The pre-loaded credibility discount
 
-Lim & Magiati (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. This is not a hypothetical risk — it is an empirically demonstrated baseline against which any gaslighting account will be heard. Outside observers do not begin from neutrality. They begin from a position that already favors the perpetrator's version, and the autistic person has to overcome that gap before being believed.
+Lim, Young & Brewer (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. This is not a hypothetical risk — it is an empirically demonstrated baseline against which any gaslighting account will be heard. Outside observers do not begin from neutrality. They begin from a position that already favors the perpetrator's version, and the autistic person has to overcome that gap before being believed.
 
 The practical implication: the documentation, third-party witnesses, and external evidence covered in the strategy section are not optional polish. They are the things that close the gap between zero credibility and being heard at all. (See [Building External Evidence Beyond Documentation](manipulation-hub-strategy-external-evidence.md) for the broader strategy.)
 
@@ -291,7 +291,7 @@ Closely related to internal assertion: refuse, internally, the move from "I was 
 If the gaslighting is occurring inside an intimate partner relationship and any lethality indicators are present, [Safety Planning](manipulation-hub-strategy-safety-planning.md) is the higher-priority strategy and the strategies above should be sequenced under safety planning, not parallel to it. Specifically:
 
 - Strangulation history → contact a DV advocate before any other strategy. Strangulation is associated with an odds ratio of 7.48 for later attempted homicide (Glass et al., 2008). This is the single most important indicator.
-- Separation contemplation → 44% of femicide victims were in the process of separating (Campbell, 2003). Safety planning needs to be in place before separation begins.
+- Separation contemplation → 55.2% of femicide victims were estranged or in the process of separating (Campbell, 2003). Safety planning needs to be in place before separation begins.
 - Weapon access, escalating threats, isolation pressure → all elevate risk and all warrant advocate contact.
 
 The Safety Assessment page is the first filter; this is its main practical use.
@@ -312,7 +312,7 @@ The Safety Assessment page is the first filter; this is its main practical use.
 
 - **It cannot tell you, from the outside, whether what you are experiencing is gaslighting.** The pattern is identified over time, with multiple data points, often with outside input. A page cannot make that determination from a single visit.
 - **It cannot win the argument with the gaslighter.** Gaslighting is structured to be argument-proof. The strategies on this page protect *you* — they do not convert the perpetrator.
-- **It cannot guarantee that your reality-check network will believe you.** Lim & Magiati's credibility discount applies inside reality-check networks too. Choosing carefully and disclosing in graduated steps reduces this risk but cannot eliminate it.
+- **It cannot guarantee that your reality-check network will believe you.** Lim, Young & Brewer's credibility discount applies inside reality-check networks too. Choosing carefully and disclosing in graduated steps reduces this risk but cannot eliminate it.
 - **It cannot replace an advocate in safety-critical situations.** If the gaslighting is part of a coercive control pattern with lethality indicators, an advocate has training and information this page does not.
 - **It cannot reverse the long-term effects of childhood gaslighting on its own.** Sensory and diagnostic invalidation across a childhood is a developmental trauma that generally requires trauma-informed therapy to work through. Reading this page is not equivalent to that work.
 - **It cannot adjudicate cases where you are uncertain whether you are the gaslighter.** Some readers will worry, correctly or incorrectly, that they are the ones rewriting reality. This page is not built for that question. If you are seriously asking it, the most useful next step is a trauma-informed therapist with experience in autistic clients, not a self-diagnosis from a webpage.
@@ -329,7 +329,7 @@ The Safety Assessment page is the first filter; this is its main practical use.
 
 4. **The episodic memory mechanism is your specific structural vulnerability.** Documentation and pattern memory are the mechanical compensations. Use both.
 
-5. **Pre-loaded credibility discount is not a confidence problem.** Lim & Magiati (2022) demonstrates the empirical baseline. External evidence and reality-check networks exist to close the gap, not to make you more confident.
+5. **Pre-loaded credibility discount is not a confidence problem.** Lim, Young & Brewer (2022) demonstrates the empirical baseline. External evidence and reality-check networks exist to close the gap, not to make you more confident.
 
 6. **The strict definition matters.** Disagreement, defensiveness, and even ordinary lying are not gaslighting. The dilution of the term in popular use is an obstacle to recognizing the actual pattern. This page commits to the strict definition.
 
@@ -362,7 +362,7 @@ The Safety Assessment page is the first filter; this is its main practical use.
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Episodic memory differences in autism:**
 - Boucher, J., & Mayes, A. (2012). "Memory in autistic spectrum disorder." Reviewed in PMC6424931 ("Exploring the neurocognitive basis of episodic recollection in autism").
@@ -389,7 +389,7 @@ The Safety Assessment page is the first filter; this is its main practical use.
 
 **Lethality indicators:**
 - Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 44% separation finding.)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 55.2% estrangement finding.)
 
 **Couples therapy contraindication when coercive control is present:**
 - Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
@@ -410,12 +410,12 @@ The Safety Assessment page is the first filter; this is its main practical use.
 
 - **Common Ground (Category 16)** — gaslighting is fundamentally an attack on the shared common ground of a relationship. The perpetrator unilaterally rewrites what was understood to be mutually known, and the target loses the ability to rely on shared reference. Reading the common ground category gives the underlying pragmatic mechanism without having to read the entire curriculum first. [category-16-common-ground.md](category-16-common-ground.md)
 - **Presupposition (Category 9)** — gaslighting often operates by introducing false presuppositions ("when you said X you meant…") that smuggle a contested claim into the structure of a sentence as if it were already accepted. Recognizing presupposition manipulation is one of the most useful direct defenses. [category-09-presupposition.md](category-09-presupposition.md)
-- **Implicature (Category 10)** — what is *implied* but not said is where much gaslighting lives. "I'm just worried about you" implicates incompetence; "are you sure that happened?" implicates unreliability. The implicature category gives the technical machinery for naming what the surface text is doing. [category-10-implicature.md](category-10-implicature.md)
-- **Speech Acts (Category 11)** — denying, claiming, asserting, accusing — gaslighting is composed of specific speech acts and recognizing them as acts (rather than as descriptions of reality) is part of the cognitive defense. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Politeness (Category 6)** — much gaslighting is wrapped in politeness scaffolding so that the target has to "be rude" to refuse it. Understanding politeness theory makes the wrapper visible. [category-06-politeness.md](category-06-politeness.md)
+- **Implicature (Category 2)** — what is *implied* but not said is where much gaslighting lives. "I'm just worried about you" implicates incompetence; "are you sure that happened?" implicates unreliability. The implicature category gives the technical machinery for naming what the surface text is doing. [category-02-implicature.md](category-02-implicature.md)
+- **Speech Acts (Category 1)** — denying, claiming, asserting, accusing — gaslighting is composed of specific speech acts and recognizing them as acts (rather than as descriptions of reality) is part of the cognitive defense. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Politeness (Category 3)** — much gaslighting is wrapped in politeness scaffolding so that the target has to "be rude" to refuse it. Understanding politeness theory makes the wrapper visible. [category-03-politeness.md](category-03-politeness.md)
 - **Register (Category 7)** — the institutional version of gaslighting often relies on register asymmetry: clinical, legal, or administrative language overriding the autistic person's account in plainer language. [category-07-register.md](category-07-register.md)
 - **Deixis (Category 8)** — memory gaslighting attacks the deictic anchors (when, where, who) that make events reconstructable. Documentation preserves deictic content. [category-08-deixis.md](category-08-deixis.md)
-- **Cooperative Principle / Grice (Category 12)** — gaslighting is a systematic violation of the cooperative principle that the target is being asked to honor unilaterally. Naming the asymmetry in cooperative effort is one of the more clarifying moves. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Implicature / Cooperative Principle (Category 2)** — gaslighting is a systematic violation of the cooperative principle that the target is being asked to honor unilaterally. Naming the asymmetry in cooperative effort is one of the more clarifying moves. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 
@@ -438,14 +438,14 @@ The Safety Assessment page is the first filter; this is its main practical use.
 - [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) — the longer arc.
 - [Building External Evidence Beyond Documentation](manipulation-hub-strategy-external-evidence.md) — for closing the credibility gap.
 
-**Other patterns (Tier 3, mostly not yet built):**
+**Other patterns (Tier 3):**
 - DARVO (next page in build order) — gaslighting and DARVO frequently co-occur as a sequence: deny → accuse → reverse roles. The two pages will cross-reference.
 - Memory Gaslighting — the specific form most directly addressed by documentation.
 - Sensory Gaslighting — the foundational childhood form.
 - Diagnostic Weaponization — "that's your autism talking" treated in depth.
 - Bandwagon Isolation — the "everyone agrees with me" move treated in depth.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where gaslighting is most lethal.
 - Family of Origin — where gaslighting is most often installed in childhood.
 - Medical Settings — where institutional gaslighting is most common.

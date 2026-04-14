@@ -338,7 +338,7 @@ Research shows questions can trigger anxiety in autistic individuals because of:
 - Stivers, T. & Enfield, N.J. (2010). "A Coding Scheme for Question-Response Sequences in Conversation." *J Pragmatics*.
 
 ### Autism Research
-- Loukusa, S. et al. (2007). "Answering Contextually Demanding Questions in Autism." *J Autism Dev Disord*. PubMed: 17126362.
+- Loukusa, S. et al. (2007). "Use of context in pragmatic language comprehension by children with Asperger syndrome or high-functioning autism." *Journal of Communication Disorders*, 40(5), 357-381. PubMed: 17126362.
 - Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." PMC5843023.
 - Koegel, L.K. et al. (2021). "Question Bank Intervention for Autism."
 - Maras, K. et al. (2021). "Adapted Interview Questions for Autistic Adults."

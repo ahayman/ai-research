@@ -190,7 +190,7 @@ In neutral English sentences, the main stress falls on the **last content word**
 
 **The grammatical vs. pragmatic split**: Autistic speakers show less difficulty with grammatical prosody (question intonation, lexical stress) than with pragmatic prosody (contrastive focus, emphasis, attitude signaling). The meaning-selection function of stress is specifically where the challenge lies.
 
-**The pitch paradox** (Chien et al., 2022): Autistic adults show HYPER-sensitivity to simple pitch changes but HYPO-sensitivity to prosodic MEANING. They can hear the pitch difference but don't assign it pragmatic significance.
+**The pitch paradox** (Haigh et al., 2022): Autistic adults show HYPER-sensitivity to simple pitch changes but HYPO-sensitivity to prosodic MEANING. They can hear the pitch difference but don't assign it pragmatic significance.
 
 ### 8.2 Why This System Is Learnable
 
@@ -291,5 +291,5 @@ When you hear a stressed word, think of it as the variable in an equation. The r
 - Su, P.L. et al. (2025). "Perception and Interpretation of Contrastive Pitch Accent in Autistic Children." *Languages* (MDPI).
 - Jiang, J. & Wang, Y. (2025). "Prosodic Focus Effects on 'Only' Reading in Autistic Children."
 - Grice, M. et al. (2023). "Linguistic Prosody in ASD." *Language and Linguistics Compass*.
-- Chien, Y.-L. et al. (2022). "Pitch Sensitivity and Prosodic Meaning in Autism." ERP study.
+- Haigh, S. M. et al. (2022). "Hyper-Sensitivity to Pitch and Poorer Prosody Processing in Adults With Autism: An Electrophysiology Study." *Frontiers in Psychiatry*, 13, 844830. PMC9174755.
 - Segal, O. et al. (2017). "Narrow Focus Comprehension in Adolescents with ASD." *Folia Phoniatrica et Logopaedica*.

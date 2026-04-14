@@ -1,4 +1,4 @@
-# Category 21: Social Hierarchy and Power Pragmatics — Theoretical Foundations and Comprehensive Research
+# Category 22: Social Hierarchy and Power Pragmatics — Theoretical Foundations and Comprehensive Research
 
 ## Research Document — How Hierarchy Is Encoded In, Signaled Through, and Created By Language
 

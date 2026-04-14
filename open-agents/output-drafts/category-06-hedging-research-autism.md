@@ -11,21 +11,20 @@ Research synthesis for a knowledge base teaching English pragmatics to autistic 
 
 Multiple lines of evidence converge on the finding that autistic individuals produce fewer hedging devices in their speech compared to non-autistic peers. However, as with discourse markers (Category 5), this finding is not uniform across all hedge types and the underlying reasons are more complex than a simple deficit account suggests.
 
-**The Tilburg University Study (Butterbrod):**
-Tim Butterbrod's thesis at Tilburg University, "The Effect of Autistic Traits on the Use of Politeness Strategies," provides what is arguably the most direct evidence on hedging and autistic traits. The study measured multiple politeness strategy variables including: attend interest, intensify interest, group identity markers, indirect speech, avoiding disagreement, use of downtoners and hedges, use of imposition minimizers, offer and promise, inclusion of speaker and hearer, giving gifts, use of negation, impersonalization, and use of expressions of commitment, obligation, possibility, and permission.
+**The Tilburg University Study (Butterbrod) — [PRELIMINARY, methodological caveat]:**
+Tim Butterbrod's Bachelor's thesis at Tilburg University, "The Effect of Autistic Traits on the Use of Politeness Strategies," is often cited for the finding that higher autistic-trait scores predict lower use of negative politeness markers. A methodological caveat is essential: the study used typically-developing university students scoring on the Autism-Spectrum Quotient (Baron-Cohen et al. 2001), not clinically diagnosed autistic participants, and the data came from fictive elicited scenarios rather than natural interaction. The finding should therefore be read as a preliminary signal about autistic-trait variation in a non-clinical population, not as a finding about clinical autism.
 
-The critical finding: individuals with ASD used "significantly lower overall politeness markers compared to non-autistic individuals, with differences primarily driven by lower use of negative politeness markers." This is a highly specific result. The deficit is not across all politeness -- it is concentrated in *negative* politeness strategies: the hedges, softeners, downtoners, indirect forms, and imposition-minimizers that Brown & Levinson (1987) categorize as tools for respecting the hearer's autonomy and freedom from imposition.
+With that caveat in place, the reported pattern: participants higher on autistic traits produced "significantly lower overall politeness markers compared to individuals lower on autistic traits, with differences primarily driven by lower use of negative politeness markers." If this signal replicates in clinical samples and natural interaction, it would suggest that the deficit is not across all politeness but concentrated in *negative* politeness strategies — the hedges, softeners, downtoners, indirect forms, and imposition-minimizers that Brown & Levinson (1987) categorize as tools for respecting the hearer's autonomy and freedom from imposition. Positive politeness markers (warmth, solidarity, in-group markers) were less affected.
 
-Positive politeness markers (warmth, solidarity, in-group markers) were less affected. This means autistic speakers may be perfectly warm and friendly while still producing speech that sounds "blunt" or "aggressive" to neurotypical ears, because the specific softening devices that signal deference and tentativeness are reduced.
-- Source: Butterbrod, Tilburg University (arno.uvt.nl/show.cgi?fid=133361)
+- Source: Butterbrod, Tilburg University Bachelor's thesis (arno.uvt.nl/show.cgi?fid=133361). Evidence level: [PRELIMINARY], non-clinical sample, elicited task.
 
-**The Voicemail Elicitation Task Study:**
-A study in the Journal of the International Neuropsychological Society compared young adults with ASD (n=22) and neurotypical controls (n=10) using employment-specific role-play scenarios. Results showed that "individuals with ASD show deficits in politeness marker use which could impact their interpersonal relationships within the workplace environment." The politeness markers measured included "non-tangible hedging words such as 'would,' 'could,' 'may,' or 'might'" -- modal verbs that serve a purely social rather than informational function in these contexts.
-- Source: Cambridge Core, Journal of the International Neuropsychological Society
+**The Voicemail Elicitation Task Study — [CITATION UNCERTAIN]:**
+A small study (ASD n=22, controls n=10) published in the *Journal of the International Neuropsychological Society* reportedly found that autistic young adults produced fewer social-modal hedges ("would," "could," "may," "might") in employment voicemail role-play scenarios than neurotypical controls, with the difference concentrated in modals that serve a social rather than informational function. **The full bibliographic details for this study could not be verified during Stage 3 Research Validation** and should be re-located or removed before this section is published. If the direction of the finding holds, it supports the same pattern documented elsewhere: autistic speakers show reduced social-politeness hedging in task-specific workplace contexts.
+- Source: *Journal of the International Neuropsychological Society* (full citation pending verification).
 
-**Computational Pragmatic Analysis (Lake et al., ACL 2021):**
+**Computational Pragmatic Analysis (Lake, Bhullar & Bhattacharyya, 2022):**
 A computational linguistics study collected transcribed natural conversations where ASD and non-ASD participants completed collaborative tasks with neurotypical peers, investigating three pragmatic features: politeness, uncertainty, and informativeness. Neural models trained with BERT embeddings could predict these pragmatic features with F1 scores exceeding 0.82, confirming that measurable, systematic differences exist in how autistic adults deploy hedging and uncertainty markers in conversation.
-- Source: PMC (pmc.ncbi.nlm.nih.gov/articles/PMC9633181/)
+- Source: Lake, Bhullar & Bhattacharyya (2022), PMC9633181.
 
 **The Tikiz-Erturk (2025) Case Study:**
 This qualitative study of a 15-year-old ASD language learner found that despite "persistent challenges in comprehending abstract concepts, conversational implicature, and social role recognition," the participant "employed several adaptive strategies, including politeness strategies, off-record communication, and explicit verbal markers." Over time, the participant showed progress in using both direct and indirect politeness techniques, though gains were "context-dependent and most evident in structured interactions." This suggests hedging and politeness strategies are learnable for autistic individuals, especially in structured or scaffolded environments.
@@ -119,7 +118,7 @@ For many autistic speakers, this is not a subtle or academic point. The experien
 - Source: Relational Psych (relationalpsych.group); Embrace Autism (embrace-autism.com)
 
 **Connection to Intolerance of Uncertainty (IU):**
-Research on autism and IU adds nuance. The PMC registered report (Bohn et al., 2022) investigating preference for certainty in autistic adults found that IU was correlated with pragmatic processing difficulty, supporting the idea that "discomfort with uncertainty plays a role in pragmatic language and communication challenges in autism." However, the study found that both accuracy and confidence were reduced on pragmatic inference tasks -- not confidence alone. Autistic adults did not show a selective *preference* for certainty so much as general difficulty with the entire implied-meaning system.
+Research on autism and IU adds nuance. Wilson & Bishop's (2022) Stage 2 registered report in *PeerJ* investigating preference for certainty in autistic adults found that IU was correlated with pragmatic processing difficulty, supporting the idea that "discomfort with uncertainty plays a role in pragmatic language and communication challenges in autism." However, the study found that both accuracy and confidence were reduced on pragmatic inference tasks -- not confidence alone. Autistic adults did not show a selective *preference* for certainty so much as general difficulty with the entire implied-meaning system.
 
 Additionally, research on IU and dichotomic (black-and-white) thinking in autism suggests that "to circumvent the discomfort of uncertainty, autistic individuals may tend to attribute a binary outcome to uncertain states of truth." This cognitive style is incompatible with the gradient nature of hedging, which operates on a continuum from full assertion to full doubt.
 - Sources: PMC (pmc.ncbi.nlm.nih.gov/articles/PMC8919847/); Nature Scientific Reports (nature.com/articles/s41598-023-41164-8)
@@ -526,10 +525,11 @@ A neurodiversity-affirming approach recognizes that some hedging expectations ar
 ## Sources
 
 ### Primary Research Studies
-- Butterbrod, T. "The Effect of Autistic Traits on the Use of Politeness Strategies." Tilburg University thesis. (arno.uvt.nl/show.cgi?fid=133361)
-- Lake, J.K., Humphreys, K.R., & Cardy, S. (2011). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." PMC (pmc.ncbi.nlm.nih.gov/articles/PMC7536647/)
+- Butterbrod, T. "The Effect of Autistic Traits on the Use of Politeness Strategies." Tilburg University Bachelor's thesis. (arno.uvt.nl/show.cgi?fid=133361). **Note: non-clinical sample scoring on autistic-traits scale; findings preliminary pending clinical replication.**
+- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *J Autism Dev Disord* 46(3):1061-1070. PMC7536647.
 - Gorman, K. et al. (2016). "Uh and Um in Children With Autism Spectrum Disorders or Language Impairment."
-- Bohn, M. et al. (2022). "Stage 2 registered report: investigating a preference for certainty in conversation among autistic adults." PMC (pmc.ncbi.nlm.nih.gov/articles/PMC8919847/)
+- Wilson, B. E., & Bishop, D. V. M. (2022). "A novel online assessment of pragmatic and core language skills: An attempt to tease apart language development and its impairment." *PeerJ* 10:e13110. PMC8919847.
+- Lake, J.K., Bhullar, S., & Bhattacharyya, O. (2022). "Predicting pragmatic discourse features in the language of adults with autism spectrum disorder." PMC9633181.
 - Sirota, K.G. (2004). "Positive politeness as discourse process." Discourse Studies, 6(2), 229-251. (journals.sagepub.com/doi/10.1177/1461445604041769)
 - Tikiz-Erturk (2025). "Rethinking Social Language Learning and Politeness in Autism." International Journal of Applied Linguistics. (onlinelibrary.wiley.com/doi/10.1111/ijal.12783)
 - Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer Is Highly Effective."

@@ -296,7 +296,7 @@ The practical implication: **"just communicate better" is not viable advice for 
 
 ### The credibility discount, applied to packaging
 
-Lim & Magiati (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than non-autistic adults even when telling the truth. The study and the surrounding literature suggest that communication features associated with autism (gaze aversion, different affect, literal phrasing, less hedging) contribute to this perception, even though they are not reliable indicators of deception.
+Lim, Young & Brewer (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than non-autistic adults even when telling the truth. The study and the surrounding literature suggest that communication features associated with autism (gaze aversion, different affect, literal phrasing, less hedging) contribute to this perception, even though they are not reliable indicators of deception.
 
 The implication for packaging invalidation: **even careful packaging adjustments will often still be perceived as miscalibrated by listeners whose baseline expectation is shaped by the credibility discount.** The speaker is adjusting toward a target that has already been moved by pre-loaded interpretation patterns. This is not a reason to stop adjusting when adjustments are strategic — it is a reason to stop *blaming yourself* when the adjustments do not achieve the perception you were aiming for. The gap is not your delivery failing; the gap is a structural feature of how autistic communication is perceived by listeners operating under the credibility discount.
 
@@ -337,7 +337,7 @@ The first and most foundational strategy is cognitive: **maintain the internal d
 
 This internal distinction is the scaffolding the whole strategy page depends on. Once you are clear internally that *the refusal counted, the concern was raised, the report was filed*, the packaging-invalidating listener's move loses its core leverage. You cannot be gaslit into believing the speech act did not occur if you have already separated the speech act from the wrapper in your own head.
 
-Speech Acts (Category 11) is the most important pragmatics cross-link for this move. Reading the speech act category clarifies the distinction between the act itself and the packaging around it and gives you the technical vocabulary to hold the distinction.
+Speech Acts (Category 1) is the most important pragmatics cross-link for this move. Reading the speech act category clarifies the distinction between the act itself and the packaging around it and gives you the technical vocabulary to hold the distinction.
 
 **Apply when:** you have any capacity for internal reframing. Apply always, as the baseline posture.
 
@@ -479,7 +479,7 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 
 6. **Masking cost is the hidden levy.** Every packaging adjustment is paid for in cognitive resources that are then unavailable for the substance itself. "Just communicate better" is structurally bad advice because the cost of the adjustment is paid by the adjuster, and the cost can functionally end the speaker's capacity to hold the substance in mind.
 
-7. **The credibility discount pre-loads packaging perception.** Lim & Magiati (2022) demonstrates that autistic communication is perceived as more deceptive and less credible even when telling the truth. Packaging adjustments aimed at "being perceived as careful" are often undermined by listener expectations that were already calibrated against the speaker.
+7. **The credibility discount pre-loads packaging perception.** Lim, Young & Brewer (2022) demonstrates that autistic communication is perceived as more deceptive and less credible even when telling the truth. Packaging adjustments aimed at "being perceived as careful" are often undermined by listener expectations that were already calibrated against the speaker.
 
 8. **The institutional version is particularly damaging and particularly actionable.** HR processes, medical complaints, legal proceedings, and accommodation requests often weaponize formal packaging requirements against autistic complainants. These are also the contexts where documentation, external evidence, and third-party advocacy make the largest material difference.
 
@@ -505,7 +505,7 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding work on the perception of autistic mock-suspects and witnesses.
 
 **Masking and camouflaging cost:**
@@ -547,15 +547,15 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 
 ### Pragmatics categories referenced on this page
 
-- **Speech Acts (Category 11)** — the fundamental distinction between the speech act you are performing and the wrapper you are performing it with is the cognitive scaffold of this whole page. **This is the most important pragmatics cross-link for pragmatic packaging invalidation.** [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework is the underlying mechanism. The politeness category gives the technical machinery for understanding why different calibrations are all valid settings on a scale with many valid settings. [category-06-politeness.md](category-06-politeness.md)
+- **Speech Acts (Category 1)** — the fundamental distinction between the speech act you are performing and the wrapper you are performing it with is the cognitive scaffold of this whole page. **This is the most important pragmatics cross-link for pragmatic packaging invalidation.** [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework is the underlying mechanism. The politeness category gives the technical machinery for understanding why different calibrations are all valid settings on a scale with many valid settings. [category-03-politeness.md](category-03-politeness.md)
 - **Register (Category 7)** — register invalidation is one of the most common forms of this pattern. Understanding register as a contextual variable rather than a moral test gives a way out of the register-critique frame. [category-07-register.md](category-07-register.md)
-- **Hedging (Category 13)** — autistic communication is generally less hedged than allistic norms expect, and the hedging critiques go in both directions. The hedging category gives technical vocabulary for the calibration. [category-13-hedging.md](category-13-hedging.md)
-- **Implicature (Category 10)** — much packaging invalidation operates through what is implicated rather than said. "I can't engage with you while you're phrasing it like that" implicates that the phrasing is the legitimate barrier. [category-10-implicature.md](category-10-implicature.md)
-- **Cooperative Principle / Grice (Category 12)** — packaging-invalidating listeners invert the cooperative principle by refusing to interpret charitably. Understanding the cooperative principle makes the non-cooperation visible. [category-12-grice.md](category-12-grice.md)
-- **Frames and Framing (Category 17)** — framing invalidation is one specific form of this pattern, and the frames category gives the vocabulary for recognizing frame attacks. [category-17-frames.md](category-17-frames.md)
-- **Prosody and Paralanguage (Category 4)** — prosodic invalidation depends on prosody being treated as voluntary. The prosody category clarifies which features are under voluntary control and which are not. [category-04-prosody.md](category-04-prosody.md)
-- **Cross-cultural Pragmatics (Category 22)** — the calibration mismatch between autistic and allistic communication is structurally similar to mismatches between communication conventions across cultures, and the cross-cultural framing gives a useful analogy for bidirectionality. [category-22-cross-cultural.md](category-22-cross-cultural.md)
+- **Hedging (Category 6)** — autistic communication is generally less hedged than allistic norms expect, and the hedging critiques go in both directions. The hedging category gives technical vocabulary for the calibration. [category-06-hedging.md](category-06-hedging.md)
+- **Implicature (Category 2)** — much packaging invalidation operates through what is implicated rather than said. "I can't engage with you while you're phrasing it like that" implicates that the phrasing is the legitimate barrier. [category-02-implicature.md](category-02-implicature.md)
+- **Implicature / Cooperative Principle (Category 2)** — packaging-invalidating listeners invert the cooperative principle by refusing to interpret charitably. Understanding the cooperative principle makes the non-cooperation visible. [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — framing invalidation is one specific form of this pattern, and the frames category gives the vocabulary for recognizing frame attacks. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Prosodic Pragmatics (Category 15)** — prosodic invalidation depends on prosody being treated as voluntary. The prosody category clarifies which features are under voluntary control and which are not. [category-15-prosodic-pragmatics.md](category-15-prosodic-pragmatics.md)
+- **Social Hierarchy and Cross-cultural Pragmatics (Category 22)** — the calibration mismatch between autistic and allistic communication is structurally similar to mismatches between communication conventions across cultures, and the cross-cultural framing gives a useful analogy for bidirectionality. [category-22-social-hierarchy.md](category-22-social-hierarchy.md)
 
 ### Other hub pages referenced on this page
 
@@ -591,7 +591,7 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 - Concern Trolling (forthcoming) — a specific form where the packaging critique is framed as being "for your own good."
 - Emotional Invalidation Double Bind (forthcoming) — treats the flat-affect double bind in depth; closely related to the affect/prosody subset of packaging invalidation.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Workplace — where institutional packaging requirements have the most direct material consequences (performance reviews, HR complaints, terminations, accommodations).
 - Family of Origin — where the childhood pipeline that trains autistic refusals into deniability is installed.
 - Educational Settings — both the K-12 origin of the pipeline and the higher-ed continuation, including IEP and accommodation processes.

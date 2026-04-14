@@ -531,7 +531,7 @@ If a therapist or recovery framework pushes you to become more neurotypical as a
 - **[Refusal, Limit-Setting, and the "Boundaries" Problem](manipulation-hub-strategy-refusal-limits-boundaries.md)** — rebuilding the capacity to refuse is part of the autism-specific compliance recovery.
 - **[De-escalation](manipulation-hub-strategy-de-escalation.md)** — recovery work sometimes involves managing activation during processing.
 - **[Finding Professional Support](manipulation-hub-strategy-professional-support.md)** — the primary resource for serious trauma recovery.
-- **Intimate Partner Relationships context page (Tier 4, not yet built)** — post-IPV recovery has specific considerations.
+- **Intimate Partner Relationships context page** — post-IPV recovery has specific considerations.
 
 ---
 

@@ -57,7 +57,7 @@ Power in a relationship comes from several sources, each of which can tilt towar
 
 **6. Control over alternatives.** If the relationship or situation ended, who has more options? (A partner with savings, marketable skills, supportive family, and housing alternatives has alternatives. A partner who gave up career for caregiving, is socially isolated by the relationship, and has no independent resources does not.)
 
-**7. Credibility / testimonial weight.** In any dispute involving testimony — with professionals, authorities, family — whose account will be believed? This is where the autistic credibility discount applies directly. (Lim & Magiati, 2022, PMC8813809 — autistic adults are perceived as more deceptive and less credible *when telling the truth*.)
+**7. Credibility / testimonial weight.** In any dispute involving testimony — with professionals, authorities, family — whose account will be believed? This is where the autistic credibility discount applies directly. (Lim, Young & Brewer, 2022, PMC8813809 — autistic adults are perceived as more deceptive and less credible *when telling the truth*.)
 
 **8. Ability to harm without consequence.** Can one of you hurt the other (emotionally, financially, professionally, reputationally, physically) without facing meaningful consequences? This is often asymmetric in ways that are invisible until tested.
 
@@ -159,7 +159,7 @@ Several things work differently for autistic readers when assessing power and re
 
 ### Credibility is almost always tilted against you
 
-Lim & Magiati (2022) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. This is a structural finding, not something you can fix by being more confident or communicating more clearly. In any dispute where testimony matters — workplace grievance, medical disagreement, legal proceeding, family argument in front of relatives — you start with a credibility discount.
+Lim, Young & Brewer (2022) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. This is a structural finding, not something you can fix by being more confident or communicating more clearly. In any dispute where testimony matters — workplace grievance, medical disagreement, legal proceeding, family argument in front of relatives — you start with a credibility discount.
 
 **Practical implication:** Assume the credibility dimension is tilted against you unless you have specific evidence that a particular audience gives you equal weight. This affects strategy selection: strategies that rely on "making your case" without written evidence will tend to underperform; strategies that rely on documentation and pattern evidence will tend to outperform.
 
@@ -304,7 +304,7 @@ Sometimes the situation is confusing enough that you cannot confidently run the 
 - Griffiths, S., et al. (2019). "The Vulnerability Experiences Quotient (VEQ)." *Autism Research.* (Financial exploitation and employment difficulties as partially mediating the autistic–non-autistic mental health gap.)
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Masking costs:**
 - Hull, L., et al. (2017). "'Putting on My Best Normal': Social Camouflaging in Adults with ASD." *Journal of Autism and Developmental Disorders.* PMC5509825.
@@ -333,11 +333,11 @@ Sometimes the situation is confusing enough that you cannot confidently run the 
 - **[Safety Assessment](manipulation-hub-safety-assessment.md)** — precedes this page. Lethality indicators override the power analysis.
 - **[Manipulation vs. Miscommunication Decision Framework](manipulation-hub-miscommunication-vs-manipulation.md)** — the category decision that precedes strategy selection.
 - **[Crisis Resources Directory](manipulation-hub-crisis-resources.md)** — the external resources that supplement your personal resources.
-- **Can This Be Repaired? (Tier 1, not yet built)** — the engage/exit decision that follows from the power and resource analysis.
-- **Documentation (Tier 2, not yet built)** — the primary strategy when power is unfavorable but resources include the capacity to keep records.
-- **Reality-Check Networks (Tier 2, not yet built)** — the specific strategy for building social resources that function as reality anchors.
-- **Disclosure Decisions (Tier 2, not yet built)** — decisions about who to tell depend on the credibility dimension of power.
-- **Strategic Disengagement (Tier 2, not yet built)** — the primary strategy when engagement is not viable.
+- **Can This Be Repaired? (Tier 1)** — the engage/exit decision that follows from the power and resource analysis.
+- **Documentation (Tier 2)** — the primary strategy when power is unfavorable but resources include the capacity to keep records.
+- **Reality-Check Networks (Tier 2)** — the specific strategy for building social resources that function as reality anchors.
+- **Disclosure Decisions (Tier 2)** — decisions about who to tell depend on the credibility dimension of power.
+- **Strategic Disengagement (Tier 2)** — the primary strategy when engagement is not viable.
 
 ---
 

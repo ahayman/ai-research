@@ -162,7 +162,7 @@ Pearson et al. (2022, *Autism*) conducted extensive qualitative research with au
 
 - Lifetime of being told your natural responses are wrong (compliance training)
 - The double empathy problem genuinely being a thing (so "maybe I misunderstood" is plausible every time)
-- The credibility discount (Lim & Magiati, 2022, PMC8813809) meaning others also tell you you misunderstood
+- The credibility discount (Lim, Young & Brewer, 2022, PMC8813809) meaning others also tell you you misunderstood
 - Alexithymia making it hard to argue about your own internal states
 - Episodic memory differences making it hard to anchor events in time
 
@@ -194,7 +194,7 @@ Rozenkrantz et al. (2021, *Trends in Cognitive Sciences*) found that autistic in
 
 ### The credibility discount affects your calibration inputs
 
-Lim & Magiati (2022) found autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. This has a consequence that is easy to miss: if you calibrate your sense of whether you're "overreacting" by watching how others react to your descriptions of what happened, you are calibrating to a biased instrument. Other people's skepticism of your account is partly a fact about their calibration, not about your accuracy.
+Lim, Young & Brewer (2022) found autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth*. This has a consequence that is easy to miss: if you calibrate your sense of whether you're "overreacting" by watching how others react to your descriptions of what happened, you are calibrating to a biased instrument. Other people's skepticism of your account is partly a fact about their calibration, not about your accuracy.
 
 **Practical implication:** When deciding whether to take a pattern seriously, do not weight others' reactions to your account as evidence that your account is wrong. Their reaction is evidence about their calibration. Your account is evidence about what happened. These are different inputs and they should not cancel each other out.
 
@@ -305,7 +305,7 @@ The decision framework points toward different strategies depending on which cat
 - Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. (Weaponized features framework.)
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Detection mechanisms in autism:**
 - Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.* (Specifically undermines theory-of-mind mediation account.)
@@ -338,12 +338,12 @@ The decision framework points toward different strategies depending on which cat
 ### Other hub pages referenced on this page
 
 - **[Safety Assessment](manipulation-hub-safety-assessment.md)** — Read before this page. If lethality indicators are present, do not apply this page's framework; contact advocacy.
-- **Can This Be Repaired? (Tier 1, not yet built)** — The engage/exit decision that comes after you've identified the category.
-- **Documentation (Tier 2, not yet built)** — The strategy for building pattern evidence when you cannot yet tell which category you're in.
-- **Reality-Check Networks (Tier 2, not yet built)** — The compensation for the credibility discount and the source of external validation for your pattern observations.
-- **Gaslighting (Tier 3, not yet built)** — The pattern that most depends on this page's framework for correct identification.
-- **DARVO (Tier 3, not yet built)** — A compound manipulation pattern. The rotating explanations characteristic of DARVO is specifically what the Three-Conversation Test detects.
-- **Tone Policing (Tier 3, not yet built)** — The pattern most likely to be confused with legitimate feedback about communication style; the decision framework is essential.
+- **Can This Be Repaired? (Tier 1)** — The engage/exit decision that comes after you've identified the category.
+- **Documentation (Tier 2)** — The strategy for building pattern evidence when you cannot yet tell which category you're in.
+- **Reality-Check Networks (Tier 2)** — The compensation for the credibility discount and the source of external validation for your pattern observations.
+- **Gaslighting (Tier 3)** — The pattern that most depends on this page's framework for correct identification.
+- **DARVO (Tier 3)** — A compound manipulation pattern. The rotating explanations characteristic of DARVO is specifically what the Three-Conversation Test detects.
+- **Tone Policing (Tier 3)** — The pattern most likely to be confused with legitimate feedback about communication style; the decision framework is essential.
 
 ---
 

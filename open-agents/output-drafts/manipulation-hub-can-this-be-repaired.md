@@ -125,7 +125,7 @@ Each of these is a legitimate form of exit. The right choice depends on your pow
 
 ### The separation paradox, revisited
 
-From the [Safety Assessment page](manipulation-hub-safety-assessment.md): **leaving is the highest-risk period in intimate partner violence situations. 44% of women murdered by an intimate partner had separated or were in the process of leaving** (Campbell et al., 2003).
+From the [Safety Assessment page](manipulation-hub-safety-assessment.md): **leaving is the highest-risk period in intimate partner violence situations. 55.2% of women murdered by an intimate partner had separated or were in the process of leaving** (Campbell et al., 2003).
 
 This finding applies specifically to IPV contexts with lethality indicators — but the broader principle matters more widely: **visible exit can trigger escalation in any situation where the other person is invested in maintaining control.** A manipulator who loses access to their target may retaliate more aggressively than they ever did while the target was present. A toxic employer may provide a bad reference or sabotage your reputation. A controlling family member may mobilize other family members against you.
 
@@ -329,7 +329,7 @@ The engage/exit decision leads to different strategic postures. These are not ri
 - Pearson, A., et al. (2024). "'It's not a physical prison but you can't get out.'" *Autism in Adulthood.*
 - Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745.
 - Griffiths, S., et al. (2019). "The Vulnerability Experiences Quotient (VEQ)." *Autism Research.*
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.*
 - Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.*
 
@@ -358,12 +358,12 @@ The engage/exit decision leads to different strategic postures. These are not ri
 - **[Manipulation vs. Miscommunication Decision Framework](manipulation-hub-miscommunication-vs-manipulation.md)** — the category decision that determines how repairability should be assessed.
 - **[Power Differential and Resource Analysis](manipulation-hub-power-differential.md)** — the terrain analysis that determines what form of exit is viable.
 - **[Crisis Resources Directory](manipulation-hub-crisis-resources.md)** — where to go when exit planning requires professional support.
-- **Documentation (Tier 2, not yet built)** — the primary preparation-stage activity when exit becomes the direction.
-- **Reality-Check Networks (Tier 2, not yet built)** — the social resource that supports contemplation-stage and preparation-stage work.
-- **Safety Planning (Tier 2, not yet built)** — the specific preparation for action-stage exit when lethality considerations apply.
-- **Strategic Disengagement (Tier 2, not yet built)** — the form of exit most commonly appropriate when full exit is not viable.
-- **Professional Support: Advocates, Therapists, Legal Help (Tier 2, not yet built)** — where to find the external support each stage requires.
-- **Recovery and Post-Traumatic Growth (Tier 2, not yet built)** — the maintenance-stage work that becomes possible after exit.
+- **Documentation (Tier 2)** — the primary preparation-stage activity when exit becomes the direction.
+- **Reality-Check Networks (Tier 2)** — the social resource that supports contemplation-stage and preparation-stage work.
+- **Safety Planning (Tier 2)** — the specific preparation for action-stage exit when lethality considerations apply.
+- **Strategic Disengagement (Tier 2)** — the form of exit most commonly appropriate when full exit is not viable.
+- **Professional Support: Advocates, Therapists, Legal Help (Tier 2)** — where to find the external support each stage requires.
+- **Recovery and Post-Traumatic Growth (Tier 2)** — the maintenance-stage work that becomes possible after exit.
 
 ---
 

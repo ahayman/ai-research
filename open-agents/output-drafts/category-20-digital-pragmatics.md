@@ -224,7 +224,7 @@ This is real and consequential. The same emoji sent between generations can be r
 | **Written record** | Can re-read messages, reducing working memory load |
 | **Interest-based communities** | Access to people who share your interests regardless of geography |
 
-Research: autistic adults spend approximately 2.3x more time on written communication compared to NT adults (2025, *npj Digital Medicine*). This is a **preference pattern**, not a deficit.
+Research: autistic adults spend approximately 2.3× more time on written communication and 2.6× less time on verbal communication compared to NT adults (Liu et al., 2025, *npj Digital Medicine*, PMC11897150). The two figures come from the same study and should be reported together — the written-over-verbal shift is the pattern, not an isolated "more written" finding. This is a **preference pattern**, not a deficit.
 
 ### 6.2 Where Digital Is Still Hard
 

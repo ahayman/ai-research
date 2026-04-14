@@ -4,6 +4,21 @@
 
 ---
 
+> ## Deep Coverage: The Pragmatic Manipulation Sub-Hub
+>
+> This document is the **summary** of a much larger resource. The full treatment is the **40-page Pragmatic Manipulation and Self-Protection Sub-Hub**, which contains:
+>
+> - **5 Tier 1 framework pages**: Safety Assessment, Manipulation vs. Miscommunication, Crisis Resources, Power Differential, Can This Be Repaired?
+> - **10 Tier 2 strategy pages**: Documentation, Reality-Check Networks, Disclosure Decisions, Safety Planning, Strategic Disengagement, Refusal and Limit-Setting, De-escalation, Professional Support, Recovery, External Evidence
+> - **15 Tier 3 pattern pages**: Gaslighting, DARVO, Tone Policing, Diagnostic Weaponization, Sensory Gaslighting, Compliance Trap, Post-Meltdown Shaming, Pragmatic Packaging Invalidation, Weaponized Accommodations, Memory Gaslighting, Bandwagon Isolation, Concern Trolling, Information Asymmetry Exploitation, Emotional Invalidation Double Bind, Performative Allyship
+> - **10 Tier 4 context pages**: Intimate Partner Relationships, Family of Origin, Medical Settings, Workplace, Educational Settings, Friendships and Mate Crime, Legal and Criminal Justice, Social Services, Online and Digital Settings, Religious and Community Settings
+>
+> The sub-hub files are at `manipulation-hub-*.md` in this same folder. Begin with [Safety Assessment](manipulation-hub-safety-assessment.md) — every other page references it. If lethality indicators are present (strangulation, separation contemplation, weapons access, escalating control), stop and contact a trained advocate before applying any strategy from the sub-hub.
+>
+> This summary document covers universal manipulation patterns and the miscommunication-vs-manipulation decision framework. The sub-hub extends this with context-specific depth (relationships, workplace, medical, legal, etc.) and the specific safety rails needed for life-stakes decisions.
+
+---
+
 ## How to Read This Document
 
 Every other category in this hub teaches you how the pragmatic system works. This one teaches you what to do when someone uses it against you.
@@ -54,7 +69,7 @@ Every pragmatic system this hub covers creates a vulnerability when someone acts
 
 Philosopher Miranda Fricker (2007) identified two forms of injustice that are directly relevant:
 
-**Testimonial injustice:** Your credibility is deflated because of who you are. Research confirms this: autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth* (Lim & Magiati, 2022). Your different eye contact, prosody, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. You are telling the truth and being read as lying.
+**Testimonial injustice:** Your credibility is deflated because of who you are. Research confirms this: autistic adults are perceived as more deceptive and less credible than neurotypical adults *when telling the truth* (Lim, Young & Brewer, 2022). Your different eye contact, prosody, and body language trigger neurotypical "deception detectors" that were calibrated for neurotypical behavior. You are telling the truth and being read as lying.
 
 **Hermeneutical injustice:** The concepts needed to describe your experience don't exist in mainstream frameworks. When you explain sensory overload to a doctor who has no framework for it, or autistic burnout to an employer who thinks you're "not trying," you face hermeneutical injustice.
 
@@ -299,7 +314,7 @@ There must be spaces where you can communicate naturally: with autistic friends,
 - Douglas, L. & Sedgewick, F. (2024). "Intimate Partner Violence and Autism." PMC11191373.
 - Cazalis, F. et al. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience*. PMC9087551.
 - Griffiths, S. et al. (2019). "The Vulnerability Experiences Quotient." *JADD*. PMC6851759.
-- Lim, A. & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive." PMC8813809.
 - Freyd, J.J. (1997). DARVO.
 - Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*.
 - Catala, A. et al. (2021). "Autism, Epistemic Injustice, and Epistemic Disablement." *Synthese*.

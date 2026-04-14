@@ -7,7 +7,7 @@
 > This is the highest-stakes page in this sub-hub. If you are reading it because you are currently in or recently left an intimate partner relationship in which you are being harmed, **the following safety information takes precedence over everything else on this page**:
 >
 > - **If you have ever been strangled, choked, or had your breathing restricted by your partner — even once, even briefly, even "playfully" — your risk of being killed by this partner is approximately 7.5 times the baseline risk for abused women** (Glass et al., 2008; OR 7.48). This is the single most predictive lethality indicator known to the research literature. Strangulation requires immediate medical attention (delayed mortality from carotid artery damage is documented) AND immediate contact with a domestic violence advocate.
-> - **If you are considering leaving, the period of separation is the single most dangerous time in an abusive relationship.** Approximately 44% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). **"Just leave" is empirically unsafe advice.** Leaving requires safety planning, ideally coordinated with a trained advocate, before the separation begins.
+> - **If you are considering leaving, the period of separation is the single most dangerous time in an abusive relationship.** Approximately 55.2% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). **"Just leave" is empirically unsafe advice.** Leaving requires safety planning, ideally coordinated with a trained advocate, before the separation begins.
 > - **If you are in immediate danger right now**, call your country's emergency line and/or your country's domestic violence hotline. The [Crisis Resources Directory](manipulation-hub-crisis-resources.md) lists multi-country options and includes critical device-safety notes (your abuser may be monitoring your phone, computer, or browser history).
 > - **Couples therapy is contraindicated when coercive control is present.** This is one of the strongest research consensus positions in the field (Bograd & Mederos, 1999; Karakurt et al., 2016). If your partner is suggesting couples therapy as the way to "work things out," and any of the patterns on this hub are present, the recommendation is wrong and potentially dangerous. Section 8.4 of this page treats this in detail.
 > - **The strategies on this page assume a level of safety that not every reader has.** If you cannot safely document, cannot safely build a reality-check network, cannot safely plan, the protective move is **to contact an advocate before applying any strategy from this page**. An advocate has training and information this page does not. Advocates can be reached through the hotlines listed in the [Crisis Resources Directory](manipulation-hub-crisis-resources.md), and the contact itself can be made from a safe device (a friend's phone, a library computer, a public phone) that your partner does not have access to.
@@ -68,7 +68,7 @@ If you have ever been strangled by your partner, **stop reading this page and co
 
 ### 2.2 The separation finding
 
-**The single most dangerous time in an abusive relationship is the period when the survivor is leaving.** Approximately 44% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). The post-separation period is also associated with stalking, legal-system abuse, and post-separation control patterns documented in the more recent literature (Spearman, Hardesty, & Campbell, 2023; PMC11114442).
+**The single most dangerous time in an abusive relationship is the period when the survivor is leaving.** Approximately 55.2% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al., 2003). The post-separation period is also associated with stalking, legal-system abuse, and post-separation control patterns documented in the more recent literature (Spearman, Hardesty, & Campbell, 2023; PMC11114442).
 
 **The primary source:** Campbell, J. C., Webster, D., Koziol-McLain, J., Block, C. R., Campbell, D., Curry, M. A., Gary, F., Glass, N., McFarlane, J., Sachs, C., Sharps, P., Ulrich, Y., Wilt, S. A., Manganello, J., Xu, X., Schollenberger, J., Frye, V., & Laughon, K. (2003). "Risk Factors for Femicide in Abusive Relationships: Results from a Multisite Case Control Study." *American Journal of Public Health* 93(7): 1089–1097.
 
@@ -161,7 +161,7 @@ The implication: the protective work of recognizing and exiting an abusive intim
 
 ### 3.3 The credibility discount, applied to IPV reporting
 
-Lim & Magiati (2022, PMC8813809) demonstrated that autistic adults are perceived as more deceptive and less credible than non-autistic adults *when telling the truth*. The effect is driven by communication features (gaze, prosody, affect) that observers read as "off" without being able to articulate what they noticed. The effect operates below conscious awareness.
+Lim, Young & Brewer (2022, PMC8813809) demonstrated that autistic adults are perceived as more deceptive and less credible than non-autistic adults *when telling the truth*. The effect is driven by communication features (gaze, prosody, affect) that observers read as "off" without being able to articulate what they noticed. The effect operates below conscious awareness.
 
 **For IPV reporting, this finding is structural and consequential.** When an autistic survivor discloses abuse — to a friend, a family member, a doctor, a therapist, a police officer, a child welfare worker, a judge, a custody evaluator — the listener defaults to reading the survivor as less credible than they would read a non-autistic survivor saying the same words. The abuser, who is more likely to be non-autistic, is correspondingly read as more credible. The credibility differential is pre-loaded before any specific facts of the case are considered.
 
@@ -337,7 +337,7 @@ Patterns rarely appear singly. In intimate partner contexts, they cluster, and c
 
 **Why this configuration is dangerous:** child custody is one of the most material consequences of autistic IPV survivor disclosure, and the family court system is one of the institutional contexts where the credibility discount and the cultural script of "autistic parents are unfit" are most operative. Many autistic IPV survivors with children describe the custody threat as the single largest barrier to leaving, and the threat is empirically credible given how custody decisions actually go in many jurisdictions.
 
-**The protective response:** family law advocacy. This configuration warrants legal advocacy from the start, ideally from a family lawyer who has experience with disability and IPV cases. The Crisis Resources Directory lists legal aid options. The strategies on this page support recognition; they cannot substitute for legal representation in custody contexts. (The Tier 4 Legal and Criminal Justice context page, not yet built, will treat the institutional dynamics in more detail.)
+**The protective response:** family law advocacy. This configuration warrants legal advocacy from the start, ideally from a family lawyer who has experience with disability and IPV cases. The Crisis Resources Directory lists legal aid options. The strategies on this page support recognition; they cannot substitute for legal representation in custody contexts. (The Tier 4 Legal and Criminal Justice context page, will treat the institutional dynamics in more detail.)
 
 ---
 
@@ -603,7 +603,7 @@ The honest limits of this page, named explicitly because the gap between recogni
 
 1. **Strangulation is the highest single lethality predictor known.** If you have ever been strangled by your partner, even once, even briefly, your risk of being killed by this partner is approximately 7.5× the baseline (Glass et al. 2008). Advocate contact is not optional.
 
-2. **Leaving is the most dangerous time.** Approximately 44% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al. 2003). "Just leave" is empirically unsafe advice. Leaving requires safety planning before the separation begins, ideally with an advocate.
+2. **Leaving is the most dangerous time.** Approximately 55.2% of women murdered by an intimate partner had separated or were in the process of leaving (Campbell et al. 2003). "Just leave" is empirically unsafe advice. Leaving requires safety planning before the separation begins, ideally with an advocate.
 
 3. **Couples therapy is contraindicated when coercive control is present.** Bograd & Mederos (1999) is the foundational reference. If your partner is suggesting couples therapy and any of the hub patterns are present, the answer is no.
 
@@ -627,7 +627,7 @@ The honest limits of this page, named explicitly because the gap between recogni
 
 **Lethality and risk assessment:**
 - Glass, N., Laughon, K., Campbell, J., Block, C. R., Hanson, G., Sharps, P. W., & Taliaferro, E. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335. PMC2573025. (Strangulation OR 7.48; the foundational lethality finding.)
-- Campbell, J. C., Webster, D., Koziol-McLain, J., Block, C. R., Campbell, D., Curry, M. A., Gary, F., Glass, N., McFarlane, J., Sachs, C., Sharps, P., Ulrich, Y., Wilt, S. A., Manganello, J., Xu, X., Schollenberger, J., Frye, V., & Laughon, K. (2003). "Risk Factors for Femicide in Abusive Relationships: Results from a Multisite Case Control Study." *American Journal of Public Health* 93(7): 1089–1097. (44% separation finding; foundation of the Danger Assessment.)
+- Campbell, J. C., Webster, D., Koziol-McLain, J., Block, C. R., Campbell, D., Curry, M. A., Gary, F., Glass, N., McFarlane, J., Sachs, C., Sharps, P., Ulrich, Y., Wilt, S. A., Manganello, J., Xu, X., Schollenberger, J., Frye, V., & Laughon, K. (2003). "Risk Factors for Femicide in Abusive Relationships: Results from a Multisite Case Control Study." *American Journal of Public Health* 93(7): 1089–1097. (55.2% estrangement finding; foundation of the Danger Assessment.)
 - Pritchard, A. J., Reckdenwald, A., & Nordham, C. (2017). "Nonfatal Strangulation as Part of Domestic Violence: A Review of Research." *Trauma, Violence, & Abuse* 18(4): 407–424.
 - Spearman, K., Hardesty, J. L., & Campbell, J. (2023). Post-separation abuse review. PMC11114442.
 - Daly, M., Wiseman, K. A., & Wilson, M. I. (1997). "Women with Children Sired by Previous Partners Incur Excess Risk of Uxoricide." *Homicide Studies* 1(1): 61–71.
@@ -674,7 +674,7 @@ The honest limits of this page, named explicitly because the gap between recogni
 - Autism Adapted Safety Plans pilot RCT (2024) and the BMC Health Services Research health economic evaluation (2025). See the foundational autism research document for the full citation.
 
 **Credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding work on autistic mock-suspects and witness credibility.
 
 **Autism-specific masking, burnout, and trauma:**
@@ -721,13 +721,13 @@ The honest limits of this page, named explicitly because the gap between recogni
 The intimate partner context page is integrative; nearly every pragmatics category in the curriculum is relevant in some way. The most directly relevant categories:
 
 - **Common Ground (Category 16)** — coercive control intimate partnerships are characterized by the unilateral rewriting of common ground over time. The autistic partner's understanding of "what is true between us" is gradually replaced by the abuser's version. **This is one of the most important pragmatics cross-links for the page.** [category-16-common-ground.md](category-16-common-ground.md)
-- **Frames and Framing (Category 17)** — Stark's "fights vs control" distinction is fundamentally about which frame is being used to read the relationship. Frame analysis is the technical tool for the diagnostic work. [category-17-frames.md](category-17-frames.md)
-- **Speech Acts (Category 11)** — refusals, complaints, reports, requests — the speech acts the autistic partner is being prevented from performing in good faith are the speech acts autonomy depends on. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework underlies the moment-to-moment rules of conversation that Stark identifies as a coercive control mechanism. [category-06-politeness.md](category-06-politeness.md)
-- **Implicature (Category 10)** — much of intimate partner manipulation operates through what is implied rather than said. The credibility discount, the threats of withdrawal, the diagnostic weaponization — all carry their force in implicatures that are hard to refute. [category-10-implicature.md](category-10-implicature.md)
-- **Identity and Stance (Category 19)** — the cumulative effect of intimate partner coercive control is the gradual erasure of the autistic partner's stance position in the relationship. They no longer have standing to speak as themselves; they speak only in the positions the abuser allows. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Cooperative Principle / Grice (Category 12)** — the relationship runs on a unilateral cooperative principle: the autistic partner is expected to cooperate, the abuser is not. Naming the asymmetry is part of the cognitive defense. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
-- **Repair (Category 18)** — coercive control intimate partnerships are characterized by the systematic *failure* of conversational repair. The autistic partner cannot repair, because every attempt to repair is treated as the next problem. [category-18-repair.md](category-18-repair.md)
+- **Framing and Frame Analysis (Category 23)** — Stark's "fights vs control" distinction is fundamentally about which frame is being used to read the relationship. Frame analysis is the technical tool for the diagnostic work. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Speech Acts (Category 1)** — refusals, complaints, reports, requests — the speech acts the autistic partner is being prevented from performing in good faith are the speech acts autonomy depends on. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework underlies the moment-to-moment rules of conversation that Stark identifies as a coercive control mechanism. [category-03-politeness.md](category-03-politeness.md)
+- **Implicature (Category 2)** — much of intimate partner manipulation operates through what is implied rather than said. The credibility discount, the threats of withdrawal, the diagnostic weaponization — all carry their force in implicatures that are hard to refute. [category-02-implicature.md](category-02-implicature.md)
+- **Identity and Stance (Category 24)** — the cumulative effect of intimate partner coercive control is the gradual erasure of the autistic partner's stance position in the relationship. They no longer have standing to speak as themselves; they speak only in the positions the abuser allows. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Implicature / Cooperative Principle (Category 2)** — the relationship runs on a unilateral cooperative principle: the autistic partner is expected to cooperate, the abuser is not. Naming the asymmetry is part of the cognitive defense. [category-02-implicature.md](category-02-implicature.md)
+- **Conversation Structure / Repair (Category 4)** — coercive control intimate partnerships are characterized by the systematic *failure* of conversational repair. The autistic partner cannot repair, because every attempt to repair is treated as the next problem. [category-04-conversation-structure.md](category-04-conversation-structure.md)
 
 ### Other hub pages referenced on this page
 
@@ -753,7 +753,7 @@ The intimate partner context page is integrative; nearly every pragmatics catego
 **Patterns (Tier 3):**
 - All fifteen pattern pages apply in intimate partner contexts. Section 4 of this page integrates them with specific IPV-relevant treatment.
 
-**Other context pages (Tier 4, not yet built):**
+**Other context pages (Tier 4):**
 - Family of Origin — where many of the childhood pipeline patterns were installed.
 - Medical Settings — for the institutional dimension when health is involved.
 - Legal and Criminal Justice — for the institutional dimension in proceedings.

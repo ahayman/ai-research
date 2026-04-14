@@ -420,10 +420,10 @@ Some people will stay. Strategic disengagement can make staying more sustainable
 - **[Reality-Check Networks](manipulation-hub-strategy-reality-check-networks.md)** — reality-check networks are the essential counterweight to sustained disengagement.
 - **[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md)** — disengagement often requires specific disclosure decisions about who knows what you are doing.
 - **[Safety Planning](manipulation-hub-strategy-safety-planning.md)** — disengagement is compatible with safety planning and can be part of the preparation phase.
-- **Refusal, Limit-Setting, and the "Boundaries" Problem (Tier 2, not yet built)** — refusal is distinct from disengagement; refusal is overt, disengagement is covert.
-- **De-escalation (Tier 2, not yet built)** — de-escalation is for specific acute moments; disengagement is for sustained patterns.
-- **Intimate Partner Relationships context page (Tier 4, not yet built)** — will integrate strategic disengagement with IPV-specific considerations.
-- **Family of Origin context page (Tier 4, not yet built)** — strategic disengagement is often the primary strategy in difficult family relationships where full contact cutoff is not immediately possible.
+- **Refusal, Limit-Setting, and the "Boundaries" Problem (Tier 2)** — refusal is distinct from disengagement; refusal is overt, disengagement is covert.
+- **De-escalation (Tier 2)** — de-escalation is for specific acute moments; disengagement is for sustained patterns.
+- **Intimate Partner Relationships context page** — will integrate strategic disengagement with IPV-specific considerations.
+- **Family of Origin context page** — strategic disengagement is often the primary strategy in difficult family relationships where full contact cutoff is not immediately possible.
 
 ---
 

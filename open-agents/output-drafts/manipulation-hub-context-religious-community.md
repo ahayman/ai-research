@@ -514,14 +514,14 @@ The standing recovery frame applies: **the goal is not to reject religion entire
 
 ### Pragmatics categories referenced on this page
 
-- **Frames and Framing (Category 17)** — religious doctrines function as frames that shape how everything else is interpreted; the frames can be the specific mechanism by which manipulation operates. **One of the most important pragmatics cross-links for this page.** [category-17-frames.md](category-17-frames.md)
+- **Framing and Frame Analysis (Category 23)** — religious doctrines function as frames that shape how everything else is interpreted; the frames can be the specific mechanism by which manipulation operates. **One of the most important pragmatics cross-links for this page.** [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
 - **Common Ground (Category 16)** — religious communities construct their own common ground around doctrine, practice, and community norms, and the common ground is not available to outside observers. [category-16-common-ground.md](category-16-common-ground.md)
 - **Presupposition (Category 9)** — religious manipulation often operates through presuppositions built into doctrinal language: "as a faithful member you will..." presupposes both the faith status and the obligation. [category-09-presupposition.md](category-09-presupposition.md)
-- **Identity and Stance (Category 19)** — religious community positions members through identity work that is both chosen and imposed; the stance moves can be difficult to separate. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Speech Acts (Category 11)** — blessings, curses, commandments, prayers, confessions, and vows are speech acts with specific performative force in religious contexts. [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Identity and Stance (Category 24)** — religious community positions members through identity work that is both chosen and imposed; the stance moves can be difficult to separate. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Speech Acts (Category 1)** — blessings, curses, commandments, prayers, confessions, and vows are speech acts with specific performative force in religious contexts. [category-01-speech-acts.md](category-01-speech-acts.md)
 - **Register (Category 7)** — religious contexts have specific register expectations (reverence, formality, specific vocabulary) that autistic members are sometimes penalized for not meeting. [category-07-register.md](category-07-register.md)
-- **Implicature (Category 10)** — much religious communication operates through implicature, and the implicatures can carry doctrinal weight: "we need to pray about your situation" implicates that there is a spiritual problem to be addressed. [category-10-implicature.md](category-10-implicature.md)
-- **Politeness (Category 6)** — religious politeness conventions can be used to enforce submission and to make questioning feel impious. [category-06-politeness.md](category-06-politeness.md)
+- **Implicature (Category 2)** — much religious communication operates through implicature, and the implicatures can carry doctrinal weight: "we need to pray about your situation" implicates that there is a spiritual problem to be addressed. [category-02-implicature.md](category-02-implicature.md)
+- **Politeness (Category 3)** — religious politeness conventions can be used to enforce submission and to make questioning feel impious. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 

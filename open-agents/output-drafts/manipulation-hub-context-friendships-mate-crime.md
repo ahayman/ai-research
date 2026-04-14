@@ -498,7 +498,7 @@ The standing recovery frame applies: **the goal is not to become a person who do
 - Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Sociology of gaslighting (the structural framing):**
 - Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875.
@@ -521,12 +521,12 @@ The standing recovery frame applies: **the goal is not to become a person who do
 ### Pragmatics categories referenced on this page
 
 - **Common Ground (Category 16)** — friendship runs on assumed shared common ground that exploitative friendships unilaterally rewrite over time. **One of the most important pragmatics cross-links for this page.** [category-16-common-ground.md](category-16-common-ground.md)
-- **Identity and Stance (Category 19)** — friendships position both parties; exploitative friendships position the autistic adult in a low-status position that the friend's stance reinforces. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Implicature (Category 10)** — much friendship-based manipulation operates through implicature: "if you really cared about me, you would..." implicates a debt or obligation that is not stated outright. [category-10-implicature.md](category-10-implicature.md)
-- **Politeness (Category 6)** — friendship has its own politeness conventions; exploitative friendships use the conventions to make refusal feel impolite. [category-06-politeness.md](category-06-politeness.md)
-- **Speech Acts (Category 11)** — refusals, requests, and offers in friendship contexts are speech acts whose function is sometimes obscured by the friendship framing. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Frames and Framing (Category 17)** — the friendship frame itself is the structural protective scaffolding that the exploitation operates inside. [category-17-frames.md](category-17-frames.md)
-- **Cooperative Principle / Grice (Category 12)** — exploitative friendships are systematic violations of cooperative communication that the autistic adult is asked to honor unilaterally. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Identity and Stance (Category 24)** — friendships position both parties; exploitative friendships position the autistic adult in a low-status position that the friend's stance reinforces. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Implicature (Category 2)** — much friendship-based manipulation operates through implicature: "if you really cared about me, you would..." implicates a debt or obligation that is not stated outright. [category-02-implicature.md](category-02-implicature.md)
+- **Politeness (Category 3)** — friendship has its own politeness conventions; exploitative friendships use the conventions to make refusal feel impolite. [category-03-politeness.md](category-03-politeness.md)
+- **Speech Acts (Category 1)** — refusals, requests, and offers in friendship contexts are speech acts whose function is sometimes obscured by the friendship framing. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — the friendship frame itself is the structural protective scaffolding that the exploitation operates inside. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Implicature / Cooperative Principle (Category 2)** — exploitative friendships are systematic violations of cooperative communication that the autistic adult is asked to honor unilaterally. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 

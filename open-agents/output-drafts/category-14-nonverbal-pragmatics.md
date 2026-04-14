@@ -222,6 +222,20 @@ NT observers often perceive autistic individuals as having "flat" or "blank" fac
 
 Research shows **contradictory patterns**: some autistic individuals prefer larger personal distances (sensory sensitivity), while others may stand closer than expected (reduced awareness of NT space norms). Sensory factors (sound, smell, visual crowding) significantly affect autistic spatial preferences beyond the social dimension.
 
+### 6.3 Haptics: The Touch Channel
+
+Touch is a pragmatic channel in its own right. Following Heslin's (1974) classification, interpersonal touch falls into five functional categories: **functional/professional** (medical exams, hair cuts, security screening — the professional context normalizes what would otherwise be intimate); **social/polite** (handshakes, brief shoulder or arm taps — socially sanctioned openers that signal inclusion); **friendship/warmth** (longer handshakes, arm touches during conversation, side hugs — relational maintenance); **love/intimacy** (hugs, sustained physical closeness — close relationships); and **sexual/arousal** (by context and mutual consent only).
+
+What touch means depends entirely on the relationship frame. The same physical contact that is ordinary between close friends is a major violation between strangers or colleagues, and the reverse is true too: refusing an expected handshake from a colleague can read as hostile, even though the handshake would be unwelcome from a stranger on the street.
+
+**Cultural variation is substantial.** High-contact cultures (Latin America, Middle East, Southern Europe, much of South Asia) use touch more frequently and closer interpersonal distances. Lower-contact cultures (Northern Europe, East Asia, Anglophone North America in many settings) expect less incidental contact and treat touch as more marked.
+
+**Autistic haptics** are highly variable. Some autistic individuals experience most touch as overwhelming or painful (sensory profile with tactile defensiveness); others seek out deep-pressure input as regulating and calming. Either pattern is compatible with a preference for predictable, explicit touch rules: who can touch you, where, when, and with what warning. The pragmatic system's default is that touch is implicit and read from relationship context; for many autistic people, explicit negotiation of touch is both clearer and more respectful.
+
+The practical point for autistic learners: touch can be declined, and declining it is not rude if it is done clearly. "I don't shake hands" is a complete sentence in most professional contexts and most non-autistic people will recover from the small awkwardness quickly.
+
+See `category-14-nonverbal-research-gesture-gaze.md` §5 for the deeper research coverage including Heslin's full typology and the cross-cultural evidence.
+
 ---
 
 ## 7. Posture and Body Orientation

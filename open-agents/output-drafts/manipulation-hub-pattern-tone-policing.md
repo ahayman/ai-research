@@ -15,7 +15,7 @@ Tone policing is the move where the response to a substantive concern is not eng
 
 This page does not invent the term. *Tone policing* was named in the Black feminist tradition long before any autism community used it — Audre Lorde's "The Uses of Anger" (1981) and Sara Ahmed's "feminist killjoy" essays are among the foundational texts. The original analysis describes how marginalized people raising legitimate concerns are systematically required to perform a kind of emotional packaging that majority interlocutors are not required to perform, and how the tone-packaging requirement becomes the lever by which the substantive concerns are evaded. **This page borrows the framework with attribution and applies it to a specific population (autistic readers) where the tone-packaging requirement collides with cognitive and pragmatic differences in a particularly damaging way.**
 
-For autistic readers, the collision has a specific shape. Autistic communication tends to be more direct, less hedged, less indirect than allistic norms expect. Prosody is often flatter or differently modulated. The cognitive cost of producing the hedged, soft, indirect, prosodically-curved version of a statement is significantly higher than the cost of producing the direct version. And the credibility discount (Lim & Magiati 2022) means that even when an autistic person delivers a concern in a way they consider careful, listeners often perceive it as more aggressive or more hostile than it was. The end result is that the autistic person is **structurally guaranteed to fail any tone test**, regardless of how hard they try, because the test is calibrated to a communication style their cognition cannot natively produce.
+For autistic readers, the collision has a specific shape. Autistic communication tends to be more direct, less hedged, less indirect than allistic norms expect. Prosody is often flatter or differently modulated. The cognitive cost of producing the hedged, soft, indirect, prosodically-curved version of a statement is significantly higher than the cost of producing the direct version. And the credibility discount (Lim, Young & Brewer 2022) means that even when an autistic person delivers a concern in a way they consider careful, listeners often perceive it as more aggressive or more hostile than it was. The end result is that the autistic person is **structurally guaranteed to fail any tone test**, regardless of how hard they try, because the test is calibrated to a communication style their cognition cannot natively produce.
 
 This page treats tone policing as a pattern, names the specific autistic vulnerability, distinguishes it carefully from legitimate civility norms (which exist), and indexes the strategies that work. As with the previous pattern pages, it is not a tool for adjudicating any single conversation. Tone policing is identified across multiple interactions, not from one event.
 
@@ -211,7 +211,7 @@ This is one reason why "just communicate better" is structurally bad advice for 
 
 ### The credibility discount, applied to tone
 
-Lim & Magiati (2022) found that autistic adults are perceived as more deceptive and less credible than non-autistic adults *even when telling the truth*. The same study and the surrounding literature suggest that autistic communication features (gaze aversion, flat or different affect, literal phrasing) contribute to this perception even though they are not in fact reliable indicators of deception. **The implication for tone policing: even when an autistic person delivers a concern in a way they consider careful and measured, listeners are likely to perceive it as more aggressive, more hostile, or more inappropriate than the speaker intended.** The gap between intended delivery and perceived delivery is not the speaker's failure — it is a product of pre-loaded interpretation patterns in the listener.
+Lim, Young & Brewer (2022) found that autistic adults are perceived as more deceptive and less credible than non-autistic adults *even when telling the truth*. The same study and the surrounding literature suggest that autistic communication features (gaze aversion, flat or different affect, literal phrasing) contribute to this perception even though they are not in fact reliable indicators of deception. **The implication for tone policing: even when an autistic person delivers a concern in a way they consider careful and measured, listeners are likely to perceive it as more aggressive, more hostile, or more inappropriate than the speaker intended.** The gap between intended delivery and perceived delivery is not the speaker's failure — it is a product of pre-loaded interpretation patterns in the listener.
 
 This means that the standard advice "just be more careful with your tone" rests on an assumption that does not hold for autistic speakers: the assumption that careful tone will be perceived as careful. For an autistic speaker addressing an audience that defaults to over-reading hostility, the careful tone may still be perceived as hostile. The strategy implications are in section 6.
 
@@ -287,7 +287,7 @@ The neutral-substance test is informative regardless of which outcome you get. I
 
 ### 6.6 Disclosure decisions about tone
 
-[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md) applies in a specific way to tone policing: it can be useful, with some audiences, to disclose that you are autistic and that your communication is calibrated differently. With supportive audiences, this disclosure shifts how your delivery is interpreted and reduces the credibility discount partially (Lim & Magiati 2022 found that disclosed-autism conditions reduced the deception attribution).
+[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md) applies in a specific way to tone policing: it can be useful, with some audiences, to disclose that you are autistic and that your communication is calibrated differently. With supportive audiences, this disclosure shifts how your delivery is interpreted and reduces the credibility discount partially (Lim, Young & Brewer 2022 found that disclosed-autism conditions reduced the deception attribution).
 
 With unsupportive audiences, the disclosure does the opposite: it provides material for diagnostic weaponization. "Of course you don't realize how aggressive you sound — that's your autism." The disclosure becomes the lever by which the tone critique is made unanswerable.
 
@@ -377,7 +377,7 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 - Patel, S. P., et al. (2020). Reviews of acoustic and prosodic features in autistic speech.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding work on the perception of autistic mock-suspects.
 
 **Masking cost:**
@@ -405,14 +405,14 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 
 ### Pragmatics categories referenced on this page
 
-- **Politeness (Category 6)** — Brown & Levinson's framework is the underlying mechanism for tone policing. Reading the politeness category gives the technical machinery for understanding why direct communication is calibrated differently rather than wrongly. **This is the most important pragmatics cross-link on this page.** [category-06-politeness.md](category-06-politeness.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework is the underlying mechanism for tone policing. Reading the politeness category gives the technical machinery for understanding why direct communication is calibrated differently rather than wrongly. **This is the most important pragmatics cross-link on this page.** [category-03-politeness.md](category-03-politeness.md)
 - **Register (Category 7)** — much tone policing is register critique: "you used the wrong register for this situation." Understanding register as a contextual variable rather than a moral test gives a way out of the framing. [category-07-register.md](category-07-register.md)
-- **Prosody and Paralanguage (Category 4)** — prosodic policing depends on prosody being treated as voluntary and meaningful. Reading the prosody category clarifies which features are under voluntary control and which are not. [category-04-prosody.md](category-04-prosody.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act ("I am raising a concern") from the wrapper (the words and tone used to do so) is one of the most useful cognitive moves against tone policing. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — much tone policing operates through what is *implied* rather than said. "Why are you being so aggressive?" implicates that you are in fact being aggressive without making the claim directly. [category-10-implicature.md](category-10-implicature.md)
-- **Hedging (Category 13)** — autistic communication is generally less hedged than allistic norms expect. The hedging category gives the technical vocabulary for the calibration difference. [category-13-hedging.md](category-13-hedging.md)
-- **Frames and Framing (Category 17)** — tone policing is a frame attack: the perpetrator replaces "we are discussing your concern" with "we are discussing your delivery." [category-17-frames.md](category-17-frames.md)
-- **Cross-cultural Pragmatics (Category 22)** — the calibration mismatch between autistic and allistic communication is structurally similar to the calibration mismatch between communication conventions in different cultures. The cross-cultural framing gives a useful analogy for understanding the bidirectionality of the friction. [category-22-cross-cultural.md](category-22-cross-cultural.md)
+- **Prosodic Pragmatics (Category 15)** — prosodic policing depends on prosody being treated as voluntary and meaningful. Reading the prosody category clarifies which features are under voluntary control and which are not. [category-15-prosodic-pragmatics.md](category-15-prosodic-pragmatics.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act ("I am raising a concern") from the wrapper (the words and tone used to do so) is one of the most useful cognitive moves against tone policing. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — much tone policing operates through what is *implied* rather than said. "Why are you being so aggressive?" implicates that you are in fact being aggressive without making the claim directly. [category-02-implicature.md](category-02-implicature.md)
+- **Hedging (Category 6)** — autistic communication is generally less hedged than allistic norms expect. The hedging category gives the technical vocabulary for the calibration difference. [category-06-hedging.md](category-06-hedging.md)
+- **Framing and Frame Analysis (Category 23)** — tone policing is a frame attack: the perpetrator replaces "we are discussing your concern" with "we are discussing your delivery." [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Social Hierarchy and Cross-cultural Pragmatics (Category 22)** — the calibration mismatch between autistic and allistic communication is structurally similar to the calibration mismatch between communication conventions in different cultures. The cross-cultural framing gives a useful analogy for understanding the bidirectionality of the friction. [category-22-social-hierarchy.md](category-22-social-hierarchy.md)
 
 ### Other hub pages referenced on this page
 
@@ -437,11 +437,11 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 - [Gaslighting](manipulation-hub-pattern-gaslighting.md) — tone policing is often the *delivery mechanism* by which gaslighting is performed; the chronic background pattern.
 - [DARVO](manipulation-hub-pattern-darvo.md) — tone policing and DARVO frequently appear together; the tone critique is often the "Attack" phase of the DARVO sequence.
 - Diagnostic Weaponization (next in build order) — "you don't realize how aggressive you sound because of your autism" is the autism-specific tone policing variant that bundles the critique with diagnostic blame.
-- Post-Meltdown Shaming (not yet built) — closely related; meltdowns are the situation where prosodic and affect policing have the most material consequences.
-- Pragmatic Packaging Invalidation (not yet built) — the broader pattern of which tone policing is one form: "you said it wrong so it doesn't count."
-- Emotional Invalidation Double Bind (not yet built) — the flat-affect double bind treated in depth.
+- Post-Meltdown Shaming — closely related; meltdowns are the situation where prosodic and affect policing have the most material consequences.
+- Pragmatic Packaging Invalidation — the broader pattern of which tone policing is one form: "you said it wrong so it doesn't count."
+- Emotional Invalidation Double Bind — the flat-affect double bind treated in depth.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Workplace — where tone policing has the most direct material consequences (performance reviews, complaints, terminations).
 - Family of Origin — where the childhood pipeline is installed.
 - Educational Settings — both the K-12 origin of the pipeline and the higher-ed continuation.

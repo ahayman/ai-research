@@ -49,7 +49,7 @@ A common misreading needs to be headed off directly. The episodic/semantic asymm
 
 - **Autistic people have "bad memory."** In many respects — factual, pattern-based, semantic, procedural — autistic memory outperforms the allistic average. The asymmetry is specifically about verbatim context of one-off episodes, not about memory as a whole.
 - **Autistic people should not trust their own memory.** This is precisely the move gaslighting wants. The correct stance is to trust the parts of memory that are reliable (pattern, gist, semantic content, impressions, emotional impressions in aggregate) and to compensate externally for the parts that are differently calibrated (verbatim specific-episode detail).
-- **Autistic accounts of past events are inherently unreliable.** The credibility discount (Lim & Magiati, 2022) is a *social* phenomenon, not a cognitive one. When an autistic person says "this kind of thing has been happening for years," that account is not less reliable than an allistic account of the same pattern. The unreliability framing is imported from the gaslighting script, not from the memory science.
+- **Autistic accounts of past events are inherently unreliable.** The credibility discount (Lim, Young & Brewer, 2022) is a *social* phenomenon, not a cognitive one. When an autistic person says "this kind of thing has been happening for years," that account is not less reliable than an allistic account of the same pattern. The unreliability framing is imported from the gaslighting script, not from the memory science.
 - **Autistic people need to be "corrected" on their memories by others.** Nothing in the memory research supports the move from "episodic memory differences exist" to "therefore someone else's version should override yours." That move is a gaslighting move wearing a science costume, and it should be refused.
 
 ### Pattern memory: the autistic asset
@@ -278,7 +278,7 @@ For example: "On April 10, at approximately 6 PM, after the conversation about t
 
 ### The credibility discount, applied to memory disputes
 
-Lim & Magiati (2022, PMC8813809) demonstrated that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. The effect is not small, and it is not hypothetical. When a memory dispute between an autistic person and an allistic person reaches any external audience — therapist, judge, HR investigator, family member, friend — the audience begins from a position already tilted toward the allistic account.
+Lim, Young & Brewer (2022, PMC8813809) demonstrated that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. The effect is not small, and it is not hypothetical. When a memory dispute between an autistic person and an allistic person reaches any external audience — therapist, judge, HR investigator, family member, friend — the audience begins from a position already tilted toward the allistic account.
 
 The implication for memory gaslighting is severe. It means that in any institutional or semi-institutional forum where the dispute goes public, the autistic person is starting from a credibility deficit that they did not earn and cannot overcome through verbal argument alone. This is why contemporaneous documentation is load-bearing. Verbal testimony from an autistic target, without external corroboration, systematically underperforms relative to verbal testimony from an allistic counterpart, even when the autistic testimony is accurate. Written contemporaneous records do not have this problem; they speak for themselves.
 
@@ -313,7 +313,7 @@ The strategic response is not to find the right words to break the loop. There a
 
 ### Memory gaslighting in institutional contexts
 
-Memory gaslighting inside institutions — HR, family court, medical complaints, legal proceedings, school discipline, social services — carries the highest material stakes of any form of the pattern. These are the contexts in which "what was said" and "what was agreed" and "what the sequence was" can determine custody, employment, diagnosis, criminal charges, or service access. The credibility discount (Lim & Magiati, 2022) operates inside institutions just as it does in private relationships, and institutional procedures rarely account for it.
+Memory gaslighting inside institutions — HR, family court, medical complaints, legal proceedings, school discipline, social services — carries the highest material stakes of any form of the pattern. These are the contexts in which "what was said" and "what was agreed" and "what the sequence was" can determine custody, employment, diagnosis, criminal charges, or service access. The credibility discount (Lim, Young & Brewer, 2022) operates inside institutions just as it does in private relationships, and institutional procedures rarely account for it.
 
 Autistic people in these contexts face a specific compound problem. The episodic memory architecture means verbatim recall of specific procedural events is differently calibrated; the credibility discount means that even accurate recall is systematically received as less reliable than the counterparty's version; and the institutional demand for verbal testimony rather than documented records disadvantages exactly the autistic target whose strongest evidence is often written.
 
@@ -442,7 +442,7 @@ Memory gaslighting recovery generally requires more than self-help. Trauma-infor
 If the memory gaslighting is occurring inside an intimate partner relationship and any lethality indicators are present, [Safety Planning](manipulation-hub-strategy-safety-planning.md) is the higher-priority strategy and everything else on this page should be sequenced under safety planning, not parallel to it. The lethality indicators from the parent Gaslighting page apply here:
 
 - Strangulation history → contact a DV advocate before any other strategy. (Glass et al., 2008: OR 7.48 for later attempted homicide.)
-- Separation contemplation → safety planning before separation begins. (Campbell et al., 2003: 44% of femicide victims were in the process of separating.)
+- Separation contemplation → safety planning before separation begins. (Campbell et al., 2003: 55.2% of femicide victims were estranged or in the process of separating.)
 - Weapon access, escalating threats, increasing isolation pressure → all elevate risk and all warrant advocate contact.
 
 Memory gaslighting inside coercive control carries the additional risk that documentation, if discovered, can itself trigger escalation. The Safety Planning page and an advocate should be consulted before large-scale documentation begins in high-risk situations.
@@ -494,7 +494,7 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 
 8. **Do NOT pursue recovered memory techniques.** The recovered memory literature is contested and the misapplications are dangerous. The protective move is contemporaneous documentation going forward, not retrieval of unrecorded past events. Any clinician who recommends the latter is working with a framework this hub does not endorse.
 
-9. **Institutional memory gaslighting carries the highest material stakes.** HR, family court, medical complaints, legal proceedings. The credibility discount (Lim & Magiati, 2022) operates inside institutions, often determinatively. Confirmation emails and contemporaneous written records are the structural defense because they convert verbal disputes (where you lose) into documented ones (where you can compete).
+9. **Institutional memory gaslighting carries the highest material stakes.** HR, family court, medical complaints, legal proceedings. The credibility discount (Lim, Young & Brewer, 2022) operates inside institutions, often determinatively. Confirmation emails and contemporaneous written records are the structural defense because they convert verbal disputes (where you lose) into documented ones (where you can compete).
 
 10. **Recovery is not "becoming less autistic."** The goal is never better episodic memory. The goal is to live in environments where your memory architecture is respected, your patterns are believed, and your documentation is allowed to stand against retroactive rewrites. Recovery is structural and environmental, not cognitive-self-improvement.
 
@@ -520,7 +520,7 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Alexithymia in autism (relevant to emotional rewriting):**
 - Kinnaird, E., Stewart, C., & Tchanturia, K. (2019). "Investigating alexithymia in autism: A systematic review and meta-analysis." *European Psychiatry* 55: 80–89.
@@ -542,7 +542,7 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 
 **Lethality indicators (referenced in safety planning section):**
 - Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (44% of femicide victims in the process of separating.)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (55.2% of femicide victims were estranged from their partner at the time of the homicide.)
 
 **Couples therapy contraindication when coercive control is present:**
 - Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
@@ -574,9 +574,9 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 - **Common Ground (Category 16)** — memory gaslighting is fundamentally an attack on the common ground of a relationship. Common ground, in pragmatic theory, is the body of mutually known or mutually presupposed information that makes ordinary communication possible. The memory gaslighter does not merely disagree about an event; they unilaterally rewrite the common ground so that what was mutually known is retroactively declared to have never been mutually known. Over time, this destroys the basic possibility of conversation between the two people, because every statement by the target has to be defended against the possibility that the common ground it relies on will be denied. Reading the common ground category gives the pragmatic vocabulary for what is happening without requiring the entire curriculum. [category-16-common-ground.md](category-16-common-ground.md)
 - **Deixis (Category 8)** — deictic expressions are the ones whose meaning depends on context (when, where, who, this, that, then, now). Memory gaslighting attacks deictic anchors systematically: the time, the place, the person, the sequence. Sequence inversion (§3.5), time compression (§3.7), witness reassignment (§3.6), and the composite event (§3.8) are all deictic attacks. Documentation preserves deictic content by anchoring events to specific times, places, and people in a form that cannot be retroactively re-anchored. [category-08-deixis.md](category-08-deixis.md)
 - **Presupposition (Category 9)** — the "you always do this" frame (§3.10) works by smuggling a contested claim into the presuppositional structure of the sentence. "Why do you always misremember things?" presupposes that you always misremember things; answering the question as asked accepts the presupposition. Recognizing presupposition manipulation is one of the most useful direct defenses. [category-09-presupposition.md](category-09-presupposition.md)
-- **Speech Acts (Category 11)** — denying, claiming, asserting, accusing, contradicting are each specific speech acts with specific felicity conditions. Recognizing a denial as a *speech act* (with its own logic and conditions) rather than as a *description of reality* is part of the cognitive defense. A denial is a move in a conversation, not a fact about the world. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Cooperative Principle / Grice (Category 12)** — Grice's cooperative principle assumes that speakers are being truthful, relevant, informative, and clear. Memory gaslighting is a systematic violation of the cooperative principle that the target is simultaneously being asked to honor unilaterally. Naming the asymmetry in cooperative effort is clarifying. The target cannot fix a conversation in which one party has quietly exited the cooperative principle; the most the target can do is recognize the exit and stop trying to repair what cannot be repaired from one side. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
-- **Repair (Category 18)** — repair mechanisms in ordinary conversation allow misunderstandings to be corrected. In memory gaslighting, repair is asymmetric: the gaslighter's version is never repaired, the target's version is always "being repaired" by the gaslighter. The failure of repair mechanisms is one of the strongest Decision Framework signals. [category-18-repair.md](category-18-repair.md)
+- **Speech Acts (Category 1)** — denying, claiming, asserting, accusing, contradicting are each specific speech acts with specific felicity conditions. Recognizing a denial as a *speech act* (with its own logic and conditions) rather than as a *description of reality* is part of the cognitive defense. A denial is a move in a conversation, not a fact about the world. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature / Cooperative Principle (Category 2)** — Grice's cooperative principle assumes that speakers are being truthful, relevant, informative, and clear. Memory gaslighting is a systematic violation of the cooperative principle that the target is simultaneously being asked to honor unilaterally. Naming the asymmetry in cooperative effort is clarifying. The target cannot fix a conversation in which one party has quietly exited the cooperative principle; the most the target can do is recognize the exit and stop trying to repair what cannot be repaired from one side. [category-02-implicature.md](category-02-implicature.md)
+- **Conversation Structure / Repair (Category 4)** — repair mechanisms in ordinary conversation allow misunderstandings to be corrected. In memory gaslighting, repair is asymmetric: the gaslighter's version is never repaired, the target's version is always "being repaired" by the gaslighter. The failure of repair mechanisms is one of the strongest Decision Framework signals. [category-04-conversation-structure.md](category-04-conversation-structure.md)
 
 ### Other hub pages referenced on this page
 
@@ -608,7 +608,7 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 - [Compliance Trap](manipulation-hub-pattern-compliance-trap.md) — compliance-trained autistic adults are specifically primed to concede memory disputes under authority pressure.
 - [Post-Meltdown Shaming](manipulation-hub-pattern-post-meltdown-shaming.md) — the retroactive meltdown rewrite (§3.3 of that page) is a specific sub-form of memory gaslighting. The two pages cross-reference and should be read together for readers whose pattern includes post-meltdown rewrites.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where memory gaslighting is most lethal and most often inside coercive control.
 - Family of Origin — where the installed self-doubt about memory typically begins in childhood.
 - Medical Settings — where institutional memory gaslighting about "what the provider said" has serious material consequences.

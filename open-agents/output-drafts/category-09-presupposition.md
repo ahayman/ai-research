@@ -388,6 +388,6 @@ The key is calibrating when to use it: challenge manipulative presuppositions, a
 
 ### Autism Research
 - Cheung, C.C.H. et al. (2017, 2020). Presupposition comprehension in Cantonese-speaking children with ASD.
-- Rozenkrantz, L. et al. (2021). Enhanced rationality in autism. *PNAS*.
+- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced Rationality in Autism Spectrum Disorder." *Trends in Cognitive Sciences* 25(8):685-696. PMID 34226128.
 - Chanchaochai, N. (2021). Presupposition and implicature in Thai-speaking children with ASD.
 - Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*.

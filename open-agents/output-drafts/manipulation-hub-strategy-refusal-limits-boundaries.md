@@ -126,7 +126,7 @@ The right level of indirection depends on the relationship, the context, the sta
 Several things conspire to make refusal harder for autistic speakers:
 
 - **Natural directness.** Autistic communication often defaults to Level 2 or Level 1 where neurotypical communication would use Level 3 or Level 4. The same "no" that feels normal to the autistic speaker can sound aggressive to a neurotypical listener.
-- **The credibility discount.** Lim & Magiati (2022) documented that autistic adults are perceived as more hostile and less credible than neurotypical adults making the same statements. A refusal that is already face-threatening lands harder when the speaker is already being perceived as hostile.
+- **The credibility discount.** Lim, Young & Brewer (2022) documented that autistic adults are perceived as more hostile and less credible than neurotypical adults making the same statements. A refusal that is already face-threatening lands harder when the speaker is already being perceived as hostile.
 - **Alexithymia.** The hedges and mitigations in refusal often include emotional content ("I'd feel bad about leaving them in the lurch"). If emotional self-labeling is difficult, these hedges are harder to produce naturally.
 - **Compliance training.** Many autistic adults have been trained out of refusal altogether ("quiet hands," "don't be disruptive"). The skill of refusing is often underdeveloped because it was actively suppressed in childhood.
 
@@ -388,7 +388,7 @@ A specific situation: your refusal of something has been characterized by the ot
 - Yule, G. (1996). *Pragmatics.* Oxford University Press. — Accessible introduction to face and politeness in speech acts.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. — Autistic refusal is more likely to be perceived as hostile than equivalent neurotypical refusal.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. — Autistic refusal is more likely to be perceived as hostile than equivalent neurotypical refusal.
 
 **Coercive control and limit-setting:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — Why "setting boundaries" does not work straightforwardly in coercive control contexts.
@@ -431,9 +431,9 @@ A specific situation: your refusal of something has been characterized by the ot
 - **[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md)** — disclosure decisions and refusal decisions often intersect.
 - **[Strategic Disengagement](manipulation-hub-strategy-strategic-disengagement.md)** — disengagement is the covert counterpart to overt refusal; in manipulation contexts, disengagement is often the safer choice.
 - **[Safety Planning](manipulation-hub-strategy-safety-planning.md)** — in high-risk situations, refusal should be coordinated with broader safety planning.
-- **De-escalation (Tier 2, not yet built)** — de-escalation techniques are often needed after refusal in tense situations.
-- **Finding Professional Support (Tier 2, not yet built)** — for readers whose compliance training is severe enough that the skill of refusal needs professional work to develop.
-- **Compliance Trap pattern page (Tier 3, not yet built)** — the pattern where refusal is treated as evidence of character failure.
+- **De-escalation (Tier 2)** — de-escalation techniques are often needed after refusal in tense situations.
+- **Finding Professional Support (Tier 2)** — for readers whose compliance training is severe enough that the skill of refusal needs professional work to develop.
+- **Compliance Trap pattern page (Tier 3)** — the pattern where refusal is treated as evidence of character failure.
 
 ---
 

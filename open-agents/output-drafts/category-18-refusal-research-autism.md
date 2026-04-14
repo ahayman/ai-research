@@ -228,7 +228,7 @@ While some autistic individuals under-apologize, others develop a pattern of **e
 - **Default script**: When an autistic person detects that something has gone wrong socially but can't identify what, "I'm sorry" serves as a generic repair attempt
 
 **Consequences of over-apologizing:**
-- Reinforces low self-esteem ("every apology sends a signal to the brain that the person is wrong")
+- Reinforces a self-concept of being the person always in the wrong — each unnecessary apology is a small act of self-positioning as the responsible party for whatever just happened
 - Creates resentment toward others who seem to trigger constant apology
 - Erodes self-advocacy capacity
 - Makes genuine apologies less meaningful (the "cry wolf" effect)

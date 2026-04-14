@@ -8,7 +8,17 @@
 
 Every previous category taught a pragmatic **mechanism** -- speech acts, hedging, turn-taking, register. This category is where they all come together. Each real-world context activates a specific combination of mechanisms with its own rules, stakes, and conventions.
 
-This document provides a **map** of six major life contexts, showing how pragmatic principles apply differently in each. The supplemental research documents contain detailed scripts and deep dives for each context. This main document gives you the overview and the key principles.
+This document provides a **map** of six major life contexts, showing how pragmatic principles apply differently in each. The main file is intentionally a map rather than a comprehensive guide — the detailed depth lives in three supplemental research files listed below, and the reader should consult the one relevant to their current situation rather than reading this file alone.
+
+### Where to find depth
+
+- [Workplace pragmatics research](category-21-contexts-research-workplace.md) — detailed workplace scripts, performance review navigation, meeting dynamics, disclosure decisions at work, PIP handling, accommodation requests.
+- [Everyday contexts research](category-21-contexts-research-everyday.md) — medical, educational, service encounters, friendships, dating, family gatherings, civic interactions, OLDCARTS medical symptom framework.
+- [Autism-specific contexts research](category-21-contexts-research-autism.md) — Raymaker et al. 2020 burnout in the context of sustained pragmatic performance, employment statistics, healthcare barriers, police encounters, Pearson autism IPV literature, context-specific strategies organized around autistic-specific considerations.
+
+When stakes are high (medical diagnoses, legal proceedings, job termination, family conflict, IPV), the relevant research file will contain more than this main file. The main file's role is orientation; the research files are the working material.
+
+If the situation involves a safety dimension (IPV, workplace retaliation, medical misdiagnosis with lethal consequences, police encounters with legal consequences), see also the 40-page [Pragmatic Manipulation and Self-Protection Sub-Hub](category-manipulation.md) which provides context-specific manipulation recognition and safety-rail guidance at the depth this main file cannot.
 
 ---
 

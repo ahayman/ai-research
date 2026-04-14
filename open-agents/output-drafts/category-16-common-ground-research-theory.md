@@ -645,7 +645,7 @@ The fact that common ground processes are often implicit makes them particularly
 
 ### Autism and Common Ground
 - Nilsen, E. S., & Fecica, A. M. (2011). A model of communicative perspective-taking for typical and atypical populations of children. *Developmental Review*, 31(1), 55-78.
-- Banney, R. M., Harper-Hill, K., & Arnott, W. L. (2015). The art of common ground: Emergence of a complex pragmatic language skill in adolescents with autism spectrum disorders. *Journal of Autism and Developmental Disorders*, 46(5), 1672-1685.
+- de Marchena, A. B., & Eigsti, I.-M. (2016). "The art of common ground: Emergence of a complex pragmatic language skill in adolescents with autism spectrum disorders." *Journal of Child Language*, 43(1), 43-80. PMC4764348.
 
 ### Communication Medium and Grounding
 - Monk, A. (2003). Common ground in electronically mediated communication. *Synthesis Lectures on Human-Centered Informatics*.

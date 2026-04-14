@@ -18,7 +18,7 @@ The standard framing of documentation is that it is "good practice" — a respon
 
 2. **Gaslighting directly exploits this.** The core gaslighting move is rewriting past events. If your memory of events is already less robustly anchored than the manipulator's version of events (from your own subjective experience, not from objective reality), you have fewer internal resources to resist the rewriting.
 
-3. **The credibility discount amplifies the problem.** Lim & Magiati (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. When your account is disputed by someone else, outside observers are predisposed to believe them. Verbal testimony alone will systematically underperform for you.
+3. **The credibility discount amplifies the problem.** Lim, Young & Brewer (2022, PMC8813809) found that autistic adults are perceived as more deceptive and less credible than neurotypical adults when telling the truth. When your account is disputed by someone else, outside observers are predisposed to believe them. Verbal testimony alone will systematically underperform for you.
 
 4. **Alexithymia complicates retrospective reporting.** About 50% of autistic adults meet criteria for alexithymia. If you cannot clearly identify and describe your emotional states in the moment, reconstructing them later is even harder. The specific words and feelings slip away; the outline remains; the outline is what the manipulator can reshape.
 
@@ -26,7 +26,7 @@ The standard framing of documentation is that it is "good practice" — a respon
 
 This is not a mental health recommendation. It is a mechanical necessity for a specific cognitive architecture operating in a specific pragmatic environment.
 
-*Evidence quality note: The episodic memory differences finding is [VALIDATED] across multiple studies. The application to gaslighting resistance is [EXTRAPOLATED] — the mechanism is straightforward but has not been directly tested as a safety intervention. The credibility discount finding (Lim & Magiati, 2022) is [VALIDATED]. The recommendation to compensate with documentation is consistent with the employment-law practitioner literature on harassment cases, which is an [ESTABLISHED LEGAL PRACTICE] rather than an [RCT-VALIDATED] recommendation.*
+*Evidence quality note: The episodic memory differences finding is [VALIDATED] across multiple studies. The application to gaslighting resistance is [EXTRAPOLATED] — the mechanism is straightforward but has not been directly tested as a safety intervention. The credibility discount finding (Lim, Young & Brewer, 2022) is [VALIDATED]. The recommendation to compensate with documentation is consistent with the employment-law practitioner literature on harassment cases, which is an [ESTABLISHED LEGAL PRACTICE] rather than an [RCT-VALIDATED] recommendation.*
 
 ---
 
@@ -374,7 +374,7 @@ Documentation is the kind of activity that can feel "wrong" to someone who has b
 - Multiple studies reviewed in the foundational autism research document, including Cooper & Simons on autism and episodic memory; see [manipulation-foundation-research-autism-application.md](manipulation-foundation-research-autism-application.md) for the full review. The general finding of relative episodic memory differences with relatively intact semantic memory is [VALIDATED] across multiple studies.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Gaslighting as structural phenomenon:**
 - Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875. DOI: 10.1177/0003122419874843.
@@ -424,12 +424,12 @@ Documentation is the kind of activity that can feel "wrong" to someone who has b
 - **[Power Differential and Resource Analysis](manipulation-hub-power-differential.md)** — documentation is most valuable when power is unfavorable and informational/legal resources are available or buildable.
 - **[Crisis Resources Directory](manipulation-hub-crisis-resources.md)** — when documentation needs to be integrated into legal or advocacy action.
 - **[Can This Be Repaired?](manipulation-hub-can-this-be-repaired.md)** — documentation supports preparation-stage work when the engage/exit decision points toward exit.
-- **Reality-Check Networks (Tier 2, not yet built)** — the social complement to written documentation; trusted people who can also remember what happened.
-- **Disclosure Decisions (Tier 2, not yet built)** — when and how to share documentation with specific audiences.
-- **Safety Planning (Tier 2, not yet built)** — documentation is often the foundation of safety planning in DV contexts.
-- **Gaslighting (Tier 3, not yet built)** — the pattern page that most depends on documentation as its primary strategy.
-- **Memory Gaslighting (Tier 3, not yet built)** — the specific pattern that documentation directly counters.
-- **Workplace context page (Tier 4, not yet built)** — will extensively reference the workplace-specific guidance on this page.
+- **Reality-Check Networks (Tier 2)** — the social complement to written documentation; trusted people who can also remember what happened.
+- **Disclosure Decisions (Tier 2)** — when and how to share documentation with specific audiences.
+- **Safety Planning (Tier 2)** — documentation is often the foundation of safety planning in DV contexts.
+- **Gaslighting (Tier 3)** — the pattern page that most depends on documentation as its primary strategy.
+- **Memory Gaslighting (Tier 3)** — the specific pattern that documentation directly counters.
+- **Workplace context page** — will extensively reference the workplace-specific guidance on this page.
 
 ---
 

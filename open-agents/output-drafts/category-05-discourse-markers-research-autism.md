@@ -25,7 +25,7 @@ One of the most robust and theoretically important findings in this area is the 
 - Their use of "uh" was unaffected -- no significant difference from controls.
 - This dissociation is critical because it maps onto the different pragmatic functions of these fillers.
 
-**Lake et al. (2011) -- "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers":**
+**Irvine, Eigsti & Fein (2016) -- "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder":**
 - Adolescents with ASD produced "um" less frequently than both typically developing peers and peers with "optimal outcomes" (those who had lost their ASD diagnosis).
 - "Um" rate was associated with autism symptom severity.
 - Crucially, "um" rate was NOT associated with executive function or language abilities.
@@ -99,7 +99,7 @@ This suggests that even when discourse is organized logically, the signaling of 
 Recent advances in computational linguistics have enabled more objective, quantitative analysis of autistic speech patterns:
 
 - Automated analysis reveals differences in conjunctions and other discourse features that distinguish autistic from non-autistic speech (multiple studies using NLP methods).
-- A computational study of pragmatic discourse features in adults with ASD investigated politeness, uncertainty, and informativeness in collaborative conversations, finding distinctive pragmatic profiles. Neural models trained with BERT embeddings could predict these features with F1 scores exceeding 0.82 (Lake et al., ACL 2021).
+- A computational study of pragmatic discourse features in adults with ASD investigated politeness, uncertainty, and informativeness in collaborative conversations, finding distinctive pragmatic profiles. Neural models trained with BERT embeddings could predict these features with F1 scores exceeding 0.82 (Lake, Bhullar & Bhattacharyya, 2022, PMC9633181).
 - Machine learning approaches using linguistic features like Mean Length of Utterance (MLU) and Mean Length of Turn Ratio have been applied to autism speech classification.
 
 **Zane & Grossman (2024) -- "Normal but Different":**
@@ -493,7 +493,7 @@ The BAP research suggests:
 
 - [Jones, Zane, & Grossman (2022) - "Like, It's Important: The Frequency and Use of the Discourse Marker Like in Older Autistic Children"](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/) - PMC9620696
 - [Gorman et al. (2016) - "Uh and Um in Children With Autism Spectrum Disorders or Language Impairment"](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/) - PMC4958035
-- [Lake et al. (2011/2015) - "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents"](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/) - PMC7536647
+- [Irvine, Eigsti & Fein (2016) - "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder"](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/) - *J Autism Dev Disord* 46(3):1061-1070, PMC7536647
 - [Gorman et al. (2018) - "Um Fillers Distinguish Children With and Without ASD"](https://pmc.ncbi.nlm.nih.gov/articles/PMC6395582/) - PMC6395582
 - [Pragmatic Language Markers of Autism Diagnosis and Severity (2022)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9075340/) - PMC9075340
 - [Zane & Grossman (2024) - "Normal but Different: Autistic Adolescents Who Score Within Normal Ranges"](https://pmc.ncbi.nlm.nih.gov/articles/PMC11447814/) - PMC11447814

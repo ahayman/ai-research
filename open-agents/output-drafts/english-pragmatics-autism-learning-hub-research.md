@@ -1204,9 +1204,9 @@ This is the master index of all categories, their research status, and links to 
 **Category 22: Social Hierarchy and Power Pragmatics** -- COMPLETE
 - Main document: [category-22-social-hierarchy.md](category-22-social-hierarchy.md) (12KB)
 - Supplemental research:
-  - [category-21-hierarchy-research-theory.md](category-21-hierarchy-research-theory.md) (82KB) -- Dominance vs. prestige, five types, linguistic/non-linguistic markers, competence paradox
-  - [category-21-hierarchy-research-autism.md](category-21-hierarchy-research-autism.md) (54KB) -- "Hierarchy blindness," directness trap, PDA, egalitarian preference, Moral Foundations
-  - [category-21-hierarchy-research-practical.md](category-21-hierarchy-research-practical.md) (61KB) -- Observable signals checklist, calibration table, four-step framework, common mistakes
+  - [category-22-hierarchy-research-theory.md](category-22-hierarchy-research-theory.md) (82KB) -- Dominance vs. prestige, five types, linguistic/non-linguistic markers, competence paradox
+  - [category-22-hierarchy-research-autism.md](category-22-hierarchy-research-autism.md) (54KB) -- Directness trap, PDA, egalitarian preference, Moral Foundations (Ogawa et al. 2019 finding reframed as rank recognition via alternate neural pathways, not as "blindness")
+  - [category-22-hierarchy-research-practical.md](category-22-hierarchy-research-practical.md) (61KB) -- Observable signals checklist, calibration table, four-step framework, common mistakes
 
 ### Tier 3b: Analytical Tools (Cross-Cutting)
 **Category: Logical Fallacies as Pragmatic Tactics** -- COMPLETE

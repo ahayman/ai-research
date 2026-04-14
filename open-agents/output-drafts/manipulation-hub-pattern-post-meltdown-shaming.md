@@ -458,7 +458,7 @@ Recovery from post-meltdown shaming, particularly the deliberate-triggering vers
 - Rumball, F., Happé, F., & Grey, N. (2020). "Experience of trauma and PTSD symptoms in autistic adults: Risk of PTSD development following DSM-5 and non-DSM-5 traumatic life events." *Autism Research* 13(12): 2122–2132. (Sensory events and "events that don't fit standard PTSD criteria" can produce PTSD-like presentations in autistic adults.)
 
 **The credibility discount (relevant to how third parties hear the post-meltdown framing):**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Autistic-to-autistic communication (the basis for autistic peer reality-check):**
 - Crompton, C. J., et al. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712.
@@ -486,14 +486,14 @@ Recovery from post-meltdown shaming, particularly the deliberate-triggering vers
 
 ### Pragmatics categories referenced on this page
 
-- **Repair (Category 18)** — post-meltdown shaming is a systematic *failure* of conversational repair: the meltdown is not treated as a moment that needs repair work but as a charge that requires apology. Reading the repair category clarifies what good-faith repair looks like and how the manipulation pattern departs from it. **This is the most important pragmatics cross-link on this page.** [category-18-repair.md](category-18-repair.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act of having a meltdown (which is not really a speech act in the technical sense — it is closer to an involuntary event) from the speech acts of accusing, demanding apology, and reframing that the manipulator performs in the aftermath. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Frames and Framing (Category 17)** — post-meltdown shaming is a frame attack: the meltdown is reframed from "neurological event in response to overload" to "directed action against the audience." [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — the drift from "you had a meltdown" to "you are unstable" is a stance attack — the meltdown is treated as evidence of identity rather than as a discrete event. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Conversation Structure / Repair (Category 4)** — post-meltdown shaming is a systematic *failure* of conversational repair: the meltdown is not treated as a moment that needs repair work but as a charge that requires apology. Reading the repair category clarifies what good-faith repair looks like and how the manipulation pattern departs from it. **This is the most important pragmatics cross-link on this page.** [category-04-conversation-structure.md](category-04-conversation-structure.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act of having a meltdown (which is not really a speech act in the technical sense — it is closer to an involuntary event) from the speech acts of accusing, demanding apology, and reframing that the manipulator performs in the aftermath. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Framing and Frame Analysis (Category 23)** — post-meltdown shaming is a frame attack: the meltdown is reframed from "neurological event in response to overload" to "directed action against the audience." [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — the drift from "you had a meltdown" to "you are unstable" is a stance attack — the meltdown is treated as evidence of identity rather than as a discrete event. [category-24-identity-stance.md](category-24-identity-stance.md)
 - **Common Ground (Category 16)** — the perpetrator unilaterally rewrites the common ground to install their version of the meltdown as the shared starting point, which the autistic person's amnesia cannot easily refute. [category-16-common-ground.md](category-16-common-ground.md)
-- **Implicature (Category 10)** — much post-meltdown shaming operates through what is *implied* about your character and dangerousness rather than said directly about specific behaviors. "You scared me" implicates intentional aggression. [category-10-implicature.md](category-10-implicature.md)
+- **Implicature (Category 2)** — much post-meltdown shaming operates through what is *implied* about your character and dangerousness rather than said directly about specific behaviors. "You scared me" implicates intentional aggression. [category-02-implicature.md](category-02-implicature.md)
 - **Presupposition (Category 9)** — the demand for an apology presupposes that the meltdown was a voluntary action that warrants apology. The presupposition is doing the work, not the surface request. [category-09-presupposition.md](category-09-presupposition.md)
-- **Politeness (Category 6)** — the post-meltdown framing is often wrapped in politeness scaffolding ("I'm only saying this because I love you and I'm worried") that makes refusing the framing feel like a politeness violation. [category-06-politeness.md](category-06-politeness.md)
+- **Politeness (Category 3)** — the post-meltdown framing is often wrapped in politeness scaffolding ("I'm only saying this because I love you and I'm worried") that makes refusing the framing feel like a politeness violation. [category-03-politeness.md](category-03-politeness.md)
 
 ### Other hub pages referenced on this page
 
@@ -523,10 +523,10 @@ Recovery from post-meltdown shaming, particularly the deliberate-triggering vers
 - [Diagnostic Weaponization](manipulation-hub-pattern-diagnostic-weaponization.md) — diagnostic vocabulary is often used to frame meltdowns as features of "your autism" rather than as responses to specific overloading conditions.
 - [Gaslighting](manipulation-hub-pattern-gaslighting.md) — post-meltdown shaming relies on the broader gaslighting infrastructure to make the rewriting of meltdown events stick.
 - Memory Gaslighting (next in build order) — the retroactive meltdown rewrite is a sub-form of memory gaslighting and the two pages will cross-reference.
-- Pragmatic Packaging Invalidation (not yet built) — meltdowns are often dismissed as "the wrong way to express something," which is the meltdown-specific version of "you said it wrong so it doesn't count."
-- Bandwagon Isolation (not yet built) — the public version of post-meltdown shaming distributes the rewritten account to third parties, which is the bandwagon isolation move.
+- Pragmatic Packaging Invalidation — meltdowns are often dismissed as "the wrong way to express something," which is the meltdown-specific version of "you said it wrong so it doesn't count."
+- Bandwagon Isolation — the public version of post-meltdown shaming distributes the rewritten account to third parties, which is the bandwagon isolation move.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where the deliberate-triggering form is most lethal.
 - Family of Origin — where the childhood post-meltdown shaming pipeline is installed.
 - Educational Settings — where K-12 meltdowns are treated as discipline issues.

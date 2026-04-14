@@ -16,7 +16,7 @@ A **reality-check network** is the social infrastructure that supplements writte
 
 For autistic readers specifically, the need for this network is acute and the mechanism is specific:
 
-1. **The credibility discount** (Lim & Magiati, 2022, PMC8813809) means that general social support is not enough. If the people you talk to about your situation are part of the general population that rates autistic accounts as less credible, they may provide warmth but not reality-check. You need people calibrated for your testimony.
+1. **The credibility discount** (Lim, Young & Brewer, 2022, PMC8813809) means that general social support is not enough. If the people you talk to about your situation are part of the general population that rates autistic accounts as less credible, they may provide warmth but not reality-check. You need people calibrated for your testimony.
 
 2. **Alexithymia** makes internal calibration unreliable. If you cannot clearly identify what you are feeling or whether your reaction is "proportionate," you cannot use your own emotional response as a check on whether the situation you are describing is as bad as you think it is. External observers who know what they are looking for can see things you cannot see from inside.
 
@@ -353,7 +353,7 @@ This is important because the reality-check network is the specific thing that i
 - Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712. — The key finding on the effectiveness of autistic-to-autistic communication.
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Disclosure outcomes (asymmetric):**
 - Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association. — Negative disclosure reactions harm more than positive reactions help; choice of confidant is itself a safety decision.
@@ -395,9 +395,9 @@ This is important because the reality-check network is the specific thing that i
 - **[Crisis Resources Directory](manipulation-hub-crisis-resources.md)** — professional alternatives when an organic reality-check network is not available or sufficient.
 - **[Can This Be Repaired?](manipulation-hub-can-this-be-repaired.md)** — the network is a key input to the engage/exit decision.
 - **[Documentation](manipulation-hub-strategy-documentation.md)** — the written complement to this social strategy. They work together.
-- **Disclosure Decisions (Tier 2, not yet built)** — specific guidance on who to tell what, including the distinction between reality-check network members and more general audiences.
-- **Gaslighting (Tier 3, not yet built)** — the pattern that most directly attacks reality-check networks through isolation.
-- **Bandwagon Isolation (Tier 3, not yet built)** — the specific pattern of "everyone agrees with me" that targets the network's function.
+- **Disclosure Decisions (Tier 2)** — specific guidance on who to tell what, including the distinction between reality-check network members and more general audiences.
+- **Gaslighting (Tier 3)** — the pattern that most directly attacks reality-check networks through isolation.
+- **Bandwagon Isolation (Tier 3)** — the specific pattern of "everyone agrees with me" that targets the network's function.
 
 ---
 

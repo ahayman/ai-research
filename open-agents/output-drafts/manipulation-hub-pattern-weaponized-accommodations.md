@@ -178,7 +178,7 @@ Accommodations are described to third parties — friends, family, coworkers, th
 - *Social media post:* "Some days I don't know how I keep going. #caregiverlife"
 - *"Their therapist doesn't even know how much I do. I should tell her."*
 
-This move is particularly damaging for several reasons. First, it builds social capital for the accommodator that the autistic person then has to contend with: the friends, family, and professionals now see the accommodator as the burdened saint and the autistic person as the difficulty. Second, it pre-emptively discredits any later report from the autistic person about the accommodator's behavior — "we've all seen how hard X has it, your side can't possibly be that bad." Third, it uses the credibility discount documented in Lim & Magiati (2022): autistic adults are already perceived as less credible, and the performance-audience move stacks that disadvantage with a well-built competing narrative.
+This move is particularly damaging for several reasons. First, it builds social capital for the accommodator that the autistic person then has to contend with: the friends, family, and professionals now see the accommodator as the burdened saint and the autistic person as the difficulty. Second, it pre-emptively discredits any later report from the autistic person about the accommodator's behavior — "we've all seen how hard X has it, your side can't possibly be that bad." Third, it uses the credibility discount documented in Lim, Young & Brewer (2022): autistic adults are already perceived as less credible, and the performance-audience move stacks that disadvantage with a well-built competing narrative.
 
 Sweet's (2019) framing is directly relevant here. The cultural script *"disabled people are burdens on those who care for them"* is already loaded in the audience. The accommodator does not have to build the case from scratch; they only have to activate the pre-installed frame. The autistic person, trying to push against it later, is pushing against a cultural default, not just against one person's claims.
 
@@ -404,13 +404,13 @@ Recognizing the historical installation does several protective things. First, i
 
 ### The credibility discount and the performance-audience move
 
-Lim & Magiati (2022), in their paper "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility," documented that autistic adults are perceived as less credible and more deceptive than non-autistic adults in observer studies, even when the autistic person is telling the truth. The effect is not moral — it operates below conscious awareness and reflects how observers read cues like affect, prosody, gaze, and fluency.
+Lim, Young & Brewer (2022), in their paper "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility," documented that autistic adults are perceived as less credible and more deceptive than non-autistic adults in observer studies, even when the autistic person is telling the truth. The effect is not moral — it operates below conscious awareness and reflects how observers read cues like affect, prosody, gaze, and fluency.
 
 This matters enormously for weaponized accommodations. When the accommodator runs the performance audience move (section 3.2) — telling friends, family, coworkers, or therapists about how much they do for the autistic person — the audience is already pre-loaded to believe the accommodator and discount the autistic person. The competing narratives are not on a level playing field. The autistic person's later attempt to say *"the accommodations are being weaponized"* runs into the audience's pre-existing credibility discount *and* the accommodator's pre-built narrative of saintly burden.
 
-The implication for strategy: **autistic reality-check networks are essential precisely because the credibility discount does not operate the same way inside them.** Autistic peers can hear an autistic person's account without the default discount, because they are not running the observer effect Lim & Magiati identified. Non-autistic friends and family may be sympathetic but may also be vulnerable to the performance-audience move. Autistic-affirming clinicians are similarly important.
+The implication for strategy: **autistic reality-check networks are essential precisely because the credibility discount does not operate the same way inside them.** Autistic peers can hear an autistic person's account without the default discount, because they are not running the observer effect Lim, Young & Brewer identified. Non-autistic friends and family may be sympathetic but may also be vulnerable to the performance-audience move. Autistic-affirming clinicians are similarly important.
 
-**Primary source:** Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+**Primary source:** Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Evidence quality:** [VALIDATED]. Peer-reviewed observer studies with replicated effects. The findings are robust.
 
@@ -477,7 +477,7 @@ Over time, the records show the pattern: substantive concerns displaced by debt 
 
 Weaponized accommodations is one of the patterns most reliably associated with the broader coercive control configurations documented in Stark (2007). If it is present and is co-occurring with isolation, control of resources, threats (including threats of accommodation withdrawal), intimidation, or any physical aggression, the [Safety Assessment](manipulation-hub-safety-assessment.md) is not optional reading — it is the next step.
 
-The lethality indicators from Glass et al. (2008) on strangulation and Campbell et al. (2003) on the risk factors for femicide become directly relevant when the weaponized accommodations pattern is embedded in a violent or potentially-violent intimate partner context. In particular, the Campbell 44% separation finding — that a significant fraction of femicides occur at or after the victim's attempt to separate — means that the strategies on this page that involve structural change must be coordinated with safety planning when lethality indicators are present.
+The lethality indicators from Glass et al. (2008) on strangulation and Campbell et al. (2003) on the risk factors for femicide become directly relevant when the weaponized accommodations pattern is embedded in a violent or potentially-violent intimate partner context. In particular, the Campbell 55.2% estrangement finding — that a significant fraction of femicides occur at or after the victim's attempt to separate — means that the strategies on this page that involve structural change must be coordinated with safety planning when lethality indicators are present.
 
 **If the Safety Assessment is green, the strategies on this page can be deployed freely.**
 
@@ -490,7 +490,7 @@ The lethality indicators from Glass et al. (2008) on strangulation and Campbell 
 [Reality-Check Networks](manipulation-hub-strategy-reality-check-networks.md), with explicit priority on autistic peers. Autistic peers can validate that the ledger frame is a manipulation in a way that allistic friends often cannot, because:
 
 1. **They are not running the "I am too much" script on your behalf.** Allistic friends, even sympathetic ones, may unconsciously default to the cultural script that disabled people are burdens. Autistic peers have generally worked against that script in their own lives.
-2. **They are not subject to the credibility discount in the same direction.** Lim & Magiati (2022) showed that autistic adults are perceived as less credible by non-autistic observers. Other autistic adults do not produce the same observer effect.
+2. **They are not subject to the credibility discount in the same direction.** Lim, Young & Brewer (2022) showed that autistic adults are perceived as less credible by non-autistic observers. Other autistic adults do not produce the same observer effect.
 3. **They are more likely to recognize the pattern quickly.** The "I do so much for you" frame is widespread enough in autistic survivor accounts that many autistic peers will hear a description and name the pattern before the autistic person has finished describing it.
 4. **They can model the refusal.** Hearing from other autistic adults who have, in some way, refused the ledger frame in their own lives provides a working example that refusal is possible and survivable. The script installs the conviction that refusal is impossible; the existence of autistic peers who have refused it interrupts the conviction.
 
@@ -645,7 +645,7 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 9. **Recovery is not "needing fewer accommodations."** The goal is not to become less autistic, take up less space, or be easier for the next accommodator. The goal is to live in relationships and environments where accommodations are given freely and are not converted into debt. The recovery frame is freely-given access, not self-reduction.
 
-10. **The evidence base is a synthesis, not an established empirical literature.** Readers should understand this page as combining [VALIDATED] general frameworks (Stark, Duluth, masking cost, Sweet), [PRELIMINARY] autism-specific qualitative work (Pearson program, Douglas & Sedgewick 2024, Lim & Magiati 2022), and [COMMUNITY KNOWLEDGE] from autistic survivors. The pattern it describes is real and converges across these sources, but a peer-reviewed quantitative literature specifically on autism-accommodation weaponization does not yet exist. The honesty about the evidence quality matters: treat the page as a working synthesis, not as settled science.
+10. **The evidence base is a synthesis, not an established empirical literature.** Readers should understand this page as combining [VALIDATED] general frameworks (Stark, Duluth, masking cost, Sweet), [PRELIMINARY] autism-specific qualitative work (Pearson program, Douglas & Sedgewick 2024, Lim, Young & Brewer 2022), and [COMMUNITY KNOWLEDGE] from autistic survivors. The pattern it describes is real and converges across these sources, but a peer-reviewed quantitative literature specifically on autism-accommodation weaponization does not yet exist. The honesty about the evidence quality matters: treat the page as a working synthesis, not as settled science.
 
 ---
 
@@ -664,7 +664,7 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 - Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* (The resource dependency as entrapment mechanism.)
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. (The observer effect that makes the performance-audience move so damaging.)
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. (The observer effect that makes the performance-audience move so damaging.)
 
 **The sociology of the cultural script:**
 - Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875. (Structural-scaffolding analysis: cultural scripts about "ungrateful disabled people" do most of the work.)
@@ -679,7 +679,7 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 **Lethality and safety planning references:**
 - Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (Strangulation as lethality indicator; relevant when weaponized accommodations co-occurs with physical violence.)
-- Campbell, J. C., et al. (2003). "Risk factors for femicide in abusive relationships: Results from a multisite case control study." *American Journal of Public Health* 93(7): 1089–1097. (The 44% separation finding that informs safety planning when structural change is being considered.)
+- Campbell, J. C., et al. (2003). "Risk factors for femicide in abusive relationships: Results from a multisite case control study." *American Journal of Public Health* 93(7): 1089–1097. (The 55.2% estrangement finding that informs safety planning when structural change is being considered.)
 
 **Autistic burnout (the cost substrate):**
 - Raymaker, D. M., et al. (2020). "'Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew': Defining Autistic Burnout." *Autism in Adulthood* 2(2): 132–143. PMC7313636. (The burnout profile that sustained weaponized accommodations tends to produce.)
@@ -705,13 +705,13 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 ### Pragmatics categories referenced on this page
 
 - **Common Ground (Category 16)** — accommodations are part of the relationship's shared understanding of what is agreed to, expected, and not-to-be-relitigated. Weaponized accommodations is a unilateral rewriting of common ground: what was part of the shared background (the accommodation is given, it does not need to be re-justified at every turn) is moved into the foreground and treated as a constantly-negotiable debt. The pragmatic category of common ground is the underlying mechanism. **This is the most important pragmatics cross-link on this page.** [category-16-common-ground.md](category-16-common-ground.md)
-- **Identity and Stance (Category 19)** — the debt frame is a stance move: the accommodator positions themselves as the generous party and the autistic person as the indebted party, and the stance is held regardless of what either party actually does. Recognizing the stance assignment as a pragmatic move rather than as a description of reality is part of the cognitive defense. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Implicature (Category 10)** — "I do so much for you" rarely says directly *"therefore you have no right to raise this concern."* The inference is implicated, not stated, which is part of what makes the pattern hard to name. The implicature category gives the technical machinery for identifying what the speaker is doing without saying it. [category-10-implicature.md](category-10-implicature.md)
-- **Frames and Framing (Category 17)** — weaponized accommodations is, structurally, a frame attack: the frame in which accommodations are access is replaced with the frame in which they are gifts. The frames category is the technical vocabulary for this. [category-17-frames.md](category-17-frames.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework is relevant because the pattern often operates through the politeness conventions of gratitude and indebtedness. Recognizing that gratitude conventions are culturally calibrated and not universal obligations is part of the way out. [category-06-politeness.md](category-06-politeness.md)
-- **Speech Acts (Category 11)** — the accommodation-as-leverage move is a specific kind of speech act: a performative citing of past actions that is not an accounting but a move in a dispute. Distinguishing the speech-act function ("I am redirecting this dispute") from the apparent content ("I am reporting cost") is protective. [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Identity and Stance (Category 24)** — the debt frame is a stance move: the accommodator positions themselves as the generous party and the autistic person as the indebted party, and the stance is held regardless of what either party actually does. Recognizing the stance assignment as a pragmatic move rather than as a description of reality is part of the cognitive defense. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Implicature (Category 2)** — "I do so much for you" rarely says directly *"therefore you have no right to raise this concern."* The inference is implicated, not stated, which is part of what makes the pattern hard to name. The implicature category gives the technical machinery for identifying what the speaker is doing without saying it. [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — weaponized accommodations is, structurally, a frame attack: the frame in which accommodations are access is replaced with the frame in which they are gifts. The frames category is the technical vocabulary for this. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework is relevant because the pattern often operates through the politeness conventions of gratitude and indebtedness. Recognizing that gratitude conventions are culturally calibrated and not universal obligations is part of the way out. [category-03-politeness.md](category-03-politeness.md)
+- **Speech Acts (Category 1)** — the accommodation-as-leverage move is a specific kind of speech act: a performative citing of past actions that is not an accounting but a move in a dispute. Distinguishing the speech-act function ("I am redirecting this dispute") from the apparent content ("I am reporting cost") is protective. [category-01-speech-acts.md](category-01-speech-acts.md)
 - **Presupposition (Category 9)** — "after everything I do for you?" presupposes that a debt exists, that the debt is valid, that the autistic person has failed to pay it, and that the current complaint is illegitimate in light of the debt. Presuppositions are hard to challenge because challenging them requires refusing the framing of the sentence itself. [category-09-presupposition.md](category-09-presupposition.md)
-- **Cooperative Principle / Grice (Category 12)** — the pattern is a systematic violation of cooperative communication that the autistic person is being asked to honor unilaterally. The cooperative principle category gives the machinery for naming the asymmetry. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Implicature / Cooperative Principle (Category 2)** — the pattern is a systematic violation of cooperative communication that the autistic person is being asked to honor unilaterally. The cooperative principle category gives the machinery for naming the asymmetry. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 
@@ -742,11 +742,11 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 - [Tone Policing](manipulation-hub-pattern-tone-policing.md) — often deployed as the surface form of the debt citation ("after everything I do for you, and you're going to speak to me in that tone?").
 - [Sensory Gaslighting](manipulation-hub-pattern-sensory-gaslighting.md) — sensory accommodations are among the most frequently weaponized.
 - [Post-Meltdown Shaming](manipulation-hub-pattern-post-meltdown-shaming.md) — meltdowns are often framed as further evidence of the cost the accommodator has been paying; the shaming and the debt-citation braid together.
-- *Pragmatic Packaging Invalidation (not yet built)* — the broader pattern of which weaponized accommodations is one form: the substance of a concern is displaced by a frame about the speaker's standing to raise it.
-- *Information Asymmetry Exploitation (not yet built)* — where the accommodator holds information (about finances, schedules, resources) that the autistic person depends on, weaponized accommodations frequently bundles with information control.
-- *Bandwagon Isolation (not yet built)* — the performance audience move in section 3.2 shades into bandwagon isolation when the audience is built into a coalition against the autistic person.
+- *Pragmatic Packaging Invalidation* — the broader pattern of which weaponized accommodations is one form: the substance of a concern is displaced by a frame about the speaker's standing to raise it.
+- *Information Asymmetry Exploitation* — where the accommodator holds information (about finances, schedules, resources) that the autistic person depends on, weaponized accommodations frequently bundles with information control.
+- *Bandwagon Isolation* — the performance audience move in section 3.2 shades into bandwagon isolation when the audience is built into a coalition against the autistic person.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Workplace — formal accommodations cited in performance reviews, denial of new requests based on existing ones, disciplinary proceedings that treat accommodations as generosity.
 - Family of Origin — where childhood care is converted into adult-life debt, and where the "I am too much" script is originally installed.
 - Intimate Partner Relationships — where the romantic/accommodation-as-love bundling is most damaging.

@@ -185,9 +185,9 @@ Hierarchies are not static:
 
 ## Supplemental Research Documents
 
-- [Social Hierarchy Theory](category-21-hierarchy-research-theory.md) -- Dominance vs. prestige, five types, linguistic/non-linguistic markers, competence paradox, context-specific hierarchies
-- [Hierarchy and Autism](category-21-hierarchy-research-autism.md) -- "Hierarchy blindness" research, directness trap, PDA, egalitarian preference, Moral Foundations data
-- [Hierarchy Detection Practical Guide](category-21-hierarchy-research-practical.md) -- Observable signals checklist, calibration table, workplace/academic/medical/social navigation, common mistakes, four-step framework
+- [Social Hierarchy Theory](category-22-hierarchy-research-theory.md) -- Dominance vs. prestige, five types, linguistic/non-linguistic markers, competence paradox, context-specific hierarchies
+- [Hierarchy and Autism](category-22-hierarchy-research-autism.md) -- "Hierarchy blindness" research, directness trap, PDA, egalitarian preference, Moral Foundations data. Note: Ogawa et al. (2019) finding is more accurately characterized as rank recognition proceeding via different neural pathways rather than as a "blindness."
+- [Hierarchy Detection Practical Guide](category-22-hierarchy-research-practical.md) -- Observable signals checklist, calibration table, workplace/academic/medical/social navigation, common mistakes, four-step framework
 
 ## Key Sources
 

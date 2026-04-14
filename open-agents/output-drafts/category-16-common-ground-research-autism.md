@@ -66,7 +66,7 @@ This landmark study, published in *Autism Research*, examined common ground gene
 
 **Critical implication for autistic adults**: The ability to establish common ground is present. The challenge is efficiency -- doing it quickly enough and with few enough words to keep pace with real-time conversation. This maps onto a pattern seen across many pragmatic domains in autism: the capability exists, but the real-time deployment is slower or more effortful.
 
-### 2.2 The Heller and Looney (2016) Study: The Art of Common Ground
+### 2.2 The de Marchena and Eigsti (2016) Study: The Art of Common Ground
 
 Published in the *Journal of Child Language*, this study examined common ground in adolescents with ASD and typical development (TD) using an experimental narrative paradigm.
 
@@ -261,7 +261,7 @@ Research reveals a critical gap in autism between explicit and implicit Theory o
 
 ### 4.3 The Gap Between Knowing and Tracking
 
-The Heller and Looney (2016) finding is the perfect illustration of this gap: autistic adolescents KNEW the listener had shared knowledge (explicit awareness), made explicit references to it ("as you know..."), but did NOT automatically shorten their narratives (implicit deployment).
+The de Marchena and Eigsti (2016) finding is the perfect illustration of this gap: autistic adolescents KNEW the listener had shared knowledge (explicit awareness), made explicit references to it ("as you know..."), but did NOT automatically shorten their narratives (implicit deployment).
 
 This maps onto a common autistic experience:
 - **In preparation** (before the conversation): "I know Maria is an expert in machine learning, so I don't need to explain basic concepts to her"
@@ -614,7 +614,7 @@ Monotropism also offers a pathway TO common ground:
 
 | Study | Year | Key Finding | Common Ground Implication |
 |-------|------|------------|--------------------------|
-| Heller & Looney | 2016 | ASD adolescents aware of CG but don't automatically shorten narratives | Explicit knowledge ≠ implicit deployment |
+| de Marchena & Eigsti | 2016 | ASD adolescents aware of CG but don't automatically shorten narratives | Explicit knowledge ≠ implicit deployment |
 | Nadig, Vivanti & Ozonoff | 2009 | Wide individual variation; language ability predicts audience design | Not a uniform deficit; vocabulary matters |
 | Schuh, Eigsti & Mirman | 2016 | Working memory constrains CG representation independent of ToM | CG is a cognitive load task, not just a ToM task |
 | Cola et al. | 2022 | ASC speakers don't adapt to bored vs. interested listeners | Real-time listener signal detection is impaired |
@@ -668,7 +668,7 @@ This profile suggests specific, concrete intervention targets:
 
 ### Primary Research Studies
 - [Karin et al. (2025) - Paths to Common Ground in ASD](https://onlinelibrary.wiley.com/doi/10.1002/aur.70006)
-- [Heller & Looney (2016) - The Art of Common Ground](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/)
+- [de Marchena & Eigsti (2016) - The Art of Common Ground](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/)
 - [Cola et al. (2022) - Conversational Adaptation in Children and Teens with Autism](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167260/)
 - [Koch et al. (2026) - Partner-dependent Communication Without Dynamic Adaptation](https://journals.sagepub.com/doi/10.1177/13623613251410418)
 - [Geelhand et al. (2025) - Autistic Adults Display Different Verbal Behavior Only in Mixed-Neurotype Interactions](https://journals.sagepub.com/doi/10.1177/13623613241298376)

@@ -28,7 +28,7 @@
 
 ## 1. Why This Page Exists
 
-Medical settings are the institutional context in which the credibility discount has the most direct material consequences. When an autistic person's report of pain, of symptom, of side effect, of need is heard by a clinician through the credibility discount documented by Lim & Magiati (2022), the cost is not theoretical — it is undiagnosed disease, untreated injury, missed cancer, dismissed cardiac symptoms, ignored neurological events, denied medication, forced treatment, and (in the cumulative empirical picture) the 16-to-18-year mortality gap that Hirvikoski et al. (2016) documented.
+Medical settings are the institutional context in which the credibility discount has the most direct material consequences. When an autistic person's report of pain, of symptom, of side effect, of need is heard by a clinician through the credibility discount documented by Lim, Young & Brewer (2022), the cost is not theoretical — it is undiagnosed disease, untreated injury, missed cancer, dismissed cardiac symptoms, ignored neurological events, denied medication, forced treatment, and (in the cumulative empirical picture) the 16-to-18-year mortality gap that Hirvikoski et al. (2016) documented.
 
 This page treats medical settings as a context where the patterns this hub addresses have the highest material stakes outside of intimate partner contexts and family of origin under guardianship. The sub-hub user has framed the entire project around helping autistic adults combat manipulation effectively. **In medical settings, the manipulation is often institutional rather than individual** — a clinician with no malice does the credibility discount automatically, because the discount is structural rather than personal — and the protective response has to be calibrated for that structural reality.
 
@@ -119,7 +119,7 @@ This section names the dimensions in which medical contexts differ from other co
 
 ### 3.1 The credibility discount in clinical encounters
 
-Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. The credibility discount has been treated extensively across this hub. In medical settings, it has several specific effects:
+Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. The credibility discount has been treated extensively across this hub. In medical settings, it has several specific effects:
 
 - **Symptom reports are weighted lower.** A description of pain, of fatigue, of weakness, of cognitive change, of sensory disturbance is read as less reliable when delivered by an autistic patient than when delivered by a non-autistic patient. The clinician's threshold for investigating moves up; the threshold for attributing the symptom to anxiety, autism, or "behavioral causes" moves down.
 - **Affect is read as inappropriate.** Flat affect during distress reports leads clinicians to discount the distress. Intense affect during the same reports leads clinicians to attribute the symptoms to "emotional dysregulation" rather than to a physical cause. The Emotional Invalidation Double Bind from Tier 3 operates with full force in clinical contexts.
@@ -564,7 +564,7 @@ The standing recovery frame for the entire sub-hub applies: **the goal is not to
 
 1. **Medical settings are a life-stakes context.** Hirvikoski et al. (2016) documented approximately 16–18 years of premature mortality for autistic adults without intellectual disability, with much of the gap driven by suicide and untreated medical conditions. The mortality data is the empirical anchor for treating medical contexts as a context where the recognition and protective strategies matter cumulatively.
 
-2. **The credibility discount operates structurally in clinical encounters.** Lim & Magiati (2022). The discount is not personal; it is structural. Symptom reports are weighted lower, affect is read as inappropriate, detail is read as obsessiveness, lack of detail is read as evasiveness, asking questions is read as challenging. The autistic patient faces a structural headwind that operates regardless of how carefully they prepare.
+2. **The credibility discount operates structurally in clinical encounters.** Lim, Young & Brewer (2022). The discount is not personal; it is structural. Symptom reports are weighted lower, affect is read as inappropriate, detail is read as obsessiveness, lack of detail is read as evasiveness, asking questions is read as challenging. The autistic patient faces a structural headwind that operates regardless of how carefully they prepare.
 
 3. **Diagnostic overshadowing is a documented failure mode.** Symptoms attributed to autism without investigation. The actual cause goes undiagnosed. The pattern is one of the routes by which the mortality gap becomes specific. The protective response is to ask explicitly for the differential diagnosis and to seek second opinions when symptoms are being dismissed.
 
@@ -590,7 +590,7 @@ The standing recovery frame for the entire sub-hub applies: **the goal is not to
 - Hirvikoski, T., Mittendorfer-Rutz, E., Boman, M., Larsson, H., Lichtenstein, P., & Bölte, S. (2016). "Premature mortality in autism spectrum disorder." *British Journal of Psychiatry* 208(3): 232–238.
 
 **The credibility discount in clinical contexts:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Autistic adults' barriers to healthcare:**
 - Doherty, M., Neilson, S., O'Sullivan, J., Carravallah, L., Johnson, M., Cullen, W., & Shaw, S. C. K. (2022). "Barriers to healthcare and self-reported adverse outcomes for autistic adults: a cross-sectional study." *BMJ Open.*
@@ -660,14 +660,14 @@ The standing recovery frame for the entire sub-hub applies: **the goal is not to
 
 ### Pragmatics categories referenced on this page
 
-- **Speech Acts (Category 11)** — symptom reports, refusals of treatment, requests for accommodation, complaints, and consent decisions are all speech acts. Distinguishing them from how the clinician chooses to read them is part of the cognitive defense. **One of the most important pragmatics cross-links for this page.** [category-11-speech-acts.md](category-11-speech-acts.md)
+- **Speech Acts (Category 1)** — symptom reports, refusals of treatment, requests for accommodation, complaints, and consent decisions are all speech acts. Distinguishing them from how the clinician chooses to read them is part of the cognitive defense. **One of the most important pragmatics cross-links for this page.** [category-01-speech-acts.md](category-01-speech-acts.md)
 - **Register (Category 7)** — clinical register has its own conventions, and autistic patients are often penalized for using a register that does not match the clinician's expectations. Understanding register as a contextual variable rather than a moral test gives a way out of the framing. [category-07-register.md](category-07-register.md)
 - **Common Ground (Category 16)** — medical encounters depend on the patient and clinician sharing a common understanding of what is being discussed. The structural credibility discount unilaterally rewrites the common ground in the clinician's favor. [category-16-common-ground.md](category-16-common-ground.md)
-- **Frames and Framing (Category 17)** — the clinician's framing of the patient (anxious, difficult, autistic) becomes the lens through which subsequent care is delivered. Frame analysis is the technical tool for recognizing the framing as a frame. [category-17-frames.md](category-17-frames.md)
-- **Implicature (Category 10)** — clinical encounters operate heavily through implicature. "We don't see anything" implicates "you don't really have anything." "This is consistent with your autism" implicates "we're not going to investigate further." [category-10-implicature.md](category-10-implicature.md)
-- **Identity and Stance (Category 19)** — the clinician's stance positions the patient. The patient's stance is the position from which they advocate for themselves. Distinguishing the two is part of the protective work. [category-19-identity-stance.md](category-19-identity-stance.md)
-- **Politeness (Category 6)** — the masking demands that medical encounters place on autistic patients are largely politeness-conventional demands. Brown & Levinson's framework gives the underlying mechanism. [category-06-politeness.md](category-06-politeness.md)
-- **Cooperative Principle / Grice (Category 12)** — clinical communication breaks down when the clinician does not cooperate with the patient's good-faith reports. Grice's maxims are violated by the credibility discount. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Framing and Frame Analysis (Category 23)** — the clinician's framing of the patient (anxious, difficult, autistic) becomes the lens through which subsequent care is delivered. Frame analysis is the technical tool for recognizing the framing as a frame. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Implicature (Category 2)** — clinical encounters operate heavily through implicature. "We don't see anything" implicates "you don't really have anything." "This is consistent with your autism" implicates "we're not going to investigate further." [category-02-implicature.md](category-02-implicature.md)
+- **Identity and Stance (Category 24)** — the clinician's stance positions the patient. The patient's stance is the position from which they advocate for themselves. Distinguishing the two is part of the protective work. [category-24-identity-stance.md](category-24-identity-stance.md)
+- **Politeness (Category 3)** — the masking demands that medical encounters place on autistic patients are largely politeness-conventional demands. Brown & Levinson's framework gives the underlying mechanism. [category-03-politeness.md](category-03-politeness.md)
+- **Implicature / Cooperative Principle (Category 2)** — clinical communication breaks down when the clinician does not cooperate with the patient's good-faith reports. Grice's maxims are violated by the credibility discount. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 

@@ -344,7 +344,7 @@ Every deictic expression requires the listener to **reconstruct the speaker's pe
 
 ### 6.2 The Fluidity-to-Inelasticity Hypothesis
 
-Researcher Joshua Breckinridge has proposed a theoretical framework specifically for autism and deixis:
+Oakley & Vidanović (2014) in *Cognitive Semiotics* 7(2):191-225 proposed a theoretical framework specifically for autism and deixis:
 
 - Typical deictic processing requires **fluid** shifting of reference points -- the ability to rapidly and flexibly update who the "I-here-now" center is
 - In autism, there may be **inelasticity** in this shifting -- the deictic reference points are less fluid, harder to update, and more likely to "stick" to a particular configuration
@@ -477,7 +477,7 @@ One corpus study comparing the use of deixis in autistic vs. typically developin
 | Sign language pronouns in autism | Shield, Meier, Tager-Flusberg | 2015 | Palm reversal evidence supporting perspective-shifting account |
 | Person-reference developmental trends | Barokova & Tager-Flusberg | 2020 | Comprehensive developmental study of person reference in ASD |
 | Deictic relational responding scoping review | Multiple authors | 2024 | Systematic review of RFT-based deictic research in autism |
-| Fluidity-to-inelasticity hypothesis | Breckinridge | 2014 | Theoretical framework for deictic difficulties in autism |
+| Fluidity-to-inelasticity hypothesis | Oakley & Vidanović | 2014 | *Cognitive Semiotics* 7(2):191-225. Theoretical framework for deictic difficulties in autism |
 
 ### Key Research Groups
 

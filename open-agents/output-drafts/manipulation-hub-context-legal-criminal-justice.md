@@ -33,7 +33,7 @@
 
 ## 1. Why This Page Exists
 
-Legal and criminal justice contexts are where the patterns this hub treats produce the most direct loss-of-liberty consequences. The stakes include: death (in police encounters), incarceration, deportation, loss of children, loss of legal capacity, loss of professional credentials and employment, sex offender registration, civil commitment, financial penalties, and the long-shadow records that follow the autistic adult across decades. The legal system is also one of the contexts in which the credibility discount documented by Lim & Magiati (2022) operates with the most material force, because legal proceedings are often single-point evaluations of credibility with consequences that are difficult or impossible to reverse.
+Legal and criminal justice contexts are where the patterns this hub treats produce the most direct loss-of-liberty consequences. The stakes include: death (in police encounters), incarceration, deportation, loss of children, loss of legal capacity, loss of professional credentials and employment, sex offender registration, civil commitment, financial penalties, and the long-shadow records that follow the autistic adult across decades. The legal system is also one of the contexts in which the credibility discount documented by Lim, Young & Brewer (2022) operates with the most material force, because legal proceedings are often single-point evaluations of credibility with consequences that are difficult or impossible to reverse.
 
 This page treats legal and criminal justice contexts as a category that integrates several distinct sub-contexts:
 
@@ -70,7 +70,7 @@ The most acute physical-safety dimension. Autistic adults are documented to have
 
 **Documented contributing factors:**
 - **Police training** is calibrated for communication assumptions that do not apply to autistic communication. Officers are trained to read non-compliance as risk, and autistic responses to overload look like non-compliance.
-- **The credibility discount** (Lim & Magiati 2022) operates in real-time during police encounters. Officers read autistic affect as evasive, intoxicated, or threatening.
+- **The credibility discount** (Lim, Young & Brewer 2022) operates in real-time during police encounters. Officers read autistic affect as evasive, intoxicated, or threatening.
 - **Presumption of intoxication or drug use.** Autistic communication features are sometimes attributed to substances rather than to autism.
 - **Mental health crisis defaults** that trigger involuntary admission rather than de-escalation.
 - **The lack of de-escalation training** in many police forces, particularly in the US.
@@ -159,7 +159,7 @@ The [Family of Origin](manipulation-hub-context-family-of-origin.md) page sectio
 
 ### 3.1 The credibility discount with the highest material consequences
 
-Lim & Magiati (2022) documented that autistic adults are perceived as more deceptive and less credible than non-autistic adults across observer studies. In legal contexts, the discount has the most material consequences:
+Lim, Young & Brewer (2022) documented that autistic adults are perceived as more deceptive and less credible than non-autistic adults across observer studies. In legal contexts, the discount has the most material consequences:
 
 - **Police officers** make split-second judgments about credibility that affect arrest decisions, use of force, and the framing of incident reports.
 - **Prosecutors** make charging decisions based partly on assessments of witness and defendant credibility.
@@ -471,7 +471,7 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 
 3. **Autistic adults are disproportionately vulnerable to false confessions** during police interrogation, due to a combination of communication features, the good-faith assumption, sensory and cognitive overload during long interrogations, and the use of deception by interrogators.
 
-4. **The credibility discount documented by Lim & Magiati (2022) operates throughout the legal system** with material consequences. Police, prosecutors, judges, juries, custody evaluators, forensic evaluators, and immigration adjudicators all read autistic affect through assumptions that work against the autistic adult.
+4. **The credibility discount documented by Lim, Young & Brewer (2022) operates throughout the legal system** with material consequences. Police, prosecutors, judges, juries, custody evaluators, forensic evaluators, and immigration adjudicators all read autistic affect through assumptions that work against the autistic adult.
 
 5. **The autism-CJS research literature is small but consistent.** Slavny-Cross, Maras, Crane, Allely, Lewy, and others have documented the patterns and have advocated for autism-adapted forensic interview protocols, expert testimony on autistic features, and broader system reform.
 
@@ -502,7 +502,7 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 - Allely, C. S., & Cooper, P. (2017). "Predicting and preventing vulnerabilities in autism and the criminal justice system."
 
 **The credibility discount:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding work on perceptions of credibility in mock-suspect studies.
 
 **Autism-PTSD and broader trauma triggers (relevant to legal-context trauma):**
@@ -542,14 +542,14 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 
 ### Pragmatics categories referenced on this page
 
-- **Speech Acts (Category 11)** — testimony, confessions, refusals to answer, and invocations of rights are speech acts whose legal effect depends on their performance and context. **One of the most important pragmatics cross-links for this page.** [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — much legal communication operates through implicature. Police framings imply consequences that are not stated; courtroom questions imply premises the witness is being asked to accept. [category-10-implicature.md](category-10-implicature.md)
+- **Speech Acts (Category 1)** — testimony, confessions, refusals to answer, and invocations of rights are speech acts whose legal effect depends on their performance and context. **One of the most important pragmatics cross-links for this page.** [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — much legal communication operates through implicature. Police framings imply consequences that are not stated; courtroom questions imply premises the witness is being asked to accept. [category-02-implicature.md](category-02-implicature.md)
 - **Register (Category 7)** — courtroom register and police-interview register have specific conventions that autistic participants are often penalized for not meeting natively. [category-07-register.md](category-07-register.md)
-- **Politeness (Category 6)** — refusing to answer police questions or invoking rights can feel impolite; recognizing politeness conventions as conventions rather than as moral requirements is part of the protective work. [category-06-politeness.md](category-06-politeness.md)
-- **Frames and Framing (Category 17)** — legal proceedings frame the autistic person in ways that subsequent decisions then operate within. [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — courts and other legal venues position individuals; the position then shapes consequences. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Politeness (Category 3)** — refusing to answer police questions or invoking rights can feel impolite; recognizing politeness conventions as conventions rather than as moral requirements is part of the protective work. [category-03-politeness.md](category-03-politeness.md)
+- **Framing and Frame Analysis (Category 23)** — legal proceedings frame the autistic person in ways that subsequent decisions then operate within. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — courts and other legal venues position individuals; the position then shapes consequences. [category-24-identity-stance.md](category-24-identity-stance.md)
 - **Common Ground (Category 16)** — legal proceedings depend on shared common ground that the credibility discount unilaterally rewrites. [category-16-common-ground.md](category-16-common-ground.md)
-- **Cooperative Principle / Grice (Category 12)** — legal communication is often expected to be cooperative on the autistic person's side without being cooperative on the institution's side. The asymmetry is structural. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Implicature / Cooperative Principle (Category 2)** — legal communication is often expected to be cooperative on the autistic person's side without being cooperative on the institution's side. The asymmetry is structural. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 

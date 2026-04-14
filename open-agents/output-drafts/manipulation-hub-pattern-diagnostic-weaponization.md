@@ -191,7 +191,7 @@ This is one of the harder distinguishing problems in this hub because well-inten
 - **The frame survives correction.** When you point out that the diagnostic vocabulary is being misused, the interlocutor either dismisses the correction or extends the frame to include your correction itself ("you're being too literal about the technical terms — that's so autistic of you").
 - **The frame is being distributed to third parties.** You discover that other people are now talking about you in diagnostic terms you did not introduce, and the description matches the manipulator's framing.
 - **The frame undermines your access to your own self-knowledge.** Repeatedly being told that you do not really know what you feel, what you remember, what you perceive, or what you intended produces, over time, the loss of access to those internal states. This is the central harm of the pattern and one of the strongest signals that you are in it.
-- **The frame intensifies after you disclose autism.** Disclosure can sometimes shift the credibility discount in your favor (Lim & Magiati, 2022, found that disclosed-autism conditions reduced the deception attribution in mock-suspect studies). But it can also have the opposite effect: a manipulator who learns you are autistic gains a vocabulary and a justification for behaviors they would otherwise have to defend without scaffolding. If disclosure made things worse, that is information about the recipient of the disclosure.
+- **The frame intensifies after you disclose autism.** Disclosure can sometimes shift the credibility discount in your favor (Lim, Young & Brewer, 2022, found that disclosed-autism conditions reduced the deception attribution in mock-suspect studies). But it can also have the opposite effect: a manipulator who learns you are autistic gains a vocabulary and a justification for behaviors they would otherwise have to defend without scaffolding. If disclosure made things worse, that is information about the recipient of the disclosure.
 
 ### Signals that shift the probability *away* from diagnostic weaponization
 
@@ -233,7 +233,7 @@ Diagnostic weaponization exploits this ambivalence directly. When someone says "
 
 ### Disclosure asymmetry, applied to autism
 
-Lim & Magiati (2022) found that disclosing autism reduced the deception attribution in mock-suspect studies — the credibility discount diminished when observers had a name for the unusual features they were seeing. This is a hopeful finding and it is real.
+Lim, Young & Brewer (2022) found that disclosing autism reduced the deception attribution in mock-suspect studies — the credibility discount diminished when observers had a name for the unusual features they were seeing. This is a hopeful finding and it is real.
 
 But the same study and the surrounding qualitative literature show that the effect is *audience-dependent*. Disclosure to an audience in good faith reduces the discount. Disclosure to an audience in bad faith *increases* it, by giving them a vocabulary and a permission structure for behaviors they would otherwise have to defend without scaffolding. Ullman's (2010) general disclosure asymmetry — negative disclosure responses harm more than positive responses help — applies to autism disclosure as it applies to abuse disclosure. The decision tree on the [Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md) page should be used; the autism disclosure decision is not separable from the audience selection decision.
 
@@ -313,7 +313,7 @@ When you do not have access to autistic peer relationships, building them is its
 
 ### 6.4 Disclose autism strategically, not universally
 
-[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md) applies in a particularly direct way to diagnostic weaponization. Disclosure to an audience in good faith reduces the credibility discount (Lim & Magiati 2022); disclosure to an audience in bad faith *increases* the discount and provides material for further weaponization. The decision is audience-dependent, not principle-dependent.
+[Disclosure Decisions](manipulation-hub-strategy-disclosure-decisions.md) applies in a particularly direct way to diagnostic weaponization. Disclosure to an audience in good faith reduces the credibility discount (Lim, Young & Brewer 2022); disclosure to an audience in bad faith *increases* the discount and provides material for further weaponization. The decision is audience-dependent, not principle-dependent.
 
 Practical guidance:
 
@@ -395,7 +395,7 @@ The recovery frame worth holding throughout: **the goal is not to become a diffe
 
 7. **The internalization endpoint is the central harm.** *"I felt like I deserved it because I was autistic"* is what successfully internalized diagnostic weaponization sounds like. Recovery has to undo this, and it usually takes years, not months.
 
-8. **Disclosure is audience-dependent, not principle-dependent.** Lim & Magiati (2022) shows that disclosure can reduce the credibility discount with good-faith audiences, and that it can amplify the discount with bad-faith audiences. The decision is who to disclose to, not whether disclosure is "good" or "bad."
+8. **Disclosure is audience-dependent, not principle-dependent.** Lim, Young & Brewer (2022) shows that disclosure can reduce the credibility discount with good-faith audiences, and that it can amplify the discount with bad-faith audiences. The decision is who to disclose to, not whether disclosure is "good" or "bad."
 
 9. **Autism-aware therapy matters more here than for most other patterns.** Non-autism-aware clinicians can inadvertently replicate the pattern in session. The authority vacuum is real and the red flags from the Professional Support page apply with extra weight.
 
@@ -413,7 +413,7 @@ The recovery frame worth holding throughout: **the goal is not to become a diffe
 - Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. https://journals.sagepub.com/doi/10.1177/13623613231205630
 
 **The credibility discount and disclosure effects:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Lim, A., Young, R. L., & Brewer, N. (2022). Surrounding empirical work on perceived deception in autistic mock-suspects, including the finding that diagnostic disclosure reduces the credibility discount when received in good faith.
 
 **Theory of mind and deception detection (correcting popular misuse of the term):**
@@ -457,14 +457,14 @@ The recovery frame worth holding throughout: **the goal is not to become a diffe
 
 ### Pragmatics categories referenced on this page
 
-- **Frames and Framing (Category 17)** — diagnostic weaponization is fundamentally a frame attack: the perpetrator replaces "we are discussing your concern" with "we are discussing your autism." Frame analysis gives the technical machinery for naming the swap. **This is the most important pragmatics cross-link on this page.** [category-17-frames.md](category-17-frames.md)
-- **Speech Acts (Category 11)** — distinguishing the speech act ("I am raising a concern") from the diagnostic discount that is being attached to it. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — much of the diagnostic weaponization operates through what is *implied* about your reliability rather than said directly. "That's your autism talking" implicates that nothing you say can be trusted. [category-10-implicature.md](category-10-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — diagnostic weaponization is fundamentally a frame attack: the perpetrator replaces "we are discussing your concern" with "we are discussing your autism." Frame analysis gives the technical machinery for naming the swap. **This is the most important pragmatics cross-link on this page.** [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Speech Acts (Category 1)** — distinguishing the speech act ("I am raising a concern") from the diagnostic discount that is being attached to it. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — much of the diagnostic weaponization operates through what is *implied* about your reliability rather than said directly. "That's your autism talking" implicates that nothing you say can be trusted. [category-02-implicature.md](category-02-implicature.md)
 - **Presupposition (Category 9)** — diagnostic vocabulary smuggles in the presupposition that the speaker has accurate access to your internal states ("you don't really know what you feel because of your alexithymia"). The presupposition is doing the work, not the surface claim. [category-09-presupposition.md](category-09-presupposition.md)
 - **Common Ground (Category 16)** — diagnostic weaponization unilaterally rewrites the common ground of the relationship to install your autism as the explanation for any difficulty. [category-16-common-ground.md](category-16-common-ground.md)
 - **Register (Category 7)** — the borrowed clinical vocabulary gives diagnostic weaponization a register of authority it would not have in plain language. Recognizing the register shift is part of the cognitive defense. [category-07-register.md](category-07-register.md)
-- **Politeness (Category 6)** — diagnostic weaponization is often wrapped in the politeness scaffolding of "I'm only saying this because I care about you." Brown & Levinson's face theory gives the underlying mechanism. [category-06-politeness.md](category-06-politeness.md)
-- **Identity and Stance (Category 19)** — diagnostic weaponization is fundamentally an attack on the autistic person's identity and stance position in the conversation. Reading the identity and stance category gives the underlying pragmatic mechanism. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Politeness (Category 3)** — diagnostic weaponization is often wrapped in the politeness scaffolding of "I'm only saying this because I care about you." Brown & Levinson's face theory gives the underlying mechanism. [category-03-politeness.md](category-03-politeness.md)
+- **Identity and Stance (Category 24)** — diagnostic weaponization is fundamentally an attack on the autistic person's identity and stance position in the conversation. Reading the identity and stance category gives the underlying pragmatic mechanism. [category-24-identity-stance.md](category-24-identity-stance.md)
 
 ### Other hub pages referenced on this page
 
@@ -491,12 +491,12 @@ The recovery frame worth holding throughout: **the goal is not to become a diffe
 - [DARVO](manipulation-hub-pattern-darvo.md) — frequently bundled with diagnostic weaponization. The acute response sequence that diagnostic weaponization gives a built-in justification.
 - [Tone Policing](manipulation-hub-pattern-tone-policing.md) — frequently bundled with diagnostic weaponization. Prosodic and affect critique attached to autism vocabulary.
 - Sensory Gaslighting (next in build order) — the foundational childhood form of diagnostic weaponization that prepares the ground for adult patterns.
-- The Compliance Trap (not yet built) — "if you'd just mask better" is the masking-double-bind variant treated in depth.
-- Post-Meltdown Shaming (not yet built) — the meltdown-as-attack variant treated in depth.
-- Memory Gaslighting (not yet built) — frequently bundled with the alexithymia and episodic memory diagnostic frame.
-- Bandwagon Isolation (not yet built) — the social-scaffolding move that distributes the diagnostic weaponization to third parties.
+- The Compliance Trap — "if you'd just mask better" is the masking-double-bind variant treated in depth.
+- Post-Meltdown Shaming — the meltdown-as-attack variant treated in depth.
+- Memory Gaslighting — frequently bundled with the alexithymia and episodic memory diagnostic frame.
+- Bandwagon Isolation — the social-scaffolding move that distributes the diagnostic weaponization to third parties.
 
-**Contexts (Tier 4, not yet built):**
+**Contexts (Tier 4):**
 - Intimate Partner Relationships — where diagnostic weaponization is most lethal and most consequential.
 - Family of Origin — where the compliance training pipeline that makes diagnostic weaponization effective is installed.
 - Medical Settings — where institutional diagnostic discounting ("it's just your autism") affects health outcomes.

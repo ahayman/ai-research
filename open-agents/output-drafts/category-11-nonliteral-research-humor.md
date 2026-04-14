@@ -938,7 +938,7 @@ For autistic individuals who rely on explicit signals, verbal humor markers can 
 - McCarthy, M. & Carter, R. (2004). "There's millions of them": hyperbole in everyday conversation. *Journal of Pragmatics*, 36, 149-184.
 - Speer, S. A. (2019). Reconsidering self-deprecation as a communication practice. *British Journal of Social Psychology*, 58(4), 806-828.
 - Bitterly, T. B., Brooks, A. W., & Schweitzer, M. E. (2016). Risky business: When humor increases and decreases status. *Journal of Personality and Social Psychology*.
-- Kasirer, A. & Mashal, N. (2014). Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development. *Journal of Autism and Developmental Disorders*, 44(8), 1931-1941.
+- Kasirer, A. & Mashal, N. (2014). "Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development." *Frontiers in Human Neuroscience*, 8, 615.
 - Hubbard, R. J. et al. (2023). Predictability and decomposability separately contribute to compositional processing of idiomatic language. *Psychophysiology*.
 - Happé, F. (1993). Communicative competence and theory of mind in autism: A test of relevance theory. *Cognition*, 48, 101-119.
 

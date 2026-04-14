@@ -560,7 +560,7 @@ The standing recovery frame applies: **the goal is not to become the kind of stu
 - Roux, A. M., Shattuck, P. T., Rast, J. E., et al. National Autism Indicators Reports. Drexel Life Course Outcomes Research Program.
 
 **The credibility discount in educational contexts:**
-- Lim, A., & Magiati, I. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 
 **Mental health on campus:**
 - Camm-Crosbie, L., Bradley, L., Shaw, R., Baron-Cohen, S., & Cassidy, S. (2019). "'People like me don't get support': Autistic adults' experiences of support and treatment for mental health difficulties, self-injury and suicidality." *Autism* 23(6): 1431–1441.
@@ -598,13 +598,13 @@ The standing recovery frame applies: **the goal is not to become the kind of stu
 ### Pragmatics categories referenced on this page
 
 - **Register (Category 7)** — academic register has its own conventions, and autistic students are often penalized for not meeting them natively. **One of the most important pragmatics cross-links for this page.** [category-07-register.md](category-07-register.md)
-- **Politeness (Category 6)** — Brown & Levinson's framework underlies the politeness conventions of academic interaction with faculty and administrators. [category-06-politeness.md](category-06-politeness.md)
-- **Speech Acts (Category 11)** — refusals, accommodation requests, complaints, and academic integrity defenses are speech acts that the institutional context treats with specific procedural requirements. [category-11-speech-acts.md](category-11-speech-acts.md)
-- **Implicature (Category 10)** — institutional educational communication operates heavily through implicature ("we have concerns about your fit," "this isn't really working out"). [category-10-implicature.md](category-10-implicature.md)
-- **Frames and Framing (Category 17)** — educational records frame students in ways that subsequent educators read before they meet the student. [category-17-frames.md](category-17-frames.md)
-- **Identity and Stance (Category 19)** — academic evaluation positions students, and the position then shapes the educational trajectory. [category-19-identity-stance.md](category-19-identity-stance.md)
+- **Politeness (Category 3)** — Brown & Levinson's framework underlies the politeness conventions of academic interaction with faculty and administrators. [category-03-politeness.md](category-03-politeness.md)
+- **Speech Acts (Category 1)** — refusals, accommodation requests, complaints, and academic integrity defenses are speech acts that the institutional context treats with specific procedural requirements. [category-01-speech-acts.md](category-01-speech-acts.md)
+- **Implicature (Category 2)** — institutional educational communication operates heavily through implicature ("we have concerns about your fit," "this isn't really working out"). [category-02-implicature.md](category-02-implicature.md)
+- **Framing and Frame Analysis (Category 23)** — educational records frame students in ways that subsequent educators read before they meet the student. [category-23-framing-frame-analysis.md](category-23-framing-frame-analysis.md)
+- **Identity and Stance (Category 24)** — academic evaluation positions students, and the position then shapes the educational trajectory. [category-24-identity-stance.md](category-24-identity-stance.md)
 - **Common Ground (Category 16)** — academic norms are part of the implicit common ground that students are expected to know without being told. [category-16-common-ground.md](category-16-common-ground.md)
-- **Cooperative Principle / Grice (Category 12)** — the cooperative communication principle is often violated unilaterally in formal academic processes. [category-12-grice-cooperation.md](category-12-grice-cooperation.md)
+- **Implicature / Cooperative Principle (Category 2)** — the cooperative communication principle is often violated unilaterally in formal academic processes. [category-02-implicature.md](category-02-implicature.md)
 
 ### Other hub pages referenced on this page
 

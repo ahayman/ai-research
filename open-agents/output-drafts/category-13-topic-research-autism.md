@@ -272,11 +272,12 @@ This suggests that in autistic-autistic conversation, the "abrupt" quality of to
 - The "generous assumption of common ground" means speakers assume their partner can follow the shift.
 
 **Cooperative Overlap:**
-Research indicates approximately 80% of autistic individuals use **cooperative overlap** -- talking along with the speaker to show enthusiastic engagement rather than to take the floor. This is often misinterpreted as "interrupting" by NT interlocutors but functions as rapport-building among those who share the style. Topic shifts within cooperative overlap are seen as energizing rather than disruptive.
+Many autistic individuals use **cooperative overlap** -- talking along with the speaker to show enthusiastic engagement rather than to take the floor. In autistic-autistic conversation this is often experienced as rapport-building rather than as interruption, but it is routinely misread as "interrupting" by non-autistic interlocutors who operate on strict one-at-a-time turn-taking norms. Topic shifts within cooperative overlap are experienced as energizing rather than disruptive by those who share the style. Tannen's original work on cooperative overlap documented this as a style difference (rather than a deficit or a violation of turn-taking) in contexts beyond autism. Exact prevalence estimates for cooperative overlap in the autistic population are not well-established in the peer-reviewed literature; community-facing sources sometimes cite figures around 80% but the empirical basis for the specific number is thin. [COMMUNITY KNOWLEDGE / preliminary empirical support]
 
 **Sources:**
-- [Heasman & Gillespie (2019) - SAGE Journals](https://journals.sagepub.com/doi/10.1177/1362361318785172)
-- [Cooperative Overlap - Embrace Autism](https://embrace-autism.com/cooperative-overlap-ie-enthusiastic-autistic-interrupting/)
+- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Ablex. (Foundational work on cooperative overlap as a positive style across populations.)
+- Heasman, B. & Gillespie, A. (2019). "Neurodivergent intersubjectivity: Distinctive features of how autistic people create shared understanding." *Autism* 23(4):910-921. [SAGE Journals](https://journals.sagepub.com/doi/10.1177/1362361318785172)
+- Crompton, C. J. et al. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7):1704-1712.
 
 ---
 

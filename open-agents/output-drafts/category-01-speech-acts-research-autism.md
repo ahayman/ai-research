@@ -381,7 +381,7 @@ For autistic individuals, the form-function mismatch presents a challenge at mul
 
 ### 5.3 The Predictive Processing Account
 
-**Bervoets & Hens (2023)** -- "Literalism in Autistic People: a Predictive Processing Proposal" -- *Review of Philosophy and Psychology*
+**Vicente, Michel & Petrolini (2023)** -- "Literalism in Autistic People: a Predictive Processing Proposal" -- *Review of Philosophy and Psychology*
 - Proposes that literalism results from atypical functioning of the predictive system
 - In predictive processing, the brain constantly generates predictions about incoming information and updates based on prediction errors
 - An atypical balance between predictions and error signals makes autistic individuals **more uncertain about their own predictions**

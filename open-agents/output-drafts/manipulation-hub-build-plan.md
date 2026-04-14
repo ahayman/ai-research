@@ -24,24 +24,24 @@ These apply to every page in the sub-hub:
 5. **Cross-link to pragmatics.** Every page links back to the relevant pragmatics categories so readers can learn the underlying mechanism without having to read the entire curriculum first.
 
 6. **Template compliance.** Every page follows the 10-part template established in the Safety Assessment page:
-   1. Opening reframe
-   2. The concept explained
-   3. How it looks in practice
-   4. How to distinguish from legitimate behavior / miscommunication
-   5. Autism-specific considerations
-   6. Strategies (with conditionals)
-   7. What this page cannot do
-   8. Key takeaways
-   9. Citation register
-   10. Cross-links
+  1. Opening reframe
+  2. The concept explained
+  3. How it looks in practice
+  4. How to distinguish from legitimate behavior / miscommunication
+  5. Autism-specific considerations
+  6. Strategies (with conditionals)
+  7. What this page cannot do
+  8. Key takeaways
+  9. Citation register
+  10. Cross-links
 
 7. **Downstream-use checklist.** Before finalizing each page, verify:
-   - Every strategy traces to the strategy-level evidence map in the DV frameworks doc
-   - Every mention of leaving pairs with safety planning + advocate referral
-   - Every strangulation mention carries the lethality marker
-   - Every "work it out" framing is screened against Bograd & Mederos
-   - No Section 12 forbidden claims
-   - Cross-links to relevant pragmatics categories
+  - Every strategy traces to the strategy-level evidence map in the DV frameworks doc
+  - Every mention of leaving pairs with safety planning + advocate referral
+  - Every strangulation mention carries the lethality marker
+  - Every "work it out" framing is screened against Bograd & Mederos
+  - No Section 12 forbidden claims
+  - Cross-links to relevant pragmatics categories
 
 ---
 
@@ -71,16 +71,16 @@ Pattern pages will reference specific strategies, so strategies need to exist fi
 
 | # | Page | Priority | Status | Primary Sources |
 |---|------|----------|--------|----------------|
-| 1 | **Documentation** | Highest | COMPLETE | Ullman (2010) on disclosure; employment-law practitioner literature; extrapolation from episodic memory differences research in autism; Lim & Magiati (2022) on credibility discount; Campbell/Sullivan/NDVH on DV documentation safety. The mechanical-necessity framing is the core autistic-specific contribution. |
+| 1 | **Documentation** | Highest | COMPLETE | Ullman (2010) on disclosure; employment-law practitioner literature; extrapolation from episodic memory differences research in autism; Lim, Young & Brewer (2022) on credibility discount; Campbell/Sullivan/NDVH on DV documentation safety. The mechanical-necessity framing is the core autistic-specific contribution. |
 | 2 | **Reality-Check Networks** | High | COMPLETE | Zalta et al. 2021 meta-analysis on social support; Coker et al. 2002; Crompton et al. 2020 on autistic peer networks; Ullman 2010 on disclosure asymmetry; Stark 2007 on isolation as coercive control. Distinguishes reality-checking from validation-seeking. |
-| 3 | **Disclosure Decisions: Who, When, and How to Tell** | High | COMPLETE | Ullman (2010) disclosure asymmetry; Lim & Magiati (2022) credibility discount; audience map covering reality-check network, advocates, therapists, medical, family/friends, police, HR, lawyers, online. Separate decision framework for autism disclosure. Graduated disclosure strategy. |
+| 3 | **Disclosure Decisions: Who, When, and How to Tell** | High | COMPLETE | Ullman (2010) disclosure asymmetry; Lim, Young & Brewer (2022) credibility discount; audience map covering reality-check network, advocates, therapists, medical, family/friends, police, HR, lawyers, online. Separate decision framework for autism disclosure. Graduated disclosure strategy. |
 | 4 | **Safety Planning** | Safety-critical | COMPLETE | NDVH three-phase framework; Sullivan & Bybee (1999) RCT; Glass et al. (2017) MyPlan; Campbell's Danger Assessment; Autism Adapted Safety Plans pilot RCT (2024). Framed as orientation paired with advocacy, not DIY replacement. Eight autism-specific adaptations from the 2024 pilot. |
 | 5 | **Strategic Disengagement** | High | COMPLETE | Stark 2007 on survival strategies; Nielsen & Einarsen workplace withdrawal research; Burke 2004 Prochaska stages; autism masking research. Five axes (emotional, informational, temporal, social, behavioral). Critical distinction from compliance masking. Gray rock technique hedged appropriately. |
 | 6 | **Refusal, Limit-Setting, and the "Boundaries" Problem** | Moderate (careful) | COMPLETE | STAIR (Cloitre et al.); Gutheil & Gabbard clinical boundaries literature; Brown & Levinson face theory; explicit critique of popular "boundaries" discourse. Five-level politeness hierarchy of refusals. Internal vs. declared limits. Enforceability test. Autism-specific compliance training considerations throughout. |
 | 7 | **De-escalation** | Moderate (scoped) | COMPLETE | Compton et al. 2014 CIT review; SAMHSA TIC; Brown & Levinson face theory. Carefully scoped: acute moments only, not ongoing-pattern solution. Extensive self-de-escalation section for autistic readers including meltdown awareness. Emotional vs. instrumental escalation distinction. |
 | 8 | **Finding Professional Support: Advocates, Therapists, Legal Help** | High | COMPLETE | Norcross & Lambert (2018, 2019) alliance research; Wampold (2015) therapist effects; Lilienfeld (2007) PHTs; NDVH advocate framework; APA/ISTSS/NICE/VA guidelines. Three distinct categories. Evidence-based trauma treatments (CPT/PE/EMDR/TF-CBT/STAIR). Extensive section on the authority vacuum and autism-adaptation gap. Red flags specific to autism-uninformed professionals. |
 | 9 | **Recovery and Post-Traumatic Growth** | Moderate | COMPLETE | Herman (1992) three-stage model; Tedeschi & Calhoun with Frazier critique; Zalta et al. 2021 on social support; Neff on self-compassion; Rumball et al. on autism-specific trauma. Explicitly rejects forgiveness-as-requirement, universal PTG, "time heals," and other overclaimed popular frameworks. Autism-specific recovery includes burnout overlap, compliance recovery, sensory recovery. |
-| 10 | **Building External Evidence Beyond Documentation** | Moderate | COMPLETE | Employment-law practitioner literature; Campbell DA; Glass strangulation research; Lim & Magiati credibility discount. Five categories of external evidence. The follow-up email technique as both documentation and diagnostic tool. Autism-specific considerations including over-documentation risk and the authority vacuum. |
+| 10 | **Building External Evidence Beyond Documentation** | Moderate | COMPLETE | Employment-law practitioner literature; Campbell DA; Glass strangulation research; Lim, Young & Brewer credibility discount. Five categories of external evidence. The follow-up email technique as both documentation and diagnostic tool. Autism-specific considerations including over-documentation risk and the authority vacuum. |
 
 **Breakpoint after Tier 2:** All strategies are available for pattern and context pages to reference.
 
@@ -122,7 +122,7 @@ Each page integrates the patterns and strategies most common in a specific setti
 |---|------|----------|-----------|
 | 1 | **Intimate Partner Relationships** | HIGHEST STAKES | Lethality risk applies. Must be built with every safety rail from the DV frameworks research. This is the page where the sub-hub either succeeds or fails at its mission. |
 | 2 | **Family of Origin** | High | Compliance training pipeline; lifelong patterns; complex disengagement due to family bonds and financial dependence. |
-| 3 | **Medical Settings** | High | Epistemic injustice at scale; diagnostic overshadowing; real medical consequences. Lim & Magiati credibility discount research applies directly. |
+| 3 | **Medical Settings** | High | Epistemic injustice at scale; diagnostic overshadowing; real medical consequences. Lim, Young & Brewer credibility discount research applies directly. |
 | 4 | **Workplace** | High | 60-70% bullying rate for autistic employees (Specialisterne). Economic stakes. Documentation and legal pathways matter. |
 | 5 | **Educational Settings** | Moderate | K-12 through higher ed. Compliance training pipeline origin. Accommodation weaponization. |
 | 6 | **Friendships and Mate Crime** | Moderate | "Mate crime" is a documented form of exploitation where a fake friendship is used to exploit an autistic person. VEQ study. |
