@@ -41,15 +41,15 @@ Grice, Wehrle, Kruger, Spaniol, Cangemi & Vogeley published "Linguistic Prosody 
 
 **Source:** [Linguistic prosody in autism spectrum disorder—An overview](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
 
-### 1.3 The Wehrle Prosodic Profile: Receptive Outstrips Expressive
+### 1.3 The Wehrle Prosodic Profile: Overall Receptive-over-Expressive Pattern (with a Contrastive-Stress Exception)
 
 Simon Wehrle (University of Cologne) completed his PhD thesis "A Multi-Dimensional Analysis of Conversation and Intonation in Autism Spectrum Disorder" (2021), contributing to understanding prosodic profiles in ASD.
 
 Wehrle et al. (2023) published "A profile of prosodic speech differences in individuals with autism spectrum disorder and first-degree relatives" using the PEPS-C (Profiling Elements of Prosody in Speech-Communication) assessment tool.
 
 **Key findings:**
-- **Receptive prosody exceeds expressive prosody in ASD and their parents**
-- In ASD, receptive prosody deficits were specifically observed in **contrastive stress** (pragmatic function)
+- **Across most PEPS-C subtests, receptive prosody scores exceed expressive prosody scores in ASD and their parents** — but this is a profile-level summary, not a universal finding
+- In ASD, a **specific receptive deficit** was observed for **contrastive stress** (pragmatic function) — so "receptive exceeds expressive" does not hold uniformly across prosodic functions
 - For expressive prosody, both ASD and ASD Parent groups exhibited reduced accuracy in:
   - Imitation
   - Lexical stress
@@ -676,14 +676,14 @@ The double empathy problem (Milton, 2012) applies directly to facial expression:
 7. Ozcaliskan et al. (2022). "Identifying Patterns of Similarities and Differences between Gesture Production and Comprehension in Autism and Typical Development." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC9046318/
 8. de Marchena & Eigsti (2010). "Conversational gestures in autism spectrum disorders: asynchrony but not decreased frequency." Autism Research. https://pubmed.ncbi.nlm.nih.gov/21182208/
 9. Trujillo et al. (2021). "Differences in the production and perception of communicative kinematics in autism." Autism Research. https://pmc.ncbi.nlm.nih.gov/articles/PMC9292179/
-10. Cook & Bird (2016). "From movement kinematics to social cognition: the case of autism." Philosophical Transactions of the Royal Society B. https://pmc.ncbi.nlm.nih.gov/articles/PMC4843610/
+10. Cook (2016). "From movement kinematics to social cognition: the case of autism." Philosophical Transactions of the Royal Society B. https://pmc.ncbi.nlm.nih.gov/articles/PMC4843610/
 11. Ramos-Cabo et al. (2021). "Different Ways of Making a Point: A Study of Gestural Communication in Typical and Atypical Early Development." Autism Research. https://pmc.ncbi.nlm.nih.gov/articles/PMC8246876/
 
 ### Eye Gaze
 12. Trevisan et al. (2017). "How do adults and teens with self-declared ASD experience eye contact?" PLOS ONE. https://pmc.ncbi.nlm.nih.gov/articles/PMC5705114/
 13. Cuve et al. (2023). "Eye Gaze in ASD: A Review of Neural Evidence for the Eye Avoidance Hypothesis." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC10123036/
 14. Dalton et al. (2005). "Gaze fixation and the neural circuitry of face processing in autism." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC4337787/
-15. Riby et al. (2013). "Gaze aversion as a cognitive load management strategy in ASD and Williams syndrome." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC3627297/
+15. Riby et al. (2012). "Gaze aversion as a cognitive load management strategy in ASD and Williams syndrome." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC3627297/
 
 ### Facial Expression
 16. Cook et al. (2013). "Alexithymia, not autism, predicts poor recognition of emotional facial expressions." PubMed. https://pubmed.ncbi.nlm.nih.gov/23528789/
@@ -713,7 +713,7 @@ The double empathy problem (Milton, 2012) applies directly to facial expression:
 
 ### Autistic Adult Nonverbal Experiences
 32. Rosello et al. (2025). "'There is just too much going on there': Nonverbal communication experiences of autistic adults." PLOS ONE. https://pmc.ncbi.nlm.nih.gov/articles/PMC12250432/
-33. Williams et al. (2025). "Communication in Autistic Adults: An Action-Focused Review." Current Psychiatry Reports. https://pmc.ncbi.nlm.nih.gov/articles/PMC12271282/
+33. de Marchena, Cuneo, Gurbuz et al. (2025). "Communication in Autistic Adults: An Action-Focused Review." Current Psychiatry Reports. https://pmc.ncbi.nlm.nih.gov/articles/PMC12271282/
 
 ### Masking/Camouflaging
 34. Bradley et al. (2022). "'Masking Is Life': Experiences of Masking in Autistic and Nonautistic Adults." PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/

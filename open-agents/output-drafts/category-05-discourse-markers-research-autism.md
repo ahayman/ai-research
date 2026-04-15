@@ -84,7 +84,7 @@ The authors note that "like" may be preserved because:
 
 Research on topic management reveals that even when autistic speakers do use discourse markers or transition devices, there may be differences in positioning:
 
-**Abalos et al. (Autism Research, 2025) -- "Conversational Topic Shifts and Topic Maintenance":**
+**Abalos et al. (Research in Autism Spectrum Disorders, 2025) -- "Conversational Topic Shifts and Topic Maintenance":**
 - Autistic children produce more topic shifts than neurotypical peers.
 - These shifts are described as "abrupt," "unannounced," "sudden," or "proximally relevant."
 - Inappropriate topic shifts are characterized by being abrupt, occurring without pause time, or when the previous topic has not been discussed at length.
@@ -99,7 +99,7 @@ This suggests that even when discourse is organized logically, the signaling of 
 Recent advances in computational linguistics have enabled more objective, quantitative analysis of autistic speech patterns:
 
 - Automated analysis reveals differences in conjunctions and other discourse features that distinguish autistic from non-autistic speech (multiple studies using NLP methods).
-- A computational study of pragmatic discourse features in adults with ASD investigated politeness, uncertainty, and informativeness in collaborative conversations, finding distinctive pragmatic profiles. Neural models trained with BERT embeddings could predict these features with F1 scores exceeding 0.82 (Lake, Bhullar & Bhattacharyya, 2022, PMC9633181).
+- A computational study of pragmatic discourse features in adults with ASD investigated politeness, uncertainty, and informativeness in collaborative conversations, finding distinctive pragmatic profiles. Neural models trained with BERT embeddings could predict these features with F1 scores exceeding 0.82 (Yang, Liu, Yang, Liu & Prud'hommeaux, 2021, ACL-SRW).
 - Machine learning approaches using linguistic features like Mean Length of Utterance (MLU) and Mean Length of Turn Ratio have been applied to autism speech classification.
 
 **Zane & Grossman (2024) -- "Normal but Different":**

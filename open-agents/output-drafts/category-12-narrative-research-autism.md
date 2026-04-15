@@ -337,7 +337,7 @@ Study details:
 - All participants reported beneficial effects in their daily lives
 - This is one of the few intervention studies specifically targeting autistic adults
 
-([Broekhof et al., 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9433774/); [Frontiers](https://www.frontiersin.org/journals/behavioral-neuroscience/articles/10.3389/fnbeh.2022.941272/full))
+([Broekhof et al., 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9437275/); [Frontiers](https://www.frontiersin.org/journals/behavioral-neuroscience/articles/10.3389/fnbeh.2022.941272/full))
 
 ### 5.3 Story Grammar Intervention with Visual Supports
 
@@ -652,42 +652,42 @@ Subtle differences in narrative ability have been documented among parents and s
 ## KEY REFERENCES
 
 ### Primary Research Studies
-- Baixauli, I., Colomer, C., Rosello, B., & Miranda, A. (2016). Narratives of children with high-functioning autism spectrum disorder: A meta-analysis. *Research in Developmental Disabilities, 59*, 234-254.
-- Broekhof, E., et al. (2022). A narrative sequencing and mentalizing training for adults with autism: A pilot study. *Frontiers in Behavioral Neuroscience, 16*, 941272.
-- Broekhof, E., et al. (2023). Mentalizing and narrative coherence in autistic adults: Cerebellar sequencing and prediction. *Neuroscience & Biobehavioral Reviews, 145*, 105014.
-- Coburn, K. L., & Williams, D. L. (2023). Quantitative analysis of narrative discourse by autistic adults of underrepresented genders. *Autism in Adulthood, 5*(2).
-- Diehl, J. J., Bennetto, L., & Young, E. C. (2006). Story recall and narrative coherence of high-functioning children with autism spectrum disorders. *Journal of Abnormal Child Psychology, 34*, 83-98.
-- Geelhand, P., Papastamou, F., Deliens, G., & Kissine, M. (2020). Narrative production in autistic adults: A systematic analysis of the microstructure, macrostructure and internal state language. *Journal of Pragmatics, 164*, 57-81.
-- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Narrative abilities of autistic and non-autistic adolescents: The role of mentalising and executive function. *Autism Research*.
-- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Everyday narrative skills in autistic adolescents. *Child Language Teaching and Therapy*.
-- Hilviu, D., et al. (2023). Can narrative skills improve in autism spectrum disorder? A preliminary study with verbally fluent adolescents receiving the Cognitive Pragmatic Treatment. *Journal of Psycholinguistic Research, 52*, 945-964.
-- Losh, M., & Capps, L. (2003). Narrative ability in high-functioning children with autism or Asperger's syndrome. *Journal of Autism and Developmental Disorders, 33*(3), 239-251.
-- Losh, M., & Capps, L. (2006). Understanding of emotional experience in autism. *Development and Psychopathology, 18*(4), 977-997.
-- Sah, W., & Torng, P. (2015). Narrative coherence of Mandarin-speaking children with high-functioning autism spectrum disorder: An investigation into causal relations. *Journal of Child Language, 42*(5), 1091-1126.
+- Baixauli, I., Colomer, C., Rosello, B., & Miranda, A. (2016). Narratives of children with high-functioning autism spectrum disorder: A meta-analysis. *Research in Developmental Disabilities, 59*, 234-254. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.ridd.2016.09.007)
+- Broekhof, E., et al. (2022). A narrative sequencing and mentalizing training for adults with autism: A pilot study. *Frontiers in Behavioral Neuroscience, 16*, 941272. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9437275/)
+- Broekhof, E., et al. (2023). Mentalizing and narrative coherence in autistic adults: Cerebellar sequencing and prediction. *Neuroscience & Biobehavioral Reviews, 145*, 105014. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.neubiorev.2022.105014)
+- Coburn, K. L., & Williams, D. L. (2023). Quantitative analysis of narrative discourse by autistic adults of underrepresented genders. *Autism in Adulthood, 5*(2). [Mary Ann Liebert](https://www.liebertpub.com/doi/10.1089/aut.2022.0014)
+- Diehl, J. J., Bennetto, L., & Young, E. C. (2006). Story recall and narrative coherence of high-functioning children with autism spectrum disorders. *Journal of Abnormal Child Psychology, 34*, 83-98. [Springer (paywalled)](https://doi.org/10.1007/s10802-005-9003-x)
+- Geelhand, P., Papastamou, F., Deliens, G., & Kissine, M. (2020). Narrative production in autistic adults: A systematic analysis of the microstructure, macrostructure and internal state language. *Journal of Pragmatics, 164*, 57-81. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2020.04.014)
+- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Narrative abilities of autistic and non-autistic adolescents: The role of mentalising and executive function. *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/journal/19393806)
+- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Everyday narrative skills in autistic adolescents. *Child Language Teaching and Therapy*. [SAGE](https://journals.sagepub.com/home/clt)
+- Hilviu, D., et al. (2023). Can narrative skills improve in autism spectrum disorder? A preliminary study with verbally fluent adolescents receiving the Cognitive Pragmatic Treatment. *Journal of Psycholinguistic Research, 52*, 945-964. [Springer](https://link.springer.com/article/10.1007/s10936-023-09965-0)
+- Losh, M., & Capps, L. (2003). Narrative ability in high-functioning children with autism or Asperger's syndrome. *Journal of Autism and Developmental Disorders, 33*(3), 239-251. [Springer (paywalled)](https://doi.org/10.1023/A:1024446215446)
+- Losh, M., & Capps, L. (2006). Understanding of emotional experience in autism. *Development and Psychopathology, 18*(4), 977-997. [Cambridge (paywalled)](https://doi.org/10.1017/S0954579406060508)
+- Sah, W., & Torng, P. (2015). Narrative coherence of Mandarin-speaking children with high-functioning autism spectrum disorder: An investigation into causal relations. *Journal of Child Language, 42*(5), 1091-1126. [Cambridge (paywalled)](https://doi.org/10.1017/S030500091400052X)
 
 ### Scoping Reviews and Meta-analyses
-- Assessing 'coherence' in the spoken narrative accounts of autistic people: A systematic scoping review. (2023). *Research in Autism Spectrum Disorders*.
-- Baixauli et al. (2016). Meta-analysis of narratives of children with high-functioning ASD. *Research in Developmental Disabilities*.
+- Assessing 'coherence' in the spoken narrative accounts of autistic people: A systematic scoping review. (2023). *Research in Autism Spectrum Disorders*. [ScienceDirect (paywalled)](https://www.sciencedirect.com/journal/research-in-autism-spectrum-disorders)
+- Baixauli et al. (2016). Meta-analysis of narratives of children with high-functioning ASD. *Research in Developmental Disabilities*. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.ridd.2016.09.007)
 
 ### Reference Tracking and Cohesion
-- Analysis of Noun Phrase Ambiguity in Narratives Reveals Differences in Referential Establishment But Not Cohesion for Older Autistic Children. (2023). *JSLHR*.
-- Novogrodsky, R., & Edelson, L. R. (2016). Ambiguous pronoun use in narratives of children with ASD. *Child Language Teaching and Therapy*.
+- Analysis of Noun Phrase Ambiguity in Narratives Reveals Differences in Referential Establishment But Not Cohesion for Older Autistic Children. (2023). *JSLHR*. [ASHA](https://pubs.asha.org/journal/jslhr)
+- Novogrodsky, R., & Edelson, L. R. (2016). Ambiguous pronoun use in narratives of children with ASD. *Child Language Teaching and Therapy*. [SAGE (paywalled)](https://doi.org/10.1177/0265659015602935)
 
 ### Double Empathy and Social Perception
-- Milton, D. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society, 27*(6), 883-887.
-- Sasson, N. J., et al. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. *Scientific Reports, 7*, 40700.
+- Milton, D. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society, 27*(6), 883-887. [Taylor & Francis](https://doi.org/10.1080/09687599.2012.710008)
+- Sasson, N. J., et al. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. *Scientific Reports, 7*, 40700. [Nature](https://www.nature.com/articles/srep40700)
 
 ### Narrative Identity
-- Narrative identity differences in autism. (2025). *Scientific Reports*.
-- Nature and Effects of Autobiographical Memory Issues in Persons with Autism Spectrum Disorders. (2022). *Neuropsychiatric Disease and Treatment*.
+- Narrative identity differences in autism. (2025). *Scientific Reports*. [Nature](https://www.nature.com/srep/)
+- Nature and Effects of Autobiographical Memory Issues in Persons with Autism Spectrum Disorders. (2022). *Neuropsychiatric Disease and Treatment*. [Dove Press](https://www.dovepress.com/neuropsychiatric-disease-and-treatment-journal)
 
 ### Intervention Research
-- Effects of an adapted story grammar intervention on the listening comprehension of children with autism. (2019). *Research in Autism Spectrum Disorders*.
-- Effect of narrative intervention with strategy instruction on the listening and reading comprehension of children with autism. (2025). *Behavioral Sciences*.
-- Systematic individualized narrative language intervention on the personal narratives of children with ASD. (2014). *LSHSS*.
+- Effects of an adapted story grammar intervention on the listening comprehension of children with autism. (2019). *Research in Autism Spectrum Disorders*. [ScienceDirect (paywalled)](https://www.sciencedirect.com/journal/research-in-autism-spectrum-disorders)
+- Effect of narrative intervention with strategy instruction on the listening and reading comprehension of children with autism. (2025). *Behavioral Sciences*. [MDPI](https://www.mdpi.com/journal/behavsci)
+- Systematic individualized narrative language intervention on the personal narratives of children with ASD. (2014). *LSHSS*. [ASHA](https://pubs.asha.org/journal/lshss)
 
 ### Infodumping and Monotropism
-- Murray, D., Lesser, M., & Lawson, W. (2005). Attention, monotropism and the diagnostic criteria for autism. *Autism, 9*(2), 139-156.
+- Murray, D., Lesser, M., & Lawson, W. (2005). Attention, monotropism and the diagnostic criteria for autism. *Autism, 9*(2), 139-156. [SAGE (paywalled)](https://doi.org/10.1177/1362361305051398) | [Monotropism.org](https://monotropism.org/dinah/attention-tunnelling-and-autism/)
 
 ---
 

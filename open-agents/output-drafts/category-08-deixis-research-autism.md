@@ -712,19 +712,19 @@ One corpus study comparing autistic and typically developing children's deictic 
 
 | Study | Authors | Year | Key Contribution |
 |-------|---------|------|-----------------|
-| Original autism description | Kanner | 1943 | First documentation of pronoun reversal in autism |
-| Person-centred deictic expressions and autism | Hobson, García-Pérez & Lee | 2010 | Systematic study of this/that, here/there, come/go in autism |
-| Neural basis of deictic shifting | Mizuno et al. | 2011 | fMRI evidence for task-specific reduced insula-precuneus coupling during deictic shifting (PMC3155703) |
-| On the ontological status of autism | Milton | 2012 | Double empathy problem, *Disability & Society* 27(6):883-887 |
-| Autism as Context Blindness | Vermeulen | 2012 | Context blindness framework (reframed here) |
-| Memory in ASD: barking up the wrong tree | Boucher & Mayes | 2012 | Reframing episodic memory findings; parietal rather than hippocampal account |
-| Fluidity-to-inelasticity hypothesis | Oakley & Vidanović | 2014 | *Cognitive Semiotics* 7(2):191-225. Theoretical framework for deictic flexibility cost |
-| Sign language pronouns in autism | Shield, Meier & Tager-Flusberg | 2015 | Palm reversal evidence; specificity rather than global deficit (PMC4474758) |
-| Abnormal Timing and Time Perception | Allman & Falter | 2015 | Review of time perception in autism |
-| Prevalence of pronoun reversals | Naigles et al. | 2016 | Reversal occurs in ~13% of autistic children's pronouns vs. ~1% in TD (PMC4834724) |
-| Time perception systematic review | Casassus et al. | 2019 | Divergent performance driven by non-timing cognitive demands (PMC6852160) |
-| Person-reference developmental trends | Barokova & Tager-Flusberg | 2020 | Longitudinal study of person reference in ASD |
-| Deictic Relational Responding scoping review | Multiple authors | 2024 | Systematic review of RFT-based deictic research in autism (PMC11035524) |
+| Original autism description | Kanner | 1943 | First documentation of pronoun reversal in autism ([Neurodiversity Library PDF](https://neurodiversity.com/library_kanner_1943.pdf)) |
+| Person-centred deictic expressions and autism | Hobson, García-Pérez & Lee | 2010 | Systematic study of this/that, here/there, come/go in autism ([Springer (paywalled)](https://doi.org/10.1007/s10803-009-0882-5)) |
+| Neural basis of deictic shifting | Mizuno et al. | 2011 | fMRI evidence for task-specific reduced insula-precuneus coupling during deictic shifting ([PMC3155703](https://pmc.ncbi.nlm.nih.gov/articles/PMC3155703/)) |
+| On the ontological status of autism | Milton | 2012 | Double empathy problem, *Disability & Society* 27(6):883-887 ([Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)) |
+| Autism as Context Blindness | Vermeulen | 2012 | Context blindness framework (reframed here) ([Amazon](https://www.amazon.com/Autism-Context-Blindness-Peter-Vermeulen/dp/1934575763)) |
+| Memory in ASD: barking up the wrong tree | Boucher & Mayes | 2012 | Reframing episodic memory findings; parietal rather than hippocampal account ([Wiley (paywalled)](https://doi.org/10.1111/j.1469-7610.2011.02487.x)) |
+| Fluidity-to-inelasticity hypothesis | Oakley & Vidanović | 2014 | *Cognitive Semiotics* 7(2):191-225. Theoretical framework for deictic flexibility cost ([De Gruyter (paywalled)](https://doi.org/10.1515/cogsem-2014-0013)) |
+| Sign language pronouns in autism | Shield, Meier & Tager-Flusberg | 2015 | Pronoun avoidance and related pronominal-sign observations in native-signing autistic children ([PMC4474758](https://pmc.ncbi.nlm.nih.gov/articles/PMC4474758/)); palm-orientation reversal in fingerspelling is the 2023 follow-up ([PMC9614108](https://pmc.ncbi.nlm.nih.gov/articles/PMC9614108/)) |
+| Abnormal Timing and Time Perception | Allman & Falter | 2015 | Review of time perception in autism ([Wiley (paywalled)](https://doi.org/10.1002/wcs.1324)) |
+| Prevalence of pronoun reversals | Naigles et al. | 2016 | Reversal occurs in ~13% of autistic children's pronouns vs. ~1% in TD ([PMC4834724](https://pmc.ncbi.nlm.nih.gov/articles/PMC4834724/)) |
+| Time perception systematic review | Casassus et al. | 2019 | Divergent performance driven by non-timing cognitive demands ([PMC6852160](https://pmc.ncbi.nlm.nih.gov/articles/PMC6852160/)) |
+| Person-reference developmental trends | Barokova & Tager-Flusberg | 2020 | Longitudinal study of person reference in ASD ([PMC7392811](https://pmc.ncbi.nlm.nih.gov/articles/PMC7392811/)) |
+| Deictic Relational Responding scoping review | Multiple authors | 2024 | Systematic review of RFT-based deictic research in autism ([PMC11035524](https://pmc.ncbi.nlm.nih.gov/articles/PMC11035524/)) |
 
 ### Key Research Groups
 

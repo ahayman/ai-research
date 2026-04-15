@@ -307,14 +307,14 @@ There must be spaces where you can communicate naturally: with autistic friends,
 
 ## Key Sources
 
-- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
-- Stark, C.A. (2019). "Gaslighting, Misogyny, and Psychological Oppression." *The Monist*, 102(2).
-- Sweet, P.L. (2019). "The Sociology of Gaslighting." *American Sociological Review*, 84(5).
-- Abramson, K. (2014). "Turning up the Lights on Gaslighting." *Philosophical Perspectives*, 28.
-- Douglas, L. & Sedgewick, F. (2024). "Intimate Partner Violence and Autism." PMC11191373.
-- Cazalis, F. et al. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience*. PMC9087551.
-- Griffiths, S. et al. (2019). "The Vulnerability Experiences Quotient." *JADD*. PMC6851759.
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive." PMC8813809.
-- Freyd, J.J. (1997). DARVO.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*.
-- Catala, A. et al. (2021). "Autism, Epistemic Injustice, and Epistemic Disablement." *Synthese*.
+- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
+- Stark, C.A. (2019). "Gaslighting, Misogyny, and Psychological Oppression." *The Monist*, 102(2). [Oxford Academic (paywalled)](https://doi.org/10.1093/monist/onz007)
+- Sweet, P.L. (2019). "The Sociology of Gaslighting." *American Sociological Review*, 84(5). [SAGE (paywalled)](https://doi.org/10.1177/0003122419874843)
+- Abramson, K. (2014). "Turning up the Lights on Gaslighting." *Philosophical Perspectives*, 28. [Wiley (paywalled)](https://doi.org/10.1111/phpe.12046)
+- Douglas, S. & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism*, 28(7), 1732-1745. [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Cazalis, F. et al. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience*. [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Griffiths, S. et al. (2019). "The Vulnerability Experiences Quotient." *JADD*. [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *JADD*, 52(2), 490-507. [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Freyd, J.J. (1997). "Violations of power, adaptive blindness, and betrayal trauma theory." *Feminism & Psychology*, 7, 22-32. [jjfreyd.com](https://www.jjfreyd.com/darvo)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Catala, A. et al. (2021). "Autism, Epistemic Injustice, and Epistemic Disablement." *Synthese*, 199, 9013-9039. [Springer (paywalled)](https://doi.org/10.1007/s11229-021-03192-7)

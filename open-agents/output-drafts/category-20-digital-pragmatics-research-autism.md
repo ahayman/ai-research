@@ -74,7 +74,7 @@ The study's title itself — "Anything but the phone!" — captures a finding re
 
 The thriving ecosystem of autistic online communities provides powerful counter-evidence to the notion that autism inherently involves "social communication deficits." When the communication medium and social norms align with autistic processing styles, communication flourishes.
 
-**Crompton et al. (2020)** demonstrated this experimentally: "Autistic people share information with other autistic people as well as non-autistic people do with other non-autistic people." Information transfer degraded only in mixed autistic/non-autistic groups, and rapport was higher in same-neurotype pairs (*Autism*, 24(7), 1901-1912).
+**Crompton et al. (2020)** demonstrated this experimentally: "Autistic people share information with other autistic people as well as non-autistic people do with other non-autistic people." Information transfer degraded only in mixed autistic/non-autistic groups, and rapport was higher in same-neurotype pairs (*Autism*, 24(7), 1704-1712).
 
 The #ActuallyAutistic community on Twitter/X, Tumblr, and other platforms demonstrates that autistic people can build complex, self-governing social communities with their own norms, humor, inside references, and support structures — all through digital text-based communication. This community was created in 2011 by autistic activists specifically to claim an autistic-centered space, and by 2012 had spread to Twitter for wider audience engagement.
 

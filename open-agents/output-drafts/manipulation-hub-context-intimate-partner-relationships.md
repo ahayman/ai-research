@@ -119,8 +119,8 @@ The general DV lethality literature is well-validated. The autism-specific exten
 
 **The qualitative depth:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Evidence quality: [PRELIMINARY-to-MODERATE].** The qualitative findings are converging across multiple research groups and across multiple countries. The prevalence estimates have wider uncertainty due to sampling limitations. The "weaponized features" framing has strong qualitative support and is increasingly accepted in the autistic-led research literature, but has not been operationalized in standardized assessment instruments.
 
@@ -625,6 +625,41 @@ The honest limits of this page, named explicitly because the gap between recogni
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Glass et al. (2008). Non-fatal strangulation. — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003). Risk Factors for Femicide. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Campbell, Webster & Glass (2009). Danger Assessment validation. — [Sage](https://journals.sagepub.com/doi/10.1177/0886260508317180) [paywalled]
+- Pritchard et al. (2017). — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015622439) [paywalled]
+- Wilson & Daly (1993). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8292563/) [paywalled]
+- Daly et al. (1997). — [Sage](https://journals.sagepub.com/doi/10.1177/1088767997001001004) [paywalled]
+- Messing et al. (2017). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/0886260515585540) [paywalled]
+- Hilton et al. (2004). ODARA. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15456382/) [paywalled]
+- Sullivan & Bybee (1999). — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+- Glass et al. (2017). MyPlan. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/28108189/) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson (2008). — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Stith et al. (2012). — [Wiley](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1752-0606.2011.00245.x) [paywalled]
+- Karakurt et al. (2016). — [PMC5050084](https://pmc.ncbi.nlm.nih.gov/articles/PMC5050084/)
+- Prochaska & DiClemente (1983). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/6863699/) [paywalled]
+- Burke et al. (2004). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15058512/) [paywalled]
+- Brown (1997). — [Sage](https://journals.sagepub.com/doi/10.1177/1077801297003001002) [paywalled]
+- Cazalis et al. (2022). — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Griffiths et al. (2019). VEQ. — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Logan & Walker (2017). — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015603210) [paywalled]
+
 **Lethality and risk assessment:**
 - Glass, N., Laughon, K., Campbell, J., Block, C. R., Hanson, G., Sharps, P. W., & Taliaferro, E. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335. PMC2573025. (Strangulation OR 7.48; the foundational lethality finding.)
 - Campbell, J. C., Webster, D., Koziol-McLain, J., Block, C. R., Campbell, D., Curry, M. A., Gary, F., Glass, N., McFarlane, J., Sachs, C., Sharps, P., Ulrich, Y., Wilt, S. A., Manganello, J., Xu, X., Schollenberger, J., Frye, V., & Laughon, K. (2003). "Risk Factors for Femicide in Abusive Relationships: Results from a Multisite Case Control Study." *American Journal of Public Health* 93(7): 1089–1097. (55.2% estrangement finding; foundation of the Danger Assessment.)
@@ -666,9 +701,9 @@ The honest limits of this page, named explicitly because the gap between recogni
 
 **Autism-specific IPV literature:**
 - Cazalis, F., Reyes, E., Leduc, S., & Gourion, D. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience.* PMC9087551.
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The weaponized features framework.)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The weaponized features framework.)
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 - Cooke, K., Ridgway, K., Pecora, L., Westrupp, E., Hedley, D., Hooley, M., & Stokes, M. A. (2025). "Outcomes of Experiencing Interpersonal Violence in Autism: A Mixed Methods Systematic Review and Meta-Analysis." *Trauma, Violence & Abuse.*
 - Griffiths, S., Allison, C., Kenny, R., Holt, R., Smith, P., & Baron-Cohen, S. (2019). "The Vulnerability Experiences Quotient (VEQ): A Study of Vulnerability, Mental Health and Life Satisfaction in Autistic Adults." *Autism Research.* PMC6851759.
 - Autism Adapted Safety Plans pilot RCT (2024) and the BMC Health Services Research health economic evaluation (2025). See the foundational autism research document for the full citation.

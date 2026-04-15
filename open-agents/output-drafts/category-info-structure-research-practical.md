@@ -1015,17 +1015,17 @@ The payoff is significant: mastering information structure makes you a clearer w
 ## Sources and Further Reading
 
 ### Key Theoretical Works
-- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English." *Journal of Linguistics*, 3(1), 37-81. [Foundational work on theme/rheme and information structure in English]
-- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (Ed.), *Discourse Production and Comprehension*. [The Given-New Strategy/Contract]
-- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (Ed.), *Radical Pragmatics*. [Taxonomy of information status: brand-new, unused, inferable, evoked]
-- Lambrecht, K. (1994). *Information Structure and Sentence Form*. Cambridge University Press. [Comprehensive treatment of topic, focus, and their syntactic realization]
-- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116. [Alternative Semantics -- the formal theory of focus]
-- Birner, B.J. & Ward, G. (1998). *Information Status and Noncanonical Word Order in English*. John Benjamins. [Empirical study of topicalization, inversion, and other non-canonical constructions]
+- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English." *Journal of Linguistics*, 3(1), 37-81. [Cambridge (paywalled)](https://doi.org/10.1017/S0022226700012949)
+- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (Ed.), *Discourse Production and Comprehension*. [Stanford PDF](https://web.stanford.edu/~clark/1970s/Clark,%20H.H.%20_%20Haviland,%20S.E.%20_Comprehension%20and%20the%20given-new%20contract_%201977.pdf)
+- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (Ed.), *Radical Pragmatics*. Academic Press. [Amazon](https://www.amazon.com/Radical-pragmatics-Peter-Cole/dp/0121796604)
+- Lambrecht, K. (1994). *Information Structure and Sentence Form*. Cambridge University Press. [Amazon](https://www.amazon.com/Information-Structure-Sentence-Form-Representations/dp/0521587042)
+- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116. [Springer (paywalled)](https://doi.org/10.1007/BF02342617)
+- Birner, B.J. & Ward, G. (1998). *Information Status and Noncanonical Word Order in English*. John Benjamins. [Amazon](https://www.amazon.com/Information-Noncanonical-Word-Order-English/dp/9027228485)
 
 ### Applied / Pedagogical Works
-- Williams, J.M. & Bizup, J. (2017). *Style: Lessons in Clarity and Grace*. 12th edition. Pearson. [Applies information structure principles to clear writing; especially Ch. 5 "Cohesion and Coherence"]
-- Pinker, S. (2014). *The Sense of Style*. Viking. [Ch. 4 "The Web, the Tree, and the String" applies information structure to prose clarity]
-- Quirk, R., Greenbaum, S., Leech, G., & Svartvik, J. (1985). *A Comprehensive Grammar of the English Language*. Longman. [Reference grammar covering end-weight, end-focus, and information structure constructions]
+- Williams, J.M. & Bizup, J. (2017). *Style: Lessons in Clarity and Grace*. 12th edition. Pearson. [Amazon](https://www.amazon.com/Style-Lessons-Clarity-Grace-12th/dp/0134080416)
+- Pinker, S. (2014). *The Sense of Style*. Viking. [Amazon](https://www.amazon.com/Sense-Style-Thinking-Persons-Writing/dp/0143127799)
+- Quirk, R., Greenbaum, S., Leech, G., & Svartvik, J. (1985). *A Comprehensive Grammar of the English Language*. Longman. [Amazon](https://www.amazon.com/Comprehensive-Grammar-English-Language-Randolph/dp/0582517346)
 
 ### Autism-Relevant Research
 - Research on autistic individuals and information structure is sparse, but related work on prosodic focus processing is covered in the Category 15 research documents, particularly the work on how autistic individuals process contrastive stress and focus marking.

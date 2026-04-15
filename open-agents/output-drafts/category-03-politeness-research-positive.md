@@ -957,7 +957,7 @@ Several features of positive politeness create specific challenges for autistic 
 
 ## Source Bibliography
 
-1. Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. (via Wikipedia: https://en.wikipedia.org/wiki/Politeness_theory)
+1. Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554) (via Wikipedia: https://en.wikipedia.org/wiki/Politeness_theory)
 2. Awin Language Blog - Positive Politeness Strategies (Brown and Levinson). http://awinlanguage.blogspot.com/2013/06/positive-politeness-strategies-brown.html
 3. Universal Class - The Politeness Theory: A Guide for Everyone. https://www.universalclass.com/articles/business/communication-studies/politeness-theory.htm
 4. Edubirdie - Positive Politeness Strategies and Factors Influencing Its Use. https://hub.edubirdie.com/examples/positive-politeness-strategies-and-factors-influencing-its-use/

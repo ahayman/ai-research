@@ -241,34 +241,34 @@ These claims are what the Category 24 main document rests on, and what the manip
 
 ## Sources
 
-Biber, D. (2006). Stance in spoken and written university registers. *Journal of English for Academic Purposes*, 5(2), 97-116.
+Biber, D. (2006). Stance in spoken and written university registers. *Journal of English for Academic Purposes*, 5(2), 97-116. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.jeap.2006.05.001)
 
-Biber, D., & Finegan, E. (1989). Styles of stance in English: Lexical and grammatical marking of evidentiality and affect. *Text*, 9(1), 93-124.
+Biber, D., & Finegan, E. (1989). Styles of stance in English: Lexical and grammatical marking of evidentiality and affect. *Text*, 9(1), 93-124. [De Gruyter (paywalled)](https://doi.org/10.1515/text.1.1989.9.1.93)
 
-Bucholtz, M., & Hall, K. (2005). Identity and interaction: A sociocultural linguistic approach. *Discourse Studies*, 7(4-5), 585-614.
+Bucholtz, M., & Hall, K. (2005). Identity and interaction: A sociocultural linguistic approach. *Discourse Studies*, 7(4-5), 585-614. [SAGE (paywalled)](https://doi.org/10.1177/1461445605054407)
 
-Butler, J. (1990). *Gender Trouble: Feminism and the Subversion of Identity*. Routledge.
+Butler, J. (1990). *Gender Trouble: Feminism and the Subversion of Identity*. Routledge. [Amazon](https://www.amazon.com/Gender-Trouble-Feminism-Subversion-Identity/dp/0415389550)
 
-Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63.
+Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63. [Wiley (paywalled)](https://doi.org/10.1111/j.1468-5914.1990.tb00174.x)
 
-Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction* (pp. 139-182). John Benjamins.
+Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction* (pp. 139-182). John Benjamins. [Amazon](https://www.amazon.com/Stancetaking-Discourse-Subjectivity-Evaluation-Interaction/dp/9027254095)
 
-Eckert, P. (2008). Variation and the indexical field. *Journal of Sociolinguistics*, 12(4), 453-476.
+Eckert, P. (2008). Variation and the indexical field. *Journal of Sociolinguistics*, 12(4), 453-476. [Wiley (paywalled)](https://doi.org/10.1111/j.1467-9841.2008.00374.x)
 
-Englebretson, R. (Ed.). (2007). *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction*. John Benjamins.
+Englebretson, R. (Ed.). (2007). *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction*. John Benjamins. [Amazon](https://www.amazon.com/Stancetaking-Discourse-Subjectivity-Evaluation-Interaction/dp/9027254095)
 
-Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
+Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
 
-Harré, R., & Van Langenhove, L. (1999). *Positioning Theory: Moral Contexts of Intentional Action*. Blackwell.
+Harré, R., & Van Langenhove, L. (1999). *Positioning Theory: Moral Contexts of Intentional Action*. Blackwell. [Amazon](https://www.amazon.com/Positioning-Theory-Moral-Contexts-Intentional/dp/063121138X)
 
-Jaffe, A. (Ed.). (2009). *Stance: Sociolinguistic Perspectives*. Oxford University Press.
+Jaffe, A. (Ed.). (2009). *Stance: Sociolinguistic Perspectives*. Oxford University Press. [Amazon](https://www.amazon.com/Stance-Sociolinguistic-Perspectives-Oxford-Studies/dp/0195331478)
 
-Jaffe, A. (2009). Introduction: The sociolinguistics of stance. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 3-28). Oxford University Press.
+Jaffe, A. (2009). Introduction: The sociolinguistics of stance. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 3-28). Oxford University Press. [Amazon](https://www.amazon.com/Stance-Sociolinguistic-Perspectives-Oxford-Studies/dp/0195331478)
 
-Kiesling, S. F. (2009). Style as stance: Stance as the explanation for patterns of sociolinguistic variation. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 171-194). Oxford University Press.
+Kiesling, S. F. (2009). Style as stance: Stance as the explanation for patterns of sociolinguistic variation. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 171-194). Oxford University Press. [Amazon](https://www.amazon.com/Stance-Sociolinguistic-Perspectives-Oxford-Studies/dp/0195331478)
 
-Medina, J. (2012). *The Epistemology of Resistance: Gender and Racial Oppression, Epistemic Injustice, and Resistant Imaginations*. Oxford University Press.
+Medina, J. (2012). *The Epistemology of Resistance: Gender and Racial Oppression, Epistemic Injustice, and Resistant Imaginations*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemology-Resistance-Oppression-Epistemic-Imaginations/dp/0199929033)
 
-Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887.
+Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
-Ochs, E. (1993). Constructing social identity: A language socialization perspective. *Research on Language and Social Interaction*, 26(3), 287-306.
+Ochs, E. (1993). Constructing social identity: A language socialization perspective. *Research on Language and Social Interaction*, 26(3), 287-306. [Taylor & Francis (paywalled)](https://doi.org/10.1207/s15327973rlsi2603_3)

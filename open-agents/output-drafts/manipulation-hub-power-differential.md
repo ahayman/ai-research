@@ -285,6 +285,20 @@ Sometimes the situation is confusing enough that you cannot confidently run the 
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Stark, E. (2007). *Coercive Control.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). *Education Groups for Men Who Batter: The Duluth Model.* — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Johnson, M. P. (2008). *A Typology of Domestic Violence.* — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Campbell et al. (2003). Risk Factors for Femicide. *AJPH* 93(7):1089-1097. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Namie & Namie (2009). *The Bully at Work* (2nd ed.). — [Amazon](https://www.amazon.com/Bully-Work-Reclaim-Dignity-Job/dp/1402224265)
+- Nielsen & Einarsen (2012). Outcomes of exposure to workplace bullying. *Work & Stress.* — [Tandfonline](https://www.tandfonline.com/doi/abs/10.1080/02678373.2012.734709) [paywalled]
+- Pearson et al. (2022, 2024) — autistic victimization research. [Pearson 2022 Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]; [Pearson 2024 Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Griffiths et al. (2019). VEQ. *Autism Research.* — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Lim, Young & Brewer (2022). *JADD* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). "Putting on My Best Normal." *JADD* 47(8):2519-2534. — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Crompton et al. (2020). Autistic peer-to-peer. *Autism* 24(7):1704-1712. — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+
 **Coercive control and power/resource constraint:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. (Chapter 8 on the entrapment model; economic abuse as core coercive control.)
 - Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer. (Power and Control Wheel including economic abuse.)

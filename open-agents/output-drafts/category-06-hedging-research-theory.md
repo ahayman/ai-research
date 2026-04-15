@@ -675,7 +675,7 @@ Modern hedging research recognizes that hedging operates simultaneously at multi
 ### Important Articles and Papers
 - Salager-Meyer, F. (1994). Hedges and textual communicative function in medical English written discourse. *English for Specific Purposes*, 13, 149-170. [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/0889490694900132)
 - Fraser, B. (2010). Pragmatic competence: The case of hedging. In G. Kaltenboeck et al. (Eds.), *New Approaches to Hedging*, 15-34. [ResearchGate](https://www.researchgate.net/publication/285760188_Pragmatic_Competence_The_Case_of_Hedging) | [Semantic Scholar](https://www.semanticscholar.org/paper/Pragmatic-Competence:-The-Case-of-Hedging-Fraser/553b47e672cbfbed1f993b4a3678db62a28f8afc)
-- Depraetere, I. & Kaltenbock, G. (2023). Hedged performatives in spoken American English: A discourse-oriented analysis. *Language in Society*. [SAGE Journals](https://journals.sagepub.com/doi/full/10.1177/00754242231173419)
+- Depraetere, I. & Kaltenbock, G. (2023). Hedged performatives in spoken American English: A discourse-oriented analysis. *Journal of English Linguistics*. [SAGE Journals](https://journals.sagepub.com/doi/full/10.1177/00754242231173419)
 
 ### Overview and Reference Sources
 - [Hedge (linguistics) - Wikipedia](https://en.wikipedia.org/wiki/Hedge_(linguistics))

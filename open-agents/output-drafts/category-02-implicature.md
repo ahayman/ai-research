@@ -657,18 +657,18 @@ The following research documents contain detailed source material, extended exam
 ## Key Sources
 
 ### Foundational Texts
-- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3: 41-58.
-- Grice, H.P. (1989). *Studies in the Way of Words*. Harvard University Press.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell.
-- Horn, L. (1984). "Toward a New Taxonomy for Pragmatic Inference." In Schiffrin (ed.), *Meaning, Form, and Use in Context*: 11-42.
-- Levinson, S.C. (2000). *Presumptive Meanings: The Theory of Generalized Conversational Implicature*. MIT Press.
+- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3: 41-58. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Grice, H.P. (1989). *Studies in the Way of Words*. Harvard University Press. [Amazon](https://www.amazon.com/Studies-Way-Words-Paul-Grice/dp/0674852710)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Horn, L. (1984). "Toward a New Taxonomy for Pragmatic Inference." In Schiffrin (ed.), *Meaning, Form, and Use in Context*: 11-42. [Amazon (volume)](https://www.amazon.com/Meaning-Form-Use-Context-Linguistic/dp/0878403949)
+- Levinson, S.C. (2000). *Presumptive Meanings: The Theory of Generalized Conversational Implicature*. MIT Press. [Amazon](https://www.amazon.com/Presumptive-Meanings-Generalized-Conversational-Implicature/dp/0262621304)
 
 ### Autism and Implicature Research
-- Andrés-Roqueta, C. et al. (2025). "Some (but not all) Pragmatic Inferences are Difficult for Autistic Children." *J Autism Dev Disord*. PubMed: 40246746.
-- Pijnacker, J. et al. (2009). "Scalar Implicature in ASD." *J Autism Dev Disord*, 39(4), 607-618. PubMed: 19052858.
-- Jary, M. et al. (2025). "Particularized Implicatures in Autistic and Neurotypical Adults." *J Communication Disorders*.
-- Deliens, G. et al. (2018). "Selective Pragmatic Impairment in Autism." *J Autism Dev Disord*, 48(9). PubMed: 29633109.
-- Wilson, C. & Bishop, D. (2021/2022). "Pragmatic Inference in Autistic Adults." Studies on second-guessing and preference for certainty.
-- Vicente, A. et al. (2023). "Predictive Processing Account of Autistic Literalism."
-- Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." *Autism*. PMC5843023.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. PubMed: 32431157.
+- Andrés-Roqueta, C. et al. (2025). "Some (but not all) Pragmatic Inferences are Difficult for Autistic Children." *J Autism Dev Disord*. PubMed: 40246746. [PubMed](https://pubmed.ncbi.nlm.nih.gov/40246746/)
+- Pijnacker, J. et al. (2009). "Scalar Implicature in ASD." *J Autism Dev Disord*, 39(4), 607-618. PubMed: 19052858. [Springer (paywalled)](https://doi.org/10.1007/s10803-008-0661-8)
+- Jary, M. et al. (2025). "Particularized Implicatures in Autistic and Neurotypical Adults." *J Communication Disorders*. [Elsevier (paywalled)](https://www.sciencedirect.com/journal/journal-of-communication-disorders)
+- Deliens, G. et al. (2018). "Selective Pragmatic Impairment in Autism." *J Autism Dev Disord*, 48(9). PubMed: 29633109. [Springer (paywalled)](https://doi.org/10.1007/s10803-018-3561-6)
+- Wilson, C. & Bishop, D. (2021/2022). "Pragmatic Inference in Autistic Adults." Studies on second-guessing and preference for certainty. [CITATION UNVERIFIED]
+- Vicente, A. et al. (2023). "Predictive Processing Account of Autistic Literalism." [Springer](https://doi.org/10.1007/s13164-023-00704-x)
+- Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." *Autism*. PMC5843023. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. PubMed: 32431157. [SAGE](https://doi.org/10.1177/1362361320919286)

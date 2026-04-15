@@ -1081,7 +1081,7 @@ Is the conversation still on this topic?
 - Lakoff, G., & Johnson, M. (1980). *Metaphors We Live By.* University of Chicago Press.
 - Lakoff, G. (1993). The contemporary theory of metaphor. In A. Ortony (Ed.), *Metaphor and Thought* (2nd ed., pp. 202-251).
 - Wang, A. T., Lee, S. S., Sigman, M., & Dapretto, M. (2006). Neural basis of irony comprehension in children with autism: the role of prosody and context. *Brain, 129*(4), 932-943. PMC3713234.
-- Colich, N. L., et al. (2012). Individuals with Autism Spectrum Disorders Do Not Use Social Stereotypes in Irony Comprehension. PMC3991690.
+- Zalla, Amsellem, Chaby, Sirigu & Leboyer (2014). Individuals with Autism Spectrum Disorders Do Not Use Social Stereotypes in Irony Comprehension. PMC3991690.
 - Rankin, K. P., et al. (2009). Detecting Sarcasm from Paralinguistic Cues: Anatomic and Cognitive Correlates in Neurodegenerative Disease. PMC2720152.
 - McCann, J., & Peppe, S. (2003). Prosody in autism spectrum disorders: a critical review. *International Journal of Language & Communication Disorders, 38*(4), 325-350.
 - Wikipedia contributors. (2024). English understatement. *Wikipedia.* https://en.wikipedia.org/wiki/English_understatement

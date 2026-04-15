@@ -470,7 +470,7 @@ A prevalence effect is serious. A prevalence effect combined with a credibility 
 
 **Citations:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). Autistic adults may be erroneously perceived as deceptive and lacking credibility. *Journal of Autism and Developmental Disorders*, 52(2), 490-507. [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
-- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
+- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
 
 #### 3.5.3 The weaponised-features pattern: Douglas & Sedgewick (2024)
 
@@ -535,7 +535,7 @@ This is why the manipulation sub-hub's self-protection strategies lean heavily o
 **The Miller, Rees & Pearson (2021) empirical companion.** The Pearson & Rose (2021) conceptual paper has a quantitative companion in the same research program: Miller, Rees & Pearson (2021), "'Masking is Life': Experiences of Masking in Autistic and Nonautistic Adults," *Autism in Adulthood* 3(4):330-338 (DOI: 10.1089/aut.2020.0083, [PMC8992921](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/)). Miller and colleagues surveyed 144 autistic adults, 49 non-autistic neurodivergent adults, and 45 neurotypical adults about their masking experiences and the cost structure of masking. The title phrase — "masking is life" — is drawn from participants who described masking not as an occasional performance but as the constant background mode of all social interaction. The survey findings matter for §3.5 in two specific ways. First, they empirically establish that masking is pervasive rather than occasional in the autistic adult population, which is the precondition for the masking-as-vulnerability argument above: a mechanism deployed in rare situations has limited interaction with relational safety, but a mechanism deployed as a default interactional stance interacts with relational safety at every level. Second, the Miller et al. comparison between autistic and non-autistic maskers found that while stigma-management masking occurs across groups, the autistic experience of masking was qualitatively distinct in its cost, its automaticity, and its difficulty to release. The depth of the masked baseline is part of why the stance-erasure mechanism documented in Pearson et al. (2024) lands so hard on autistic targets: the baseline from which stance-erasure proceeds is already a suppressed baseline.
 
 **Citations:**
-- Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking: Understanding the narrative of stigma and the illusion of choice. *Autism in Adulthood*, 3(1), 52-60. DOI: 10.1089/aut.2020.0043. [PMC8992880](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992880/)
+- Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking: Understanding the narrative of stigma and the illusion of choice. *Autism in Adulthood*, 3(1), 52-60. DOI: 10.1089/aut.2020.0043. [PMC8992888](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992888/)
 - Miller, D., Rees, J., & Pearson, A. (2021). "Masking is life": Experiences of masking in autistic and nonautistic adults. *Autism in Adulthood*, 3(4), 330-338. DOI: 10.1089/aut.2020.0083. [PMC8992921](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/)
 
 **Supplementary citation on autistic women's relationships:**
@@ -1022,7 +1022,7 @@ Phone calls are a specific and well-documented challenge for many autistic adult
 1. **Raymaker et al. (2020)** - Defining Autistic Burnout. *Autism in Adulthood*, 2(2), 132-143.
 2. **Milton (2012)** - On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6), 883-887.
 3. **Szechy, Turk, & O'Donnell (2024)** - Autism and Employment Challenges: The Double Empathy Problem. *Autism in Adulthood*, 6(4), 351-363.
-4. **Shaw, Doherty et al. (2024)** - Barriers to healthcare and a 'triple empathy problem'. *Autism*, 28(7), 1677-1690.
+4. **Shaw, Doherty et al. (2024)** - Barriers to healthcare and a 'triple empathy problem' may lead to adverse outcomes for autistic adults. *Autism*, 28(7), 1746-1757. [SAGE](https://doi.org/10.1177/13623613231205629)
 5. **Szechy & O'Donnell (2025)** - Autism Knowledge Matters: Perceptions of an Autistic Employee's Competency. *Autism in Adulthood*.
 6. **Hull et al. (2017)** - "Putting on My Best Normal": Social Camouflaging in Adults with Autism Spectrum Conditions. *Journal of Autism and Developmental Disorders*, 47, 2519-2534.
 

@@ -925,22 +925,22 @@ For autistic individuals who rely on explicit signals, verbal humor markers can 
 ## Sources and References
 
 ### Academic Papers and Books
-- Raskin, V. (1985). *Semantic Mechanisms of Humor*. Dordrecht: D. Reidel.
-- Attardo, S. & Raskin, V. (1991). Script theory revis(it)ed: Joke similarity and joke representation model. *Humor*, 4(3-4), 293-348.
-- McGraw, A. P. & Warren, C. (2010). Benign Violations: Making Immoral Behavior Funny. *Psychological Science*, 21(8), 1141-1149.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell.
-- Lakoff, G. & Johnson, M. (1980). *Metaphors We Live By*. Chicago: University of Chicago Press.
-- Freud, S. (1905). *Jokes and Their Relation to the Unconscious*.
-- Kalandadze, T., Norbury, C., Nærland, T., & Næss, K.-A. B. (2018). Figurative language comprehension in individuals with autism spectrum disorder: A meta-analytic review. *Autism*, 22(2), 99-117.
-- Lampri, N. et al. (2024). Figurative language processing in autism spectrum disorders: A review. *Autism Research*.
-- Lampri, N. et al. (2024). Metaphor comprehension and production in verbally able children with Autism Spectrum Disorder. *Autism Research*.
-- Gibbs, R. W. & Nayak, N. P. (1989). Psycholinguistic studies on the syntactic behavior of idioms. *Cognitive Psychology*, 21, 100-138.
-- McCarthy, M. & Carter, R. (2004). "There's millions of them": hyperbole in everyday conversation. *Journal of Pragmatics*, 36, 149-184.
-- Speer, S. A. (2019). Reconsidering self-deprecation as a communication practice. *British Journal of Social Psychology*, 58(4), 806-828.
-- Bitterly, T. B., Brooks, A. W., & Schweitzer, M. E. (2016). Risky business: When humor increases and decreases status. *Journal of Personality and Social Psychology*.
-- Kasirer, A. & Mashal, N. (2014). "Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development." *Frontiers in Human Neuroscience*, 8, 615.
-- Hubbard, R. J. et al. (2023). Predictability and decomposability separately contribute to compositional processing of idiomatic language. *Psychophysiology*.
-- Happé, F. (1993). Communicative competence and theory of mind in autism: A test of relevance theory. *Cognition*, 48, 101-119.
+- Raskin, V. (1985). *Semantic Mechanisms of Humor*. Dordrecht: D. Reidel. [Amazon](https://www.amazon.com/Semantic-Mechanisms-Humor-Synthese-Language/dp/9027718911)
+- Attardo, S. & Raskin, V. (1991). Script theory revis(it)ed: Joke similarity and joke representation model. *Humor*, 4(3-4), 293-348. [De Gruyter (paywalled)](https://doi.org/10.1515/humr.1991.4.3-4.293)
+- McGraw, A. P. & Warren, C. (2010). Benign Violations: Making Immoral Behavior Funny. *Psychological Science*, 21(8), 1141-1149. [SAGE (paywalled)](https://doi.org/10.1177/0956797610376073)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Lakoff, G. & Johnson, M. (1980). *Metaphors We Live By*. Chicago: University of Chicago Press. [Amazon](https://www.amazon.com/Metaphors-We-Live-George-Lakoff/dp/0226468011)
+- Freud, S. (1905). *Jokes and Their Relation to the Unconscious*. [Amazon](https://www.amazon.com/Jokes-Their-Relation-Unconscious-Classics/dp/0140186034)
+- Kalandadze, T., Norbury, C., Nærland, T., & Næss, K.-A. B. (2018). Figurative language comprehension in individuals with autism spectrum disorder: A meta-analytic review. *Autism*, 22(2), 99-117. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Lampri, S. et al. (2024). Figurative language processing in autism spectrum disorders: A review. *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.3069)
+- Lampri, S. et al. (2024). Metaphor comprehension and production in verbally able children with Autism Spectrum Disorder. *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.3210)
+- Gibbs, R. W. & Nayak, N. P. (1989). Psycholinguistic studies on the syntactic behavior of idioms. *Cognitive Psychology*, 21, 100-138. [ScienceDirect (paywalled)](https://doi.org/10.1016/0010-0285(89)90004-2)
+- McCarthy, M. & Carter, R. (2004). "There's millions of them": hyperbole in everyday conversation. *Journal of Pragmatics*, 36, 149-184. [PDF](https://qualquant.org/wp-content/uploads/text/McCarthy%20&%20Carter%202004.pdf)
+- Speer, S. A. (2019). Reconsidering self-deprecation as a communication practice. *British Journal of Social Psychology*, 58(4), 806-828. [Wiley (paywalled)](https://doi.org/10.1111/bjso.12329)
+- Bitterly, T. B., Brooks, A. W., & Schweitzer, M. E. (2016). Risky business: When humor increases and decreases status. *Journal of Personality and Social Psychology*. [APA (paywalled)](https://doi.org/10.1037/pspi0000079)
+- Kasirer, A. & Mashal, N. (2014). "Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development." *Frontiers in Human Neuroscience*, 8, 615. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4128218/)
+- Hubbard, R. J. et al. (2023). Predictability and decomposability separately contribute to compositional processing of idiomatic language. *Psychophysiology*. [Wiley (paywalled)](https://doi.org/10.1111/psyp.14241)
+- Happé, F. (1993). Communicative competence and theory of mind in autism: A test of relevance theory. *Cognition*, 48, 101-119. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8243028/) | [ScienceDirect (paywalled)](https://doi.org/10.1016/0010-0277(93)90026-R)
 
 ### Web Sources
 - [Philosophy of Humor (Stanford Encyclopedia of Philosophy)](https://plato.stanford.edu/entries/humor/)

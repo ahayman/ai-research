@@ -517,6 +517,12 @@ The standing recovery frame applies: **the goal is not to disengage from digital
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Citron (2014). *Hate Crimes in Cyberspace.* — [Amazon](https://www.amazon.com/Hate-Crimes-Cyberspace-Danielle-Keats-Citron/dp/0674368290)
+- Logan & Walker (2017). — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015603210) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+
 **Cyberharassment and image-based sexual abuse:**
 - Citron, D. K. (2014). *Hate Crimes in Cyberspace.* Harvard University Press.
 - McGlynn, C., & Rackley, E. Series of papers on image-based sexual abuse and the law.

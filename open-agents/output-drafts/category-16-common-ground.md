@@ -296,14 +296,14 @@ Because grounding depends on listener feedback (backchannels, acknowledgments), 
 ## Key Sources
 
 ### Foundational Texts
-- Clark, H.H. (1996). *Using Language*. Cambridge University Press.
-- Clark, H.H. & Brennan, S.E. (1991). "Grounding in Communication." In Resnick et al. (eds.), *Perspectives on Socially Shared Cognition*.
-- Stalnaker, R. (2002). "Common Ground." *Linguistics and Philosophy*, 25, 701-721.
-- Clark, H.H. & Wilkes-Gibbs, D. (1986). "Referring as a Collaborative Process." *Cognition*, 22, 1-39.
+- Clark, H.H. (1996). *Using Language*. Cambridge University Press. [Amazon](https://www.amazon.com/Using-Language-Herbert-H-Clark/dp/0521567459)
+- Clark, H.H. & Brennan, S.E. (1991). "Grounding in Communication." In Resnick et al. (eds.), *Perspectives on Socially Shared Cognition*. [Stanford PDF](https://web.stanford.edu/~clark/1990s/Clark,%20H.H.%20_%20Brennan,%20S.E.%20_Grounding%20in%20communication_%201991.pdf)
+- Stalnaker, R. (2002). "Common Ground." *Linguistics and Philosophy*, 25, 701-721. [Springer (paywalled)](https://doi.org/10.1023/A:1020867916902)
+- Clark, H.H. & Wilkes-Gibbs, D. (1986). "Referring as a Collaborative Process." *Cognition*, 22, 1-39. [Elsevier (paywalled)](https://doi.org/10.1016/0010-0277(86)90010-7)
 
 ### Autism Research
-- Karin, I. et al. (2025). "Common Ground Generation in ASD."
-- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. PMC8117104.
-- Cola, M. et al. (2022). "Conversational Adaptation in Autism." PMC9167260.
-- Malkin, L. & Abbot-Smith, K. (2021). "Context-Appropriate Language in Autism." *Autism*.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
+- Karin, I. et al. (2025). "Common Ground Generation in ASD." [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.70006)
+- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8117104/)
+- Cola, M. et al. (2022). "Conversational Adaptation in Autism." [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167260/)
+- Malkin, L. & Abbot-Smith, K. (2021). "Context-Appropriate Language in Autism." *Autism*. [Sage](https://journals.sagepub.com/doi/10.1177/13623613211012860)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/32431157/)

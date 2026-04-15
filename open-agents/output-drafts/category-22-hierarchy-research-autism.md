@@ -194,7 +194,7 @@ The consequences of hierarchy-blind directness are severe and well-documented:
 
 **Employment termination data**:
 
-**Sung, C. et al. (2023). "Perspectives on Employer-Initiated Terminations Among Young Adults on the Autism Spectrum." *Journal of Autism and Developmental Disorders*. PMC9838300.**
+**Pezzimenti, F., Durrani, S. R., Zheng, S., Adams, R. E., Bishop, S. L., & Taylor, J. L. (2023). "Perspectives on Employer-Initiated Terminations Among Young Adults on the Autism Spectrum." *Journal of Autism and Developmental Disorders*. PMC9838300.**
 
 - From 315 autistic individuals ages 18-35, 93 (29.5%) reported having been terminated from a job
 - Social difficulties were the second most common reason for termination
@@ -353,9 +353,9 @@ Haidt's theory posits five moral foundations grouped into two clusters:
 **Dempsey et al. (2020). "Moral foundations theory in autism spectrum disorder: A qualitative investigation." *Autism*, 24(8).**
 - DOI: https://doi.org/10.1177/1362361320939331
 
-**Hartley et al. (2024). "Moral foundations in autistic people and people with systemizing minds." *Molecular Autism*. PMC11092219.**
+**Greenberg et al. et al. (2024). "Moral foundations in autistic people and people with systemizing minds." *Molecular Autism*. PMC11092219.**
 
-**Zeidan et al. (2022). "Moral Foundations Theory Among Autistic and Neurotypical Children." *Frontiers in Psychology*. PMC8795511.**
+**Dempsey, Moore, Johnson, Stewart & Smith (2022). "Moral Foundations Theory Among Autistic and Neurotypical Children." *Frontiers in Psychology*. PMC8795511.**
 
 Findings across these studies:
 1. **Autistic people score HIGHER on Fairness** than neurotypical controls -- particularly autistic females
@@ -600,13 +600,13 @@ For many autistic individuals, hierarchy feels not just confusing but actively w
 
 5. Caldwell-Harris, C.L. (2023). "Why Autistic Sociality Is Different: Reduced Interest in Competing for Social Status." *OUGHT: The Journal of Autistic Culture*, 5(1), Article 12. Grand Valley State University. https://scholarworks.gvsu.edu/ought/vol5/iss1/12/
 
-6. Hartley, S.L. et al. (2024). "Moral foundations in autistic people and people with systemizing minds." *Molecular Autism*. PMC11092219. https://pmc.ncbi.nlm.nih.gov/articles/PMC11092219/
+6. Greenberg et al., S.L. et al. (2024). "Moral foundations in autistic people and people with systemizing minds." *Molecular Autism*. PMC11092219. https://pmc.ncbi.nlm.nih.gov/articles/PMC11092219/
 
 7. Zeidan, A. et al. (2022). "Moral Foundations Theory Among Autistic and Neurotypical Children." *Frontiers in Psychology*. PMC8795511. https://pmc.ncbi.nlm.nih.gov/articles/PMC8795511/
 
 8. Dempsey, E.E. et al. (2020). "Moral foundations theory in autism spectrum disorder: A qualitative investigation." *Autism*, 24(8). https://journals.sagepub.com/doi/abs/10.1177/1362361320939331
 
-9. Sung, C. et al. (2023). "Perspectives on Employer-Initiated Terminations Among Young Adults on the Autism Spectrum." *Journal of Autism and Developmental Disorders*. PMC9838300. https://pmc.ncbi.nlm.nih.gov/articles/PMC9838300/
+9. Pezzimenti, F., Durrani, S. R., Zheng, S., Adams, R. E., Bishop, S. L., & Taylor, J. L. (2023). "Perspectives on Employer-Initiated Terminations Among Young Adults on the Autism Spectrum." *Journal of Autism and Developmental Disorders*. PMC9838300. https://pmc.ncbi.nlm.nih.gov/articles/PMC9838300/
 
 10. Szechy, K. A., Turk, P. D., & O'Donnell, L. A. (2024). "Autism and employment challenges: The double empathy problem and perceptions of an autistic employee in the workplace." *Autism in Adulthood*, 6(2), 205-217. PMC11317796. https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/
 

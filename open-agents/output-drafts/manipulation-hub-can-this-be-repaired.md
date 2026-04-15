@@ -301,6 +301,29 @@ The engage/exit decision leads to different strategic postures. These are not ri
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Bograd & Mederos (1999). Battering and Couples Therapy. *JMFT* 25(3):291-312. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Stith et al. (2012). *JMFT* 38(1):220-240. — [Wiley](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1752-0606.2011.00245.x) [paywalled]
+- Karakurt et al. (2016). *JMFT* 42(4):567-583. — [PMC5050084](https://pmc.ncbi.nlm.nih.gov/articles/PMC5050084/)
+- Namie & Namie (2009). *The Bully at Work* (2nd ed.). — [Amazon](https://www.amazon.com/Bully-Work-Reclaim-Dignity-Job/dp/1402224265)
+- Salin (2008). Prevention of Workplace Bullying. *Scand J Mgmt.* — [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0956522108000419) [paywalled]
+- Prochaska & DiClemente (1983). *JCCP* 51(3):390-395. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/6863699/) [paywalled]
+- Burke et al. (2004). *Am J Health Behav* 28(2):122-133. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15058512/) [paywalled]
+- Brown (1997). *Violence Against Women* 3(1):5-26. — [Sage](https://journals.sagepub.com/doi/10.1177/1077801297003001002) [paywalled]
+- Stark (2007). *Coercive Control.* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson (2008). *A Typology of Domestic Violence.* — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Babcock, Green & Robie (2004). *Clin Psych Rev* 23(8):1023-1053. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/14729422/) [paywalled]
+- Campbell et al. (2003). *AJPH* 93(7):1089-1097. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Wilson & Daly (1993). *Violence and Victims* 8(1):3-16. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8292563/) [paywalled]
+- Pearson et al. (2022). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Griffiths et al. (2019). VEQ. — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Williams et al. (2018). — [PMC6220950](https://pmc.ncbi.nlm.nih.gov/articles/PMC6220950/)
+- Rozenkrantz et al. (2021). — [Cell](https://www.cell.com/trends/cognitive-sciences/fulltext/S1364-6613(21)00125-X) [paywalled]
+- Herman (1992). *Trauma and Recovery.* — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
+
 **Couples therapy and mediation contraindication:**
 - Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
 - Stith, S. M., et al. (2012). "Systemic Perspectives on Intimate Partner Violence Treatment." *Journal of Marital and Family Therapy* 38(1): 220–240.

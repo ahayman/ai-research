@@ -1437,27 +1437,27 @@ By learning the structural components explicitly, you gain what neurotypical spe
 
 ### Foundational Academic Works
 
-- **Schegloff, E.A.** (1968). "Sequencing in Conversational Openings." *American Anthropologist*, 70(6), 1075-1095. [The foundational study of opening sequences and summons-answer pairs]
-- **Schegloff, E.A.** (1979). "Identification and Recognition in Telephone Conversation Openings." In G. Psathas (Ed.), *Everyday Language: Studies in Ethnomethodology*. [The four core opening sequences]
-- **Schegloff, E.A.** (1986). "The Routine as Achievement." *Human Studies*, 9, 111-152.
-- **Schegloff, E.A.** (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis, Volume 1*. Cambridge University Press.
-- **Schegloff, E.A. & Sacks, H.** (1973). "Opening Up Closings." *Semiotica*, 8(4), 289-327. [The foundational study of how conversations end]
-- **Sacks, H., Schegloff, E.A., & Jefferson, G.** (1974). "A Simplest Systematics for the Organization of Turn-Taking for Conversation." *Language*, 50(4), 696-735. [The turn-taking system]
-- **Button, G.** (1987). "Moving Out of Closings." In G. Button & J.R.E. Lee (Eds.), *Talk and Social Organisation*. [Reopening after pre-closing]
-- **Malinowski, B.** (1923). "The Problem of Meaning in Primitive Languages." In C.K. Ogden & I.A. Richards, *The Meaning of Meaning*. [Origin of "phatic communion"]
-- **Heritage, J. & Maynard, D.W.** (2006). *Communication in Medical Care: Interaction between Primary Care Physicians and Patients*. Cambridge University Press. [Phases of medical consultation]
-- **Goffman, E.** (1955). "On Face-Work: An Analysis of Ritual Elements in Social Interaction." *Psychiatry*, 18(3), 213-231.
-- **Brown, P. & Levinson, S.C.** (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
+- **Schegloff, E.A.** (1968). "Sequencing in Conversational Openings." *American Anthropologist*, 70(6), 1075-1095. [The foundational study of opening sequences and summons-answer pairs] [Wiley](https://doi.org/10.1525/aa.1968.70.6.02a00030)
+- **Schegloff, E.A.** (1979). "Identification and Recognition in Telephone Conversation Openings." In G. Psathas (Ed.), *Everyday Language: Studies in Ethnomethodology*. [The four core opening sequences] [Amazon (volume)](https://www.amazon.com/Everyday-language-Studies-ethnomethodology-Psathas/dp/0470267151)
+- **Schegloff, E.A.** (1986). "The Routine as Achievement." *Human Studies*, 9, 111-152. [Springer (paywalled)](https://doi.org/10.1007/BF00148124)
+- **Schegloff, E.A.** (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis, Volume 1*. Cambridge University Press. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)
+- **Schegloff, E.A. & Sacks, H.** (1973). "Opening Up Closings." *Semiotica*, 8(4), 289-327. [The foundational study of how conversations end] [De Gruyter](https://doi.org/10.1515/semi.1973.8.4.289)
+- **Sacks, H., Schegloff, E.A., & Jefferson, G.** (1974). "A Simplest Systematics for the Organization of Turn-Taking for Conversation." *Language*, 50(4), 696-735. [The turn-taking system] [JSTOR](https://doi.org/10.2307/412243)
+- **Button, G.** (1987). "Moving Out of Closings." In G. Button & J.R.E. Lee (Eds.), *Talk and Social Organisation*. [Reopening after pre-closing] [Amazon (volume)](https://www.amazon.com/Talk-Social-Organisation-Intercommunication-Button/dp/1853590045)
+- **Malinowski, B.** (1923). "The Problem of Meaning in Primitive Languages." In C.K. Ogden & I.A. Richards, *The Meaning of Meaning*. [Origin of "phatic communion"] [Amazon (volume)](https://www.amazon.com/Meaning-Harvest-Book-C-K-Ogden/dp/0156584468)
+- **Heritage, J. & Maynard, D.W.** (2006). *Communication in Medical Care: Interaction between Primary Care Physicians and Patients*. Cambridge University Press. [Phases of medical consultation] [Amazon](https://www.amazon.com/Communication-Medical-Care-Interaction-Sociolinguistics/dp/0521628997)
+- **Goffman, E.** (1955). "On Face-Work: An Analysis of Ritual Elements in Social Interaction." *Psychiatry*, 18(3), 213-231. [Taylor & Francis (paywalled)](https://doi.org/10.1080/00332747.1955.11023008)
+- **Brown, P. & Levinson, S.C.** (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 
 ### Research on Autism and Pragmatic Communication
 
-- **Sng, C.Y., Carter, M., & Stephenson, J.** (2018). "A Systematic Review of the Comparative Pragmatic Differences in Conversational Skills of Individuals with Autism." *Autism & Developmental Language Impairments*, 3.
-- Indiana Resource Center for Autism. "Meeting the Challenge of Social Pragmatics with Students on the Autism Spectrum." Indiana University Bloomington.
+- **Sng, C.Y., Carter, M., & Stephenson, J.** (2018). "A Systematic Review of the Comparative Pragmatic Differences in Conversational Skills of Individuals with Autism." *Autism & Developmental Language Impairments*, 3. [SAGE](https://doi.org/10.1177/2396941518803806)
+- Indiana Resource Center for Autism. "Meeting the Challenge of Social Pragmatics with Students on the Autism Spectrum." Indiana University Bloomington. [IRCA](https://iidc.indiana.edu/irca/articles/meeting-the-challenge-of-social-pragmatics-with-students-on-the-autism-spectrum.html)
 
 ### Topic Management
 
-- **Yang, Y.** "The Management of Topics in Ordinary Conversation." PhD thesis, University of Leeds.
-- **Maynard, D.W.** (1980). "Placement of Topic Changes in Conversation." *Semiotica*, 30(3-4), 263-290.
+- **Yang, Y.** "The Management of Topics in Ordinary Conversation." PhD thesis, University of Leeds. [Leeds Repository](https://etheses.whiterose.ac.uk/)
+- **Maynard, D.W.** (1980). "Placement of Topic Changes in Conversation." *Semiotica*, 30(3-4), 263-290. [De Gruyter (paywalled)](https://doi.org/10.1515/semi.1980.30.3-4.263)
 
 ### Digital Communication
 

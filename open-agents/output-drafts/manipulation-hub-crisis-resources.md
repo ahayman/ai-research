@@ -543,11 +543,11 @@ This is a directory, not a research document, and the primary sources are the re
 
 **Research sources referenced:**
 
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. — the source for the Danger Assessment referenced in the Safety Assessment page.
-- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. — the finding on attenuated gender protection in autistic samples (cited in Section 7, men-specific resources).
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. — referenced for the credibility discount that affects police and medical encounters.
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
-- Pearson, A., et al. (2022, 2024) — autistic victimization research, for the situational-vulnerability framing used throughout.
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. — the source for the Danger Assessment referenced in the Safety Assessment page. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *JADD* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Pearson, A., et al. (2022, 2024) — autistic victimization research. — [Pearson 2022 Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]; [Pearson 2024 Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
 
 **Directory source organizations** (primary sources for contact information):
 

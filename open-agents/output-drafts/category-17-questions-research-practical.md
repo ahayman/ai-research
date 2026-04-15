@@ -794,15 +794,15 @@ Disagree → "I wonder if..." → "That's a good point, but..." → "I see it di
 
 Research referenced in this document:
 
-- Stivers, T., Enfield, N. J., Brown, P., et al. (2009). Universals and cultural variation in turn-taking in conversation. *PNAS*, 106(26), 10587-10592.
-- Bögels, S., Kendrick, K. H., & Levinson, S. C. (2015). Never say no... How the brain interprets the pregnant pause in conversation. *PLOS ONE*, 10(12). [PMC4689543]
-- Leinonen, E., & Ryder, N. (2021). Understanding indirect requests for information in high-functioning autism. *Cognitive Processing*. [PMC8831260]
-- Kissine, M., et al. (2015). Selective pragmatic impairment in autism spectrum disorder: Indirect requests versus irony. *Journal of Autism and Developmental Disorders*.
-- Huiskes, M., et al. (2024). Autistic and non-autistic adults use discourse context to determine a speaker's intention to request. *Cognitive Processing*. [PMC11897084]
-- Kimps, D. (2018). *Tag Questions in Conversation: A typology of their interactional and stance meanings*. John Benjamins.
-- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press.
-- Schegloff, E. A., Jefferson, G., & Sacks, H. (1977). The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382.
-- Searle, J. R. (1975). Indirect speech acts. In P. Cole & J. L. Morgan (Eds.), *Syntax and Semantics*, vol. 3.
-- Huang, K., Yeomans, M., Brooks, A. W., Minson, J., & Gino, F. (2017). It doesn't hurt to ask: Question-asking increases liking. *Journal of Personality and Social Psychology*, 113(3), 430-452.
-- Nicolaidis, C., Raymaker, D., McDonald, K., et al. (2016). Respect the way I need to communicate with you: Healthcare experiences of adults on the autism spectrum. [PMC4841263]
-- Roberts, S. G., Torreira, F., & Levinson, S. C. (2015). Timing in conversation. *Journal of Cognition*, 6(1), 268.
+- Stivers, T., Enfield, N. J., Brown, P., et al. (2009). Universals and cultural variation in turn-taking in conversation. *PNAS*, 106(26), 10587-10592. [PNAS](https://www.pnas.org/doi/10.1073/pnas.0903616106)
+- Bögels, S., Kendrick, K. H., & Levinson, S. C. (2015). Never say no... How the brain interprets the pregnant pause in conversation. *PLOS ONE*, 10(12). [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4689543/)
+- Marocchini, E., Domaneschi, F., Di Paola, S., & Mazzaggio, G. (2021). Understanding indirect requests for information in high-functioning autism. *Cognitive Processing*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8831260/)
+- Kissine, M., et al. (2015). Selective pragmatic impairment in autism spectrum disorder: Indirect requests versus irony. *Journal of Autism and Developmental Disorders*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
+- Huiskes, M., et al. (2024). Autistic and non-autistic adults use discourse context to determine a speaker's intention to request. *Cognitive Processing*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11897084/)
+- Kimps, D. (2018). *Tag Questions in Conversation: A typology of their interactional and stance meanings*. John Benjamins. [Amazon](https://www.amazon.com/Tag-Questions-Conversation-interactional-Pragmatics/dp/9027200300)
+- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- Schegloff, E. A., Jefferson, G., & Sacks, H. (1977). The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382. [JSTOR (paywalled)](https://www.jstor.org/stable/413107)
+- Searle, J. R. (1975). Indirect speech acts. In P. Cole & J. L. Morgan (Eds.), *Syntax and Semantics*, vol. 3. [Brill](https://brill.com/display/book/edcoll/9789004368811/BP000004.xml)
+- Huang, K., Yeomans, M., Brooks, A. W., Minson, J., & Gino, F. (2017). It doesn't hurt to ask: Question-asking increases liking. *Journal of Personality and Social Psychology*, 113(3), 430-452. [APA PsycNet (paywalled)](https://doi.org/10.1037/pspi0000097)
+- Nicolaidis, C., Raymaker, D., McDonald, K., et al. (2015). Respect the way I need to communicate with you: Healthcare experiences of adults on the autism spectrum. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4841263/)
+- Roberts, S. G., Torreira, F., & Levinson, S. C. (2015). The effects of processing and sequence organization on the timing of turn taking: A corpus study. *Frontiers in Psychology*, 6, 509. [Frontiers](https://doi.org/10.3389/fpsyg.2015.00509)

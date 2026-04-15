@@ -639,17 +639,17 @@ Understanding deixis as a **system** -- a set of coordinated pointing devices an
 ## Sources
 
 ### Primary Academic Works
-- Buhler, K. (1934). *Sprachtheorie: Die Darstellungsfunktion der Sprache*. Jena: Gustav Fischer.
-- Fillmore, C. J. (1971/1975/1997). *Lectures on Deixis* (originally *Santa Cruz Lectures on Deixis, 1971*). Stanford: CSLI Publications.
-- Levinson, S. C. (1983). *Pragmatics*. Cambridge: Cambridge University Press.
-- Reichenbach, H. (1947). *Elements of Symbolic Logic*. New York: Macmillan.
-- Comrie, B. (1985). *Tense*. Cambridge: Cambridge University Press.
-- Lyons, J. (1977). *Semantics*. Cambridge: Cambridge University Press.
+- Buhler, K. (1934). *Sprachtheorie: Die Darstellungsfunktion der Sprache*. Jena: Gustav Fischer. [Benjamins (English translation)](https://benjamins.com/catalog/fos.25)
+- Fillmore, C. J. (1971/1975/1997). *Lectures on Deixis* (originally *Santa Cruz Lectures on Deixis, 1971*). Stanford: CSLI Publications. [Amazon](https://www.amazon.com/Lectures-Deixis-Lecture-Notes/dp/1575860902)
+- Levinson, S. C. (1983). *Pragmatics*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
+- Reichenbach, H. (1947). *Elements of Symbolic Logic*. New York: Macmillan. [Amazon](https://www.amazon.com/Elements-Symbolic-Logic-Hans-Reichenbach/dp/0486240045)
+- Comrie, B. (1985). *Tense*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Tense-Cambridge-Textbooks-Linguistics-Comrie/dp/0521281385)
+- Lyons, J. (1977). *Semantics*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Semantics-Volume-1-John-Lyons/dp/0521291860)
 
 ### Key Articles and Chapters
-- Levinson, S. C. (2004). "Deixis and Pragmatics." In L. Horn & G. Ward (Eds.), *Handbook of Pragmatics*. Blackwell.
-- Webber, B. L. (1988). "Discourse Deixis: Reference to Discourse Segments." *Proceedings of ACL*.
-- Lyons, A. (2014). "We are there now: Deixis and reference frame in text-messages." *Journal of Pragmatics*.
+- Levinson, S. C. (2004). "Deixis and Pragmatics." In L. Horn & G. Ward (Eds.), *Handbook of Pragmatics*. Blackwell. [Wiley (paywalled)](https://doi.org/10.1002/9780470756959.ch5)
+- Webber, B. L. (1988). "Discourse Deixis: Reference to Discourse Segments." *Proceedings of ACL*. [ACL Anthology](https://aclanthology.org/P88-1014/)
+- Lyons, A. (2014). "We are there now: Deixis and reference frame in text-messages." *Journal of Pragmatics*. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2014.05.001)
 
 ### Web Sources Consulted
 - [Deixis - Wikipedia](https://en.wikipedia.org/wiki/Deixis)

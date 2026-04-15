@@ -615,6 +615,16 @@ A specific risk: your evidence collection can become a substitute for action. Yo
 
 ## 12. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Sullivan & Bybee (1999). — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+- Glass et al. (2008). — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+
 **Evidence standards and workplace harassment:**
 - Employment-law practitioner literature and Title VII case law on hostile environment claims. Synthesized from EEOC guidance, *Harris v. Forklift Systems* and subsequent case law, and employment lawyer practical guides. [ESTABLISHED LEGAL PRACTICE].
 - See strategy-level evidence map in [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md), Section 8, for the classification of contemporaneous documentation for workplace harassment as [STRONG LEGAL-EVIDENTIARY].

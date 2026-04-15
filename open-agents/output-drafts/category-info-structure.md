@@ -224,7 +224,7 @@ Key findings:
 
 | Study | Finding |
 |-------|---------|
-| Paul et al. (2005) | Two distinct autistic subgroups: one uses wide pitch range but fails to mark information-structural focus; the other uses narrow pitch range but marks focus functionally. The system exists but is unevenly deployed. |
+| DePape et al. (2012) | Two distinct autistic subgroups: one uses wide pitch range but fails to mark information-structural focus; the other uses narrow pitch range but marks focus functionally. The system exists but is unevenly deployed. |
 | Patel et al. (2023) | Autistic adults produce contrastive stress correctly 73.6% of the time (vs. 89% controls). Comprehend it 80.6% (vs. 93.1%). The gap is real but not catastrophic. |
 | Arnold et al. (2009) | Autistic children over-specify referents (use full names/descriptions instead of pronouns), but this decreases with age (r=.60). It's developmental, not fixed. |
 | Nadig et al. (2009) | Referential shortening for common ground (using shorter descriptions when the listener already knows the referent) was absent in younger autistic participants but emerged in older ones. |
@@ -350,15 +350,15 @@ BLUF works because it establishes the focus immediately and provides the listene
 
 ## Key Sources
 
-- Chafe, W. (1976). "Givenness, Contrastiveness, Definiteness, Subjects, Topics, and Point of View." In C. Li (ed.), *Subject and Topic*.
-- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (ed.), *Discourse Production and Comprehension*.
-- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English." *Journal of Linguistics*.
-- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (ed.), *Radical Pragmatics*.
-- Lambrecht, K. (1994). *Information Structure and Sentence Form*. Cambridge University Press.
-- Roberts, C. (1996/2012). "Information Structure in Discourse." *Semantics and Pragmatics*.
-- Danes, F. (1974). "Functional Sentence Perspective and the Organization of the Text."
-- Paul, R. et al. (2005). "Use of Prosody and Information Structure in High Functioning Adults with Autism." *JADD*. PMC3312270.
-- Arnold, J.E. et al. (2009). "Reference Production in Young Speakers with and without Autism." *Cognition*. PMC3668432.
-- Patel, S.P. et al. (2023). "A Profile of Prosodic Speech Differences in ASD." *J Communication Disorders*. PMC10395513.
-- Geelhand, P. et al. (2025). "Autistic Adults Display Different Verbal Behavior Only in Mixed-Neurotype Interactions." *Autism*.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*.
+- Chafe, W. (1976). "Givenness, Contrastiveness, Definiteness, Subjects, Topics, and Point of View." In C. Li (ed.), *Subject and Topic*. Academic Press. [Amazon](https://www.amazon.com/Subject-Topic-Charles-N-Li/dp/0124473504)
+- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (ed.), *Discourse Production and Comprehension*. [CITATION UNVERIFIED — book chapter, no canonical online source]
+- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English." *Journal of Linguistics*, 3(1), 37-81. [Cambridge (paywalled)](https://doi.org/10.1017/S0022226700012949)
+- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (ed.), *Radical Pragmatics*. Academic Press. [Amazon](https://www.amazon.com/Radical-pragmatics-Peter-Cole/dp/0121796604)
+- Lambrecht, K. (1994). *Information Structure and Sentence Form*. Cambridge University Press. [Amazon](https://www.amazon.com/Information-Structure-Sentence-Form-Representations/dp/0521587042)
+- Roberts, C. (1996/2012). "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." *Semantics and Pragmatics*, 5(6), 1-69. [Open Access](https://doi.org/10.3765/sp.5.6)
+- Danes, F. (1974). "Functional Sentence Perspective and the Organization of the Text." In F. Danes (ed.), *Papers on Functional Sentence Perspective*. Academia. [Amazon](https://www.amazon.com/Papers-functional-sentence-perspective-Janua/dp/9027933480)
+- DePape, A.-M. R., Chen, A., Hall, G. B. C., & Trainor, L. J. (2012). "Use of Prosody and Information Structure in High Functioning Adults with Autism in Relation to Language Ability." *Frontiers in Psychology*, 3, 72. [PMC3312270](https://pmc.ncbi.nlm.nih.gov/articles/PMC3312270/)
+- Arnold, J.E. et al. (2009). "Reference Production in Young Speakers with and without Autism." *Cognition*, 110(2), 131-146. [PMC3668432](https://pmc.ncbi.nlm.nih.gov/articles/PMC3668432/)
+- Patel, S.P. et al. (2023). "A Profile of Prosodic Speech Differences in ASD." *J Communication Disorders*. [PMC10395513](https://pmc.ncbi.nlm.nih.gov/articles/PMC10395513/)
+- Geelhand, P. et al. (2025). "Autistic Adults Display Different Verbal Behavior Only in Mixed-Neurotype Interactions." *Autism*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/39572980/)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)

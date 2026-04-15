@@ -992,15 +992,15 @@ This category draws on and connects to every other category in the hub:
 
 ### Academic Research
 
-- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
-- Milton, D. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6), 883-887.
-- Freyd, J.J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32.
-- Harsey, S.J., Zurbriggen, E.L., & Freyd, J.J. (2017). Perpetrator responses to victim confrontation: DARVO and victim self-blame. *Journal of Aggression, Maltreatment & Trauma*, 26(6), 644-663.
-- Harsey, S.J. & Freyd, J.J. (2023). The influence of deny, attack, reverse victim and offender and insincere apologies on perceptions of sexual assault. *Journal of Interpersonal Violence*.
+- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
+- Milton, D. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Freyd, J.J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32. [jjfreyd.com](https://www.jjfreyd.com/darvo)
+- Harsey, S.J., Zurbriggen, E.L., & Freyd, J.J. (2017). Perpetrator responses to victim confrontation: DARVO and victim self-blame. *Journal of Aggression, Maltreatment & Trauma*, 26(6), 644-663. [Taylor & Francis (paywalled)](https://doi.org/10.1080/10926771.2017.1320777)
+- Harsey, S.J. & Freyd, J.J. (2023). The influence of deny, attack, reverse victim and offender and insincere apologies on perceptions of sexual assault. *Journal of Interpersonal Violence*. [SAGE (paywalled)](https://doi.org/10.1177/08862605231197142)
 - Lim, A., Young, R. L., & Brewer, N. (2022). [Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/). *Journal of Autism and Developmental Disorders*, 52, 490-507.
-- Douglas, S. & Sedgewick, F. (2024). [Experiences of interpersonal victimization and abuse among autistic people](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/). *Autism*, 28(6), 1464-1476.
-- Hull, L., et al. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
-- Cage, E. & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911.
+- Douglas, S. & Sedgewick, F. (2024). [Experiences of interpersonal victimization and abuse among autistic people](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/). *Autism*, 28(7), 1732-1745. DOI [10.1177/13623613231205630](https://doi.org/10.1177/13623613231205630)
+- Hull, L., et al. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534. [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Cage, E. & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911. [Springer](https://doi.org/10.1007/s10803-018-03878-x)
 - Chapman, R. (2022). [Neurodiversity, epistemic injustice, and the good human life](https://onlinelibrary.wiley.com/doi/10.1111/josp.12456). *Journal of Social Philosophy*.
 
 ### Autistic Community and Advocacy Sources

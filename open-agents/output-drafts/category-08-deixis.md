@@ -326,12 +326,12 @@ Some deictic expressions carry pragmatic meaning beyond their reference:
 ## Key Sources
 
 ### Foundational Texts
-- Bühler, K. (1934). *Sprachtheorie: Die Darstellungsfunktion der Sprache*. Gustav Fischer.
-- Fillmore, C.J. (1997). *Lectures on Deixis*. CSLI Publications. (Originally 1971.)
-- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press. (Chapter 2: Deixis.)
+- Bühler, K. (1934). *Sprachtheorie: Die Darstellungsfunktion der Sprache*. Gustav Fischer. [Benjamins (English translation)](https://benjamins.com/catalog/fos.25)
+- Fillmore, C.J. (1997). *Lectures on Deixis*. CSLI Publications. (Originally 1971.) [Amazon](https://www.amazon.com/Lectures-Deixis-Lecture-Notes/dp/1575860902)
+- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press. (Chapter 2: Deixis.) [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
 
 ### Autism and Deixis
-- Kanner, L. (1943). "Autistic Disturbances of Affective Contact." *Nervous Child*, 2, 217-250.
-- Mizuno, A. et al. (2011). "Neural Basis of Deictic Shifting in Linguistic Perspective-Taking in High-Functioning Autism." PMC3155703.
-- Naigles, L. et al. (2016). "Prevalence and Predictors of Pronoun Reversals in ASD." PMC4834724.
-- Barokova, M. & Tager-Flusberg, H. (2020). "Person-Reference in ASD: Developmental Trends."
+- Kanner, L. (1943). "Autistic Disturbances of Affective Contact." *Nervous Child*, 2, 217-250. [Neurodiversity Library PDF](https://neurodiversity.com/library_kanner_1943.pdf)
+- Mizuno, A. et al. (2011). "Neural Basis of Deictic Shifting in Linguistic Perspective-Taking in High-Functioning Autism." [PMC3155703](https://pmc.ncbi.nlm.nih.gov/articles/PMC3155703/)
+- Naigles, L. et al. (2016). "Prevalence and Predictors of Pronoun Reversals in ASD." [PMC4834724](https://pmc.ncbi.nlm.nih.gov/articles/PMC4834724/)
+- Barokova, M. & Tager-Flusberg, H. (2020). "Person-Reference in ASD: Developmental Trends." [PMC7392811](https://pmc.ncbi.nlm.nih.gov/articles/PMC7392811/)

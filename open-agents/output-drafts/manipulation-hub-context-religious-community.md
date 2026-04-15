@@ -463,6 +463,12 @@ The standing recovery frame applies: **the goal is not to reject religion entire
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Lalich (2004). *Bounded Choice.* — [Amazon](https://www.amazon.com/Bounded-Choice-Believers-Charismatic-Cults/dp/0520240189)
+- Singer (2003). *Cults in Our Midst.* — [Amazon](https://www.amazon.com/Cults-Our-Midst-Continuing-Against/dp/0787967416)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+
 **High-control groups and cult literature:**
 - Lalich, J. (2004). *Bounded Choice: True Believers and Charismatic Cults.* University of California Press.
 - Langone, M. D. (Ed.). (1993). *Recovery from Cults: Help for Victims of Psychological and Spiritual Abuse.* Norton.

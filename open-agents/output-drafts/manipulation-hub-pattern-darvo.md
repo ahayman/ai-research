@@ -328,47 +328,47 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 ## 9. Citation Register
 
 **Original DARVO formulation:**
-- Freyd, J. J. (1997). "Violations of power, adaptive blindness and betrayal trauma theory." *Feminism & Psychology* 7(1): 22–32.
+- Freyd, J. J. (1997). "Violations of power, adaptive blindness and betrayal trauma theory." *Feminism & Psychology* 7(1): 22–32. — [PDF](https://dynamic.uoregon.edu/jjf/articles/freyd97r.pdf)
 
 **Empirical work on DARVO and victim self-blame:**
-- Harsey, S. J., Zurbriggen, E. L., & Freyd, J. J. (2017). "Perpetrator responses to victim confrontation: DARVO and victim self-blame." *Journal of Aggression, Maltreatment & Trauma* 26(6): 644–663.
+- Harsey, S. J., Zurbriggen, E. L., & Freyd, J. J. (2017). "Perpetrator responses to victim confrontation: DARVO and victim self-blame." *Journal of Aggression, Maltreatment & Trauma* 26(6): 644–663. — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/10926771.2017.1320777) [paywalled]
 
 **Empirical work on DARVO and third-party persuasion (the inoculation finding):**
-- Harsey, S. J., & Freyd, J. J. (2020). "Deny, Attack, and Reverse Victim and Offender (DARVO): What Is the Influence on Perceived Perpetrator and Victim Credibility?" *Journal of Aggression, Maltreatment & Trauma* 29(8): 897–916.
+- Harsey, S. J., & Freyd, J. J. (2020). "Deny, Attack, and Reverse Victim and Offender (DARVO): What Is the Influence on Perceived Perpetrator and Victim Credibility?" *Journal of Aggression, Maltreatment & Trauma* 29(8): 897–916. — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/10926771.2020.1774695) [paywalled]
 
 **Empirical refinement of the DARVO definition:**
-- Harsey, S. J., & Freyd, J. J. (2022). Continuing empirical work refining the operational definition of DARVO. (See Freyd Dynamics Lab publications: dynamic.uoregon.edu, for the current state of the literature.)
+- Harsey, S. J., & Freyd, J. J. (2022). Continuing empirical work refining the operational definition of DARVO. (See [Freyd Dynamics Lab publications](https://dynamic.uoregon.edu/jjf/articles/), for the current state of the literature.)
 
 **Betrayal trauma theory (the conceptual backdrop for Freyd's work on DARVO):**
-- Freyd, J. J. (1996). *Betrayal Trauma: The Logic of Forgetting Childhood Abuse.* Harvard University Press.
-- Freyd, J. J., & Birrell, P. J. (2013). *Blind to Betrayal.* Wiley.
+- Freyd, J. J. (1996). *Betrayal Trauma: The Logic of Forgetting Childhood Abuse.* Harvard University Press. — [Amazon](https://www.amazon.com/Betrayal-Trauma-Logic-Forgetting-Childhood/dp/0674068068)
+- Freyd, J. J., & Birrell, P. J. (2013). *Blind to Betrayal.* Wiley. — [Amazon](https://www.amazon.com/Blind-Betrayal-People-Deceive-Deceived/dp/0470604409)
 
 **Coercive control framework (where DARVO frequently embeds):**
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
 
 **Gaslighting (the related pattern):**
-- Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875.
-- Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30.
+- Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875. — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30. — [DOI](https://doi.org/10.1111/phpe.12046) [paywalled]
 
 **The credibility discount (relevant to confrontation cost asymmetry):**
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
 
 **Double empathy problem (relevant to how autistic confrontations are received):**
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
 
 **Weaponized features of autism in IPV (the meltdown-as-attack frame):**
-- Douglas, P., & Sedgewick, F. (2024). On weaponized features in intimate partner violence against autistic adults — see foundational autism research document for the full citation.
-- Pearson, A., Rees, J., & Forster, S. (2022). "'This Was Just How This Friendship Worked': Experiences of Interpersonal Victimization Among Autistic Adults." *Autism in Adulthood* 4(2): 141–150.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson, A., Rees, J., & Forster, S. (2022). "'This Was Just How This Friendship Worked': Experiences of Interpersonal Victimization Among Autistic Adults." *Autism in Adulthood* 4(2): 141–150. — [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
 
 **Couples therapy contraindication (relevant when DARVO is active):**
-- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
+- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
 
 **Lethality indicators (relevant when exit planning enters the picture):**
-- Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (55.2% of femicide victims were estranged or in the process of separating.)
+- Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.) — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (55.2% of femicide victims were estranged or in the process of separating.) — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
 
 **Disclosure asymmetry (relevant to who hears your account first):**
-- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association.
+- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association. — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
 
 **Foundational research documents for this hub:**
 - [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md) — particularly Section 1 (Duluth Wheel), Section 6 (Bograd & Mederos couples therapy contraindication), and Section 10 (Sweet on gaslighting).

@@ -951,9 +951,9 @@ Implicature use correlates with power asymmetry:
 ## Sources and References
 
 ### Academic Sources
-- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics*, Vol. 3.
-- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press.
-- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
+- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics*, Vol. 3. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
+- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 - [Implicature -- Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/implicature/)
 - [Gricean Conversational Implicature -- 1000-Word Philosophy](https://1000wordphilosophy.com/2022/07/05/gricean-conversational-implicature/)
 - [Grice's Maxims of Conversation -- LibreTexts](https://socialsci.libretexts.org/Bookshelves/Linguistics/Analyzing_Meaning_-_An_Introduction_to_Semantics_and_Pragmatics_(Kroeger)/08:_Grices_theory_of_Implicature/8.03:_Grices_Maxims_of_Conversation)

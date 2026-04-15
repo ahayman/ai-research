@@ -352,6 +352,22 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 
 ## 9. Citation Register
 
+**Verified source links (key citations used on this page):**
+- Lorde (1984). *Sister Outsider.* — [Amazon](https://www.amazon.com/Sister-Outsider-Speeches-Crossing-Feminist/dp/1580911862)
+- Collins (2000). *Black Feminist Thought.* — [Amazon](https://www.amazon.com/Black-Feminist-Thought-Consciousness-Empowerment/dp/0415964725)
+- Cooper (2018). *Eloquent Rage.* — [Amazon](https://www.amazon.com/Eloquent-Rage-Black-Feminist-Discovers/dp/125011289X)
+- Higginbotham (1993). *Righteous Discontent.* — [Amazon](https://www.amazon.com/Righteous-Discontent-Womens-Movement-1880-1920/dp/0674769783)
+- Brown & Levinson (1987). *Politeness.* — [Amazon](https://www.amazon.com/Politeness-Universals-Language-Interactional-Sociolinguistics/dp/0521313554)
+- Crompton et al. (2020). Autistic peer-to-peer. — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). Double empathy. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Shriberg et al. (2001). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/11708530/) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson, Rose, Rees (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Stark (2007). *Coercive Control.* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). *Duluth Model.* — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+
 **Foundational Black feminist scholarship on tone policing and respectability:**
 - Lorde, A. (1981). "The Uses of Anger: Women Responding to Racism." Keynote presentation, National Women's Studies Association Conference. Reprinted in *Sister Outsider* (1984). Crossing Press.
 - Collins, P. H. (2000, 2nd ed.). *Black Feminist Thought: Knowledge, Consciousness, and the Politics of Empowerment.* Routledge.
@@ -385,7 +401,7 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 - Cook, J., Hull, L., Crane, L., & Mandy, W. (2021). "Camouflaging in autism: A systematic review." *Clinical Psychology Review* 89: 102080. (Plus 2024 systematic review and meta-analysis update.)
 
 **Weaponized features in autistic IPV:**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
 
 **Coercive control and the moment-to-moment rules of conversation:**

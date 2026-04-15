@@ -540,45 +540,45 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 
 ## Sources
 
-- Bartlett, F. C. (1932). *Remembering: A Study in Experimental and Social Psychology*. Cambridge University Press.
-- Bateson, G. (1972). A theory of play and fantasy. In *Steps to an Ecology of Mind* (pp. 177-193). Chandler.
-- Bourdieu, P. (1991). *Language and Symbolic Power*. Harvard University Press.
-- Foucault, M. (1977). *Discipline and Punish: The Birth of the Prison*. Pantheon.
-- Foucault, M. (1978). *The History of Sexuality, Volume 1: An Introduction*. Pantheon.
-- Wodak, R. (2001). What CDA is about -- a summary of its history, important concepts, and its developments. In R. Wodak & M. Meyer (Eds.), *Methods of Critical Discourse Analysis* (pp. 1-13). Sage.
-- Beck, A. T. (1976). *Cognitive Therapy and the Emotional Disorders*. International Universities Press.
-- Benford, R. D., & Snow, D. A. (2000). Framing processes and social movements: An overview and assessment. *Annual Review of Sociology*, 26, 611-639.
-- Bull, P. (2003). *The Microanalysis of Political Communication: Claptrap and Ambiguity*. Routledge.
-- D'Angelo, P. (2002). News framing as a multiparadigmatic research program: A response to Entman. *Journal of Communication*, 52(4), 870-888.
-- Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58.
-- Fairclough, N. (1989). *Language and Power*. Longman.
-- Fillmore, C. J. (1982). Frame semantics. In Linguistic Society of Korea (Ed.), *Linguistics in the Morning Calm* (pp. 111-137). Hanshin.
-- Fillmore, C. J. (1985). Frames and the semantics of understanding. *Quaderni di Semantica*, 6(2), 222-254.
-- Gitlin, T. (1980). *The Whole World Is Watching: Mass Media in the Making and Unmaking of the New Left*. University of California Press.
-- Goffman, E. (1961). *Asylums: Essays on the Social Situation of Mental Patients and Other Inmates*. Anchor.
-- Goffman, E. (1963). *Stigma: Notes on the Management of Spoiled Identity*. Prentice-Hall.
-- Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row.
-- Gross, J. J. (2002). Emotion regulation: Affective, cognitive, and social consequences. *Psychophysiology*, 39(3), 281-291.
-- Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press.
-- Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica*, 47(2), 263-291.
-- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458.
-- Lakoff, G. (1996). *Moral Politics: What Conservatives Know That Liberals Don't*. University of Chicago Press.
-- Lakoff, G. (2004). *Don't Think of an Elephant! Know Your Values and Frame the Debate*. Chelsea Green.
-- Lakoff, G., & Johnson, M. (1980). *Metaphors We Live By*. University of Chicago Press.
-- Nelson, T. E., Clawson, R. A., & Oxley, Z. M. (1997). Media framing of a civil liberties conflict and its effect on tolerance. *American Political Science Review*, 91(3), 567-583.
-- Ochsner, K. N., & Gross, J. J. (2005). The cognitive control of emotion. *Trends in Cognitive Sciences*, 9(5), 242-249.
-- Ruppenhofer, J., Ellsworth, M., Petruck, M. R. L., Johnson, C. R., & Scheffczyk, J. (2016). *FrameNet II: Extended Theory and Practice*. International Computer Science Institute.
-- Scheufele, D. A. (1999). Framing as a theory of media effects. *Journal of Communication*, 49(1), 103-122.
-- Schank, R. C., & Abelson, R. P. (1977). *Scripts, Plans, Goals, and Understanding*. Lawrence Erlbaum.
-- Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. *International Social Movement Research*, 1, 197-217.
-- Snow, D. A., Rochford, E. B., Worden, S. K., & Benford, R. D. (1986). Frame alignment processes, micromobilization, and movement participation. *American Sociological Review*, 51(4), 464-481.
-- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power: A constructionist approach. *American Journal of Sociology*, 95(1), 1-37.
-- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Ablex.
-- Tannen, D. (1986). *That's Not What I Meant!*. Ballantine.
-- Tannen, D. (1989). *Talking Voices: Repetition, Dialogue, and Imagery in Conversational Discourse*. Cambridge University Press.
-- Tannen, D. (1990). *You Just Don't Understand: Women and Men in Conversation*. Morrow.
-- Tannen, D. (Ed.) (1993). *Framing in Discourse*. Oxford University Press.
-- Tannen, D., & Wallat, C. (1987). Interactive frames and knowledge schemas in interaction: Examples from a medical examination/interview. *Social Psychology Quarterly*, 50(2), 205-216.
-- Van Gorp, B. (2007). The constructionist approach to framing: Bringing culture back in. *Journal of Communication*, 57(1), 60-78.
-- Watzlawick, P., Weakland, J., & Fisch, R. (1974). *Change: Principles of Problem Formation and Problem Resolution*. Norton.
-- Wodak, R. (2001). The discourse-historical approach. In R. Wodak & M. Meyer (Eds.), *Methods of Critical Discourse Analysis* (pp. 63-94). Sage.
+- Bartlett, F. C. (1932). *Remembering: A Study in Experimental and Social Psychology*. Cambridge University Press. [Amazon](https://www.amazon.com/Remembering-Experimental-Psychology-Cambridge-Classical/dp/0521483565)
+- Bateson, G. (1972). A theory of play and fantasy. In *Steps to an Ecology of Mind* (pp. 177-193). Chandler. [Amazon](https://www.amazon.com/Steps-Ecology-Mind-Anthropological-Epistemology/dp/0226039056)
+- Bourdieu, P. (1991). *Language and Symbolic Power*. Harvard University Press. [Harvard](https://www.hup.harvard.edu/books/9780674510418)
+- Foucault, M. (1977). *Discipline and Punish: The Birth of the Prison*. Pantheon. [Amazon](https://www.amazon.com/Discipline-Punish-Birth-Prison/dp/0679752552)
+- Foucault, M. (1978). *The History of Sexuality, Volume 1: An Introduction*. Pantheon. [Amazon](https://www.amazon.com/History-Sexuality-Vol-1-Introduction/dp/0679724699)
+- Wodak, R. (2001). What CDA is about. In *Methods of Critical Discourse Analysis*. Sage. [Amazon](https://www.amazon.com/Methods-Critical-Discourse-Analysis-Introducing/dp/1446282406)
+- Beck, A. T. (1976). *Cognitive Therapy and the Emotional Disorders*. International Universities Press. [Amazon](https://www.amazon.com/Cognitive-Therapy-Emotional-Disorders-Plume/dp/0452009286)
+- Benford, R. D., & Snow, D. A. (2000). Framing processes and social movements. *Annual Review of Sociology*, 26, 611-639. [Annual Reviews (paywalled)](https://doi.org/10.1146/annurev.soc.26.1.611)
+- Bull, P. (2003). *The Microanalysis of Political Communication: Claptrap and Ambiguity*. Routledge. [Amazon](https://www.amazon.com/Microanalysis-Political-Communication-Claptrap-Ambiguity/dp/0415273803)
+- D'Angelo, P. (2002). News framing as a multiparadigmatic research program. *Journal of Communication*, 52(4), 870-888. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.2002.tb02578.x)
+- Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1993.tb01304.x)
+- Fairclough, N. (1989). *Language and Power*. Longman. [Amazon](https://www.amazon.com/Language-Power-Norman-Fairclough/dp/0582414830)
+- Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm*. Hanshin. [CITATION UNVERIFIED — Korean volume, limited online access]
+- Fillmore, C. J. (1985). Frames and the semantics of understanding. *Quaderni di Semantica*, 6(2), 222-254. [CITATION UNVERIFIED — Italian journal, no stable online source]
+- Gitlin, T. (1980). *The Whole World Is Watching*. University of California Press. [Amazon](https://www.amazon.com/Whole-World-Watching-Unmaking-Anniversary/dp/0520239326)
+- Goffman, E. (1961). *Asylums*. Anchor. [Amazon](https://www.amazon.com/Asylums-Essays-Situation-Patients-Inmates/dp/0385000162)
+- Goffman, E. (1963). *Stigma: Notes on the Management of Spoiled Identity*. Prentice-Hall. [Amazon](https://www.amazon.com/Stigma-Notes-Management-Spoiled-Identity/dp/0671622447)
+- Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row. [Amazon](https://www.amazon.com/Frame-Analysis-Essay-Organization-Experience/dp/0930350910)
+- Gross, J. J. (2002). Emotion regulation: Affective, cognitive, and social consequences. *Psychophysiology*, 39(3), 281-291. [Wiley (paywalled)](https://doi.org/10.1017/S0048577201393198)
+- Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press. [Amazon](https://www.amazon.com/Anyone-Responsible-Television-Political-American/dp/0226388557)
+- Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica*, 47(2), 263-291. [JSTOR (paywalled)](https://doi.org/10.2307/1914185)
+- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458. [Science (paywalled)](https://doi.org/10.1126/science.7455683)
+- Lakoff, G. (1996). *Moral Politics*. University of Chicago Press. [Amazon](https://www.amazon.com/Moral-Politics-Liberals-Conservatives-Think/dp/0226467716)
+- Lakoff, G. (2004). *Don't Think of an Elephant!* Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Frame/dp/1931498717)
+- Lakoff, G., & Johnson, M. (1980). *Metaphors We Live By*. University of Chicago Press. [Amazon](https://www.amazon.com/Metaphors-We-Live-George-Lakoff/dp/0226468011)
+- Nelson, T. E., Clawson, R. A., & Oxley, Z. M. (1997). Media framing of a civil liberties conflict and its effect on tolerance. *American Political Science Review*, 91(3), 567-583. [Cambridge (paywalled)](https://doi.org/10.2307/2952075)
+- Ochsner, K. N., & Gross, J. J. (2005). The cognitive control of emotion. *Trends in Cognitive Sciences*, 9(5), 242-249. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.tics.2005.03.010)
+- Ruppenhofer, J. et al. (2016). *FrameNet II: Extended Theory and Practice*. International Computer Science Institute. [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/the_book)
+- Scheufele, D. A. (1999). Framing as a theory of media effects. *Journal of Communication*, 49(1), 103-122. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1999.tb02784.x)
+- Schank, R. C., & Abelson, R. P. (1977). *Scripts, Plans, Goals, and Understanding*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Scripts-Understanding-Artificial-Intelligence-Psychology/dp/0470990333)
+- Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. *International Social Movement Research*, 1, 197-217. [CITATION UNVERIFIED — out-of-print serial]
+- Snow, D. A., Rochford, E. B., Worden, S. K., & Benford, R. D. (1986). Frame alignment processes. *American Sociological Review*, 51(4), 464-481. [JSTOR (paywalled)](https://doi.org/10.2307/2095581)
+- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power. *American Journal of Sociology*, 95(1), 1-37. [University of Chicago (paywalled)](https://doi.org/10.1086/229213)
+- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Ablex. [Amazon](https://www.amazon.com/Conversational-Style-Analyzing-Talk-Among/dp/0195221818)
+- Tannen, D. (1986). *That's Not What I Meant!*. Ballantine. [Amazon](https://www.amazon.com/Thats-Not-What-Meant-Conversational/dp/0062062999)
+- Tannen, D. (1989). *Talking Voices*. Cambridge University Press. [Amazon](https://www.amazon.com/Talking-Voices-Repetition-Conversational-Sociolinguistics/dp/0521399130)
+- Tannen, D. (1990). *You Just Don't Understand: Women and Men in Conversation*. Morrow. [Amazon](https://www.amazon.com/You-Just-Dont-Understand-Conversation/dp/0060959622)
+- Tannen, D. (Ed.) (1993). *Framing in Discourse*. Oxford University Press. [Amazon](https://www.amazon.com/Framing-Discourse-Deborah-Tannen/dp/0195079973)
+- Tannen, D., & Wallat, C. (1987). Interactive frames and knowledge schemas in interaction. *Social Psychology Quarterly*, 50(2), 205-216. [JSTOR (paywalled)](https://doi.org/10.2307/2786752)
+- Van Gorp, B. (2007). The constructionist approach to framing. *Journal of Communication*, 57(1), 60-78. [Wiley (paywalled)](https://doi.org/10.1111/j.0021-9916.2007.00329.x)
+- Watzlawick, P., Weakland, J., & Fisch, R. (1974). *Change: Principles of Problem Formation and Problem Resolution*. Norton. [Amazon](https://www.amazon.com/Change-Principles-Problem-Formation-Resolution/dp/0393707067)
+- Wodak, R. (2001). The discourse-historical approach. In R. Wodak & M. Meyer (Eds.), *Methods of Critical Discourse Analysis*. Sage. [Amazon](https://www.amazon.com/Methods-Critical-Discourse-Analysis-Introducing/dp/1446282406)

@@ -368,14 +368,14 @@ A three-tier priority system for learning:
 ## Key Sources
 
 ### Foundational Texts
-- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press.
-- Fraser, B. (1999). "What Are Discourse Markers?" *Journal of Pragmatics*, 31, 931-952.
-- Blakemore, D. (2002). *Relevance and Linguistic Meaning: The Semantics and Pragmatics of Discourse Markers*. Cambridge University Press.
-- Heritage, J. (1984). "A Change-of-State Token and Aspects of Its Sequential Placement." In Atkinson & Heritage (eds.), *Structures of Social Action*.
-- Jucker, A.H. (1993). "The Discourse Marker 'Well': A Relevance-Theoretic Account." *Journal of Pragmatics*, 19, 435-452.
+- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Markers-Studies-Interactional-Sociolinguistics/dp/0521357187)
+- Fraser, B. (1999). "What Are Discourse Markers?" *Journal of Pragmatics*, 31, 931-952. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0378-2166(98)00101-5)
+- Blakemore, D. (2002). *Relevance and Linguistic Meaning: The Semantics and Pragmatics of Discourse Markers*. Cambridge University Press. [Amazon](https://www.amazon.com/Relevance-Linguistic-Meaning-Semantics-Pragmatics/dp/0521640075)
+- Heritage, J. (1984). "A Change-of-State Token and Aspects of Its Sequential Placement." In Atkinson & Heritage (eds.), *Structures of Social Action*. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
+- Jucker, A.H. (1993). "The Discourse Marker 'Well': A Relevance-Theoretic Account." *Journal of Pragmatics*, 19, 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90004-9)
 
-### Autism Research
-- Gorman, K. et al. (2016). "Uh and Um in Children with ASD or Language Impairment." *Autism Research*.
-- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *Journal of Autism and Developmental Disorders*, 46(3), 1061-1070. PMC7536647.
-- Jones, A., Zane, E. & Grossman, R. (2022). "Like, It's Important: Discourse Marker Use by Autistic Children." *PMC*.
-- Zane, E. & Grossman, R. (2021). "Impression Formation of Autistic Speakers." *Autism Research*.
+### Research in Autism Spectrum Disorders
+- Gorman, K. et al. (2016). "Uh and Um in Children with ASD or Language Impairment." *Research in Autism Spectrum Disorders*. [PMC4958035](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/)
+- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *Journal of Autism and Developmental Disorders*, 46(3), 1061-1070. [PMC7536647](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/)
+- Jones, A., Zane, E. & Grossman, R. (2022). "Like, It's Important: Discourse Marker Use by Autistic Children." *PMC*. [PMC9620696](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/)
+- Zane, E. & Grossman, R. (2021). "Impression Formation of Autistic Speakers." *Research in Autism Spectrum Disorders*. [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S1750946721000179)

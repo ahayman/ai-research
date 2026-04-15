@@ -491,6 +491,25 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Austin (1962). *How to Do Things with Words.* — [Amazon](https://www.amazon.com/How-Things-Words-J-Austin/dp/0674411528)
+- Searle (1969). *Speech Acts.* — [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Grice (1975). Logic and Conversation. — [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
+- Brown & Levinson (1987). *Politeness.* — [Amazon](https://www.amazon.com/Politeness-Universals-Language-Interactional-Sociolinguistics/dp/0521313554)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Kinnaird et al. (2019). Alexithymia. — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Shriberg et al. (2001). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/11708530/) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+
 **Pragmatic and linguistic theory (mechanism):**
 - Austin, J. L. (1962). *How to Do Things with Words.* Harvard University Press. (Foundational speech act theory.)
 - Searle, J. R. (1969). *Speech Acts: An Essay in the Philosophy of Language.* Cambridge University Press.
@@ -520,9 +539,9 @@ The [Recovery and Post-Traumatic Growth](manipulation-hub-strategy-recovery.md) 
 - Diehl, J. J., Watson, D., Bennetto, L., McDonough, J., & Gunlogson, C. (2009). "An acoustic analysis of prosody in high-functioning autism." *Applied Psycholinguistics* 30(3): 385–404.
 
 **Autistic experiences of interpersonal victimization (weaponized features):**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 
 **Coercive control and the moment-to-moment rules of conversation:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. (The section on controlling the rules of conversation is the structural parent of pragmatic packaging invalidation.)

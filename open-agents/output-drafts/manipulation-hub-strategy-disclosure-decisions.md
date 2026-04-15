@@ -459,6 +459,19 @@ This is a separate category that deserves specific attention. Disclosing to the 
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Barriers to Disclosing DV to Healthcare systematic review (2021). — [PMC8248429](https://pmc.ncbi.nlm.nih.gov/articles/PMC8248429/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Slavny-Cross et al. (2022). — [PMC9314022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9314022/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Kinnaird et al. (2019). — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+
 **The disclosure asymmetry:**
 - Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association. — Foundational work on positive vs. negative disclosure reactions.
 - Ullman, S. E., & Peter-Hagene, L. (2014). "Social reactions to sexual assault disclosure, coping, perceived control, and PTSD symptoms in sexual assault victims." *Journal of Community Psychology.*

@@ -1275,17 +1275,17 @@ The challenge is not that autistic communication is wrong; it's that it operates
 ## Research Sources
 
 ### Medical/Healthcare Encounters
-- PMC (2024). "Barriers and facilitators to primary healthcare encounters as reported by autistic adults." PMC11937071.
-- PMC (2024). "I'm dealing with a health care system that doesn't get it: Barriers and Facilitators to Inclusive Healthcare for Autistic Adults." PMC11132937.
-- PMC (2024). "Autism-Friendly Healthcare: A Narrative Review of the Literature." PMC11305600.
-- Waisman Center, University of Wisconsin (2024). "Barriers and facilitators of inclusive healthcare for autistic adults."
-- UW Medicine/Right as Rain. "5 Scripts to Use When You Disagree with Your Doctor."
-- PMC (2013). "An interactional approach to conceptualising small talk in medical interactions." PMC3609551.
-- AAFP (2004). "The Big Deal About Small Talk."
-- Harvard Adult Autism Health. "Health Care Rights for Autistic Patients."
-- AASPIRE. "Autism Healthcare Accommodation Tool."
-- PMC (2024). "What You Are Hiding Could Be Hurting You: Autistic Masking." PMC11317797.
-- PMC (2023). "Camouflage and masking behavior in adult autism." PMC10060524.
+- PMC (2024). "Barriers and facilitators to primary healthcare encounters as reported by autistic adults." [PMC11937071](https://pmc.ncbi.nlm.nih.gov/articles/PMC11937071/)
+- PMC (2024). "I'm dealing with a health care system that doesn't get it: Barriers and Facilitators to Inclusive Healthcare for Autistic Adults." [PMC11132937](https://pmc.ncbi.nlm.nih.gov/articles/PMC11132937/)
+- PMC (2024). "Autism-Friendly Healthcare: A Narrative Review of the Literature." [PMC11305600](https://pmc.ncbi.nlm.nih.gov/articles/PMC11305600/)
+- Waisman Center, University of Wisconsin (2024). "Barriers and facilitators of inclusive healthcare for autistic adults." [Waisman Center](https://www.waisman.wisc.edu/)
+- UW Medicine/Right as Rain. "5 Scripts to Use When You Disagree with Your Doctor." [UW Medicine](https://rightasrain.uwmedicine.org/well/health/disagree-with-doctor)
+- PMC (2013). "An interactional approach to conceptualising small talk in medical interactions." [PMC3609551](https://pmc.ncbi.nlm.nih.gov/articles/PMC3609551/)
+- AAFP (2004). "The Big Deal About Small Talk." [AAFP](https://www.aafp.org/pubs/fpm/issues/2004/0600/p56.html)
+- Harvard Adult Autism Health. "Health Care Rights for Autistic Patients." [Harvard](https://www.adult-autism.health.harvard.edu/)
+- AASPIRE. "Autism Healthcare Accommodation Tool." [AASPIRE](https://aaspire.org/resources/accommodations-tool/)
+- PMC (2024). "What You Are Hiding Could Be Hurting You: Autistic Masking." [PMC11317797](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317797/)
+- PMC (2023). "Camouflage and masking behavior in adult autism." [PMC10060524](https://pmc.ncbi.nlm.nih.gov/articles/PMC10060524/)
 
 ### Educational Settings
 - Indiana University IRCA. "Meeting the Challenge of Social Pragmatics with Students on the Autism Spectrum."
@@ -1300,24 +1300,24 @@ The challenge is not that autistic communication is wrong; it's that it operates
 - xMinds. "Classroom and Learning Accommodations for Autistic Students."
 
 ### Service Encounters
-- PMC (2023). "It Is a Big Spider Web of Things: Sensory Experiences of Autistic Adults in Public Spaces." PMC10726197.
-- University of Reading (2022). "Autistic people find supermarkets a spiderweb of sensory experiences."
-- Cambridge University Press. "The Language of Service Encounters." Félix-Brasdefer (2015).
-- AARP. "How to Navigate Today's Tipping Culture and Rules."
-- Qantas Travel Insider. "Tipping in America: The Ultimate Guide."
-- FTC Consumer Advice. "Solving Problems With a Business: Returns, Refunds, and Other Resolutions."
-- Howard & Sedgewick (2021). "Anything but the phone: Communication mode preferences in the autism community." Autism, 25(8).
+- PMC (2023). "It Is a Big Spider Web of Things: Sensory Experiences of Autistic Adults in Public Spaces." [PMC10726197](https://pmc.ncbi.nlm.nih.gov/articles/PMC10726197/)
+- University of Reading (2022). "Autistic people find supermarkets a spiderweb of sensory experiences." [Reading](https://www.reading.ac.uk/news/2022/Research-News/Autistic-people-find-supermarkets-a-spider-web-of-sensory-experiences)
+- Félix-Brasdefer, J.C. (2015). *The Language of Service Encounters*. Cambridge University Press. [Amazon](https://www.amazon.com/Language-Service-Encounters-Pragmatic-Perspective/dp/1107065666)
+- AARP. "How to Navigate Today's Tipping Culture and Rules." [AARP](https://www.aarp.org/money/budgeting-saving/info-2023/tipping-etiquette.html)
+- Qantas Travel Insider. "Tipping in America: The Ultimate Guide." [Qantas](https://www.qantas.com/travelinsider/en/travel-tips/tipping-in-america-ultimate-guide.html)
+- FTC Consumer Advice. "Solving Problems With a Business: Returns, Refunds, and Other Resolutions." [FTC](https://consumer.ftc.gov/articles/solving-problems-business-returns-refunds-other-resolutions)
+- Howard, P.L. & Sedgewick, F. (2021). "Anything but the phone: Communication mode preferences in the autism community." *Autism*, 25(8). [SAGE](https://journals.sagepub.com/doi/full/10.1177/13623613211014995)
 
 ### Friendship and Relationship Communication
-- PMC (2022). "Beyond Friendship: The Spectrum of Social Participation of Autistic Adults." PMC8788910.
-- PMC (2022). "Setbacks and Successes: How Young Adults on the Autism Spectrum Seek Friendship." PMC8992803.
-- Crompton et al. (2020). "I never realised everybody felt as happy as I do when I am around autistic people." Autism, 24(6).
-- PMC (2024). "I have to charge my social battery: Perspectives from autistic young adults on Quality of Life." PMC11457465.
-- PMC (2024). "Comparing Physical Intimacy and Romantic Relationships of Autistic and Non-autistic Adults." PMC11461547.
-- PMC (2022). "Sexual Knowledge, Experiences, and Pragmatic Language in Adults With and Without Autism." PMC9362056.
-- Scharrer & Weckermann (2025). "You Wanna Flirt? - Let's Flirt: A Corpus-Based Analysis of Flirting." Journal of Pragmatics.
-- Hall & Baym (2012). "Calling and texting (too much): Mobile maintenance expectations." New Media & Society.
-- University of Kansas friendship research on hours needed for friendship formation.
+- PMC (2022). "Beyond Friendship: The Spectrum of Social Participation of Autistic Adults." [PMC8788910](https://pmc.ncbi.nlm.nih.gov/articles/PMC8788910/)
+- PMC (2022). "Setbacks and Successes: How Young Adults on the Autism Spectrum Seek Friendship." [PMC8992803](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992803/)
+- Crompton et al. (2020). "I never realised everybody felt as happy as I do when I am around autistic people." *Autism*, 24(6). [SAGE](https://doi.org/10.1177/1362361320908976)
+- PMC (2024). "I have to charge my social battery: Perspectives from autistic young adults on Quality of Life." [PMC11457465](https://pmc.ncbi.nlm.nih.gov/articles/PMC11457465/)
+- PMC (2024). "Comparing Physical Intimacy and Romantic Relationships of Autistic and Non-autistic Adults." [PMC11461547](https://pmc.ncbi.nlm.nih.gov/articles/PMC11461547/)
+- PMC (2022). "Sexual Knowledge, Experiences, and Pragmatic Language in Adults With and Without Autism." [PMC9362056](https://pmc.ncbi.nlm.nih.gov/articles/PMC9362056/)
+- Scharrer & Weckermann (2025). "You Wanna Flirt? - Let's Flirt: A Corpus-Based Analysis of Flirting." *Journal of Pragmatics*. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2024.10.009)
+- Hall, J.A. & Baym, N.K. (2012). "Calling and texting (too much): Mobile maintenance expectations." *New Media & Society*, 14(2), 316-331. [SAGE (paywalled)](https://doi.org/10.1177/1461444811415047)
+- Hall, J.A. (2019). "How many hours does it take to make a friend?" *Journal of Social and Personal Relationships*, 36(4), 1278-1296. [SAGE (paywalled)](https://doi.org/10.1177/0265407518761225)
 
 ### Authority and Institutional Interactions
 - PMC (2022). "Autistic adults and their experiences with police personnel." PMC9225786.

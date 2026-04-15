@@ -728,9 +728,9 @@ Implicature should be distinguished from:
 ## Research Sources
 
 ### Primary Sources
-- Grice, H.P. (1975). "Logic and Conversation." In Cole, P. & Morgan, J. (eds.), *Syntax and Semantics*, Vol. 3: *Speech Acts*. New York: Academic Press, pp. 41-58.
-- Grice, H.P. (1989). *Studies in the Way of Words*. Cambridge, MA: Harvard University Press.
-- Horn, L.R. (1972). *On the Semantic Properties of Logical Operators in English*. PhD dissertation, UCLA.
+- Grice, H.P. (1975). "Logic and Conversation." In Cole, P. & Morgan, J. (eds.), *Syntax and Semantics*, Vol. 3: *Speech Acts*. New York: Academic Press, pp. 41-58. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Grice, H.P. (1989). *Studies in the Way of Words*. Cambridge, MA: Harvard University Press. [Amazon](https://www.amazon.com/Studies-Way-Words-Paul-Grice/dp/0674852710)
+- Horn, L.R. (1972). *On the Semantic Properties of Logical Operators in English*. PhD dissertation, UCLA. [UCLA Repository](https://linguistics.ucla.edu/wp-content/uploads/2022/09/Horn-1972.pdf)
 
 ### Web Sources Consulted
 - [Implicature — Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/implicature/)

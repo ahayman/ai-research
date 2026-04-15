@@ -438,12 +438,27 @@ This distinction matters because the cost of refusing all allyship is high. Isol
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Griffiths et al. (2019). — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Price (2022). *Unmasking Autism.* — [Amazon](https://www.amazon.com/Unmasking-Autism-Discovering-Faces-Neurodiversity/dp/0593235231)
+
 **Situational vulnerability and internalization:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* (The internalization that "they're an ally so I must be misreading the harm" is one instance of the broader internalization Pearson et al. documented.)
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 
 **Weaponized features framework (applicable structurally to credentials as weaponized feature):**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Credibility discount, compounded by the "allies as the good guys" script:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.

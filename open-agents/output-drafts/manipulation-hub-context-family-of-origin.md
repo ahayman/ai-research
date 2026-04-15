@@ -612,10 +612,33 @@ The standing recovery frame for the entire sub-hub applies here: **the goal is n
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Cazalis et al. (2022). — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Griffiths et al. (2019). — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Episodic recollection in autism. — [PMC6424931](https://pmc.ncbi.nlm.nih.gov/articles/PMC6424931/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Glass et al. (2008). — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Sandoval-Norton et al. (2019). — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/23311908.2019.1641258)
+- Price (2022). — [Amazon](https://www.amazon.com/Unmasking-Autism-Discovering-Faces-Neurodiversity/dp/0593235231)
+- Hendrickx (2015). — [Amazon](https://www.amazon.com/Women-Girls-Autism-Spectrum-Disorder/dp/1849055475)
+
 **Autism-specific victimization (the foundational research program):**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.'" *Autism in Adulthood.*
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.'" *Autism in Adulthood.*
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Cazalis, F., Reyes, E., Leduc, S., & Gourion, D. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience.* PMC9087551.
 - Griffiths, S., Allison, C., Kenny, R., Holt, R., Smith, P., & Baron-Cohen, S. (2019). "The Vulnerability Experiences Quotient (VEQ): A Study of Vulnerability, Mental Health and Life Satisfaction in Autistic Adults." *Autism Research.* PMC6851759.
 - Cooke, K., Ridgway, K., Pecora, L., Westrupp, E., Hedley, D., Hooley, M., & Stokes, M. A. (2025). "Outcomes of Experiencing Interpersonal Violence in Autism: A Mixed Methods Systematic Review and Meta-Analysis." *Trauma, Violence & Abuse.*

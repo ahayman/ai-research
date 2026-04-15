@@ -502,6 +502,25 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Sweet (2019). Sociology of Gaslighting. *ASR* 84(5):851-875. — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Abramson (2014). Turning Up the Lights on Gaslighting. *Phil Perspectives* 28:1-30. — [DOI](https://doi.org/10.1111/phpe.12046) [paywalled]
+- Stark (2007). *Coercive Control.* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). *Duluth Model.* — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Lim, Young & Brewer (2022). *JADD* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Kinnaird et al. (2019). Alexithymia in autism. *Eur Psychiatry* 55:80-89. — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Douglas & Sedgewick (2024). *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Crompton et al. (2020). Autistic peer-to-peer. — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). Double empathy problem. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Hull et al. (2017). "Putting on My Best Normal." — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Glass et al. (2008). Non-fatal strangulation. *J Emerg Med* 35(3):329-335. — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003). Risk Factors for Femicide. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Bograd & Mederos (1999). Battering and Couples Therapy. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Ullman (2010). *Talking About Sexual Assault.* — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Herman (1992). *Trauma and Recovery.* — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
+- Episodic recollection in autism. — [PMC6424931](https://pmc.ncbi.nlm.nih.gov/articles/PMC6424931/)
+
 **Episodic memory differences in autism (the empirical anchor):**
 - Boucher, J., & Mayes, A. (2012). "Memory in autistic spectrum disorder: Findings, issues, and future directions." In *The Wiley-Blackwell Handbook of Childhood Cognitive Development* (2nd ed.).
 - "Exploring the neurocognitive basis of episodic recollection in autism" (review). PMC6424931.
@@ -529,7 +548,7 @@ The recovery frame is not "become less autistic." It is never that, and the hub 
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of autism on experiences of interpersonal victimisation." *Autism* (advance publication).
 
 **Interpersonal victimization in autistic adults:**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Autistic peer-to-peer communication:**
 - Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712.

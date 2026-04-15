@@ -354,15 +354,15 @@ When you've taken something literally that wasn't meant that way:
 ## Key Sources
 
 ### Foundational Texts
-- Sperber, D. & Wilson, D. (1981). "Irony and the Use-Mention Distinction." In Cole (ed.), *Radical Pragmatics*.
-- Clark, H.H. & Gerrig, R.J. (1984). "On the Pretense Theory of Irony." *J Experimental Psychology: General*.
-- Lakoff, G. & Johnson, M. (1980). *Metaphors We Live By*. University of Chicago Press.
-- Gibbs, R. (1994). *The Poetics of Mind: Figurative Thought, Language, and Understanding*. Cambridge University Press.
-- Dews, S. & Winner, E. (1995). "Muting the Meaning: A Social Function of Irony." *Metaphor and Symbolic Activity*.
+- Sperber, D. & Wilson, D. (1981). "Irony and the Use-Mention Distinction." In Cole (ed.), *Radical Pragmatics*. [PDF](https://www.dan.sperber.fr/wp-content/uploads/1984_verbal-irony-pretense-or-echoic-mention.pdf)
+- Clark, H.H. & Gerrig, R.J. (1984). "On the Pretense Theory of Irony." *J Experimental Psychology: General*. [PDF](https://web.stanford.edu/~clark/1980s/Clark,%20H.H.%20_%20Gerrig,%20R.J.%20_On%20the%20pretense%20theory%20of%20irony_%201984.pdf)
+- Lakoff, G. & Johnson, M. (1980). *Metaphors We Live By*. University of Chicago Press. [Amazon](https://www.amazon.com/Metaphors-We-Live-George-Lakoff/dp/0226468011)
+- Gibbs, R. (1994). *The Poetics of Mind: Figurative Thought, Language, and Understanding*. Cambridge University Press. [Amazon](https://www.amazon.com/Poetics-Mind-Figurative-Language-Understanding/dp/0521429927)
+- Dews, S. & Winner, E. (1995). "Muting the Meaning: A Social Function of Irony." *Metaphor and Symbolic Activity*. [Taylor & Francis (paywalled)](https://doi.org/10.1207/s15327868ms1001_2)
 
 ### Autism Research
-- Kalandadze, T. et al. (2018). "Figurative Language Comprehension in ASD: Meta-Analysis." PMC5843023.
-- Happé, F. (1993). "Communicative Competence and Theory of Mind in Autism." *Cognition*.
-- Andrés-Roqueta, C. et al. (2025). "Some (but not all) Pragmatic Inferences." *J Autism Dev Disord*.
-- Kasirer, A. & Mashal, N. "Novel Metaphor Generation in Autism."
-- Persicke, A. et al. (2013). "Teaching Sarcasm Detection." Dornsife USC.
+- Kalandadze, T. et al. (2018). "Figurative Language Comprehension in ASD: Meta-Analysis." *Autism*, 22(2), 99-117. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Happé, F. (1993). "Communicative Competence and Theory of Mind in Autism." *Cognition*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8243028/) | [ScienceDirect (paywalled)](https://doi.org/10.1016/0010-0277(93)90026-R)
+- Andrés-Roqueta, C. et al. (2025). "Some (but not all) Pragmatic Inferences." *J Autism Dev Disord*. [Springer](https://link.springer.com/article/10.1007/s10803-025-06838-4)
+- Kasirer, A. & Mashal, N. (2014). "Verbal creativity in autism: comprehension and generation of metaphoric language." *Frontiers in Human Neuroscience*, 8:615. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4128218/)
+- Persicke, A. et al. (2013). "Teaching children with autism to detect and respond to sarcasm." [Dornsife USC PDF](https://dornsife.usc.edu/aba/wp-content/uploads/sites/130/2023/10/Persicke2013Sarcasm.pdf)

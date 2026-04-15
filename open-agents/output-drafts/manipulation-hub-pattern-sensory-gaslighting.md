@@ -387,6 +387,23 @@ For survivors of childhood sensory gaslighting specifically, the recovery work i
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Marco et al. (2011). Sensory processing in autism. *Pediatric Research.* — [PMC3086654](https://pmc.ncbi.nlm.nih.gov/articles/PMC3086654/)
+- Robertson & Baron-Cohen (2017). Sensory perception in autism. *Nat Rev Neurosci.* — [Nature](https://www.nature.com/articles/nrn.2017.112) [paywalled]
+- Garfinkel et al. (2016). Interoception in autism. *Biol Psychol* 114:117-126. — [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0301051115300466) [paywalled]
+- Nicholson et al. (2018). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/30102067/) [paywalled]
+- Rumball et al. (2020). Trauma and PTSD in autistic adults. *Autism Research.* — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Kerns et al. (2015). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/25711547/) [paywalled]
+- Raymaker et al. (2020). Defining Autistic Burnout. — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Abramson (2014). — [DOI](https://doi.org/10.1111/phpe.12046) [paywalled]
+- Kupferstein (2018). — [Emerald](https://www.emerald.com/insight/content/doi/10.1108/aia-08-2017-0016/full/html) [paywalled]
+- Sandoval-Norton et al. (2019). — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/23311908.2019.1641258)
+
 **Sensory processing differences in autism:**
 - Marco, E. J., Hinkley, L. B. N., Hill, S. S., & Nagarajan, S. S. (2011). "Sensory processing in autism: A review of neurophysiologic findings." *Pediatric Research* 69(5 Pt 2): 48R–54R.
 - Robertson, C. E., & Baron-Cohen, S. (2017). "Sensory perception in autism." *Nature Reviews Neuroscience* 18(11): 671–684.
@@ -410,7 +427,7 @@ For survivors of childhood sensory gaslighting specifically, the recovery work i
 - Cook, J., Hull, L., Crane, L., & Mandy, W. (2021). "Camouflaging in autism: A systematic review." *Clinical Psychology Review* 89: 102080.
 
 **Weaponized features in autistic IPV (sensory triggering as a tactic):**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
 
 **Autistic-to-autistic communication (the basis for autistic peer reality-check):**

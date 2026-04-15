@@ -346,56 +346,56 @@ The Safety Assessment page is the first filter; this is its main practical use.
 ## 9. Citation Register
 
 **Sweet's structural framing:**
-- Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875. DOI: 10.1177/0003122419874843.
+- Sweet, P. L. (2019). "The Sociology of Gaslighting." *American Sociological Review* 84(5): 851–875. — [DOI 10.1177/0003122419874843](https://doi.org/10.1177/0003122419874843) [paywalled]
 
 **Abramson's epistemic analysis:**
-- Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30.
+- Abramson, K. (2014). "Turning Up the Lights on Gaslighting." *Philosophical Perspectives* 28: 1–30. — [DOI](https://doi.org/10.1111/phpe.12046) [paywalled]
 
 **Popular foundational work (with caveats):**
-- Stern, R. (2007). *The Gaslight Effect: How to Spot and Survive the Hidden Manipulation Others Use to Control Your Life.* Morgan Road Books. (Useful for popularizing the concept; not a peer-reviewed source. Sweet and Abramson are the academically grounded references.)
+- Stern, R. (2007). *The Gaslight Effect: How to Spot and Survive the Hidden Manipulation Others Use to Control Your Life.* Morgan Road Books. (Useful for popularizing the concept; not a peer-reviewed source. Sweet and Abramson are the academically grounded references.) — [Amazon](https://www.amazon.com/Gaslight-Effect-Survive-Hidden-Manipulation/dp/076792445X)
 
 **The Duluth bridge (Minimizing, Denying, Blaming):**
-- Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer.
-- Domestic Abuse Intervention Programs. "The Power and Control Wheel." theduluthmodel.org.
+- Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer. — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Domestic Abuse Intervention Programs. "The Power and Control Wheel." — [theduluthmodel.org](https://www.theduluthmodel.org/wheels/)
 
 **Coercive control framework (gaslighting as embedded pattern):**
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
 
 **The credibility discount:**
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
 
 **Episodic memory differences in autism:**
-- Boucher, J., & Mayes, A. (2012). "Memory in autistic spectrum disorder." Reviewed in PMC6424931 ("Exploring the neurocognitive basis of episodic recollection in autism").
+- Boucher, J., & Mayes, A. (2012). "Memory in autistic spectrum disorder." Reviewed in PMC6424931 ("Exploring the neurocognitive basis of episodic recollection in autism"). — [PMC6424931](https://pmc.ncbi.nlm.nih.gov/articles/PMC6424931/)
 
 **Sensory processing differences:**
-- Marco, E. J., et al. (2011). "Sensory processing in autism: A review of neurophysiologic findings." *Pediatric Research.*
-- Robertson, C. E., & Baron-Cohen, S. (2017). "Sensory perception in autism." *Nature Reviews Neuroscience.*
+- Marco, E. J., et al. (2011). "Sensory processing in autism: A review of neurophysiologic findings." *Pediatric Research.* — [PMC3086654](https://pmc.ncbi.nlm.nih.gov/articles/PMC3086654/)
+- Robertson, C. E., & Baron-Cohen, S. (2017). "Sensory perception in autism." *Nature Reviews Neuroscience.* — [Nature](https://www.nature.com/articles/nrn.2017.112) [paywalled]
 
 **Diagnostic gaslighting and weaponized features:**
-- Pearson, A., Rees, J., & Forster, S. (2022). "'This Was Just How This Friendship Worked': Experiences of Interpersonal Victimization Among Autistic Adults." *Autism in Adulthood* 4(2): 141–150.
-- Douglas, P., & Sedgewick, F. (2024). On weaponized features in intimate partner violence against autistic adults — see foundational autism research document for the full citation.
+- Pearson, A., Rees, J., & Forster, S. (2022). "'This Was Just How This Friendship Worked': Experiences of Interpersonal Victimization Among Autistic Adults." *Autism in Adulthood* 4(2): 141–150. — [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
 
 **Alexithymia in autism:**
-- Kinnaird, E., Stewart, C., & Tchanturia, K. (2019). "Investigating alexithymia in autism: A systematic review and meta-analysis." *European Psychiatry* 55: 80–89.
+- Kinnaird, E., Stewart, C., & Tchanturia, K. (2019). "Investigating alexithymia in autism: A systematic review and meta-analysis." *European Psychiatry* 55: 80–89. — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
 
 **Disclosure asymmetry:**
-- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association.
+- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association. — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
 
 **Double empathy problem:**
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
 
 **Autistic peer-to-peer communication:**
-- Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712.
+- Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). "Autistic peer-to-peer information transfer is highly effective." *Autism* 24(7): 1704–1712. — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
 
 **Lethality indicators:**
-- Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.)
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 55.2% estrangement finding.)
+- Glass, N., et al. (2008). "Non-fatal strangulation is an important risk factor for homicide of women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48 for later attempted homicide.) — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. (Including the 55.2% estrangement finding.) — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
 
 **Couples therapy contraindication when coercive control is present:**
-- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
+- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
 
 **Recovery framework:**
-- Herman, J. L. (1992). *Trauma and Recovery.* Basic Books. (The three-stage model used as a non-linear heuristic; see [Recovery](manipulation-hub-strategy-recovery.md) for the full treatment with caveats.)
+- Herman, J. L. (1992). *Trauma and Recovery.* Basic Books. (The three-stage model used as a non-linear heuristic; see [Recovery](manipulation-hub-strategy-recovery.md) for the full treatment with caveats.) — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
 
 **Foundational research documents for this hub:**
 - [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md) — particularly Section 1 (Duluth Wheel) and Section 10 (Sweet on gaslighting).

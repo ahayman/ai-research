@@ -431,12 +431,29 @@ Recovery from post-meltdown shaming, particularly the deliberate-triggering vers
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Douglas & Sedgewick (2024). *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Marco et al. (2011). — [PMC3086654](https://pmc.ncbi.nlm.nih.gov/articles/PMC3086654/)
+- Robertson & Baron-Cohen (2017). — [Nature](https://www.nature.com/articles/nrn.2017.112) [paywalled]
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Abramson (2014). — [DOI](https://doi.org/10.1111/phpe.12046) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Lipsky (2011). *From Anxiety to Meltdown.* — [Amazon](https://www.amazon.com/Anxiety-Meltdown-Individuals-Autism-Spectrum/dp/1849058431)
+
 **Weaponized features framework (the deliberate-triggering pattern):**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The qualitative source for the deliberate-triggering pattern in autistic IPV.)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The qualitative source for the deliberate-triggering pattern in autistic IPV.)
 
 **Situational vulnerability framework:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* (The internalization endpoint that post-meltdown shaming produces over time.)
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 
 **Meltdowns and overload (community-developed construct, with the developing research literature):**
 - Lipsky, D. (2011). *From Anxiety to Meltdown.* Jessica Kingsley Publishers. (Autistic-authored synthesis; cited as experiential and community-developed source rather than as primary research.)

@@ -713,11 +713,11 @@ For pattern-oriented learners, the following structural regularities can serve a
 ## Sources
 
 ### Primary Sources
-- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press.
-- Searle, J.R. (1975/1976). "A Taxonomy of Illocutionary Acts." Republished in *Expression and Meaning: Studies in the Theory of Speech Acts* (1979), Cambridge University Press.
-- Searle, J.R. (1975). "Indirect Speech Acts." In *Syntax and Semantics, Vol. 3: Speech Acts*, ed. P. Cole and J.L. Morgan.
-- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press.
-- Bach, K. and Harnish, R.M. (1979). *Linguistic Communication and Speech Acts*. MIT Press.
+- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Searle, J.R. (1975/1976). "A Taxonomy of Illocutionary Acts." Republished in *Expression and Meaning: Studies in the Theory of Speech Acts* (1979), Cambridge University Press. [Amazon](https://www.amazon.com/Expression-Meaning-Studies-Theory-Speech/dp/0521313937)
+- Searle, J.R. (1975). "Indirect Speech Acts." In *Syntax and Semantics, Vol. 3: Speech Acts*, ed. P. Cole and J.L. Morgan. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
+- Bach, K. and Harnish, R.M. (1979). *Linguistic Communication and Speech Acts*. MIT Press. [Amazon](https://www.amazon.com/Linguistic-Communication-Speech-Acts-Kent/dp/0262520745)
 
 ### Web Sources Consulted
 - [Speech Acts - Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/speech-acts/)

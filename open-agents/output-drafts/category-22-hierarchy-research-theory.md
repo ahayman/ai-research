@@ -680,11 +680,11 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 ## KEY SOURCES AND REFERENCES
 
 ### Foundational Theory
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
 - Bourdieu, P. (1991). [*Language and Symbolic Power*](https://www.hup.harvard.edu/books/9780674510418). Harvard University Press.
-- Fairclough, N. (1989/2001). *Language and Power*. Longman.
-- Lakoff, R. (1990). *Talking Power: The Politics of Language*. Basic Books.
-- Hofstede, G. (1980). *Culture's Consequences: International Differences in Work-Related Values*. Sage.
+- Fairclough, N. (1989/2001). *Language and Power*. Longman. [Amazon](https://www.amazon.com/Language-Power-Norman-Fairclough/dp/0582414830)
+- Lakoff, R. (1990). *Talking Power: The Politics of Language*. Basic Books. [Amazon](https://www.amazon.com/Talking-Power-Politics-Robin-Lakoff/dp/0465083595)
+- Hofstede, G. (1980). *Culture's Consequences: International Differences in Work-Related Values*. Sage. [Amazon](https://www.amazon.com/Cultures-Consequences-International-Differences-Work-Related/dp/0803913060)
 
 ### Dominance-Prestige Framework
 - Cheng, J.T., Tracy, J.L., Foulsham, T., Kingstone, A. & Henrich, J. (2013). ["Two Ways to the Top: Evidence That Dominance and Prestige Are Distinct Yet Viable Avenues to Social Rank and Influence."](https://pubmed.ncbi.nlm.nih.gov/23163747/) *Journal of Personality and Social Psychology*, 104(1), 103-125.
@@ -696,15 +696,15 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 - Körner, R., Overbeck, J.R., Körner, E. & Schütz, A. (2024). ["The Language of Power: Interpersonal Perceptions of Sense of Power, Dominance, and Prestige Based on Word Usage."](https://journals.sagepub.com/doi/10.1177/08902070231221346) *European Journal of Personality*.
 - Danescu-Niculescu-Mizil, C. et al. (2012). ["Echoes of Power: Language Effects and Power Differences in Social Interaction."](https://www.cs.cornell.edu/~cristian/Echoes_of_power_files/echoes_of_power.pdf) Cornell University.
 - Morand, D.A. (1996). ["Dominance, Deference, and Egalitarianism in Organizational Interaction."](https://pubsonline.informs.org/doi/10.1287/orsc.7.5.544) *Organization Science*, 7(5), 544-556.
-- Erickson, B., Lind, E.A., Johnson, B.C. & O'Barr, W.O. (1978). "Speech Style and Impression Formation in a Court Setting: The Effects of 'Powerful' and 'Powerless' Speech." *Journal of Experimental and Social Psychology*, 14, 266-279.
+- Erickson, B., Lind, E.A., Johnson, B.C. & O'Barr, W.O. (1978). "Speech Style and Impression Formation in a Court Setting: The Effects of 'Powerful' and 'Powerless' Speech." *Journal of Experimental Social Psychology*, 14, 266-279. [ScienceDirect (paywalled)](https://doi.org/10.1016/0022-1031(78)90015-X)
 - Blankenship, K.L. & Holtgraves, T. (2005). ["The Role of Different Markers of Linguistic Powerlessness in Persuasion."](https://journals.sagepub.com/doi/10.1177/0261927X04273034) *Journal of Language and Social Psychology*.
 
 ### Turn-Taking and Interruption
 - Mast, M.S. (2002). ["Dominance as Expressed and Inferred Through Speaking Time."](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1468-2958.2002.tb00814.x) *Human Communication Research*.
-- Zimmerman, D. & West, C. (1975). "Sex Roles, Interruptions and Silences in Conversation." *Language and Sex: Difference and Dominance*.
+- Zimmerman, D. & West, C. (1975). "Sex Roles, Interruptions and Silences in Conversation." In B. Thorne & N. Henley (Eds.), *Language and Sex: Difference and Dominance*. Newbury House. [Amazon](https://www.amazon.com/Language-sex-difference-dominance-Newbury/dp/0883770431)
 
 ### Nonverbal Hierarchy
-- Dovidio, J.F. & Ellyson, S.L. (1982). "Decoding Visual Dominance: Attributions of Power Based on Relative Percentages of Looking While Speaking and Looking While Listening." *Social Psychology Quarterly*.
+- Dovidio, J.F. & Ellyson, S.L. (1982). "Decoding Visual Dominance: Attributions of Power Based on Relative Percentages of Looking While Speaking and Looking While Listening." *Social Psychology Quarterly*, 45(2), 106-113. [JSTOR (paywalled)](https://doi.org/10.2307/3033933)
 - Carney, D.R., Cuddy, A.J.C. & Yap, A.J. (2010). ["Power Posing: Brief Nonverbal Displays Affect Neuroendocrine Levels and Risk Tolerance."](https://journals.sagepub.com/doi/abs/10.1177/0956797610383437) *Psychological Science*.
 - Hollander, E.P. (1958). ["Conformity, Status, and Idiosyncrasy Credit."](https://psycnet.apa.org/record/1959-08073-001) *Psychological Review*, 65(2), 117-127.
 
@@ -723,7 +723,7 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 ### Self-Promotion and the Hierarchy Paradox
 - Sezer, O., Gino, F. & Norton, M.I. (2018). ["Humblebragging: A Distinct — and Ineffective — Self-Presentation Strategy."](https://www.hbs.edu/ris/Publication%20Files/15-080_97293623-53aa-4df8-b967-38617e144fd9.pdf) Harvard Business School.
 - ["Why Shameless Self-Promotion Backfires at Work."](https://knowledge.wharton.upenn.edu/article/why-shameless-self-promotion-backfires-at-work-and-how-to-get-it-right/) Knowledge at Wharton.
-- Krings, F. et al. (2023). "Backlash for High Self-Promotion at Hiring Depends on Candidates' Gender and Age." *International Journal of Selection and Assessment*.
+- Krings, F. et al. (2023). "Backlash for High Self-Promotion at Hiring Depends on Candidates' Gender and Age." *International Journal of Selection and Assessment*. [Wiley (paywalled)](https://doi.org/10.1111/ijsa.12432)
 
 ### Workplace Communication
 - ["Chain of Command" May Be Confusing for Your Autistic Employees.](https://us.specialisterne.com/chain-of-command-may-be-confusing-for-your-autistic-employees/) Specialisterne USA.
@@ -739,7 +739,7 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 - ["Why Your Autistic Coworkers Don't Bend Rules the Way You Do."](https://us.specialisterne.com/why-your-autistic-coworkers-dont-bend-rules-the-way-you-do/) Specialisterne USA.
 
 ### Aviation Communication Case Studies
-- Gladwell, M. (2008). *Outliers: The Story of Success*. Chapter 7: "The Ethnic Theory of Plane Crashes." Little, Brown and Company.
+- Gladwell, M. (2008). *Outliers: The Story of Success*. Chapter 7: "The Ethnic Theory of Plane Crashes." Little, Brown and Company. [Amazon](https://www.amazon.com/Outliers-Story-Success-Malcolm-Gladwell/dp/0316017930)
 
 ### Address Forms
 - [Forms of Address: Definition.](https://fiveable.me/key-terms/introduction-linguistics/forms-of-address) Fiveable.
@@ -747,4 +747,4 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 
 ### Host-Guest Dynamics
 - [Power Dynamics in Peer-to-Peer Accommodation.](https://pmc.ncbi.nlm.nih.gov/articles/PMC7273166/) *PMC*, 2020.
-- Schneider, F. (2024). "Guesting: Rethinking the Relationship Between Hospitality and Homemaking." *Journal of the Royal Anthropological Institute*.
+- Schneider, F. (2024). "Guesting: Rethinking the Relationship Between Hospitality and Homemaking." *Journal of the Royal Anthropological Institute*. [Wiley (paywalled)](https://doi.org/10.1111/1467-9655.14108)

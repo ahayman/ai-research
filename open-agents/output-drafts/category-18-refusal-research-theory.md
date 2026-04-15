@@ -927,35 +927,35 @@ The entire system reduces to a learnable pattern:
 ## Sources and Key References
 
 ### Foundational Research
-- Beebe, L. M., Takahashi, T., & Uliss-Weltz, R. (1990). Pragmatic transfer in ESL refusals. In R. C. Scarcella, E. Andersen, & S. D. Krashen (Eds.), *Developing communicative competence in a second language* (pp. 55-73).
-- Pomerantz, A. (1984). Agreeing and disagreeing with assessments: Some features of preferred/dispreferred turn shapes. In J. M. Atkinson & J. Heritage (Eds.), *Structures of social action* (pp. 57-101).
-- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press.
-- Leech, G. (1983/2014). *The Pragmatics of Politeness*. Oxford University Press.
-- Goffman, E. (1967). *Interaction Ritual: Essays on Face-to-Face Behavior*. Doubleday.
-- Olshtain, E., & Cohen, A. (1983). Apology: A speech act set. In N. Wolfson & E. Judd (Eds.), *Sociolinguistics and language acquisition* (pp. 18-36).
+- Beebe, L. M., Takahashi, T., & Uliss-Weltz, R. (1990). Pragmatic transfer in ESL refusals. In R. C. Scarcella, E. Andersen, & S. D. Krashen (Eds.), *Developing communicative competence in a second language* (pp. 55-73). [Amazon](https://www.amazon.com/Developing-Communicative-Competence-Second-Language/dp/0060532246)
+- Pomerantz, A. (1984). Agreeing and disagreeing with assessments: Some features of preferred/dispreferred turn shapes. In J. M. Atkinson & J. Heritage (Eds.), *Structures of social action* (pp. 57-101). [Amazon](https://www.amazon.com/Structures-Social-Action-Conversation-Interactional/dp/0521318629)
+- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- Leech, G. (1983/2014). *The Pragmatics of Politeness*. Oxford University Press. [Amazon](https://www.amazon.com/Pragmatics-Politeness-Oxford-Studies-Sociolinguistics/dp/0195341384)
+- Goffman, E. (1967). *Interaction Ritual: Essays on Face-to-Face Behavior*. Doubleday. [Amazon](https://www.amazon.com/Interaction-Ritual-Essays-Face-Face/dp/0202307778)
+- Olshtain, E., & Cohen, A. (1983). Apology: A speech act set. In N. Wolfson & E. Judd (Eds.), *Sociolinguistics and language acquisition* (pp. 18-36). [Amazon](https://www.amazon.com/Sociolinguistics-Language-Acquisition-Nessa-Wolfson/dp/0883771861)
 
 ### Cross-Cultural Refusal Research
-- Al-Issa, A. (2003). Sociocultural transfer in L2 speech behaviors. *International Journal of Intercultural Relations*, 27(5), 581-599.
-- Nelson, G. L., Carson, J., Al Batal, M., & El Bakary, W. (2002). Cross-cultural pragmatics: Strategy use in Egyptian Arabic and American English refusals. *Applied Linguistics*, 23(2), 163-189.
-- Mansor, F. (2017). *Politeness and offering in Libyan Arabic hospitality*. Sheffield Hallam University.
-- Ostensible Refusals in the Jordanian culture (2024). *Cogent Arts & Humanities*, 11(1).
+- Al-Issa, A. (2003). Sociocultural transfer in L2 speech behaviors. *International Journal of Intercultural Relations*, 27(5), 581-599. [Elsevier (paywalled)](https://doi.org/10.1016/S0147-1767(03)00055-5)
+- Nelson, G. L., Carson, J., Al Batal, M., & El Bakary, W. (2002). Cross-cultural pragmatics: Strategy use in Egyptian Arabic and American English refusals. *Applied Linguistics*, 23(2), 163-189. [OUP (paywalled)](https://doi.org/10.1093/applin/23.2.163)
+- Mansor, F. (2017). *Politeness and offering in Libyan Arabic hospitality*. Sheffield Hallam University. [SHU Repository](https://shura.shu.ac.uk/17506/)
+- Ostensible Refusals in the Jordanian culture (2024). *Cogent Arts & Humanities*, 11(1). [Taylor & Francis](https://www.tandfonline.com/doi/full/10.1080/23311983.2024.2306653)
 
 ### Conversation Analysis and Preference
-- Sacks, H. (1987). On the preferences for agreement and contiguity in sequences in conversation.
-- Kotthoff, H. (1993). Disagreement and concession in disputes: On the context sensitivity of preference structures. *Language in Society*, 22(2), 193-216.
-- Bilmes, J. (2014). Preference and the conversation analytic endeavor. *Journal of Pragmatics*, 64, 52-71.
+- Sacks, H. (1987). On the preferences for agreement and contiguity in sequences in conversation. [Amazon](https://www.amazon.com/Talk-Social-Organisation-Graham-Button/dp/1853590037)
+- Kotthoff, H. (1993). Disagreement and concession in disputes: On the context sensitivity of preference structures. *Language in Society*, 22(2), 193-216. [CUP (paywalled)](https://doi.org/10.1017/S0047404500017103)
+- Bilmes, J. (2014). Preference and the conversation analytic endeavor. *Journal of Pragmatics*, 64, 52-71. [Elsevier (paywalled)](https://doi.org/10.1016/j.pragma.2014.01.007)
 
 ### Complaint and Commiseration Research
-- Boxer, D. (1993). Complaints as positive strategies: What the learner needs to know. *TESOL Quarterly*, 27(2), 277-299.
-- Boxer, D. (1993). Social distance and speech behavior: The case of indirect complaints. *Journal of Pragmatics*, 19(2), 103-125.
+- Boxer, D. (1993). Complaints as positive strategies: What the learner needs to know. *TESOL Quarterly*, 27(2), 277-299. [Wiley (paywalled)](https://doi.org/10.2307/3587147)
+- Boxer, D. (1993). Social distance and speech behavior: The case of indirect complaints. *Journal of Pragmatics*, 19(2), 103-125. [Elsevier (paywalled)](https://doi.org/10.1016/0378-2166(93)90084-3)
 
 ### Apology Research
-- CARLA (Center for Advanced Research on Language Acquisition). Speech Acts: Apologies and Refusals. University of Minnesota.
-- Benoit, W. L. (1995). *Accounts, excuses, and apologies: A theory of image restoration strategies*. State University of New York Press.
+- CARLA (Center for Advanced Research on Language Acquisition). Speech Acts: Apologies and Refusals. University of Minnesota. [CARLA](https://archive.carla.umn.edu/speechacts/)
+- Benoit, W. L. (1995). *Accounts, excuses, and apologies: A theory of image restoration strategies*. State University of New York Press. [Amazon](https://www.amazon.com/Accounts-Excuses-Apologies-Second-Restoration/dp/1438453981)
 
 ### Autism and Pragmatic Communication
-- Milton, D. E. M. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887.
-- Cummings, L. (2023). Divergent social communication between autistic and non-autistic individuals revisited. *PMC*.
+- Milton, D. E. M. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Cummings, L. (2023). Divergent social communication between autistic and non-autistic individuals revisited. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10594999/)
 
 ### Conflict and De-Escalation
 - Directness and Oppositional Intensity of Conflict Expression research.

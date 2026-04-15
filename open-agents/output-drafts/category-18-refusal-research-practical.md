@@ -1116,10 +1116,10 @@ Invoking "agree to disagree" has a specific flow:
 
 ## Research Sources
 
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. -- Foundational theory on face-threatening acts and politeness strategies.
-- Lewicki, R.J. & Polin, B. (2016). "An Exploration of the Structure of Effective Apologies." *Negotiation and Conflict Management Research*, 9(2), 177-196. -- Identified six components of effective apologies and their relative importance.
-- Beebe, L.M., Takahashi, T., & Uliss-Weltz, R. (1990). "Pragmatic Transfer in ESL Refusals." In R.C. Scarcella, E.S. Andersen, & S.D. Krashen (Eds.), *Developing Communicative Competence in a Second Language*. -- Seminal taxonomy of refusal strategies.
-- Gottman, J.M. (1994). *What Predicts Divorce?* -- Research on the "Four Horsemen" of relationship dissolution (criticism, contempt, defensiveness, stonewalling).
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. -- Foundational theory on face-threatening acts and politeness strategies. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- Lewicki, R.J. & Polin, B. (2016). "An Exploration of the Structure of Effective Apologies." *Negotiation and Conflict Management Research*, 9(2), 177-196. -- Identified six components of effective apologies and their relative importance. [Wiley](https://onlinelibrary.wiley.com/doi/10.1111/ncmr.12073)
+- Beebe, L.M., Takahashi, T., & Uliss-Weltz, R. (1990). "Pragmatic Transfer in ESL Refusals." In R.C. Scarcella, E.S. Andersen, & S.D. Krashen (Eds.), *Developing Communicative Competence in a Second Language*. -- Seminal taxonomy of refusal strategies. [Amazon](https://www.amazon.com/Developing-Communicative-Competence-Second-Language/dp/0060532246)
+- Gottman, J.M. (1994). *What Predicts Divorce?* -- Research on the "Four Horsemen" of relationship dissolution (criticism, contempt, defensiveness, stonewalling). [Amazon](https://www.amazon.com/What-Predicts-Divorce-Relationship-Processes/dp/0805814027)
 - CARLA (Center for Advanced Research on Language Acquisition), University of Minnesota. Pragmatics and Speech Acts teaching modules. https://archive.carla.umn.edu/speechacts/
 - Association for Psychological Science (2016). "Effective Apologies Include Six Elements." https://www.psychologicalscience.org/news/minds-business/effective-apologies-include-six-elements.html
 - Crisis Prevention Institute. "Top 10 De-escalation Tips." https://www.crisisprevention.com/en-GB/blog/general/cpi-top-10-de-escalation-tips/

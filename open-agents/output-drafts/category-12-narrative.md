@@ -323,14 +323,14 @@ In these contexts, the autistic preference for detailed, precise, comprehensive 
 ## Key Sources
 
 ### Foundational Texts
-- Labov, W. & Waletzky, J. (1967). "Narrative Analysis: Oral Versions of Personal Experience." In Helm (ed.), *Essays on the Verbal and Visual Arts*.
-- Halliday, M.A.K. & Hasan, R. (1976). *Cohesion in English*. Longman.
-- Bruner, J. (1986). *Actual Minds, Possible Worlds*. Harvard University Press.
-- Ochs, E. & Capps, L. (2001). *Living Narrative*. Harvard University Press.
+- Labov, W. & Waletzky, J. (1967). "Narrative Analysis: Oral Versions of Personal Experience." In Helm (ed.), *Essays on the Verbal and Visual Arts*. [Wiley](https://anthrosource.onlinelibrary.wiley.com/doi/10.1525/jlin.1997.7.1-4.3)
+- Halliday, M.A.K. & Hasan, R. (1976). *Cohesion in English*. Longman. [Amazon](https://www.amazon.com/Cohesion-English-English-Language-Series/dp/0582550416)
+- Bruner, J. (1986). *Actual Minds, Possible Worlds*. Harvard University Press. [Amazon](https://www.amazon.com/Actual-Minds-Possible-Worlds-Jerome/dp/0674003667)
+- Ochs, E. & Capps, L. (2001). *Living Narrative*. Harvard University Press. [Amazon](https://www.amazon.com/Living-Narrative-Creating-Everyday-Storytelling/dp/0674007689)
 
 ### Autism and Narrative
-- Baixauli, I., Colomer, C., Roselló, B., & Miranda, A. (2016). "Narratives of children with high-functioning autism spectrum disorder: A meta-analysis." *Research in Developmental Disabilities*, 59, 234-254.
-- Geelhand, P. et al. (2020). "Narrative Production in Autistic Adults." *J Pragmatics*, 164.
-- Harvey, M. et al. (2025). "Narrative Abilities of Autistic Adolescents." *Autism Research*.
-- Hilviu, D. et al. (2023). "CPT and Narrative Skills in ASD." *J Psycholinguistic Research*.
-- Losh, M. & Capps, L. (2003). "Narrative Ability in Autism." *J Autism Dev Disord*.
+- Baixauli, I., Colomer, C., Roselló, B., & Miranda, A. (2016). "Narratives of children with high-functioning autism spectrum disorder: A meta-analysis." *Research in Developmental Disabilities*, 59, 234-254. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.ridd.2016.09.007)
+- Geelhand, P. et al. (2020). "Narrative Production in Autistic Adults." *J Pragmatics*, 164. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2020.04.014)
+- Harvey, M. et al. (2025). "Narrative Abilities of Autistic Adolescents." *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/journal/19393806)
+- Hilviu, D. et al. (2023). "CPT and Narrative Skills in ASD." *J Psycholinguistic Research*. [Springer](https://link.springer.com/article/10.1007/s10936-023-09965-0)
+- Losh, M. & Capps, L. (2003). "Narrative Ability in Autism." *J Autism Dev Disord*. [Springer (paywalled)](https://doi.org/10.1023/A:1024446215446)

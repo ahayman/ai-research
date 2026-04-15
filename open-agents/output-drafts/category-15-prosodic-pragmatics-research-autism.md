@@ -267,7 +267,7 @@ This is encouraging: it suggests that autistic adults can arrive at correct prag
 
 ### 6.1 The ERP Evidence
 
-A 2022 study in *Frontiers in Psychiatry* (Chien et al.) provided ERP (event-related potential) evidence of a striking dissociation:
+A 2022 study in *Frontiers in Psychiatry* ([Haigh et al., 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9174755/)) provided ERP (event-related potential) evidence of a striking dissociation:
 
 **Simple pitched tones:**
 - The autism group showed **larger** mismatch negativity (MMN) -- indicating **hyper-sensitivity** to pitch changes at the early auditory processing level
@@ -299,9 +299,8 @@ Research suggests that "increasing stimulus complexity spectrally and temporally
 
 Across multiple studies, a consistent pattern emerges:
 
-**Receptive prosody** (understanding stress in others' speech) generally **outstrips** expressive prosody (producing appropriate stress in one's own speech) in autism:
-- Wehrle et al. (2023): "Receptive prosody exceeds expressive prosody in ASD"
-- The PEPS-C profile across studies shows the "ASD prosodic profile is one of discordance, where receptive prosodic skills generally outstripped performance on expressive subtests"
+**Receptive prosody** (understanding stress in others' speech) is frequently **less impaired** than expressive prosody (producing appropriate stress in one's own speech) in autism, but this is not a blanket "receptive > expressive" finding — the receptive deficit is present in contrastive stress specifically, alongside broader expressive deficits:
+- Wehrle et al. (2023, PEPS-C): PEPS-C profile shows discordance — receptive prosodic skills generally outstripped performance on expressive subtests, **except** for a clear receptive deficit on contrastive stress (Focus)
 - Grossman et al. (2010): Children with HFA were "as capable as their TD peers in receptive tasks of lexical stress and affective prosody" while showing atypical production patterns
 
 ### 7.2 Does This Hold for Contrastive Stress Specifically?
@@ -471,7 +470,7 @@ The challenge is not learnability but **automaticity**: applying these rules fas
 
 11. **Drakopoulou Kalantzi, G. (2024)**. Comprehension and Production of Contrastive Reference in Autism. Dissertation, CUNY Graduate Center. https://academicworks.cuny.edu/gc_etds/5703/
 
-12. **Tian, Y. et al. (2025)**. Sung Speech Training Improves Prosodic Focus Marking in a Nondominant Language in Children With Autism Spectrum Disorder. *Journal of Speech, Language, and Hearing Research*. https://pubs.asha.org/doi/10.1044/2025_JSLHR-25-00104
+12. **Zhang, Y. et al. (2025)**. Sung Speech Training Improves Prosodic Focus Marking in a Nondominant Language in Children With Autism Spectrum Disorder. *Journal of Speech, Language, and Hearing Research*. https://pubs.asha.org/doi/10.1044/2025_JSLHR-25-00104
 
 13. **Baltaxe, C. A. (1984)**. Use of contrastive stress in normal, aphasic, and autistic children. *Journal of Speech and Hearing Research*, 27(1), 97-105. https://pubs.asha.org/doi/10.1044/jshr.2701.97
 

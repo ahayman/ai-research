@@ -69,7 +69,7 @@ The empirical literature documents disproportionate positioning consequences for
 
 - **Employment**: Romualdez et al. (2021), Bury et al. (2020) document the prevalence of performance reviews that translate autistic communication defaults into "not a culture fit" or "poor interpersonal skills" language. The review is a positioning move with record-keeping and financial consequences.
 
-- **Legal**: Maras et al. (2019), Crane et al. (2018) document the credibility problems autistic witnesses face in legal settings. Autistic patterns of recall and delivery are often read as "inconsistent" or "evasive," which is a stance assignment that the positioned party can only partially counter.
+- **Legal**: Maras et al. (2017), Crane et al. (2016) document the credibility problems autistic witnesses face in legal settings. Autistic patterns of recall and delivery are often read as "inconsistent" or "evasive," which is a stance assignment that the positioned party can only partially counter.
 
 - **Education**: Horgan et al. (2023) and earlier work document the positioning of autistic students into behavioral and ability categories that shape their educational trajectory, often in ways that underestimate their capacity.
 
@@ -507,44 +507,42 @@ The detection heuristics and repair vocabulary in this research file are intende
 
 ## Sources
 
-Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453.
+Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453. [Taylor & Francis](https://doi.org/10.1080/09687599.2020.1822782)
 
-Bury, S. M., Hedley, D., Uljarević, M., & Gal, E. (2020). The autism advantage at work: A critical and systematic review of current evidence. *Research in Developmental Disabilities*, 105, 103750.
+Bury, S. M., Hedley, D., Uljarević, M., & Gal, E. (2020). The autism advantage at work: A critical and systematic review of current evidence. *Research in Developmental Disabilities*, 105, 103750. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.ridd.2020.103750)
 
-Camm-Crosbie, L., Bradley, L., Shaw, R., Baron-Cohen, S., & Cassidy, S. (2019). "People like me don't get support": Autistic adults' experiences of support and treatment for mental health difficulties, self-injury and suicidality. *Autism*, 23(6), 1431-1441.
+Camm-Crosbie, L., Bradley, L., Shaw, R., Baron-Cohen, S., & Cassidy, S. (2019). "People like me don't get support": Autistic adults' experiences of support and treatment for mental health difficulties, self-injury and suicidality. *Autism*, 23(6), 1431-1441. [SAGE (paywalled)](https://doi.org/10.1177/1362361318816053)
 
-Crane, L., Maras, K. L., Hawken, T., Mulcahy, S., & Memon, A. (2018). Experiences of autism spectrum disorder and policing in England and Wales: Surveying police and the autism community. *Journal of Autism and Developmental Disorders*, 48(8), 2732-2738.
+Crane, L., Maras, K. L., Hawken, T., Mulcahy, S., & Memon, A. (2016). Experiences of autism spectrum disorder and policing in England and Wales: Surveying police and the autism community. *Journal of Autism and Developmental Disorders*, 46(6), 2028-2041. [Springer](https://doi.org/10.1007/s10803-015-2729-6)
 
-Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712.
+Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
 
-Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63.
+Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63. [Wiley (paywalled)](https://doi.org/10.1111/j.1468-5914.1990.tb00174.x)
 
-Doherty, M., Neilson, S., O'Sullivan, J., Carravallah, L., Johnson, M., Cullen, W., & Shaw, S. C. K. (2022). "Barriers to healthcare and self-reported adverse outcomes for autistic adults: a cross-sectional study." *BMJ Open*, 12(2), e056904.
+Doherty, M., Neilson, S., O'Sullivan, J., Carravallah, L., Johnson, M., Cullen, W., & Shaw, S. C. K. (2022). "Barriers to healthcare and self-reported adverse outcomes for autistic adults: a cross-sectional study." *BMJ Open*, 12(2), e056904. [BMJ Open](https://bmjopen.bmj.com/content/12/2/e056904)
 
-Du Bois, J. W. (2007). The stance triangle.
+Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse* (pp. 139-182). John Benjamins. [Amazon](https://www.amazon.com/Stancetaking-Discourse-Subjectivity-Evaluation-Interaction/dp/9027254095)
 
-Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse* (pp. 139-182). John Benjamins.
+DuBois, D., Ameis, S. H., Lai, M.-C., Casanova, M. F., & Desarkar, P. (2016). Interoception in autism spectrum disorder: A review. *International Journal of Developmental Neuroscience*, 52, 104-111. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.ijdevneu.2016.05.001)
 
-DuBois, D., Ameis, S. H., Lai, M.-C., Casanova, M. F., & Desarkar, P. (2016). Interoception in autism spectrum disorder: A review. *International Journal of Developmental Neuroscience*, 52, 104-111.
+Garfinkel, S. N., Tiley, C., O'Keeffe, S., Harrison, N. A., Seth, A. K., & Critchley, H. D. (2016). Discrepancies between dimensions of interoception in autism. *Biological Psychology*, 114, 117-126. [ScienceDirect](https://doi.org/10.1016/j.biopsycho.2015.12.003)
 
-Garfinkel, S. N., Tiley, C., O'Keeffe, S., Harrison, N. A., Seth, A. K., & Critchley, H. D. (2016). Discrepancies between dimensions of interoception in autism. *Biological Psychology*, 114, 117-126.
+Goodwin, M. H. (2007). Occasioned knowledge exploration in family interaction. *Discourse & Society*, 18(1), 93-110. [SAGE (paywalled)](https://doi.org/10.1177/0957926507069459)
 
-Goodwin, M. H. (2007). Occasioned knowledge exploration in family interaction. *Discourse & Society*, 18(1), 93-110.
+Horgan, F., Kenny, N., & Flynn, P. (2023). A systematic review of the experiences of autistic young people enrolled in mainstream second-level (post-primary) schools. *Autism*, 27(2), 526-538. [SAGE (paywalled)](https://doi.org/10.1177/13623613221105089)
 
-Horgan, F., Kenny, N., & Flynn, P. (2023). A systematic review of the experiences of autistic young people enrolled in mainstream second-level (post-primary) schools. *Autism*, 27(2), 526-538.
+Maras, K., Crane, L., Mulcahy, S., Hawken, T., Cooper, P., Wurtzel, D., & Memon, A. (2019). Brief report: Autism in the courtroom: Experiences of legal professionals and the autism community. *Journal of Autism and Developmental Disorders*, 47(8), 2610-2620. [Springer](https://doi.org/10.1007/s10803-017-3162-9)
 
-Maras, K., Crane, L., Mulcahy, S., Hawken, T., Cooper, P., Wurtzel, D., & Memon, A. (2019). Brief report: Autism in the courtroom: Experiences of legal professionals and the autism community. *Journal of Autism and Developmental Disorders*, 47(8), 2610-2620.
+Marwick, A. E., & boyd, d. (2011). I tweet honestly, I tweet passionately: Twitter users, context collapse, and the imagined audience. *New Media & Society*, 13(1), 114-133. [SAGE (paywalled)](https://doi.org/10.1177/1461444810365313)
 
-Marwick, A. E., & boyd, d. (2011). I tweet honestly, I tweet passionately: Twitter users, context collapse, and the imagined audience. *New Media & Society*, 13(1), 114-133.
+Potter, J. (1996). *Representing Reality: Discourse, Rhetoric and Social Construction*. Sage. [Amazon](https://www.amazon.com/Representing-Reality-Discourse-Rhetoric-Construction/dp/0803984111)
 
-Potter, J. (1996). *Representing Reality: Discourse, Rhetoric and Social Construction*. Sage.
+Romualdez, A. M., Walker, Z., & Remington, A. (2021). Autistic adults' experiences of diagnostic disclosure in the workplace. *Autism & Developmental Language Impairments*, 6, 1-12. [SAGE](https://doi.org/10.1177/23969415211022955)
 
-Romualdez, A. M., Walker, Z., & Remington, A. (2021). Autistic adults' experiences of diagnostic disclosure in the workplace. *Autism & Developmental Language Impairments*, 6, 1-12.
+Schegloff, E. A. (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis*. Cambridge University Press. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Conversation-Analysis/dp/0521532795)
 
-Schegloff, E. A. (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis*. Cambridge University Press.
+Shaw, S. C. K., Carravallah, L., Johnson, M., O'Sullivan, J., Chown, N., Neilson, S., & Doherty, M. (2024). "Barriers to healthcare and a 'triple empathy problem' may lead to adverse outcomes for autistic adults: A qualitative study." *Autism*, 28(7), 1746-1757. [SAGE](https://doi.org/10.1177/13623613231205629)
 
-Shaw, S. C. K., Carravallah, L., Johnson, M., O'Sullivan, J., Chown, N., Neilson, S., & Doherty, M. (2024). "Barriers to healthcare and a 'triple empathy problem' may lead to adverse outcomes for autistic adults: A qualitative study." *Autism*, 28(7), 1746-1757. DOI 10.1177/13623613231205629.
+Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life*. Oxford University Press. [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
 
-Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life*. Oxford University Press.
-
-Tagg, C., Seargeant, P., & Brown, A. A. (2017). *Taking Offence on Social Media: Conviviality and Communication on Facebook*. Palgrave Macmillan.
+Tagg, C., Seargeant, P., & Brown, A. A. (2017). *Taking Offence on Social Media: Conviviality and Communication on Facebook*. Palgrave Macmillan. [Springer (paywalled)](https://doi.org/10.1007/978-3-319-56717-4)

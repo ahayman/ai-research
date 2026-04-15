@@ -400,36 +400,36 @@ Some people, for legitimate reasons, cannot leave their situation in the foresee
 ## 10. Citation Register
 
 **Safety planning efficacy:**
-- Sullivan, C. M., & Bybee, D. I. (1999). "Reducing Violence Using Community-Based Advocacy for Women With Abusive Partners." *Journal of Consulting and Clinical Psychology* 67(1): 43–53. — Seminal RCT showing advocacy + safety planning reduces re-assault at 24-month follow-up.
-- Bell, M. E., & Goodman, L. A. (2001). "Supporting Battered Women Involved in the Court System." *Violence Against Women* 7(12): 1377–1404.
-- Glass, N. E., et al. (2017). "The Longitudinal Impact of an Internet Safety Decision Aid for Abused Women." *American Journal of Preventive Medicine* 52(5): 606–615. — MyPlan, tailored safety planning.
+- Sullivan, C. M., & Bybee, D. I. (1999). "Reducing Violence Using Community-Based Advocacy for Women With Abusive Partners." *Journal of Consulting and Clinical Psychology* 67(1): 43–53. — Seminal RCT showing advocacy + safety planning reduces re-assault at 24-month follow-up. — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+- Bell, M. E., & Goodman, L. A. (2001). "Supporting Battered Women Involved in the Court System." *Violence Against Women* 7(12): 1377–1404. — [Sage](https://journals.sagepub.com/doi/10.1177/10778010122183919) [paywalled]
+- Glass, N. E., et al. (2017). "The Longitudinal Impact of an Internet Safety Decision Aid for Abused Women." *American Journal of Preventive Medicine* 52(5): 606–615. — MyPlan, tailored safety planning. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/28108189/) [paywalled]
 
 **Lethality and risk assessment:**
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097.
-- Campbell, J. C., Webster, D. W., & Glass, N. (2009). "The Danger Assessment: Validation of a Lethality Risk Assessment Instrument for Intimate Partner Femicide." *Journal of Interpersonal Violence* 24(4): 653–674.
-- Glass, N., et al. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335.
-- Wilson, M., & Daly, M. (1993). "Spousal Homicide Risk and Estrangement." *Violence and Victims* 8(1): 3–16.
-- Messing, J. T., et al. (2017). "The Lethality Screen." *Journal of Interpersonal Violence* 32(2): 205–226.
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Campbell, J. C., Webster, D. W., & Glass, N. (2009). "The Danger Assessment: Validation of a Lethality Risk Assessment Instrument for Intimate Partner Femicide." *Journal of Interpersonal Violence* 24(4): 653–674. — [Sage](https://journals.sagepub.com/doi/10.1177/0886260508317180) [paywalled]
+- Glass, N., et al. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335. — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Wilson, M., & Daly, M. (1993). "Spousal Homicide Risk and Estrangement." *Violence and Victims* 8(1): 3–16. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8292563/) [paywalled]
+- Messing, J. T., et al. (2017). "The Lethality Screen." *Journal of Interpersonal Violence* 32(2): 205–226. — [Sage](https://journals.sagepub.com/doi/abs/10.1177/0886260515585540) [paywalled]
 
 **Stalking and post-separation safety:**
-- Logan, T. K., & Walker, R. (2017). "Stalking: A Multidimensional Framework for Assessment and Safety Planning." *Trauma, Violence, & Abuse* 18(2): 200–222.
-- Logan, T. K., & Walker, R. (2010). "Civil protective order effectiveness: Justice or just a piece of paper?" *Violence and Victims.*
+- Logan, T. K., & Walker, R. (2017). "Stalking: A Multidimensional Framework for Assessment and Safety Planning." *Trauma, Violence, & Abuse* 18(2): 200–222. — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015603210) [paywalled]
+- Logan, T. K., & Walker, R. (2010). "Civil protective order effectiveness: Justice or just a piece of paper?" *Violence and Victims.* — [PubMed](https://pubmed.ncbi.nlm.nih.gov/20795453/) [paywalled]
 
 **Coercive control theory:**
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
 
 **Autism-adapted safety planning:**
-- "Feasibility and acceptability of autism adapted safety plans: an external pilot randomised controlled trial." *eClinicalMedicine* (2024). — The pilot RCT.
-- "Adapting Safety Plans for Autistic Adults with Involvement from the Autism Community." *Autism in Adulthood* (2024). — The qualitative companion paper.
+- "Feasibility and acceptability of autism adapted safety plans: an external pilot randomised controlled trial." *eClinicalMedicine* (2024). — The pilot RCT. — [Lancet](https://www.thelancet.com/journals/eclinm/article/PIIS2589-5370(24)00241-4/fulltext)
+- "Adapting Safety Plans for Autistic Adults with Involvement from the Autism Community." *Autism in Adulthood* (2024). — The qualitative companion paper. — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2023.0124) [paywalled]
 
 **Autism-specific victimization research:**
-- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic.'" *Autism.*
-- Pearson, A., et al. (2024). "'It's not a physical prison but you can't get out.'" *Autism in Adulthood.*
-- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745.
-- Cazalis, F., Reyes, E., Leduc, S., & Gourion, D. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience.* PMC9087551.
+- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic.'" *Autism.* — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson, A., et al. (2024). "'It's not a physical prison but you can't get out.'" *Autism in Adulthood.* — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Cazalis, F., Reyes, E., Leduc, S., & Gourion, D. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience.* — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
 
 **Trauma framework and safety-before-processing:**
-- Herman, J. L. (1992, 2015). *Trauma and Recovery.* Basic Books.
+- Herman, J. L. (1992, 2015). *Trauma and Recovery.* Basic Books. — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
 
 **The Lethality Assessment Program:**
 - Maryland Network Against Domestic Violence (2022). *Position Paper: Effectiveness of the Lethality Assessment Program.*

@@ -897,29 +897,29 @@ This difficulty is amplified for individuals who may not automatically process t
 ## Key Academic References
 
 ### Foundational Works
-- Sacks, H., Schegloff, E. A., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735.
-- Schegloff, E. A. (1968). Sequencing in conversational openings. *American Anthropologist*, 70(6), 1075-1095.
-- Schegloff, E. A., & Sacks, H. (1973). Opening up closings. *Semiotica*, 8(4), 289-327.
-- Schegloff, E. A. (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis I*. Cambridge University Press.
+- Sacks, H., Schegloff, E. A., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735. [JSTOR](https://doi.org/10.2307/412243)
+- Schegloff, E. A. (1968). Sequencing in conversational openings. *American Anthropologist*, 70(6), 1075-1095. [Wiley](https://doi.org/10.1525/aa.1968.70.6.02a00030)
+- Schegloff, E. A., & Sacks, H. (1973). Opening up closings. *Semiotica*, 8(4), 289-327. [De Gruyter](https://doi.org/10.1515/semi.1973.8.4.289)
+- Schegloff, E. A. (2007). *Sequence Organization in Interaction: A Primer in Conversation Analysis I*. Cambridge University Press. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)
 
 ### Preference Organization
-- Pomerantz, A. (1978). Compliment responses: Notes on the co-operation of multiple constraints. In J. Schenkein (Ed.), *Studies in the Organization of Conversational Interaction* (pp. 79-112). Academic Press.
-- Pomerantz, A. (1984). Agreeing and disagreeing with assessments: Some features of preferred/dispreferred turn shapes. In J. M. Atkinson & J. Heritage (Eds.), *Structures of Social Action: Studies in Conversation Analysis* (pp. 57-101). Cambridge University Press.
-- Heritage, J. (1984). *Garfinkel and Ethnomethodology*. Polity Press.
-- Levinson, S. C. (1983). *Pragmatics*. Cambridge University Press.
+- Pomerantz, A. (1978). Compliment responses: Notes on the co-operation of multiple constraints. In J. Schenkein (Ed.), *Studies in the Organization of Conversational Interaction* (pp. 79-112). Academic Press. [Amazon (volume)](https://www.amazon.com/Studies-Organization-Conversational-Interaction-Schenkein/dp/0126239304)
+- Pomerantz, A. (1984). Agreeing and disagreeing with assessments: Some features of preferred/dispreferred turn shapes. In J. M. Atkinson & J. Heritage (Eds.), *Structures of Social Action: Studies in Conversation Analysis* (pp. 57-101). Cambridge University Press. [Amazon (volume)](https://www.amazon.com/Structures-Social-Action-Conversation-Analysis/dp/052131862X)
+- Heritage, J. (1984). *Garfinkel and Ethnomethodology*. Polity Press. [Amazon](https://www.amazon.com/Garfinkel-Ethnomethodology-John-Heritage/dp/0745600611)
+- Levinson, S. C. (1983). *Pragmatics*. Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
 
 ### Timing Research
-- Stivers, T., et al. (2009). Universals and cultural variation in turn-taking in conversation. *Proceedings of the National Academy of Sciences*, 106(26), 10587-10592.
-- Kendrick, K. H., & Torreira, F. (2015). The timing and construction of preference: A quantitative study. *Discourse Processes*, 52(4), 255-289.
-- Roberts, S. G., Torreira, F., & Levinson, S. C. (2015). The effects of processing and sequence organization on the timing of turn taking: A corpus study. *Frontiers in Psychology*, 6, 509.
+- Stivers, T., et al. (2009). Universals and cultural variation in turn-taking in conversation. *Proceedings of the National Academy of Sciences*, 106(26), 10587-10592. [PNAS](https://doi.org/10.1073/pnas.0903616106)
+- Kendrick, K. H., & Torreira, F. (2015). The timing and construction of preference: A quantitative study. *Discourse Processes*, 52(4), 255-289. [Taylor & Francis](https://doi.org/10.1080/0163853X.2014.955997)
+- Roberts, S. G., Torreira, F., & Levinson, S. C. (2015). The effects of processing and sequence organization on the timing of turn taking: A corpus study. *Frontiers in Psychology*, 6, 509. [Frontiers](https://doi.org/10.3389/fpsyg.2015.00509)
 
 ### Pre-Sequences and Sequence Expansion
-- Terasaki, A. K. (2004). Pre-announcement sequences in conversation. In G. H. Lerner (Ed.), *Conversation Analysis: Studies from the First Generation* (pp. 171-224). John Benjamins. (Originally circulated 1976.)
-- Schegloff, E. A. (2007). *Sequence Organization in Interaction* (Chapters 4-7 on pre-expansion, insert expansion, post-expansion).
+- Terasaki, A. K. (2004). Pre-announcement sequences in conversation. In G. H. Lerner (Ed.), *Conversation Analysis: Studies from the First Generation* (pp. 171-224). John Benjamins. (Originally circulated 1976.) [Benjamins](https://doi.org/10.1075/pbns.125.11ter)
+- Schegloff, E. A. (2007). *Sequence Organization in Interaction* (Chapters 4-7 on pre-expansion, insert expansion, post-expansion). [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)
 
 ### Closing Sequences
-- Schegloff, E. A., & Sacks, H. (1973). Opening up closings. *Semiotica*, 8(4), 289-327.
-- Mastroianni, A. M., Gilbert, D. T., Cooney, G., & Wilson, T. D. (2021). Do conversations end when people want them to? *Proceedings of the National Academy of Sciences*, 118(10).
+- Schegloff, E. A., & Sacks, H. (1973). Opening up closings. *Semiotica*, 8(4), 289-327. [De Gruyter](https://doi.org/10.1515/semi.1973.8.4.289)
+- Mastroianni, A. M., Gilbert, D. T., Cooney, G., & Wilson, T. D. (2021). Do conversations end when people want them to? *Proceedings of the National Academy of Sciences*, 118(10). [PNAS](https://doi.org/10.1073/pnas.2011809118)
 
 ---
 

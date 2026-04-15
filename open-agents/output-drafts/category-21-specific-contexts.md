@@ -259,7 +259,7 @@ Reduced social engagement is sometimes **self-care**, not failure. When the soci
 - [Autism-Specific Contexts](category-21-contexts-research-autism.md) -- Employment stats, healthcare barriers, relationship research, police safety, burnout (Raymaker 2020), cross-context strategies
 
 ## Key Sources
-- Raymaker, D. et al. (2020). "'Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew': Defining Autistic Burnout." *Autism in Adulthood*.
-- Szechy, K. et al. (2024). "Double Empathy in the Workplace." *Autism in Adulthood*. PMC11317796.
-- Roux, A. et al. (2015). "National Autism Indicators Report: Transition into Young Adulthood." Drexel University.
-- Maras, K. et al. (2021). "Adapted Interview Questions for Autistic Adults."
+- Raymaker, D. et al. (2020). "'Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew': Defining Autistic Burnout." *Autism in Adulthood*, 2(2), 132-143. [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Szechy, K.A., Turk, P.D. & O'Donnell, L.A. (2024). "Autism and Employment Challenges: The Double Empathy Problem and Perceptions of an Autistic Employee in the Workplace." *Autism in Adulthood*, 6(2), 205-217. [PMC11317796](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/)
+- Roux, A. et al. (2015). "National Autism Indicators Report: Transition into Young Adulthood." Drexel University. [Drexel AJ Autism Institute](https://drexel.edu/autismoutcomes/publications-and-reports/publications/National-Autism-Indicators-Report-Transition-to-Adulthood/)
+- Maras, K. et al. (2021). "Ameliorating the disadvantage for autistic job seekers: An initial evaluation of adapted employment interview questions." *Autism*, 25(4), 1060-1075. [PMC8108109](https://pmc.ncbi.nlm.nih.gov/articles/PMC8108109/)

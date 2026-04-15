@@ -828,35 +828,35 @@ Studying requests across 8 languages (Australian/American/British English, Canad
 ## Key Sources and References
 
 ### Foundational Works
-- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press.
-- Searle, J.R. (1975). "Indirect Speech Acts." In *Syntax and Semantics 3: Speech Acts*, ed. P. Cole & J. Morgan, 59-82.
-- Grice, H.P. (1975). "Logic and Conversation." In *Syntax and Semantics 3*, 41-58.
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
-- Leech, G. (1983). *Principles of Pragmatics*. Longman.
+- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
+- Searle, J.R. (1975). "Indirect Speech Acts." In *Syntax and Semantics 3: Speech Acts*, ed. P. Cole & J. Morgan, 59-82. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Grice, H.P. (1975). "Logic and Conversation." In *Syntax and Semantics 3*, 41-58. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
+- Leech, G. (1983). *Principles of Pragmatics*. Longman. [Amazon](https://www.amazon.com/Principles-Pragmatics-Longman-Linguistics-Library/dp/0582551102)
 
 ### Processing Research
-- Clark, H.H. & Lucy, P. (1975). "Understanding what is meant from what is said." *Journal of Verbal Learning and Verbal Behavior*, 14, 56-72.
-- Gibbs, R.W. (1983). "Do people always process the literal meanings of indirect requests?" *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 9(3), 524-533.
-- Holtgraves, T. (1994). "Communication in context: The effects of speaker status on the comprehension of indirect requests." *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 20, 1205-1215.
-- Giora, R. (1997). "Understanding figurative and literal language: The graded salience hypothesis." *Cognitive Linguistics*, 8(3), 183-206.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell.
+- Clark, H.H. & Lucy, P. (1975). "Understanding what is meant from what is said." *Journal of Verbal Learning and Verbal Behavior*, 14, 56-72. [Elsevier (paywalled)](https://doi.org/10.1016/S0022-5371(75)80006-5)
+- Gibbs, R.W. (1983). "Do people always process the literal meanings of indirect requests?" *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 9(3), 524-533. [APA (paywalled)](https://doi.org/10.1037/0278-7393.9.3.524)
+- Holtgraves, T. (1994). "Communication in context: The effects of speaker status on the comprehension of indirect requests." *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 20, 1205-1215. [APA (paywalled)](https://doi.org/10.1037/0278-7393.20.5.1205)
+- Giora, R. (1997). "Understanding figurative and literal language: The graded salience hypothesis." *Cognitive Linguistics*, 8(3), 183-206. [De Gruyter (paywalled)](https://doi.org/10.1515/cogl.1997.8.3.183)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
 
 ### Strategic and Evolutionary Accounts
-- Pinker, S., Nowak, M.A., & Lee, J.J. (2008). "The logic of indirect speech." *PNAS*, 105(3), 833-838.
-- Lee, J.J. & Pinker, S. (2010). "Rationales for indirect speech: The theory of the strategic speaker." *Psychological Review*, 117(3), 785-807.
+- Pinker, S., Nowak, M.A., & Lee, J.J. (2008). "The logic of indirect speech." *PNAS*, 105(3), 833-838. [PNAS](https://doi.org/10.1073/pnas.0707192105)
+- Lee, J.J. & Pinker, S. (2010). "Rationales for indirect speech: The theory of the strategic speaker." *Psychological Review*, 117(3), 785-807. [APA (paywalled)](https://doi.org/10.1037/a0019688)
 
 ### Cross-Cultural Research
-- Blum-Kulka, S. & Olshtain, E. (1984). "Requests and Apologies: A Cross-Cultural Study of Speech Act Realization Patterns (CCSARP)." *Applied Linguistics*, 5(3), 196-213.
+- Blum-Kulka, S. & Olshtain, E. (1984). "Requests and Apologies: A Cross-Cultural Study of Speech Act Realization Patterns (CCSARP)." *Applied Linguistics*, 5(3), 196-213. [OUP (paywalled)](https://doi.org/10.1093/applin/5.3.196)
 
 ### Autism and Indirect Speech Acts
-- Kissine, M., Cano-Chervel, J., et al. (2015). "Children with Autism Understand Indirect Speech Acts: Evidence from a Semi-Structured Act-Out Task." *PLOS ONE*, 10(11), e0142191.
-- Beaurrain, G. & Kissine, M. (2016). "Evidence from autism: Conventionalization in indirect speech acts." In *Indirect Reports and Pragmatics*, Linguistic Aktuell, vol. 176.
-- Deliens, G., Papastamou, F., Ruytenbeek, N., Geelhand, P., & Kissine, M. (2018). "Selective Pragmatic Impairment in Autism Spectrum Disorder: Indirect Requests Versus Irony." *Journal of Autism and Developmental Disorders*, 48, 2938-2952.
-- Kalandadze, T., Norbury, C., Naerland, T., & Naess, K.-A.B. (2018). "Figurative Language Comprehension in Individuals with Autism Spectrum Disorder: A Meta-Analytic Review." *Autism*, 22(2), 99-117.
-- Vicente, A., Michel, C., & Petrolini, V. (2023). "Literalism in Autistic People: A Predictive Processing Proposal." *Review of Philosophy and Psychology*.
-- Lampri, N. et al. (2024). "Figurative language processing in autism spectrum disorders: A review." *Autism Research*.
+- Kissine, M., Cano-Chervel, J., et al. (2015). "Children with Autism Understand Indirect Speech Acts: Evidence from a Semi-Structured Act-Out Task." *PLOS ONE*, 10(11), e0142191. [PLOS](https://doi.org/10.1371/journal.pone.0142191)
+- Beaurrain, G. & Kissine, M. (2016). "Evidence from autism: Conventionalization in indirect speech acts." In *Indirect Reports and Pragmatics*, Linguistic Aktuell, vol. 176. [Benjamins](https://doi.org/10.1075/la.176.11bea)
+- Deliens, G., Papastamou, F., Ruytenbeek, N., Geelhand, P., & Kissine, M. (2018). "Selective Pragmatic Impairment in Autism Spectrum Disorder: Indirect Requests Versus Irony." *Journal of Autism and Developmental Disorders*, 48, 2938-2952. [Springer (paywalled)](https://doi.org/10.1007/s10803-018-3561-6)
+- Kalandadze, T., Norbury, C., Naerland, T., & Naess, K.-A.B. (2018). "Figurative Language Comprehension in Individuals with Autism Spectrum Disorder: A Meta-Analytic Review." *Autism*, 22(2), 99-117. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Vicente, A., Michel, C., & Petrolini, V. (2023). "Literalism in Autistic People: A Predictive Processing Proposal." *Review of Philosophy and Psychology*. [Springer](https://doi.org/10.1007/s13164-023-00704-x)
+- Lampri, S. et al. (2024). "Figurative language processing in autism spectrum disorders: A review." *Autism Research*. [Wiley (paywalled)](https://doi.org/10.1002/aur.3069)
 
 ### Flirting and Romantic Speech Acts
-- McDonald, L. (2023). "Flirting." In *The Oxford Handbook of Philosophy of Love*.
-- Ranganath, R., Jurafsky, D., & McFarland, D. (2013). "Detecting friendly, flirtatious, awkward, and assertive speech in speed-dates." *Computer Speech and Language*, 27(1), 89-115.
-- Motschenbacher, H. (2020). "Coming out -- seducing -- flirting: Shedding light on sexual speech acts." *Journal of Pragmatics*, 170, 256-270.
+- McDonald, L. (2023). "Flirting." In *The Oxford Handbook of Philosophy of Love*. [OUP](https://doi.org/10.1093/oxfordhb/9780190847333.013.27)
+- Ranganath, R., Jurafsky, D., & McFarland, D. (2013). "Detecting friendly, flirtatious, awkward, and assertive speech in speed-dates." *Computer Speech and Language*, 27(1), 89-115. [Elsevier (paywalled)](https://doi.org/10.1016/j.csl.2012.01.005)
+- Motschenbacher, H. (2020). "Coming out -- seducing -- flirting: Shedding light on sexual speech acts." *Journal of Pragmatics*, 170, 256-270. [Elsevier (paywalled)](https://doi.org/10.1016/j.pragma.2020.09.012)

@@ -345,6 +345,20 @@ This is important because the reality-check network is the specific thing that i
 
 ## 12. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Zalta et al. (2021) *Psychological Bulletin* 147(1):33-54. — [APA PsycNet](https://doi.org/10.1037/bul0000316) [paywalled]
+- Wang, Chung, Wang, Yu & Kenardy (2021) *Clinical Psychology Review*. — [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416) [paywalled]
+- Coker et al. (2002). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/12165164/) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Kinnaird et al. (2019). — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+
 **Social support and trauma recovery:**
 - Zalta, A. K., Tirone, V., Orlowska, D., Blais, R. K., Lofgreen, A., Klassen, B., Held, P., Stevens, N. R., Adkins, E., & Dent, A. L. (2021). "Examining moderators of the relationship between social support and self-reported PTSD symptoms: A meta-analysis." *Psychological Bulletin* 147(1): 33–54. — Strongest single finding on social support as a PTSD protective factor.
 - Coker, A. L., Smith, P. H., Thompson, M. P., McKeown, R. E., Bethea, L., & Davis, K. E. (2002). "Social support protects against the negative effects of partner violence on mental health." *Journal of Women's Health* 11(5): 465–476. — IPV-specific social support research.

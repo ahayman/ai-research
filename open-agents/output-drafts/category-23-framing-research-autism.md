@@ -558,42 +558,42 @@ The material in this file has covered substantial ground: the double-empathy fra
 
 ## Sources
 
-- American Psychiatric Association. (2013). *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.). American Psychiatric Publishing.
-- Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453.
-- Botha, M., Hanlon, J., & Williams, G. L. (2023). Does language matter? Identity-first versus person-first language use in autism research: A response to Vivanti. *Journal of Autism and Developmental Disorders*, 53(2), 870-878.
-- Cage, E., & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911.
-- Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712.
-- DeBrabander, K. M., Morrison, K. E., Jones, D. R., Faso, D. J., Chmielewski, M., & Sasson, N. J. (2019). Do first impressions of autistic adults differ between autistic and nonautistic observers? *Autism in Adulthood*, 1(4), 250-257.
-- Douglas, S., & Sedgewick, F. (2024). Experiences of interpersonal victimization and abuse among autistic people. *Autism*, 28(7), 1732-1745.
-- Fletcher-Watson, S., Adams, J., Brook, K., Charman, T., Crane, L., Cusack, J., Leekam, S., Milton, D., Parr, J. R., & Pellicano, E. (2019). Making the future together: Shaping autism research through meaningful participation. *Autism*, 23(4), 943-953.
-- Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row.
-- Heasman, B., & Gillespie, A. (2019). Neurodivergent intersubjectivity: Distinctive features of how autistic people create shared understanding. *Autism*, 23(4), 910-921.
-- Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
-- Hull, L., Petrides, K. V., & Mandy, W. (2020). The female autism phenotype and camouflaging: A narrative review. *Review Journal of Autism and Developmental Disorders*, 7(4), 306-317.
-- Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence*. Northeastern University Press.
-- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458.
-- Kapp, S. K., Gillespie-Lynch, K., Sherman, L. E., & Hutman, T. (2013). Deficit, difference, or both? Autism and neurodiversity. *Developmental Psychology*, 49(1), 59-71.
-- Lakoff, G. (2004). *Don't Think of an Elephant! Know Your Values and Frame the Debate*. Chelsea Green.
-- Lai, M.-C., Lombardo, M. V., Ruigrok, A. N. V., Chakrabarti, B., Auyeung, B., Szatmari, P., Happé, F., & Baron-Cohen, S. (2017). Quantifying and exploring camouflaging in men and women with autism. *Autism*, 21(6), 690-702.
-- Lawson, R. P., Rees, G., & Friston, K. J. (2014). An aberrant precision account of autism. *Frontiers in Human Neuroscience*, 8, 302.
-- Miller, D., Rees, J., & Pearson, A. (2021). "Masking is life": Experiences of masking in autistic and nonautistic adults. *Autism in Adulthood*, 3(4), 330-338.
-- Milton, D. (2012). On the ontological status of autism: The "double empathy problem". *Disability & Society*, 27(6), 883-887.
-- Mitchell, P., Sheppard, E., & Cassidy, S. (2021). Autism and the double empathy problem: Implications for development and mental health. *British Journal of Developmental Psychology*, 39(1), 1-18.
-- Morrison, K. E., DeBrabander, K. M., Jones, D. R., Faso, D. J., Ackerman, R. A., & Sasson, N. J. (2020). Outcomes of real-world social interaction for autistic adults paired with autistic compared to typically developing partners. *Autism*, 24(5), 1067-1080.
-- Murray, D., Lesser, M., & Lawson, W. (2005). Attention, monotropism and the diagnostic criteria for autism. *Autism*, 9(2), 139-156.
-- Palmer, C. J., Lawson, R. P., & Hohwy, J. (2017). Bayesian approaches to autism: Towards volatility, action, and behavior. *Psychological Bulletin*, 143(5), 521-542.
-- Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking: Understanding the narrative of stigma and the illusion of choice. *Autism in Adulthood*, 3(1), 52-60.
-- Pearson, A., Rees, J., & Forster, S. (2022). "'This was just how this friendship worked': Experiences of interpersonal victimization among autistic adults." *Autism in Adulthood*, 4(2), 141-150.
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "It's not a physical prison but you can't get out." How autistic adults make sense of the experience of intimate violence and abuse. *Autism in Adulthood*, advance online publication.
-- Pellicano, E., & Burr, D. (2012). When the world becomes "too real": A Bayesian explanation of autistic perception. *Trends in Cognitive Sciences*, 16(10), 504-510.
-- Pellicano, E., Dinsmore, A., & Charman, T. (2014). What should autism research focus upon? Community views and priorities from the United Kingdom. *Autism*, 18(7), 756-770.
-- Pellicano, E., & Stears, M. (2011). Bridging autism, science and society: Moving toward an ethically informed approach to autism research. *Autism Research*, 4(4), 271-282.
-- Raymaker, D. M., Teo, A. R., Steckler, N. A., Lentz, B., Scharer, M., Delos Santos, A., Kapp, S. K., Hunter, M., Joyce, A., & Nicolaidis, C. (2020). "Having all of your internal resources exhausted beyond measure and being left with no clean-up crew": Defining autistic burnout. *Autism in Adulthood*, 2(2), 132-143.
-- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). Enhanced rationality in autism spectrum disorder. *Trends in Cognitive Sciences*, 25(8), 685-696.
-- Sasson, N. J., Faso, D. J., Nugent, J., Lovell, S., Kennedy, D. P., & Grossman, R. B. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. *Scientific Reports*, 7, 40700.
-- Sasson, N. J., & Morrison, K. E. (2019). First impressions of adults with autism improve with diagnostic disclosure and increased autism knowledge of peers. *Autism*, 23(1), 50-59.
-- Sheppard, E., Pillai, D., Wong, G. T.-L., Ropar, D., & Mitchell, P. (2016). How easy is it to read the minds of people with autism spectrum disorder? *Journal of Autism and Developmental Disorders*, 46(4), 1247-1254.
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life*. Oxford University Press.
-- Van de Cruys, S., Evers, K., Van der Hallen, R., Van Eylen, L., Boets, B., de-Wit, L., & Wagemans, J. (2014). Precise minds in uncertain worlds: Predictive coding in autism. *Psychological Review*, 121(4), 649-675.
-- Vermeulen, P. (2012). *Autism as Context Blindness*. AAPC Publishing.
-- World Health Organization. (2019). *International Statistical Classification of Diseases and Related Health Problems* (11th ed.).
+- American Psychiatric Association. (2013). *Diagnostic and Statistical Manual of Mental Disorders* (5th ed.). American Psychiatric Publishing. [Amazon](https://www.amazon.com/Diagnostic-Statistical-Manual-Mental-Disorders/dp/0890425558)
+- Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me". *Disability & Society*, 37(3), 427-453. [Taylor & Francis](https://doi.org/10.1080/09687599.2020.1822782)
+- Botha, M., Hanlon, J., & Williams, G. L. (2023). Does language matter? Identity-first versus person-first language use in autism research. *Journal of Autism and Developmental Disorders*, 53(2), 870-878. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9889441/)
+- Cage, E., & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911. [Springer](https://doi.org/10.1007/s10803-018-03878-x)
+- Crompton, C. J. et al. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
+- DeBrabander, K. M. et al. (2019). Do first impressions of autistic adults differ between autistic and nonautistic observers? *Autism in Adulthood*, 1(4), 250-257. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992867/)
+- Douglas, S., & Sedgewick, F. (2024). Experiences of interpersonal victimization and abuse among autistic people. *Autism*, 28(7), 1732-1745. [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Fletcher-Watson, S. et al. (2019). Making the future together: Shaping autism research through meaningful participation. *Autism*, 23(4), 943-953. [SAGE](https://doi.org/10.1177/1362361318786721)
+- Goffman, E. (1974). *Frame Analysis*. Harper & Row. [Amazon](https://www.amazon.com/Frame-Analysis-Essay-Organization-Experience/dp/0930350910)
+- Heasman, B., & Gillespie, A. (2019). Neurodivergent intersubjectivity. *Autism*, 23(4), 910-921. [SAGE](https://doi.org/10.1177/1362361318785172)
+- Hull, L. et al. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534. [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Hull, L., Petrides, K. V., & Mandy, W. (2020). The female autism phenotype and camouflaging: A narrative review. *Review Journal of Autism and Developmental Disorders*, 7(4), 306-317. [Springer (paywalled)](https://doi.org/10.1007/s40489-020-00197-9)
+- Johnson, M. P. (2008). *A Typology of Domestic Violence*. Northeastern University Press. [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Resistance-Situational/dp/1555536948)
+- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458. [Science (paywalled)](https://doi.org/10.1126/science.7455683)
+- Kapp, S. K. et al. (2013). Deficit, difference, or both? Autism and neurodiversity. *Developmental Psychology*, 49(1), 59-71. [APA (paywalled)](https://doi.org/10.1037/a0028353)
+- Lakoff, G. (2004). *Don't Think of an Elephant!* Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Frame/dp/1931498717)
+- Lai, M.-C. et al. (2017). Quantifying and exploring camouflaging in men and women with autism. *Autism*, 21(6), 690-702. [SAGE](https://doi.org/10.1177/1362361316671012)
+- Lawson, R. P., Rees, G., & Friston, K. J. (2014). An aberrant precision account of autism. *Frontiers in Human Neuroscience*, 8, 302. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4030191/)
+- Miller, D., Rees, J., & Pearson, A. (2021). "Masking is life". *Autism in Adulthood*, 3(4), 330-338. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/)
+- Milton, D. (2012). On the ontological status of autism: The "double empathy problem". *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Mitchell, P., Sheppard, E., & Cassidy, S. (2021). Autism and the double empathy problem. *British Journal of Developmental Psychology*, 39(1), 1-18. [Wiley](https://doi.org/10.1111/bjdp.12350)
+- Morrison, K. E. et al. (2020). Outcomes of real-world social interaction. *Autism*, 24(5), 1067-1080. [SAGE](https://doi.org/10.1177/1362361319892701)
+- Murray, D., Lesser, M., & Lawson, W. (2005). Attention, monotropism and the diagnostic criteria for autism. *Autism*, 9(2), 139-156. [SAGE (paywalled)](https://doi.org/10.1177/1362361305051398)
+- Palmer, C. J., Lawson, R. P., & Hohwy, J. (2017). Bayesian approaches to autism. *Psychological Bulletin*, 143(5), 521-542. [APA (paywalled)](https://doi.org/10.1037/bul0000097)
+- Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking. *Autism in Adulthood*, 3(1), 52-60. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992888/)
+- Pearson, A., Rees, J., & Forster, S. (2022). "'This was just how this friendship worked'". *Autism in Adulthood*, 4(2), 141-150. [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "It's not a physical prison but you can't get out." *Autism in Adulthood*. [DOI](https://doi.org/10.1089/aut.2024.0145)
+- Pellicano, E., & Burr, D. (2012). When the world becomes "too real": A Bayesian explanation of autistic perception. *Trends in Cognitive Sciences*, 16(10), 504-510. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.tics.2012.08.009)
+- Pellicano, E., Dinsmore, A., & Charman, T. (2014). What should autism research focus upon? *Autism*, 18(7), 756-770. [SAGE](https://doi.org/10.1177/1362361314529627)
+- Pellicano, E., & Stears, M. (2011). Bridging autism, science and society. *Autism Research*, 4(4), 271-282. [Wiley (paywalled)](https://doi.org/10.1002/aur.201)
+- Raymaker, D. M. et al. (2020). Defining autistic burnout. *Autism in Adulthood*, 2(2), 132-143. [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). Enhanced rationality in autism spectrum disorder. *Trends in Cognitive Sciences*, 25(8), 685-696. [PubMed 34226128](https://pubmed.ncbi.nlm.nih.gov/34226128/)
+- Sasson, N. J. et al. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. *Scientific Reports*, 7, 40700. [Nature](https://doi.org/10.1038/srep40700)
+- Sasson, N. J., & Morrison, K. E. (2019). First impressions of adults with autism improve with diagnostic disclosure. *Autism*, 23(1), 50-59. [SAGE](https://doi.org/10.1177/1362361317729526)
+- Sheppard, E. et al. (2016). How easy is it to read the minds of people with autism spectrum disorder? *Journal of Autism and Developmental Disorders*, 46(4), 1247-1254. [Springer](https://doi.org/10.1007/s10803-015-2662-8)
+- Stark, E. (2007). *Coercive Control*. Oxford University Press. [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Van de Cruys, S. et al. (2014). Precise minds in uncertain worlds: Predictive coding in autism. *Psychological Review*, 121(4), 649-675. [APA (paywalled)](https://doi.org/10.1037/a0037665)
+- Vermeulen, P. (2012). *Autism as Context Blindness*. AAPC Publishing. [Amazon](https://www.amazon.com/Autism-Context-Blindness-Peter-Vermeulen/dp/1934575747)
+- World Health Organization. (2019). *ICD-11*. [WHO](https://icd.who.int/)

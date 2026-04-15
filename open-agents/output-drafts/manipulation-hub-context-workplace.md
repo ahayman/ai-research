@@ -587,6 +587,22 @@ The standing recovery frame applies: **the goal is not to become a less autistic
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Namie & Namie (2009). — [Amazon](https://www.amazon.com/Bully-Work-Reclaim-Dignity-Job/dp/1402224265)
+- Nielsen & Einarsen (2012). — [Tandfonline](https://www.tandfonline.com/doi/abs/10.1080/02678373.2012.734709) [paywalled]
+- Salin (2008). — [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0956522108000419) [paywalled]
+- Leiter et al. (2011). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/21744942/) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Hirvikoski et al. (2016). — [PubMed 26541693](https://pubmed.ncbi.nlm.nih.gov/26541693/) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Scott (2018). Duluth/Workplace. — [Sage](https://journals.sagepub.com/doi/10.1177/2165079917750934) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Camm-Crosbie et al. (2019). — [Sage](https://journals.sagepub.com/doi/10.1177/1362361318816053) [paywalled]
+
 **Autism employment statistics:**
 - Roux, A. M., Shattuck, P. T., Rast, J. E., Rava, J. A., & Anderson, K. A. National Autism Indicators Reports. Drexel University Life Course Outcomes Research Program.
 - Hendricks, D. (2010). "Employment and adults with autism spectrum disorders: Challenges and strategies for success." *Journal of Vocational Rehabilitation* 32(2): 125–134.

@@ -1354,7 +1354,7 @@ All 10 strategies serve one master function: **reducing the imposition on the he
 ## 10. Sources and References
 
 ### Primary Theoretical Source
-- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press.
+- Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 
 ### Research Sources Consulted
 - [Politeness Theory - Wikipedia](https://en.wikipedia.org/wiki/Politeness_theory)

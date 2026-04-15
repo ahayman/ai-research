@@ -236,13 +236,13 @@ The most powerful use of fallacy knowledge is **internal**: recognizing what's h
 
 ## Key Sources
 
-- Rozenkrantz, L., D'Mello, A.M., & Gabrieli, J.D.E. (2021). "Enhanced Rationality in Autism Spectrum Disorder." *Trends in Cognitive Sciences*.
-- Van Eemeren, F.H. & Grootendorst, R. (2004). *A Systematic Theory of Argumentation: The Pragma-Dialectical Approach*. Cambridge University Press.
-- Walton, D.N. (1995). *A Pragmatic Theory of Fallacy*. University of Alabama Press.
-- Hamblin, C.L. (1970). *Fallacies*. Methuen.
-- Brosnan, M., Lewton, M. & Ashwin, C. (2016). "Reasoning on the Autism Spectrum: A Dual Process Theory Account." *JADD*. PMC4860198.
-- De Martino, B., Kumaran, D., Seymour, B., & Dolan, R. J. (2006). "Frames, Biases, and Rational Decision-Making in the Human Brain." *Science*, 313(5787), 684-687. PMC2631940. (Note: the 2008 De Martino et al. *Journal of Neuroscience* paper is a different, autism-specific follow-up on amygdala activation; do not conflate with the 2006 *Science* paper on framing-effect reasoning.)
-- Inoue, K. et al. (2023). "Autistic Traits Associated with Dichotomous Thinking Mediated by Intolerance of Uncertainty." *Scientific Reports*.
-- Baron-Cohen, S. (2017). "Autism and Talent: The Cognitive and Neural Basis of Systemizing." *Dialogues in Clinical Neuroscience*. PMC5789212.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*.
-- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3.
+- Rozenkrantz, L., D'Mello, A.M., & Gabrieli, J.D.E. (2021). "Enhanced Rationality in Autism Spectrum Disorder." *Trends in Cognitive Sciences*, 25(8), 685-696. [PubMed 34226128](https://pubmed.ncbi.nlm.nih.gov/34226128/)
+- Van Eemeren, F.H. & Grootendorst, R. (2004). *A Systematic Theory of Argumentation: The Pragma-Dialectical Approach*. Cambridge University Press. [Amazon](https://www.amazon.com/Systematic-Theory-Argumentation-Pragma-Dialectical-Approach/dp/0521537720)
+- Walton, D.N. (1995). *A Pragmatic Theory of Fallacy*. University of Alabama Press. [Amazon](https://www.amazon.com/Pragmatic-Theory-Fallacy-Studies-Rhetoric/dp/0817307982)
+- Hamblin, C.L. (1970). *Fallacies*. Methuen. [Amazon](https://www.amazon.com/Fallacies-C-L-Hamblin/dp/0916475247)
+- Brosnan, M., Lewton, M. & Ashwin, C. (2016). "Reasoning on the Autism Spectrum: A Dual Process Theory Account." *JADD*, 46(6), 2115-2125. [PMC4860198](https://pmc.ncbi.nlm.nih.gov/articles/PMC4860198/)
+- De Martino, B., Kumaran, D., Seymour, B., & Dolan, R. J. (2006). "Frames, Biases, and Rational Decision-Making in the Human Brain." *Science*, 313(5787), 684-687. [PMC2631940](https://pmc.ncbi.nlm.nih.gov/articles/PMC2631940/) (Note: the 2008 De Martino et al. *Journal of Neuroscience* paper is a different, autism-specific follow-up on amygdala activation; do not conflate with the 2006 *Science* paper on framing-effect reasoning.)
+- Inoue, K. et al. (2023). "Autistic Traits Associated with Dichotomous Thinking Mediated by Intolerance of Uncertainty." *Scientific Reports*. [Nature](https://www.nature.com/articles/s41598-023-41164-8)
+- Baron-Cohen, S. (2017). "Autism and Talent: The Cognitive and Neural Basis of Systemizing." *Dialogues in Clinical Neuroscience*, 19(4), 345-353. [PMC5789212](https://pmc.ncbi.nlm.nih.gov/articles/PMC5789212/)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3. Academic Press. [Amazon](https://www.amazon.com/Syntax-Semantics-Vol-Speech-Acts/dp/0127854231)

@@ -479,6 +479,19 @@ Milton's (2012) double empathy problem applies specifically in therapeutic conte
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Norcross & Lambert (2018). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/30335448/) [paywalled]
+- Wampold (2015). — [PMC4592639](https://pmc.ncbi.nlm.nih.gov/articles/PMC4592639/)
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Cloitre et al. (2002). STAIR. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/12362957/) [paywalled]
+- Pennebaker & Smyth (2016). — [Amazon](https://www.amazon.com/Opening-Up-Writing-Down-Expressive/dp/1462524923)
+- Neff (2003). — [PDF](https://self-compassion.org/wp-content/uploads/publications/empirical.article.pdf)
+- Sullivan & Bybee (1999). — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+
 **Therapeutic alliance and outcomes:**
 - Norcross, J. C., & Lambert, M. J. (2018). "Psychotherapy relationships that work III." *Psychotherapy* 55(4): 303–315.
 - Norcross, J. C., & Lambert, M. J. (2019). *Psychotherapy Relationships That Work: Volume 1: Evidence-Based Therapist Contributions* (3rd ed.). Oxford University Press.
@@ -522,7 +535,7 @@ Milton's (2012) double empathy problem applies specifically in therapeutic conte
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
 - Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic.'" *Autism.*
-- Fisher, N., van Diest, C., Leoni, M., & Spain, D. (2023). Delphi survey on EMDR adaptations for autistic adults. *Journal of EMDR Practice and Research* — [PRELIMINARY] clinician-survey level evidence.
+- Fisher, N., van Diest, C., Leoni, M., & Spain, D. (2023). Delphi survey on EMDR adaptations for autistic adults. *Autism (SAGE)* — [PRELIMINARY] clinician-survey level evidence.
 
 **Foundational research documents for this hub:**
 - [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md)

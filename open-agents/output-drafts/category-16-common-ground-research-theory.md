@@ -618,38 +618,38 @@ The fact that common ground processes are often implicit makes them particularly
 ## 10. KEY REFERENCES
 
 ### Foundational Works
-- Clark, H. H. (1996). *Using Language*. Cambridge: Cambridge University Press.
-- Clark, H. H., & Brennan, S. E. (1991). Grounding in communication. In L. B. Resnick, J. M. Levine, & S. D. Teasley (Eds.), *Perspectives on Socially Shared Cognition* (pp. 127-149). APA.
-- Clark, H. H., & Marshall, C. R. (1981). Definite reference and mutual knowledge. In A. K. Joshi, B. L. Webber, & I. A. Sag (Eds.), *Elements of Discourse Understanding*. Cambridge University Press.
-- Clark, H. H., & Schaefer, E. F. (1989). Contributing to discourse. *Cognitive Science*, 13(2), 259-294.
-- Clark, H. H., & Wilkes-Gibbs, D. (1986). Referring as a collaborative process. *Cognition*, 22(1), 1-39.
-- Clark, H. H., & Murphy, G. L. (1982). Audience design in meaning and reference. In J. F. Le Ny & W. Kintsch (Eds.), *Language and Comprehension*. Amsterdam: North-Holland.
+- Clark, H. H. (1996). *Using Language*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Using-Language-Herbert-H-Clark/dp/0521567459)
+- Clark, H. H., & Brennan, S. E. (1991). Grounding in communication. In L. B. Resnick, J. M. Levine, & S. D. Teasley (Eds.), *Perspectives on Socially Shared Cognition* (pp. 127-149). APA. [Stanford PDF](https://web.stanford.edu/~clark/1990s/Clark,%20H.H.%20_%20Brennan,%20S.E.%20_Grounding%20in%20communication_%201991.pdf)
+- Clark, H. H., & Marshall, C. R. (1981). Definite reference and mutual knowledge. In A. K. Joshi, B. L. Webber, & I. A. Sag (Eds.), *Elements of Discourse Understanding*. Cambridge University Press. [Amazon](https://www.amazon.com/Elements-Discourse-Understanding-Aravind-Joshi/dp/052123127X)
+- Clark, H. H., & Schaefer, E. F. (1989). Contributing to discourse. *Cognitive Science*, 13(2), 259-294. [Wiley](https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog1302_7)
+- Clark, H. H., & Wilkes-Gibbs, D. (1986). Referring as a collaborative process. *Cognition*, 22(1), 1-39. [Elsevier (paywalled)](https://doi.org/10.1016/0010-0277(86)90010-7)
+- Clark, H. H., & Murphy, G. L. (1982). Audience design in meaning and reference. In J. F. Le Ny & W. Kintsch (Eds.), *Language and Comprehension*. Amsterdam: North-Holland. [Stanford PDF](https://web.stanford.edu/~clark/1980s/Clark,%20H.H.%20_%20Murphy,%20G.L.%20_Audience%20design%20in%20meaning%20and%20reference_%201982.pdf)
 
 ### Philosophical Accounts
-- Stalnaker, R. (1978). Assertion. In P. Cole (Ed.), *Syntax and Semantics 9: Pragmatics*. New York: Academic Press.
-- Stalnaker, R. (2002). Common ground. *Linguistics and Philosophy*, 25(5-6), 701-721.
-- Lewis, D. (1969). *Convention: A Philosophical Study*. Harvard University Press.
-- Lewis, D. (1979). Scorekeeping in a language game. *Journal of Philosophical Logic*, 8(1), 339-359.
-- Schiffer, S. (1972). *Meaning*. Oxford: Clarendon Press.
+- Stalnaker, R. (1978). Assertion. In P. Cole (Ed.), *Syntax and Semantics 9: Pragmatics*. New York: Academic Press. [Amazon](https://www.amazon.com/Syntax-Semantics-Pragmatics-Peter-Cole/dp/0126135096)
+- Stalnaker, R. (2002). Common ground. *Linguistics and Philosophy*, 25(5-6), 701-721. [Springer (paywalled)](https://doi.org/10.1023/A:1020867916902)
+- Lewis, D. (1969). *Convention: A Philosophical Study*. Harvard University Press. [Amazon](https://www.amazon.com/Convention-Philosophical-Study-David-Lewis/dp/0631232575)
+- Lewis, D. (1979). Scorekeeping in a language game. *Journal of Philosophical Logic*, 8(1), 339-359. [Springer (paywalled)](https://doi.org/10.1007/BF00258436)
+- Schiffer, S. (1972). *Meaning*. Oxford: Clarendon Press. [Amazon](https://www.amazon.com/Meaning-Stephen-R-Schiffer/dp/0198244770)
 
 ### Conceptual Pacts and Partner-Specificity
-- Brennan, S. E., & Clark, H. H. (1996). Conceptual pacts and lexical choice in conversation. *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 22(6), 1482-1493.
+- Brennan, S. E., & Clark, H. H. (1996). Conceptual pacts and lexical choice in conversation. *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 22(6), 1482-1493. [APA PsycNet (paywalled)](https://doi.org/10.1037/0278-7393.22.6.1482)
 
 ### Egocentric Processing and Common Ground
-- Keysar, B., Barr, D. J., Balin, J. A., & Brauner, J. S. (2000). Taking perspective in conversation: The role of mutual knowledge in comprehension. *Psychological Science*, 11(1), 32-38.
-- Keysar, B., Barr, D. J., & Horton, W. S. (1998). The egocentric basis of language use: Insights from a processing approach. *Current Directions in Psychological Science*, 7(2), 46-50.
-- Epley, N., Keysar, B., Van Boven, L., & Gilovich, T. (2004). Perspective taking as egocentric anchoring and adjustment. *Journal of Personality and Social Psychology*, 87(3), 327-339.
+- Keysar, B., Barr, D. J., Balin, J. A., & Brauner, J. S. (2000). Taking perspective in conversation: The role of mutual knowledge in comprehension. *Psychological Science*, 11(1), 32-38. [Sage (paywalled)](https://doi.org/10.1111/1467-9280.00211)
+- Keysar, B., Barr, D. J., & Horton, W. S. (1998). The egocentric basis of language use: Insights from a processing approach. *Current Directions in Psychological Science*, 7(2), 46-50. [Sage (paywalled)](https://doi.org/10.1111/1467-8721.ep13175613)
+- Epley, N., Keysar, B., Van Boven, L., & Gilovich, T. (2004). Perspective taking as egocentric anchoring and adjustment. *Journal of Personality and Social Psychology*, 87(3), 327-339. [APA PsycNet (paywalled)](https://doi.org/10.1037/0022-3514.87.3.327)
 
 ### Relevance Theory Alternative
-- Sperber, D., & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell.
+- Sperber, D., & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
 
 ### Autism and Common Ground
-- Nilsen, E. S., & Fecica, A. M. (2011). A model of communicative perspective-taking for typical and atypical populations of children. *Developmental Review*, 31(1), 55-78.
-- de Marchena, A. B., & Eigsti, I.-M. (2016). "The art of common ground: Emergence of a complex pragmatic language skill in adolescents with autism spectrum disorders." *Journal of Child Language*, 43(1), 43-80. PMC4764348.
+- Nilsen, E. S., & Fecica, A. M. (2011). A model of communicative perspective-taking for typical and atypical populations of children. *Developmental Review*, 31(1), 55-78. [Elsevier (paywalled)](https://doi.org/10.1016/j.dr.2011.07.001)
+- de Marchena, A. B., & Eigsti, I.-M. (2016). "The art of common ground: Emergence of a complex pragmatic language skill in adolescents with autism spectrum disorders." *Journal of Child Language*, 43(1), 43-80. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/)
 
 ### Communication Medium and Grounding
-- Monk, A. (2003). Common ground in electronically mediated communication. *Synthesis Lectures on Human-Centered Informatics*.
+- Monk, A. (2003). Common ground in electronically mediated communication. *Synthesis Lectures on Human-Centered Informatics*. [Morgan & Claypool](https://www.morganclaypoolpublishers.com/catalog_Orig/product_info.php?products_id=181)
 
 ### Comprehensive Overview
 - Stanford Encyclopedia of Philosophy. "Common Ground in Pragmatics." https://plato.stanford.edu/entries/common-ground-pragmatics/
-- Rubio-Fernandez, P., & Harris, D. W. (forthcoming). "Common Ground: Between Formal Pragmatics and Psycholinguistics." *Annual Review of Linguistics*.
+- Rubio-Fernandez, P., & Harris, D. W. (forthcoming). "Common Ground: Between Formal Pragmatics and Psycholinguistics." *Annual Review of Linguistics*. [Annual Reviews](https://www.annualreviews.org/journal/linguistics)

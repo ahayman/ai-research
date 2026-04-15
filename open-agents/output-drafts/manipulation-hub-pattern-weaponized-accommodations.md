@@ -72,7 +72,7 @@ Douglas & Sedgewick (2024), in their qualitative study of 24 autistic adults' ex
 
 The relevant point: the very thing that allows the autistic person to function — the specific adjustment to environment, schedule, or interaction that closes the gap between their neurology and the situation — can be turned into the leash. The accommodation was provided *because* the person needed it. The fact that they need it is what makes the accommodation a locus of control. Without the accommodation, the person cannot function. With the accommodation, the person can function, but only in the specific environment the accommodator controls. The feature has become a weapon.
 
-**Primary source:** Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+**Primary source:** Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Evidence quality:** [PRELIMINARY]. Small qualitative sample (n=24), self-selected, but converges with the broader Pearson research program and with long-standing autistic community knowledge. The weaponized-features framing is a conceptual contribution from the empirical literature to community knowledge that had already named the pattern; the academic literature is following the community here, not leading it.
 
@@ -82,7 +82,7 @@ Pearson et al. (2024), in "'It's Not a Physical Prison but You Can't Get Out,'" 
 
 This is the mechanism by which weaponized accommodations produces material entrapment. The accommodations are not just emotional leverage; they are the substrate of the autistic person's daily life. Losing them means losing the conditions under which they can function. *"Other people wouldn't put up with you"* is not just a cruel line — it is, for many autistic adults, an empirically plausible threat, given the scarcity of accommodating environments and the history of rejection they have actually experienced. The threat lands because it matches something true about the world, even though the inference *therefore you must accept whatever I do* is false.
 
-**Primary source:** Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+**Primary source:** Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 
 **Evidence quality:** [PRELIMINARY]. Qualitative work with modest sample sizes; the "prison without walls" framing is descriptive rather than a prevalence estimate. But the convergence with Stark's independent framework and with autistic survivor accounts is strong, and the core insight — that material dependency is part of the trap — is well-grounded.
 
@@ -651,6 +651,24 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson (2008). — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Glass et al. (2008). — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Price (2022). *Unmasking Autism.* — [Amazon](https://www.amazon.com/Unmasking-Autism-Discovering-Faces-Neurodiversity/dp/0593235231)
+
 **Coercive control framework (the primary structural parent):**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
 - Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence.* Northeastern University Press. (For the intimate terrorism vs. situational couple violence distinction Stark builds on.)
@@ -660,8 +678,8 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 **Autism-specific victimization and weaponized features:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* (The "I am too much" script and the internalization of deservingness.)
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The weaponized features framework; accommodations as features that can be weaponized.)
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* (The resource dependency as entrapment mechanism.)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (The weaponized features framework; accommodations as features that can be weaponized.)
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* (The resource dependency as entrapment mechanism.)
 
 **The credibility discount:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809. (The observer effect that makes the performance-audience move so damaging.)

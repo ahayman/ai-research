@@ -380,14 +380,14 @@ The key is calibrating when to use it: challenge manipulative presuppositions, a
 ## Key Sources
 
 ### Foundational Texts
-- Frege, G. (1892). "Über Sinn und Bedeutung." *Zeitschrift für Philosophie und philosophische Kritik*.
-- Strawson, P.F. (1950). "On Referring." *Mind*, 59(235), 320-344.
-- Stalnaker, R. (1974). "Pragmatic Presuppositions." In Munitz & Unger (eds.), *Semantics and Philosophy*.
-- Lewis, D. (1979). "Scorekeeping in a Language Game." *Journal of Philosophical Logic*, 8, 339-359.
-- Karttunen, L. (1973). "Presuppositions of Compound Sentences." *Linguistic Inquiry*, 4(2), 169-193.
+- Frege, G. (1892). "Über Sinn und Bedeutung." *Zeitschrift für Philosophie und philosophische Kritik*. [Wikisource (English)](https://en.wikisource.org/wiki/On_Sense_and_Reference)
+- Strawson, P.F. (1950). "On Referring." *Mind*, 59(235), 320-344. [JSTOR (paywalled)](https://doi.org/10.1093/mind/LIX.235.320)
+- Stalnaker, R. (1974). "Pragmatic Presuppositions." In Munitz & Unger (eds.), *Semantics and Philosophy*. [Amazon (parent volume)](https://www.amazon.com/Semantics-Philosophy-Milton-K-Munitz/dp/0814753736)
+- Lewis, D. (1979). "Scorekeeping in a Language Game." *Journal of Philosophical Logic*, 8, 339-359. [Springer (paywalled)](https://doi.org/10.1007/BF00258436)
+- Karttunen, L. (1973). "Presuppositions of Compound Sentences." *Linguistic Inquiry*, 4(2), 169-193. [JSTOR (paywalled)](https://www.jstor.org/stable/4177763)
 
 ### Autism Research
-- Cheung, C.C.H. et al. (2017, 2020). Presupposition comprehension in Cantonese-speaking children with ASD.
-- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced Rationality in Autism Spectrum Disorder." *Trends in Cognitive Sciences* 25(8):685-696. PMID 34226128.
-- Chanchaochai, N. (2021). Presupposition and implicature in Thai-speaking children with ASD.
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*.
+- Cheung, C.C.H. et al. (2017, 2020). Presupposition comprehension in Cantonese-speaking children with ASD. [Frontiers](https://www.frontiersin.org/articles/10.3389/fpsyg.2017.01301/full)
+- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced Rationality in Autism Spectrum Disorder." *Trends in Cognitive Sciences* 25(8):685-696. [PubMed](https://pubmed.ncbi.nlm.nih.gov/34226128/)
+- Chanchaochai, N. (2021). Presupposition and implicature in Thai-speaking children with ASD. [UPenn Repository](https://repository.upenn.edu/edissertations/3837/)
+- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)

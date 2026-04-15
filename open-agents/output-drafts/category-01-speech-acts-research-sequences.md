@@ -1760,15 +1760,15 @@ Text messages have developed their own speech act conventions:
 # Sources and References
 
 ## Academic Foundations
-- Austin, J.L. (1962). *How to Do Things with Words*
-- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*
-- Schegloff, E.A. & Sacks, H. (1973). "Opening up Closings"
-- Schegloff, E.A. (2007). *Sequence Organization in Interaction*
-- Herbert, R.K. (1989). "The ethnography of English compliments and compliment responses"
-- Cohen, A.D. & Olshtain, E. (1981). "Developing a measure of sociocultural competence: The case of apology"
-- Olshtain, E. & Weinbach, L. (1987). "Complaints: A study of speech act behavior among native and non-native speakers of Hebrew"
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*
-- Schneider, K.P. (2005). "No problem, you're welcome, anytime: Responding to thanks in Ireland, England, and the USA"
+- Austin, J.L. (1962). *How to Do Things with Words*. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
+- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Schegloff, E.A. & Sacks, H. (1973). "Opening up Closings". [De Gruyter](https://doi.org/10.1515/semi.1973.8.4.289)
+- Schegloff, E.A. (2007). *Sequence Organization in Interaction*. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)
+- Herbert, R.K. (1989). "The ethnography of English compliments and compliment responses". [Benjamins](https://doi.org/10.1075/pbns.3.02her)
+- Cohen, A.D. & Olshtain, E. (1981). "Developing a measure of sociocultural competence: The case of apology". [Wiley (paywalled)](https://doi.org/10.1111/j.1467-1770.1981.tb01375.x)
+- Olshtain, E. & Weinbach, L. (1987). "Complaints: A study of speech act behavior among native and non-native speakers of Hebrew". [Benjamins](https://doi.org/10.1075/pbcs.5.15ols)
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
+- Schneider, K.P. (2005). "No problem, you're welcome, anytime: Responding to thanks in Ireland, England, and the USA". [Benjamins](https://doi.org/10.1075/pbns.146.07sch)
 
 ## Web Resources Consulted
 - [CARLA Pragmatics and Speech Acts](https://archive.carla.umn.edu/speechacts/definition.html) -- University of Minnesota

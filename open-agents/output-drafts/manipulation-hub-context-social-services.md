@@ -433,6 +433,12 @@ The standing recovery frame applies: **the goal is not to become a more complian
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+
 **Disability rights and social services:**
 - Autistic Self Advocacy Network (ASAN). Policy work on benefits, guardianship, institutionalization, and disability rights. autisticadvocacy.org.
 - National Disability Rights Network (NDRN). Reports on the Protection and Advocacy network and disability rights issues.
@@ -464,7 +470,7 @@ The standing recovery frame applies: **the goal is not to become a more complian
 
 **Pearson, Douglas & Sedgewick research program:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic.'" *Autism.*
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., et al. (2024). "'It's Not a Physical Prison but You Can't Get Out.'" *Autism in Adulthood.*
 
 **Foundational research documents for this hub:**

@@ -107,7 +107,7 @@ The period has undergone the most dramatic pragmatic transformation. In traditio
 | "OK." | Formal, serious, possibly annoyed |
 | "Ok." | Cold, curt, or angry |
 
-**Gunraj et al. (2016)** conducted experiments in which participants ranked the sincerity of text messages and handwritten letters that included final periods. Participants ranked text messages ending with a period as less sincere — but handwritten notes ending with a period as more sincere. This demonstrates that the pragmatic value of punctuation is **medium-specific**: the same mark carries different meanings in different contexts.
+**Gunraj et al. (2016)** conducted experiments in which participants ranked the sincerity of text messages and handwritten notes that included final periods. Participants ranked text messages ending with a period as **less sincere**, whereas handwritten notes ending with a period showed **no such effect** — the "insincere period" is specific to digital text. This demonstrates that the pragmatic value of punctuation is **medium-specific**: the same mark carries different meanings in different contexts.
 
 The mechanism is straightforward: in text messaging, the message boundary itself (the edge of the bubble) functions as the sentence-ending marker. A period is therefore *redundant* — and redundancy is interpreted as *deliberate*. A deliberate period is read as marking something: formality, emphasis, finality, or displeasure.
 
@@ -1026,26 +1026,26 @@ This document treats digital pragmatics as its own comprehensive system. Connect
 ## SOURCES AND KEY REFERENCES
 
 ### Books and Monographs
-- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins.
-- Crystal, D. (2001/2006). *Language and the Internet*. Cambridge University Press.
-- Crystal, D. (2008). *Txtng: The Gr8 Db8*. Oxford University Press.
-- Baron, N. (2008). *Always On: Language in an Online and Mobile World*. Oxford University Press.
-- McSweeney, M.A. (2018). *The Pragmatics of Text Messaging: Making Meaning in Messages*. Routledge.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell.
-- Darics, E. (Ed.). *Digital Business Discourse*. Palgrave Macmillan.
+- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins. [Amazon](https://www.amazon.com/Cyberpragmatics-Internet-Mediated-Communication-Pragmatics-Beyond/dp/9027256195)
+- Crystal, D. (2001/2006). *Language and the Internet*. Cambridge University Press. [Amazon](https://www.amazon.com/Language-Internet-David-Crystal/dp/0521868599)
+- Crystal, D. (2008). *Txtng: The Gr8 Db8*. Oxford University Press. [Amazon](https://www.amazon.com/Txtng-Gr8-Db8-David-Crystal/dp/0199571333)
+- Baron, N. (2008). *Always On: Language in an Online and Mobile World*. Oxford University Press. [Amazon](https://www.amazon.com/Always-Language-Online-Mobile-World/dp/0195313054)
+- McSweeney, M.A. (2018). *The Pragmatics of Text Messaging: Making Meaning in Messages*. Routledge. [Amazon](https://www.amazon.com/Pragmatics-Text-Messaging-Making-Meaning/dp/1138303682)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Darics, E. (Ed.). *Digital Business Discourse*. Palgrave Macmillan. [Amazon](https://www.amazon.com/Digital-Business-Discourse-Erika-Darics/dp/1137405457)
 
 ### Key Research Articles
-- Clark, H.H. & Brennan, S.E. (1991). "Grounding in communication." In L.B. Resnick, J.M. Levine, & S.D. Teasley (Eds.), *Perspectives on Socially Shared Cognition*. APA.
-- Walther, J.B. (1992). "Interpersonal effects in computer-mediated interaction: A relational perspective." *Communication Research*, 19(1), 52-90.
-- Culnan, M.J. & Markus, M.L. (1987). "Information technologies." In F.M. Jablin et al. (Eds.), *Handbook of Organizational Communication*. Sage.
-- Marwick, A.E. & boyd, d. (2011). "I tweet honestly, I tweet passionately: Twitter users, context collapse, and the imagined audience." *New Media & Society*, 13(1), 114-133.
-- Gunraj, D.N., et al. (2016). "Texting insincerely: The role of the period in text messaging." *Computers in Human Behavior*, 55, 1067-1075.
-- Holtgraves, T. (2024). "Emoji, Speech Acts, and Perceived Communicative Success." *Journal of Language and Social Psychology*.
-- Bailenson, J.N. (2021). "Nonverbal Overload: A Theoretical Argument for the Causes of Zoom Fatigue." *Technology, Mind, and Behavior*, 2(1).
-- Howard, P.L. & Sedgewick, F. (2021). "'Anything but the phone!': Communication mode preferences in the autism community." *Autism*, 25(8).
-- Herring, S.C. (2004). "Computer-mediated discourse analysis: An approach to researching online behavior."
-- Rygg, K. "Openings and closings in workplace emails." *Hermes*.
-- Darics, E. & Gatti, M.C. (2019). "Talking a team into being in online workplace collaborations." *Discourse & Society*.
+- Clark, H.H. & Brennan, S.E. (1991). "Grounding in communication." In *Perspectives on Socially Shared Cognition*. APA. [Stanford PDF](https://web.stanford.edu/~clark/1990s/Clark,%20H.H.%20_%20Brennan,%20S.E.%20_Grounding%20in%20communication_%201991.pdf)
+- Walther, J.B. (1992). "Interpersonal effects in computer-mediated interaction: A relational perspective." *Communication Research*, 19(1), 52-90. [SAGE (paywalled)](https://doi.org/10.1177/009365092019001003)
+- Culnan, M.J. & Markus, M.L. (1987). "Information technologies." In *Handbook of Organizational Communication*. Sage. [Amazon](https://www.amazon.com/Handbook-Organizational-Communication-Interdisciplinary-Perspective/dp/0803921004)
+- Marwick, A.E. & boyd, d. (2011). "I tweet honestly, I tweet passionately: Twitter users, context collapse, and the imagined audience." *New Media & Society*, 13(1), 114-133. [SAGE (paywalled)](https://doi.org/10.1177/1461444810365313)
+- Gunraj, D.N., et al. (2016). "Texting insincerely: The role of the period in text messaging." *Computers in Human Behavior*, 55, 1067-1075. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.chb.2015.11.003)
+- Holtgraves, T. (2024). "Emoji, Speech Acts, and Perceived Communicative Success." *Journal of Language and Social Psychology*. [SAGE (paywalled)](https://doi.org/10.1177/0261927X241257432)
+- Bailenson, J.N. (2021). "Nonverbal Overload: A Theoretical Argument for the Causes of Zoom Fatigue." *Technology, Mind, and Behavior*, 2(1). [APA](https://doi.org/10.1037/tmb0000030)
+- Howard, P.L. & Sedgewick, F. (2021). "'Anything but the phone!': Communication mode preferences in the autism community." *Autism*, 25(8). [SAGE](https://journals.sagepub.com/doi/full/10.1177/13623613211014995)
+- Herring, S.C. (2004). "Computer-mediated discourse analysis: An approach to researching online behavior." [Indiana University PDF](https://info.ils.indiana.edu/~herring/cmda.pdf)
+- Rygg, K. "Openings and closings in workplace emails." *Hermes*. [Open Access](https://tidsskrift.dk/her/article/view/24288)
+- Darics, E. & Gatti, M.C. (2019). "Talking a team into being in online workplace collaborations." *Discourse & Society*. [SAGE (paywalled)](https://doi.org/10.1177/0957926519828038)
 
 ### Web Resources Consulted
 - [Cyberpragmatics overview (Yus)](https://personal.ua.es/francisco.yus/site/cyber.pdf)

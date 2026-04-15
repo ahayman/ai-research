@@ -372,6 +372,16 @@ A specific situation: your refusal of something has been characterized by the ot
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Cloitre et al. (2002). STAIR. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/12362957/) [paywalled]
+- Gutheil & Gabbard (1993). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8422069/) [paywalled]
+- Brown & Levinson (1987). *Politeness.* — [Amazon](https://www.amazon.com/Politeness-Universals-Language-Interactional-Sociolinguistics/dp/0521313554)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+
 **Assertiveness and interpersonal-skills training:**
 - Cloitre, M., Koenen, K. C., Cohen, L. R., & Han, H. (2002). "Skills training in affective and interpersonal regulation followed by exposure: A phase-based treatment for PTSD related to childhood abuse." *Journal of Consulting and Clinical Psychology* 70(5): 1067–1074. — STAIR protocol, including assertiveness module.
 - Cloitre, M., et al. (2010). "Treatment for PTSD related to childhood abuse: A randomized controlled trial." *American Journal of Psychiatry* 167(8): 915–924.

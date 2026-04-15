@@ -613,39 +613,39 @@ Sources:
 
 ### Primary Sources
 
-1. **Schegloff, E.A., Jefferson, G., & Sacks, H. (1977)**. The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382. -- The foundational paper establishing repair organization.
+1. **Schegloff, E.A., Jefferson, G., & Sacks, H. (1977)**. The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382. -- The foundational paper establishing repair organization. [JSTOR](https://doi.org/10.2307/413107)
 
-2. **Jefferson, G. (1987)**. On exposed and embedded correction in conversation. In G. Button & J.R.E. Lee (Eds.), *Talk and Social Organisation* (pp. 86-100). Clevedon: Multilingual Matters. -- The distinction between covert and overt correction.
+2. **Jefferson, G. (1987)**. On exposed and embedded correction in conversation. In G. Button & J.R.E. Lee (Eds.), *Talk and Social Organisation* (pp. 86-100). Clevedon: Multilingual Matters. -- The distinction between covert and overt correction. [Amazon (volume)](https://www.amazon.com/Talk-Social-Organisation-Intercommunication-Button/dp/1853590045)
 
-3. **Schegloff, E.A. (1992)**. Repair after next turn: The last structurally provided defense of intersubjectivity in conversation. *American Journal of Sociology*, 97(5), 1295-1345. -- Third-position repair as the "last defense."
+3. **Schegloff, E.A. (1992)**. Repair after next turn: The last structurally provided defense of intersubjectivity in conversation. *American Journal of Sociology*, 97(5), 1295-1345. -- Third-position repair as the "last defense." [JSTOR](https://doi.org/10.1086/229903)
 
-4. **Schegloff, E.A. (1997)**. Practices and actions: Boundary cases of other-initiated repair. *Discourse Processes*, 23(3), 499-545. -- Exploring repair initiators beyond their standard functions.
+4. **Schegloff, E.A. (1997)**. Practices and actions: Boundary cases of other-initiated repair. *Discourse Processes*, 23(3), 499-545. -- Exploring repair initiators beyond their standard functions. [Taylor & Francis (paywalled)](https://doi.org/10.1080/01638539709545001)
 
-5. **Schegloff, E.A. (2000)**. When 'others' initiate repair. *Applied Linguistics*, 21(2), 205-243. -- Extended analysis of other-initiated repair.
+5. **Schegloff, E.A. (2000)**. When 'others' initiate repair. *Applied Linguistics*, 21(2), 205-243. -- Extended analysis of other-initiated repair. [OUP (paywalled)](https://doi.org/10.1093/applin/21.2.205)
 
-6. **Dingemanse, M., Torreira, F., & Enfield, N.J. (2013)**. Is "Huh?" a universal word? Conversational infrastructure and the convergent evolution of linguistic items. *PLOS ONE*, 8(11), e78273. -- Cross-linguistic universality of repair initiators.
+6. **Dingemanse, M., Torreira, F., & Enfield, N.J. (2013)**. Is "Huh?" a universal word? Conversational infrastructure and the convergent evolution of linguistic items. *PLOS ONE*, 8(11), e78273. -- Cross-linguistic universality of repair initiators. [PLOS](https://doi.org/10.1371/journal.pone.0078273)
 
-7. **Dingemanse, M., Roberts, S.G., et al. (2015)**. Universal principles in the repair of communication problems. *PLOS ONE*, 10(9), e0136100. -- 12-language study of universal repair patterns.
+7. **Dingemanse, M., Roberts, S.G., et al. (2015)**. Universal principles in the repair of communication problems. *PLOS ONE*, 10(9), e0136100. -- 12-language study of universal repair patterns. [PLOS](https://doi.org/10.1371/journal.pone.0136100)
 
-8. **Albert, S. (2018)**. Repair: The interface between interaction and cognition. *Topics in Cognitive Science*, 10(2), 279-313. -- Comprehensive review connecting repair to cognitive processes.
+8. **Albert, S. (2018)**. Repair: The interface between interaction and cognition. *Topics in Cognitive Science*, 10(2), 279-313. -- Comprehensive review connecting repair to cognitive processes. [Wiley (paywalled)](https://doi.org/10.1111/tops.12339)
 
 ### Autism-Specific Sources
 
-9. **Volden, J. (2004)**. Conversational repair in speakers with autism spectrum disorder. *International Journal of Language & Communication Disorders*, 39(2), 171-189.
+9. **Volden, J. (2004)**. Conversational repair in speakers with autism spectrum disorder. *International Journal of Language & Communication Disorders*, 39(2), 171-189. [Wiley (paywalled)](https://doi.org/10.1080/13682820410001681215)
 
-10. **Keen, D. (2005)**. The use of non-verbal repair strategies by children with autism. *Research in Developmental Disabilities*, 26(3), 243-254.
+10. **Keen, D. (2005)**. The use of non-verbal repair strategies by children with autism. *Research in Developmental Disabilities*, 26(3), 243-254. [Elsevier (paywalled)](https://doi.org/10.1016/j.ridd.2004.05.005)
 
-11. **Dindar, K., Korkiakangas, T., Laitila, A., & Kärnä, E. (2016)**. Interactional challenges in conversations with autistic preadolescents: The role of prosody and non-verbal communication in other-initiated repairs. *Journal of Pragmatics*, 94, 76-97.
+11. **Dindar, K., Korkiakangas, T., Laitila, A., & Kärnä, E. (2016)**. Interactional challenges in conversations with autistic preadolescents: The role of prosody and non-verbal communication in other-initiated repairs. *Journal of Pragmatics*, 94, 76-97. [Elsevier (paywalled)](https://doi.org/10.1016/j.pragma.2016.01.001)
 
-12. **Milton, D. (2012)**. On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887.
+12. **Milton, D. (2012)**. On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
-13. **Crompton, C.J., Ropar, D., Evans-Williams, C.V., Flynn, E.G., & Fletcher-Watson, S. (2020)**. Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712.
+13. **Crompton, C.J., Ropar, D., Evans-Williams, C.V., Flynn, E.G., & Fletcher-Watson, S. (2020)**. Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://doi.org/10.1177/1362361320919286)
 
 ### Politeness and Face
 
-14. **Brown, P. & Levinson, S.C. (1987)**. *Politeness: Some universals in language usage*. Cambridge University Press.
+14. **Brown, P. & Levinson, S.C. (1987)**. *Politeness: Some universals in language usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 
-15. **Goffman, E. (1967)**. *Interaction Ritual: Essays on Face-to-Face Behavior*. New York: Anchor Books.
+15. **Goffman, E. (1967)**. *Interaction Ritual: Essays on Face-to-Face Behavior*. New York: Anchor Books. [Amazon](https://www.amazon.com/Interaction-Ritual-Essays-Face-Face-Behavior/dp/0394706315)
 
 ---
 

@@ -608,23 +608,23 @@ This has direct implications for the autistic experience: many autistic individu
 ## Sources
 
 ### Academic and Research Sources
-- Halliday, M.A.K. (1978). *Language as Social Semiotic*. London: Edward Arnold.
-- Halliday, M.A.K. & Hasan, R. (1989). *Language, Context, and Text: Aspects of Language in a Social-Semiotic Perspective*. Oxford: Oxford University Press.
-- Joos, M. (1962). *The Five Clocks: A Linguistic Excursion into the Five Styles of English Usage*. New York: Harcourt, Brace & World.
-- Biber, D. (1988). *Variation across Speech and Writing*. Cambridge: Cambridge University Press.
-- Biber, D. (1995). *Dimensions of Register Variation: A Cross-Linguistic Comparison*. Cambridge: Cambridge University Press.
-- Brown, R. & Gilman, A. (1960). "The Pronouns of Power and Solidarity." In T.A. Sebeok (ed.), *Style in Language*.
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press.
-- Giles, H. & Ogay, T. (2007). "Communication Accommodation Theory." In B.B. Whaley & W. Samter (eds.), *Explaining Communication*.
-- Hymes, D. (1972). "On Communicative Competence." In J.B. Pride & J. Holmes (eds.), *Sociolinguistics*.
-- Agha, A. (2004). "Registers of Language." In A. Duranti (ed.), *A Companion to Linguistic Anthropology*.
+- Halliday, M.A.K. (1978). *Language as Social Semiotic*. London: Edward Arnold. [Amazon](https://www.amazon.com/Language-Social-Semiotic-Interpretation-Language/dp/0713159677)
+- Halliday, M.A.K. & Hasan, R. (1989). *Language, Context, and Text: Aspects of Language in a Social-Semiotic Perspective*. Oxford: Oxford University Press. [Amazon](https://www.amazon.com/Language-Context-Text-Social-Semiotic-Perspective/dp/0194371549)
+- Joos, M. (1962). *The Five Clocks: A Linguistic Excursion into the Five Styles of English Usage*. New York: Harcourt, Brace & World. [Amazon](https://www.amazon.com/five-clocks-Martin-Joos/dp/0156314002)
+- Biber, D. (1988). *Variation across Speech and Writing*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Variation-across-Speech-Writing-Douglas/dp/0521425565)
+- Biber, D. (1995). *Dimensions of Register Variation: A Cross-Linguistic Comparison*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Dimensions-Register-Variation-Cross-Linguistic-Comparison/dp/0521025222)
+- Brown, R. & Gilman, A. (1960). "The Pronouns of Power and Solidarity." In T.A. Sebeok (ed.), *Style in Language*. [Amazon (parent volume)](https://www.amazon.com/Style-Language-Thomas-Sebeok/dp/0262690101)
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Linguistics/dp/0521313554)
+- Giles, H. & Ogay, T. (2007). "Communication Accommodation Theory." In B.B. Whaley & W. Samter (eds.), *Explaining Communication*. [Amazon (parent volume)](https://www.amazon.com/Explaining-Communication-Contemporary-Theories-Exemplars/dp/0805839593)
+- Hymes, D. (1972). "On Communicative Competence." In J.B. Pride & J. Holmes (eds.), *Sociolinguistics*. [Amazon (parent volume)](https://www.amazon.com/Sociolinguistics-Selected-Readings-J-B-Pride/dp/0140806652)
+- Agha, A. (2004). "Registers of Language." In A. Duranti (ed.), *A Companion to Linguistic Anthropology*. [Wiley (paywalled)](https://doi.org/10.1002/9780470996522.ch2)
 
 ### Autism and Pragmatic Language Sources
-- Volden, J. & Lord, C. (1991). "Neologisms and Idiosyncratic Language in Autistic Speakers." *Journal of Autism and Developmental Disorders*, 21(2), 109-130.
-- Eigsti, I.M. et al. (2007). "Language Acquisition in Autism Spectrum Disorders." *Research in Autism Spectrum Disorders*, 1(1), 1-21.
-- Ghaziuddin, M. & Gerstein, L. (1996). "Pedantic Speaking Style Differentiates Asperger Syndrome from High-Functioning Autism." *Journal of Autism and Developmental Disorders*, 26(6), 585-595.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887.
-- Hull, L. et al. (2017). "'Putting on My Best Normal': Social Camouflaging in Adults with Autism Spectrum Conditions." *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
+- Volden, J. & Lord, C. (1991). "Neologisms and Idiosyncratic Language in Autistic Speakers." *Journal of Autism and Developmental Disorders*, 21(2), 109-130. [Springer (paywalled)](https://doi.org/10.1007/BF02284755)
+- Eigsti, I.-M., de Marchena, A. B., Schuh, J. M., & Minshew, N. (2011). "Language Acquisition in Autism Spectrum Disorders: A Developmental Review." *Research in Autism Spectrum Disorders*, 5(2), 681-691. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.rasd.2010.09.001)
+- Ghaziuddin, M. & Gerstein, L. (1996). "Pedantic Speaking Style Differentiates Asperger Syndrome from High-Functioning Autism." *Journal of Autism and Developmental Disorders*, 26(6), 585-595. [Springer (paywalled)](https://doi.org/10.1007/BF02172348)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Hull, L. et al. (2017). "'Putting on My Best Normal': Social Camouflaging in Adults with Autism Spectrum Conditions." *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534. [Springer](https://doi.org/10.1007/s10803-017-3166-5)
 
 ### Online Reference Sources
 - [Register (sociolinguistics) - Wikipedia](https://en.wikipedia.org/wiki/Register_(sociolinguistics))

@@ -234,7 +234,7 @@ Trauma-informed: collaborative, choice-preserving, explicitly structured to avoi
 
 **Key meta-analyses:**
 - Asmundson, G. J. G., et al. (2019). A meta-analytic review of cognitive processing therapy for adults with posttraumatic stress disorder. *Cognitive Behaviour Therapy*, 48(1), 1–14. https://pubmed.ncbi.nlm.nih.gov/30332919/.
-- Lenz, A. S., et al. (2025). A meta-analytic review of CPT with and without the written account. https://www.sciencedirect.com/science/article/abs/pii/S088761852500012X. Finding: CPT+A and CPT-C produce large reductions in PTSD symptoms with no significant difference between protocol versions.
+- Sager, Z. S., DeJesus, B., Kearns, J. C., Thompson-Hollands, J., Trendel, S. L., Mark, T. L., & Sloan, D. M. (2025). A meta-analytic review of CPT with and without the written account. *Journal of Anxiety Disorders*, 110, 102976. https://www.sciencedirect.com/science/article/abs/pii/S088761852500012X. Finding: CPT+A and CPT-C produce large reductions in PTSD symptoms with no significant difference between protocol versions.
 - Shearing, V., et al. (2024). Allegiance effects in CPT for PTSD: A systematic review and meta-analysis. *Clinical Psychologist*. https://www.tandfonline.com/doi/full/10.1080/13284207.2024.2347643.
 - Cochrane-style NCBI review: https://www.ncbi.nlm.nih.gov/books/NBK362346/.
 
@@ -365,8 +365,8 @@ Herman's three-stage model (Section 1) remains the most cited clinical framework
 ### 6.3 Social support
 
 **Meta-analyses:**
-- Zalta, A. K., et al. (2021). Social support and PTSD: A meta-analysis of longitudinal studies. https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416. Moderate cross-sectional association (r ≈ −0.26 between social support and PTSD severity). Reciprocal effects: social support buffers PTSD; PTSD erodes social support.
-- Wang, Y., et al. (2021). Social support and posttraumatic growth: A meta-analysis. https://www.sciencedirect.com/science/article/abs/pii/S0165032722011193.
+- Wang, Y., Chung, M. C., Wang, N., Yu, X., & Kenardy, J. (2021). Social support and posttraumatic stress disorder: A meta-analysis of longitudinal studies. *Clinical Psychology Review*. https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416. Moderate cross-sectional association (r ≈ −0.26 between social support and PTSD severity). Reciprocal effects: social support buffers PTSD; PTSD erodes social support.
+- Wang, Y., et al. (2022). Social support and posttraumatic growth: A meta-analysis. *Journal of Affective Disorders*. https://www.sciencedirect.com/science/article/abs/pii/S0165032722011193.
 - 2023 review: Bryant, R. A., et al. The role of social support in coping with psychological trauma. *Psychiatric Quarterly*. https://pmc.ncbi.nlm.nih.gov/articles/PMC9534006/.
 
 **Critical nuance — not all support is helpful:**
@@ -864,7 +864,7 @@ For each downstream topic, the following is the minimum primary-source anchor to
 - [PTG: A Comprehensive Evaluation](https://www.turkpsikiyatri.com/PDF/C31S1/en/7TPD_19034_DURSUN_posttraumatic%20growth_P.pdf)
 
 ### Social support and meaning-making
-- [Zalta et al. (2021) social support and PTSD longitudinal meta-analysis](https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416)
+- [Wang, Chung, Wang, Yu & Kenardy (2021) social support and PTSD longitudinal meta-analysis](https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416)
 - [Bidirectional associations — sources of social support and trauma recovery](https://www.mdpi.com/2076-328X/14/4/284)
 - [The role of social support in coping with psychological trauma (Psychiatric Quarterly)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9534006/)
 - [Social support and PTG meta-analysis](https://www.sciencedirect.com/science/article/abs/pii/S0165032722011193)

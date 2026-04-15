@@ -888,39 +888,39 @@ The RT comprehension procedure is a STARTING tool, not an end state. The goal ov
 ## Sources and References
 
 ### Primary RT Sources
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell.
-- Wilson, D. & Sperber, D. (2004). "Relevance Theory." In L.R. Horn & G. Ward (eds.), *The Handbook of Pragmatics*. Blackwell, 607-632.
-- Wilson, D. & Sperber, D. (2002). "Relevance Theory." UCL Working Papers in Linguistics.
-- Wilson, D. & Sperber, D. (2012). *Meaning and Relevance*. Cambridge University Press.
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Wilson, D. & Sperber, D. (2004). "Relevance Theory." In L.R. Horn & G. Ward (eds.), *The Handbook of Pragmatics*. Blackwell, 607-632. [PDF](https://www.dan.sperber.fr/wp-content/uploads/2004_wilson_relevance-theory.pdf)
+- Wilson, D. & Sperber, D. (2002). "Relevance Theory." UCL Working Papers in Linguistics. [PDF](https://www.phon.ucl.ac.uk/publications/WPL/02papers/wilson_sperber.pdf)
+- Wilson, D. & Sperber, D. (2012). *Meaning and Relevance*. Cambridge University Press. [Amazon](https://www.amazon.com/Meaning-Relevance-Deirdre-Wilson/dp/1107605997)
 
 ### RT and Autism
-- Cummings, L. (2021). "Relevance Theory and Communication Atypicalities." *The Handbook of Clinical Linguistics*, 2nd ed. Wiley.
-- Cummins, C. et al. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12:616664. (PMC8117104)
-- Zheng, Q. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*.
+- Wharton, T. & Jagoe, C. (2024). "Relevance Theory and Communication Atypicalities." *The Handbook of Clinical Linguistics*, 2nd ed. Wiley. [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/10.1002/9781119875949.ch3)
+- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12:616664. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8117104/) | [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.616664/full)
+- Williams, G.L. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2021.04.032) | [Author manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
 
 ### RT and Irony/Sarcasm
-- Wilson, D. & Sperber, D. (2012). "Explaining Irony." In *Meaning and Relevance*, Cambridge University Press.
-- Sperber, D. & Wilson, D. (1981). "Irony and the Use-Mention Distinction." In P. Cole (ed.), *Radical Pragmatics*. Academic Press.
+- Wilson, D. & Sperber, D. (2012). "Explaining Irony." In *Meaning and Relevance*, Cambridge University Press. [PDF](https://www.dan.sperber.fr/wp-content/uploads/2012_wilson_explaining-irony.pdf)
+- Sperber, D. & Wilson, D. (1981). "Irony and the Use-Mention Distinction." In P. Cole (ed.), *Radical Pragmatics*. Academic Press. [PDF](https://www.dan.sperber.fr/wp-content/uploads/1984_verbal-irony-pretense-or-echoic-mention.pdf)
 
 ### RT and Prosody
-- Wilson, D. & Wharton, T. (2006). "Relevance and Prosody." *Journal of Pragmatics* 38(10): 1559-1579.
-- Sasamoto, R. (2022). "Perceptual resemblance and the communication of emotion in digital contexts." *Pragmatics*.
+- Wilson, D. & Wharton, T. (2006). "Relevance and Prosody." *Journal of Pragmatics* 38(10): 1559-1579. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2005.04.012) | [ResearchGate](https://www.researchgate.net/profile/Deirdre-Wilson-2/publication/222826780_Relevance_and_prosody/links/5b1a4f8baca272021cf2c5ed/Relevance-and-prosody.pdf)
+- Sasamoto, R. (2022). "Perceptual resemblance and the communication of emotion in digital contexts." *Pragmatics*. [John Benjamins](https://www.jbe-platform.com/content/journals/10.1075/prag.21058.sas)
 
 ### Digital Communication and Pragmatics
-- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins.
-- Gunraj, D.N. et al. (2016). "Texting insincerely: The role of the period in text messaging." *Computers in Human Behavior*, 55, 1067-1075.
-- Holtgraves, T. (2021). "Understanding Miscommunication: Speech Act Recognition in Digital Contexts." *Cognitive Science*, 45.
-- Nature (2025). "Relevance theory perspective of emojis used by Chinese younger and older adults in WeChat." *Humanities and Social Sciences Communications*.
+- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins. [Amazon](https://www.amazon.com/Cyberpragmatics-Internet-Mediated-Communication-Pragmatics-Beyond/dp/9027256195)
+- Gunraj, D.N. et al. (2016). "Texting insincerely: The role of the period in text messaging." *Computers in Human Behavior*, 55, 1067-1075. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.chb.2015.11.003)
+- Holtgraves, T. (2021). "Understanding Miscommunication: Speech Act Recognition in Digital Contexts." *Cognitive Science*, 45. [Wiley](https://onlinelibrary.wiley.com/doi/10.1111/cogs.13023)
+- (2025). "Relevance theory perspective of emojis used by Chinese younger and older adults in WeChat." *Humanities and Social Sciences Communications*. [Nature](https://www.nature.com/articles/s41599-025-04600-w)
 
 ### Misunderstanding and Repair
-- Allott, N. (2016). "Misunderstandings in Verbal Communication." In A. Rocci & L. de Saussure (eds.), *Verbal Communication*.
-- Dingemanse, M. et al. (2015). "Universal Principles in the Repair of Communication Problems." *PLOS ONE*.
-- Francis Academic Press (2019). "A tentative analysis of pragmatic failure from the perspective of Relevance Theory."
+- Allott, N. (2016). "Misunderstandings in Verbal Communication." In A. Rocci & L. de Saussure (eds.), *Verbal Communication*. [De Gruyter (paywalled)](https://www.degruyter.com/document/doi/10.1515/9783110255478-004/html)
+- Dingemanse, M. et al. (2015). "Universal Principles in the Repair of Communication Problems." *PLOS ONE*. [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0136100)
+- Francis Academic Press (2019). "A tentative analysis of pragmatic failure from the perspective of Relevance Theory." [CITATION UNVERIFIED]
 
 ### Grice for Comparison
-- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (eds.), *Syntax and Semantics 3: Speech Acts*. Academic Press.
+- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (eds.), *Syntax and Semantics 3: Speech Acts*. Academic Press. [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
 
 ### Phatic Communication
-- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In C.K. Ogden & I.A. Richards (eds.), *The Meaning of Meaning*.
-- Yus, F. (2018). "A cognitive pragmatics of the phatic Internet."
-- Zuckerman, C.H.P. "Phatic, the: Communication and Communion." *The International Encyclopedia of Linguistic Anthropology*.
+- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In C.K. Ogden & I.A. Richards (eds.), *The Meaning of Meaning*. [Amazon (parent book)](https://www.amazon.com/Meaning-International-Library-Psychology-Scientific/dp/0156584468)
+- Yus, F. (2018). "A cognitive pragmatics of the phatic Internet." [Yus publications](https://personal.ua.es/francisco.yus/site/phatic-internet.pdf)
+- Zuckerman, C.H.P. "Phatic, the: Communication and Communion." *The International Encyclopedia of Linguistic Anthropology*. [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/10.1002/9781118786093.iela0300)

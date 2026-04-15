@@ -292,30 +292,30 @@ The decision framework points toward different strategies depending on which cat
 ## 9. Citation Register
 
 **The double empathy problem:**
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
-- Milton, D., Gurbuz, E., & López, B. (2022). "The 'double empathy problem': Ten years on." *Autism* 26(8): 1901–1903. (Ten-year review.)
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Milton, D., Gurbuz, E., & López, B. (2022). "The 'double empathy problem': Ten years on." *Autism* 26(8): 1901–1903. — [DOI](https://doi.org/10.1177/13623613221129123) [paywalled]
 
 **Coercive control and the fight/control distinction:**
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
-- Johnson, M. P. (2008). *A Typology of Domestic Violence.* Northeastern University Press.
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson, M. P. (2008). *A Typology of Domestic Violence.* Northeastern University Press. — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
 
 **Autistic survivors and the internalization trap:**
-- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, R., Joseph, R., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's not a physical prison but you can't get out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
-- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. (Weaponized features framework.)
+- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson, A., Rose, K., Mitchell, R., Joseph, R., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's not a physical prison but you can't get out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* — [DOI](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. (Weaponized features framework.) — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
 
 **The credibility discount:**
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
 
 **Detection mechanisms in autism:**
-- Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.* (Specifically undermines theory-of-mind mediation account.)
-- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.* (Reduced framing effects and other cognitive biases.)
+- Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.* — [PMC6220950](https://pmc.ncbi.nlm.nih.gov/articles/PMC6220950/)
+- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.* — [Cell](https://www.cell.com/trends/cognitive-sciences/fulltext/S1364-6613(21)00125-X) [paywalled]
 
 **The four possibilities framing:**
 - Synthesized from the above sources combined with the foundational manipulation research compilations. The specific four-category framing is a framework synthesis; the underlying distinctions are drawn from Stark (2007) on fight/control, Pearson et al. (2022, 2024) on internalization, and the general IPV literature on intentionality vs. effect.
 
 **Couples therapy contraindication (referenced by implication):**
-- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
+- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
 
 **Foundational research documents for this hub:**
 - [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md)

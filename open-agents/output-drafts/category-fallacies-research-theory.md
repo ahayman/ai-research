@@ -970,56 +970,56 @@ Even then, the meta-commentary should be **specific** ("You asked me to provide 
 ### 12. Academic Citations and Further Reading
 
 #### Core Argumentation Theory
-- Aristotle. (c. 350 BCE). *Sophistical Refutations* (Sophistici Elenchi). Various translations.
-- Hamblin, C. L. (1970). *Fallacies*. London: Methuen. [Reprinted: Vale Press, 2004.]
-- van Eemeren, F. H., & Grootendorst, R. (1984). *Speech Acts in Argumentive Discussions*. Dordrecht: Foris.
-- van Eemeren, F. H., & Grootendorst, R. (1992). *Argumentation, Communication, and Fallacies: A Pragma-Dialectical Perspective*. Hillsdale, NJ: Lawrence Erlbaum.
-- van Eemeren, F. H., & Grootendorst, R. (2004). *A Systematic Theory of Argumentation: The Pragma-Dialectical Approach*. Cambridge: Cambridge University Press.
-- van Eemeren, F. H. (2010). *Strategic Maneuvering in Argumentative Discourse*. Amsterdam: John Benjamins.
-- van Eemeren, F. H., Garssen, B., Krabbe, E. C. W., Snoeck Henkemans, A. F., Verheij, B., & Wagemans, J. H. M. (2014). *Handbook of Argumentation Theory*. Dordrecht: Springer.
-- Walton, D. N. (1989). *Informal Logic: A Handbook for Critical Argumentation*. Cambridge: Cambridge University Press.
-- Walton, D. N. (1995). *A Pragmatic Theory of Fallacy*. Tuscaloosa: University of Alabama Press.
-- Walton, D. N. (2008). *Informal Logic: A Pragmatic Approach*. 2nd edition. Cambridge: Cambridge University Press.
-- Walton, D., Reed, C., & Macagno, F. (2008). *Argumentation Schemes*. Cambridge: Cambridge University Press.
-- Johnson, R. H. (2000). *Manifest Rationality: A Pragmatic Theory of Argument*. Mahwah, NJ: Lawrence Erlbaum.
-- Johnson, R. H., & Blair, J. A. (2006). *Logical Self-Defense*. 3rd edition. New York: IDEA Press.
-- Govier, T. (2010). *A Practical Study of Argument*. 7th edition. Belmont, CA: Wadsworth.
+- Aristotle. (c. 350 BCE). *Sophistical Refutations* (Sophistici Elenchi). Various translations. [MIT Internet Classics Archive](http://classics.mit.edu/Aristotle/sophist_refut.html)
+- Hamblin, C. L. (1970). *Fallacies*. London: Methuen. [Reprinted: Vale Press, 2004.] [Amazon](https://www.amazon.com/Fallacies-C-L-Hamblin/dp/0916475247)
+- van Eemeren, F. H., & Grootendorst, R. (1984). *Speech Acts in Argumentive Discussions*. Foris. [Amazon](https://www.amazon.com/Speech-Argumentative-Discussions-Theoretical-Argumentation/dp/9067650188)
+- van Eemeren, F. H., & Grootendorst, R. (1992). *Argumentation, Communication, and Fallacies: A Pragma-Dialectical Perspective*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Argumentation-Communication-Fallacies-Pragma-Dialectical-Perspective/dp/0805810692)
+- van Eemeren, F. H., & Grootendorst, R. (2004). *A Systematic Theory of Argumentation: The Pragma-Dialectical Approach*. Cambridge University Press. [Amazon](https://www.amazon.com/Systematic-Theory-Argumentation-Pragma-Dialectical-Approach/dp/0521537720)
+- van Eemeren, F. H. (2010). *Strategic Maneuvering in Argumentative Discourse*. John Benjamins. [Amazon](https://www.amazon.com/Strategic-Maneuvering-Argumentative-Discourse-Theoretical/dp/9027218315)
+- van Eemeren, F. H. et al. (2014). *Handbook of Argumentation Theory*. Springer. [Springer (paywalled)](https://doi.org/10.1007/978-90-481-9473-5)
+- Walton, D. N. (1989). *Informal Logic: A Handbook for Critical Argumentation*. Cambridge University Press. [Amazon](https://www.amazon.com/Informal-Logic-Handbook-Critical-Argumentation/dp/0521379253)
+- Walton, D. N. (1995). *A Pragmatic Theory of Fallacy*. University of Alabama Press. [Amazon](https://www.amazon.com/Pragmatic-Theory-Fallacy-Studies-Rhetoric/dp/0817307982)
+- Walton, D. N. (2008). *Informal Logic: A Pragmatic Approach*. 2nd ed. Cambridge University Press. [Amazon](https://www.amazon.com/Informal-Logic-Pragmatic-Douglas-Walton/dp/0521713803)
+- Walton, D., Reed, C., & Macagno, F. (2008). *Argumentation Schemes*. Cambridge University Press. [Amazon](https://www.amazon.com/Argumentation-Schemes-Douglas-Walton/dp/0521723744)
+- Johnson, R. H. (2000). *Manifest Rationality: A Pragmatic Theory of Argument*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Manifest-Rationality-Pragmatic-Theory-Argument/dp/0805821740)
+- Johnson, R. H., & Blair, J. A. (2006). *Logical Self-Defense*. 3rd ed. IDEA Press. [Amazon](https://www.amazon.com/Logical-Self-Defense-Key-Titles-Rhetoric/dp/1932716181)
+- Govier, T. (2010). *A Practical Study of Argument*. 7th ed. Wadsworth. [Amazon](https://www.amazon.com/Practical-Study-Argument-Trudy-Govier/dp/0495603406)
 
 #### On Specific Fallacies
-- Walton, D. N. (1998). *Ad Hominem Arguments*. Tuscaloosa: University of Alabama Press.
-- Walton, D. N. (1992). *Slippery Slope Arguments*. Oxford: Clarendon Press.
-- Walton, D. N. (1992). *The Place of Emotion in Argument*. University Park: Penn State University Press.
-- Walton, D. N. (2000). *Scare Tactics: Arguments That Appeal to Fear and Threats*. Dordrecht: Kluwer.
-- Walton, D. N. (2004). *Relevance in Argumentation*. Mahwah, NJ: Lawrence Erlbaum.
-- Talisse, R. B., & Aikin, S. F. (2006). Two forms of the straw man. *Argumentation*, 20, 345-352.
-- Macagno, F., & Walton, D. (2017). Interpreting straw man argumentation. In F. H. van Eemeren (Ed.), *Prototypical Argumentative Patterns*. Amsterdam: John Benjamins.
-- Flew, A. (1975). *Thinking About Thinking: Do I Sincerely Want to Be Right?* London: Fontana/Collins.
+- Walton, D. N. (1998). *Ad Hominem Arguments*. University of Alabama Press. [Amazon](https://www.amazon.com/Hominem-Arguments-Studies-Rhetoric-Communication/dp/0817309225)
+- Walton, D. N. (1992). *Slippery Slope Arguments*. Oxford: Clarendon Press. [Amazon](https://www.amazon.com/Slippery-Slope-Arguments-Douglas-Walton/dp/0198239254)
+- Walton, D. N. (1992). *The Place of Emotion in Argument*. Penn State University Press. [Amazon](https://www.amazon.com/Place-Emotion-Argument-Douglas-Walton/dp/0271008334)
+- Walton, D. N. (2000). *Scare Tactics: Arguments That Appeal to Fear and Threats*. Kluwer. [Springer (paywalled)](https://doi.org/10.1007/978-94-017-1828-2)
+- Walton, D. N. (2004). *Relevance in Argumentation*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Relevance-Argumentation-Douglas-Walton/dp/0805846719)
+- Talisse, R. B., & Aikin, S. F. (2006). Two forms of the straw man. *Argumentation*, 20, 345-352. [Springer (paywalled)](https://doi.org/10.1007/s10503-006-9018-7)
+- Macagno, F., & Walton, D. (2017). Interpreting straw man argumentation. In F. H. van Eemeren (Ed.), *Prototypical Argumentative Patterns*. John Benjamins. [Amazon](https://www.amazon.com/Prototypical-Argumentative-Patterns-Exploring-Argumentation/dp/9027211310)
+- Flew, A. (1975). *Thinking About Thinking: Do I Sincerely Want to Be Right?* Fontana/Collins. [Amazon](https://www.amazon.com/Thinking-about-sincerely-Fontana-paperbacks/dp/000633580X)
 
 #### Pragmatic Foundations
-- Grice, H. P. (1975). Logic and conversation. In P. Cole & J. Morgan (Eds.), *Syntax and Semantics, Vol. 3: Speech Acts* (pp. 41-58). New York: Academic Press.
-- Grice, H. P. (1989). *Studies in the Way of Words*. Cambridge, MA: Harvard University Press.
-- Sperber, D., & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell.
-- Brown, P., & Levinson, S. C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press.
-- Clark, H. H. (1996). *Using Language*. Cambridge: Cambridge University Press.
-- Lewis, D. (1979). Scorekeeping in a language game. *Journal of Philosophical Logic*, 8, 339-359.
-- Stalnaker, R. (1974). Pragmatic presuppositions. In M. Munitz & P. Unger (Eds.), *Semantics and Philosophy*. New York: New York University Press.
-- Jacobs, S., & Jackson, S. (1982). Conversational argument: A discourse analytic approach. In J. R. Cox & C. A. Willard (Eds.), *Advances in Argumentation Theory and Research*. Carbondale: Southern Illinois University Press.
+- Grice, H. P. (1975). Logic and conversation. In P. Cole & J. Morgan (Eds.), *Syntax and Semantics, Vol. 3: Speech Acts* (pp. 41-58). Academic Press. [Amazon](https://www.amazon.com/Syntax-Semantics-Vol-Speech-Acts/dp/0127854231)
+- Grice, H. P. (1989). *Studies in the Way of Words*. Harvard University Press. [Amazon](https://www.amazon.com/Studies-Way-Words-H-P-Grice/dp/0674852710)
+- Sperber, D., & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Brown, P., & Levinson, S. C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- Clark, H. H. (1996). *Using Language*. Cambridge University Press. [Amazon](https://www.amazon.com/Using-Language-Herbert-H-Clark/dp/0521567459)
+- Lewis, D. (1979). Scorekeeping in a language game. *Journal of Philosophical Logic*, 8, 339-359. [Springer (paywalled)](https://doi.org/10.1007/BF00258436)
+- Stalnaker, R. (1974). Pragmatic presuppositions. In M. Munitz & P. Unger (Eds.), *Semantics and Philosophy*. New York University Press. [Amazon](https://www.amazon.com/Semantics-Philosophy-Milton-K-Munitz/dp/0814753655)
+- Jacobs, S., & Jackson, S. (1982). Conversational argument: A discourse analytic approach. In J. R. Cox & C. A. Willard (Eds.), *Advances in Argumentation Theory and Research*. Southern Illinois University Press. [Amazon](https://www.amazon.com/Advances-Argumentation-Theory-Research-Cox/dp/0809310503)
 
 #### On the Argumentation-Politeness Conflict
-- Craig, R. T., & Tracy, K. (1995). Grounded practical theory: The case of intellectual discussion. *Communication Theory*, 5(3), 248-272.
-- Hample, D. (2005). *Arguing: Exchanging Reasons Face to Face*. Mahwah, NJ: Lawrence Erlbaum.
-- Lewiński, M. (2010). *Internet Political Discussion Forums as an Argumentative Activity Type*. Amsterdam: Sic Sat.
-- Lewiński, M., & Aakhus, M. (2014). Argumentative polylogues in a dialectical framework: A methodological inquiry. *Argumentation*, 28(2), 161-185.
-- Tannen, D. (1998). *The Argument Culture: Stopping America's War of Words*. New York: Ballantine.
+- Craig, R. T., & Tracy, K. (1995). Grounded practical theory: The case of intellectual discussion. *Communication Theory*, 5(3), 248-272. [Wiley (paywalled)](https://doi.org/10.1111/j.1468-2885.1995.tb00108.x)
+- Hample, D. (2005). *Arguing: Exchanging Reasons Face to Face*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Arguing-Exchanging-Reasons-Dale-Hample/dp/0805851437)
+- Lewiński, M. (2010). *Internet Political Discussion Forums as an Argumentative Activity Type*. Sic Sat. [Amazon](https://www.amazon.com/Internet-political-discussion-argumentative-amsterdam/dp/9064647038)
+- Lewiński, M., & Aakhus, M. (2014). Argumentative polylogues in a dialectical framework: A methodological inquiry. *Argumentation*, 28(2), 161-185. [Springer (paywalled)](https://doi.org/10.1007/s10503-013-9307-x)
+- Tannen, D. (1998). *The Argument Culture*. Ballantine. [Amazon](https://www.amazon.com/Argument-Culture-Stopping-Americas-Words/dp/0345407512)
 
 #### Logic Textbooks (Traditional Fallacy Treatment)
-- Copi, I. M. (1953). *Introduction to Logic*. New York: Macmillan. [Through 14th edition, 2014.]
-- Copi, I. M., & Cohen, C. (1990). *Introduction to Logic*. 8th edition. New York: Macmillan.
-- Hurley, P. J. (2003). *A Concise Introduction to Logic*. 8th edition. Belmont, CA: Wadsworth.
+- Copi, I. M. (1953). *Introduction to Logic*. Macmillan. [Amazon](https://www.amazon.com/Introduction-Logic-14th-Irving-Copi/dp/0205820379)
+- Copi, I. M., & Cohen, C. (1990). *Introduction to Logic*. 8th ed. Macmillan. [Amazon](https://www.amazon.com/Introduction-Logic-14th-Irving-Copi/dp/0205820379)
+- Hurley, P. J. (2003). *A Concise Introduction to Logic*. 8th ed. Wadsworth. [Amazon](https://www.amazon.com/Concise-Introduction-Logic-Patrick-Hurley/dp/1305958098)
 
 #### Cognitive Science and Bias
-- Asch, S. E. (1951). Effects of group pressure upon the modification and distortion of judgments. In H. Guetzkow (Ed.), *Groups, Leadership and Men*. Pittsburgh: Carnegie Press.
-- Lakoff, G. (2004). *Don't Think of an Elephant!* White River Junction, VT: Chelsea Green.
+- Asch, S. E. (1951). Effects of group pressure upon the modification and distortion of judgments. In H. Guetzkow (Ed.), *Groups, Leadership and Men*. Carnegie Press. [CITATION UNVERIFIED — out-of-print volume]
+- Lakoff, G. (2004). *Don't Think of an Elephant!* Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Frame/dp/1931498717)
 
 ---
 

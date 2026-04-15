@@ -839,23 +839,23 @@ The following research documents were produced during the development of this ca
 ## Key Sources
 
 ### Foundational Texts
-- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press.
-- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press.
-- Searle, J.R. (1975). "Indirect Speech Acts." In Cole & Morgan (eds.), *Syntax and Semantics* 3.
-- Searle, J.R. (1979). *Expression and Meaning: Studies in the Theory of Speech Acts*. Cambridge University Press.
-- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3.
+- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
+- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Searle, J.R. (1975). "Indirect Speech Acts." In Cole & Morgan (eds.), *Syntax and Semantics* 3. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Searle, J.R. (1979). *Expression and Meaning: Studies in the Theory of Speech Acts*. Cambridge University Press. [Amazon](https://www.amazon.com/Expression-Meaning-Studies-Theory-Speech/dp/0521313937)
+- Grice, H.P. (1975). "Logic and Conversation." In Cole & Morgan (eds.), *Syntax and Semantics* 3. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
 
 ### Autism and Speech Acts Research
-- Kissine et al. (2015). "Children with Autism Understand Indirect Speech Acts." PMC4638355.
-- Deliens et al. (2018). "Selective Pragmatic Impairment in Autism." PubMed: 29633109.
-- Frost et al. (2024). "Test Scores, Not Autism Diagnosis, Predict Indirect Request Interpretation." PMC11897084.
-- Kalandadze et al. (2018). "Figurative Language Meta-Analysis." PMC5843023.
-- Crompton et al. (2020). "Autistic Peer-to-Peer Information Transfer." PubMed: 32431157.
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*, 27(6).
-- Sutherland et al. (2024). "Autistic Perspectives on Autistic Social Communication." *Scandinavian J Disability Research*.
-- Prizant, B. & Duchan, J. (1981). "Functions of Immediate Echolalia." *J Speech and Hearing Disorders*.
-- Hull et al. (2017). "Camouflaging in Autism." PMC5509825.
+- Kissine et al. (2015). "Children with Autism Understand Indirect Speech Acts." PMC4638355. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
+- Deliens et al. (2018). "Selective Pragmatic Impairment in Autism." PubMed: 29633109. [Springer (paywalled)](https://doi.org/10.1007/s10803-018-3561-6)
+- Frost et al. (2024). "Test Scores, Not Autism Diagnosis, Predict Indirect Request Interpretation." PMC11897084. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11897084/)
+- Kalandadze et al. (2018). "Figurative Language Meta-Analysis." PMC5843023. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Crompton et al. (2020). "Autistic Peer-to-Peer Information Transfer." PubMed: 32431157. [SAGE](https://doi.org/10.1177/1362361320919286)
+- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*, 27(6). [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Sutherland et al. (2024). "Autistic Perspectives on Autistic Social Communication." *Scandinavian J Disability Research*. [SJDR](https://www.sjdr.se/articles/10.16993/sjdr.1184)
+- Prizant, B. & Duchan, J. (1981). "Functions of Immediate Echolalia." *J Speech and Hearing Disorders*. [ASHA (paywalled)](https://doi.org/10.1044/jshd.4603.241)
+- Hull et al. (2017). "Camouflaging in Autism." PMC5509825. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
 
 ### Conversation Analysis
-- Sacks, H., Schegloff, E.A. & Jefferson, G. (1974). "Turn-Taking in Conversation." *Language*, 50(4).
-- Schegloff, E.A. (2007). *Sequence Organization in Interaction*. Cambridge University Press.
+- Sacks, H., Schegloff, E.A. & Jefferson, G. (1974). "Turn-Taking in Conversation." *Language*, 50(4). [JSTOR](https://doi.org/10.2307/412243)
+- Schegloff, E.A. (2007). *Sequence Organization in Interaction*. Cambridge University Press. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)

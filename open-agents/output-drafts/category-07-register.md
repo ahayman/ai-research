@@ -409,15 +409,15 @@ When you're unsure what register to use:
 ## Key Sources
 
 ### Foundational Texts
-- Halliday, M.A.K. (1978). *Language as Social Semiotic*. Arnold.
-- Joos, M. (1961). *The Five Clocks*. Harcourt, Brace & World.
-- Giles, H. & Powesland, P.F. (1975). *Speech Style and Social Evaluation*. Academic Press.
-- Labov, W. (1972). *Sociolinguistic Patterns*. University of Pennsylvania Press.
-- Biber, D. (1995). *Dimensions of Register Variation*. Cambridge University Press.
+- Halliday, M.A.K. (1978). *Language as Social Semiotic*. Arnold. [Amazon](https://www.amazon.com/Language-Social-Semiotic-Interpretation-Language/dp/0713159677)
+- Joos, M. (1961). *The Five Clocks*. Harcourt, Brace & World. [Amazon](https://www.amazon.com/five-clocks-Martin-Joos/dp/0156314002)
+- Giles, H. & Powesland, P.F. (1975). *Speech Style and Social Evaluation*. Academic Press. [Amazon](https://www.amazon.com/Speech-style-social-evaluation-Psychology/dp/0122831500)
+- Labov, W. (1972). *Sociolinguistic Patterns*. University of Pennsylvania Press. [Amazon](https://www.amazon.com/Sociolinguistic-Patterns-Conduct-Communication-William/dp/0812210522)
+- Biber, D. (1995). *Dimensions of Register Variation*. Cambridge University Press. [Amazon](https://www.amazon.com/Dimensions-Register-Variation-Cross-Linguistic-Comparison/dp/0521025222)
 
 ### Autism Research
-- Vermeulen, P. (2015). "Context Blindness in Autism." *Focus on Autism*, 30(3).
-- Cola, M. et al. (2022). "Conversational Adaptation in Autism." PMC9167260.
-- Malkin, L. & Abbot-Smith, K. (2021). "Set Switching and Context-Appropriate Language." *Autism*.
-- Hull, L. et al. (2019). "Development of the CAT-Q." *J Autism Dev Disord*.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
+- Vermeulen, P. (2015). "Context Blindness in Autism." *Focus on Autism*, 30(3). [Sage (paywalled)](https://doi.org/10.1177/1088357615583473)
+- Cola, M. et al. (2022). "Conversational Adaptation in Autism." [PMC9167260](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167260/)
+- Malkin, L. & Abbot-Smith, K. (2021). "Set Switching and Context-Appropriate Language." *Autism*. [Sage](https://doi.org/10.1177/13623613211012860)
+- Hull, L. et al. (2019). "Development of the CAT-Q." *J Autism Dev Disord*. [Springer](https://doi.org/10.1007/s10803-018-3792-6)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [Sage](https://journals.sagepub.com/doi/10.1177/1362361320919286)

@@ -611,39 +611,39 @@ Research on turn-taking in autistic individuals provides important context for a
 ## Key Research References
 
 ### Foundational Works
-- Sacks, H., Schegloff, E., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735.
-- Schegloff, E. (1968). Sequencing in conversational openings. *American Anthropologist*, 70(6), 1075-1095.
-- Schegloff, E. (2000). Overlapping talk and the organization of turn-taking for conversation. *Language in Society*, 29(1), 1-63.
-- Schegloff, E., Jefferson, G., & Sacks, H. (1977). The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382.
-- Sacks, H. (1992). *Lectures on Conversation* (2 volumes). Oxford: Blackwell.
+- Sacks, H., Schegloff, E., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735. [JSTOR](https://doi.org/10.2307/412243)
+- Schegloff, E. (1968). Sequencing in conversational openings. *American Anthropologist*, 70(6), 1075-1095. [Wiley](https://doi.org/10.1525/aa.1968.70.6.02a00030)
+- Schegloff, E. (2000). Overlapping talk and the organization of turn-taking for conversation. *Language in Society*, 29(1), 1-63. [Cambridge (paywalled)](https://doi.org/10.1017/S0047404500001019)
+- Schegloff, E., Jefferson, G., & Sacks, H. (1977). The preference for self-correction in the organization of repair in conversation. *Language*, 53(2), 361-382. [JSTOR](https://doi.org/10.2307/413107)
+- Sacks, H. (1992). *Lectures on Conversation* (2 volumes). Oxford: Blackwell. [Amazon](https://www.amazon.com/Lectures-Conversation-Volumes-One-Two/dp/1557867054)
 
 ### Turn-Taking Timing and Processing
-- Stivers, T., Enfield, N.J., Brown, P., et al. (2009). Universals and cultural variation in turn-taking in conversation. *PNAS*, 106(26), 10587-10592.
-- Levinson, S.C. & Torreira, F. (2015). Timing in turn-taking and its implications for processing models of language. *Frontiers in Psychology*, 6, 731.
-- Ford, C. & Thompson, S. (1996). Interactional units in conversation: Syntactic, intonational, and pragmatic resources for the management of turns. In E. Ochs, E. Schegloff, & S. Thompson (Eds.), *Interaction and Grammar*. Cambridge University Press.
+- Stivers, T., Enfield, N.J., Brown, P., et al. (2009). Universals and cultural variation in turn-taking in conversation. *PNAS*, 106(26), 10587-10592. [PNAS](https://doi.org/10.1073/pnas.0903616106)
+- Levinson, S.C. & Torreira, F. (2015). Timing in turn-taking and its implications for processing models of language. *Frontiers in Psychology*, 6, 731. [Frontiers](https://doi.org/10.3389/fpsyg.2015.00731)
+- Ford, C. & Thompson, S. (1996). Interactional units in conversation: Syntactic, intonational, and pragmatic resources for the management of turns. In E. Ochs, E. Schegloff, & S. Thompson (Eds.), *Interaction and Grammar*. Cambridge University Press. [Amazon (volume)](https://www.amazon.com/Interaction-Grammar-Studies-Social-Cultural/dp/0521556252)
 
 ### Overlap and Interruption
-- Zimmerman, D. & West, C. (1975). Sex roles, interruptions and silences in conversation. In B. Thorne & N. Henley (Eds.), *Language and Sex: Difference and Dominance*. Rowley, MA: Newbury House.
-- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Norwood, NJ: Ablex.
+- Zimmerman, D. & West, C. (1975). Sex roles, interruptions and silences in conversation. In B. Thorne & N. Henley (Eds.), *Language and Sex: Difference and Dominance*. Rowley, MA: Newbury House. [Amazon (volume)](https://www.amazon.com/Language-Sex-Difference-Dominance-Thorne/dp/0883770431)
+- Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Norwood, NJ: Ablex. [Amazon](https://www.amazon.com/Conversational-Style-Analyzing-Talk-Friends/dp/0195221818)
 
 ### Backchannels and Listener Responses
-- Yngve, V. (1970). On getting a word in edgewise. *Papers from the Sixth Regional Meeting, Chicago Linguistic Society*, 567-578.
-- Bavelas, J.B., Coates, L., & Johnson, T. (2002). Listener responses as a collaborative process: The role of gaze. *Journal of Communication*, 52(3), 566-580.
+- Yngve, V. (1970). On getting a word in edgewise. *Papers from the Sixth Regional Meeting, Chicago Linguistic Society*, 567-578. [CITATION UNVERIFIED]
+- Bavelas, J.B., Coates, L., & Johnson, T. (2002). Listener responses as a collaborative process: The role of gaze. *Journal of Communication*, 52(3), 566-580. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.2002.tb02562.x)
 
 ### Filled Pauses and Floor Management
-- Clark, H.H. & Fox Tree, J.E. (2002). Using uh and um in spontaneous speaking. *Cognition*, 84(1), 73-111.
-- Kendon, A. (1967). Some functions of gaze-direction in social interaction. *Acta Psychologica*, 26, 22-63.
+- Clark, H.H. & Fox Tree, J.E. (2002). Using uh and um in spontaneous speaking. *Cognition*, 84(1), 73-111. [Elsevier (paywalled)](https://doi.org/10.1016/S0010-0277(02)00017-3)
+- Kendon, A. (1967). Some functions of gaze-direction in social interaction. *Acta Psychologica*, 26, 22-63. [Elsevier (paywalled)](https://doi.org/10.1016/0001-6918(67)90005-4)
 
 ### Gaze and Turn-Taking
-- Auer, P. (2021). Turn-allocation and gaze: A multimodal revision of the "current-speaker-selects-next" rule. *Discourse Studies*, 23(2), 117-140.
-- Lerner, G. (2003). Selecting next speaker: The context-sensitive operation of a context-free organization. *Language in Society*, 32(2), 177-201.
+- Auer, P. (2021). Turn-allocation and gaze: A multimodal revision of the "current-speaker-selects-next" rule. *Discourse Studies*, 23(2), 117-140. [SAGE (paywalled)](https://doi.org/10.1177/1461445620966922)
+- Lerner, G. (2003). Selecting next speaker: The context-sensitive operation of a context-free organization. *Language in Society*, 32(2), 177-201. [Cambridge (paywalled)](https://doi.org/10.1017/S004740450332202X)
 
 ### Autistic Turn-Taking
-- Sng, C.Y., Carter, M., & Stephenson, J. (2018). A systematic review of the comparative pragmatic differences in conversational skills of individuals with autism. *Autism & Developmental Language Impairments*, 3.
-- "Turn-timing in conversations between autistic adults: Typical short-gap transitions are preferred, but not achieved instantly." (2023). *PLOS ONE*.
+- Sng, C.Y., Carter, M., & Stephenson, J. (2018). A systematic review of the comparative pragmatic differences in conversational skills of individuals with autism. *Autism & Developmental Language Impairments*, 3. [SAGE](https://doi.org/10.1177/2396941518803806)
+- "Turn-timing in conversations between autistic adults: Typical short-gap transitions are preferred, but not achieved instantly." (2023). *PLOS ONE*. [PLOS](https://doi.org/10.1371/journal.pone.0284029)
 
 ### Ethnomethodology and Background
-- Garfinkel, H. (1967). *Studies in Ethnomethodology*. Englewood Cliffs, NJ: Prentice-Hall.
+- Garfinkel, H. (1967). *Studies in Ethnomethodology*. Englewood Cliffs, NJ: Prentice-Hall. [Amazon](https://www.amazon.com/Studies-Ethnomethodology-Harold-Garfinkel/dp/0745600050)
 
 ---
 

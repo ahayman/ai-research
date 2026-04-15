@@ -69,7 +69,7 @@ This means that presupposition use and comprehension require a working model of 
 
 **Karin et al. (2025, "Paths to Common Ground in ASD," Autism Research)** conducted one of the most comprehensive studies to date, examining common ground generation in ASD (N=84) versus control (N=56) children and adolescents aged 6-16. Both groups generated common ground spontaneously, but the control group achieved common conceptualization faster and with fewer words. Path analysis revealed independent contributions from both Vocabulary and Theory of Mind to common ground efficiency.
 
-**Hyter et al. (2017, "The Art of Common Ground," Journal of Child Language)** found that typically developing participants produced shorter narrations when they shared knowledge with an interlocutor -- an effect not observed at the group level in ASD. However, older and less severely affected participants with ASD did shorten their narratives, suggesting the ability develops with age.
+**de Marchena & Eigsti (2016, "The art of common ground: emergence of a complex pragmatic skill in children with ASD," *Journal of Child Language* 43(1):43-80, PMC4764348)** found that typically developing participants produced shorter narrations when they shared knowledge with an interlocutor -- an effect not observed at the group level in ASD. However, older and less severely affected participants with ASD did shorten their narratives, suggesting the ability develops with age.
 
 **De Marchena & Eigsti (2018)** found that 5-to-7-year-olds with ASD were able to consider what they had previously shared with a conversation partner, suggesting basic common ground tracking is present but may develop on a delayed trajectory.
 
@@ -374,7 +374,7 @@ When you realize you're missing presupposed knowledge:
 
 ### Common Ground Research
 - [Karin et al. (2025) - Paths to Common Ground in ASD](https://onlinelibrary.wiley.com/doi/10.1002/aur.70006)
-- [Hyter et al. (2017) - The art of common ground: emergence of a complex pragmatic skill in ASD](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/)
+- [de Marchena & Eigsti (2016) - The art of common ground: emergence of a complex pragmatic skill in ASD](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/)
 - [De Marchena & Eigsti (2018) - When do children with ASD take common ground into account?](https://pubmed.ncbi.nlm.nih.gov/30212612/)
 - [Geelhand et al. (2025) - Autistic adults display different verbal behavior only in mixed-neurotype interactions](https://journals.sagepub.com/doi/10.1177/13623613241298376)
 

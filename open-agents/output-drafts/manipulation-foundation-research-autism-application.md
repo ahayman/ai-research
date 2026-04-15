@@ -182,7 +182,7 @@ This supports a **pattern-recognition-over-time approach** to manipulation detec
 ### 3.3 Memory differences
 
 - Autistic individuals typically show intact or superior semantic memory but **diminished episodic recollection** — particularly for the specific spatial-temporal context and subjective re-experiencing of personal events (Boucher & Mayes, 2012; Exploring the neurocognitive basis of episodic recollection in autism, PMC6424931).
-- Adults with autism show heightened PTSD risk associated with cumulative trauma and memory deficits (Haruvi-Lamdan et al., 2021, PMID 33454451).
+- Adults with autism show heightened PTSD risk associated with cumulative trauma and memory deficits (Haruvi-Lamdan et al., 2020, PMID 33454451).
 - **Mechanism of vulnerability in manipulation contexts:**
   1. Gaslighting ("that's not what happened") is harder to resist when episodic memory of the event's context is less vivid.
   2. Pattern-level memory ("this keeps happening") may still be available even when specific-incident memory is fuzzy — this is an asset if the person learns to trust it.
@@ -318,7 +318,7 @@ This section documents specific empirical or community-documented failures of st
 - **40% current probable PTSD; 61% lifetime probable PTSD** in trauma-exposed autistic adults. (Other reports of the same dataset cite 45% current.)
 - Compared to an estimated 8.9% conditional probability in the English general population following trauma exposure.
 - **Evidence quality: [PRELIMINARY]** — Small sample, online, no clinician confirmation, self-selected. Rumball and colleagues themselves note these limits.
-- **Subsequent work:** Haruvi-Lamdan et al. (2021) and Prosser, Rumball, King & Steel (2026, *Autism*) extend the work with appraisal-based models. A 2024 systematic review (*Review Journal of Autism and Developmental Disorders*) consolidates the area.
+- **Subsequent work:** Haruvi-Lamdan et al. (2020) and Prosser, Rumball, King & Steel (2026, *Autism*) extend the work with appraisal-based models. A 2024 systematic review (*Review Journal of Autism and Developmental Disorders*) consolidates the area.
 
 ### 6.2 Non-DSM-5 trauma
 
@@ -343,7 +343,7 @@ This section documents specific empirical or community-documented failures of st
 
 ### 6.5 Therapeutic adaptation
 
-- **EMDR:** Fisher, van Diest, Leoni & Spain (2023) — Delphi survey with EMDR therapists; identified specific adaptations. Systematic review in *Journal of EMDR Practice and Research* (2023) found encouraging PTSD reductions across studies. Evidence: **[PRELIMINARY]**.
+- **EMDR:** Fisher, van Diest, Leoni & Spain (2023) — Delphi survey with EMDR therapists; identified specific adaptations. Systematic review in *Autism (SAGE)* (2023) found encouraging PTSD reductions across studies. Evidence: **[PRELIMINARY]**.
 - **CBT:** Kerns et al. (2016 and related) — trauma-focused CBT is plausibly adaptable with modifications for autistic sensory, communication, and information-processing differences. Evidence: **[PRELIMINARY]**.
 - **No clear evidence-based trauma therapy specifically validated for autistic adults.** This is a critical gap — the best-validated trauma therapies have not been rigorously adapted and tested in autistic populations. What exists is therapist-reported adaptation and small-n qualitative work.
 
@@ -554,7 +554,7 @@ Based on this foundation, downstream content should:
 - *The Assessment and Treatment of Post-traumatic Stress Disorder in Autistic People: A Systematic Review.* (2024). https://link.springer.com/article/10.1007/s40489-024-00430-9
 - Raymaker, D. M. et al. (2020). *"Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew": Defining Autistic Burnout.* Autism in Adulthood. PMC7313636. https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/
 - Fisher, N., van Diest, C., Leoni, M. & Spain, D. (2023). *Using EMDR with autistic individuals: A Delphi survey with EMDR therapists.* Autism. PMC9806468. https://journals.sagepub.com/doi/full/10.1177/13623613221080254
-- *Eye Movement Desensitization and Reprocessing Therapy for Individuals With Neurodevelopmental Disorders: A Systematic Review.* Journal of EMDR Practice and Research (2023). https://spj.science.org/doi/10.1891/EMDR-2023-0005
+- *Eye Movement Desensitization and Reprocessing Therapy for Individuals With Neurodevelopmental Disorders: A Systematic Review.* Autism (SAGE) (2023). https://spj.science.org/doi/10.1891/EMDR-2023-0005
 - Kerns et al. (2015, 2016) — *Autism Spectrum Disorder and the Experience of Traumatic Events: Review of the Current Literature to Inform Modifications to a Treatment Model for Children with Autism.* https://pubmed.ncbi.nlm.nih.gov/30539370/
 
 ### Safety planning adaptations
@@ -600,7 +600,7 @@ Based on this foundation, downstream content should:
 ### Experiential/synthesis authors
 
 - Price, D. (2022). *Unmasking Autism: Discovering the New Faces of Neurodiversity.* Harmony. (Synthesis and advocacy; individual empirical claims should be traced to underlying sources.)
-- Hendrickx, S. & Gould, J. (2015). *Women and Girls with Autism Spectrum Disorder: Understanding Life Experiences from Early Childhood to Old Age.* Jessica Kingsley Publishers. (Clinical-experiential.)
+- Hendrickx, S. (2015). *Women and Girls with Autism Spectrum Disorder: Understanding Life Experiences from Early Childhood to Old Age.* Jessica Kingsley Publishers. (Clinical-experiential.)
 
 ---
 

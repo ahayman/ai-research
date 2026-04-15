@@ -801,40 +801,40 @@ The pragmatic system of questions can be approached systematically:
 ## 9. KEY THEORETICAL FRAMEWORKS AND REFERENCES
 
 ### Core Texts:
-- **Austin, J.L. (1962).** *How to Do Things with Words.* — Foundational speech act theory
-- **Searle, J.R. (1969).** *Speech Acts: An Essay in the Philosophy of Language.* — Classification of questions as directives
-- **Searle, J.R. (1975).** "Indirect Speech Acts." — Framework for understanding how questions function as requests
-- **Levinson, S.C. (1983).** *Pragmatics.* — Comprehensive textbook covering questions in speech act theory, conversation structure, and implicature
-- **Brown, P. & Levinson, S.C. (1987).** *Politeness: Some Universals in Language Usage.* — Face-saving motivation for indirect question-requests
-- **Grice, H.P. (1975).** "Logic and Conversation." — Maxims governing answers and generating implicatures through questions
+- **Austin, J.L. (1962).** *How to Do Things with Words.* — Foundational speech act theory. [Amazon](https://www.amazon.com/How-Things-Words-Second/dp/0674411528)
+- **Searle, J.R. (1969).** *Speech Acts: An Essay in the Philosophy of Language.* — Classification of questions as directives. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- **Searle, J.R. (1975).** "Indirect Speech Acts." — Framework for understanding how questions function as requests. [Brill](https://brill.com/display/book/edcoll/9789004368811/BP000004.xml)
+- **Levinson, S.C. (1983).** *Pragmatics.* — Comprehensive textbook covering questions in speech act theory, conversation structure, and implicature. [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
+- **Brown, P. & Levinson, S.C. (1987).** *Politeness: Some Universals in Language Usage.* — Face-saving motivation for indirect question-requests. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- **Grice, H.P. (1975).** "Logic and Conversation." — Maxims governing answers and generating implicatures through questions. [UCL PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
 
 ### Conversation Analysis:
-- **Schegloff, E.A. (2007).** *Sequence Organization in Interaction.* — Question-answer adjacency pairs, insertion sequences, preference organization
-- **Sacks, H., Schegloff, E.A., & Jefferson, G. (1974).** "A Simplest Systematics for the Organization of Turn-Taking." — Turn-allocation properties of questions
-- **Heritage, J. (2012).** "Epistemics in Action: Action Formation and Territories of Knowledge." — Epistemic gradient framework for question design
-- **Heritage, J. & Raymond, G. (2012).** "Navigating Epistemic Landscapes." — How different question forms index different epistemic stances
-- **Drew, P. (1997).** "'Open' Class Repair Initiators in Response to Sequential Sources of Troubles in Conversation." — Questions as repair mechanisms
+- **Schegloff, E.A. (2007).** *Sequence Organization in Interaction.* — Question-answer adjacency pairs, insertion sequences, preference organization. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Emanuel-Schegloff/dp/0521532795)
+- **Sacks, H., Schegloff, E.A., & Jefferson, G. (1974).** "A Simplest Systematics for the Organization of Turn-Taking." — Turn-allocation properties of questions. [JSTOR (paywalled)](https://www.jstor.org/stable/412243)
+- **Heritage, J. (2012).** "Epistemics in Action: Action Formation and Territories of Knowledge." — Epistemic gradient framework for question design. [Taylor & Francis (paywalled)](https://doi.org/10.1080/08351813.2012.646684)
+- **Heritage, J. & Raymond, G. (2012).** "Navigating Epistemic Landscapes." — How different question forms index different epistemic stances. [de Gruyter](https://www.degruyter.com/document/doi/10.1515/9783110219272.179/html)
+- **Drew, P. (1997).** "'Open' Class Repair Initiators in Response to Sequential Sources of Troubles in Conversation." — Questions as repair mechanisms. [Elsevier (paywalled)](https://doi.org/10.1016/S0378-2166(96)00027-8)
 
 ### Classroom Discourse:
-- **Sinclair, J.McH. & Coulthard, R.M. (1975).** *Towards an Analysis of Discourse.* — The IRF pattern
-- **Mehan, H. (1979).** *Learning Lessons: Social Organization in the Classroom.* — The IRE pattern
-- **Long, M.H. & Sato, C.J. (1983).** — Display vs. referential questions in classroom interaction
+- **Sinclair, J.McH. & Coulthard, R.M. (1975).** *Towards an Analysis of Discourse.* — The IRF pattern. [Amazon](https://www.amazon.com/Towards-analysis-discourse-English-teachers/dp/0194360113)
+- **Mehan, H. (1979).** *Learning Lessons: Social Organization in the Classroom.* — The IRE pattern. [Amazon](https://www.amazon.com/Learning-Lessons-Social-Organization-Classroom/dp/0674520157)
+- **Long, M.H. & Sato, C.J. (1983).** — Display vs. referential questions in classroom interaction. [Amazon](https://www.amazon.com/Classroom-Oriented-Research-Second-Language-Acquisition/dp/088377244X)
 
 ### Questions and Power:
-- **Fairclough, N. (1989, 2001).** *Language and Power* / *Critical Discourse Analysis.* — Questions as mechanisms of power in institutional discourse
-- **Bull, P. (2003).** *The Microanalysis of Political Communication.* — Political question evasion
-- **Clayman, S. (2001).** "Answers and Evasions." — Question-response sequences in political interviews
+- **Fairclough, N. (1989, 2001).** *Language and Power* / *Critical Discourse Analysis.* — Questions as mechanisms of power in institutional discourse. [Amazon](https://www.amazon.com/Language-Power-Norman-Fairclough/dp/0582414830)
+- **Bull, P. (2003).** *The Microanalysis of Political Communication.* — Political question evasion. [Amazon](https://www.amazon.com/Microanalysis-Political-Communication-Peter-Bull/dp/0415273730)
+- **Clayman, S. (2001).** "Answers and Evasions." — Question-response sequences in political interviews. [CUP (paywalled)](https://doi.org/10.1017/S0047404501003037)
 
 ### Questions and Autism:
-- **Kissine, M. et al. (2015).** "Children with Autism Understand Indirect Speech Acts." — Evidence that conventionalized indirect requests are accessible
-- **Cummings, L. (2014).** *Pragmatic Disorders.* — Overview of pragmatic difficulties in autism including question interpretation
-- **Mao, Y. (2023).** "Pragmatic Competence, Autistic Language Use and the Basic Properties of Human Language." — Distinguishing linguistic pragmatics from social pragmatics in autism
+- **Kissine, M. et al. (2015).** "Children with Autism Understand Indirect Speech Acts." — Evidence that conventionalized indirect requests are accessible. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
+- **Cummings, L. (2014).** *Pragmatic Disorders.* — Overview of pragmatic difficulties in autism including question interpretation. [Amazon](https://www.amazon.com/Pragmatic-Disorders-Perspectives-Pragmatics-Philosophy/dp/9400779534)
+- **Mao, Y. (2023).** "Pragmatic Competence, Autistic Language Use and the Basic Properties of Human Language." — Distinguishing linguistic pragmatics from social pragmatics in autism. [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1170991/full)
 
 ### Question Semantics and Pragmatics:
-- **Roberts, C. (1996, 2012).** "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." — Question Under Discussion framework
-- **Sadock, J. (1970, 1974).** — Whimperatives and hybrid question-directive forms
-- **Gunlogson, C. (2001, 2003).** *True to Form: Rising and Falling Declaratives as Questions in English.* — Form-function mismatches in declarative questions
-- **Rohde, H. (2024).** "Rhetorical Questions." — Comprehensive overview of rhetorical question pragmatics
+- **Roberts, C. (1996, 2012).** "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." — Question Under Discussion framework. [Semantics & Pragmatics](https://semprag.org/index.php/sp/article/view/sp.5.6)
+- **Sadock, J. (1970, 1974).** *Toward a Linguistic Theory of Speech Acts.* — Whimperatives and hybrid question-directive forms. [Amazon](https://www.amazon.com/Toward-linguistic-theory-speech-Jerrold/dp/0126144508)
+- **Gunlogson, C. (2001, 2003).** *True to Form: Rising and Falling Declaratives as Questions in English.* — Form-function mismatches in declarative questions. [Amazon](https://www.amazon.com/True-Form-Declaratives-Questions-Outstanding/dp/0415967643)
+- **Rohde, H. (2024).** "Rhetorical Questions." — Comprehensive overview of rhetorical question pragmatics. [Annual Reviews](https://www.annualreviews.org/content/journals/linguistics)
 
 ---
 

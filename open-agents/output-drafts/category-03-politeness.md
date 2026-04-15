@@ -502,18 +502,18 @@ The same system works in reverse -- you can decode what others' politeness level
 ## Key Sources
 
 ### Foundational Texts
-- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
-- Goffman, E. (1967). *Interaction Ritual: Essays on Face-to-Face Behavior*. Anchor Books.
-- Goffman, E. (1959). *The Presentation of Self in Everyday Life*. Anchor Books.
-- Leech, G. (1983). *Principles of Pragmatics*. Longman.
-- Watts, R. (2003). *Politeness*. Cambridge University Press.
-- Spencer-Oatey, H. (2008). *Culturally Speaking: Culture, Communication and Politeness Theory*. 2nd ed. Continuum.
+- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
+- Goffman, E. (1967). *Interaction Ritual: Essays on Face-to-Face Behavior*. Anchor Books. [Amazon](https://www.amazon.com/Interaction-Ritual-Essays-Face-Face-Behavior/dp/0394706315)
+- Goffman, E. (1959). *The Presentation of Self in Everyday Life*. Anchor Books. [Amazon](https://www.amazon.com/Presentation-Self-Everyday-Life/dp/0385094027)
+- Leech, G. (1983). *Principles of Pragmatics*. Longman. [Amazon](https://www.amazon.com/Principles-Pragmatics-Longman-Linguistics-Library/dp/0582551102)
+- Watts, R. (2003). *Politeness*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Key-Topics-Sociolinguistics/dp/0521794064)
+- Spencer-Oatey, H. (2008). *Culturally Speaking: Culture, Communication and Politeness Theory*. 2nd ed. Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Second-Communication-Politeness/dp/1847063616)
 
 ### Autism and Politeness
-- Alvarez & Wolfe (2024). "Face-Threatening Acts in ASD." *J Social and Personal Relationships*.
-- Butterbrod, T. "The Effect of Autistic Traits on Politeness Strategies." Tilburg University.
-- Sirota, K.G. (2004). "Positive Politeness in Autistic Family Interaction." *Discourse Studies*.
-- Hull, L. et al. (2017). "Camouflaging in Autism." PMC5509825.
-- Szechy et al. (2024). "Double Empathy in Workplace." PMC11317796.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*.
+- Alvarez & Wolfe (2024). "Face-Threatening Acts in ASD." *J Social and Personal Relationships*. [SAGE (paywalled)](https://journals.sagepub.com/home/spr)
+- Butterbrod, T. "The Effect of Autistic Traits on Politeness Strategies." Tilburg University. [Tilburg Repository](http://arno.uvt.nl/show.cgi?fid=148839)
+- Sirota, K.G. (2004). "Positive Politeness in Autistic Family Interaction." *Discourse Studies*. [SAGE (paywalled)](https://doi.org/10.1177/1461445604041769)
+- Hull, L. et al. (2017). "Camouflaging in Autism." PMC5509825. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Szechy et al. (2024). "Double Empathy in Workplace." PMC11317796. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [SAGE](https://doi.org/10.1177/1362361320919286)
+- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)

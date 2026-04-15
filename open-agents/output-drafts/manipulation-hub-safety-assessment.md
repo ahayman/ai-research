@@ -302,46 +302,46 @@ This hub is research-grounded content. It cannot:
 Every claim on this page should be traceable to one of the following sources. This page itself will be the model for every subsequent page in the hub: if a claim cannot be traced to a source in the foundational research documents, it does not go on the page.
 
 **Fight vs. control framework:**
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
-- Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence.* Northeastern University Press.
-- Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer.
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence.* Northeastern University Press. — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer. — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
 
 **Couples therapy contraindication:**
-- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312.
-- Stith, S. M., et al. (2012). "Systemic Perspectives on Intimate Partner Violence Treatment." *Journal of Marital and Family Therapy* 38(1): 220–240.
-- Karakurt, G., et al. (2016). "Couples Therapy for Intimate Partner Violence: A Systematic Review and Meta-Analysis." *Journal of Marital and Family Therapy* 42(4): 567–583. PMC5050084.
+- Bograd, M., & Mederos, F. (1999). "Battering and Couples Therapy: Universal Screening and Selection of Treatment Modality." *Journal of Marital and Family Therapy* 25(3): 291–312. — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Stith, S. M., et al. (2012). "Systemic Perspectives on Intimate Partner Violence Treatment." *Journal of Marital and Family Therapy* 38(1): 220–240. — [Wiley](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1752-0606.2011.00245.x) [paywalled]
+- Karakurt, G., et al. (2016). "Couples Therapy for Intimate Partner Violence: A Systematic Review and Meta-Analysis." *Journal of Marital and Family Therapy* 42(4): 567–583. — [PMC5050084](https://pmc.ncbi.nlm.nih.gov/articles/PMC5050084/)
 
 **Lethality indicators:**
-- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097.
-- Campbell, J. C., Webster, D. W., & Glass, N. (2009). "The Danger Assessment: Validation of a Lethality Risk Assessment Instrument for Intimate Partner Femicide." *Journal of Interpersonal Violence* 24(4): 653–674.
-- Glass, N., et al. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48, 95% CI 4.53–12.35)
-- Wilson, M., & Daly, M. (1993). "Spousal Homicide Risk and Estrangement." *Violence and Victims* 8(1): 3–16.
-- Messing, J. T., et al. (2017). "The Lethality Screen." *Journal of Interpersonal Violence* 32(2): 205–226.
+- Campbell, J. C., et al. (2003). "Risk Factors for Femicide in Abusive Relationships." *American Journal of Public Health* 93(7): 1089–1097. — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Campbell, J. C., Webster, D. W., & Glass, N. (2009). "The Danger Assessment: Validation of a Lethality Risk Assessment Instrument for Intimate Partner Femicide." *Journal of Interpersonal Violence* 24(4): 653–674. — [Sage](https://journals.sagepub.com/doi/10.1177/0886260508317180) [paywalled]
+- Glass, N., et al. (2008). "Non-Fatal Strangulation Is an Important Risk Factor for Homicide of Women." *Journal of Emergency Medicine* 35(3): 329–335. (OR 7.48, 95% CI 4.53–12.35) — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Wilson, M., & Daly, M. (1993). "Spousal Homicide Risk and Estrangement." *Violence and Victims* 8(1): 3–16. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8292563/) [paywalled]
+- Messing, J. T., et al. (2017). "The Lethality Screen." *Journal of Interpersonal Violence* 32(2): 205–226. — [Sage](https://journals.sagepub.com/doi/abs/10.1177/0886260515585540) [paywalled]
 
 **Safety planning + advocacy:**
-- Sullivan, C. M., & Bybee, D. I. (1999). "Reducing Violence Using Community-Based Advocacy for Women With Abusive Partners." *Journal of Consulting and Clinical Psychology* 67(1): 43–53.
+- Sullivan, C. M., & Bybee, D. I. (1999). "Reducing Violence Using Community-Based Advocacy for Women With Abusive Partners." *Journal of Consulting and Clinical Psychology* 67(1): 43–53. — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
 
 **Stages of change applied to leaving:**
-- Prochaska, J. O., & DiClemente, C. C. (1983). *Journal of Consulting and Clinical Psychology* 51(3): 390–395.
-- Burke, J. G., et al. (2004). "Ending Intimate Partner Violence: An Application of the Transtheoretical Model." *American Journal of Health Behavior* 28(2): 122–133.
+- Prochaska, J. O., & DiClemente, C. C. (1983). *Journal of Consulting and Clinical Psychology* 51(3): 390–395. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/6863699/) [paywalled]
+- Burke, J. G., et al. (2004). "Ending Intimate Partner Violence: An Application of the Transtheoretical Model." *American Journal of Health Behavior* 28(2): 122–133. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15058512/) [paywalled]
 
 **Disclosure asymmetry:**
-- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association.
+- Ullman, S. E. (2010). *Talking About Sexual Assault: Society's Response to Survivors.* American Psychological Association. — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
 
 **Autism-specific application:**
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887.
-- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
-- Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.*
-- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.*
-- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745.
-- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation." *Autism.*
-- Pearson, A., et al. (2024). "'It's not a physical prison but you can't get out.'" *Autism in Adulthood.*
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem.'" *Disability & Society* 27(6): 883–887. — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders* 52(2):490-507. — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Williams, D. M., et al. (2018). "Can you spot a liar? Deception, mindreading, and the case of autism spectrum disorder." *Autism Research.* — [PMC6220950](https://pmc.ncbi.nlm.nih.gov/articles/PMC6220950/)
+- Rozenkrantz, L., D'Mello, A. M., & Gabrieli, J. D. E. (2021). "Enhanced rationality in autism spectrum disorder." *Trends in Cognitive Sciences.* — [Cell](https://www.cell.com/trends/cognitive-sciences/fulltext/S1364-6613(21)00125-X) [paywalled]
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson, A., Rose, K., & Rees, J. (2022). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation." *Autism.* — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson, A., et al. (2024). "'It's not a physical prison but you can't get out.'" *Autism in Adulthood.* — [Liebert DOI](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
 
 **Recovery framework:**
-- Herman, J. L. (1992, 2015). *Trauma and Recovery.* Basic Books.
+- Herman, J. L. (1992, 2015). *Trauma and Recovery.* Basic Books. — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
 
 **Potentially harmful therapies:**
-- Lilienfeld, S. O. (2007). "Psychological Treatments That Cause Harm." *Perspectives on Psychological Science* 2(1): 53–70.
+- Lilienfeld, S. O. (2007). "Psychological Treatments That Cause Harm." *Perspectives on Psychological Science* 2(1): 53–70. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
 
 **Foundational research documents for this hub:**
 - [manipulation-foundation-research-dv-frameworks.md](manipulation-foundation-research-dv-frameworks.md)

@@ -298,12 +298,12 @@ The key is that each step is locally relevant to the previous one. You're not ju
 ## Key Sources
 
 ### Foundational Texts
-- Keenan, E.O. & Schieffelin, B.B. (1976). "Topic as a Discourse Notion."
-- Brown, G. & Yule, G. (1983). *Discourse Analysis*. Cambridge University Press.
-- Schegloff, E.A. (1990). "On the Organization of Sequences as a Source of 'Coherence.'"
-- Sacks, H. (1992). *Lectures on Conversation*. Blackwell.
+- Keenan, E.O. & Schieffelin, B.B. (1976). "Topic as a Discourse Notion." In C.N. Li (Ed.), *Subject and Topic*. Academic Press. [Amazon (parent book)](https://www.amazon.com/Subject-Topic-Charles-N-Li/dp/0124473504)
+- Brown, G. & Yule, G. (1983). *Discourse Analysis*. Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Analysis-Cambridge-Textbooks-Linguistics/dp/0521284759)
+- Schegloff, E.A. (1990). "On the Organization of Sequences as a Source of 'Coherence' in Talk-in-Interaction." [Amazon (parent book)](https://www.amazon.com/Conversational-Organization-Its-Development-Understanding/dp/089391640X)
+- Sacks, H. (1992). *Lectures on Conversation*. Blackwell. [Amazon](https://www.amazon.com/Lectures-Conversation-Harvey-Sacks/dp/1557869057)
 
 ### Autism Research
-- Ábalos, A. et al. (2025). "Conversational Topic Shifts and Maintenance in Autistic and NT Children." *Autism Research*.
-- Abbot-Smith, K. et al. (2025). "Conversational Topic Maintenance and Related Cognitive Abilities." *Autism*.
-- Abbot-Smith, K. et al. (2023). "Topic Maintenance in Social Conversation: What Children Need to Learn." *First Language*.
+- Ábalos, A. et al. (2025). "Conversational Topic Shifts and Maintenance in Autistic and NT Children." *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.70204)
+- Abbot-Smith, K. et al. (2025). "Conversational Topic Maintenance and Related Cognitive Abilities." *Autism*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11894863/)
+- Abbot-Smith, K. et al. (2023). "Topic Maintenance in Social Conversation: What Children Need to Learn." *First Language*. [SAGE](https://journals.sagepub.com/doi/full/10.1177/01427237231172652)

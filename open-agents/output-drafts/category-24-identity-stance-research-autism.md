@@ -21,7 +21,7 @@ The reframe is load-bearing for this category. If the breakdown is mutual, then 
 Milton's argument was initially philosophical. Subsequent empirical work has supported the core claim:
 
 - **Sheppard et al. (2016)** found that non-autistic participants had difficulty reading the mental states of autistic targets -- that is, the inference difficulty runs in both directions, not only from autistic to non-autistic.
-- **Edey et al. (2016)** found that judgments of social competence declined when non-autistic observers interacted with autistic people, supporting the view that the cross-group difficulty is shared.
+- **Edey et al. (2016)** found that non-autistic observers exhibited mind-blindness when reading mental states from autistic targets' movement animations, supporting the view that the cross-group difficulty is shared. (For explicit social-competence ratings, see Alkhaldi et al. 2019, cited below.)
 - **Alkhaldi et al. (2019)** found that neurotypical observers judged autistic individuals more negatively after only brief exposure, and that these judgments were made using thin-slice social information.
 - **Mitchell, Sheppard, & Cassidy (2021)** extended the line of work, arguing that the phenomena traditionally called "autistic social impairment" are better characterized as an interaction-level mismatch.
 
@@ -213,8 +213,8 @@ Subsequent studies have extended the finding:
 - **Crompton, Hallett, et al. (2020)** on rapport in autistic-autistic versus mixed interactions. This study found that autistic adults reported significantly higher rapport, ease, and enjoyment when interacting with other autistic adults than when interacting in mixed pairs. The rapport finding is particularly important for stance theory because rapport is precisely the interactional outcome that stance alignment is supposed to produce. When rapport is high in autistic-autistic pairs, it means that the stance alignment work is landing — that each speaker's stance moves are being read the way they were intended.
 - **Crompton et al. (2022)** on the specific conversational features that support autistic-autistic rapport.
 - **Morrison et al. (2020)** on first impressions between autistic and non-autistic participants.
-- **Heasman & Gillespie (2019)** qualitative work on perspective-taking in autistic family interactions.
-- **Heasman & Gillespie (2018)** on "neurodivergent intersubjectivity," arguing that autistic interactants develop specific coordinated strategies for shared understanding that look different from non-autistic strategies but are functionally equivalent.
+- **Heasman & Gillespie (2018)** qualitative work on perspective-taking in autistic family interactions (*Autism* 22(6):740-750).
+- **Heasman & Gillespie (2019)** on "neurodivergent intersubjectivity," arguing that autistic interactants develop specific coordinated strategies for shared understanding that look different from non-autistic strategies but are functionally equivalent (*Autism* 23(4):910-921).
 
 The cumulative picture: autistic interactants have shared stance defaults with each other that non-autistic interactants do not share with them. The stance ecology of autistic-to-autistic interaction is internally coherent and functional.
 
@@ -241,7 +241,7 @@ Neither party is doing anything wrong. Both parties are doing ordinary stance-re
 Several empirical studies support the stance-reading frame:
 
 - **Edey et al. (2016)** "Interaction takes two" *Journal of Abnormal Psychology* 125(7):879-885 showed that non-autistic observers had systematic difficulty reading the mental states of autistic targets, demonstrating that the reading difficulty runs in both directions.
-- **Sheppard et al. (2016)** showed that non-autistic observers had difficulty inferring emotion from autistic facial displays, even though the emotion itself was accurately experienced by the target.
+- **Sheppard et al. (2016)** showed that non-autistic observers had difficulty inferring the mental states of autistic targets from short vignettes describing the target's behavior — the inference difficulty runs in both directions, not only from autistic to non-autistic. (For non-autistic observers' difficulty reading autistic *facial* emotion displays specifically, see Brewer et al., 2016.)
 - **Alkhaldi, Sheppard & Mitchell (2019)** showed that non-autistic observers formed negative impressions of autistic targets from thin-slice exposure, and these impressions were driven by the observer's reading rather than by the target's content.
 - **Morrison et al. (2020)** and **DeBrabander et al. (2019)** showed that autistic-autistic pairs produced outcomes different from mixed pairs even on the same task content, supporting the boundary-mismatch interpretation.
 
@@ -568,74 +568,76 @@ This structure is offered so that readers can calibrate their use of the file. M
 
 ## Sources
 
-Alkhaldi, R. S., Sheppard, E., & Mitchell, P. (2019). Is there a link between autistic people being perceived unfavorably and having a mind that is difficult to read? *Journal of Autism and Developmental Disorders*, 49(10), 3973-3982.
+Alkhaldi, R. S., Sheppard, E., & Mitchell, P. (2019). Is there a link between autistic people being perceived unfavorably and having a mind that is difficult to read? *Journal of Autism and Developmental Disorders*, 49(10), 3973-3982. [Springer](https://doi.org/10.1007/s10803-019-04101-1)
 
-Arnold, S. R. C., Higgins, J. M., Weise, J., Desai, A., Pellicano, E., & Trollor, J. N. (2023). Towards the measurement of autistic burnout. *Autism*, 27(7), 1933-1948.
+Arnold, S. R. C., Higgins, J. M., Weise, J., Desai, A., Pellicano, E., & Trollor, J. N. (2023). Towards the measurement of autistic burnout. *Autism*, 27(7), 1933-1948. [SAGE](https://doi.org/10.1177/13623613221147410)
 
-DeBrabander, K. M., Morrison, K. E., Jones, D. R., Faso, D. J., Chmielewski, M., & Sasson, N. J. (2019). Do first impressions of autistic adults differ between autistic and nonautistic observers? *Autism in Adulthood*, 1(4), 250-257.
+DeBrabander, K. M., Morrison, K. E., Jones, D. R., Faso, D. J., Chmielewski, M., & Sasson, N. J. (2019). Do first impressions of autistic adults differ between autistic and nonautistic observers? *Autism in Adulthood*, 1(4), 250-257. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992867/)
 
-Bagatell, N. (2010). From cure to community: Transforming notions of autism. *Ethos*, 38(1), 33-55.
+Bagatell, N. (2010). From cure to community: Transforming notions of autism. *Ethos*, 38(1), 33-55. [Wiley (paywalled)](https://doi.org/10.1111/j.1548-1352.2009.01080.x)
 
-Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453.
+Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453. [Taylor & Francis](https://doi.org/10.1080/09687599.2020.1822782)
 
-Brown-Lavoie, S. M., Viecili, M. A., & Weiss, J. A. (2014). Sexual knowledge and victimization in adults with autism spectrum disorders. *Journal of Autism and Developmental Disorders*, 44(9), 2185-2196.
+Brown-Lavoie, S. M., Viecili, M. A., & Weiss, J. A. (2014). Sexual knowledge and victimization in adults with autism spectrum disorders. *Journal of Autism and Developmental Disorders*, 44(9), 2185-2196. [Springer (paywalled)](https://doi.org/10.1007/s10803-014-2093-y)
 
-Cage, E., & Howes, J. (2020). Dropping out and moving on: A qualitative study of autistic people's experiences of university. *Autism*, 24(7), 1664-1675.
+Cage, E., & Howes, J. (2020). Dropping out and moving on: A qualitative study of autistic people's experiences of university. *Autism*, 24(7), 1664-1675. [SAGE](https://doi.org/10.1177/1362361320918750)
 
-Cage, E., & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911.
+Cage, E., & Troxell-Whitman, Z. (2019). Understanding the reasons, contexts and costs of camouflaging for autistic adults. *Journal of Autism and Developmental Disorders*, 49(5), 1899-1911. [Springer](https://doi.org/10.1007/s10803-018-03878-x)
 
-Cook, J., Hull, L., Crane, L., & Mandy, W. (2021). Camouflaging in autism: A systematic review. *Clinical Psychology Review*, 89, 102080.
+Cook, J., Hull, L., Crane, L., & Mandy, W. (2021). Camouflaging in autism: A systematic review. *Clinical Psychology Review*, 89, 102080. [ScienceDirect](https://doi.org/10.1016/j.cpr.2021.102080)
 
-Cooper, K., Smith, L. G. E., & Russell, A. (2017). Social identity, self-esteem, and mental health in autism. *European Journal of Social Psychology*, 47(7), 844-854.
+Cooper, K., Smith, L. G. E., & Russell, A. (2017). Social identity, self-esteem, and mental health in autism. *European Journal of Social Psychology*, 47(7), 844-854. [Wiley](https://doi.org/10.1002/ejsp.2297)
 
-Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712.
+Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
 
-Crompton, C. J., Hallett, S., Ropar, D., Flynn, E., & Fletcher-Watson, S. (2020). "I never realised everybody felt as happy as I do when I am around autistic people": A thematic analysis of autistic adults' relationships with autistic and neurotypical friends and family. *Autism*, 24(6), 1438-1448.
+Crompton, C. J., Hallett, S., Ropar, D., Flynn, E., & Fletcher-Watson, S. (2020). "I never realised everybody felt as happy as I do when I am around autistic people": A thematic analysis of autistic adults' relationships with autistic and neurotypical friends and family. *Autism*, 24(6), 1438-1448. [SAGE](https://doi.org/10.1177/1362361320908976)
 
-Douglas, P., & Sedgewick, F. (2024). Weaponised features: How autistic characteristics are used against autistic people in coercive relationships. [Representative citation for the weaponization literature; check current reference list for exact details.]
+Douglas, S., & Sedgewick, F. (2024). Experiences of interpersonal victimization and abuse among autistic people. *Autism*, 28(7), 1732-1745. DOI 10.1177/13623613231205630. [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
 
-Edey, R., Cook, J., Brewer, R., Johnson, M. H., Bird, G., & Press, C. (2016). Interaction takes two: Typical adults exhibit mind-blindness towards those with autism spectrum disorder. *Journal of Abnormal Psychology*, 125(7), 879-885.
+Edey, R., Cook, J., Brewer, R., Johnson, M. H., Bird, G., & Press, C. (2016). Interaction takes two: Typical adults exhibit mind-blindness towards those with autism spectrum disorder. *Journal of Abnormal Psychology*, 125(7), 879-885. [APA (paywalled)](https://doi.org/10.1037/abn0000199)
 
-Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
+Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
 
-Griffiths, S., Allison, C., Kenny, R., Holt, R., Smith, P., & Baron-Cohen, S. (2019). The Vulnerability Experiences Quotient (VEQ): A study of vulnerability, mental health and life satisfaction in autistic adults. *Autism Research*, 12(10), 1516-1528.
+Griffiths, S., Allison, C., Kenny, R., Holt, R., Smith, P., & Baron-Cohen, S. (2019). The Vulnerability Experiences Quotient (VEQ). *Autism Research*, 12(10), 1516-1528. [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
 
-Heasman, B., & Gillespie, A. (2019). Neurodivergent intersubjectivity: Distinctive features of how autistic people create shared understanding. *Autism*, 23(4), 910-921.
+Heasman, B., & Gillespie, A. (2018). Perspective-taking is two-sided: Misunderstandings between people with Asperger's syndrome and their family members. *Autism*, 22(6), 740-750. [SAGE](https://doi.org/10.1177/1362361317708287)
 
-Higgins, J. M., Arnold, S. R. C., Weise, J., Pellicano, E., & Trollor, J. N. (2021). Defining autistic burnout through experts by lived experience: Grounded Delphi method investigating #AutisticBurnout. *Autism*, 25(8), 2356-2369.
+Heasman, B., & Gillespie, A. (2019). Neurodivergent intersubjectivity: Distinctive features of how autistic people create shared understanding. *Autism*, 23(4), 910-921. [SAGE](https://doi.org/10.1177/1362361318785172)
 
-Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
+Higgins, J. M., Arnold, S. R. C., Weise, J., Pellicano, E., & Trollor, J. N. (2021). Defining autistic burnout through experts by lived experience: Grounded Delphi method investigating #AutisticBurnout. *Autism*, 25(8), 2356-2369. [SAGE](https://doi.org/10.1177/13623613211019858)
 
-Hull, L., Mandy, W., Lai, M.-C., Baron-Cohen, S., Allison, C., Smith, P., & Petrides, K. V. (2019). Development and validation of the Camouflaging Autistic Traits Questionnaire (CAT-Q). *Journal of Autism and Developmental Disorders*, 49(3), 819-833.
+Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534. [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
 
-Kapp, S. K., Gillespie-Lynch, K., Sherman, L. E., & Hutman, T. (2013). Deficit, difference, or both? Autism and neurodiversity. *Developmental Psychology*, 49(1), 59-71.
+Hull, L., Mandy, W., Lai, M.-C., Baron-Cohen, S., Allison, C., Smith, P., & Petrides, K. V. (2019). Development and validation of the Camouflaging Autistic Traits Questionnaire (CAT-Q). *Journal of Autism and Developmental Disorders*, 49(3), 819-833. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC6394785/)
 
-Leadbitter, K., Buckle, K. L., Ellis, C., & Dekker, M. (2021). Autistic self-advocacy and the neurodiversity movement: Implications for autism early intervention research and practice. *Frontiers in Psychology*, 12, 635690.
+Kapp, S. K., Gillespie-Lynch, K., Sherman, L. E., & Hutman, T. (2013). Deficit, difference, or both? Autism and neurodiversity. *Developmental Psychology*, 49(1), 59-71. [APA (paywalled)](https://doi.org/10.1037/a0028353)
 
-Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders*, 52(2), 490-507. PMC8813809.
+Leadbitter, K., Buckle, K. L., Ellis, C., & Dekker, M. (2021). Autistic self-advocacy and the neurodiversity movement: Implications for autism early intervention research and practice. *Frontiers in Psychology*, 12, 635690. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8075160/)
 
-Mantzalas, J., Richdale, A. L., & Dissanayake, C. (2022). A conceptual model of risk and protective factors for autistic burnout. *Autism Research*, 15(6), 976-987.
+Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders*, 52(2), 490-507. [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
 
-Miller, D., Rees, J., & Pearson, A. (2021). "Masking is life": Experiences of masking in autistic and nonautistic adults. *Autism in Adulthood*, 3(4), 330-338.
+Mantzalas, J., Richdale, A. L., & Dissanayake, C. (2022). A conceptual model of risk and protective factors for autistic burnout. *Autism Research*, 15(6), 976-987. [Wiley](https://doi.org/10.1002/aur.2722)
 
-Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887.
+Miller, D., Rees, J., & Pearson, A. (2021). "Masking is life": Experiences of masking in autistic and nonautistic adults. *Autism in Adulthood*, 3(4), 330-338. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/)
 
-Mitchell, P., Sheppard, E., & Cassidy, S. (2021). Autism and the double empathy problem: Implications for development and mental health. *British Journal of Developmental Psychology*, 39(1), 1-18.
+Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
-Morrison, K. E., DeBrabander, K. M., Jones, D. R., Faso, D. J., Ackerman, R. A., & Sasson, N. J. (2020). Outcomes of real-world social interaction for autistic adults paired with autistic compared to typically developing partners. *Autism*, 24(5), 1067-1080.
+Mitchell, P., Sheppard, E., & Cassidy, S. (2021). Autism and the double empathy problem: Implications for development and mental health. *British Journal of Developmental Psychology*, 39(1), 1-18. [Wiley](https://doi.org/10.1111/bjdp.12350)
 
-Pearson, A., Rees, J., & Forster, S. (2022). "This was just how this friendship worked": Experiences of interpersonal victimization among autistic adults. *Autism in Adulthood*, 4(2), 141-150.
+Morrison, K. E., DeBrabander, K. M., Jones, D. R., Faso, D. J., Ackerman, R. A., & Sasson, N. J. (2020). Outcomes of real-world social interaction for autistic adults paired with autistic compared to typically developing partners. *Autism*, 24(5), 1067-1080. [SAGE](https://doi.org/10.1177/1362361319892701)
 
-Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking: Understanding the narrative of stigma and the illusion of choice. *Autism in Adulthood*, 3(1), 52-60.
+Pearson, A., Rees, J., & Forster, S. (2022). "This was just how this friendship worked": Experiences of interpersonal victimization among autistic adults. *Autism in Adulthood*, 4(2), 141-150. [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
 
-Phung, J., Penner, M., Pirlot, C., & Welch, C. (2021). What I wish you knew: Insights on burnout, inertia, meltdown, and shutdown from autistic youth. *Frontiers in Psychology*, 12, 741421.
+Pearson, A., & Rose, K. (2021). A conceptual analysis of autistic masking: Understanding the narrative of stigma and the illusion of choice. *Autism in Adulthood*, 3(1), 52-60. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992888/)
 
-Raymaker, D. M., Teo, A. R., Steckler, N. A., Lentz, B., Scharer, M., Delos Santos, A., ... & Nicolaidis, C. (2020). "Having all of your internal resources exhausted beyond measure and being left with no clean-up crew": Defining autistic burnout. *Autism in Adulthood*, 2(2), 132-143.
+Phung, J., Penner, M., Pirlot, C., & Welch, C. (2021). What I wish you knew: Insights on burnout, inertia, meltdown, and shutdown from autistic youth. *Frontiers in Psychology*, 12, 741421. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8595127/)
 
-Romualdez, A. M., Walker, Z., & Remington, A. (2021). Autistic adults' experiences of diagnostic disclosure in the workplace. *Autism & Developmental Language Impairments*, 6, 1-12.
+Raymaker, D. M. et al. (2020). "Having all of your internal resources exhausted beyond measure and being left with no clean-up crew": Defining autistic burnout. *Autism in Adulthood*, 2(2), 132-143. [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
 
-Sarrett, J. C. (2018). Autism and accommodations in higher education: Insights from the autism community. *Journal of Autism and Developmental Disorders*, 48(3), 679-693.
+Romualdez, A. M., Walker, Z., & Remington, A. (2021). Autistic adults' experiences of diagnostic disclosure in the workplace. *Autism & Developmental Language Impairments*, 6, 1-12. [SAGE](https://doi.org/10.1177/23969415211022955)
 
-Sheppard, E., Pillai, D., Wong, G. T.-L., Ropar, D., & Mitchell, P. (2016). How easy is it to read the minds of people with autism spectrum disorder? *Journal of Autism and Developmental Disorders*, 46(4), 1247-1254.
+Sarrett, J. C. (2018). Autism and accommodations in higher education: Insights from the autism community. *Journal of Autism and Developmental Disorders*, 48(3), 679-693. [Springer (paywalled)](https://doi.org/10.1007/s10803-017-3353-4)
 
-Thompson-Hodgetts, S., Labonté, C., Mazumder, R., & Phelan, S. (2020). Helpful or harmful? A scoping review of perceptions and outcomes of autism diagnostic disclosure to others. *Research in Autism Spectrum Disorders*, 77, 101598.
+Sheppard, E., Pillai, D., Wong, G. T.-L., Ropar, D., & Mitchell, P. (2016). How easy is it to read the minds of people with autism spectrum disorder? *Journal of Autism and Developmental Disorders*, 46(4), 1247-1254. [Springer](https://doi.org/10.1007/s10803-015-2662-8)
+
+Thompson-Hodgetts, S., Labonté, C., Mazumder, R., & Phelan, S. (2020). Helpful or harmful? A scoping review of perceptions and outcomes of autism diagnostic disclosure to others. *Research in Autism Spectrum Disorders*, 77, 101598. [ScienceDirect](https://doi.org/10.1016/j.rasd.2020.101598)

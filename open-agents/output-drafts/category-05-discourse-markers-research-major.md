@@ -220,7 +220,7 @@ This research document provides exhaustive detail on 12 major English discourse 
 
 ### Key Academic Sources
 
-- **D'Arcy & Tagliamonte (2004)**: "He's like, she's like: The quotative system in Canadian youth"
+- **Tagliamonte & D'Arcy (2004)**: "He's like, she's like: The quotative system in Canadian youth"
 - **Underhill (1988)**: Early analysis of "like" as a discourse marker with multiple functions
 - **Andersen (2001)**: Classified four functions: hedging, self-rephrasal, focus-marking, quotation
 - **Jones, Zane, & Grossman (2022)**: PMC study showing autistic children use "like" with similar frequency and functions as neurotypical peers
@@ -1193,26 +1193,26 @@ Research findings relevant to autistic individuals:
 ## Sources and References
 
 ### Books
-- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press.
-- Beeching, K. (2016). *Pragmatic Markers in British English: Meaning in Social Interaction*. Cambridge University Press.
-- Ostman, J.-O. (1981). *You Know: A Discourse-Functional Approach*. John Benjamins.
-- Cameron, D. (1995/2012). *Verbal Hygiene*. Routledge.
+- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Markers-Studies-Interactional-Sociolinguistics/dp/0521357187)
+- Beeching, K. (2016). *Pragmatic Markers in British English: Meaning in Social Interaction*. Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatic-Markers-British-English-Interaction/dp/1107032768)
+- Ostman, J.-O. (1981). *You Know: A Discourse-Functional Approach*. John Benjamins. [Benjamins](https://benjamins.com/catalog/pb.ii.7)
+- Cameron, D. (1995/2012). *Verbal Hygiene*. Routledge. [Amazon](https://www.amazon.com/Verbal-Hygiene-Routledge-Linguistics-Classics/dp/0415696909)
 
 ### Journal Articles
-- Heritage, J. (1984). "A Change-of-State Token and Aspects of its Sequential Placement." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press.
-- Pomerantz, A. (1984). "Agreeing and disagreeing with assessments." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*, 57-101.
-- Bolden, G.B. (2009). "Implementing incipient actions: The discourse marker 'so' in English conversation." *Journal of Pragmatics*, 41, 974-998.
-- Bolden, G.B. (2008). "'So What's Up?': Using the discourse marker so to launch conversational business." *Research on Language and Social Interaction*, 41(3).
-- Jucker, A. (1993). "The discourse marker well: A relevance-theoretical account." *Journal of Pragmatics*, 19(5), 435-452.
-- Tagliamonte, S. & D'Arcy, A. (2004). "He's like, she's like: The quotative system in Canadian youth." *Journal of Sociolinguistics*, 8(4), 493-514.
-- Beach, W. (1993). "Transitional regularities for casual 'Okay' usages." *Journal of Pragmatics*, 19, 325-352.
-- Ferrara, K. (1997). "Form and function of the discourse marker anyway." *Linguistics*, 35, 343-378.
-- Clift, R. (2001). "Meaning in interaction: The case of actually." *Language*, 77(2), 245-291.
-- Aijmer, K. & Simon-Vandenbergen, A.-M. (2004). "A model and a methodology for the study of pragmatic markers: the semantic field of expectation." *Journal of Pragmatics*, 36(10), 1781-1805.
-- Jones, R., Zane, E.R., & Grossman, R.B. (2022). "Like, it's important: The frequency and use of the discourse marker like in older autistic children." *Autism & Developmental Language Impairments*, 7. PMC9620696.
-- Lakoff, R. (1973). "Questionable answers and answerable questions." In B.B. Kachru et al. (Eds.), *Issues in Linguistics*.
-- Lee, D. (1987). "Categories in the description of just." *Lingua*, 73(1-2), 43-65.
+- Heritage, J. (1984). "A Change-of-State Token and Aspects of its Sequential Placement." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
+- Pomerantz, A. (1984). "Agreeing and disagreeing with assessments." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*, 57-101. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
+- Bolden, G.B. (2009). "Implementing incipient actions: The discourse marker 'so' in English conversation." *Journal of Pragmatics*, 41, 974-998. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2008.10.004)
+- Bolden, G.B. (2008). "'So What's Up?': Using the discourse marker so to launch conversational business." *Research on Language and Social Interaction*, 41(3). [Taylor & Francis (paywalled)](https://doi.org/10.1080/08351810802237909)
+- Jucker, A. (1993). "The discourse marker well: A relevance-theoretical account." *Journal of Pragmatics*, 19(5), 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90004-9)
+- Tagliamonte, S. & D'Arcy, A. (2004). "He's like, she's like: The quotative system in Canadian youth." *Journal of Sociolinguistics*, 8(4), 493-514. [Wiley (paywalled)](https://doi.org/10.1111/j.1467-9841.2004.00271.x)
+- Beach, W. (1993). "Transitional regularities for casual 'Okay' usages." *Journal of Pragmatics*, 19, 325-352. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90092-4)
+- Ferrara, K. (1997). "Form and function of the discourse marker anyway." *Linguistics*, 35, 343-378. [De Gruyter (paywalled)](https://doi.org/10.1515/ling.1997.35.2.343)
+- Clift, R. (2001). "Meaning in interaction: The case of actually." *Language*, 77(2), 245-291. [JSTOR (paywalled)](https://doi.org/10.1353/lan.2001.0074)
+- Aijmer, K. & Simon-Vandenbergen, A.-M. (2004). "A model and a methodology for the study of pragmatic markers: the semantic field of expectation." *Journal of Pragmatics*, 36(10), 1781-1805. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2004.05.005)
+- Jones, R., Zane, E.R., & Grossman, R.B. (2022). "Like, it's important: The frequency and use of the discourse marker like in older autistic children." *Autism & Developmental Language Impairments*, 7. [PMC9620696](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/)
+- Lakoff, R. (1973). "Questionable answers and answerable questions." In B.B. Kachru et al. (Eds.), *Issues in Linguistics*. [CITATION UNVERIFIED]
+- Lee, D. (1987). "Categories in the description of just." *Lingua*, 73(1-2), 43-65. [ScienceDirect (paywalled)](https://doi.org/10.1016/0024-3841(87)90015-4)
 
 ### Online Resources
-- Google Conversation Design: Discourse Markers Guide (developers.google.com/assistant/conversation-design/discourse-markers)
-- Cambridge Dictionary Grammar: Discourse Markers (dictionary.cambridge.org)
+- [Google Conversation Design: Discourse Markers Guide](https://developers.google.com/assistant/conversation-design/discourse-markers)
+- [Cambridge Dictionary Grammar: Discourse Markers](https://dictionary.cambridge.org/grammar/british-grammar/discourse-markers-so-right-okay)

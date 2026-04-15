@@ -22,9 +22,9 @@ With that caveat in place, the reported pattern: participants higher on autistic
 A small study (ASD n=22, controls n=10) published in the *Journal of the International Neuropsychological Society* reportedly found that autistic young adults produced fewer social-modal hedges ("would," "could," "may," "might") in employment voicemail role-play scenarios than neurotypical controls, with the difference concentrated in modals that serve a social rather than informational function. **The full bibliographic details for this study could not be verified during Stage 3 Research Validation** and should be re-located or removed before this section is published. If the direction of the finding holds, it supports the same pattern documented elsewhere: autistic speakers show reduced social-politeness hedging in task-specific workplace contexts.
 - Source: *Journal of the International Neuropsychological Society* (full citation pending verification).
 
-**Computational Pragmatic Analysis (Lake, Bhullar & Bhattacharyya, 2022):**
+**Computational Pragmatic Analysis (Yang, Liu, Yang, Liu & Prud'hommeaux, 2021):**
 A computational linguistics study collected transcribed natural conversations where ASD and non-ASD participants completed collaborative tasks with neurotypical peers, investigating three pragmatic features: politeness, uncertainty, and informativeness. Neural models trained with BERT embeddings could predict these pragmatic features with F1 scores exceeding 0.82, confirming that measurable, systematic differences exist in how autistic adults deploy hedging and uncertainty markers in conversation.
-- Source: Lake, Bhullar & Bhattacharyya (2022), PMC9633181.
+- Source: Yang, Liu, Yang, Liu & Prud'hommeaux (2021), PMC9633181.
 
 **The Tikiz-Erturk (2025) Case Study:**
 This qualitative study of a 15-year-old ASD language learner found that despite "persistent challenges in comprehending abstract concepts, conversational implicature, and social role recognition," the participant "employed several adaptive strategies, including politeness strategies, off-record communication, and explicit verbal markers." Over time, the participant showed progress in using both direct and indirect politeness techniques, though gains were "context-dependent and most evident in structured interactions." This suggests hedging and politeness strategies are learnable for autistic individuals, especially in structured or scaffolded environments.
@@ -525,69 +525,69 @@ A neurodiversity-affirming approach recognizes that some hedging expectations ar
 ## Sources
 
 ### Primary Research Studies
-- Butterbrod, T. "The Effect of Autistic Traits on the Use of Politeness Strategies." Tilburg University Bachelor's thesis. (arno.uvt.nl/show.cgi?fid=133361). **Note: non-clinical sample scoring on autistic-traits scale; findings preliminary pending clinical replication.**
-- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *J Autism Dev Disord* 46(3):1061-1070. PMC7536647.
-- Gorman, K. et al. (2016). "Uh and Um in Children With Autism Spectrum Disorders or Language Impairment."
-- Wilson, B. E., & Bishop, D. V. M. (2022). "A novel online assessment of pragmatic and core language skills: An attempt to tease apart language development and its impairment." *PeerJ* 10:e13110. PMC8919847.
-- Lake, J.K., Bhullar, S., & Bhattacharyya, O. (2022). "Predicting pragmatic discourse features in the language of adults with autism spectrum disorder." PMC9633181.
-- Sirota, K.G. (2004). "Positive politeness as discourse process." Discourse Studies, 6(2), 229-251. (journals.sagepub.com/doi/10.1177/1461445604041769)
-- Tikiz-Erturk (2025). "Rethinking Social Language Learning and Politeness in Autism." International Journal of Applied Linguistics. (onlinelibrary.wiley.com/doi/10.1111/ijal.12783)
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer Is Highly Effective."
-- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem'."
-- Kissine, M. et al. (2015). "Children with Autism Understand Indirect Speech Acts." PLOS ONE. (pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
-- Alvarez & Wolfe (2024). Face-threatening acts in ASD. Journal of Social and Personal Relationships.
-- Howard, P.L. & Sedgewick, F. (2021). "'Anything but the phone!': Communication mode preferences in the autism community."
-- Crompton, C. et al. (SJDR). "'A Difference in Typical Values': Autistic Perspectives on Autistic Social Communication." (sjdr.se/articles/10.16993/sjdr.1184)
-- Grice, M. (2023). "Linguistic prosody in autism spectrum disorder -- An overview." Language and Linguistics Compass. (compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
+- Butterbrod, T. "The Effect of Autistic Traits on the Use of Politeness Strategies." Tilburg University Bachelor's thesis. [Tilburg Repository](http://arno.uvt.nl/show.cgi?fid=133361). **Note: non-clinical sample scoring on autistic-traits scale; findings preliminary pending clinical replication.**
+- Irvine, C. A., Eigsti, I.-M., & Fein, D. A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *J Autism Dev Disord* 46(3):1061-1070. [PMC7536647](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/)
+- Gorman, K. et al. (2016). "Uh and Um in Children With Autism Spectrum Disorders or Language Impairment." [PMC4958035](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/)
+- Wilson, A.C. & Bishop, D.V.M. (2022). "'Second guessing yourself all the time about what they really mean': Cognitive differences between autistic and non-autistic adults in understanding implied meaning." *PeerJ* 10:e13110. [PeerJ](https://doi.org/10.7717/peerj.13110)
+- Yang, Y., Liu, L., Yang, D., Liu, Z., & Prud'hommeaux, E. (2021). "Predicting pragmatic discourse features in the language of adults with autism spectrum disorder." *ACL-SRW 2021*. [PMC9633181](https://pmc.ncbi.nlm.nih.gov/articles/PMC9633181/)
+- Sirota, K.G. (2004). "Positive politeness as discourse process." Discourse Studies, 6(2), 229-251. [Sage (paywalled)](https://journals.sagepub.com/doi/10.1177/1461445604041769)
+- Tikiz-Erturk (2025). "Rethinking Social Language Learning and Politeness in Autism." International Journal of Applied Linguistics. [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/10.1111/ijal.12783)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer Is Highly Effective." [Sage](https://journals.sagepub.com/doi/10.1177/1362361320919286)
+- Milton, D. (2012). "On the ontological status of autism: the 'double empathy problem'." [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Kissine, M. et al. (2015). "Children with Autism Understand Indirect Speech Acts." PLOS ONE. [PMC4638355](https://pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
+- Alvarez & Wolfe (2024). Face-threatening acts in ASD. Journal of Social and Personal Relationships. [CITATION UNVERIFIED]
+- Howard, P.L. & Sedgewick, F. (2021). "'Anything but the phone!': Communication mode preferences in the autism community." [Sage](https://journals.sagepub.com/doi/10.1177/13623613211014995)
+- Crompton, C. et al. (SJDR). "'A Difference in Typical Values': Autistic Perspectives on Autistic Social Communication." [SJDR](https://www.sjdr.se/articles/10.16993/sjdr.1184)
+- Grice, M. (2023). "Linguistic prosody in autism spectrum disorder -- An overview." Language and Linguistics Compass. [Wiley](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
 
 ### Filled Pauses and Prosody Research
-- Wehrle, S. et al. (2023). "Filled Pauses Produced by Autistic Adults Differ in Prosodic Realisation, but not Rate or Lexical Type." PMC (pmc.ncbi.nlm.nih.gov/articles/PMC11286642/)
-- Jones, Z., Zane, E., & Grossman, R.B. (2022). "Like, It's Important: The Frequency and Use of the Discourse Marker Like in Older Autistic Children."
+- Wehrle, S. et al. (2023). "Filled Pauses Produced by Autistic Adults Differ in Prosodic Realisation, but not Rate or Lexical Type." [PMC11286642](https://pmc.ncbi.nlm.nih.gov/articles/PMC11286642/)
+- Jones, R., Zane, E., & Grossman, R.B. (2022). "Like, It's Important: The Frequency and Use of the Discourse Marker Like in Older Autistic Children." [PMC9620696](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/)
 
 ### Hedging Theory
-- Prince, E., Frader, J., & Bosk, C. (1982). "On Hedging in Physician-Physician Discourse." -- Taxonomy of approximators and shields.
-- Brown, P. & Levinson, S.C. (1987). "Politeness: Some Universals in Language Usage."
-- Fraser, B. -- Hedged performatives theory.
+- Prince, E., Frader, J., & Bosk, C. (1982). "On Hedging in Physician-Physician Discourse." -- Taxonomy of approximators and shields. [Columbia PDF](http://www.cs.columbia.edu/~prokofieva/CandidacyPapers/Prince_Hedging.pdf)
+- Brown, P. & Levinson, S.C. (1987). "Politeness: Some Universals in Language Usage." [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Linguistics/dp/0521313554)
+- Fraser, B. -- Hedged performatives theory. [ResearchGate](https://www.researchgate.net/publication/285760188_Pragmatic_Competence_The_Case_of_Hedging)
 
 ### Masking and Authenticity
-- Masking and autistic burnout research: PMC (pmc.ncbi.nlm.nih.gov/articles/PMC11317797/); PMC (pmc.ncbi.nlm.nih.gov/articles/PMC10060524/)
-- Hull, L. et al. "Camouflaging in autism: A systematic review." (sciencedirect.com/science/article/abs/pii/S0272735821001239)
-- AANE. "The Cost and Privilege of Autistic Authenticity." (aane.org)
-- Relational Psych. "Masking vs. Authenticity." (relationalpsych.group)
+- Masking and autistic burnout research: [PMC11317797](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317797/); [PMC10060524](https://pmc.ncbi.nlm.nih.gov/articles/PMC10060524/)
+- Hull, L. et al. "Camouflaging in autism: A systematic review." [ScienceDirect (paywalled)](https://www.sciencedirect.com/science/article/abs/pii/S0272735821001239)
+- AANE. "The Cost and Privilege of Autistic Authenticity." [AANE](https://www.aane.org/the-cost-and-privilege-of-autistic-authenticity/)
+- Relational Psych. "Masking vs. Authenticity." [Relational Psych](https://www.relationalpsych.group/)
 
 ### Workplace and Social Consequences
-- SkillPath. "Autistic Communication in the Workplace." (skillpath.com)
-- Specialisterne USA. "Chain of Command May Be Confusing." (us.specialisterne.com)
-- The Articulate Autistic. "We Have No Intuitive Concept of Social Hierarchy." (thearticulateautistic.com)
+- SkillPath. "Autistic Communication in the Workplace." [SkillPath](https://skillpath.com/)
+- Specialisterne USA. "Chain of Command May Be Confusing." [Specialisterne](https://us.specialisterne.com/)
+- The Articulate Autistic. "We Have No Intuitive Concept of Social Hierarchy." [The Articulate Autistic](https://thearticulateautistic.com/)
 
 ### Autism and Intolerance of Uncertainty
-- Boulter, C. et al. "Intolerance of Uncertainty as a Framework for Understanding Anxiety in Children and Adolescents with Autism Spectrum Disorders."
-- Bervoets, J. & Hens, K. (2021). "Autism and intolerance of uncertainty: an ill-fitting pair." Trends in Cognitive Sciences. (cell.com/trends/cognitive-sciences/abstract/S1364-6613(21)00223-0)
-- Costello, E. et al. (2023). "Autistic traits associated with dichotomic thinking mediated by intolerance of uncertainty." Scientific Reports. (nature.com/articles/s41598-023-41164-8)
+- Boulter, C. et al. "Intolerance of Uncertainty as a Framework for Understanding Anxiety in Children and Adolescents with Autism Spectrum Disorders." [Springer (paywalled)](https://doi.org/10.1007/s10803-013-1971-z)
+- Bervoets, J. & Hens, K. (2021). "Autism and intolerance of uncertainty: an ill-fitting pair." Trends in Cognitive Sciences. [Cell (paywalled)](https://www.cell.com/trends/cognitive-sciences/abstract/S1364-6613(21)00223-0)
+- Costello, E. et al. (2023). "Autistic traits associated with dichotomic thinking mediated by intolerance of uncertainty." Scientific Reports. [Nature](https://www.nature.com/articles/s41598-023-41164-8)
 
 ### Gender and Autism
-- Frontiers in Psychology (2021). "A Subtle Profile With a Significant Impact: Language and Communication Difficulties for Autistic Females Without Intellectual Disability." (frontiersin.org/fpsyg.2021.621742)
-- Autism Spectrum News. "The Unique Interpersonal Demands for Women with ASD."
-- Salon (2023). "Sorry, not sorry: The link between gender, autism and over-apologizing."
+- Frontiers in Psychology (2021). "A Subtle Profile With a Significant Impact: Language and Communication Difficulties for Autistic Females Without Intellectual Disability." [Frontiers](https://www.frontiersin.org/articles/10.3389/fpsyg.2021.621742/full)
+- Autism Spectrum News. "The Unique Interpersonal Demands for Women with ASD." [Autism Spectrum News](https://autismspectrumnews.org/)
+- Salon (2023). "Sorry, not sorry: The link between gender, autism and over-apologizing." [Salon](https://www.salon.com/)
 
 ### Cross-Cultural Communication
-- Cultural Atlas: Israeli communication. (culturalatlas.sbs.com.au/israeli-culture)
-- Cultural Atlas: Dutch communication. (culturalatlas.sbs.com.au/dutch-culture)
-- Everything About Germany: German Direktheit. (everythingaboutgermany.de/en/culture/direktheit/)
-- GConnection: Dutch direct communication. (gconnection.nl)
+- Cultural Atlas: Israeli communication. [Cultural Atlas](https://culturalatlas.sbs.com.au/israeli-culture)
+- Cultural Atlas: Dutch communication. [Cultural Atlas](https://culturalatlas.sbs.com.au/dutch-culture)
+- Everything About Germany: German Direktheit. [Everything About Germany](https://everythingaboutgermany.de/en/culture/direktheit/)
+- GConnection: Dutch direct communication. [GConnection](https://gconnection.nl/)
 
 ### Neurodiversity-Affirming Practice
-- Therapist Neurodiversity Collective: Non-ableist pragmatic language therapy. (therapistndc.org)
-- PMC (2023). "A Framework for Neurodiversity-Affirming Interventions for Autistic Individuals." (pmc.ncbi.nlm.nih.gov/articles/PMC10430771/)
-- NeuroClastic: Autistic communication differences. (neuroclastic.com)
-- Neurodivergent Insights: Autistic communication as difference. (neurodivergentinsights.com)
-- Autistic Science Person: "Be Honest: Autistic vs Neurotypical Honesty." (autisticscienceperson.com)
+- Therapist Neurodiversity Collective: Non-ableist pragmatic language therapy. [Therapist NDC](https://therapistndc.org/)
+- PMC (2023). "A Framework for Neurodiversity-Affirming Interventions for Autistic Individuals." [PMC10430771](https://pmc.ncbi.nlm.nih.gov/articles/PMC10430771/)
+- NeuroClastic: Autistic communication differences. [NeuroClastic](https://neuroclastic.com/)
+- Neurodivergent Insights: Autistic communication as difference. [Neurodivergent Insights](https://neurodivergentinsights.com/)
+- Autistic Science Person: "Be Honest: Autistic vs Neurotypical Honesty." [Autistic Science Person](https://autisticscienceperson.com/)
 
 ### L2 Learner Hedging Comparison
-- Wishnoff, J. "Hedging Your Bets: L2 Learners' Acquisition of Pragmatic Devices." University of Hawaii. (hawaii.edu/sls)
-- Norwegian Journal of Language Teaching and Linguistics, 2020, 8(2), 27-48.
+- Wishnoff, J. "Hedging Your Bets: L2 Learners' Acquisition of Pragmatic Devices." University of Hawaii. [Hawaii SLS](https://www.hawaii.edu/sls/)
+- Norwegian Journal of Language Teaching and Linguistics, 2020, 8(2), 27-48. [CITATION UNVERIFIED]
 
 ### Sarcasm and Irony Detection
-- PMC (2013). "Neural basis of irony comprehension in children with autism: the role of prosody and context." (pmc.ncbi.nlm.nih.gov/articles/PMC3713234/)
-- Cambridge Core. "Does prosody mark sarcasm early in an utterance?" (Including autism spectrum listeners.)
-- Neurolaunch: "Sarcasm and Autism." (neurolaunch.com)
+- PMC (2013). "Neural basis of irony comprehension in children with autism: the role of prosody and context." [PMC3713234](https://pmc.ncbi.nlm.nih.gov/articles/PMC3713234/)
+- Cambridge Core. "Does prosody mark sarcasm early in an utterance?" (Including autism spectrum listeners.) [CITATION UNVERIFIED]
+- Neurolaunch: "Sarcasm and Autism." [Neurolaunch](https://neurolaunch.com/)

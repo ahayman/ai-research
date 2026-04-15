@@ -174,7 +174,8 @@ The reversal exploits the tu quoque fallacy (deflecting by accusing the accuser)
 
 **Sources:**
 - Freyd, J. J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32.
-- Harsey, S. J., Zurbriggen, E. L. & Freyd, J. J. (2017). Deny, attack, and reverse victim and offender (DARVO): What is the influence on perceived perpetrator and victim credibility? *Journal of Aggression, Maltreatment & Trauma*, 29(8), 897-916.
+- Harsey, S. J., Zurbriggen, E. L. & Freyd, J. J. (2017). Perpetrator responses to victim confrontation: DARVO and victim self-blame. *Journal of Aggression, Maltreatment & Trauma*, 26(6), 644-663.
+- Harsey, S. J. & Freyd, J. J. (2020). Deny, attack, and reverse victim and offender (DARVO): What is the influence on perceived perpetrator and victim credibility? *Journal of Aggression, Maltreatment & Trauma*, 29(8), 897-916.
 - DARVO entry, jjfreyd.com (Jennifer Freyd's research page).
 
 ---
@@ -616,37 +617,38 @@ The goal is not to make autistic people paranoid or fearful. The goal is to make
 ## Key References (Consolidated)
 
 ### Books and Monographs
-- Abramson, K. (2014). Turning up the lights on gaslighting. *Philosophical Perspectives*, 28, 1-30.
-- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
-- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life*. Oxford University Press.
+- Abramson, K. (2014). Turning up the lights on gaslighting. *Philosophical Perspectives*, 28, 1-30. [Wiley (paywalled)](https://doi.org/10.1111/phpe.12046)
+- Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
+- Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life*. Oxford University Press. [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
 
 ### Peer-Reviewed Articles
-- Catala, A., Faucher, L. & Poirier, P. (2021). Autism, epistemic injustice, and epistemic disablement. *Synthese*, 199, 9013-9039.
-- Cazalis, F. et al. (2022). Evidence that nine autistic women out of ten have been victims of sexual violence. *Frontiers in Behavioral Neuroscience*, 16, 852203.
-- Chapman, R. & Carel, H. (2022). Neurodiversity, epistemic injustice, and the good human life. *Journal of Social Philosophy*, 53(4), 614-631.
-- Dinishak, J. (2021). Autistic autobiography and hermeneutical injustice. *Metaphilosophy*, 52, 556-569.
-- Douglas, S. & Sedgewick, F. (2024). Experiences of interpersonal victimization and abuse among autistic people. *Autism*, 28(7), 1732-1745.
-- Freyd, J. J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32.
-- Harsey, S. J., Zurbriggen, E. L. & Freyd, J. J. (2017/2020). Deny, Attack, and Reverse Victim and Offender (DARVO). *Journal of Aggression, Maltreatment & Trauma*, 29(8), 897-916.
-- Milton, D. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6), 883-887.
-- Shaw, S. C. K. et al. (2024). Barriers to healthcare and a 'triple empathy problem.' *Autism*, 28(7).
-- Slavny-Cross, R. et al. (2022). Autism and the criminal justice system: An analysis of 93 cases. *Autism Research*. PMC9314022.
-- Stark, C. A. (2019). Gaslighting, misogyny, and psychological oppression. *The Monist*, 102(2), 221-235.
-- Sweet, P. L. (2019). The sociology of gaslighting. *American Sociological Review*, 84(5), 851-875.
-- Uisma, A.-M. et al. (2026). Misunderstood, minimised, misrepresented. *Sociology of Health & Illness*.
+- Catala, A., Faucher, L. & Poirier, P. (2021). Autism, epistemic injustice, and epistemic disablement. *Synthese*, 199, 9013-9039. [Springer (paywalled)](https://doi.org/10.1007/s11229-021-03192-7)
+- Cazalis, F. et al. (2022). Evidence that nine autistic women out of ten have been victims of sexual violence. *Frontiers in Behavioral Neuroscience*, 16, 852203. [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Chapman, R. & Carel, H. (2022). Neurodiversity, epistemic injustice, and the good human life. *Journal of Social Philosophy*, 53(4), 614-631. [Wiley](https://doi.org/10.1111/josp.12456)
+- Dinishak, J. (2021). Autistic autobiography and hermeneutical injustice. *Metaphilosophy*, 52, 556-569. [Wiley (paywalled)](https://doi.org/10.1111/meta.12514)
+- Douglas, S. & Sedgewick, F. (2024). Experiences of interpersonal victimization and abuse among autistic people. *Autism*, 28(7), 1732-1745. [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Freyd, J. J. (1997). Violations of power, adaptive blindness, and betrayal trauma theory. *Feminism & Psychology*, 7, 22-32. [jjfreyd.com](https://www.jjfreyd.com/darvo)
+- Harsey, S. J., Zurbriggen, E. L. & Freyd, J. J. (2017). Perpetrator responses to victim confrontation: DARVO and victim self-blame. *Journal of Aggression, Maltreatment & Trauma*, 26(6), 644-663. [Taylor & Francis (paywalled)](https://doi.org/10.1080/10926771.2017.1320777)
+- Harsey, S. J. & Freyd, J. J. (2020). Deny, Attack, and Reverse Victim and Offender (DARVO): What is the influence on perceived perpetrator and victim credibility? *Journal of Aggression, Maltreatment & Trauma*, 29(8), 897-916. [Taylor & Francis (paywalled)](https://doi.org/10.1080/10926771.2020.1774695)
+- Milton, D. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Shaw, S. C. K. et al. (2024). Barriers to healthcare and a 'triple empathy problem' may lead to adverse outcomes for autistic adults. *Autism*, 28(7), 1746-1757. [SAGE](https://doi.org/10.1177/13623613231205629)
+- Slavny-Cross, R. et al. (2022). Autism and the criminal justice system: An analysis of 93 cases. *Autism Research*. [PMC9314022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9314022/)
+- Stark, C. A. (2019). Gaslighting, misogyny, and psychological oppression. *The Monist*, 102(2), 221-235. [Oxford Academic (paywalled)](https://doi.org/10.1093/monist/onz007)
+- Sweet, P. L. (2019). The sociology of gaslighting. *American Sociological Review*, 84(5), 851-875. [SAGE (paywalled)](https://doi.org/10.1177/0003122419874843)
+- Uisma, A.-M. et al. (2026). Misunderstood, minimised, misrepresented. *Sociology of Health & Illness*. [CITATION UNVERIFIED — forthcoming]
 
 ### Systematic Reviews and Meta-Analyses
-- Prevalence of victimisation in autistic individuals: A systematic review and meta-analysis. PMC10486169.
-- Prevalence and risk factors associated with interpersonal violence reported by autistic adults. *Review Journal of Autism and Developmental Disorders* (2023). Springer.
-- Frontiers (2025). Autism, bullying, and mental health: a comprehensive systematic review.
-- Gender differences in the prevalence of autistic experiences of interpersonal violence (2025). Springer.
+- Prevalence of victimisation in autistic individuals: A systematic review and meta-analysis. [PMC10486169](https://pmc.ncbi.nlm.nih.gov/articles/PMC10486169/)
+- Prevalence and risk factors associated with interpersonal violence reported by autistic adults. *Review Journal of Autism and Developmental Disorders* (2023). [Springer (paywalled)](https://doi.org/10.1007/s40489-023-00410-5)
+- Frontiers (2025). Autism, bullying, and mental health: a comprehensive systematic review. [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1489223/full)
+- Gender differences in the prevalence of autistic experiences of interpersonal violence (2025). [Springer (paywalled)](https://doi.org/10.1007/s10803-025-06857-1)
 
 ### Additional Research Sources
-- Embrace Autism. Alexithymia & manipulation.
-- NeuroClastic. 50 ways society gaslights and stonewalls autistic people.
-- NeuroClastic. Toxic positivity, gaslighting, and tone policing autistic people.
-- Neurodiverse Connection. Autism, grooming and coercive control.
-- Organization for Autism Research. Too nice: Avoiding the traps of exploitation and manipulation.
-- Psychology Today. (2024). Gaslighting and neurodiversity.
-- Autistic Science Person. (2021). Neurotypicals: Listen to our words, not our tone.
-- Therapist Neurodiversity Collective. "Training" social skills is dehumanizing.
+- Embrace Autism. Alexithymia & manipulation. [embrace-autism.com](https://embrace-autism.com/alexithymia-and-manipulation/)
+- NeuroClastic. 50 ways society gaslights and stonewalls autistic people. [neuroclastic.com](https://neuroclastic.com/ways-society-gaslights-autistics/)
+- NeuroClastic. Toxic positivity, gaslighting, and tone policing autistic people. [neuroclastic.com](https://neuroclastic.com/toxic-positivity-gaslighting-and-tone-policing-autistic-people/)
+- Neurodiverse Connection. Autism, grooming and coercive control. [ndconnection.co.uk](https://ndconnection.co.uk/blog/autism-grooming-and-coercive-control)
+- Organization for Autism Research. Too nice: Avoiding the traps of exploitation and manipulation. [researchautism.org](https://researchautism.org/blog/too-nice-avoiding-the-traps-of-exploitation-and-manipulation/)
+- Psychology Today. (2024). Gaslighting and neurodiversity. [psychologytoday.com](https://www.psychologytoday.com/us/blog/insights-about-age-and-ageing/202404/gaslighting-and-neurodiversity)
+- Autistic Science Person. (2021). Neurotypicals: Listen to our words, not our tone. [autisticscienceperson.com](https://autisticscienceperson.com/2021/04/07/neurotypicals-listen-to-our-words-not-our-tone/)
+- Therapist Neurodiversity Collective. "Training" social skills is dehumanizing. [therapistndc.org](https://therapistndc.org/training-social-skills-is-dehumanizing-part-1/)

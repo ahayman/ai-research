@@ -446,6 +446,22 @@ The recovery frame worth holding throughout: **the goal is not to mask less in s
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Hull et al. (2017). "Putting on My Best Normal." — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Hull et al. (2019). Reasons for Camouflaging. — [Springer](https://link.springer.com/article/10.1007/s10803-018-03878-x) [paywalled]
+- Raymaker et al. (2020). Autistic Burnout. — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Kupferstein (2018). — [Emerald](https://www.emerald.com/insight/content/doi/10.1108/aia-08-2017-0016/full/html) [paywalled]
+- Sandoval-Norton et al. (2019). — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/23311908.2019.1641258)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Stark (2007). *Coercive Control.* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Price (2022). *Unmasking Autism.* — [Amazon](https://www.amazon.com/Unmasking-Autism-Discovering-Faces-Neurodiversity/dp/0593235231)
+- Walker (2021). *Neuroqueer Heresies.* — [Amazon](https://www.amazon.com/Neuroqueer-Heresies-Neurodiversity-Empowerment-Possibilities/dp/1945955267)
+
 **Masking and camouflaging in autism (the empirical foundation):**
 - Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on My Best Normal: Social Camouflaging in Adults with Autism Spectrum Conditions." *Journal of Autism and Developmental Disorders* 47(8): 2519–2534. PMC5509825.
 - Hull, L., et al. (2019). "Understanding the Reasons, Contexts and Costs of Camouflaging for Autistic Adults." *Journal of Autism and Developmental Disorders* 49(5): 1899–1911.
@@ -480,7 +496,7 @@ The recovery frame worth holding throughout: **the goal is not to mask less in s
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
 
 **Weaponized features in autistic IPV:**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
 
 **Autism-PTSD profile:**

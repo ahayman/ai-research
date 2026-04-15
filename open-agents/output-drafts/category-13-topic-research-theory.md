@@ -536,7 +536,7 @@ Topic management difficulties are among the most commonly noted pragmatic challe
 
 **Perseverative topic focus**: Research on "perseverative speech" or "restricted topic focus" in autism shows that autistic individuals may return repeatedly to topics related to their intense interests. Importantly, newer research reframes this as "autistic focused interests" rather than pathology. Discourse analysis suggests that focused interest-driven communication serves important functions: self-regulation, comfort in social interaction, and genuine sharing of knowledge and enthusiasm. The challenge is not the interest itself but the mismatch between the speaker's desire to discuss the topic and the listener's engagement level.
 
-**Failure to adapt to listener interest**: Research by Usher et al. (PMC, 2022) found that neurotypical participants adapted their talkativeness based on conversation partner cues (talking more when their partner appeared interested, less when bored), but autistic participants did not differentially adapt their behavior to bored versus interested contexts, remaining consistently talkative in both.
+**Failure to adapt to listener interest**: Research by Cola et al. (PMC9167260, 2022) found that neurotypical participants adapted their talkativeness based on conversation partner cues (talking more when their partner appeared interested, less when bored), but autistic participants did not differentially adapt their behavior to bored versus interested contexts, remaining consistently talkative in both.
 
 **Difficulty with stepwise transitions**: Stepwise topic transitions — the most common and socially valued form of topic change — require real-time tracking of associative links and shared knowledge. Autistic individuals may find it easier to use disjunctive shifts (which are more explicit) but may not realize that disjunctive shifts are socially marked and can seem jarring to others.
 
@@ -566,42 +566,42 @@ Recent discourse research invokes the "double empathy problem" (Milton, 2012): c
 ## Key Academic Sources and References
 
 ### Foundational Works
-- Keenan (Ochs), E. & Schieffelin, B.B. (1976). "Topic as a discourse notion: A study of topics in the conversations of children and adults." In C.N. Li (Ed.), *Subject and Topic*. Academic Press.
-- Brown, G. & Yule, G. (1983). *Discourse Analysis*. Cambridge University Press.
-- Schegloff, E.A. (1990). "On the Organization of Sequences as a Source of 'Coherence' in Talk-in-Interaction." In B. Dorval (Ed.), *Conversational Organization and Its Development*. Ablex.
-- Schegloff, E.A. & Sacks, H. (1973). "Opening Up Closings." *Semiotica*, 8(4), 289–327.
-- Sacks, H. (1992). *Lectures on Conversation*, Vols. I & II. Edited by G. Jefferson. Blackwell.
+- Keenan (Ochs), E. & Schieffelin, B.B. (1976). "Topic as a discourse notion: A study of topics in the conversations of children and adults." In C.N. Li (Ed.), *Subject and Topic*. Academic Press. [Amazon (parent book)](https://www.amazon.com/Subject-Topic-Charles-N-Li/dp/0124473504)
+- Brown, G. & Yule, G. (1983). *Discourse Analysis*. Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Analysis-Cambridge-Textbooks-Linguistics/dp/0521284759)
+- Schegloff, E.A. (1990). "On the Organization of Sequences as a Source of 'Coherence' in Talk-in-Interaction." In B. Dorval (Ed.), *Conversational Organization and Its Development*. Ablex. [Amazon (parent book)](https://www.amazon.com/Conversational-Organization-Its-Development-Understanding/dp/089391640X)
+- Schegloff, E.A. & Sacks, H. (1973). "Opening Up Closings." *Semiotica*, 8(4), 289–327. [De Gruyter (paywalled)](https://doi.org/10.1515/semi.1973.8.4.289)
+- Sacks, H. (1992). *Lectures on Conversation*, Vols. I & II. Edited by G. Jefferson. Blackwell. [Amazon](https://www.amazon.com/Lectures-Conversation-Harvey-Sacks/dp/1557869057)
 
 ### Topic Introduction and Transition
-- Button, G. & Casey, N. (1984). "Generating Topic: The Use of Topic Initial Elicitors." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press.
-- Button, G. & Casey, N. (1985). "Topic Nomination and Topic Pursuit." *Human Studies*, 8, 3–55.
-- Jefferson, G. (1984). "On Stepwise Transition from Talk about a Trouble to Inappropriately Next-Positioned Matters." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press.
-- Maynard, D.W. (1980). "Placement of Topic Changes in Conversation." *Semiotica*, 30(3-4), 263–290.
-- Crow, B.K. (1983). "Topic Shifts in Couples' Conversations." In R.T. Craig & K. Tracy (Eds.), *Conversational Coherence*. Sage.
+- Button, G. & Casey, N. (1984). "Generating Topic: The Use of Topic Initial Elicitors." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press. [Amazon (parent book)](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521317622)
+- Button, G. & Casey, N. (1985). "Topic Nomination and Topic Pursuit." *Human Studies*, 8, 3–55. [Springer (paywalled)](https://doi.org/10.1007/BF00143022)
+- Jefferson, G. (1984). "On Stepwise Transition from Talk about a Trouble to Inappropriately Next-Positioned Matters." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge University Press. [Amazon (parent book)](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521317622)
+- Maynard, D.W. (1980). "Placement of Topic Changes in Conversation." *Semiotica*, 30(3-4), 263–290. [De Gruyter (paywalled)](https://doi.org/10.1515/semi.1980.30.3-4.263)
+- Crow, B.K. (1983). "Topic Shifts in Couples' Conversations." In R.T. Craig & K. Tracy (Eds.), *Conversational Coherence*. Sage. [Amazon (parent book)](https://www.amazon.com/Conversational-Coherence-Structure-Robert-T-Craig/dp/0803919875)
 
 ### Discourse Markers and Topic Management
-- Bolden, G.B. (2009). "Implementing Incipient Actions: The Discourse Marker 'So' in English Conversation." *Journal of Pragmatics*, 41, 974–998.
-- Heritage, J. (2015). "Well-prefaced Turns in English Conversation: A Conversation Analytic Perspective." *Journal of Pragmatics*, 88, 88–104.
-- Park, I. (2010). "Marking an Impasse: The Use of Anyway as a Sequence-Closing Device." *Journal of Pragmatics*, 42, 3283–3299.
+- Bolden, G.B. (2009). "Implementing Incipient Actions: The Discourse Marker 'So' in English Conversation." *Journal of Pragmatics*, 41, 974–998. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2008.10.004)
+- Heritage, J. (2015). "Well-prefaced Turns in English Conversation: A Conversation Analytic Perspective." *Journal of Pragmatics*, 88, 88–104. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2015.08.008)
+- Park, I. (2010). "Marking an Impasse: The Use of Anyway as a Sequence-Closing Device." *Journal of Pragmatics*, 42, 3283–3299. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2010.05.002)
 
 ### Topic, Power, and Gender
-- Okamoto, D.G. & Smith-Lovin, L. (2001). "Changing the Subject: Gender, Status, and the Dynamics of Topic Change." *American Sociological Review*, 66(6), 852–873.
-- West, C. & Zimmerman, D.H. (1983). "Small Insults: A Study of Interruptions in Cross-Sex Conversations between Unacquainted Persons." In B. Thorne, C. Kramarae, & N. Henley (Eds.), *Language, Gender and Society*. Newbury House.
-- Tannen, D. (1990). *You Just Don't Understand: Women and Men in Conversation*. Morrow.
-- Fishman, P. (1983). "Interaction: The Work Women Do." In B. Thorne, C. Kramarae, & N. Henley (Eds.), *Language, Gender and Society*. Newbury House.
+- Okamoto, D.G. & Smith-Lovin, L. (2001). "Changing the Subject: Gender, Status, and the Dynamics of Topic Change." *American Sociological Review*, 66(6), 852–873. [JSTOR](https://www.jstor.org/stable/3088876)
+- West, C. & Zimmerman, D.H. (1983). "Small Insults: A Study of Interruptions in Cross-Sex Conversations between Unacquainted Persons." In B. Thorne, C. Kramarae, & N. Henley (Eds.), *Language, Gender and Society*. Newbury House. [Amazon (parent book)](https://www.amazon.com/Language-gender-society-Barrie-Thorne/dp/0883772685)
+- Tannen, D. (1990). *You Just Don't Understand: Women and Men in Conversation*. Morrow. [Amazon](https://www.amazon.com/You-Just-Dont-Understand-Conversation/dp/0060959622)
+- Fishman, P. (1983). "Interaction: The Work Women Do." In B. Thorne, C. Kramarae, & N. Henley (Eds.), *Language, Gender and Society*. Newbury House. [Amazon (parent book)](https://www.amazon.com/Language-gender-society-Barrie-Thorne/dp/0883772685)
 
 ### Institutional Talk
-- Drew, P. & Heritage, J. (1992). *Talk at Work: Interaction in Institutional Settings*. Cambridge University Press.
-- Clayman, S. & Heritage, J. (2002). *The News Interview: Journalists and Public Figures on the Air*. Cambridge University Press.
-- Sinclair, J. McH. & Coulthard, R.M. (1975). *Towards an Analysis of Discourse: The English Used by Teachers and Pupils*. Oxford University Press.
-- Mehan, H. (1979). *Learning Lessons: Social Organization in the Classroom*. Harvard University Press.
+- Drew, P. & Heritage, J. (1992). *Talk at Work: Interaction in Institutional Settings*. Cambridge University Press. [Amazon](https://www.amazon.com/Talk-at-Work-Interaction-Institutional/dp/0521379415)
+- Clayman, S. & Heritage, J. (2002). *The News Interview: Journalists and Public Figures on the Air*. Cambridge University Press. [Amazon](https://www.amazon.com/News-Interview-Journalists-Public-Figures/dp/0521002885)
+- Sinclair, J. McH. & Coulthard, R.M. (1975). *Towards an Analysis of Discourse: The English Used by Teachers and Pupils*. Oxford University Press. [Amazon](https://www.amazon.com/Towards-Analysis-Discourse-English-Teachers/dp/019436011X)
+- Mehan, H. (1979). *Learning Lessons: Social Organization in the Classroom*. Harvard University Press. [Amazon](https://www.amazon.com/Learning-Lessons-Social-Organization-Classroom/dp/0674519752)
 
 ### Autism and Topic Management
-- Prizant, B.M. & Rydell, P.J. (1993). "Assessment and Intervention Considerations for Unconventional Verbal Behavior." In J. Reichle & D.P. Wacker (Eds.), *Communicative Alternatives to Challenging Behavior*. Paul H. Brookes.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883–887.
-- Usher, L.V. et al. (2022). "Conversational Adaptation in Children and Teens with Autism: Differences in Talkativeness across Contexts." *PMC/Autism Research*.
+- Prizant, B.M. & Rydell, P.J. (1993). "Assessment and Intervention Considerations for Unconventional Verbal Behavior." In J. Reichle & D.P. Wacker (Eds.), *Communicative Alternatives to Challenging Behavior*. Paul H. Brookes. [Amazon (parent book)](https://www.amazon.com/Communicative-Alternatives-Challenging-Behavior-Integrating/dp/1557661251)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883–887. [Taylor & Francis](https://doi.org/10.1080/09687599.2012.710008)
+- Cola, M. et al. (2022). "Conversational Adaptation in Children and Teens with Autism: Differences in Talkativeness across Contexts." *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.2693) [PMC9167260](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167260/)
 
 ### Other Relevant Works
-- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (Eds.), *Syntax and Semantics 3: Speech Acts*. Academic Press.
-- Maynard, D.W. (2003). *Bad News, Good News: Conversational Order in Everyday Talk and Clinical Settings*. University of Chicago Press.
-- Tiitinen, S. & Lempiälä, T. (2022). "Two Social Functions of Stepwise Transitions When Discussing Ideas in Workplace Meetings." *International Journal of Business Communication*, 33(1).
+- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (Eds.), *Syntax and Semantics 3: Speech Acts*. Academic Press. [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
+- Maynard, D.W. (2003). *Bad News, Good News: Conversational Order in Everyday Talk and Clinical Settings*. University of Chicago Press. [Amazon](https://www.amazon.com/Bad-News-Good-Conversational-Settings/dp/0226511952)
+- Tiitinen, S. & Lempiälä, T. (2022). "Two Social Functions of Stepwise Transitions When Discussing Ideas in Workplace Meetings." *International Journal of Business Communication*. [SAGE (paywalled)](https://journals.sagepub.com/doi/10.1177/23294884221077474)

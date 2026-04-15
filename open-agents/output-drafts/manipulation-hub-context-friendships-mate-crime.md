@@ -475,6 +475,20 @@ The standing recovery frame applies: **the goal is not to become a person who do
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Thomas (2011). Mate crime. — [Tandfonline](https://www.tandfonline.com/doi/abs/10.1080/09687599.2011.529670) [paywalled]
+- Pearson, Rees & Forster (2022). — [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Cazalis et al. (2022). — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Griffiths et al. (2019). — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+
 **Mate crime literature:**
 - Thomas, P. (2011). "'Mate crime': Ridicule, hostility and targeted attacks against disabled people." *Disability & Society* 26(1): 107–111.
 - Quarmby, K. (2008). *Getting Away with Murder: Disabled People's Experiences of Hate Crime in the UK.* Scope, UK Disability Now, and Disability Awareness in Action.
@@ -486,8 +500,8 @@ The standing recovery frame applies: **the goal is not to become a person who do
 **Autism-specific friendship and victimization research:**
 - Pearson, A., Rees, J., & Forster, S. (2022). "'This Was Just How This Friendship Worked': Experiences of Interpersonal Victimization Among Autistic Adults." *Autism in Adulthood* 4(2): 141–150.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.'" *Autism in Adulthood.*
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.'" *Autism in Adulthood.*
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Cazalis, F., Reyes, E., Leduc, S., & Gourion, D. (2022). "Evidence That Nine Autistic Women Out of Ten Have Been Victims of Sexual Violence." *Frontiers in Behavioral Neuroscience.* PMC9087551.
 - Cooke, K., et al. (2025). "Outcomes of Experiencing Interpersonal Violence in Autism: A Mixed Methods Systematic Review and Meta-Analysis." *Trauma, Violence & Abuse.*
 

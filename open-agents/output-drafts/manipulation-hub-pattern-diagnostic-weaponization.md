@@ -35,7 +35,7 @@ The distinction matters because:
 
 **Primary sources:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.*
 
 **Evidence quality:** [PRELIMINARY]. The Pearson research program is high-quality qualitative work. The sample sizes are modest (24 in Douglas & Sedgewick 2024; 100+ across the broader Pearson research program), the participants are self-selected, and the findings have not yet been replicated outside this research group. However, the convergence across multiple studies in the same group is strong, and the situational-vulnerability framing has been broadly accepted in autistic community theorizing as the correct conceptual reframe.
 
@@ -54,7 +54,7 @@ The argument: perpetrators of abuse against autistic people often appear to *del
 
 The *weaponized features* framing is conceptually important for two reasons. First, it relocates responsibility: the features themselves are not the problem; the deliberate exploitation of them is. Second, it identifies the exploitation as a *tactic* rather than as accidental or as a side effect of the relationship. This makes diagnostic weaponization recognizable as a specific manipulation move rather than as misunderstanding.
 
-**Primary source:** Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+**Primary source:** Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Evidence quality:** [PRELIMINARY]. Small qualitative sample (n=24), self-selected, but findings converge with the broader Pearson research program and with autistic community theorizing. The "weaponized features" framing is a *conceptual contribution* — it changes how the pattern should be understood — rather than a prevalence estimate. As the foundational autism research document notes, the framing was actually present in autistic survivor communities before it appeared in this peer-reviewed paper; the academic literature is catching up to community knowledge here, not leading it.
 
@@ -405,12 +405,28 @@ The recovery frame worth holding throughout: **the goal is not to become a diffe
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). *Autism* 28(7):1732-1745. — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Williams et al. (2018). Can you spot a liar? — [PMC6220950](https://pmc.ncbi.nlm.nih.gov/articles/PMC6220950/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Griffiths et al. (2019). VEQ. — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Cazalis et al. (2022). — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Ullman (2010). *Talking About Sexual Assault.* — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Stark (2007). *Coercive Control.* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+
 **Situational vulnerability reframe:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* https://journals.sagepub.com/doi/abs/10.1177/13623613221104546
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* https://journals.sagepub.com/doi/10.1089/aut.2024.0145
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* https://journals.sagepub.com/doi/10.1089/aut.2024.0145
 
 **Weaponized features framework:**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. https://journals.sagepub.com/doi/10.1177/13623613231205630
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. https://journals.sagepub.com/doi/10.1177/13623613231205630
 
 **The credibility discount and disclosure effects:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.

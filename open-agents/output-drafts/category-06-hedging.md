@@ -410,14 +410,14 @@ Both statements communicate the same content. The hedged version adds a social c
 ## Key Sources
 
 ### Foundational Texts
-- Lakoff, G. (1973). "Hedges: A Study in Meaning Criteria and the Logic of Fuzzy Concepts." *Journal of Philosophical Logic*, 2(4), 458-508.
-- Prince, E., Frader, J. & Bosk, C. (1982). "On Hedging in Physician-Physician Discourse." In di Pietro (ed.), *Linguistics and the Professions*.
-- Hyland, K. (1998). *Hedging in Scientific Research Articles*. John Benjamins.
-- Hyland, K. (2005). *Metadiscourse: Exploring Interaction in Writing*. Continuum.
-- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
+- Lakoff, G. (1973). "Hedges: A Study in Meaning Criteria and the Logic of Fuzzy Concepts." *Journal of Philosophical Logic*, 2(4), 458-508. [Springer (paywalled)](https://doi.org/10.1007/BF00262952)
+- Prince, E., Frader, J. & Bosk, C. (1982). "On Hedging in Physician-Physician Discourse." In di Pietro (ed.), *Linguistics and the Professions*. [Amazon](https://www.amazon.com/Linguistics-Professions-Proceedings-Delaware-Symposium/dp/0893910937)
+- Hyland, K. (1998). *Hedging in Scientific Research Articles*. John Benjamins. [Benjamins](https://benjamins.com/catalog/pbns.54)
+- Hyland, K. (2005). *Metadiscourse: Exploring Interaction in Writing*. Continuum. [Amazon](https://www.amazon.com/Metadiscourse-Exploring-Interaction-Writing-Continuum/dp/0826476104)
+- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Linguistics/dp/0521313554)
 
 ### Autism Research
-- Butterbrod, T. "The Effect of Autistic Traits on Politeness Strategies." Tilburg University.
-- Lake, J. et al. (2011). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers." *J Autism Dev Disord*.
-- Gorman, K. et al. (2016). "Uh and Um in Children with ASD." *Autism Research*.
-- Wilson, C. & Bishop, D. (2022). "Preference for Certainty." *PeerJ*.
+- Butterbrod, T. "The Effect of Autistic Traits on Politeness Strategies." Tilburg University. [Tilburg Repository](http://arno.uvt.nl/show.cgi?fid=145186)
+- Irvine, C.A., Eigsti, I.-M., & Fein, D.A. (2016). "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder." *J Autism Dev Disord*, 46(3), 1061-1070. [PMC7536647](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/) *(corrects earlier misattribution to "Lake et al. 2011")*
+- Gorman, K. et al. (2016). "Uh and Um in Children with ASD." *Autism Research*. [PMC4958035](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/)
+- Wilson, A.C. & Bishop, D.V.M. (2022). "'Second guessing yourself all the time about what they really mean': Cognitive differences between autistic and non-autistic adults in understanding implied meaning." *PeerJ*, 10, e13110. [PeerJ](https://doi.org/10.7717/peerj.13110) *(corrects earlier misattribution to "Bohn et al. 2022")*

@@ -476,6 +476,23 @@ The strategies above do not require the childhood recognition to function. They 
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Shriberg et al. (2001). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/11708530/) [paywalled]
+- Kinnaird et al. (2019). Alexithymia. — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Garfinkel et al. (2016). — [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0301051115300466) [paywalled]
+- Nicholson et al. (2018). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/30102067/) [paywalled]
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+
 **Autistic prosody and affect differences (Leg 1 and Leg 3 substrate):**
 - Shriberg, L. D., Paul, R., McSweeny, J. L., Klin, A., Cohen, D. J., & Volkmar, F. R. (2001). "Speech and prosody characteristics of adolescents and adults with high-functioning autism and Asperger syndrome." *Journal of Speech, Language, and Hearing Research* 44(5): 1097–1115.
 - Diehl, J. J., Watson, D., Bennetto, L., McDonough, J., & Gunlogson, C. (2009). "An acoustic analysis of prosody in high-functioning autism." *Applied Psycholinguistics* 30(3): 385–404.
@@ -506,7 +523,7 @@ The strategies above do not require the childhood recognition to function. They 
 - Rumball, F., Happé, F., & Grey, N. (2020). "Experience of Trauma and PTSD Symptoms in Autistic Adults: Risk of PTSD Development Following DSM-5 and Non-DSM-5 Traumatic Life Events." *Autism Research* 13(12): 2122–2132.
 
 **Autistic interpersonal victimization and abuse:**
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.*
 
 **Gaslighting as a sociological mechanism (emotional channel overwrite):**

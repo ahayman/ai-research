@@ -469,27 +469,27 @@ Address forms (Section 4.1 above) directly connect to Category 07's treatment of
 
 ## Research Sources
 
-- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press. (Foundational treatment of deixis types)
-- Fillmore, C.J. (1997). *Lectures on Deixis*. CSLI Publications. (Original deictic center theory)
-- Yule, G. (1996). *Pragmatics*. Oxford University Press. (Accessible introduction to deictic categories)
-- Isaacs, E.A. & Clark, H.H. (1990). "Ostensible invitations." *Language in Society*, 19, 493-509. (Research on sincere vs. insincere invitations)
-- Ozonoff, S., & Miller, J.N. (1996). "An exploration of right-hemisphere contributions to the pragmatic impairments of autism." *Brain and Language*, 52(3), 411-434.
-- Mizuno, A. et al. (2011). "The neural basis of deictic shifting in linguistic perspective-taking in high-functioning autism." *Neuropsychologia*, 49(10), 2743-2751. PMC3155703.
-- Hobson, R.P., Garcia-Perez, R., & Lee, A. (2010). "Person-centred (deictic) expressions and autism." *Journal of Autism and Developmental Disorders*, 40(4), 403-415.
-- Sterponi, L. & de Kirby, K. (2016). "A multidimensional reappraisal of language in autism: Insights from a discourse analytic study." *Journal of Autism and Developmental Disorders*, 46, 394-405.
-- Springer: "Deixis and personhood: Autism, intersubjectivity, and the fluidity-to-inelasticity hypothesis."
-- Gundel, J.K. et al. (1993). "Cognitive status and the form of referring expressions in discourse." *Language*, 69(2), 274-307.
-- Ouy, A. et al. (2020). "'You' speaks to me: Effects of generic-you in creating resonance between people and ideas." *PNAS*, 117(49). (Research on generic "you" effects)
-- Springer (2017). "Temporal and atemporal uses of 'you': indexical and generic second person pronouns in English, German, and Dutch." *Journal of Comparative Germanic Linguistics*.
-- Wikipedia: "Singular they" (historical development from 14th century)
-- Wikipedia: "Royal we" / Pluralis majestatis
-- Cambridge Dictionary: "Come or go?" (Deictic motion verb distinctions)
-- Oshima, D.Y. "GO and COME Revisited: What Serves as a Reference Point?" *Proceedings of BLS*.
-- PMC9003772: "The Effects of Day of the Week on Temporal Ambiguity Resolution." (Research on "next Friday" ambiguity)
-- Lund University student paper: "See You Next Tuesday: A Study of Temporal Deictic Modifiers Next and Last."
-- ScienceDirect: "Recent changes of now as a discourse marker in spoken English." (2025)
-- ScienceDirect: "The discourse marker now: A relevance-theoretic approach."
-- APHA Blog (2013): Documentation of "How are we feeling" as patronizing elderspeak.
-- Springer (2025): "Some (but not all) Pragmatic Inferences are Difficult for Autistic Children." *J. Autism Dev. Disord.*
-- Springer (2023): "Literalism in Autistic People: a Predictive Processing Proposal." *Review of Philosophy and Psychology*.
-- Springer: "Language in autism: domains, profiles and co-occurring conditions." PMC10033486.
+- Levinson, S.C. (1983). *Pragmatics*. Cambridge University Press. (Foundational treatment of deixis types) [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
+- Fillmore, C.J. (1997). *Lectures on Deixis*. CSLI Publications. (Original deictic center theory) [Amazon](https://www.amazon.com/Lectures-Deixis-Lecture-Notes/dp/1575860902)
+- Yule, G. (1996). *Pragmatics*. Oxford University Press. (Accessible introduction to deictic categories) [Amazon](https://www.amazon.com/Pragmatics-Oxford-Introductions-Language-Study/dp/0194372073)
+- Isaacs, E.A. & Clark, H.H. (1990). "Ostensible invitations." *Language in Society*, 19, 493-509. (Research on sincere vs. insincere invitations) [Cambridge (paywalled)](https://doi.org/10.1017/S0047404500014780)
+- Ozonoff, S., & Miller, J.N. (1996). "An exploration of right-hemisphere contributions to the pragmatic impairments of autism." *Brain and Language*, 52(3), 411-434. [ScienceDirect (paywalled)](https://doi.org/10.1006/brln.1996.0022)
+- Mizuno, A. et al. (2011). "The neural basis of deictic shifting in linguistic perspective-taking in high-functioning autism." *Brain*, 134(8), 2422-2435. [PMC3155703](https://pmc.ncbi.nlm.nih.gov/articles/PMC3155703/)
+- Hobson, R.P., Garcia-Perez, R., & Lee, A. (2010). "Person-centred (deictic) expressions and autism." *Journal of Autism and Developmental Disorders*, 40(4), 403-415. [Springer (paywalled)](https://doi.org/10.1007/s10803-009-0882-5)
+- Sterponi, L. & de Kirby, K. (2016). "A multidimensional reappraisal of language in autism: Insights from a discourse analytic study." *Journal of Autism and Developmental Disorders*, 46, 394-405. [Springer (paywalled)](https://doi.org/10.1007/s10803-015-2679-z)
+- Oakley, T. & Vidanović, Đ. (2014). "Deixis and personhood: Autism, intersubjectivity, and the fluidity-to-inelasticity hypothesis." *Cognitive Semiotics*, 7(2), 191-225. [De Gruyter (paywalled)](https://doi.org/10.1515/cogsem-2014-0013) *(previously misattributed to "Breckinridge 2014" / "Springer")*
+- Gundel, J.K. et al. (1993). "Cognitive status and the form of referring expressions in discourse." *Language*, 69(2), 274-307. [JSTOR (paywalled)](https://doi.org/10.2307/416535)
+- Orvell, A. et al. (2020). "'You' speaks to me: Effects of generic-you in creating resonance between people and ideas." *PNAS*, 117(49). [PNAS](https://doi.org/10.1073/pnas.2010939117)
+- Springer (2017). "Temporal and atemporal uses of 'you': indexical and generic second person pronouns in English, German, and Dutch." *Journal of Comparative Germanic Linguistics*. [Springer (paywalled)](https://doi.org/10.1007/s10828-017-9093-1)
+- [Wikipedia: Singular they (historical development from 14th century)](https://en.wikipedia.org/wiki/Singular_they)
+- [Wikipedia: Royal we / Pluralis majestatis](https://en.wikipedia.org/wiki/Royal_we)
+- [Cambridge Dictionary: Come or go?](https://dictionary.cambridge.org/grammar/british-grammar/come-or-go)
+- Oshima, D.Y. "GO and COME Revisited: What Serves as a Reference Point?" *Proceedings of BLS*. [BLS Proceedings](https://journals.linguisticsociety.org/proceedings/index.php/BLS/article/download/3466/3169/4255)
+- "The Effects of Day of the Week on Temporal Ambiguity Resolution." [PMC9003772](https://pmc.ncbi.nlm.nih.gov/articles/PMC9003772/)
+- Lund University student paper: "See You Next Tuesday: A Study of Temporal Deictic Modifiers Next and Last." [Lund Repository](https://lup.lub.lu.se/student-papers/search/publication/8922893)
+- ScienceDirect: "Recent changes of now as a discourse marker in spoken English." (2025) [CITATION UNVERIFIED]
+- ScienceDirect: "The discourse marker now: A relevance-theoretic approach." [ScienceDirect (paywalled)](https://doi.org/10.1016/S0378-2166(02)00032-6)
+- APHA Blog (2013): Documentation of "How are we feeling" as patronizing elderspeak. [CITATION UNVERIFIED]
+- Springer (2025): "Some (but not all) Pragmatic Inferences are Difficult for Autistic Children." *J. Autism Dev. Disord.* [Springer](https://doi.org/10.1007/s10803-025-06838-4)
+- Springer (2023): "Literalism in Autistic People: a Predictive Processing Proposal." *Review of Philosophy and Psychology*. [Springer](https://doi.org/10.1007/s13164-023-00704-x)
+- "Language in autism: domains, profiles and co-occurring conditions." [PMC10033486](https://pmc.ncbi.nlm.nih.gov/articles/PMC10033486/)

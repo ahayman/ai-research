@@ -425,9 +425,20 @@ De-escalation is one tool among several. Documentation, reality-check networks, 
 
 ## 12. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Compton et al. (2014). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/24382643/) [paywalled]
+- Brown & Levinson (1987). — [Amazon](https://www.amazon.com/Politeness-Universals-Language-Interactional-Sociolinguistics/dp/0521313554)
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Glass et al. (2008). — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+
 **Crisis intervention and de-escalation evidence base:**
 - Compton, M. T., et al. (2014). "The police-based crisis intervention team (CIT) model." *Psychiatric Services* 65(4): 523–529. — Systematic review of CIT evaluations.
-- Watson, A. C., et al. (2017). "Crisis intervention teams and mental health response." *Annual Review of Clinical Psychology.*
+- Watson, A. C., et al. (2017). "Crisis intervention teams and mental health response." *Behavioral Sciences & the Law 35(5-6):431-441.*
 - Taheri, S. A. (2016). "Do crisis intervention teams reduce arrests and improve officer safety? A systematic review and meta-analysis." *Criminal Justice Policy Review.*
 
 **Trauma-informed de-escalation principles:**

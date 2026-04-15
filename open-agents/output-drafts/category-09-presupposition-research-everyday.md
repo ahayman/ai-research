@@ -771,57 +771,57 @@ When encountering a question, statement, or headline, ask:
 ## Sources and References
 
 ### Academic and Reference Sources
-- Wikipedia: Presupposition - comprehensive overview of presupposition types, triggers, and the negation test
-- Stanford Encyclopedia of Philosophy: Presupposition - formal semantics treatment of presupposition theory
-- Stanford Encyclopedia of Philosophy: Common Ground in Pragmatics - foundational work on shared assumptions
-- Loftus & Palmer (1974) - landmark study on leading questions and eyewitness memory
-- von Fintel (2000) "What is Presupposition Accommodation?" - MIT working paper on accommodation theory
-- Stalnaker: "Common Ground" - foundational paper on common ground in communication
-- Simons: "Presupposition without Common Ground" - Carnegie Mellon philosophy paper
+- [Wikipedia: Presupposition](https://en.wikipedia.org/wiki/Presupposition) - comprehensive overview of presupposition types, triggers, and the negation test
+- [Stanford Encyclopedia of Philosophy: Presupposition](https://plato.stanford.edu/entries/presupposition/) - formal semantics treatment of presupposition theory
+- [Stanford Encyclopedia of Philosophy: Common Ground](https://plato.stanford.edu/entries/pragmatics/) - foundational work on shared assumptions
+- Loftus & Palmer (1974) - landmark study on leading questions and eyewitness memory. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0022-5371(74)80011-3)
+- von Fintel (2000) "What is Presupposition Accommodation?" - MIT working paper on accommodation theory. [MIT PDF](http://web.mit.edu/fintel/fintel-2008-what-is-accommodation.pdf)
+- Stalnaker: "Common Ground" - foundational paper on common ground in communication. [Springer (paywalled)](https://doi.org/10.1023/A:1020867916902)
+- Simons: "Presupposition without Common Ground" - Carnegie Mellon philosophy paper. [CMU PDF](https://www.cmu.edu/dietrich/philosophy/docs/simons/Presupposition%20without%20Common%20Ground.pdf)
 
 ### Loaded Questions and Manipulation
-- Effectiviology: "Loaded Questions: What They Are and How to Respond to Them"
-- Wikipedia: Loaded Question - comprehensive overview with examples
-- Fallacy Files: Loaded Question - logical fallacy analysis
-- Rephrasely: "Understanding the Loaded Question Fallacy"
+- [Effectiviology: Loaded Questions: What They Are and How to Respond to Them](https://effectiviology.com/loaded-questions/)
+- [Wikipedia: Loaded Question](https://en.wikipedia.org/wiki/Loaded_question)
+- [Fallacy Files: Loaded Question](https://www.fallacyfiles.org/loadques.html)
+- [Rephrasely: Understanding the Loaded Question Fallacy](https://rephrasely.com/)
 
 ### Advertising and Presupposition
-- Atlantis Press: "Pragmatic Presupposition and Its Function in Advertisements"
-- Semantic Scholar: "Pragmatic Functions of Presupposition in Advertising English"
-- Francis Academic Press: "A Study on Presuppositions in Chinese and English Advertising Slogans"
-- ResearchGate: "Understanding Advertiser's Intention: The Analysis of Presupposition Triggers in Advertisement"
+- [Atlantis Press: Pragmatic Presupposition and Its Function in Advertisements](https://www.atlantis-press.com/proceedings/iclahd-17/25884617)
+- [Semantic Scholar: Pragmatic Functions of Presupposition in Advertising English](https://www.semanticscholar.org/)
+- [Francis Academic Press: Presuppositions in Chinese and English Advertising Slogans](https://francis-press.com/)
+- [ResearchGate: Presupposition Triggers in Advertisement](https://www.researchgate.net/)
 
 ### Political Rhetoric
-- Academia.edu: "Language, Power and Manipulation: The Use of Rhetoric in Maintaining Political Influence"
-- Academia.edu: "Presupposition and Campaign Rhetoric: A Comparative Analysis"
-- Nature: "Manipulative uses of pragmatic markers in political discourse"
-- Journal of Language Studies: "Presupposition as a Manipulation Strategy in Political Discourse"
-- ScienceDirect: "Persuasive Presuppositions"
+- [Academia.edu: Language, Power and Manipulation](https://www.academia.edu/)
+- [Academia.edu: Presupposition and Campaign Rhetoric: A Comparative Analysis](https://www.academia.edu/)
+- [Nature: Manipulative uses of pragmatic markers in political discourse](https://www.nature.com/)
+- [Journal of Language Studies: Presupposition as a Manipulation Strategy in Political Discourse](https://jls.tu.edu.iq/index.php/jls/article/view/1146)
+- [ScienceDirect: Persuasive Presuppositions](https://www.sciencedirect.com/)
 
 ### Legal Contexts
-- Springer: "Presupposition under Cross-Examination" (International Journal for the Semiotics of Law)
-- De Gruyter: "Presuppositions as Discourse Strategies in Court Examinations"
-- FindLaw: "Leading Questions - Criminal Law"
-- American Bar Association: "How Courts Work" - direct and cross-examination
+- Springer: "Presupposition under Cross-Examination" (International Journal for the Semiotics of Law). [Springer (paywalled)](https://doi.org/10.1007/s11196-017-9506-0)
+- [De Gruyter: Presuppositions as Discourse Strategies in Court Examinations](https://www.degruyter.com/)
+- [FindLaw: Leading Questions - Criminal Law](https://www.findlaw.com/)
+- [American Bar Association: How Courts Work](https://www.americanbar.org/groups/public_education/resources/law_related_education_network/how_courts_work/)
 
 ### Digital Communication
-- PMC: "Click me...! The influence of clickbait on user engagement in social media"
-- Oxford Academic: "Misleading Polls in the Media: Does Survey Clickbait Have Social Consequences?"
-- ScienceDirect: "'Deceptive' clickbait headlines: Relevance, intentions, and lies"
-- TheySaid.io: "What Are Loaded Questions? Survey Bias Examples & Tips"
-- Delighted: "Avoiding biased questions: 7 examples of bad survey questions"
-- SurveyMonkey: "3 Survey Bias Types To Avoid"
+- [PMC: Click me...! The influence of clickbait on user engagement in social media](https://pmc.ncbi.nlm.nih.gov/articles/PMC8006992/)
+- [Oxford Academic: Misleading Polls in the Media](https://academic.oup.com/)
+- [ScienceDirect: 'Deceptive' clickbait headlines: Relevance, intentions, and lies](https://www.sciencedirect.com/science/article/abs/pii/S0378216619306472)
+- [TheySaid.io: What Are Loaded Questions?](https://theysaid.io/)
+- [Delighted: Avoiding biased questions](https://delighted.com/blog/avoiding-biased-questions-survey)
+- [SurveyMonkey: Survey Bias Types To Avoid](https://www.surveymonkey.com/mp/survey-bias/)
 
 ### Autism and Language Processing
-- Springer: "Literalism in Autistic People: A Predictive Processing Proposal" (Review of Philosophy and Psychology)
-- PMC: "Language in autism: domains, profiles and co-occurring conditions"
-- Wiley: "Pragmatic competence, autistic language use and the basic properties of human language"
-- Wiley: "Figurative language processing in autism spectrum disorders: A review"
-- Springer: "Pragmatic Language in Autism: An Overview"
+- Springer: "Literalism in Autistic People: A Predictive Processing Proposal" (Review of Philosophy and Psychology). [Springer](https://doi.org/10.1007/s13164-023-00704-x)
+- "Language in autism: domains, profiles and co-occurring conditions." [PMC10033486](https://pmc.ncbi.nlm.nih.gov/articles/PMC10033486/)
+- Wiley: "Pragmatic competence, autistic language use and the basic properties of human language." [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/full/10.1111/jtsb.12377)
+- Wiley: "Figurative language processing in autism spectrum disorders: A review." [Wiley (paywalled)](https://doi.org/10.1111/mbe.12082)
+- Springer: "Pragmatic Language in Autism: An Overview." [Springer (paywalled)](https://doi.org/10.1007/978-3-319-91280-6_959)
 
 ### Presupposition Theory
-- StudySmarter: "Presupposition: Meaning, Types & Examples"
-- LibreTexts: "Presupposition" (Analyzing Meaning textbook)
-- Arthur Parish: "What Is Presupposition - 6 Types & Heaps Of Examples"
-- ThePowerArk: "Presuppositions: The Complete Guide to Persuasive Communication"
-- Fiveable: "Presupposition projection and accommodation"
+- [StudySmarter: Presupposition: Meaning, Types & Examples](https://www.vaia.com/en-us/explanations/english/pragmatics/presupposition/)
+- [LibreTexts: Presupposition (Analyzing Meaning textbook)](https://socialsci.libretexts.org/Bookshelves/Linguistics/Analyzing_Meaning_-_An_Introduction_to_Semantics_and_Pragmatics_(Kroeger)/03:_Truth_and_inference/3.04:_Presupposition)
+- [Arthur Parish: What Is Presupposition - 6 Types & Examples](https://arthurparish.com/)
+- [ThePowerArk: Presuppositions: Complete Guide to Persuasive Communication](https://thepowerark.com/)
+- [Fiveable: Presupposition projection and accommodation](https://fiveable.me/key-terms/introduction-semantics-pragmatics/presupposition-projection)

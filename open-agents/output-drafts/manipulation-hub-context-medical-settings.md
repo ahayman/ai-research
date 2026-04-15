@@ -586,6 +586,28 @@ The standing recovery frame for the entire sub-hub applies: **the goal is not to
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Hirvikoski et al. (2016). — [PubMed 26541693](https://pubmed.ncbi.nlm.nih.gov/26541693/) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Doherty et al. (2022). — [BMJ Open](https://bmjopen.bmj.com/content/12/2/e056904)
+- Camm-Crosbie et al. (2019). — [Sage](https://journals.sagepub.com/doi/10.1177/1362361318816053) [paywalled]
+- Reiss et al. (1982). Diagnostic overshadowing. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/7102729/) [paywalled]
+- Marco et al. (2011). — [PMC3086654](https://pmc.ncbi.nlm.nih.gov/articles/PMC3086654/)
+- Robertson & Baron-Cohen (2017). — [Nature](https://www.nature.com/articles/nrn.2017.112) [paywalled]
+- Garfinkel et al. (2016). — [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0301051115300466) [paywalled]
+- Nicholson et al. (2018). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/30102067/) [paywalled]
+- Kinnaird et al. (2019). — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Casanova et al. (2020). — [PMC7766877](https://pmc.ncbi.nlm.nih.gov/articles/PMC7766877/)
+- Croen et al. (2015). — [Sage](https://journals.sagepub.com/doi/10.1177/1362361315577517) [paywalled]
+- Wing & Shah (2000). — [Cambridge](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/catatonia-in-autistic-spectrum-disorders/E17E8B9B31E4A14E5F4F1C8A4BF1FEE1) [paywalled]
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+
 **Premature mortality (the empirical anchor):**
 - Hirvikoski, T., Mittendorfer-Rutz, E., Boman, M., Larsson, H., Lichtenstein, P., & Bölte, S. (2016). "Premature mortality in autism spectrum disorder." *British Journal of Psychiatry* 208(3): 232–238.
 

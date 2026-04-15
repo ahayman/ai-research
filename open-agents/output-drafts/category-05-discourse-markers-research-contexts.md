@@ -615,17 +615,17 @@ If you are uncertain what a discourse marker means, wait for what comes after it
 ## Sources and References
 
 Research informing this document draws from:
-- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press.
-- Jucker, A. & Ziv, Y. (1998). *Discourse Markers: Descriptions and Theory*.
-- Schneebeli, C. (2021). Research on "lol" as a discourse marker in YouTube comments.
-- Fox Tree, J.E. (2010). "Discourse Markers across Speakers and Settings." University of California Santa Cruz.
-- Taboada, M. "Turn-Taking and Pragmatics." Simon Fraser University.
-- Cambridge Dictionary Grammar - Discourse Markers.
-- Google Developers - Conversation Design: Discourse Markers.
-- Springer Nature - Pragmatic Marker Combinations research.
-- McSweeney, M. Research on "lol" as marker of illocutionary force.
-- Rennie et al. (2016). "The Discourse Marker 'so' in Turn-Taking and Turn-Releasing Behavior."
-- Research on emoji pragmatic functions (Springer Nature, ScienceDirect).
-- Psychology Today - Passive-aggressive phrases and discourse markers.
-- PMC/NIH - Predicting pragmatic discourse features in autism spectrum disorder.
-- Frontiers in Communication - Discourse markers "you know" and "I mean" in political interviews.
+- Schiffrin, D. (1987). *Discourse Markers*. Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Markers-Studies-Interactional-Sociolinguistics/dp/0521357187)
+- Jucker, A. & Ziv, Y. (1998). *Discourse Markers: Descriptions and Theory*. [Benjamins](https://benjamins.com/catalog/pbns.57)
+- Schneebeli, C. (2020). Research on "lol" as a discourse marker in YouTube comments. [OpenEdition](https://journals.openedition.org/discours/11821)
+- Fox Tree, J.E. (2010). "Discourse Markers across Speakers and Settings." University of California Santa Cruz. [Wiley (paywalled)](https://doi.org/10.1111/j.1749-818X.2010.00195.x)
+- Taboada, M. "Turn-Taking and Pragmatics." Simon Fraser University. [CITATION UNVERIFIED]
+- [Cambridge Dictionary Grammar - Discourse Markers](https://dictionary.cambridge.org/grammar/british-grammar/discourse-markers-so-right-okay)
+- [Google Developers - Conversation Design: Discourse Markers](https://developers.google.com/assistant/conversation-design/discourse-markers)
+- Springer Nature - Pragmatic Marker Combinations research. [CITATION UNVERIFIED]
+- McSweeney, M. Research on "lol" as marker of illocutionary force. [CITATION UNVERIFIED]
+- Bolden, G. B. (2009). "Implementing incipient actions: The discourse marker 'so' in English conversation." *Journal of Pragmatics*, 41(5), 974-998. [ScienceDirect](https://doi.org/10.1016/j.pragma.2008.10.004)
+- Research on emoji pragmatic functions (Springer Nature, ScienceDirect). [CITATION UNVERIFIED]
+- Psychology Today - Passive-aggressive phrases and discourse markers. [CITATION UNVERIFIED]
+- PMC/NIH - Predicting pragmatic discourse features in autism spectrum disorder. [PMC9633181](https://pmc.ncbi.nlm.nih.gov/articles/PMC9633181/)
+- Frontiers in Communication - Discourse markers "you know" and "I mean" in political interviews. [Frontiers](https://www.frontiersin.org/journals/communication/articles/10.3389/fcomm.2021.647437/full)

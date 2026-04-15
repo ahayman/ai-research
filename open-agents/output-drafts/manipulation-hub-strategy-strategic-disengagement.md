@@ -367,6 +367,19 @@ Some people will stay. Strategic disengagement can make staying more sustainable
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Namie & Namie (2009). — [Amazon](https://www.amazon.com/Bully-Work-Reclaim-Dignity-Job/dp/1402224265)
+- Nielsen & Einarsen (2012). — [Tandfonline](https://www.tandfonline.com/doi/abs/10.1080/02678373.2012.734709) [paywalled]
+- Prochaska & DiClemente (1983). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/6863699/) [paywalled]
+- Burke et al. (2004). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15058512/) [paywalled]
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Herman (1992). — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
+
 **Coercive control and survival strategies:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. — Specifically Chapter 8 on the entrapment model; survival strategies as adaptive responses.
 - Pence, E., & Paymar, M. (1993). *Education Groups for Men Who Batter: The Duluth Model.* Springer.

@@ -329,13 +329,13 @@ Never send just "hey" or "hi" as a standalone message, especially at work. It cr
 ## Key Sources
 
 ### Foundational Texts
-- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins.
-- Crystal, D. (2001). *Language and the Internet*. Cambridge University Press.
-- McCulloch, G. (2019). *Because Internet: Understanding the New Rules of Language*. Riverhead Books.
-- Clark, H.H. & Brennan, S.E. (1991). "Grounding in Communication."
-- Walther, J.B. (1992). "Social Information Processing Theory." *Communication Research*.
+- Yus, F. (2011). *Cyberpragmatics: Internet-Mediated Communication in Context*. John Benjamins. [Amazon](https://www.amazon.com/Cyberpragmatics-Internet-Mediated-Communication-Pragmatics-Beyond/dp/9027256195)
+- Crystal, D. (2001). *Language and the Internet*. Cambridge University Press. [Amazon](https://www.amazon.com/Language-Internet-David-Crystal/dp/0521868599)
+- McCulloch, G. (2019). *Because Internet: Understanding the New Rules of Language*. Riverhead Books. [Amazon](https://www.amazon.com/Because-Internet-Understanding-Rules-Language/dp/0735210934)
+- Clark, H.H. & Brennan, S.E. (1991). "Grounding in Communication." [Stanford PDF](https://web.stanford.edu/~clark/1990s/Clark,%20H.H.%20_%20Brennan,%20S.E.%20_Grounding%20in%20communication_%201991.pdf)
+- Walther, J.B. (1992). "Interpersonal effects in computer-mediated interaction." *Communication Research*, 19(1), 52-90. [SAGE (paywalled)](https://doi.org/10.1177/009365092019001003)
 
 ### Autism Research
-- Howard, P.L. & Sedgewick, F. (2021). "Autistic Adults' Digital Communication Preferences."
-- Gillespie-Lynch, K. et al. (2020). "Writing Skills in Autistic Students."
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
+- Howard, P.L. & Sedgewick, F. (2021). "'Anything but the phone!': Communication mode preferences in the autism community." *Autism*, 25(8). [SAGE](https://journals.sagepub.com/doi/full/10.1177/13623613211014995)
+- Gillespie-Lynch, K. et al. (2020). "Comparing the Writing Skills of Autistic and Nonautistic University Students." *Autism*. [SAGE (paywalled)](https://journals.sagepub.com/doi/abs/10.1177/1362361320929453)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer is Highly Effective." *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)

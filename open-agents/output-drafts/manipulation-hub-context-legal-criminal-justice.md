@@ -205,8 +205,8 @@ A small but growing research literature documents autism in CJS contexts specifi
 - **Allely, C. S.** Series of papers on autism and the criminal justice system, including offending patterns and false confessions.
 - **King, C., & Murphy, G. H. (2014).** "A Systematic Review of People with Autism Spectrum Disorder and the Criminal Justice System." *Journal of Autism and Developmental Disorders.*
 - **Hepworth, D. (2017).** Autism and police custody experiences.
-- **Robertson, C. E., & McGillivray, J. A. (2015).** Autism and custodial settings.
-- **Lewy, M. (2020).** On autism and false confessions.
+- **Robertson, C. E., & McGillivray, J. A. (2015).** Autism behind bars: a review of the research literature and discussion of key issues.
+- **Crane, L. et al. (2016).** Experiences of autism spectrum disorder and policing in England and Wales. *JADD*, 46(6), 2028-2041.
 - **Allely, C. S., & Cooper, P. (2017).** Predicting and preventing vulnerabilities in autism and CJS.
 
 **What the literature collectively documents:**
@@ -277,7 +277,7 @@ A specific risk for autistic adults that is documented in the autism-CJS literat
 
 **The legal consequences:** sex offender registration in the US and equivalent registries in other countries impose lifetime restrictions on housing, employment, travel, and social contact. The registration is rarely reversible. The autistic adult on the registry faces severe long-term consequences for behaviors that may not have included sexual intent in the way the law presumes.
 
-**Evidence quality:** [PRELIMINARY] for the autism-specific patterns; [VALIDATED] for the broader patterns of CJS overreach affecting disabled populations. Allely, Lewy, and others have written on the autism-sex-offense intersection.
+**Evidence quality:** [PRELIMINARY] for the autism-specific patterns; [VALIDATED] for the broader patterns of CJS overreach affecting disabled populations. Allely, Allely & Cooper, and others have written on the autism-sex-offense intersection.
 
 **The protective response:** these cases are particularly serious and require specialized legal representation from attorneys with experience in both criminal defense and disability law. The prevention dimension (autism-aware sex education for autistic adolescents and adults, explicit discussion of legal age of consent, explicit discussion of social cues around sexual interaction) is part of the broader autism community's work but is not addressable in the moment when an autistic adult is facing charges.
 
@@ -473,7 +473,7 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 
 4. **The credibility discount documented by Lim, Young & Brewer (2022) operates throughout the legal system** with material consequences. Police, prosecutors, judges, juries, custody evaluators, forensic evaluators, and immigration adjudicators all read autistic affect through assumptions that work against the autistic adult.
 
-5. **The autism-CJS research literature is small but consistent.** Slavny-Cross, Maras, Crane, Allely, Lewy, and others have documented the patterns and have advocated for autism-adapted forensic interview protocols, expert testimony on autistic features, and broader system reform.
+5. **The autism-CJS research literature is small but consistent.** Slavny-Cross, Maras, Crane, Allely, Allely & Cooper, and others have documented the patterns and have advocated for autism-adapted forensic interview protocols, expert testimony on autistic features, and broader system reform.
 
 6. **The four most dangerous configurations** are police welfare check + meltdown + use of force; interrogation + false confession + conviction; custody case + autism weaponization + loss of children; and civil commitment + guardianship + loss of legal capacity. Each warrants specialized legal representation and disability rights organizational support.
 
@@ -489,6 +489,16 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Slavny-Cross et al. (2022). — [PMC9314022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9314022/)
+- Crane et al. (2016). — [Springer](https://link.springer.com/article/10.1007/s10803-016-2729-1) [paywalled]
+- King & Murphy (2014). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/24577785/) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Hirvikoski et al. (2016). — [PubMed 26541693](https://pubmed.ncbi.nlm.nih.gov/26541693/) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+
 **Autism in the criminal justice system (the autism-CJS research program):**
 - Slavny-Cross, R., Allison, C., Griffiths, S., & Baron-Cohen, S. (2022). Autism and CJS interactions.
 - Maras, K. L., & Bowler, D. M. (2014). "Eyewitness testimony in autism spectrum disorder: A review." *Journal of Autism and Developmental Disorders.*
@@ -497,8 +507,8 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 - Allely, C. S. Series of papers on autism and the criminal justice system, including offending patterns and false confessions.
 - King, C., & Murphy, G. H. (2014). "A Systematic Review of People with Autism Spectrum Disorder and the Criminal Justice System." *Journal of Autism and Developmental Disorders* 44(11): 2717–2733.
 - Hepworth, D. (2017). On autism and police custody experiences.
-- Robertson, C. E., & McGillivray, J. A. (2015). On autism and custodial settings.
-- Lewy, M. (2020). On autism and false confessions.
+- Robertson, C. E., & McGillivray, J. A. (2015). Autism behind bars: a review of the research literature and discussion of key issues.
+- Crane, L. et al. (2016). Experiences of autism spectrum disorder and policing in England and Wales: Surveying police and the autism community. *Journal of Autism and Developmental Disorders*, 46(6), 2028-2041.
 - Allely, C. S., & Cooper, P. (2017). "Predicting and preventing vulnerabilities in autism and the criminal justice system."
 
 **The credibility discount:**

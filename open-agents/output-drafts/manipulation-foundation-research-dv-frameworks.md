@@ -607,6 +607,88 @@ Given the gaps:
 
 ## Full Reference List (for downstream citation)
 
+### Verified source links (safety-critical and load-bearing citations)
+
+The following citations have been independently verified with working URLs. Entries appear in the full reference list below with their bibliographic details.
+
+**Safety-critical lethality and risk research (free access):**
+- Glass et al. (2008) — "Non-fatal strangulation is an important risk factor for homicide of women" — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003) — "Risk Factors for Femicide in Abusive Relationships" — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Campbell, Webster & Glass (2009) — Danger Assessment validation (310/324 sample) — [Sage](https://journals.sagepub.com/doi/10.1177/0886260508317180) [paywalled]
+- Karakurt et al. (2016) — Couples Therapy for IPV systematic review — [PMC5050084](https://pmc.ncbi.nlm.nih.gov/articles/PMC5050084/)
+- Bograd & Mederos (1999) — Battering and Couples Therapy (couples therapy contraindication) — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Sullivan & Bybee (1999) — Reducing violence using community-based advocacy — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+
+**Autism-specific victimization research (peer-reviewed, foundational):**
+- Douglas & Sedgewick (2024) — Experiences of interpersonal victimization among autistic people — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Pearson, Rose & Rees (2023) — "I felt like I deserved it because I was autistic" — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024) — "It's Not a Physical Prison but You Can't Get Out" — [Liebert DOI](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Pearson, Rees & Forster (2022) — "This Was Just How This Friendship Worked" — [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
+- Cazalis et al. (2022) — Nine autistic women out of ten sexual violence victims — [PMC9087551](https://pmc.ncbi.nlm.nih.gov/articles/PMC9087551/)
+- Griffiths et al. (2019) — Vulnerability Experiences Quotient (VEQ) — [PMC6851759](https://pmc.ncbi.nlm.nih.gov/articles/PMC6851759/)
+- Lim, Young & Brewer (2022) — Autistic Adults Perceived as Deceptive — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Milton (2012) — Double empathy problem — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Crompton et al. (2020) — Autistic peer-to-peer information transfer — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+
+**Coercive control theory and Duluth Model:**
+- Stark (2007) — *Coercive Control: How Men Entrap Women in Personal Life* — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Stark (2009) — Rethinking Coercive Control — [Sage](https://journals.sagepub.com/doi/10.1177/1077801209347452) [paywalled]
+- Stark & Hester (2019) — Coercive Control Update and Review — [Sage](https://journals.sagepub.com/doi/abs/10.1177/1077801218816191) [paywalled]
+- Johnson (2008) — *A Typology of Domestic Violence* — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Pence & Paymar (1993) — *Education Groups for Men Who Batter: The Duluth Model* — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+
+**Other lethality, stalking, and risk:**
+- Wilson & Daly (1993) — Spousal Homicide Risk and Estrangement — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8292563/) [paywalled]
+- Daly et al. (1997) — Women with Children Sired by Previous Partners — [Sage](https://journals.sagepub.com/doi/10.1177/1088767997001001004) [paywalled]
+- Messing et al. (2017) — The Lethality Screen — [Sage](https://journals.sagepub.com/doi/abs/10.1177/0886260515585540) [paywalled]
+- Pritchard et al. (2017) — Nonfatal Strangulation Review — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015622439) [paywalled]
+- Logan & Walker (2017) — Stalking: Multidimensional Framework — [Sage](https://journals.sagepub.com/doi/10.1177/1524838015603210) [paywalled]
+- Logan & Walker (2009) — Partner Stalking — [Sage](https://journals.sagepub.com/doi/abs/10.1177/1524838009334461) [paywalled]
+
+**Safety planning / advocacy / batterer intervention / stages of change:**
+- Babcock, Green & Robie (2004) — Does Batterers' Treatment Work? — [PubMed](https://pubmed.ncbi.nlm.nih.gov/14729422/) [paywalled]
+- Bell & Goodman (2001) — Supporting Battered Women in the Court System — [Sage](https://journals.sagepub.com/doi/10.1177/10778010122183919) [paywalled]
+- Glass et al. (2017) — MyPlan Internet Safety Decision Aid — [PubMed](https://pubmed.ncbi.nlm.nih.gov/28108189/) [paywalled]
+- Stith et al. (2012) — Systemic Perspectives on IPV Treatment — [Wiley](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1752-0606.2011.00245.x) [paywalled]
+- Prochaska & DiClemente (1983) — Stages and Processes of Self-Change — [PubMed](https://pubmed.ncbi.nlm.nih.gov/6863699/) [paywalled]
+- Burke et al. (2004) — Ending IPV (Transtheoretical Model) — [PubMed](https://pubmed.ncbi.nlm.nih.gov/15058512/) [paywalled]
+- Brown (1997) — Working Toward Freedom From Violence — [Sage](https://journals.sagepub.com/doi/10.1177/1077801297003001002) [paywalled]
+
+**Workplace bullying:**
+- Nielsen & Einarsen (2012) — Outcomes of Workplace Bullying — [Tandfonline](https://www.tandfonline.com/doi/abs/10.1080/02678373.2012.734709) [paywalled]
+- Salin (2008) — The Prevention of Workplace Bullying — [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0956522108000419) [paywalled]
+- Leiter et al. (2011) — Impact of Civility Interventions — [PubMed](https://pubmed.ncbi.nlm.nih.gov/21744942/) [paywalled]
+- Scott (2018) — Extending Duluth to Workplace — [Sage](https://journals.sagepub.com/doi/10.1177/2165079917750934) [paywalled]
+- Namie & Namie (2009) — *The Bully at Work* — [Amazon](https://www.amazon.com/Bully-Work-Reclaim-Dignity-Job/dp/1402224265)
+
+**Sociology of gaslighting and disclosure:**
+- Sweet (2019) — The Sociology of Gaslighting — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Ullman (2010) — *Talking About Sexual Assault* — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Coker et al. (2002) — Social support protects against partner violence — [PubMed](https://pubmed.ncbi.nlm.nih.gov/12165164/) [paywalled]
+- "Barriers and Facilitators of Disclosing DV to Healthcare" (2021) — [PMC8248429](https://pmc.ncbi.nlm.nih.gov/articles/PMC8248429/)
+
+**Other referenced books and monographs:**
+- Walker (1979) — *The Battered Woman* — [Amazon](https://www.amazon.com/Battered-Woman-Lenore-E-Walker/dp/0061818224)
+- Walker (2016) — *The Battered Woman Syndrome* (4th ed.) — [Amazon](https://www.amazon.com/Battered-Woman-Syndrome-Lenore-Walker/dp/0826170994)
+- Logan et al. (2006) — *Partner Stalking* — [Amazon](https://www.amazon.com/Partner-Stalking-Women-Respond-Survive/dp/0826102913)
+- Seligman (1975) — *Helplessness* — [Amazon](https://www.amazon.com/Helplessness-Depression-Development-Death-Freeman/dp/0716707519)
+- Herman (1992) — *Trauma and Recovery* — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
+- Cooke et al. (2025) — Outcomes of Experiencing Interpersonal Violence in Autism — [Sage](https://journals.sagepub.com/doi/10.1177/15248380251357618) [paywalled]
+
+**Organizations (free web resources):**
+- [thehotline.org](https://www.thehotline.org/) — National Domestic Violence Hotline
+- [theduluthmodel.org](https://www.theduluthmodel.org/) — Domestic Abuse Intervention Programs (Duluth)
+- [dangerassessment.org](https://www.dangerassessment.org/) — Danger Assessment
+- [vawnet.org](https://vawnet.org/) — VAWnet
+- [futureswithoutviolence.org](https://www.futureswithoutviolence.org/)
+- [ncadv.org](https://ncadv.org/) — National Coalition Against Domestic Violence
+- [bwjp.org](https://www.bwjp.org/) — Battered Women's Justice Project
+- [workplacebullying.org](https://workplacebullying.org/) — Workplace Bullying Institute
+- [strangulationtraininginstitute.com](https://www.strangulationtraininginstitute.com/) — Training Institute on Strangulation Prevention
+- [stalkingawareness.org](https://www.stalkingawareness.org/) — SPARC
+
+---
+
 ### Books and monographs
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press.
 - Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence.* Northeastern University Press.

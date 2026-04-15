@@ -266,33 +266,33 @@ Three companion files provide the detailed research base for this category:
 
 ## Sources
 
-Bucholtz, M., & Hall, K. (2005). Identity and interaction: A sociocultural linguistic approach. *Discourse Studies*, 7(4-5), 585-614.
+Bucholtz, M., & Hall, K. (2005). Identity and interaction: A sociocultural linguistic approach. *Discourse Studies*, 7(4-5), 585-614. [SAGE (paywalled)](https://doi.org/10.1177/1461445605054407)
 
-Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453.
+Botha, M., Dibb, B., & Frost, D. M. (2022). "Autism is me": An investigation of how autistic individuals make sense of autism and stigma. *Disability & Society*, 37(3), 427-453. [Taylor & Francis](https://doi.org/10.1080/09687599.2020.1822782)
 
-Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63.
+Davies, B., & Harré, R. (1990). Positioning: The discursive production of selves. *Journal for the Theory of Social Behaviour*, 20(1), 43-63. [Wiley (paywalled)](https://doi.org/10.1111/j.1468-5914.1990.tb00174.x)
 
-Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction* (pp. 139-182). John Benjamins.
+Du Bois, J. W. (2007). The stance triangle. In R. Englebretson (Ed.), *Stancetaking in Discourse: Subjectivity, Evaluation, Interaction* (pp. 139-182). John Benjamins. [Amazon](https://www.amazon.com/Stancetaking-Discourse-Subjectivity-Evaluation-Interaction/dp/9027254095)
 
-Eckert, P. (2008). Variation and the indexical field. *Journal of Sociolinguistics*, 12(4), 453-476.
+Eckert, P. (2008). Variation and the indexical field. *Journal of Sociolinguistics*, 12(4), 453-476. [Wiley (paywalled)](https://doi.org/10.1111/j.1467-9841.2008.00374.x)
 
-Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press.
+Fricker, M. (2007). *Epistemic Injustice: Power and the Ethics of Knowing*. Oxford University Press. [Amazon](https://www.amazon.com/Epistemic-Injustice-Power-Ethics-Knowing/dp/0198237901)
 
-Harré, R., & Van Langenhove, L. (1999). *Positioning Theory: Moral Contexts of Intentional Action*. Blackwell.
+Harré, R., & Van Langenhove, L. (1999). *Positioning Theory: Moral Contexts of Intentional Action*. Blackwell. [Amazon](https://www.amazon.com/Positioning-Theory-Moral-Contexts-Intentional/dp/063121138X)
 
-Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534.
+Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. *Journal of Autism and Developmental Disorders*, 47(8), 2519-2534. [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
 
-Jaffe, A. (Ed.). (2009). *Stance: Sociolinguistic Perspectives*. Oxford University Press.
+Jaffe, A. (Ed.). (2009). *Stance: Sociolinguistic Perspectives*. Oxford University Press. [Amazon](https://www.amazon.com/Stance-Sociolinguistic-Perspectives-Oxford-Studies/dp/0195331478)
 
-Kiesling, S. F. (2009). Style as stance: Stance as the explanation for patterns of sociolinguistic variation. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 171-194). Oxford University Press.
+Kiesling, S. F. (2009). Style as stance: Stance as the explanation for patterns of sociolinguistic variation. In A. Jaffe (Ed.), *Stance: Sociolinguistic Perspectives* (pp. 171-194). Oxford University Press. [Amazon](https://www.amazon.com/Stance-Sociolinguistic-Perspectives-Oxford-Studies/dp/0195331478)
 
-Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders*, 52(2), 490-507. PMC8813809.
+Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." *Journal of Autism and Developmental Disorders*, 52(2), 490-507. [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
 
-Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887.
+Milton, D. E. M. (2012). On the ontological status of autism: The "double empathy problem." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
-Ochs, E. (1993). Constructing social identity: A language socialization perspective. *Research on Language and Social Interaction*, 26(3), 287-306.
+Ochs, E. (1993). Constructing social identity: A language socialization perspective. *Research on Language and Social Interaction*, 26(3), 287-306. [Taylor & Francis (paywalled)](https://doi.org/10.1207/s15327973rlsi2603_3)
 
-Pearson, A., Rees, J., & Forster, S. (2022). "This was just how this friendship worked": Experiences of interpersonal victimization among autistic adults. *Autism in Adulthood*, 4(2), 141-150.
+Pearson, A., Rees, J., & Forster, S. (2022). "This was just how this friendship worked": Experiences of interpersonal victimization among autistic adults. *Autism in Adulthood*, 4(2), 141-150. [PMC9645672](https://pmc.ncbi.nlm.nih.gov/articles/PMC9645672/)
 
 ---
 

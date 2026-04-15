@@ -69,13 +69,13 @@ English uses four primary mechanisms:
 
 ## 2. AUTISTIC PROCESSING OF INFORMATION STRUCTURE: THE RESEARCH
 
-### 2.1 The Prosodic Marking of Focus: The Paul et al. (2005/2008) Studies
+### 2.1 The Prosodic Marking of Focus: DePape et al. (2012)
 
-The most directly relevant study on autism and information structure is Paul, Augustyn, Klin, and Volkmar's research on prosody and information structure in high-functioning adults with autism.
+The most directly relevant study on autism and information structure is DePape, Chen, Hall & Trainor's research on prosody and information structure in high-functioning adults with autism.
 
 **Study design**: Adults with ASD and controls produced sentences where target words appeared in either topic (given) or focus (new) position, at both sentence-initial and sentence-final locations. Acoustic analysis measured pitch range (falls and rises) and duration.
 
-**Key findings** (Paul et al., 2005, Journal of Autism and Developmental Disorders; extended in Shriberg et al., 2001; reported in PMC3312270):
+**Key findings** (DePape, Chen, Hall & Trainor, 2012, *Frontiers in Psychology* 3:72, PMC3312270; background work from Paul et al., 2005 and Shriberg et al., 2001):
 
 The study identified **two distinct subgroups** based on language ability:
 
@@ -229,7 +229,7 @@ Information structure fundamentally depends on common ground -- the shared knowl
 
 ### 4.2 Research on Common Ground in Autism
 
-**Nadig, Vivanti & Ozonoff (2009, PMC4764348)** -- The landmark study:
+**de Marchena & Eigsti (2016, "The art of common ground," *Journal of Child Language* 43(1):43-80, PMC4764348)** -- The landmark study:
 
 - TD adolescents shortened their narratives by ~12% when sharing knowledge with listeners (referential shortening)
 - Autistic adolescents showed **no such effect at the group level**
@@ -596,9 +596,10 @@ Deictic expressions (pronouns, demonstratives, spatial/temporal terms) are funda
 
 ### Core Information Structure and Autism Studies
 
-- Paul, R., Augustyn, A., Klin, A. & Volkmar, F. (2005). [Use of Prosody and Information Structure in High Functioning Adults with Autism in Relation to Language Ability](https://pmc.ncbi.nlm.nih.gov/articles/PMC3312270/). *Journal of Autism and Developmental Disorders*. -- THE key study on prosodic information-structure marking in autism; two subgroups with opposite patterns
+- DePape, A.-M. R., Chen, A., Hall, G. B. C., & Trainor, L. J. (2012). [Use of Prosody and Information Structure in High Functioning Adults with Autism in Relation to Language Ability](https://pmc.ncbi.nlm.nih.gov/articles/PMC3312270/). *Frontiers in Psychology*, 3, 72. -- THE key study on prosodic information-structure marking in autism; two subgroups with opposite patterns
+- Paul, R., Augustyn, A., Klin, A., & Volkmar, F. R. (2005). [Perception and Production of Prosody by Speakers with Autism Spectrum Disorders](https://pubmed.ncbi.nlm.nih.gov/15909407/). *Journal of Autism and Developmental Disorders*, 35(2), 205-220. -- Foundational study on prosody perception and production in ASD
 - Arnold, J.E., Bennetto, L. & Diehl, J.J. (2009). [Reference Production in Young Speakers with and without Autism: Effects of Discourse Status and Processing Constraints](https://pmc.ncbi.nlm.nih.gov/articles/PMC3668432/). *Cognition*, 110(2), 131-146. -- Landmark study on over-specification and discourse status sensitivity
-- Nadig, A., Vivanti, G. & Ozonoff, S. (2009). [The art of common ground: emergence of a complex pragmatic language skill in adolescents with ASD](https://pmc.ncbi.nlm.nih.gov/articles/PMC4764348/). -- Common ground and referential shortening study
+- Nadig, A., Vivanti, G. & Ozonoff, S. (2009). [Adaptation of Object Descriptions to a Partner Under Increasing Communicative Demands: A Comparison of Children With and Without Autism](https://pubmed.ncbi.nlm.nih.gov/19998354/). *Autism Research*. -- Audience design and object description adaptation study
 
 ### Prosodic Focus Marking
 

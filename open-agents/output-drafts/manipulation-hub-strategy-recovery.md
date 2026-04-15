@@ -433,6 +433,23 @@ If a therapist or recovery framework pushes you to become more neurotypical as a
 
 ## 12. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Herman (1992). *Trauma and Recovery.* — [Amazon](https://www.amazon.com/Trauma-Recovery-Aftermath-Violence-Political/dp/0465061710)
+- Tedeschi & Calhoun (1996). PTGI. — [PubMed](https://pubmed.ncbi.nlm.nih.gov/8827649/) [paywalled]
+- Zalta et al. (2021) *Psychological Bulletin* 147(1):33-54. — [APA PsycNet](https://doi.org/10.1037/bul0000316) [paywalled]
+- Wang, Chung, Wang, Yu & Kenardy (2021) *Clinical Psychology Review*. — [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0272735821000416) [paywalled]
+- Coker et al. (2002). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/12165164/) [paywalled]
+- Neff (2003). — [PDF](https://self-compassion.org/wp-content/uploads/publications/empirical.article.pdf)
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Pennebaker & Smyth (2016). — [Amazon](https://www.amazon.com/Opening-Up-Writing-Down-Expressive/dp/1462524923)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Kerns et al. (2015). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/25711547/) [paywalled]
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+
 **Herman's foundational framework:**
 - Herman, J. L. (1992, 2015). *Trauma and Recovery: The Aftermath of Violence—From Domestic Abuse to Political Terror.* Basic Books. (Three-stage model; safety before processing.)
 - Herman, J. L. (1998). "Recovery from psychological trauma." *Psychiatry and Clinical Neurosciences* 52(S1): S145–S150.
@@ -486,9 +503,9 @@ If a therapist or recovery framework pushes you to become more neurotypical as a
 
 **Autism and trauma:**
 - Rumball, F., Happé, F., & Grey, N. (2020). "Experience of Trauma and PTSD Symptoms in Autistic Adults." *Autism Research.*
-- Kerns, C. M., et al. (2016). "Traumatic childhood events and autism spectrum disorder." *Journal of Autism and Developmental Disorders.*
+- Kerns, C. M., et al. (2015). "Traumatic childhood events and autism spectrum disorder." *Journal of Autism and Developmental Disorders.*
 - Haruvi-Lamdan, N., et al. (2021). "Autism spectrum disorder and post-traumatic stress disorder: An unexplored co-occurrence of conditions." *Autism.*
-- Prosser, E., Rumball, F., King, C., & Steel, C. (2026). *Autism.*
+- Prosser, R., Rumball, F., King, C., & Steel, C. (2026). *Autism.*
 
 **Autistic burnout:**
 - Raymaker, D. M., et al. (2020). "'Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew': Defining Autistic Burnout." *Autism in Adulthood.*

@@ -308,11 +308,11 @@ The content is often correct; the social packaging is what creates friction.
 ## Key Sources
 
 ### Foundational Texts
-- Pomerantz, A. (1984). "Agreeing and Disagreeing with Assessments." In Atkinson & Heritage (eds.), *Structures of Social Action*.
-- Beebe, L.M., Takahashi, T. & Uliss-Weltz, R. (1990). "Pragmatic Transfer in ESL Refusals." In Scarcella et al. (eds.), *Developing Communicative Competence in a Second Language*.
-- Olshtain, E. & Cohen, A. (1983). "Apology: A Speech Act Set." In Wolfson & Judd (eds.), *Sociolinguistics and Language Acquisition*.
+- Pomerantz, A. (1984). "Agreeing and Disagreeing with Assessments." In Atkinson & Heritage (eds.), *Structures of Social Action*. [Amazon](https://www.amazon.com/Structures-Social-Action-Conversation-Interactional/dp/0521318629)
+- Beebe, L.M., Takahashi, T. & Uliss-Weltz, R. (1990). "Pragmatic Transfer in ESL Refusals." In Scarcella et al. (eds.), *Developing Communicative Competence in a Second Language*. [Amazon](https://www.amazon.com/Developing-Communicative-Competence-Second-Language/dp/0060532246)
+- Olshtain, E. & Cohen, A. (1983). "Apology: A Speech Act Set." In Wolfson & Judd (eds.), *Sociolinguistics and Language Acquisition*. [Amazon](https://www.amazon.com/Sociolinguistics-Language-Acquisition-Nessa-Wolfson/dp/0883771861)
 
 ### Autism Research
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*.
-- Hull, L. et al. (2017). "Camouflaging in Autism." PMC5509825.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
+- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Hull, L. et al. (2017). "Camouflaging in Autism." [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/32431157/)

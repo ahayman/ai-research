@@ -186,7 +186,7 @@ The key vulnerability is not that autistic people lack emotions -- they often ex
 
 > **Sources**:
 > - [Alexithymia & Manipulation](https://embrace-autism.com/alexithymia-and-manipulation/) (Embrace Autism)
-> - Harms, M.B., Martin, A., & Wallace, G.L. (2010). The development of emotion recognition in individuals with autism. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3085906/)
+> - Harms, M.B., Martin, A., & Wallace, G.L. (2010). Facial Emotion Recognition in Autism Spectrum Disorders: A Review of Behavioral and Neuroimaging Studies. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3085906/)
 
 ### 3.3 Tone Policing (Ad Hominem Variant)
 
@@ -575,11 +575,11 @@ The research on social conformity in autism suggests that **adult conformity lev
 - Brosnan, M., Lewton, M., & Ashwin, C. (2016). Reasoning on the Autism Spectrum: A Dual Process Theory Account. *JADD*, 46(6), 2115-2125. [PMC4860198](https://pmc.ncbi.nlm.nih.gov/articles/PMC4860198/)
 - De Martino, B. et al. (2008). Explaining enhanced logical consistency during decision making in autism. *Journal of Neuroscience*, 28(42), 10746-10750. [PMC2682781](https://pmc.ncbi.nlm.nih.gov/articles/PMC2682781/)
 - Freyd, J.J. (1997, 2023). DARVO: Deny, Attack, Reverse Victim and Offender. [jjfreyd.com](https://www.jjfreyd.com/darvo)
-- Harms, M.B., Martin, A., & Wallace, G.L. (2010). The development of emotion recognition in individuals with autism. [PMC3085906](https://pmc.ncbi.nlm.nih.gov/articles/PMC3085906/)
+- Harms, M.B., Martin, A., & Wallace, G.L. (2010). Facial Emotion Recognition in Autism Spectrum Disorders: A Review of Behavioral and Neuroimaging Studies. [PMC3085906](https://pmc.ncbi.nlm.nih.gov/articles/PMC3085906/)
 - Inoue, K. et al. (2023). Autistic traits associated with dichotomic thinking mediated by intolerance of uncertainty. *Scientific Reports*. [Nature](https://www.nature.com/articles/s41598-023-41164-8)
 - Macagno, F. (2023). Presuppositional Fallacies. *Argumentation*. [Springer](https://link.springer.com/article/10.1007/s10503-023-09625-6)
-- Milton, D.E.M. (2012). On the ontological status of autism: The 'double empathy problem.' *Disability & Society*, 27(6), 883-887.
-- Pellicano, E. & Burr, D. (2012). When the world becomes 'too real': A Bayesian explanation of autistic perception. *Trends in Cognitive Sciences*.
+- Milton, D.E.M. (2012). On the ontological status of autism: The 'double empathy problem.' *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Pellicano, E. & Burr, D. (2012). When the world becomes 'too real': A Bayesian explanation of autistic perception. *Trends in Cognitive Sciences*, 16(10), 504-510. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.tics.2012.08.009)
 - Pijnacker, J. et al. (2009). Defeasible reasoning in high-functioning adults with autism. *Neuropsychologia*. [PubMed 19063905](https://pubmed.ncbi.nlm.nih.gov/19063905/)
 - Rozenkrantz, L., D'Mello, A.M., & Gabrieli, J.D.E. (2021). Enhanced rationality in autism spectrum disorder. *Trends in Cognitive Sciences*, 25(8), 685-696. [PubMed 34226128](https://pubmed.ncbi.nlm.nih.gov/34226128/)
 - van Schijndel, P.E. & Jonker, C.M. (2021). When the cost has sunk: Measuring and comparing the sunk-cost bias in autistic and neurotypical persons. *Journal of Economic Psychology*. [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0167487021000647)

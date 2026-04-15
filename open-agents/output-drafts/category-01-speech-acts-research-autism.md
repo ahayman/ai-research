@@ -312,7 +312,7 @@ A crucial reconceptualization: echolalia (present in 75-80% of verbal autistic i
 
 ### 4.6 Developmental Social Pragmatic Interventions
 
-**Binns & Oram Cardy (2019)** -- *Autism & Developmental Language Impairments*
+**Binns & Oram Cardy (2019)** -- *Review Journal of Autism and Developmental Disorders*
 - Systematic review of developmental social pragmatic (DSP) interventions for preschoolers with ASD
 - Compelling evidence for effectiveness on **foundational** social communication skills:
   - Attention, joint attention bids, reciprocal interactions, initiating communication
@@ -432,7 +432,7 @@ Research on speech acts in autistic adults is significantly less extensive than 
 - Specifically impaired: comprehension of inferred meaning and appreciation of humor
 - These findings demonstrate that pragmatic differences persist into adulthood
 
-**Sng, Carter, & Stephenson (2018)** -- *Autism & Developmental Language Impairments*, 3(5)
+**Sng, Carter, & Stephenson (2018)** -- *Review Journal of Autism and Developmental Disorders*, 3(5)
 - Systematic review of comparative pragmatic differences in conversational skills
 - Found that individuals with ASD have difficulties with pragmatic communication to achieve a social end (e.g., during social conversations)
 - Research in conversation skills is "fragmented and lacks uniformity, with few common measures"
@@ -519,66 +519,66 @@ For individuals who struggle with the implicit mapping between linguistic form a
 ## Sources
 
 ### Primary Research Articles (with IDs where available)
-- Paul & Cohen (1985). Comprehension of indirect requests in adults with autistic disorders. *JSHR*. PubMed: 4087881
-- Ozonoff & Miller (1996). Right-hemisphere contributions to pragmatic impairments of autism. *Brain and Language*. PubMed: 8653388
-- Kissine, De Brabanter, & Leybaert (2012). Compliance with requests by children with autism. *Autism*. SAGE
-- Kissine (2012). Pragmatics, cognitive flexibility and autism spectrum disorders. *Mind & Language*, 27(1), 1-28
-- Kissine et al. (2015). Children with autism understand indirect speech acts. *PLOS ONE*. PMC4638355, PubMed: 26551648
-- Kalandadze et al. (2018). Figurative language comprehension meta-analysis. *Autism*. PMC5843023, PubMed: 27899711
-- Deliens et al. (2018). Selective pragmatic impairment in ASD. *JADD*, 48(9), 2938-2952. PubMed: 29633109
-- Hull et al. (2017). Putting on my best normal. *JADD*. PMC5509825
-- Crompton et al. (2020). Autistic peer-to-peer information transfer. *Autism*. PubMed: 32431157
-- Mazzaggio et al. (2021). Understanding indirect requests for information. *Cognitive Processing*. PMC8831260, PubMed: 34487273
-- Bervoets & Hens (2023). Literalism in autistic people: predictive processing proposal. *Review of Philosophy and Psychology*
-- Frost, Nagano, & Zane (2024). Autistic and non-autistic adults use discourse context. *Cognitive Processing*. PMC11897084
-- Geelhand et al. (2025). Autistic adults display different verbal behavior in mixed-neurotype interactions. *Autism*. PubMed: 39572980
-- Nature Human Behaviour (2025). Information transfer within and between autistic and non-autistic people. PMC12283400, PubMed: 40369213
-- Sutherland et al. (2024). A difference in typical values. *Scandinavian Journal of Disability Research*
+- Paul & Cohen (1985). Comprehension of indirect requests in adults with autistic disorders. *JSHR*. PubMed: 4087881. [PubMed](https://pubmed.ncbi.nlm.nih.gov/4087881/)
+- Ozonoff & Miller (1996). Right-hemisphere contributions to pragmatic impairments of autism. *Brain and Language*. PubMed: 8653388. [PubMed (paywalled)](https://pubmed.ncbi.nlm.nih.gov/8653388/)
+- Kissine, De Brabanter, & Leybaert (2012). Compliance with requests by children with autism. *Autism*. [SAGE (paywalled)](https://journals.sagepub.com/doi/10.1177/1362361311406296)
+- Kissine (2012). Pragmatics, cognitive flexibility and autism spectrum disorders. *Mind & Language*, 27(1), 1-28. [Wiley (paywalled)](https://doi.org/10.1111/j.1468-0017.2011.01433.x)
+- Kissine et al. (2015). Children with autism understand indirect speech acts. *PLOS ONE*. PMC4638355, PubMed: 26551648. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4638355/)
+- Kalandadze et al. (2018). Figurative language comprehension meta-analysis. *Autism*. PMC5843023, PubMed: 27899711. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Deliens et al. (2018). Selective pragmatic impairment in ASD. *JADD*, 48(9), 2938-2952. PubMed: 29633109. [Springer (paywalled)](https://doi.org/10.1007/s10803-018-3561-6)
+- Hull et al. (2017). Putting on my best normal. *JADD*. PMC5509825. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Crompton et al. (2020). Autistic peer-to-peer information transfer. *Autism*. PubMed: 32431157. [SAGE](https://doi.org/10.1177/1362361320919286)
+- Mazzaggio et al. (2021). Understanding indirect requests for information. *Cognitive Processing*. PMC8831260, PubMed: 34487273. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8831260/)
+- Bervoets & Hens (2023). Literalism in autistic people: predictive processing proposal. *Review of Philosophy and Psychology*. [Springer](https://doi.org/10.1007/s13164-023-00704-x)
+- Frost, Nagano, & Zane (2024). Autistic and non-autistic adults use discourse context. *Cognitive Processing*. PMC11897084. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11897084/)
+- Geelhand et al. (2025). Autistic adults display different verbal behavior in mixed-neurotype interactions. *Autism*. PubMed: 39572980. [PubMed](https://pubmed.ncbi.nlm.nih.gov/39572980/)
+- Nature Human Behaviour (2025). Information transfer within and between autistic and non-autistic people. PMC12283400, PubMed: 40369213. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC12283400/)
+- Sutherland et al. (2024). A difference in typical values. *Scandinavian Journal of Disability Research*. [SJDR](https://www.sjdr.se/articles/10.16993/sjdr.1184)
 
 ### Foundational Texts
-- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press
-- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press
-- Searle, J.R. (1975). Indirect speech acts. In *Syntax and Semantics 3: Speech Acts*
-- Grice, H.P. (1975). Logic and conversation. In *Syntax and Semantics 3: Speech Acts*
-- Milton, D.E.M. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6)
-- Prizant, B.M. & Duchan, J.F. (1981). The functions of immediate echolalia in autistic children. *JSHD*
-- Peters, A. (1977). Language learning strategies. *Language*, 53(3)
+- Austin, J.L. (1962). *How to Do Things with Words*. Oxford University Press. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
+- Searle, J.R. (1969). *Speech Acts: An Essay in the Philosophy of Language*. Cambridge University Press. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Searle, J.R. (1975). Indirect speech acts. In *Syntax and Semantics 3: Speech Acts*. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Grice, H.P. (1975). Logic and conversation. In *Syntax and Semantics 3: Speech Acts*. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Milton, D.E.M. (2012). On the ontological status of autism: the 'double empathy problem'. *Disability & Society*, 27(6). [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Prizant, B.M. & Duchan, J.F. (1981). The functions of immediate echolalia in autistic children. *JSHD*. [ASHA (paywalled)](https://doi.org/10.1044/jshd.4603.241)
+- Peters, A. (1977). Language learning strategies. *Language*, 53(3). [JSTOR (paywalled)](https://doi.org/10.2307/412912)
 
 ### Systematic Reviews and Meta-Analyses
-- Parsons et al. (2017). Systematic review of pragmatic language interventions. *PLOS ONE*. PMC5398499, PubMed: 28426832
-- Sng, Carter, & Stephenson (2018). Systematic review of pragmatic differences in conversational skills. *ADLI*, 3(5)
-- Binns & Oram Cardy (2019). Developmental social pragmatic interventions review. *ADLI*
-- Lampri (2024). Figurative language processing in ASD: A review. *Autism Research*
+- Parsons et al. (2017). Systematic review of pragmatic language interventions. *PLOS ONE*. PMC5398499, PubMed: 28426832. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5398499/)
+- Sng, Carter, & Stephenson (2018). Systematic review of pragmatic differences in conversational skills. *ADLI*, 3(5). [Springer (paywalled)](https://doi.org/10.1177/2396941518803806)
+- Binns & Oram Cardy (2019). Developmental social pragmatic interventions review. *ADLI*. [Springer (paywalled)](https://doi.org/10.1007/s40489-019-00177-8)
+- Lampri (2024). Figurative language processing in ASD: A review. *Autism Research*. [Wiley (paywalled)](https://doi.org/10.1002/aur.3069)
 
 ### Intervention Programs
-- PEERS Program (UCLA): PubMed: 21858588, PubMed: 26109247
-- Social Communication Intervention Project: Adams et al. (2012), *IJLCD*
+- PEERS Program (UCLA): PubMed: 21858588, PubMed: 26109247. [PubMed](https://pubmed.ncbi.nlm.nih.gov/21858588/)
+- Social Communication Intervention Project: Adams et al. (2012), *IJLCD*. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-6984.2011.00094.x)
 
 ### Workplace and Social Consequences
-- Autism and Employment Challenges: PMC11317796, PubMed: 39139509
-- Szechy & O'Donnell (2025). Autism knowledge and workplace attitudes. *Autism in Adulthood*
+- Autism and Employment Challenges: PMC11317796, PubMed: 39139509. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/)
+- Szechy & O'Donnell (2025). Autism knowledge and workplace attitudes. *Autism in Adulthood*. [Liebert](https://doi.org/10.1089/aut.2024.0261)
 
 ### Camouflaging and Masking
-- Hull et al. (2017). PMC5509825
-- Camouflaging systematic review (2025). ScienceDirect
-- Understanding camouflaging as response to stigma. PMC8813820
-- Masking is life. PMC8992921
-- Neurodiversity-affirming intervention framework. PMC10430771
+- Hull et al. (2017). PMC5509825. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Camouflaging systematic review (2025). ScienceDirect. [CITATION UNVERIFIED]
+- Understanding camouflaging as response to stigma. PMC8813820. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813820/)
+- Masking is life. PMC8992921. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992921/)
+- Neurodiversity-affirming intervention framework. PMC10430771. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10430771/)
 
 ### Gricean Maxim Studies
-- Wahyunianto et al. Grice's cooperative principles violation in autism. *Sosiohumaniora*
-- Understanding of Gricean maxims in children with ASD (2022). ScienceDirect
+- Wahyunianto et al. Grice's cooperative principles violation in autism. *Sosiohumaniora*. [Sosiohumaniora](https://jurnal.unpad.ac.id/sosiohumaniora)
+- Understanding of Gricean maxims in children with ASD (2022). ScienceDirect. [CITATION UNVERIFIED]
 
 ### Echolalia and Gestalt Processing
-- Prizant & Duchan (1981). Functions of immediate echolalia. *JSHD*
-- Kissine et al. (2023). Functional echolalia in autism speech. *Frontiers in Psychology*. PMC9997079
-- Echolalia prevalence review (2024). *Current Developmental Disorders Reports*
+- Prizant & Duchan (1981). Functions of immediate echolalia. *JSHD*. [ASHA (paywalled)](https://doi.org/10.1044/jshd.4603.241)
+- Kissine et al. (2023). Functional echolalia in autism speech. *Frontiers in Psychology*. PMC9997079. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9997079/)
+- Echolalia prevalence review (2024). *Current Developmental Disorders Reports*. [Springer (paywalled)](https://link.springer.com/journal/40474)
 
 ### Additional Resources
-- Pragmatic language and Theory of Mind associations (2025). *Phil Trans Royal Soc B*
-- Pragmatic language markers of autism severity. ScienceDirect
-- Language in autism: domains, profiles, co-occurring conditions (2023). *J Neural Transmission*. PMC10033486
-- Some (but not all) pragmatic inferences are difficult for autistic children (2025). *JADD*. PubMed: 40246746
-- Ad-hoc and scalar implicatures in children with ASD (2021). PubMed: 33621945
-- Scalar implicature understanding in children with ASD. PMC6064869
-- Communication in autistic adults: action-focused review (2025). PMC12271282
+- Pragmatic language and Theory of Mind associations (2025). *Phil Trans Royal Soc B*. [Royal Society](https://royalsocietypublishing.org/journal/rstb)
+- Pragmatic language markers of autism severity. ScienceDirect. [CITATION UNVERIFIED]
+- Language in autism: domains, profiles, co-occurring conditions (2023). *J Neural Transmission*. PMC10033486. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10033486/)
+- Some (but not all) pragmatic inferences are difficult for autistic children (2025). *JADD*. PubMed: 40246746. [PubMed](https://pubmed.ncbi.nlm.nih.gov/40246746/)
+- Ad-hoc and scalar implicatures in children with ASD (2021). PubMed: 33621945. [PubMed](https://pubmed.ncbi.nlm.nih.gov/33621945/)
+- Scalar implicature understanding in children with ASD. PMC6064869. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC6064869/)
+- Communication in autistic adults: action-focused review (2025). PMC12271282. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC12271282/)

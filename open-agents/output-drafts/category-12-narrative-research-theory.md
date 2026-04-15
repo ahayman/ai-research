@@ -658,24 +658,24 @@ These markers are crucial for narrative coherence because they help the listener
 ## KEY REFERENCES
 
 ### Primary Sources
-- Labov, W., & Waletzky, J. (1967). Narrative analysis: Oral versions of personal experience. *Essays on the verbal and visual arts*, 12-44.
-- Labov, W. (1972). *Language in the inner city: Studies in the Black English vernacular*. University of Pennsylvania Press.
-- Labov, W. (1997). Some further steps in narrative analysis. *Journal of Narrative and Life History*, 7, 395-415.
-- Halliday, M. A. K., & Hasan, R. (1976). *Cohesion in English*. Longman.
-- Bruner, J. (1986). *Actual minds, possible worlds*. Harvard University Press.
-- Bruner, J. (1990). *Acts of meaning*. Harvard University Press.
-- Bell, A. (1984). Language style as audience design. *Language in Society*, 13(2), 145-204.
-- Ochs, E., & Capps, L. (2001). *Living narrative: Creating lives in everyday storytelling*. Harvard University Press.
-- Mann, W. C., & Thompson, S. A. (1988). Rhetorical structure theory: Toward a functional theory of text organization. *Text*, 8(3), 243-281.
-- Sacks, H., Schegloff, E. A., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735.
-- Prince, E. F. (1981). Toward a taxonomy of given-new information. In P. Cole (Ed.), *Radical pragmatics* (pp. 223-255). Academic Press.
-- Stein, N. L., & Glenn, C. G. (1979). An analysis of story comprehension in elementary school children. In R. Freedle (Ed.), *New directions in discourse processing*. Ablex.
-- Toulmin, S. E. (1958). *The uses of argument*. Cambridge University Press.
+- Labov, W., & Waletzky, J. (1967). Narrative analysis: Oral versions of personal experience. *Essays on the verbal and visual arts*, 12-44. [Wiley](https://anthrosource.onlinelibrary.wiley.com/doi/10.1525/jlin.1997.7.1-4.3)
+- Labov, W. (1972). *Language in the inner city: Studies in the Black English vernacular*. University of Pennsylvania Press. [Amazon](https://www.amazon.com/Language-Inner-City-Vernacular-Conduct/dp/0812210514)
+- Labov, W. (1997). Some further steps in narrative analysis. *Journal of Narrative and Life History*, 7, 395-415. [PDF](https://www.ling.upenn.edu/~wlabov/sfs.html)
+- Halliday, M. A. K., & Hasan, R. (1976). *Cohesion in English*. Longman. [Amazon](https://www.amazon.com/Cohesion-English-English-Language-Series/dp/0582550416)
+- Bruner, J. (1986). *Actual minds, possible worlds*. Harvard University Press. [Amazon](https://www.amazon.com/Actual-Minds-Possible-Worlds-Jerome/dp/0674003667)
+- Bruner, J. (1990). *Acts of meaning*. Harvard University Press. [Amazon](https://www.amazon.com/Acts-Meaning-Four-Lectures-Mind/dp/0674003616)
+- Bell, A. (1984). Language style as audience design. *Language in Society*, 13(2), 145-204. [Cambridge (paywalled)](https://doi.org/10.1017/S004740450001037X)
+- Ochs, E., & Capps, L. (2001). *Living narrative: Creating lives in everyday storytelling*. Harvard University Press. [Amazon](https://www.amazon.com/Living-Narrative-Creating-Everyday-Storytelling/dp/0674007689)
+- Mann, W. C., & Thompson, S. A. (1988). Rhetorical structure theory: Toward a functional theory of text organization. *Text*, 8(3), 243-281. [De Gruyter (paywalled)](https://doi.org/10.1515/text.1.1988.8.3.243)
+- Sacks, H., Schegloff, E. A., & Jefferson, G. (1974). A simplest systematics for the organization of turn-taking for conversation. *Language*, 50(4), 696-735. [JSTOR](https://www.jstor.org/stable/412243)
+- Prince, E. F. (1981). Toward a taxonomy of given-new information. In P. Cole (Ed.), *Radical pragmatics* (pp. 223-255). Academic Press. [Amazon (parent book)](https://www.amazon.com/Radical-Pragmatics-Peter-Cole/dp/0121796604)
+- Stein, N. L., & Glenn, C. G. (1979). An analysis of story comprehension in elementary school children. In R. Freedle (Ed.), *New directions in discourse processing*. Ablex. [Amazon (parent book)](https://www.amazon.com/New-Directions-Discourse-Processing-Advances/dp/0893910430)
+- Toulmin, S. E. (1958). *The uses of argument*. Cambridge University Press. [Amazon](https://www.amazon.com/Uses-Argument-Stephen-E-Toulmin/dp/0521534836)
 
 ### Secondary/Supplementary Sources
-- Clark, H. H., & Murphy, G. L. (1982). Audience design in meaning and reference. In J. F. Le Ny & W. Kintsch (Eds.), *Language and comprehension* (pp. 287-299). North-Holland.
-- Enkvist, N. E. (1978). Coherence, pseudo-coherence, and non-coherence. In J. O. Östman (Ed.), *Cohesion and semantics* (pp. 109-128). Åbo Akademi Foundation.
-- Grice, H. P. (1975). Logic and conversation. In P. Cole & J. L. Morgan (Eds.), *Syntax and semantics: Speech acts* (pp. 41-58). Academic Press.
+- Clark, H. H., & Murphy, G. L. (1982). Audience design in meaning and reference. In J. F. Le Ny & W. Kintsch (Eds.), *Language and comprehension* (pp. 287-299). North-Holland. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0166-4115(09)60088-8)
+- Enkvist, N. E. (1978). Coherence, pseudo-coherence, and non-coherence. In J. O. Östman (Ed.), *Cohesion and semantics* (pp. 109-128). Åbo Akademi Foundation. [CITATION UNVERIFIED]
+- Grice, H. P. (1975). Logic and conversation. In P. Cole & J. L. Morgan (Eds.), *Syntax and semantics: Speech acts* (pp. 41-58). Academic Press. [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
 
 ---
 

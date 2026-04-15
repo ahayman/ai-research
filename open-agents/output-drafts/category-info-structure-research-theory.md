@@ -878,68 +878,68 @@ Autistic individuals who find these assessments non-automatic can develop **expl
 
 ### Foundational Works
 
-- Mathesius, V. (1929). "Zur Satzperspektive im modernen Englisch." *Archiv für das Studium der neueren Sprachen und Literaturen*, 155, 202-210. [The original formulation of Functional Sentence Perspective.]
-- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English, Part 2." *Journal of Linguistics*, 3(2), 199-244. [Foundational treatment of Theme/Rheme and Given/New in English within SFL.]
-- Halliday, M.A.K. & Matthiessen, C.M.I.M. (2004). *An Introduction to Functional Grammar* (3rd ed.). London: Arnold. [Comprehensive SFL grammar including detailed treatment of Theme.]
-- Chafe, W.L. (1976). "Givenness, Contrastiveness, Definiteness, Subjects, Topics, and Point of View." In C. Li (ed.), *Subject and Topic*, pp. 25-55. New York: Academic Press. [The "packaging" metaphor; activation states.]
-- Chafe, W.L. (1987). "Cognitive Constraints on Information Flow." In R. Tomlin (ed.), *Coherence and Grounding in Discourse*, pp. 21-51. Amsterdam: John Benjamins. [Further development of activation states and information flow.]
-- Chafe, W.L. (1994). *Discourse, Consciousness, and Time: The Flow and Displacement of Conscious Experience in Speaking and Writing*. Chicago: University of Chicago Press. [Chafe's mature theory of information flow and consciousness.]
-- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (ed.), *Radical Pragmatics*, pp. 223-255. New York: Academic Press. [The discourse-old/new vs. hearer-old/new distinction; inferrables.]
-- Prince, E.F. (1992). "The ZPG Letter: Subjects, Definiteness, and Information Status." In W.C. Mann & S.A. Thompson (eds.), *Discourse Description: Diverse Linguistic Analyses of a Fund-Raising Text*, pp. 295-325. Amsterdam: John Benjamins. [Taxonomy of NP types by information status.]
-- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (ed.), *Discourse Production and Comprehension*, pp. 1-40. Norwood, NJ: Ablex. [The Given-New Contract; bridging inferences.]
+- Mathesius, V. (1929). "Zur Satzperspektive im modernen Englisch." *Archiv für das Studium der neueren Sprachen und Literaturen*, 155, 202-210. [The original formulation of Functional Sentence Perspective.] [CITATION UNVERIFIED — no stable online source]
+- Halliday, M.A.K. (1967). "Notes on Transitivity and Theme in English, Part 2." *Journal of Linguistics*, 3(2), 199-244. [Cambridge (paywalled)](https://doi.org/10.1017/S0022226700016613)
+- Halliday, M.A.K. & Matthiessen, C.M.I.M. (2004). *An Introduction to Functional Grammar* (3rd ed.). London: Arnold. [Amazon](https://www.amazon.com/Introduction-Functional-Grammar-M-K-Halliday/dp/0340761679)
+- Chafe, W.L. (1976). "Givenness, Contrastiveness, Definiteness, Subjects, Topics, and Point of View." In C. Li (ed.), *Subject and Topic*, pp. 25-55. New York: Academic Press. [Amazon](https://www.amazon.com/Subject-Topic-Charles-N-Li/dp/0124473504)
+- Chafe, W.L. (1987). "Cognitive Constraints on Information Flow." In R. Tomlin (ed.), *Coherence and Grounding in Discourse*, pp. 21-51. Amsterdam: John Benjamins. [Amazon](https://www.amazon.com/Coherence-Grounding-Discourse-Typological-Linguistic/dp/9027229090)
+- Chafe, W.L. (1994). *Discourse, Consciousness, and Time*. Chicago: University of Chicago Press. [Amazon](https://www.amazon.com/Discourse-Consciousness-Time-Displacement-Conscious/dp/0226100545)
+- Prince, E.F. (1981). "Toward a Taxonomy of Given-New Information." In P. Cole (ed.), *Radical Pragmatics*, pp. 223-255. New York: Academic Press. [Amazon](https://www.amazon.com/Radical-pragmatics-Peter-Cole/dp/0121796604)
+- Prince, E.F. (1992). "The ZPG Letter: Subjects, Definiteness, and Information Status." In W.C. Mann & S.A. Thompson (eds.), *Discourse Description*, pp. 295-325. Amsterdam: John Benjamins. [Amazon](https://www.amazon.com/Discourse-Description-linguistic-fund-raising-Pragmatics/dp/9027250340)
+- Clark, H.H. & Haviland, S.E. (1977). "Comprehension and the Given-New Contract." In R.O. Freedle (ed.), *Discourse Production and Comprehension*, pp. 1-40. Norwood, NJ: Ablex. [Stanford PDF](https://web.stanford.edu/~clark/1970s/Clark,%20H.H.%20_%20Haviland,%20S.E.%20_Comprehension%20and%20the%20given-new%20contract_%201977.pdf)
 
 ### Focus and Alternatives
 
-- Jackendoff, R. (1972). *Semantic Interpretation in Generative Grammar*. Cambridge, MA: MIT Press. [Focus-presupposition distinction; the A/B accent distinction.]
-- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116. [Alternative Semantics — the formal theory of how focus activates alternatives.]
-- Selkirk, E. (1984). *Phonology and Syntax: The Relation between Sound and Structure*. Cambridge, MA: MIT Press. [Focus projection rules.]
-- Selkirk, E. (1995). "Sentence Prosody: Intonation, Stress, and Phrasing." In J.A. Goldsmith (ed.), *The Handbook of Phonological Theory*, pp. 550-569. Oxford: Blackwell. [Updated focus projection theory.]
-- Kiss, K.É. (1998). "Identificational Focus versus Information Focus." *Language*, 74(2), 245-273. [The categorical distinction between information focus and identificational (exhaustive) focus.]
-- Schwarzschild, R. (1999). "GIVENness, AvoidF, and Other Constraints on the Placement of Accent." *Natural Language Semantics*, 7(2), 141-177. [Givenness-based account of deaccenting and focus.]
+- Jackendoff, R. (1972). *Semantic Interpretation in Generative Grammar*. MIT Press. [Amazon](https://www.amazon.com/Semantic-Interpretation-Generative-Grammar-Jackendoff/dp/0262600072)
+- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116. [Springer (paywalled)](https://doi.org/10.1007/BF02342617)
+- Selkirk, E. (1984). *Phonology and Syntax: The Relation between Sound and Structure*. MIT Press. [Amazon](https://www.amazon.com/Phonology-Syntax-Relation-Between-Structure/dp/0262691000)
+- Selkirk, E. (1995). "Sentence Prosody: Intonation, Stress, and Phrasing." In J.A. Goldsmith (ed.), *The Handbook of Phonological Theory*. Blackwell. [Amazon](https://www.amazon.com/Handbook-Phonological-Theory-Blackwell-Handbooks/dp/063120126X)
+- Kiss, K.É. (1998). "Identificational Focus versus Information Focus." *Language*, 74(2), 245-273. [JSTOR (paywalled)](https://doi.org/10.1353/lan.1998.0211)
+- Schwarzschild, R. (1999). "GIVENness, AvoidF, and Other Constraints on the Placement of Accent." *Natural Language Semantics*, 7(2), 141-177. [Springer (paywalled)](https://doi.org/10.1023/A:1008370902407)
 
 ### Question Under Discussion
 
-- Roberts, C. (1996/2012). "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." *Semantics and Pragmatics*, 5(6), 1-69. [The QUD framework — discourse as organized around implicit and explicit questions.]
-- Büring, D. (2003). "On D-Trees, Beans, and B-Accents." *Linguistics and Philosophy*, 26(5), 511-545. [Contrastive topic and discourse trees.]
-- Büring, D. (2014). "(Contrastive) Topic." In C. Féry & S. Ishihara (eds.), *Oxford Handbook of Information Structure*, pp. 175-195. Oxford: Oxford University Press. [Comprehensive treatment of contrastive topic.]
+- Roberts, C. (1996/2012). "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." *Semantics and Pragmatics*, 5(6), 1-69. [Open Access](https://doi.org/10.3765/sp.5.6)
+- Büring, D. (2003). "On D-Trees, Beans, and B-Accents." *Linguistics and Philosophy*, 26(5), 511-545. [Springer (paywalled)](https://doi.org/10.1023/A:1025887707652)
+- Büring, D. (2014). "(Contrastive) Topic." In C. Féry & S. Ishihara (eds.), *Oxford Handbook of Information Structure*. Oxford University Press. [Amazon](https://www.amazon.com/Oxford-Handbook-Information-Structure-Handbooks/dp/0199642672)
 
 ### Topic and Comment
 
-- Li, C.N. & Thompson, S.A. (1976). "Subject and Topic: A New Typology of Language." In C. Li (ed.), *Subject and Topic*, pp. 457-489. New York: Academic Press. [Topic-prominent vs. subject-prominent language typology.]
-- Reinhart, T. (1981). "Pragmatics and Linguistics: An Analysis of Sentence Topics." *Philosophica*, 27(1), 53-94. [Aboutness topic; the "What about X?" test.]
-- Gundel, J.K. (1988). "Universals of Topic-Comment Structure." In M. Hammond et al. (eds.), *Studies in Syntactic Typology*, pp. 209-239. Amsterdam: John Benjamins. [The "as for" test for topic identification.]
-- Lambrecht, K. (1994). *Information Structure and Sentence Form: Topic, Focus, and the Mental Representations of Discourse Referents*. Cambridge: Cambridge University Press. [Comprehensive framework integrating topic, focus, activation states. Three focus structure types: predicate-focus, argument-focus, sentence-focus.]
-- Gundel, J.K., Hedberg, N. & Zacharski, R. (1993). "Cognitive Status and the Form of Referring Expressions in Discourse." *Language*, 69(2), 274-307. [The Givenness Hierarchy — six levels of cognitive status mapped to referring expression types.]
+- Li, C.N. & Thompson, S.A. (1976). "Subject and Topic: A New Typology of Language." In C. Li (ed.), *Subject and Topic*. Academic Press. [Amazon](https://www.amazon.com/Subject-Topic-Charles-N-Li/dp/0124473504)
+- Reinhart, T. (1981). "Pragmatics and Linguistics: An Analysis of Sentence Topics." *Philosophica*, 27(1), 53-94. [Open Access](https://philpapers.org/archive/REIPAL.pdf)
+- Gundel, J.K. (1988). "Universals of Topic-Comment Structure." In M. Hammond et al. (eds.), *Studies in Syntactic Typology*. John Benjamins. [Amazon](https://www.amazon.com/Studies-Syntactic-Typology-Typological-Linguistic/dp/9027228930)
+- Lambrecht, K. (1994). *Information Structure and Sentence Form*. Cambridge University Press. [Amazon](https://www.amazon.com/Information-Structure-Sentence-Form-Representations/dp/0521587042)
+- Gundel, J.K., Hedberg, N. & Zacharski, R. (1993). "Cognitive Status and the Form of Referring Expressions in Discourse." *Language*, 69(2), 274-307. [JSTOR (paywalled)](https://doi.org/10.2307/416535)
 
 ### Thematic Progression
 
-- Danes, F. (1974). "Functional Sentence Perspective and the Organization of the Text." In F. Danes (ed.), *Papers on Functional Sentence Perspective*, pp. 106-128. Prague: Academia. [Patterns of thematic progression.]
-- Firbas, J. (1971). "On the Concept of Communicative Dynamism in the Theory of Functional Sentence Perspective." *Sborník prací filozofické fakulty brněnské univerzity*, A19, 135-144. [Communicative Dynamism.]
-- Firbas, J. (1992). *Functional Sentence Perspective in Written and Spoken Communication*. Cambridge: Cambridge University Press. [Firbas's comprehensive mature statement.]
+- Danes, F. (1974). "Functional Sentence Perspective and the Organization of the Text." In F. Danes (ed.), *Papers on Functional Sentence Perspective*. Prague: Academia. [Amazon](https://www.amazon.com/Papers-functional-sentence-perspective-Janua/dp/9027933480)
+- Firbas, J. (1971). "On the Concept of Communicative Dynamism in the Theory of Functional Sentence Perspective." *Sborník prací filozofické fakulty brněnské univerzity*, A19, 135-144. [CITATION UNVERIFIED — Czech journal, no stable online source]
+- Firbas, J. (1992). *Functional Sentence Perspective in Written and Spoken Communication*. Cambridge University Press. [Amazon](https://www.amazon.com/Functional-Perspective-Communication-Cambridge-Linguistics/dp/0521373085)
 
 ### Syntactic Constructions and Information Structure
 
-- Horn, L. (1981). "Exhaustiveness and the Semantics of Clefts." *Proceedings of NELS*, 11, 125-142. [Exhaustivity in cleft constructions.]
-- Ward, G. & Birner, B.J. (1998). "Information Status and Noncanonical Word Order in English." *Language*, 74(4), 723-759. [Comprehensive study of how topicalization, inversion, and other non-canonical constructions serve information structure.]
-- Birner, B.J. & Ward, G. (1998). *Information Status and Noncanonical Word Order in English*. Amsterdam: John Benjamins. [Book-length treatment of the discourse functions of English word order variants.]
+- Horn, L. (1981). "Exhaustiveness and the Semantics of Clefts." *Proceedings of NELS*, 11, 125-142. [CITATION UNVERIFIED — conference proceedings, no stable online source]
+- Ward, G. & Birner, B.J. (1998). "Information Status and Noncanonical Word Order in English." *Language*, 74(4), 723-759. [JSTOR (paywalled)](https://doi.org/10.2307/417002)
+- Birner, B.J. & Ward, G. (1998). *Information Status and Noncanonical Word Order in English*. John Benjamins. [Amazon](https://www.amazon.com/Information-Noncanonical-Word-Order-English/dp/9027228485)
 
 ### Synthesis and Overviews
 
-- Krifka, M. (2008). "Basic Notions of Information Structure." *Acta Linguistica Hungarica*, 55(3-4), 243-276. [Comprehensive framework synthesizing focus, givenness, and topic as distinct but interacting dimensions.]
-- Féry, C. & Ishihara, S. (eds.) (2016). *Oxford Handbook of Information Structure*. Oxford: Oxford University Press. [The most comprehensive reference work on information structure; covers all major topics and approaches.]
-- Vallduví, E. (1992). *The Informational Component*. New York: Garland. [Focus, ground (link + tail) — an alternative decomposition of information structure.]
-- Steedman, M. (2000). "Information Structure and the Syntax-Phonology Interface." *Linguistic Inquiry*, 31(4), 649-689. [Combinatory Categorial Grammar approach to the syntax-prosody-information structure interface.]
+- Krifka, M. (2008). "Basic Notions of Information Structure." *Acta Linguistica Hungarica*, 55(3-4), 243-276. [Akadémiai Kiadó (paywalled)](https://doi.org/10.1556/ALing.55.2008.3-4.2)
+- Féry, C. & Ishihara, S. (eds.) (2016). *Oxford Handbook of Information Structure*. Oxford University Press. [Amazon](https://www.amazon.com/Oxford-Handbook-Information-Structure-Handbooks/dp/0199642672)
+- Vallduví, E. (1992). *The Informational Component*. Garland. [Amazon](https://www.amazon.com/Informational-Component-Enric-Vallduvi/dp/0815310129)
+- Steedman, M. (2000). "Information Structure and the Syntax-Phonology Interface." *Linguistic Inquiry*, 31(4), 649-689. [MIT Press (paywalled)](https://doi.org/10.1162/002438900554505)
 
 ### Autism and Information Structure
 
-- Peppé, S., McCann, J., Gibbon, F., O'Hare, A. & Rutherford, M. (2007). "Receptive and Expressive Prosodic Ability in Children with High-Functioning Autism." *Journal of Speech, Language, and Hearing Research*, 50(4), 1015-1028. [Prosodic focus marking difficulties in autistic children.]
-- Diehl, J.J., Bennetto, L., Watson, D., Gunlogson, C. & McDonough, J. (2008). "Resolving Ambiguity: A Psycholinguistic Approach to Understanding Prosody Processing in High-Functioning Autism." *Brain and Language*, 106(2), 144-152. [Prosodic disambiguation in autism.]
-- de Marchena, A. & Eigsti, I.M. (2010). "Conversational Gestures in Autism Spectrum Disorders: Asynchrony but Not Decreased Frequency." *Autism Research*, 3(6), 311-322. [Referencing patterns in autistic conversation.]
-- Colle, L., Baron-Cohen, S., Wheelwright, S. & van der Lely, H.K.J. (2008). "Narrative Discourse in Adults with High-Functioning Autism or Asperger Syndrome." *Journal of Autism and Developmental Disorders*, 38(1), 28-40. [Information flow in autistic narrative production.]
-- Losh, M. & Capps, L. (2003). "Narrative Ability in High-Functioning Children with Autism or Asperger's Syndrome." *Journal of Autism and Developmental Disorders*, 33(3), 239-251. [Narrative structure differences including information management.]
-- Norbury, C.F. & Bishop, D.V.M. (2003). "Narrative Skills of Children with Communication Impairments." *International Journal of Language & Communication Disorders*, 38(3), 287-313. [Narrative coherence and reference tracking.]
-- McCann, J., Peppé, S., Gibbon, F.E., O'Hare, A. & Rutherford, M. (2007). "Prosody and its Relationship to Language in School-Aged Children with High-Functioning Autism." *International Journal of Language & Communication Disorders*, 42(6), 682-702. [Broader prosodic abilities in autistic children.]
-- Milton, D.E.M. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883-887. [The double empathy framework.]
+- Peppé, S., McCann, J., Gibbon, F., O'Hare, A. & Rutherford, M. (2007). "Receptive and Expressive Prosodic Ability in Children with High-Functioning Autism." *Journal of Speech, Language, and Hearing Research*, 50(4), 1015-1028. [ASHA (paywalled)](https://doi.org/10.1044/1092-4388(2007/071))
+- Diehl, J.J., Bennetto, L., Watson, D., Gunlogson, C. & McDonough, J. (2008). "Resolving Ambiguity: A Psycholinguistic Approach to Understanding Prosody Processing in High-Functioning Autism." *Brain and Language*, 106(2), 144-152. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.bandl.2008.04.002)
+- de Marchena, A. & Eigsti, I.M. (2010). "Conversational Gestures in Autism Spectrum Disorders: Asynchrony but Not Decreased Frequency." *Autism Research*, 3(6), 311-322. [Wiley (paywalled)](https://doi.org/10.1002/aur.159)
+- Colle, L., Baron-Cohen, S., Wheelwright, S. & van der Lely, H.K.J. (2008). "Narrative Discourse in Adults with High-Functioning Autism or Asperger Syndrome." *Journal of Autism and Developmental Disorders*, 38(1), 28-40. [Springer (paywalled)](https://doi.org/10.1007/s10803-007-0357-5)
+- Losh, M. & Capps, L. (2003). "Narrative Ability in High-Functioning Children with Autism or Asperger's Syndrome." *Journal of Autism and Developmental Disorders*, 33(3), 239-251. [Springer (paywalled)](https://doi.org/10.1023/A:1024446215446)
+- Norbury, C.F. & Bishop, D.V.M. (2003). "Narrative Skills of Children with Communication Impairments." *International Journal of Language & Communication Disorders*, 38(3), 287-313. [Wiley (paywalled)](https://doi.org/10.1080/136820310000108133)
+- McCann, J., Peppé, S., Gibbon, F.E., O'Hare, A. & Rutherford, M. (2007). "Prosody and its Relationship to Language in School-Aged Children with High-Functioning Autism." *International Journal of Language & Communication Disorders*, 42(6), 682-702. [Wiley (paywalled)](https://doi.org/10.1080/13682820601173676)
+- Milton, D.E.M. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
 ---
 

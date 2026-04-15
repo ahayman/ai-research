@@ -297,12 +297,12 @@ When you need to leave a small talk conversation:
 ## Key Sources
 
 ### Foundational Texts
-- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In Ogden & Richards, *The Meaning of Meaning*.
-- Jakobson, R. (1960). "Closing Statement: Linguistics and Poetics." In Sebeok (ed.), *Style in Language*.
-- Dunbar, R. (1996). *Grooming, Gossip, and the Evolution of Language*. Harvard University Press.
-- Laver, J. (1975). "Communicative Functions of Phatic Communion." In Kendon et al. (eds.), *Organization of Behavior in Face-to-Face Interaction*.
+- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In Ogden & Richards, *The Meaning of Meaning*. [Amazon](https://www.amazon.com/Meaning-C-K-Ogden/dp/0156584468)
+- Jakobson, R. (1960). "Closing Statement: Linguistics and Poetics." In Sebeok (ed.), *Style in Language*. [Amazon](https://www.amazon.com/Style-Language-Thomas-Sebeok/dp/0262690128)
+- Dunbar, R. (1996). *Grooming, Gossip, and the Evolution of Language*. Harvard University Press. [Amazon](https://www.amazon.com/Grooming-Gossip-Evolution-Language-Robin/dp/0674363361)
+- Laver, J. (1975). "Communicative Functions of Phatic Communion." In Kendon et al. (eds.), *Organization of Behavior in Face-to-Face Interaction*. [Amazon](https://www.amazon.com/Organization-Behavior-Face-Face-Interaction/dp/9027976449)
 
 ### Autism Research
-- Sutherland, H. & Crompton, C. (2024). "A Difference in Typical Values." *Scandinavian J Disability Research*.
-- Silver, M. & Parsons, S. (2022). Conversation Strategies Study.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
+- Sutherland, H. & Crompton, C. (2024). "A Difference in Typical Values." *Scandinavian J Disability Research*. [SJDR](https://sjdr.se/articles/10.16993/sjdr.1184)
+- Silver, K. & Parsons, S. (2022). Conversation Strategies Study. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620675/)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/32431157/)

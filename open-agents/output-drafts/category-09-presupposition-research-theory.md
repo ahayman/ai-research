@@ -717,24 +717,24 @@ To determine whether an inference is a presupposition or an entailment:
 ## Sources
 
 ### Foundational Works
-- Frege, G. (1892). "Über Sinn und Bedeutung." *Zeitschrift für Philosophie und philosophische Kritik*, 100, 25-50.
-- Russell, B. (1905). "On Denoting." *Mind*, 14(56), 479-493.
-- Strawson, P. F. (1950). "On Referring." *Mind*, 59(235), 320-344.
-- Strawson, P. F. (1952). *Introduction to Logical Theory*. London: Methuen.
+- Frege, G. (1892). "Über Sinn und Bedeutung." *Zeitschrift für Philosophie und philosophische Kritik*, 100, 25-50. [Wikisource (English)](https://en.wikisource.org/wiki/On_Sense_and_Reference)
+- Russell, B. (1905). "On Denoting." *Mind*, 14(56), 479-493. [JSTOR (paywalled)](https://doi.org/10.1093/mind/XIV.4.479)
+- Strawson, P. F. (1950). "On Referring." *Mind*, 59(235), 320-344. [JSTOR (paywalled)](https://doi.org/10.1093/mind/LIX.235.320)
+- Strawson, P. F. (1952). *Introduction to Logical Theory*. London: Methuen. [Amazon](https://www.amazon.com/Introduction-Logical-Theory-P-Strawson/dp/0416683509)
 
 ### Theoretical Development
-- Karttunen, L. (1973). "Presuppositions of Compound Sentences." *Linguistic Inquiry*, 4(2), 169-193.
-- Stalnaker, R. (1973). "Presuppositions." *Journal of Philosophical Logic*, 2, 447-457.
-- Stalnaker, R. (1974). "Pragmatic Presuppositions." In M. Munitz & P. Unger (eds.), *Semantics and Philosophy*. New York: NYU Press.
-- Lewis, D. (1979). "Scorekeeping in a Language Game." *Journal of Philosophical Logic*, 8, 339-359.
-- Kiparsky, P. & Kiparsky, C. (1970). "Fact." In M. Bierwisch & K. Heidolph (eds.), *Progress in Linguistics*. The Hague: Mouton.
-- Levinson, S. C. (1983). *Pragmatics*. Cambridge: Cambridge University Press.
-- Heim, I. (1983). "On the Projection Problem for Presuppositions." *WCCFL 2*, 114-125.
+- Karttunen, L. (1973). "Presuppositions of Compound Sentences." *Linguistic Inquiry*, 4(2), 169-193. [JSTOR (paywalled)](https://www.jstor.org/stable/4177763)
+- Stalnaker, R. (1973). "Presuppositions." *Journal of Philosophical Logic*, 2, 447-457. [Springer (paywalled)](https://doi.org/10.1007/BF00262951)
+- Stalnaker, R. (1974). "Pragmatic Presuppositions." In M. Munitz & P. Unger (eds.), *Semantics and Philosophy*. New York: NYU Press. [Amazon (parent volume)](https://www.amazon.com/Semantics-Philosophy-Milton-K-Munitz/dp/0814753736)
+- Lewis, D. (1979). "Scorekeeping in a Language Game." *Journal of Philosophical Logic*, 8, 339-359. [Springer (paywalled)](https://doi.org/10.1007/BF00258436)
+- Kiparsky, P. & Kiparsky, C. (1970). "Fact." In M. Bierwisch & K. Heidolph (eds.), *Progress in Linguistics*. The Hague: Mouton. [Amazon (parent volume)](https://www.amazon.com/Progress-linguistics-collection-Janua-linguarum/dp/9027907005)
+- Levinson, S. C. (1983). *Pragmatics*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatics-Cambridge-Textbooks-Linguistics-Levinson/dp/0521294142)
+- Heim, I. (1983). "On the Projection Problem for Presuppositions." *WCCFL 2*, 114-125. [Semantics Archive](https://semanticsarchive.net/Archive/zY5YTczM/Heim%20Projection%201983.pdf)
 
 ### Modern Research
-- Abrusan, M. (2011, 2016). "Presupposition cancellation: explaining the 'soft-hard' trigger distinction." *Natural Language Semantics*, 24(2), 165-202.
-- Simons, M. (2001). "On the Conversational Basis of Some Presuppositions." In R. Hastings, B. Jackson & Z. Zvolenszky (eds.), *Proceedings of SALT 11*.
-- Potts, C. (2005). *The Logic of Conventional Implicatures*. Oxford: Oxford University Press.
+- Abrusan, M. (2011, 2016). "Presupposition cancellation: explaining the 'soft-hard' trigger distinction." *Natural Language Semantics*, 24(2), 165-202. [Springer (paywalled)](https://doi.org/10.1007/s11050-016-9122-7)
+- Simons, M. (2001). "On the Conversational Basis of Some Presuppositions." In R. Hastings, B. Jackson & Z. Zvolenszky (eds.), *Proceedings of SALT 11*. [LSA Journals](https://journals.linguisticsociety.org/proceedings/index.php/SALT/article/view/2802)
+- Potts, C. (2005). *The Logic of Conventional Implicatures*. Oxford: Oxford University Press. [Amazon](https://www.amazon.com/Conventional-Implicatures-Oxford-Studies-Theoretical/dp/0199273839)
 
 ### Web Resources Consulted
 - [Presupposition - Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/presupposition/)

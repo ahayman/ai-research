@@ -542,6 +542,12 @@ The standing recovery frame applies: **the goal is not to become the kind of stu
 
 ## 10. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Camm-Crosbie et al. (2019). — [Sage](https://journals.sagepub.com/doi/10.1177/1362361318816053) [paywalled]
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+
 **Restraint and seclusion in schools:**
 - US Government Accountability Office (2009). "Seclusions and Restraints: Selected Cases of Death and Abuse at Public and Private Schools and Treatment Centers." GAO-09-719T.
 - Autistic Self Advocacy Network (ASAN). Policy work on restraint and seclusion. autisticadvocacy.org.

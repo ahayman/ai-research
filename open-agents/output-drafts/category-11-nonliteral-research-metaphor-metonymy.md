@@ -621,73 +621,73 @@ See `manipulation-hub-pattern-pragmatic-packaging-invalidation.md` for how insti
 
 ### Foundational cognitive linguistics
 
-- **Lakoff, G. & Johnson, M. (1980).** *Metaphors We Live By*. Chicago: University of Chicago Press. — The foundational text. Still the best introduction.
-- **Lakoff, G. (1987).** *Women, Fire, and Dangerous Things: What Categories Reveal about the Mind*. Chicago: University of Chicago Press. — Introduces Idealized Cognitive Models (ICMs), which are the domains within which metonymy operates.
-- **Lakoff, G. (1990).** "The invariance hypothesis: Is abstract reason based on image-schemas?" *Cognitive Linguistics* 1(1):39–74.
-- **Lakoff, G. (1993).** "The contemporary theory of metaphor." In Ortony (ed.), *Metaphor and Thought* (2nd ed.). Cambridge University Press. — Cleanest late-Lakoff restatement of conceptual metaphor theory.
-- **Lakoff, G. & Johnson, M. (1999).** *Philosophy in the Flesh: The Embodied Mind and Its Challenge to Western Thought*. New York: Basic Books. — The long-form philosophical expansion.
-- **Johnson, M. (1987).** *The Body in the Mind: The Bodily Basis of Meaning, Imagination, and Reason*. Chicago: University of Chicago Press.
+- **Lakoff, G. & Johnson, M. (1980).** *Metaphors We Live By*. Chicago: University of Chicago Press. — The foundational text. Still the best introduction. [Amazon](https://www.amazon.com/Metaphors-We-Live-George-Lakoff/dp/0226468011)
+- **Lakoff, G. (1987).** *Women, Fire, and Dangerous Things: What Categories Reveal about the Mind*. Chicago: University of Chicago Press. — Introduces Idealized Cognitive Models (ICMs), which are the domains within which metonymy operates. [Amazon](https://www.amazon.com/Women-Fire-Dangerous-Things-Categories/dp/0226468046)
+- **Lakoff, G. (1990).** "The invariance hypothesis: Is abstract reason based on image-schemas?" *Cognitive Linguistics* 1(1):39–74. [De Gruyter (paywalled)](https://doi.org/10.1515/cogl.1990.1.1.39)
+- **Lakoff, G. (1993).** "The contemporary theory of metaphor." In Ortony (ed.), *Metaphor and Thought* (2nd ed.). Cambridge University Press. — Cleanest late-Lakoff restatement of conceptual metaphor theory. [PDF](https://terpconnect.umd.edu/~israel/lakoff-ConTheorMetaphor.pdf)
+- **Lakoff, G. & Johnson, M. (1999).** *Philosophy in the Flesh: The Embodied Mind and Its Challenge to Western Thought*. New York: Basic Books. — The long-form philosophical expansion. [Amazon](https://www.amazon.com/Philosophy-Flesh-Embodied-Challenge-Western/dp/0465056741)
+- **Johnson, M. (1987).** *The Body in the Mind: The Bodily Basis of Meaning, Imagination, and Reason*. Chicago: University of Chicago Press. [Amazon](https://www.amazon.com/Body-Mind-Bodily-Meaning-Imagination/dp/0226403181)
 
 ### Metonymy
 
-- **Radden, G. & Kövecses, Z. (1999).** "Towards a theory of metonymy." In Panther & Radden (eds.), *Metonymy in Language and Thought*, pp. 17–59. Amsterdam: John Benjamins. — The canonical typology of metonymic patterns.
-- **Panther, K.-U. & Radden, G. (eds.) (1999).** *Metonymy in Language and Thought*. Amsterdam: John Benjamins. — The edited volume containing Radden & Kövecses (1999) and other key chapters.
-- **Langacker, R. (1993).** "Reference-point constructions." *Cognitive Linguistics* 4(1):1–38. — The reference-point model of metonymy.
-- **Nunberg, G. (1979).** "The non-uniqueness of semantic solutions: Polysemy." *Linguistics and Philosophy* 3(2):143–184. — The "ham sandwich" paper.
-- **Radden, G. (2000).** "How metonymic are metaphors?" In Barcelona (ed.), *Metaphor and Metonymy at the Crossroads*, pp. 93–108. Berlin: Mouton de Gruyter.
-- **Barcelona, A. (ed.) (2000).** *Metaphor and Metonymy at the Crossroads: A Cognitive Perspective*. Berlin: Mouton de Gruyter.
+- **Radden, G. & Kövecses, Z. (1999).** "Towards a theory of metonymy." In Panther & Radden (eds.), *Metonymy in Language and Thought*, pp. 17–59. Amsterdam: John Benjamins. — The canonical typology of metonymic patterns. [John Benjamins (paywalled)](https://doi.org/10.1075/hcp.4.03rad)
+- **Panther, K.-U. & Radden, G. (eds.) (1999).** *Metonymy in Language and Thought*. Amsterdam: John Benjamins. — The edited volume containing Radden & Kövecses (1999) and other key chapters. [Amazon](https://www.amazon.com/Metonymy-Language-Thought-Human-Cognitive/dp/9027223564)
+- **Langacker, R. (1993).** "Reference-point constructions." *Cognitive Linguistics* 4(1):1–38. — The reference-point model of metonymy. [De Gruyter (paywalled)](https://doi.org/10.1515/cogl.1993.4.1.1)
+- **Nunberg, G. (1979).** "The non-uniqueness of semantic solutions: Polysemy." *Linguistics and Philosophy* 3(2):143–184. — The "ham sandwich" paper. [Springer (paywalled)](https://doi.org/10.1007/BF00126509)
+- **Radden, G. (2000).** "How metonymic are metaphors?" In Barcelona (ed.), *Metaphor and Metonymy at the Crossroads*, pp. 93–108. Berlin: Mouton de Gruyter. [De Gruyter (paywalled)](https://doi.org/10.1515/9783110894677.93)
+- **Barcelona, A. (ed.) (2000).** *Metaphor and Metonymy at the Crossroads: A Cognitive Perspective*. Berlin: Mouton de Gruyter. [Amazon](https://www.amazon.com/Metaphor-Metonymy-Crossroads-Cognitive-Perspective/dp/3110170558)
 
 ### Primary metaphor and the neural theory
 
-- **Grady, J. (1997).** *Foundations of Meaning: Primary Metaphors and Primary Scenes*. PhD dissertation, University of California, Berkeley. — The primary-metaphor hypothesis. Available via UC Berkeley eScholarship.
-- **Grady, J. (2005).** "Primary metaphors as inputs to conceptual integration." *Journal of Pragmatics* 37(10):1595–1614.
-- **Lakoff, G. (2008).** "The neural theory of metaphor." In Gibbs (ed.), *The Cambridge Handbook of Metaphor and Thought*, pp. 17–38. Cambridge University Press.
-- **Lakoff, G. (2014).** "Mapping the brain's metaphor circuitry: Metaphorical thought in everyday reason." *Frontiers in Human Neuroscience* 8:958.
+- **Grady, J. (1997).** *Foundations of Meaning: Primary Metaphors and Primary Scenes*. PhD dissertation, University of California, Berkeley. — The primary-metaphor hypothesis. [UC Berkeley eScholarship](https://escholarship.org/uc/item/6pz9z41z)
+- **Grady, J. (2005).** "Primary metaphors as inputs to conceptual integration." *Journal of Pragmatics* 37(10):1595–1614. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2004.03.012)
+- **Lakoff, G. (2008).** "The neural theory of metaphor." In Gibbs (ed.), *The Cambridge Handbook of Metaphor and Thought*, pp. 17–38. Cambridge University Press. [SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1437794)
+- **Lakoff, G. (2014).** "Mapping the brain's metaphor circuitry: Metaphorical thought in everyday reason." *Frontiers in Human Neuroscience* 8:958. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4267278/)
 
 ### Cultural variation
 
-- **Kövecses, Z. (2002).** *Metaphor: A Practical Introduction*. Oxford: Oxford University Press. — Standard textbook.
-- **Kövecses, Z. (2005).** *Metaphor in Culture: Universality and Variation*. Cambridge: Cambridge University Press. — The canonical treatment of cross-cultural variation in conceptual metaphor.
-- **Yu, N. (1995).** "Metaphorical expressions of anger and happiness in English and Chinese." *Metaphor and Symbolic Activity* 10(2):59–92.
-- **Matsuki, K. (1995).** "Metaphors of anger in Japanese." In Taylor & MacLaury (eds.), *Language and the Cognitive Construal of the World*. Berlin: Mouton de Gruyter.
-- **Taylor, J. & Mbense, T. (1998).** "Red dogs and rotten mealies: How Zulus talk about anger." In Athanasiadou & Tabakowska (eds.), *Speaking of Emotions: Conceptualisation and Expression*. Berlin: Mouton de Gruyter.
-- **Sweetser, E. (1990).** *From Etymology to Pragmatics: Metaphorical and Cultural Aspects of Semantic Structure*. Cambridge: Cambridge University Press. — The UNDERSTANDING IS SEEING cross-linguistic argument.
+- **Kövecses, Z. (2002).** *Metaphor: A Practical Introduction*. Oxford: Oxford University Press. — Standard textbook. [Amazon](https://www.amazon.com/Metaphor-Practical-Introduction-Zoltan-Kovecses/dp/0195374940)
+- **Kövecses, Z. (2005).** *Metaphor in Culture: Universality and Variation*. Cambridge: Cambridge University Press. — The canonical treatment of cross-cultural variation in conceptual metaphor. [Amazon](https://www.amazon.com/Metaphor-Culture-Universality-Zolt%C3%A1n-K%C3%B6vecses/dp/0521696127)
+- **Yu, N. (1995).** "Metaphorical expressions of anger and happiness in English and Chinese." *Metaphor and Symbolic Activity* 10(2):59–92. [Taylor & Francis (paywalled)](https://doi.org/10.1207/s15327868ms1002_1)
+- **Matsuki, K. (1995).** "Metaphors of anger in Japanese." In Taylor & MacLaury (eds.), *Language and the Cognitive Construal of the World*. Berlin: Mouton de Gruyter. [De Gruyter (paywalled)](https://www.degruyter.com/document/doi/10.1515/9783110809305.137/html)
+- **Taylor, J. & Mbense, T. (1998).** "Red dogs and rotten mealies: How Zulus talk about anger." In Athanasiadou & Tabakowska (eds.), *Speaking of Emotions: Conceptualisation and Expression*. Berlin: Mouton de Gruyter. [De Gruyter (paywalled)](https://www.degruyter.com/document/doi/10.1515/9783110806007.191/html)
+- **Sweetser, E. (1990).** *From Etymology to Pragmatics: Metaphorical and Cultural Aspects of Semantic Structure*. Cambridge: Cambridge University Press. — The UNDERSTANDING IS SEEING cross-linguistic argument. [Amazon](https://www.amazon.com/Etymology-Pragmatics-Metaphorical-Structure-Linguistics/dp/0521424429)
 
 ### Experimental work on metaphor and reasoning
 
-- **Boroditsky, L. (2000).** "Metaphoric structuring: Understanding time through spatial metaphors." *Cognition* 75(1):1–28.
-- **Boroditsky, L. (2001).** "Does language shape thought? Mandarin and English speakers' conceptions of time." *Cognitive Psychology* 43(1):1–22.
-- **Thibodeau, P. H. & Boroditsky, L. (2011).** "Metaphors we think with: The role of metaphor in reasoning." *PLOS ONE* 6(2):e16782. — The crime-as-beast-vs.-virus experiments.
-- **Thibodeau, P. H. & Boroditsky, L. (2013).** "Natural language metaphors covertly influence reasoning." *PLOS ONE* 8(1):e52961.
+- **Boroditsky, L. (2000).** "Metaphoric structuring: Understanding time through spatial metaphors." *Cognition* 75(1):1–28. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0010-0277(99)00073-6)
+- **Boroditsky, L. (2001).** "Does language shape thought? Mandarin and English speakers' conceptions of time." *Cognitive Psychology* 43(1):1–22. [ScienceDirect (paywalled)](https://doi.org/10.1006/cogp.2001.0748)
+- **Thibodeau, P. H. & Boroditsky, L. (2011).** "Metaphors we think with: The role of metaphor in reasoning." *PLOS ONE* 6(2):e16782. — The crime-as-beast-vs.-virus experiments. [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0016782)
+- **Thibodeau, P. H. & Boroditsky, L. (2013).** "Natural language metaphors covertly influence reasoning." *PLOS ONE* 8(1):e52961. [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0052961)
 
 ### Metaphor-metonymy interaction
 
-- **Goossens, L. (1990).** "Metaphtonymy: The interaction of metaphor and metonymy in expressions for linguistic action." *Cognitive Linguistics* 1(3):323–342. — Origin of the term *metaphtonymy*.
-- **Gibbs, R. W. (1994).** *The Poetics of Mind: Figurative Thought, Language, and Understanding*. Cambridge: Cambridge University Press.
-- **Giora, R. (1997).** "Understanding figurative and literal language: The graded salience hypothesis." *Cognitive Linguistics* 8(3):183–206.
+- **Goossens, L. (1990).** "Metaphtonymy: The interaction of metaphor and metonymy in expressions for linguistic action." *Cognitive Linguistics* 1(3):323–342. — Origin of the term *metaphtonymy*. [De Gruyter (paywalled)](https://doi.org/10.1515/cogl.1990.1.3.323)
+- **Gibbs, R. W. (1994).** *The Poetics of Mind: Figurative Thought, Language, and Understanding*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Poetics-Mind-Figurative-Language-Understanding/dp/0521429927)
+- **Giora, R. (1997).** "Understanding figurative and literal language: The graded salience hypothesis." *Cognitive Linguistics* 8(3):183–206. [De Gruyter (paywalled)](https://doi.org/10.1515/cogl.1997.8.3.183)
 
 ### Political framing
 
-- **Lakoff, G. (2003).** "Metaphor and war, again." *alternet.org* / widely reprinted.
-- **Lakoff, G. (1996/2002).** *Moral Politics: How Liberals and Conservatives Think*. Chicago: University of Chicago Press.
-- **Lakoff, G. (2004).** *Don't Think of an Elephant! Know Your Values and Frame the Debate*. White River Junction: Chelsea Green.
+- **Lakoff, G. (2003).** "Metaphor and war, again." *alternet.org* / widely reprinted. [AlterNet archive](https://www.alternet.org/2003/03/metaphor_and_war_again/)
+- **Lakoff, G. (1996/2002).** *Moral Politics: How Liberals and Conservatives Think*. Chicago: University of Chicago Press. [Amazon](https://www.amazon.com/Moral-Politics-Liberals-Conservatives-Third/dp/022641129X)
+- **Lakoff, G. (2004).** *Don't Think of an Elephant! Know Your Values and Frame the Debate*. White River Junction: Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Debate/dp/1603585940)
 
 ### Autism-specific research
 
-- **Rundblad, G. & Annaz, D. (2010).** "The atypical development of metaphor and metonymy comprehension in children with autism." *Autism: The International Journal of Research and Practice* 14(1):29–46. — The canonical autism-and-metonymy-vs.-metaphor study.
-- **Rundblad, G. & Annaz, D. (2010).** "Development of metaphor and metonymy comprehension: Receptive vocabulary and conceptual knowledge." *British Journal of Developmental Psychology* 28(3):547–563. — The typical-development baseline.
-- **Kalandadze, T., Norbury, C., Naerland, T. & Naess, K.-A. (2018).** "Figurative language comprehension in individuals with autism spectrum disorder: A meta-analytic review." *Autism* 22(2):99–117. PMC5843023. — The landmark meta-analysis; see the language-matching finding.
-- **Kasirer, A. & Mashal, N. (2014).** "Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development." *Frontiers in Human Neuroscience* 8:615. — The "autistic adults generate more creative novel metaphors" study. (Note: the journal is *Frontiers in Human Neuroscience*, not *Journal of Autism and Developmental Disorders*.)
-- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2020).** "Analogical reasoning in autism: A systematic review and meta-analysis." In Morsanyi & Holyoak (eds.), *Thinking, Reasoning, and Decision Making in Autism*. Routledge.
-- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2020).** "Metaphor processing in autism: A systematic review and meta-analysis." *Developmental Review* 57:100925.
-- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2022).** "Linking metaphor comprehension with analogical reasoning: Evidence from typical development and autism spectrum disorder." *British Journal of Psychology* 113(2):479–495.
-- **Happé, F. (1993).** "Communicative competence and theory of mind in autism: A test of relevance theory." *Cognition* 48(2):101–119.
-- **Milton, D. (2012).** "On the ontological status of autism: The 'double empathy problem.'" *Disability & Society* 27(6):883–887. — Non-negotiable citation for any autism-framing discussion.
+- **Rundblad, G. & Annaz, D. (2010).** "The atypical development of metaphor and metonymy comprehension in children with autism." *Autism: The International Journal of Research and Practice* 14(1):29–46. — The canonical autism-and-metonymy-vs.-metaphor study. [SAGE (paywalled)](https://doi.org/10.1177/1362361309340667)
+- **Rundblad, G. & Annaz, D. (2010).** "Development of metaphor and metonymy comprehension: Receptive vocabulary and conceptual knowledge." *British Journal of Developmental Psychology* 28(3):547–563. [Wiley (paywalled)](https://doi.org/10.1348/026151009X454373)
+- **Kalandadze, T., Norbury, C., Naerland, T. & Naess, K.-A. (2018).** "Figurative language comprehension in individuals with autism spectrum disorder: A meta-analytic review." *Autism* 22(2):99–117. — The landmark meta-analysis; see the language-matching finding. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- **Kasirer, A. & Mashal, N. (2014).** "Verbal creativity in autism: comprehension and generation of metaphoric language in high-functioning autism spectrum disorder and typical development." *Frontiers in Human Neuroscience* 8:615. — The "autistic adults generate more creative novel metaphors" study. (Note: the journal is *Frontiers in Human Neuroscience*, not *Journal of Autism and Developmental Disorders*.) [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4128218/)
+- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2020).** "Analogical reasoning in autism: A systematic review and meta-analysis." In Morsanyi & Holyoak (eds.), *Thinking, Reasoning, and Decision Making in Autism*. Routledge. [Routledge (paywalled)](https://www.routledge.com/Thinking-Reasoning-and-Decision-Making-in-Autism/Morsanyi-Holyoak/p/book/9780367344634)
+- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2020).** "Metaphor processing in autism: A systematic review and meta-analysis." *Developmental Review* 57:100925. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.dr.2020.100925)
+- **Morsanyi, K., Stamenković, D. & Holyoak, K. J. (2022).** "Linking metaphor comprehension with analogical reasoning: Evidence from typical development and autism spectrum disorder." *British Journal of Psychology* 113(2):479–495. [Wiley](https://bpspsychub.onlinelibrary.wiley.com/doi/10.1111/bjop.12542)
+- **Happé, F. (1993).** "Communicative competence and theory of mind in autism: A test of relevance theory." *Cognition* 48(2):101–119. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8243028/) | [ScienceDirect (paywalled)](https://doi.org/10.1016/0010-0277(93)90026-R)
+- **Milton, D. (2012).** "On the ontological status of autism: The 'double empathy problem.'" *Disability & Society* 27(6):883–887. — Non-negotiable citation for any autism-framing discussion. [Taylor & Francis](https://doi.org/10.1080/09687599.2012.710008)
 
 ### Background pragmatics
 
-- **Gibbs, R. W. (2008) (ed.).** *The Cambridge Handbook of Metaphor and Thought*. Cambridge University Press.
-- **Panther, K.-U., Thornburg, L. L. & Barcelona, A. (eds.) (2009).** *Metonymy and Metaphor in Grammar*. Amsterdam: John Benjamins.
+- **Gibbs, R. W. (2008) (ed.).** *The Cambridge Handbook of Metaphor and Thought*. Cambridge University Press. [Amazon](https://www.amazon.com/Cambridge-Handbook-Metaphor-Thought-Handbooks/dp/0521600863)
+- **Panther, K.-U., Thornburg, L. L. & Barcelona, A. (eds.) (2009).** *Metonymy and Metaphor in Grammar*. Amsterdam: John Benjamins. [Amazon](https://www.amazon.com/Metonymy-Metaphor-Grammar-Human-Cognitive/dp/9027223793)
 
 ---
 

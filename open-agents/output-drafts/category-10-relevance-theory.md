@@ -337,14 +337,14 @@ Both frameworks are tools. Use whichever gives you the better answer:
 ## Key Sources
 
 ### Foundational Texts
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell.
-- Wilson, D. & Sperber, D. (2004). "Relevance Theory." In Horn & Ward (eds.), *The Handbook of Pragmatics*. Blackwell.
-- Carston, R. (2002). *Thoughts and Utterances: The Pragmatics of Explicit Communication*. Blackwell.
-- Blakemore, D. (2002). *Relevance and Linguistic Meaning*. Cambridge University Press.
-- Wilson, D. & Sperber, D. (2012). *Meaning and Relevance*. Cambridge University Press.
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Wilson, D. & Sperber, D. (2004). "Relevance Theory." In Horn & Ward (eds.), *The Handbook of Pragmatics*. Blackwell. [PDF](https://www.dan.sperber.fr/wp-content/uploads/2004_wilson_relevance-theory.pdf)
+- Carston, R. (2002). *Thoughts and Utterances: The Pragmatics of Explicit Communication*. Blackwell. [Amazon](https://www.amazon.com/Thoughts-Utterances-Pragmatics-Explicit-Communication/dp/0631178910)
+- Blakemore, D. (2002). *Relevance and Linguistic Meaning*. Cambridge University Press. [Amazon](https://www.amazon.com/Relevance-Linguistic-Meaning-Semantics-Pragmatics/dp/0521640075)
+- Wilson, D. & Sperber, D. (2012). *Meaning and Relevance*. Cambridge University Press. [Amazon](https://www.amazon.com/Meaning-Relevance-Deirdre-Wilson/dp/1107605997)
 
 ### Autism and RT
-- Happé, F. (1993). "Communicative Competence and Theory of Mind in Autism: A Test of Relevance Theory." *Cognition*, 48, 101-119.
-- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. PMC8117104.
-- Williams, G.L. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. (Companion paper to Williams/Wharton/Jagoe 2021.)
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*, 27(6).
+- Happé, F. (1993). "Communicative Competence and Theory of Mind in Autism: A Test of Relevance Theory." *Cognition*, 48, 101-119. [ScienceDirect (paywalled)](https://doi.org/10.1016/0010-0277(93)90026-R) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/8243028/)
+- Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8117104/) | [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.616664/full)
+- Williams, G.L. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. (Companion paper to Williams/Wharton/Jagoe 2021.) [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2021.04.032) | [Author manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
+- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*, 27(6). [Taylor & Francis](https://doi.org/10.1080/09687599.2012.710008)

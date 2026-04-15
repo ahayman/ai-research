@@ -578,15 +578,15 @@ When you need to say no:
 ## Key Sources
 
 ### Foundational Texts
-- Sacks, H., Schegloff, E.A. & Jefferson, G. (1974). "A Simplest Systematics for Turn-Taking." *Language*, 50(4), 696-735.
-- Schegloff, E.A. (2007). *Sequence Organization in Interaction*. Cambridge University Press.
-- Schegloff, E.A., Jefferson, G. & Sacks, H. (1977). "The Preference for Self-Correction." *Language*, 53(2), 361-382.
-- Schegloff, E.A. & Sacks, H. (1973). "Opening Up Closings." *Semiotica*, 8, 289-327.
-- Stivers, T. et al. (2009). "Universals and Cultural Variation in Turn-Taking." *PNAS*, 106(26), 10587-92.
+- Sacks, H., Schegloff, E.A. & Jefferson, G. (1974). "A Simplest Systematics for Turn-Taking." *Language*, 50(4), 696-735. [JSTOR](https://doi.org/10.2307/412243)
+- Schegloff, E.A. (2007). *Sequence Organization in Interaction*. Cambridge University Press. [Amazon](https://www.amazon.com/Sequence-Organization-Interaction-Primer-Conversation/dp/0521532795)
+- Schegloff, E.A., Jefferson, G. & Sacks, H. (1977). "The Preference for Self-Correction." *Language*, 53(2), 361-382. [JSTOR](https://doi.org/10.2307/413107)
+- Schegloff, E.A. & Sacks, H. (1973). "Opening Up Closings." *Semiotica*, 8, 289-327. [De Gruyter](https://doi.org/10.1515/semi.1973.8.4.289)
+- Stivers, T. et al. (2009). "Universals and Cultural Variation in Turn-Taking." *PNAS*, 106(26), 10587-92. [PNAS](https://doi.org/10.1073/pnas.0903616106)
 
 ### Autism and Conversation Structure
-- Wehrle, S. et al. (2023). "Turn-Timing in Conversations Between Autistic Adults." *PLOS ONE*.
-- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*.
-- Crompton, C. et al. (2025). "Information Transfer Within and Between Neurotypes." *Nature Human Behaviour*.
-- Dindar, K. et al. (2016). "Prosody and Non-Verbal Communication in Repair." *J Pragmatics*.
-- Volden, J. (2004). "Conversational Repair in Speakers with Autism." *Int J Lang Comm Disorders*.
+- Wehrle, S. et al. (2023). "Turn-Timing in Conversations Between Autistic Adults." *PLOS ONE*. [PLOS](https://doi.org/10.1371/journal.pone.0284029)
+- Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. [SAGE](https://doi.org/10.1177/1362361320919286)
+- Crompton, C. et al. (2025). "Information Transfer Within and Between Neurotypes." *Nature Human Behaviour*. [Nature](https://www.nature.com/articles/s41562-025-02163-z)
+- Dindar, K. et al. (2016). "Prosody and Non-Verbal Communication in Repair." *J Pragmatics*. [Elsevier (paywalled)](https://www.sciencedirect.com/journal/journal-of-pragmatics)
+- Volden, J. (2004). "Conversational Repair in Speakers with Autism." *Int J Lang Comm Disorders*. [Wiley (paywalled)](https://doi.org/10.1080/13682820410001681215)

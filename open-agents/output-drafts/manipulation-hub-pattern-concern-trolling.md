@@ -87,7 +87,7 @@ Finally, the Pearson, Douglas, and Sedgewick research program has documented tha
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.
 - Hull, L., et al. (2017). "Putting on My Best Normal." PMC5509825.
 - Hull, L., et al. (2019). "Understanding the Reasons, Contexts and Costs of Camouflaging for Autistic Adults."
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373.
 
 **Evidence quality:** [VALIDATED] for the Lim, Young & Brewer credibility discount and the Hull et al. masking work. [PRELIMINARY] for the Pearson and Douglas & Sedgewick qualitative work (modest samples, self-selected, but converging with long-standing community accounts). The synthesis into the concern-trolling vulnerability profile is [EXTRAPOLATED] from these sources.
 
@@ -642,6 +642,27 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 ## 9. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Johnson (2008). — [Amazon](https://www.amazon.com/Typology-Domestic-Violence-Situational-Northeastern/dp/1555536948)
+- Pence & Paymar (1993). — [Amazon](https://www.amazon.com/Education-Groups-Men-Who-Batter/dp/0826179908)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Hull et al. (2019). — [Springer](https://link.springer.com/article/10.1007/s10803-018-03878-x) [paywalled]
+- Pearson et al. (2023). — [Sage](https://journals.sagepub.com/doi/abs/10.1177/13623613221104546) [paywalled]
+- Pearson et al. (2024). — [Liebert](https://www.liebertpub.com/doi/10.1089/aut.2024.0145) [paywalled]
+- Douglas & Sedgewick (2024). — [PMC11191373](https://pmc.ncbi.nlm.nih.gov/articles/PMC11191373/)
+- Raymaker et al. (2020). — [PMC7313636](https://pmc.ncbi.nlm.nih.gov/articles/PMC7313636/)
+- Rumball et al. (2020). — [Wiley](https://onlinelibrary.wiley.com/doi/full/10.1002/aur.2306) [paywalled]
+- Lilienfeld (2007). — [PubMed](https://pubmed.ncbi.nlm.nih.gov/26151919/) [paywalled]
+- Bograd & Mederos (1999). — [DOI](https://doi.org/10.1111/j.1752-0606.1999.tb00249.x) [paywalled]
+- Glass et al. (2008). — [PMC2573025](https://pmc.ncbi.nlm.nih.gov/articles/PMC2573025/)
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Crompton et al. (2020). — [PMC7545656](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545656/)
+- Milton (2012). — [DOI](https://doi.org/10.1080/09687599.2012.710008) [paywalled]
+- Grice (1975). — [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
+
 **Coercive control framework:**
 - Stark, E. (2007). *Coercive Control: How Men Entrap Women in Personal Life.* Oxford University Press. (The broader structural parent: control moves delivered through care language.)
 - Johnson, M. P. (2008). *A Typology of Domestic Violence: Intimate Terrorism, Violent Resistance, and Situational Couple Violence.* Northeastern University Press. (The intimate-terrorism versus situational-violence distinction relevant for interpreting concern-wrapped patterns.)
@@ -662,8 +683,8 @@ The standing recovery frame worth holding throughout: **recovery is not about be
 
 **Autism-specific victimization and weaponized features:**
 - Pearson, A., Rose, K., & Rees, J. (2023). "'I felt like I deserved it because I was autistic': Understanding the impact of interpersonal victimisation in the lives of autistic people." *Autism.* (The installed conviction that authority-figure concern is the truth about the autistic person.)
-- Douglas, P., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (Weaponized features framework: autism-related traits used as components of manipulation tactics, including concern-framed moves.)
-- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, P., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* (The entrapment mechanisms that concern trolling contributes to.)
+- Douglas, S., & Sedgewick, F. (2024). "Experiences of interpersonal victimization and abuse among autistic people." *Autism* 28(7): 1732–1745. PMC11191373. (Weaponized features framework: autism-related traits used as components of manipulation tactics, including concern-framed moves.)
+- Pearson, A., Rose, K., Mitchell, A., Joseph, W., Douglas, S., Sedgewick, F., & Botha, M. (2024). "'It's Not a Physical Prison but You Can't Get Out.' How Autistic Adults Make Sense of the Experience of Intimate Violence and Abuse." *Autism in Adulthood.* (The entrapment mechanisms that concern trolling contributes to.)
 
 **Autistic burnout and autistic PTSD (the real states concern trolling misattributes):**
 - Raymaker, D. M., et al. (2020). "'Having All of Your Internal Resources Exhausted Beyond Measure and Being Left with No Clean-Up Crew': Defining Autistic Burnout." *Autism in Adulthood* 2(2): 132–143. PMC7313636. (The specific state that concern trolling often tries to reframe as depression or other clinical conditions.)

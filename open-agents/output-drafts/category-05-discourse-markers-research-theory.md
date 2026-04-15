@@ -506,27 +506,27 @@ There is active debate about whether this process is best described as grammatic
 ## Sources and Key References
 
 ### Foundational Works
-- Schiffrin, D. (1987). *Discourse Markers*. Cambridge: Cambridge University Press.
-- Fraser, B. (1999). "What Are Discourse Markers?" *Journal of Pragmatics*, 31, 931-952.
-- Fraser, B. (1990). "An Approach to Discourse Markers." *Journal of Pragmatics*, 14, 383-398.
-- Blakemore, D. (2002). *Relevance and Linguistic Meaning: The Semantics and Pragmatics of Discourse Markers*. Cambridge: Cambridge University Press.
-- Blakemore, D. (1987). "Semantic Constraints on Relevance." Oxford: Blackwell.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell.
-- Heritage, J. (1984). "A Change-of-State Token and Aspects of Its Sequential Placement." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge: Cambridge University Press.
-- Jucker, A.H. & Ziv, Y. (Eds.) (1998). *Discourse Markers: Descriptions and Theory*. Amsterdam: John Benjamins.
-- Redeker, G. (1991). "Linguistic Markers of Discourse Structure." *Linguistics*, 29, 1139-1172.
+- Schiffrin, D. (1987). *Discourse Markers*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Discourse-Markers-Studies-Interactional-Sociolinguistics/dp/0521357187)
+- Fraser, B. (1999). "What Are Discourse Markers?" *Journal of Pragmatics*, 31, 931-952. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0378-2166(98)00101-5)
+- Fraser, B. (1990). "An Approach to Discourse Markers." *Journal of Pragmatics*, 14, 383-398. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(90)90096-V)
+- Blakemore, D. (2002). *Relevance and Linguistic Meaning: The Semantics and Pragmatics of Discourse Markers*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Relevance-Linguistic-Meaning-Semantics-Pragmatics/dp/0521640075)
+- Blakemore, D. (1987). "Semantic Constraints on Relevance." Oxford: Blackwell. [Amazon](https://www.amazon.com/Semantic-Constraints-Relevance-Diane-Blakemore/dp/0631158227)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Heritage, J. (1984). "A Change-of-State Token and Aspects of Its Sequential Placement." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
+- Jucker, A.H. & Ziv, Y. (Eds.) (1998). *Discourse Markers: Descriptions and Theory*. Amsterdam: John Benjamins. [Benjamins](https://benjamins.com/catalog/pbns.57)
+- Redeker, G. (1991). "Linguistic Markers of Discourse Structure." *Linguistics*, 29, 1139-1172. [De Gruyter (paywalled)](https://doi.org/10.1515/ling.1991.29.6.1139)
 
 ### Discourse Markers and Autism
-- Jones, R., Zane, E.R., & Grossman, R.B. (2022). "Like, it's important: The frequency and use of the discourse marker *like* in older autistic children." *Autism & Developmental Language Impairments*, 7. PMC9620696.
-- Lake, J.K., Bhullar, S., & Bhattacharyya, O. (2022). "Predicting pragmatic discourse features in the language of adults with autism spectrum disorder." PMC9633181.
-- Wilson, A.C. et al. (2021). "Second guessing yourself all the time about what they really mean: Cognitive differences between autistic and non-autistic adults in understanding implied meaning." *Autism Research*.
-- Pijnacker, J. et al. (2008). "Pragmatic Inferences in High-Functioning Adults with Autism and Asperger Syndrome." *Journal of Autism and Developmental Disorders*.
-- Perkins, M.R. (2007). *Pragmatic Impairment*. Cambridge: Cambridge University Press.
+- Jones, R., Zane, E.R., & Grossman, R.B. (2022). "Like, it's important: The frequency and use of the discourse marker *like* in older autistic children." *Autism & Developmental Language Impairments*, 7. [PMC9620696](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/)
+- Yang, Y., Liu, L., Yang, D., Liu, Z., & Prud'hommeaux, E. (2021). "Predicting pragmatic discourse features in the language of adults with autism spectrum disorder." *ACL-SRW 2021*. [PMC9633181](https://pmc.ncbi.nlm.nih.gov/articles/PMC9633181/)
+- Wilson, A.C. et al. (2021). "Second guessing yourself all the time about what they really mean: Cognitive differences between autistic and non-autistic adults in understanding implied meaning." *Autism Research*. [Wiley (paywalled)](https://doi.org/10.1002/aur.2345)
+- Pijnacker, J. et al. (2009). "Pragmatic Inferences in High-Functioning Adults with Autism and Asperger Syndrome." *Journal of Autism and Developmental Disorders*. [Springer (paywalled)](https://doi.org/10.1007/s10803-008-0661-8)
+- Perkins, M.R. (2007). *Pragmatic Impairment*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Pragmatic-Impairment-Michael-Perkins/dp/0521793106)
 
 ### Additional Academic Resources
-- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press.
-- Schiffrin, D. & Maschler, Y. (2015). "Discourse Markers: Language, Meaning, and Context." In *The Handbook of Discourse Analysis* (2nd ed.), Wiley-Blackwell.
-- Fox Tree, J.E. (2010). "Discourse Markers across Speakers and Settings." *Language and Linguistics Compass*, 4(5), 269-281.
+- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Linguistics/dp/0521313554)
+- Schiffrin, D. & Maschler, Y. (2015). "Discourse Markers: Language, Meaning, and Context." In *The Handbook of Discourse Analysis* (2nd ed.), Wiley-Blackwell. [Wiley (paywalled)](https://doi.org/10.1002/9781118584194.ch9)
+- Fox Tree, J.E. (2010). "Discourse Markers across Speakers and Settings." *Language and Linguistics Compass*, 4(5), 269-281. [Wiley (paywalled)](https://doi.org/10.1111/j.1749-818X.2010.00195.x)
 
 ### Web Sources Consulted
 - [Schiffrin, Discourse Markers: Language, Meaning, and Context](https://www.blackwellpublishing.com/content/bpl_images/Content_Store/WWW_Content/9780631205951/003.pdf)

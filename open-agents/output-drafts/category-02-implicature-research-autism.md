@@ -39,7 +39,7 @@ Ad-hoc implicatures are context-dependent inferences that don't rely on establis
 
 - **Mazzaggio, Foppolo, Job & Surian (2021)** tested 26 children with ASD (ages 4-10, mean 7.1) and 26 TD controls on both scalar and ad-hoc implicatures. Children with ASD showed difficulty with **both** types, but the predictors differed: **Theory of Mind predicted performance on scalar but not ad-hoc implicatures**, while **IQ modulated performance on both types**. This suggests different mechanisms underlie different implicature types. Published in *Journal of Communication Disorders*. PubMed ID: 33621945
 
-- **Su & Zhao (2024)** studied Mandarin-speaking autistic children (ages 4-8) and found challenges with computing both scalar and ad-hoc implicatures, published in *Journal of Communication Disorders*.
+- **Su & Jiang (2024)** studied Mandarin-speaking autistic children (ages 4-8) and found challenges with computing both scalar and ad-hoc implicatures, published in *Journal of Communication Disorders*.
 
 ### 1.4 Particularized Conversational Implicatures: A Surprising Finding
 
@@ -470,15 +470,15 @@ The research suggests that the most effective approach combines:
 
 3. Andrés-Roqueta, C. et al. (2018). Comprehension of Generalized Conversational Implicatures by Children With and Without ASD. *Frontiers in Psychology*. PMC: PMC5859064. [Link](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2018.00272/full)
 
-4. Cardillo, R. et al. (2021). Pragmatic Language in Children and Adolescents With ASD: Do ToM and EFs Have a Mediating Role? *Autism Research*, 14(5), 932-945. PubMed: 33111475
+4. Cardillo, R. et al. (2021). Pragmatic Language in Children and Adolescents With ASD: Do ToM and EFs Have a Mediating Role? *Autism Research*, 14(5), 932-945. PubMed: 33111475. [Wiley (paywalled)](https://doi.org/10.1002/aur.2423)
 
 5. Geelhand, P. et al. (2025). Autistic adults display different verbal behavior only in mixed-neurotype interactions. *Autism*. PubMed: 39572980. [Link](https://journals.sagepub.com/doi/10.1177/13623613241298376)
 
 6. Jary, M., Martín-González, I., Vicente, A. & Castroviejo, E. (2025). Performance of autistic adults on conversational implicatures: A comparison of material and behavioural inferences. *Journal of Communication Disorders*. [Link](https://www.sciencedirect.com/science/article/pii/S0021992425000164)
 
-7. Kissine, M. (2021). Theory of autistic mind: A renewed relevance theoretic perspective. *Journal of Pragmatics*. [Link](https://www.sciencedirect.com/science/article/abs/pii/S0378216621001715)
+7. Jagoe & Wharton (2021). Theory of autistic mind: A renewed relevance theoretic perspective. *Journal of Pragmatics*. [Link](https://www.sciencedirect.com/science/article/abs/pii/S0378216621001715)
 
-8. Lampri, P. et al. (2024). Figurative language processing in autism spectrum disorders: A review. *Autism Research*, 17(4), 674-689. PubMed: 38071498. [Link](https://onlinelibrary.wiley.com/doi/10.1002/aur.3069)
+8. Lampri, S. et al. (2024). Figurative language processing in autism spectrum disorders: A review. *Autism Research*, 17(4), 674-689. PubMed: 38071498. [Link](https://onlinelibrary.wiley.com/doi/10.1002/aur.3069)
 
 9. Mazzaggio, G., Foppolo, F., Job, R. & Surian, L. (2021). Ad-hoc and scalar implicatures in children with ASD. *Journal of Communication Disorders*. PubMed: 33621945. [Link](https://www.sciencedirect.com/science/article/abs/pii/S0021992421000125)
 
@@ -488,7 +488,7 @@ The research suggests that the most effective approach combines:
 
 12. Su, Y. & Zhao, Y. (2024). Challenges with computing scalar and ad-hoc implicatures in Mandarin-speaking 4-8-year-old autistic children. *Journal of Communication Disorders*. [Link](https://www.sciencedirect.com/science/article/abs/pii/S0021992424000236)
 
-13. Surian, L., Baron-Cohen, S. & van der Lely, H. (1996). Are children with autism deaf to Gricean maxims? *Cognitive Neuropsychiatry*, 1(1), 55-71. PubMed: 16571474
+13. Surian, L., Baron-Cohen, S. & van der Lely, H. (1996). Are children with autism deaf to Gricean maxims? *Cognitive Neuropsychiatry*, 1(1), 55-71. PubMed: 16571474. [Taylor & Francis (paywalled)](https://doi.org/10.1080/135468096396703)
 
 14. Vicente, A. & Falkum, I.L. (2023). Accounting for the preference for literal meanings in ASC. *Mind & Language*. [Link](https://onlinelibrary.wiley.com/doi/full/10.1111/mila.12371)
 
@@ -500,7 +500,7 @@ The research suggests that the most effective approach combines:
 
 18. Wilson, A.C. & Bishop, D.V.M. (2022). Stage 2 registered report: Preference for certainty in conversation among autistic adults. *PeerJ*, 10:e13110. PMC: PMC8919847. [Link](https://peerj.com/articles/13110/)
 
-19. Zou, X. (2023). Divergent social communication between autistic and non-autistic individuals revisited. *Frontiers in Psychology*. PMC: PMC10690413. [Link](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1248557/full)
+19. Xu, C., Mao, T. & Du, S. (2023). Divergent social communication between autistic and non-autistic individuals revisited. *Frontiers in Psychology*. PMC: PMC10690413. [Link](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1248557/full)
 
 ### Reviews and Meta-Analyses
 

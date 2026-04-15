@@ -332,13 +332,13 @@ Research shows questions can trigger anxiety in autistic individuals because of:
 ## Key Sources
 
 ### Foundational Texts
-- Searle, J.R. (1969). *Speech Acts*. Cambridge University Press.
-- Heritage, J. (2012). "Epistemics in Action." *Research on Language and Social Interaction*.
-- Bolinger, D. (1978). "Yes-No Questions Are Not Alternative Questions." In Hiz (ed.), *Questions*.
-- Stivers, T. & Enfield, N.J. (2010). "A Coding Scheme for Question-Response Sequences in Conversation." *J Pragmatics*.
+- Searle, J.R. (1969). *Speech Acts*. Cambridge University Press. [Amazon](https://www.amazon.com/Speech-Acts-Essay-Philosophy-Language/dp/052109626X)
+- Heritage, J. (2012). "Epistemics in Action." *Research on Language and Social Interaction*. [Taylor & Francis (paywalled)](https://doi.org/10.1080/08351813.2012.646684)
+- Bolinger, D. (1978). "Yes-No Questions Are Not Alternative Questions." In Hiz (ed.), *Questions*. [Springer](https://link.springer.com/chapter/10.1007/978-94-009-9509-3_5)
+- Stivers, T. & Enfield, N.J. (2010). "A Coding Scheme for Question-Response Sequences in Conversation." *J Pragmatics*. [Elsevier (paywalled)](https://doi.org/10.1016/j.pragma.2010.04.001)
 
 ### Autism Research
-- Loukusa, S. et al. (2007). "Use of context in pragmatic language comprehension by children with Asperger syndrome or high-functioning autism." *Journal of Communication Disorders*, 40(5), 357-381. PubMed: 17126362.
-- Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." PMC5843023.
-- Koegel, L.K. et al. (2021). "Question Bank Intervention for Autism."
-- Maras, K. et al. (2021). "Adapted Interview Questions for Autistic Adults."
+- Loukusa, S. et al. (2007). "Use of context in pragmatic language comprehension by children with Asperger syndrome or high-functioning autism." *Journal of Communication Disorders*, 40(5), 357-381. [PubMed](https://pubmed.ncbi.nlm.nih.gov/17126362/)
+- Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
+- Koegel, L.K. et al. (2021). "Question Bank Intervention for Autism." [ASHA](https://pubs.asha.org/doi/10.1044/2021_JSLHR-20-00534)
+- Maras, K. et al. (2021). "Adapted Interview Questions for Autistic Adults." [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8108109/)

@@ -281,15 +281,15 @@ When you hear a stressed word, think of it as the variable in an equation. The r
 ## Key Sources
 
 ### Foundational Texts
-- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116.
-- Jackendoff, R. (1972). *Semantic Interpretation in Generative Grammar*. MIT Press.
-- Selkirk, E. (1995). "Sentence Prosody: Intonation, Stress, and Phrasing." In Goldsmith (ed.), *Handbook of Phonological Theory*.
-- Büring, D. (2016). *Intonation and Meaning*. Oxford University Press.
-- Schwarzschild, R. (1999). "GIVENness, AvoidF and Other Constraints on the Placement of Accent." *Natural Language Semantics*.
+- Rooth, M. (1992). "A Theory of Focus Interpretation." *Natural Language Semantics*, 1(1), 75-116. [Springer (paywalled)](https://link.springer.com/article/10.1007/BF02342617)
+- Jackendoff, R. (1972). *Semantic Interpretation in Generative Grammar*. MIT Press. [Amazon](https://www.amazon.com/Semantic-Interpretation-Generative-Grammar-Jackendoff/dp/0262100134)
+- Selkirk, E. (1995). "Sentence Prosody: Intonation, Stress, and Phrasing." In Goldsmith (ed.), *Handbook of Phonological Theory*. [Full PDF](https://coehuman.uodiyala.edu.iq/uploads/Coehuman%20library%20pdf/English%20library%D9%83%D8%AA%D8%A8%20%D8%A7%D9%84%D8%A7%D9%86%D9%83%D9%84%D9%8A%D8%B2%D9%8A/The%20Handbook%20of%20Pragmatics/16.%20Sentence%20Prosody-%20Intonation,%20Stress,%20and%20Phrasing.pdf)
+- Büring, D. (2016). *Intonation and Meaning*. Oxford University Press. [Amazon](https://www.amazon.com/Intonation-Meaning-Surveys-Semantics-Pragmatics/dp/019922627X)
+- Schwarzschild, R. (1999). "GIVENness, AvoidF and Other Constraints on the Placement of Accent." *Natural Language Semantics*. [Springer (paywalled)](https://link.springer.com/article/10.1023/A:1008370902407)
 
 ### Autism Research
-- Su, P.L. et al. (2025). "Perception and Interpretation of Contrastive Pitch Accent in Autistic Children." *Languages* (MDPI).
-- Jiang, J. & Wang, Y. (2025). "Prosodic Focus Effects on 'Only' Reading in Autistic Children."
-- Grice, M. et al. (2023). "Linguistic Prosody in ASD." *Language and Linguistics Compass*.
-- Haigh, S. M. et al. (2022). "Hyper-Sensitivity to Pitch and Poorer Prosody Processing in Adults With Autism: An Electrophysiology Study." *Frontiers in Psychiatry*, 13, 844830. PMC9174755.
-- Segal, O. et al. (2017). "Narrow Focus Comprehension in Adolescents with ASD." *Folia Phoniatrica et Logopaedica*.
+- Su, P.L. et al. (2025). "Perception and Interpretation of Contrastive Pitch Accent in Autistic Children." *Languages* (MDPI). [MDPI](https://www.mdpi.com/2226-471X/10/7/161)
+- Jiang, J. & Wang, Y. (2025). "Prosodic Focus Effects on 'Only' Reading in Autistic Children." [Springer](https://link.springer.com/article/10.1007/s10803-025-06827-7)
+- Grice, M. et al. (2023). "Linguistic Prosody in ASD." *Language and Linguistics Compass*. [Wiley (paywalled)](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
+- Haigh, S. M. et al. (2022). "Hyper-Sensitivity to Pitch and Poorer Prosody Processing in Adults With Autism: An Electrophysiology Study." *Frontiers in Psychiatry*, 13, 844830. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9174755/)
+- Segal, O. et al. (2017). "Narrow Focus Comprehension in Adolescents with ASD." *Folia Phoniatrica et Logopaedica*. [Karger (paywalled)](https://karger.com/fpl/article/69/1-2/67/141391/)

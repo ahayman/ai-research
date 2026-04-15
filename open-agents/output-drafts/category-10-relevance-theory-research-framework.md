@@ -774,7 +774,7 @@ Autistic individuals may find **strong communication** more comfortable (clear, 
 
 ### RT and Autism
 - [Williams, Wharton & Jagoe (2021). "Mutual (Mis)understanding" - Frontiers in Psychology](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.616664/full)
-- [Jagoe & Wharton (2021). "Theory of autistic mind" - Author Accepted Manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
+- [Williams (2021). "Theory of autistic mind" - Author Accepted Manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
 - [Relevance Theory and the social realities of communication - PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10860676/)
 
 ---

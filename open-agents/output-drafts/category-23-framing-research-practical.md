@@ -685,17 +685,17 @@ Readers should hold the claims here at the level of confidence appropriate to ea
 
 ## Sources
 
-- Bateson, G. (1972). A theory of play and fantasy. In *Steps to an Ecology of Mind* (pp. 177-193). Chandler.
-- Brown, P., & Levinson, S. C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
-- Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712.
-- Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58.
-- Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm* (pp. 111-137). Hanshin.
-- Goffman, E. (1974). *Frame Analysis: An Essay on the Organization of Experience*. Harper & Row.
-- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power: A constructionist approach. *American Journal of Sociology*, 95(1), 1-37.
-- Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press.
-- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458.
-- Lakoff, G. (2004). *Don't Think of an Elephant! Know Your Values and Frame the Debate*. Chelsea Green.
-- Sweet, P. L. (2019). The sociology of gaslighting. *American Sociological Review*, 84(5), 851-875.
-- Tannen, D. (Ed.) (1993). *Framing in Discourse*. Oxford University Press.
-- Tannen, D., & Wallat, C. (1987). Interactive frames and knowledge schemas in interaction: Examples from a medical examination/interview. *Social Psychology Quarterly*, 50(2), 205-216.
-- Watzlawick, P., Weakland, J., & Fisch, R. (1974). *Change: Principles of Problem Formation and Problem Resolution*. Norton.
+- Bateson, G. (1972). A theory of play and fantasy. In *Steps to an Ecology of Mind*. Chandler. [Amazon](https://www.amazon.com/Steps-Ecology-Mind-Anthropological-Epistemology/dp/0226039056)
+- Brown, P., & Levinson, S. C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
+- Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
+- Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1993.tb01304.x)
+- Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm*. Hanshin. [CITATION UNVERIFIED — Korean volume, limited online access]
+- Goffman, E. (1974). *Frame Analysis*. Harper & Row. [Amazon](https://www.amazon.com/Frame-Analysis-Essay-Organization-Experience/dp/0930350910)
+- Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power. *American Journal of Sociology*, 95(1), 1-37. [University of Chicago (paywalled)](https://doi.org/10.1086/229213)
+- Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press. [Amazon](https://www.amazon.com/Anyone-Responsible-Television-Political-American/dp/0226388557)
+- Kahneman, D., & Tversky, A. (1981). The framing of decisions and the psychology of choice. *Science*, 211(4481), 453-458. [Science (paywalled)](https://doi.org/10.1126/science.7455683)
+- Lakoff, G. (2004). *Don't Think of an Elephant!* Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Frame/dp/1931498717)
+- Sweet, P. L. (2019). The sociology of gaslighting. *American Sociological Review*, 84(5), 851-875. [SAGE (paywalled)](https://doi.org/10.1177/0003122419874843)
+- Tannen, D. (Ed.) (1993). *Framing in Discourse*. Oxford University Press. [Amazon](https://www.amazon.com/Framing-Discourse-Deborah-Tannen/dp/0195079973)
+- Tannen, D., & Wallat, C. (1987). Interactive frames and knowledge schemas in interaction. *Social Psychology Quarterly*, 50(2), 205-216. [JSTOR (paywalled)](https://doi.org/10.2307/2786752)
+- Watzlawick, P., Weakland, J., & Fisch, R. (1974). *Change: Principles of Problem Formation and Problem Resolution*. Norton. [Amazon](https://www.amazon.com/Change-Principles-Problem-Formation-Resolution/dp/0393707067)

@@ -525,7 +525,7 @@ Research on prosody in autism spectrum conditions reveals a complex picture:
 
 - **Impairments in prosody** are among the most notable communication characteristics of individuals with ASD, significantly impacting communicative interactions.
 
-- There is a **production-perception asymmetry**: The ASD prosodic profile shows discordance where receptive (comprehension) prosodic skills generally outstrip performance on expressive (production) subtests. That is, autistic individuals often understand prosodic cues better than they produce them.
+- There is a **production-perception asymmetry on most PEPS-C subtests**: autistic individuals' receptive (comprehension) prosodic skills generally outstrip their expressive (production) performance — with the important exception of contrastive stress, where receptive difficulties have also been documented, alongside consistent expressive deficits. The headline "receptive exceeds expressive" is a summary of the overall profile, not a universal claim.
 
 - **Contrastive stress** is specifically flagged as an area of difficulty. Contrastive stress understanding is an area in which impaired comprehension has been reported, and both ASD and ASD-parent groups showed reduced accuracy in contrastive stress expression. Contrastive stress is critical for imparting communicative intent, and misunderstanding it may derail social interactions.
 

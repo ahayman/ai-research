@@ -698,13 +698,13 @@ Much of common ground management happens implicitly -- through facial expression
 ## SOURCES AND REFERENCES
 
 ### Academic Sources
-- Clark, H. H., & Brennan, S. E. (1991). "Grounding in Communication." In L. B. Resnick, J. M. Levine, & S. D. Teasley (Eds.), *Perspectives on Socially Shared Cognition*. APA.
-- Clark, H. H., & Schaefer, E. F. (1989). "Contributing to Discourse." *Cognitive Science*, 13, 259-294.
-- Brennan, S. E., & Clark, H. H. (1996). "Conceptual Pacts and Lexical Choice in Conversation." *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 22(6), 1482-1493.
-- Savitsky, K., Keysar, B., Epley, N., Carter, T., & Swanson, A. (2011). "The Closeness-Communication Bias: Increased Egocentrism among Friends Versus Strangers." *Journal of Experimental Social Psychology*, 47, 269-273.
-- Clark, E. V. (2014). "Common Ground." In B. MacWhinney & W. O'Grady (Eds.), *The Handbook of Language Emergence*. Wiley.
-- Schegloff, E. A., Jefferson, G., & Sacks, H. (1977). "The Preference for Self-Correction in the Organization of Repair in Conversation." *Language*, 53(2), 361-382.
-- Milton, D. E. M. (2012). "On the ontological status of autism: the 'double empathy problem'." *Disability & Society*, 27(6), 883-887.
+- Clark, H. H., & Brennan, S. E. (1991). "Grounding in Communication." In L. B. Resnick, J. M. Levine, & S. D. Teasley (Eds.), *Perspectives on Socially Shared Cognition*. APA. [Stanford PDF](https://web.stanford.edu/~clark/1990s/Clark,%20H.H.%20_%20Brennan,%20S.E.%20_Grounding%20in%20communication_%201991.pdf)
+- Clark, H. H., & Schaefer, E. F. (1989). "Contributing to Discourse." *Cognitive Science*, 13, 259-294. [Wiley](https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog1302_7)
+- Brennan, S. E., & Clark, H. H. (1996). "Conceptual Pacts and Lexical Choice in Conversation." *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 22(6), 1482-1493. [APA PsycNet (paywalled)](https://doi.org/10.1037/0278-7393.22.6.1482)
+- Savitsky, K., Keysar, B., Epley, N., Carter, T., & Swanson, A. (2011). "The Closeness-Communication Bias: Increased Egocentrism among Friends Versus Strangers." *Journal of Experimental Social Psychology*, 47, 269-273. [Wharton PDF](https://faculty.wharton.upenn.edu/wp-content/uploads/2015/02/2.-Savitsky-Comm-Bias.pdf)
+- Clark, E. V. (2014). "Common Ground." In B. MacWhinney & W. O'Grady (Eds.), *The Handbook of Language Emergence*. Wiley. [Stanford PDF](https://web.stanford.edu/class/cs379c/class_messages_listing/curriculum/Annotated_Readings/ClarkCOMMON-GROUND-15_Unannotated.pdf)
+- Schegloff, E. A., Jefferson, G., & Sacks, H. (1977). "The Preference for Self-Correction in the Organization of Repair in Conversation." *Language*, 53(2), 361-382. [JSTOR (paywalled)](https://www.jstor.org/stable/413107)
+- Milton, D. E. M. (2012). "On the ontological status of autism: the 'double empathy problem'." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
 
 ### Web Sources
 - [Grounding in Communication - Wikipedia](https://en.wikipedia.org/wiki/Grounding_in_communication)

@@ -1170,15 +1170,15 @@ Group Chats → TikTok Comments
 
 ## Research Sources
 
-- Gunraj, D. N., et al. (2016). "Texting insincerely: The role of the period in text messaging." -- Binghamton University study on period perception in text messages
-- Herring, S. C. & Dainas, A. R. (2020). "Interpreting Emoji Pragmatics" -- Indiana University, published in Approaches to Internet Pragmatics (John Benjamins)
-- Yus, F. (2014). "Not all emoticons are created equal" -- Research on emoji pragmatic functions
-- Research from Slack official blog on workplace messaging best practices (2024-2025)
-- MosaicAI Research on response time psychology in digital relationships (2024)
-- PMC article on fast response times and social connection (2022, PMC8794835)
-- ResearchGate publications on delayed response interpretation in instant messaging
-- Multiple 2025-2026 professional guides on email etiquette, virtual meeting norms, and social media best practices
-- Neurodiversity Wiki and community-created tone indicator references
-- InsideHook analysis of "k" vs "kk" vs "ok" vs "okay" texting differences
-- The Outline analysis of "sure" as an infuriating affirmative
-- Yale Linguistics research on punctuation and textual pragmatics
+- Gunraj, D. N., et al. (2016). "Texting insincerely: The role of the period in text messaging." *Computers in Human Behavior*, 55, 1067-1075. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.chb.2015.11.003)
+- Herring, S. C. & Dainas, A. R. (2020). "Interpreting Emoji Pragmatics." In C. Xie, F. Yus, H. Haberland (Eds.), *Approaches to Internet Pragmatics*. John Benjamins. [Amazon](https://www.amazon.com/Approaches-Internet-Pragmatics-Theory-Practice/dp/9027207348)
+- Yus, F. (2014). "Not all emoticons are created equal." *Linguagem em (Dis)curso*, 14(3). [Open Access](https://www.scielo.br/j/ld/a/nLxg9Z8c9BJHCpNcGcyvYfm/)
+- Research from Slack official blog on workplace messaging best practices (2024-2025). [Slack blog](https://slack.com/blog)
+- MosaicAI Research on response time psychology in digital relationships (2024). [CITATION UNVERIFIED — commercial research, no canonical link]
+- PMC article on fast response times and social connection (2022). [PMC8794835](https://pmc.ncbi.nlm.nih.gov/articles/PMC8794835/)
+- ResearchGate publications on delayed response interpretation in instant messaging. [CITATION UNVERIFIED — generic reference, no specific citation]
+- Multiple 2025-2026 professional guides on email etiquette, virtual meeting norms, and social media best practices. [CITATION UNVERIFIED — generic reference]
+- Neurodiversity Wiki and community-created tone indicator references. [Tone Indicators Wiki](https://neurodiversity.fandom.com/wiki/Tone_Indicators)
+- InsideHook analysis of "k" vs "kk" vs "ok" vs "okay" texting differences. [InsideHook](https://www.insidehook.com/article/internet/whats-the-difference-between-k-kk-ok-and-okay-text)
+- The Outline analysis of "sure" as an infuriating affirmative. [CITATION UNVERIFIED — The Outline is defunct]
+- Yale Linguistics research on punctuation and textual pragmatics. [CITATION UNVERIFIED — generic institutional reference]

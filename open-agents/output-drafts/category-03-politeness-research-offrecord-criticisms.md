@@ -645,42 +645,42 @@ The power critique of politeness is particularly relevant for autistic people be
 ## Research Sources
 
 ### Off-Record Strategies
-- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press.
-- Grice, H.P. (1975). "Logic and Conversation." In *Syntax and Semantics 3: Speech Acts*, pp. 41-58.
-- Pinker, S., Nowak, M.A., & Lee, J.J. (2008). "The Logic of Indirect Speech." *PNAS*, 105(3), 833-838.
-- Camp, E. (2023). "Beyond the Implicit/Explicit Dichotomy: The Pragmatics of Plausible Deniability." *Review of Philosophy and Psychology*.
+- Brown, P. & Levinson, S. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
+- Grice, H.P. (1975). "Logic and Conversation." In *Syntax and Semantics 3: Speech Acts*, pp. 41-58. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Pinker, S., Nowak, M.A., & Lee, J.J. (2008). "The Logic of Indirect Speech." *PNAS*, 105(3), 833-838. [PNAS](https://doi.org/10.1073/pnas.0707192105)
+- Camp, E. (2023). "Beyond the Implicit/Explicit Dichotomy: The Pragmatics of Plausible Deniability." *Review of Philosophy and Psychology*. [Springer (paywalled)](https://doi.org/10.1007/s13164-023-00695-9)
 
 ### Cultural Criticisms
-- Matsumoto, Y. (1988). "Reexamination of the Universality of Face: Politeness Phenomena in Japanese." *Journal of Pragmatics*, 12, 403-426.
-- Ide, S. (1989). "Formal Forms and Discernment: Two Neglected Aspects of Universals of Linguistic Politeness." *Multilingua*, 8(2-3), 223-248.
-- Gu, Y. (1990). "Politeness Phenomena in Modern Chinese." *Journal of Pragmatics*, 14(2), 237-257.
-- Mao, L.R. (1994). "Beyond Politeness Theory: 'Face' Revisited and Renewed." *Journal of Pragmatics*, 21, 451-486.
+- Matsumoto, Y. (1988). "Reexamination of the Universality of Face: Politeness Phenomena in Japanese." *Journal of Pragmatics*, 12, 403-426. [Elsevier (paywalled)](https://doi.org/10.1016/0378-2166(88)90003-3)
+- Ide, S. (1989). "Formal Forms and Discernment: Two Neglected Aspects of Universals of Linguistic Politeness." *Multilingua*, 8(2-3), 223-248. [De Gruyter (paywalled)](https://doi.org/10.1515/mult.1989.8.2-3.223)
+- Gu, Y. (1990). "Politeness Phenomena in Modern Chinese." *Journal of Pragmatics*, 14(2), 237-257. [Elsevier (paywalled)](https://doi.org/10.1016/0378-2166(90)90082-O)
+- Mao, L.R. (1994). "Beyond Politeness Theory: 'Face' Revisited and Renewed." *Journal of Pragmatics*, 21, 451-486. [Elsevier (paywalled)](https://doi.org/10.1016/0378-2166(94)90025-6)
 
 ### Leech's Politeness Principles
-- Leech, G.N. (1983). *Principles of Pragmatics*. London: Longman.
-- Leech, G.N. (2014). *The Pragmatics of Politeness*. Oxford University Press.
+- Leech, G.N. (1983). *Principles of Pragmatics*. London: Longman. [Amazon](https://www.amazon.com/Principles-Pragmatics-Longman-Linguistics-Library/dp/0582551102)
+- Leech, G.N. (2014). *The Pragmatics of Politeness*. Oxford University Press. [Amazon](https://www.amazon.com/Pragmatics-Politeness-Oxford-Studies-Sociolinguistics/dp/0195341384)
 
 ### Watts' Relational Work
-- Watts, R.J. (2003). *Politeness*. Cambridge: Cambridge University Press.
-- Locher, M.A. & Watts, R.J. (2005). "Politeness Theory and Relational Work." *Journal of Politeness Research*, 1, 9-33.
+- Watts, R.J. (2003). *Politeness*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Key-Topics-Sociolinguistics/dp/0521794064)
+- Locher, M.A. & Watts, R.J. (2005). "Politeness Theory and Relational Work." *Journal of Politeness Research*, 1, 9-33. [De Gruyter (paywalled)](https://doi.org/10.1515/jplr.2005.1.1.9)
 
 ### Spencer-Oatey's Rapport Management
-- Spencer-Oatey, H. (2000). *Culturally Speaking: Managing Rapport through Talk across Cultures*. London: Continuum.
-- Spencer-Oatey, H. (2005). "(Im)Politeness, Face and Perceptions of Rapport: Unpackaging their Bases and Interrelationships." *Journal of Politeness Research*, 1(1), 95-119.
-- Spencer-Oatey, H. (2008). "Face, (Im)Politeness and Rapport." In *Culturally Speaking* (2nd ed.). London: Continuum.
+- Spencer-Oatey, H. (2000). *Culturally Speaking: Managing Rapport through Talk across Cultures*. London: Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Managing-Rapport-Through/dp/0304704369)
+- Spencer-Oatey, H. (2005). "(Im)Politeness, Face and Perceptions of Rapport: Unpackaging their Bases and Interrelationships." *Journal of Politeness Research*, 1(1), 95-119. [De Gruyter (paywalled)](https://doi.org/10.1515/jplr.2005.1.1.95)
+- Spencer-Oatey, H. (2008). "Face, (Im)Politeness and Rapport." In *Culturally Speaking* (2nd ed.). London: Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Second-Communication-Politeness/dp/1847063616)
 
 ### Gender Critique
-- Lakoff, R. (1975). *Language and Woman's Place*. New York: Harper & Row.
-- Holmes, J. (1995). *Women, Men and Politeness*. London: Longman.
-- Burrow, S. (2010). "Gendered Politeness, Self-Respect, and Autonomy." In *De la Croix et al.* (eds.)
-- Cameron, D. (1995). *Verbal Hygiene*. London: Routledge.
+- Lakoff, R. (1975). *Language and Woman's Place*. New York: Harper & Row. [Amazon](https://www.amazon.com/Language-Womans-Place-Revised-Commentaries/dp/0195167570)
+- Holmes, J. (1995). *Women, Men and Politeness*. London: Longman. [Amazon](https://www.amazon.com/Women-Men-Politeness-Real-Language/dp/0582063612)
+- Burrow, S. (2010). "Gendered Politeness, Self-Respect, and Autonomy." In *De la Croix et al.* (eds.). [CITATION UNVERIFIED]
+- Cameron, D. (1995). *Verbal Hygiene*. London: Routledge. [Amazon](https://www.amazon.com/Verbal-Hygiene-Routledge-Linguistics-Classics/dp/0415691559)
 
 ### Power Critique
-- Fairclough, N. (1989). *Language and Power*. London: Longman.
-- Eelen, G. (2001). *A Critique of Politeness Theories*. Manchester: St. Jerome Publishing.
-- Bourdieu, P. (1991). *Language and Symbolic Power*. Cambridge: Polity Press.
+- Fairclough, N. (1989). *Language and Power*. London: Longman. [Amazon](https://www.amazon.com/Language-Power-Norman-Fairclough/dp/1138790974)
+- Eelen, G. (2001). *A Critique of Politeness Theories*. Manchester: St. Jerome Publishing. [Amazon](https://www.amazon.com/Critique-Politeness-Theories-Gino-Eelen/dp/1900650401)
+- Bourdieu, P. (1991). *Language and Symbolic Power*. Cambridge: Polity Press. [Amazon](https://www.amazon.com/Language-Symbolic-Power-Pierre-Bourdieu/dp/0674510410)
 
 ### Autism and Pragmatics
-- Tikiz-Erturk (2025). "Rethinking Social Language Learning and Politeness in Autism." *International Journal of Applied Linguistics*.
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883-887.
-- Crompton, C.J. et al. (2020). "Neurotype-Matching, but Not Being Autistic, Influences Self and Observer Ratings of Interpersonal Rapport." *Frontiers in Psychology*, 11, 586171.
+- Tikiz-Erturk (2025). "Rethinking Social Language Learning and Politeness in Autism." *International Journal of Applied Linguistics*. [Wiley](https://doi.org/10.1111/ijal.12783)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Crompton, C.J. et al. (2020). "Neurotype-Matching, but Not Being Autistic, Influences Self and Observer Ratings of Interpersonal Rapport." *Frontiers in Psychology*, 11, 586171. [Frontiers](https://doi.org/10.3389/fpsyg.2020.586171)

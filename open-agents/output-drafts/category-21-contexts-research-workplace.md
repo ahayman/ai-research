@@ -596,7 +596,7 @@ The deficit framing of autism at work is incomplete. Research (Cope & Remington,
 
 Key findings from the research literature:
 
-**Communication as primary barrier** (Szechy et al., 2024; Eisner et al., 2024): Communication challenges were the single most-cited barrier across autistic employees, coworkers, and managers. Phone calls, ambiguous verbal instructions, and open-plan office social dynamics were the most frequently reported difficulties.
+**Communication as primary barrier** (Szechy et al., 2024): Communication challenges were the single most-cited barrier across autistic employees, coworkers, and managers. Phone calls, ambiguous verbal instructions, and open-plan office social dynamics were the most frequently reported difficulties.
 
 **Manager relationship is critical**: Autistic employees who reported a supportive, understanding manager were significantly more likely to sustain employment and report job satisfaction. The manager's willingness to provide clear feedback, explicit instructions, and reasonable accommodations was the strongest predictor of workplace success.
 
@@ -787,33 +787,32 @@ This is a standalone research document synthesizing content from prior categorie
 ## Key Sources
 
 ### Workplace Discourse and Pragmatics
-- Holmes, J. & Stubbe, M. (2015). *Power and Politeness in the Workplace: A Sociolinguistic Analysis of Talk at Work* (2nd ed.). Routledge.
-- Marra, M., Vine, B. & Holmes, J. (2008). "Workplace Interaction." In *Handbook of Pragmatics*. John Benjamins.
-- Stubbe, M. et al. (2003). "Multiple Discourse Analyses of a Workplace Interaction." *Discourse & Society*, 14(3).
-- Vine, B. (2004). *Getting Things Done at Work: The Discourse of Power in Workplace Interaction*. John Benjamins.
-- Schnurr, S. (2009). *Leadership Discourse at Work: Interactions of Humour, Gender and Workplace Culture*. Palgrave Macmillan.
+- Holmes, J. & Stubbe, M. (2015). *Power and Politeness in the Workplace* (2nd ed.). Routledge. [Amazon](https://www.amazon.com/Power-Politeness-Workplace-Sociolinguistic-Interaction/dp/1138950203)
+- Marra, M., Vine, B. & Holmes, J. (2008). "Workplace Interaction." In *Handbook of Pragmatics*. John Benjamins. [Amazon](https://www.amazon.com/Handbook-Pragmatics-Highlights-Jan-Ola-Ostman/dp/9027207801)
+- Stubbe, M. et al. (2003). "Multiple Discourse Analyses of a Workplace Interaction." *Discourse Studies*, 5(3). [SAGE (paywalled)](https://doi.org/10.1177/14614456030053002)
+- Vine, B. (2004). *Getting Things Done at Work: The Discourse of Power in Workplace Interaction*. John Benjamins. [Amazon](https://www.amazon.com/Getting-Things-Done-Work-Discourse/dp/1588115348)
+- Schnurr, S. (2009). *Leadership Discourse at Work*. Palgrave Macmillan. [Amazon](https://www.amazon.com/Leadership-Discourse-Work-Interactions-Workplace/dp/0230537634)
 
 ### Autism and Employment
-- Roux, A.M. et al. (2015). "National Autism Indicators Report: Transition into Young Adulthood." A.J. Drexel Autism Institute.
-- Bury, S.M. et al. (2024). "Employment Profiles of Autistic People: An 8-Year Longitudinal Study." *Autism*, 28(4). PMC11403919.
-- Cope, R. & Remington, A. (2022). "The Strengths and Abilities of Autistic People in the Workplace." *Autism in Adulthood*, 4(1). PMC8992926.
-- Szechy, K.A. & O'Donnell, L.A. (2025). "Autism Knowledge Matters: Perceptions of an Autistic Employee's Competency." *Autism in Adulthood*.
-- Szechy, K.A., Turk, P.D. & O'Donnell, L.A. (2024). "Autism and Employment Challenges: The Double Empathy Problem and Perceptions of an Autistic Employee in the Workplace." PMC11317796.
-- Eisner, L. et al. (2024). "Workplace Barriers and Solutions for Positive Employment." *Journal of Higher Education in Africa*.
+- Roux, A.M. et al. (2015). "National Autism Indicators Report: Transition into Young Adulthood." A.J. Drexel Autism Institute. [Drexel](https://drexel.edu/autismoutcomes/publications-and-reports/publications/National-Autism-Indicators-Report-Transition-to-Adulthood/)
+- Bury, S.M. et al. (2024). "Employment Profiles of Autistic People: An 8-Year Longitudinal Study." *Autism*, 28(4). [PMC11403919](https://pmc.ncbi.nlm.nih.gov/articles/PMC11403919/)
+- Cope, R. & Remington, A. (2022). "The Strengths and Abilities of Autistic People in the Workplace." *Autism in Adulthood*, 4(1). [PMC8992926](https://pmc.ncbi.nlm.nih.gov/articles/PMC8992926/)
+- Szechy, K.A. & O'Donnell, L.A. (2025). "Autism Knowledge Matters: Perceptions of an Autistic Employee's Competency." *Autism in Adulthood*. [SAGE (paywalled)](https://doi.org/10.1089/aut.2024.0261)
+- Szechy, K.A., Turk, P.D. & O'Donnell, L.A. (2024). "Autism and Employment Challenges: The Double Empathy Problem and Perceptions of an Autistic Employee in the Workplace." *Autism in Adulthood*, 6(2), 205-217. [PMC11317796](https://pmc.ncbi.nlm.nih.gov/articles/PMC11317796/)
 
 ### Autism and Job Interviews
-- Maras, K. et al. (2021). "Ameliorating the Disadvantage for Autistic Job Seekers: Adapted Employment Interview Questions." *Autism*, 25(5). PMC8108109.
-- Finn, M. et al. (2023). "'If I'm Just Me, I Doubt I'd Get the Job': Autistic People's Experiences in Job Interviews." *Autism*, 27(6).
+- Maras, K. et al. (2021). "Ameliorating the Disadvantage for Autistic Job Seekers: Adapted Employment Interview Questions." *Autism*, 25(5). [PMC8108109](https://pmc.ncbi.nlm.nih.gov/articles/PMC8108109/)
+- Finn, M. et al. (2023). "'If I'm Just Me, I Doubt I'd Get the Job': Autistic People's Experiences in Job Interviews." *Autism*, 27(6). [SAGE (paywalled)](https://doi.org/10.1177/13623613221150375)
 
 ### Disclosure Research
-- Johnson, T.D. & Joshi, A. (2016). "Dark Clouds or Silver Linings? A Stigma Threat Perspective on the Implications of an Autism Diagnosis for Workplace Well-Being." *Journal of Applied Psychology*.
-- "Autistic Adults' Experiences of Diagnostic Disclosure in the Workplace." (2022). PMC9620671.
-- "To Tell or Not to Tell -- Disclosure of Autism in the Workplace." (2023). PMC10197981.
+- Johnson, T.D. & Joshi, A. (2016). "Dark Clouds or Silver Linings? A Stigma Threat Perspective on the Implications of an Autism Diagnosis for Workplace Well-Being." *Journal of Applied Psychology*, 101(3). [APA (paywalled)](https://doi.org/10.1037/apl0000058)
+- "Autistic Adults' Experiences of Diagnostic Disclosure in the Workplace." (2022). [PMC9620671](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620671/)
+- "To Tell or Not to Tell -- Disclosure of Autism in the Workplace." (2023). [PMC10197981](https://pmc.ncbi.nlm.nih.gov/articles/PMC10197981/)
 
 ### Masking and Camouflaging
-- Hull, L. et al. (2017). "'Putting on My Best Normal': Social Camouflaging in Adults with Autism Spectrum Conditions." *Journal of Autism and Developmental Disorders*. PMC5509825.
-- Cage, E. & Troxell-Whitman, Z. (2019). "Understanding the Reasons, Contexts and Costs of Camouflaging for Autistic Adults." *Journal of Autism and Developmental Disorders*.
+- Hull, L. et al. (2017). "'Putting on My Best Normal': Social Camouflaging in Adults with Autism Spectrum Conditions." *Journal of Autism and Developmental Disorders*. [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Cage, E. & Troxell-Whitman, Z. (2019). "Understanding the Reasons, Contexts and Costs of Camouflaging for Autistic Adults." *Journal of Autism and Developmental Disorders*. [Springer](https://doi.org/10.1007/s10803-018-03878-x)
 
 ### Organizational Socialization
-- Korte, R. & Lin, S. (2013). "Getting on Board: Organizational Socialization and the Contribution of Social Capital." *Human Relations*, 66(3).
-- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6).
+- Korte, R. & Lin, S. (2013). "Getting on Board: Organizational Socialization and the Contribution of Social Capital." *Human Relations*, 66(3). [SAGE (paywalled)](https://doi.org/10.1177/0018726712461933)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem'." *Disability & Society*, 27(6). [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)

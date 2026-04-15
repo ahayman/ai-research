@@ -819,13 +819,13 @@ Research on autism and prosody (Grice, 2023; Grossman et al., 2010; Diehl et al.
 
 ## Sources
 
-- Rooth, M. (1992). A Theory of Focus Interpretation. *Natural Language Semantics, 1*(1), 75-116.
-- Roberts, C. (1996). Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics. *OSU Working Papers in Linguistics, 49*, 91-136.
-- Grice, M. (2023). Linguistic prosody in autism spectrum disorder---An overview. *Language and Linguistics Compass, 17*(12), e12498.
-- Grossman, R.B., et al. (2010). Lexical and Affective Prosody in Children with High-Functioning Autism. *Journal of Speech, Language, and Hearing Research, 53*(3), 778-793.
-- Diehl, J.J., et al. (2015). The Interface of Syntax with Pragmatics and Prosody in Children with Autism Spectrum Disorders. *Journal of Autism and Developmental Disorders, 46*(8), 2641-2653.
-- Katz, J. & Selkirk, E. (2011). Contrastive Focus vs. Discourse-New: Evidence from Phonetic Prominence in English. *Language, 87*(4), 771-816.
-- Zimmermann, M. (2008). Contrastive Focus. In C. Fery & S. Ishihara (Eds.), *Oxford Handbook of Information Structure*.
+- Rooth, M. (1992). A Theory of Focus Interpretation. *Natural Language Semantics, 1*(1), 75-116. [Springer (paywalled)](https://link.springer.com/article/10.1007/BF02342617)
+- Roberts, C. (1996). Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics. *OSU Working Papers in Linguistics, 49*, 91-136. [Semantics & Pragmatics](https://www.tandfonline.com/doi/full/10.1080/0163853X.2017.1316038)
+- Grice, M. (2023). Linguistic prosody in autism spectrum disorder---An overview. *Language and Linguistics Compass, 17*(12), e12498. [Wiley (paywalled)](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
+- Grossman, R.B., et al. (2010). Lexical and Affective Prosody in Children with High-Functioning Autism. *Journal of Speech, Language, and Hearing Research, 53*(3), 778-793. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3538164/)
+- Diehl, J.J., et al. (2015). The Interface of Syntax with Pragmatics and Prosody in Children with Autism Spectrum Disorders. *Journal of Autism and Developmental Disorders, 46*(8), 2641-2653. [Springer (paywalled)](https://link.springer.com/article/10.1007/s10803-015-2381-1)
+- Katz, J. & Selkirk, E. (2011). Contrastive Focus vs. Discourse-New: Evidence from Phonetic Prominence in English. *Language, 87*(4), 771-816. [Cambridge Core (paywalled)](https://www.cambridge.org/core/journals/language/article/abs/contrastive-focus-vs-discoursenew-evidence-from-phonetic-prominence-in-english/D6D4AC72DC319DDFFEB642CED6D774AC)
+- Zimmermann, M. (2016). Contrastive Focus. In C. Féry & S. Ishihara (Eds.), *Oxford Handbook of Information Structure*. [Amazon](https://www.amazon.com/Oxford-Handbook-Information-Structure-Handbooks/dp/0199642672)
 - [How Stress Changes Meaning: "I never said she stole my money"](https://medium.com/@TheBSofE/i-never-said-she-stole-my-money-b958eab1c928)
 - [Contrastive Stress in English](https://owlcation.com/academia/stress-and-intonation-in-english-contrastive-stress)
 - [Evoking Context with Contrastive Stress: Effects on Pragmatic Enrichment (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4659916/)

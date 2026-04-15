@@ -424,37 +424,37 @@ Brown and Levinson remains genuinely useful. Nothing in this file is meant to di
 
 ## Sources
 
-Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge: Cambridge University Press.
+Brown, P., & Levinson, S. C. (1987). *Politeness: Some universals in language usage*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 
 Crompton, C. J., Ropar, D., Evans-Williams, C. V. M., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. https://doi.org/10.1177/1362361320919286
 
-Culpeper, J. (2011). *Impoliteness: Using language to cause offence* (Studies in Interactional Sociolinguistics 28). Cambridge: Cambridge University Press.
+Culpeper, J. (2011). *Impoliteness: Using language to cause offence* (Studies in Interactional Sociolinguistics 28). Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Impoliteness-Language-Interactional-Sociolinguistics-Culpeper/dp/0521689775)
 
-Eelen, G. (2001). *A critique of politeness theories*. Manchester: St. Jerome Publishing.
+Eelen, G. (2001). *A critique of politeness theories*. Manchester: St. Jerome Publishing. [Amazon](https://www.amazon.com/Critique-Politeness-Theories-Gino-Eelen/dp/1900650401)
 
-Grice, H. P. (1975). Logic and conversation. In P. Cole & J. L. Morgan (Eds.), *Syntax and semantics, Vol. 3: Speech acts* (pp. 41-58). New York: Academic Press.
+Grice, H. P. (1975). Logic and conversation. In P. Cole & J. L. Morgan (Eds.), *Syntax and semantics, Vol. 3: Speech acts* (pp. 41-58). New York: Academic Press. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
 
-Haugh, M. (2007). The discursive challenge to politeness research: An interactional alternative. *Journal of Politeness Research*, 3(2), 295-317.
+Haugh, M. (2007). The discursive challenge to politeness research: An interactional alternative. *Journal of Politeness Research*, 3(2), 295-317. [De Gruyter (paywalled)](https://doi.org/10.1515/PR.2007.013)
 
-Leech, G. N. (1983). *Principles of pragmatics*. London: Longman.
+Leech, G. N. (1983). *Principles of pragmatics*. London: Longman. [Amazon](https://www.amazon.com/Principles-Pragmatics-Longman-Linguistics-Library/dp/0582551102)
 
-Leech, G. N. (2014). *The pragmatics of politeness* (Oxford Studies in Sociolinguistics). Oxford: Oxford University Press.
+Leech, G. N. (2014). *The pragmatics of politeness* (Oxford Studies in Sociolinguistics). Oxford: Oxford University Press. [Amazon](https://www.amazon.com/Pragmatics-Politeness-Oxford-Studies-Sociolinguistics/dp/0195341384)
 
 Locher, M. A., & Watts, R. J. (2005). Politeness theory and relational work. *Journal of Politeness Research*, 1(1), 9-33. https://doi.org/10.1515/jplr.2005.1.1.9
 
-Mills, S. (2003). *Gender and politeness*. Cambridge: Cambridge University Press.
+Mills, S. (2003). *Gender and politeness*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Gender-Politeness-Studies-Interactional-Sociolinguistics/dp/0521009197)
 
-Mills, S. (2011). Discursive approaches to politeness and impoliteness. In Linguistic Politeness Research Group (Eds.), *Discursive approaches to politeness* (pp. 19-56). Berlin: De Gruyter Mouton.
+Mills, S. (2011). Discursive approaches to politeness and impoliteness. In Linguistic Politeness Research Group (Eds.), *Discursive approaches to politeness* (pp. 19-56). Berlin: De Gruyter Mouton. [De Gruyter](https://doi.org/10.1515/9783110238679.19)
 
 Milton, D. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887. https://doi.org/10.1080/09687599.2012.710008
 
-Spencer-Oatey, H. (Ed.). (2000). *Culturally speaking: Managing rapport through talk across cultures*. London: Continuum.
+Spencer-Oatey, H. (Ed.). (2000). *Culturally speaking: Managing rapport through talk across cultures*. London: Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Managing-Rapport-Through/dp/0304704369)
 
-Spencer-Oatey, H. (Ed.). (2008). *Culturally speaking: Culture, communication and politeness theory* (2nd ed.). London: Continuum.
+Spencer-Oatey, H. (Ed.). (2008). *Culturally speaking: Culture, communication and politeness theory* (2nd ed.). London: Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Second-Communication-Politeness/dp/1847063616)
 
-Spencer-Oatey, H. (2008). Face, (im)politeness and rapport. In H. Spencer-Oatey (Ed.), *Culturally speaking: Culture, communication and politeness theory* (2nd ed., pp. 11-47). London: Continuum.
+Spencer-Oatey, H. (2008). Face, (im)politeness and rapport. In H. Spencer-Oatey (Ed.), *Culturally speaking: Culture, communication and politeness theory* (2nd ed., pp. 11-47). London: Continuum. [Amazon](https://www.amazon.com/Culturally-Speaking-Second-Communication-Politeness/dp/1847063616)
 
-Watts, R. J. (2003). *Politeness* (Key Topics in Sociolinguistics). Cambridge: Cambridge University Press.
+Watts, R. J. (2003). *Politeness* (Key Topics in Sociolinguistics). Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Key-Topics-Sociolinguistics/dp/0521794064)
 
 ---
 

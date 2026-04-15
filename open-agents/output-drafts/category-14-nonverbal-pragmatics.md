@@ -320,14 +320,14 @@ When you can't attend to all channels:
 ## Key Sources
 
 ### Foundational Texts
-- McNeill, D. (1992). *Hand and Mind: What Gestures Reveal About Thought*. University of Chicago Press.
-- Hall, E.T. (1966). *The Hidden Dimension*. Doubleday.
-- Ekman, P. (1999). "Basic Emotions." In Dalgleish & Power (eds.), *Handbook of Cognition and Emotion*.
-- Grice, M. et al. (2023). "Linguistic Prosody in ASD -- An Overview." *Language and Linguistics Compass*.
+- McNeill, D. (1992). *Hand and Mind: What Gestures Reveal About Thought*. University of Chicago Press. [Amazon](https://www.amazon.com/Hand-Mind-What-Gestures-Reveal/dp/0226561321)
+- Hall, E.T. (1966). *The Hidden Dimension*. Doubleday. [Amazon](https://www.amazon.com/Hidden-Dimension-Edward-T-Hall/dp/0385084765)
+- Ekman, P. (1999). "Basic Emotions." In Dalgleish & Power (eds.), *Handbook of Cognition and Emotion*. [Wiley (paywalled)](https://doi.org/10.1002/0470013494.ch3)
+- Grice, M. et al. (2023). "Linguistic Prosody in ASD -- An Overview." *Language and Linguistics Compass*. [Wiley](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/lnc3.12498)
 
 ### Autism Research
-- Sasson, N.J. et al. (2017). "Neurotypical Peers Are Less Willing to Interact with Autistic Individuals." *Scientific Reports*.
-- Cook, R. et al. (2013). "Alexithymia, Not Autism, Predicts Poor Recognition of Emotional Facial Expressions." *Psychological Science*.
-- Keating, C.T. & Cook, J.L. (2021). "Facial Expression Production and Recognition in Autism." *Autism Research*.
-- Wehrle, S. et al. (2023). "Prosodic Speech Differences in ASD." *J Communication Disorders*.
-- Radford, S. et al. (2025). "Too Much Going On." *PLOS ONE*.
+- Sasson, N.J. et al. (2017). "Neurotypical Peers Are Less Willing to Interact with Autistic Individuals." *Scientific Reports*. [Nature](https://www.nature.com/articles/srep40700)
+- Cook, R. et al. (2013). "Alexithymia, Not Autism, Predicts Poor Recognition of Emotional Facial Expressions." *Psychological Science*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/23528789/)
+- Keating, C.T. & Cook, J.L. (2021). "Facial Expression Production and Recognition in Autism." *Autism Research*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/33526234/)
+- Wehrle, S. et al. (2023). "Prosodic Speech Differences in ASD." *J Communication Disorders*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10395513/)
+- Radford, H. et al. (2025). "Too Much Going On." *PLOS ONE*. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC12250432/)

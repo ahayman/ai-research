@@ -191,7 +191,7 @@ Hierarchies are not static:
 
 ## Key Sources
 
-- Cheng, J.T. et al. (2013). "Two Ways to the Top." *J Personality and Social Psychology*.
-- Ogawa, S. et al. (2019). "Atypical Social Rank Recognition in ASD." *Scientific Reports*.
-- Morand, D.A. (1996). "Dominance, Deference, and Egalitarianism." *Organization Science*.
-- Milton, D. (2012). "The Double Empathy Problem." *Disability & Society*.
+- Cheng, J.T. et al. (2013). "Two Ways to the Top: Evidence That Dominance and Prestige Are Distinct Yet Viable Avenues to Social Rank and Influence." *J Personality and Social Psychology*, 104(1), 103-125. [PubMed](https://pubmed.ncbi.nlm.nih.gov/23163747/)
+- Ogawa, S. et al. (2019). "Atypical Social Rank Recognition in ASD." *Scientific Reports*, 9, 15657. [Nature](https://www.nature.com/articles/s41598-019-52211-8)
+- Morand, D.A. (1996). "Dominance, Deference, and Egalitarianism in Organizational Interaction." *Organization Science*, 7(5), 544-556. [INFORMS (paywalled)](https://pubsonline.informs.org/doi/10.1287/orsc.7.5.544)
+- Milton, D. (2012). "On the Ontological Status of Autism: The 'Double Empathy Problem.'" *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)

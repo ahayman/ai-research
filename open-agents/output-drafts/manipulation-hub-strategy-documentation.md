@@ -370,6 +370,17 @@ Documentation is the kind of activity that can feel "wrong" to someone who has b
 
 ## 11. Citation Register
 
+**Verified source links (safety-critical citations used on this page):**
+- Lim, Young & Brewer (2022). — [PMC8813809](https://pmc.ncbi.nlm.nih.gov/articles/PMC8813809/)
+- Sweet (2019). — [DOI](https://doi.org/10.1177/0003122419874843) [paywalled]
+- Stark (2007). — [Amazon](https://www.amazon.com/Coercive-Control-Personal-Interpersonal-Violence/dp/0195384040)
+- Campbell et al. (2003). — [PMC1447915](https://pmc.ncbi.nlm.nih.gov/articles/PMC1447915/)
+- Sullivan & Bybee (1999). — [PubMed 10028208](https://pubmed.ncbi.nlm.nih.gov/10028208/) [paywalled]
+- Kinnaird et al. (2019). — [PMC6331035](https://pmc.ncbi.nlm.nih.gov/articles/PMC6331035/)
+- Hull et al. (2017). — [PMC5509825](https://pmc.ncbi.nlm.nih.gov/articles/PMC5509825/)
+- Ullman (2010). — [Amazon](https://www.amazon.com/Talking-About-Sexual-Assault-Psychology/dp/1433808072)
+- Episodic recollection in autism. — [PMC6424931](https://pmc.ncbi.nlm.nih.gov/articles/PMC6424931/)
+
 **Episodic memory differences in autism:**
 - Multiple studies reviewed in the foundational autism research document, including Cooper & Simons on autism and episodic memory; see [manipulation-foundation-research-autism-application.md](manipulation-foundation-research-autism-application.md) for the full review. The general finding of relative episodic memory differences with relatively intact semantic memory is [VALIDATED] across multiple studies.
 

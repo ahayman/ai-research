@@ -545,7 +545,7 @@ Austin himself was dissatisfied with this taxonomy and considered it tentative. 
 ## 9. Sources
 
 ### Primary Source
-- Austin, J.L. (1962). *How to Do Things with Words*. The William James Lectures delivered at Harvard University in 1955. Edited by J.O. Urmson. Oxford: Clarendon Press. Second edition (1975) edited by J.O. Urmson and Marina Sbisa.
+- Austin, J.L. (1962). *How to Do Things with Words*. The William James Lectures delivered at Harvard University in 1955. Edited by J.O. Urmson. Oxford: Clarendon Press. Second edition (1975) edited by J.O. Urmson and Marina Sbisa. [Amazon](https://www.amazon.com/How-Things-Words-William-Lectures/dp/0674411528)
 
 ### Scholarly References Used in This Research
 - [Speech Acts -- Stanford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/speech-acts/)

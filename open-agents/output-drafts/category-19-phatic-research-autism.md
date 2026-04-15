@@ -29,7 +29,7 @@ The challenge is bidirectional:
 - **Giving insincere answers**: Responding "Fine, thanks!" when you're actually struggling feels like deception.
 - **Receiving insincere responses**: When someone says "Great!" but their body language contradicts it, the mixed signal is deeply confusing.
 
-From a care ethics perspective, researchers have noted the tension between the autistic commitment to truthfulness (aligned with Kantian ethics) and the social function of white lies in maintaining harmony (Shuster, "Living the Categorical Imperative: Autistic Perspectives on Lying and Truth Telling," *Journal of Autism and Developmental Disorders*, 2012).
+From a care ethics perspective, researchers have noted the tension between the autistic commitment to truthfulness (aligned with Kantian ethics) and the social function of white lies in maintaining harmony (Jaarsma, Gelhaus & Welin, "Living the Categorical Imperative: Autistic Perspectives on Lying and Truth Telling," *Medicine, Health Care and Philosophy*, 15(3), 271-277, 2012).
 
 The reframe that addresses this: phatic exchanges are not lies. "How are you?" / "Fine, thanks" is not a factual assertion about one's medical or emotional state -- it is a *protocol handshake* that means "I acknowledge your presence and the relationship between us is intact." Understood this way, it is no more dishonest than saying "Hello" -- which is also not a propositional statement.
 
@@ -70,7 +70,7 @@ Small talk requires rapid reciprocal exchange -- a volley of short turns that mu
 - Appropriate response calibration
 - Monitoring for conversation-ending signals
 
-Research on turn-timing in autistic adults found that while autistic individuals *prefer* the typical short-gap timing of conversation, they don't achieve it instantly -- there is a processing latency that can make the rapid back-and-forth of small talk particularly demanding (Ochi et al., "Turn-timing in conversations between autistic adults," *PLOS One*, 2023).
+Research on turn-timing in autistic adults found that while autistic individuals *prefer* the typical short-gap timing of conversation, they don't achieve it instantly -- there is a processing latency that can make the rapid back-and-forth of small talk particularly demanding (Wehrle, Cangemi, Janz, Vogeley & Grice, "Turn-timing in conversations between autistic adults," *PLOS One*, 2023).
 
 ---
 
@@ -622,13 +622,13 @@ The most balanced framing acknowledges both sides:
 - Silver, K. & Parsons, S. (2022). "Perspectives of autistic adults on the strategies that help or hinder successful conversations." *Autism & Developmental Language Impairments*, 7. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620675/)
 - Sutherland, H.E.A. & Crompton, C.J. et al. (2024). "'A Difference in Typical Values': Autistic Perspectives on Autistic Social Communication." *Scandinavian Journal of Disability Research*. [SJDR](https://sjdr.se/articles/10.16993/sjdr.1184)
 - Grace, K., Remington, A., Lloyd-Evans, B., Davies, J., & Crane, L. (2022). "Loneliness in autistic adults: A systematic review." *Autism*, 26(8). [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9597154/)
-- Ochi, K. et al. (2023). "Turn-timing in conversations between autistic adults." *PLOS One*. [PLOS](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0284029)
-- Shuster, E. (2012). "Living the categorical imperative: autistic perspectives on lying and truth telling." *Journal of Autism and Developmental Disorders*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/22065242/)
-- Milton, D.E.M. (2012). "On the ontological status of autism: the 'double empathy problem'." *Disability & Society*, 27(6), 883-887.
-- Dunbar, R.I.M. (1996). *Grooming, Gossip, and the Evolution of Language*. Harvard University Press.
-- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In Ogden, C.K. & Richards, I.A. *The Meaning of Meaning*.
-- Jakobson, R. (1960). "Closing Statement: Linguistics and Poetics." In Sebeok, T. (ed.) *Style in Language*. MIT Press.
-- Camerer, C. & Weber, R. "Small Talk as a Contracting Device: Trust, Cooperative Norms, and Changing Equilibria." MIT Sloan Working Paper.
+- Wehrle, S., Cangemi, F., Janz, A., Vogeley, K., & Grice, M. (2023). "Turn-timing in conversations between autistic adults." *PLOS One*. [PLOS](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0284029)
+- Jaarsma, P., Gelhaus, P., & Welin, S. (2012). "Living the categorical imperative: autistic perspectives on lying and truth telling." *Medicine, Health Care and Philosophy*, 15(3), 271-277. [PubMed](https://pubmed.ncbi.nlm.nih.gov/22065242/)
+- Milton, D.E.M. (2012). "On the ontological status of autism: the 'double empathy problem'." *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
+- Dunbar, R.I.M. (1996). *Grooming, Gossip, and the Evolution of Language*. Harvard University Press. [Amazon](https://www.amazon.com/Grooming-Gossip-Evolution-Language-Robin/dp/0674363361)
+- Malinowski, B. (1923). "The Problem of Meaning in Primitive Languages." In Ogden, C.K. & Richards, I.A. *The Meaning of Meaning*. [Amazon](https://www.amazon.com/Meaning-C-K-Ogden/dp/0156584468)
+- Jakobson, R. (1960). "Closing Statement: Linguistics and Poetics." In Sebeok, T. (ed.) *Style in Language*. MIT Press. [Amazon](https://www.amazon.com/Style-Language-Thomas-Sebeok/dp/0262690128)
+- Camerer, C. & Weber, R. "Small Talk as a Contracting Device: Trust, Cooperative Norms, and Changing Equilibria." MIT Sloan Working Paper. [MIT PDF](https://web.mit.edu/bwerner/www/papers/smalltalk.pdf) [CITATION UNVERIFIED: authorship may be Cashman, Maciejovsky & Wernerfelt]
 
 ### Autistic Community and Advocacy Sources
 - [ASDNext: Deconstructing Small Talk - Phatic Communication](https://asdnext.org/blog/deconstructing-small-talk-phatic-communication/)

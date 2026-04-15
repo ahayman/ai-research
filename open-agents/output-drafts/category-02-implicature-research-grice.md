@@ -572,8 +572,8 @@ The maxims are particularly useful as an explicit framework precisely because th
 ## Source Bibliography
 
 ### Primary Sources
-- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (Eds.), *Syntax and Semantics, Vol. 3: Speech Acts* (pp. 41--58). New York: Academic Press.
-- Grice, H.P. (1989). *Studies in the Way of Words*. Cambridge, MA: Harvard University Press.
+- Grice, H.P. (1975). "Logic and Conversation." In P. Cole & J. Morgan (Eds.), *Syntax and Semantics, Vol. 3: Speech Acts* (pp. 41--58). New York: Academic Press. [Amazon (volume)](https://www.amazon.com/Syntax-Semantics-Speech-Acts-Vol/dp/0127854231)
+- Grice, H.P. (1989). *Studies in the Way of Words*. Cambridge, MA: Harvard University Press. [Amazon](https://www.amazon.com/Studies-Way-Words-Paul-Grice/dp/0674852710)
 
 ### Secondary Sources and References
 - Stanford Encyclopedia of Philosophy. "Paul Grice." https://plato.stanford.edu/entries/grice/
@@ -595,11 +595,11 @@ The maxims are particularly useful as an explicit framework precisely because th
 - PMC. "Understanding Violations of Gricean Maxims in Preschoolers and Adults." https://pmc.ncbi.nlm.nih.gov/articles/PMC4488609/
 
 ### Neo-Gricean and Post-Gricean Sources
-- Horn, L.R. (1984). "Toward a New Taxonomy for Pragmatic Inference: Q-Based and R-Based Implicature." In D. Schiffrin (Ed.), *Meaning, Form, and Use in Context* (pp. 11--42). Washington, DC: Georgetown University Press.
-- Levinson, S.C. (2000). *Presumptive Meanings: The Theory of Generalized Conversational Implicature*. Cambridge, MA: MIT Press.
-- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell.
-- Keenan, E.O. (1976). "The Universality of Conversational Postulates." *Language in Society* 5(1): 67--80.
-- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press.
+- Horn, L.R. (1984). "Toward a New Taxonomy for Pragmatic Inference: Q-Based and R-Based Implicature." In D. Schiffrin (Ed.), *Meaning, Form, and Use in Context* (pp. 11--42). Washington, DC: Georgetown University Press. [Amazon (volume)](https://www.amazon.com/Meaning-Form-Use-Context-Linguistic/dp/0878403949)
+- Levinson, S.C. (2000). *Presumptive Meanings: The Theory of Generalized Conversational Implicature*. Cambridge, MA: MIT Press. [Amazon](https://www.amazon.com/Presumptive-Meanings-Generalized-Conversational-Implicature/dp/0262621304)
+- Sperber, D. & Wilson, D. (1986/1995). *Relevance: Communication and Cognition*. Oxford: Blackwell. [Amazon](https://www.amazon.com/Relevance-Communication-Cognition-Dan-Sperber/dp/0631198784)
+- Keenan, E.O. (1976). "The Universality of Conversational Postulates." *Language in Society* 5(1): 67--80. [Cambridge (paywalled)](https://doi.org/10.1017/S0047404500006850)
+- Brown, P. & Levinson, S.C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge: Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Cambridge-Sociolinguistics/dp/0521313554)
 
 ### Original Text Access
 - Grice, H.P. "Logic and Conversation" (PDF). https://projects.illc.uva.nl/inquisitivesemantics/assets/files/papers/Grice1975.pdf
