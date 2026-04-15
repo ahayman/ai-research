@@ -717,7 +717,7 @@ This category is **cross-cutting** — it modulates the deployment of nearly eve
 - [Power Asymmetry and Embarrassment in Shared Decision-Making.](https://pmc.ncbi.nlm.nih.gov/articles/PMC11892210/) *PMC*, 2025.
 
 ### Legal and Institutional Communication
-- Nyangeri, E.A. (2024). ["Language, Power and Control in Courtroom Discourse."](https://www.researchgate.net/publication/332316273_Language_power_and_control_in_courtroom_discourse) *Athens Journal of Law*.
+- Nyangeri, A., Omboga, J. Z. & Habwe, J. (2024). "The Pragmatic Impact of Grammatical Structures on Interpretations in the Kisii Law Courts." *Athens Journal of Law*, 10(4), article 22. [Athens Journals PDF](https://www.athensjournals.gr/law/2024-10-4-22-Nyangeri.pdf)
 - [The Pragmatics of Powerlessness in Police Interrogation.](https://openyls.law.yale.edu/server/api/core/bitstreams/65ecea7a-8ec7-48d5-b9fa-f2382df7babf/content) Yale Law School.
 
 ### Self-Promotion and the Hierarchy Paradox

@@ -689,7 +689,7 @@ Readers should hold the claims here at the level of confidence appropriate to ea
 - Brown, P., & Levinson, S. C. (1987). *Politeness: Some Universals in Language Usage*. Cambridge University Press. [Amazon](https://www.amazon.com/Politeness-Universals-Language-Studies-Interactional/dp/0521313554)
 - Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
 - Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1993.tb01304.x)
-- Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm*. Hanshin. [CITATION UNVERIFIED — Korean volume, limited online access]
+- Fillmore, C. J. (1982). Frame semantics. In Linguistic Society of Korea (Ed.), *Linguistics in the Morning Calm* (pp. 111-137). Hanshin.
 - Goffman, E. (1974). *Frame Analysis*. Harper & Row. [Amazon](https://www.amazon.com/Frame-Analysis-Essay-Organization-Experience/dp/0930350910)
 - Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power. *American Journal of Sociology*, 95(1), 1-37. [University of Chicago (paywalled)](https://doi.org/10.1086/229213)
 - Iyengar, S. (1991). *Is Anyone Responsible? How Television Frames Political Issues*. University of Chicago Press. [Amazon](https://www.amazon.com/Anyone-Responsible-Television-Political-American/dp/0226388557)

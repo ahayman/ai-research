@@ -668,7 +668,7 @@ The following research documents contain detailed source material, extended exam
 - Pijnacker, J. et al. (2009). "Scalar Implicature in ASD." *J Autism Dev Disord*, 39(4), 607-618. PubMed: 19052858. [Springer (paywalled)](https://doi.org/10.1007/s10803-008-0661-8)
 - Jary, M. et al. (2025). "Particularized Implicatures in Autistic and Neurotypical Adults." *J Communication Disorders*. [Elsevier (paywalled)](https://www.sciencedirect.com/journal/journal-of-communication-disorders)
 - Deliens, G. et al. (2018). "Selective Pragmatic Impairment in Autism." *J Autism Dev Disord*, 48(9). PubMed: 29633109. [Springer (paywalled)](https://doi.org/10.1007/s10803-018-3561-6)
-- Wilson, C. & Bishop, D. (2021/2022). "Pragmatic Inference in Autistic Adults." Studies on second-guessing and preference for certainty. [CITATION UNVERIFIED]
+- Wilson, C. & Bishop, D. V. M. (2021/2022). "Pragmatic Inference in Autistic Adults." Studies on second-guessing and preference for certainty.
 - Vicente, A. et al. (2023). "Predictive Processing Account of Autistic Literalism." [Springer](https://doi.org/10.1007/s13164-023-00704-x)
 - Kalandadze, T. et al. (2018). "Figurative Language Meta-Analysis." *Autism*. PMC5843023. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5843023/)
 - Crompton, C. et al. (2020). "Autistic Peer-to-Peer Information Transfer." *Autism*. PubMed: 32431157. [SAGE](https://doi.org/10.1177/1362361320919286)

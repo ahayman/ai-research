@@ -117,7 +117,7 @@ Chapman and Carel (2022) extend this analysis, arguing that autistic thriving ha
 - Catala, A., Faucher, L. & Poirier, P. (2021). Autism, epistemic injustice, and epistemic disablement: a relational account of epistemic agency. *Synthese*, 199, 9013-9039.
 - Dinishak, J. (2021). Autistic autobiography and hermeneutical injustice. *Metaphilosophy*, 52, 556-569.
 - Chapman, R. & Carel, H. (2022). Neurodiversity, epistemic injustice, and the good human life. *Journal of Social Philosophy*, 53(4), 614-631.
-- Uisma, A.-M., Virkki, T. & Ylilahti, M. (2026). Misunderstood, minimised, misrepresented: Autistic young adults' experiences of epistemic injustices in healthcare interactions around autism. *Sociology of Health & Illness*.
+- Uisma, A.-M., Virkki, T. & Ylilahti, M. (2026). Misunderstood, minimised, misrepresented: Autistic young adults' experiences of epistemic injustices in healthcare interactions around autism. *Sociology of Health & Illness*. [PMC12665047](https://pmc.ncbi.nlm.nih.gov/articles/PMC12665047/) | [DOI 10.1111/1467-9566.70124](https://doi.org/10.1111/1467-9566.70124)
 - Nesic, J. (2023). Affording autistic persons epistemic justice. *PhilArchive*.
 
 ---
@@ -396,7 +396,7 @@ Shaw et al. (2024) identify a **"triple empathy problem"** in healthcare: breakd
 - PMC. Diagnostic overshadowing: An evolutionary concept analysis (2022).
 - Shaw, S. C. K. et al. (2024). Barriers to healthcare and a 'triple empathy problem' may lead to adverse outcomes for autistic adults. *Autism*, 28(7).
 - PMC. Barriers to healthcare and self-reported adverse outcomes for autistic adults (2022).
-- Uisma, A.-M. et al. (2026). Misunderstood, minimised, misrepresented. *Sociology of Health & Illness*.
+- Uisma, A.-M., Virkki, T. & Ylilahti, M. (2026). Misunderstood, minimised, misrepresented. *Sociology of Health & Illness*. [PMC12665047](https://pmc.ncbi.nlm.nih.gov/articles/PMC12665047/) | [DOI 10.1111/1467-9566.70124](https://doi.org/10.1111/1467-9566.70124)
 
 #### Workplace
 
@@ -635,7 +635,7 @@ The goal is not to make autistic people paranoid or fearful. The goal is to make
 - Slavny-Cross, R. et al. (2022). Autism and the criminal justice system: An analysis of 93 cases. *Autism Research*. [PMC9314022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9314022/)
 - Stark, C. A. (2019). Gaslighting, misogyny, and psychological oppression. *The Monist*, 102(2), 221-235. [Oxford Academic (paywalled)](https://doi.org/10.1093/monist/onz007)
 - Sweet, P. L. (2019). The sociology of gaslighting. *American Sociological Review*, 84(5), 851-875. [SAGE (paywalled)](https://doi.org/10.1177/0003122419874843)
-- Uisma, A.-M. et al. (2026). Misunderstood, minimised, misrepresented. *Sociology of Health & Illness*. [CITATION UNVERIFIED — forthcoming]
+- Uisma, A.-M., Virkki, T. & Ylilahti, M. (2026). Misunderstood, minimised, misrepresented: Autistic young adults' experiences of epistemic injustices in healthcare interactions around autism. *Sociology of Health & Illness*. [PMC12665047](https://pmc.ncbi.nlm.nih.gov/articles/PMC12665047/) | [DOI 10.1111/1467-9566.70124](https://doi.org/10.1111/1467-9566.70124)
 
 ### Systematic Reviews and Meta-Analyses
 - Prevalence of victimisation in autistic individuals: A systematic review and meta-analysis. [PMC10486169](https://pmc.ncbi.nlm.nih.gov/articles/PMC10486169/)

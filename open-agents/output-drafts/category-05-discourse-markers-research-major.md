@@ -932,7 +932,7 @@ These three markers share roots in temporal reference but have developed signifi
 
 - **Schiffrin (1987)**: Chapter 8, "Temporal adverbs: now and then" in *Discourse Markers*
 - **Fraser (1990)**: General analysis of discourse marker function
-- **Bestgen & Vonk (1995)**: "The Role of Temporal Segmentation Markers in Discourse Processing"
+- **Bestgen & Vonk (1995)**: "The Role of Temporal Segmentation Markers in Discourse Processing." *Discourse Processes*, 19(3), 385-406. [DOI](https://doi.org/10.1080/01638539509544924)
 
 ### "NOW" -- Functions
 
@@ -1203,14 +1203,14 @@ Research findings relevant to autistic individuals:
 - Pomerantz, A. (1984). "Agreeing and disagreeing with assessments." In J.M. Atkinson & J. Heritage (Eds.), *Structures of Social Action*, 57-101. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
 - Bolden, G.B. (2009). "Implementing incipient actions: The discourse marker 'so' in English conversation." *Journal of Pragmatics*, 41, 974-998. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2008.10.004)
 - Bolden, G.B. (2008). "'So What's Up?': Using the discourse marker so to launch conversational business." *Research on Language and Social Interaction*, 41(3). [Taylor & Francis (paywalled)](https://doi.org/10.1080/08351810802237909)
-- Jucker, A. (1993). "The discourse marker well: A relevance-theoretical account." *Journal of Pragmatics*, 19(5), 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90004-9)
+- Jucker, A. (1993). "The discourse marker well: A relevance-theoretical account." *Journal of Pragmatics*, 19(5), 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166%2893%2990004-9)
 - Tagliamonte, S. & D'Arcy, A. (2004). "He's like, she's like: The quotative system in Canadian youth." *Journal of Sociolinguistics*, 8(4), 493-514. [Wiley (paywalled)](https://doi.org/10.1111/j.1467-9841.2004.00271.x)
 - Beach, W. (1993). "Transitional regularities for casual 'Okay' usages." *Journal of Pragmatics*, 19, 325-352. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90092-4)
 - Ferrara, K. (1997). "Form and function of the discourse marker anyway." *Linguistics*, 35, 343-378. [De Gruyter (paywalled)](https://doi.org/10.1515/ling.1997.35.2.343)
 - Clift, R. (2001). "Meaning in interaction: The case of actually." *Language*, 77(2), 245-291. [JSTOR (paywalled)](https://doi.org/10.1353/lan.2001.0074)
 - Aijmer, K. & Simon-Vandenbergen, A.-M. (2004). "A model and a methodology for the study of pragmatic markers: the semantic field of expectation." *Journal of Pragmatics*, 36(10), 1781-1805. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2004.05.005)
 - Jones, R., Zane, E.R., & Grossman, R.B. (2022). "Like, it's important: The frequency and use of the discourse marker like in older autistic children." *Autism & Developmental Language Impairments*, 7. [PMC9620696](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/)
-- Lakoff, R. (1973). "Questionable answers and answerable questions." In B.B. Kachru et al. (Eds.), *Issues in Linguistics*. [CITATION UNVERIFIED]
+- Lakoff, R. (1973). "Questionable answers and answerable questions." In B.B. Kachru, R.B. Lees, Y. Malkiel, A. Pietrangeli, & S. Saporta (Eds.), *Issues in Linguistics: Papers in Honor of Henry and Renée Kahane*. University of Illinois Press.
 - Lee, D. (1987). "Categories in the description of just." *Lingua*, 73(1-2), 43-65. [ScienceDirect (paywalled)](https://doi.org/10.1016/0024-3841(87)90015-4)
 
 ### Online Resources

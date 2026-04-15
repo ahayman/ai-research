@@ -390,7 +390,7 @@ Recovery from tone policing in adulthood is in part recovery from childhood tone
 **Autistic prosody differences:**
 - Shriberg, L. D., Paul, R., McSweeny, J. L., Klin, A., Cohen, D. J., & Volkmar, F. R. (2001). "Speech and prosody characteristics of adolescents and adults with high-functioning autism and Asperger syndrome." *Journal of Speech, Language, and Hearing Research* 44(5): 1097–1115.
 - Diehl, J. J., Watson, D., Bennetto, L., McDonough, J., & Gunlogson, C. (2009). "An acoustic analysis of prosody in high-functioning autism." *Applied Psycholinguistics* 30(3): 385–404.
-- Patel, S. P., et al. (2020). Reviews of acoustic and prosodic features in autistic speech.
+- Patel, S. P., et al. (2020). "An Acoustic Characterization of Prosodic Differences in Autism Spectrum Disorder and First-Degree Relatives." *Journal of Autism and Developmental Disorders*. [PMC7374471](https://pmc.ncbi.nlm.nih.gov/articles/PMC7374471/)
 
 **The credibility discount:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.

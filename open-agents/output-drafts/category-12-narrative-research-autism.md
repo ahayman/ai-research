@@ -658,8 +658,8 @@ Subtle differences in narrative ability have been documented among parents and s
 - Coburn, K. L., & Williams, D. L. (2023). Quantitative analysis of narrative discourse by autistic adults of underrepresented genders. *Autism in Adulthood, 5*(2). [Mary Ann Liebert](https://www.liebertpub.com/doi/10.1089/aut.2022.0014)
 - Diehl, J. J., Bennetto, L., & Young, E. C. (2006). Story recall and narrative coherence of high-functioning children with autism spectrum disorders. *Journal of Abnormal Child Psychology, 34*, 83-98. [Springer (paywalled)](https://doi.org/10.1007/s10802-005-9003-x)
 - Geelhand, P., Papastamou, F., Deliens, G., & Kissine, M. (2020). Narrative production in autistic adults: A systematic analysis of the microstructure, macrostructure and internal state language. *Journal of Pragmatics, 164*, 57-81. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2020.04.014)
-- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Narrative abilities of autistic and non-autistic adolescents: The role of mentalising and executive function. *Autism Research*. [Wiley](https://onlinelibrary.wiley.com/journal/19393806)
-- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Everyday narrative skills in autistic adolescents. *Child Language Teaching and Therapy*. [SAGE](https://journals.sagepub.com/home/clt)
+- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Narrative abilities of autistic and non-autistic adolescents: The role of mentalising and executive function. *Autism Research*. [DOI](https://onlinelibrary.wiley.com/doi/10.1002/aur.3272)
+- Harvey, A., Spicer-Cain, H., Botting, N., & Henry, L. (2025). Everyday narrative skills in autistic adolescents. *Child Language Teaching and Therapy*. [DOI](https://journals.sagepub.com/doi/10.1177/01427237251315253)
 - Hilviu, D., et al. (2023). Can narrative skills improve in autism spectrum disorder? A preliminary study with verbally fluent adolescents receiving the Cognitive Pragmatic Treatment. *Journal of Psycholinguistic Research, 52*, 945-964. [Springer](https://link.springer.com/article/10.1007/s10936-023-09965-0)
 - Losh, M., & Capps, L. (2003). Narrative ability in high-functioning children with autism or Asperger's syndrome. *Journal of Autism and Developmental Disorders, 33*(3), 239-251. [Springer (paywalled)](https://doi.org/10.1023/A:1024446215446)
 - Losh, M., & Capps, L. (2006). Understanding of emotional experience in autism. *Development and Psychopathology, 18*(4), 977-997. [Cambridge (paywalled)](https://doi.org/10.1017/S0954579406060508)
@@ -678,8 +678,7 @@ Subtle differences in narrative ability have been documented among parents and s
 - Sasson, N. J., et al. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. *Scientific Reports, 7*, 40700. [Nature](https://www.nature.com/articles/srep40700)
 
 ### Narrative Identity
-- Narrative identity differences in autism. (2025). *Scientific Reports*. [Nature](https://www.nature.com/srep/)
-- Nature and Effects of Autobiographical Memory Issues in Persons with Autism Spectrum Disorders. (2022). *Neuropsychiatric Disease and Treatment*. [Dove Press](https://www.dovepress.com/neuropsychiatric-disease-and-treatment-journal)
+- Westby, C. (2022). Nature and Effects of Autobiographical Memory Issues in Persons with Autism Spectrum Disorders. *Neuropsychiatric Disease and Treatment*, 18, 2279-2293. [PMC9586886](https://pmc.ncbi.nlm.nih.gov/articles/PMC9586886/) | [DOI](https://doi.org/10.2147/NDT.S332521)
 
 ### Intervention Research
 - Effects of an adapted story grammar intervention on the listening comprehension of children with autism. (2019). *Research in Autism Spectrum Disorders*. [ScienceDirect (paywalled)](https://www.sciencedirect.com/journal/research-in-autism-spectrum-disorders)

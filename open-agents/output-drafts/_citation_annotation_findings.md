@@ -19,6 +19,24 @@ Final totals:
 - **907 high / 64 medium / 11 low** confidence
 - **297 load-bearing / 547 supporting / 138 ornamental**
 
+**Pending-citation remediation pass — COMPLETE 2026-04-15**:
+- All ~53 pending items from the annotation pass processed across 34 additional hub files. Log: `_pending_remediation_log.md`.
+- Breakdown: 4 already-resolved skips · 7 URL/flag fixes · 7 named replacements · 13 web-verified major corrections · 7 web-verified soft edits · ~13 verify-only (no change needed) · 4 grey-lit kept as-is · 2 dropped · 0 deferred.
+- **8 NEW author/year misattributions discovered during this pass** (in addition to the 84 already found during Stage 3.5):
+  - Ball 2023 → **Reeves et al. 2023** (*J Family Violence*)
+  - Crompton 2022 PMC9685143 → **Wilson 2022** (*ADLI*) — conversation questionnaire
+  - Cummings 2023 → **Xu, Mao & Du 2023** (*Frontiers in Psychology* 1248557)
+  - Gorman 2018 PMC6395582 → **McGregor & Hadden 2020** (*JADD*) — "um" fillers
+  - Pitt 2023 PMC10476060 → **Smit et al. 2023** (*Psychological Medicine*) — peer support
+  - Rumball 2024 → **Quinton et al. 2024** (*Rev J ASD*) — PTSD review
+  - Marocchini 2026 → **Żuromski & Pacholik-Żuromska 2026** — intercultural cognitive pragmatics
+  - Wharton & Jagoe 2024 → **Wharton & Ifantidou 2024** (handbook chapter)
+- Year drift: Sheley 2024 → 2021.
+- **"Nature 2022 autobiographical memory" stub** resolved as **Westby (2022)** in *Neuropsychiatric Disease and Treatment* (Dove Press). The `nature|2022|neuropsychiatric` key was a naming confusion — "nature" referred to "the nature of X" in the title, not the Nature publisher.
+- **Allely & Cooper 2017** annotator's venue guess was wrong. Real paper is in ***Journal of Law and Medicine*** 25(1):105-123, PMID 29978627 (not *J Forensic Practice* as previously noted in this findings log).
+- **Items needing human review (3)**: (a) Crompton 2022 ref in category-24 may have meant Crompton/Hallett 2020 thematic-analysis paper; (b) Sperber & Wilson 2002 title swap ("Relevance Theory Revisited" → "Pragmatics, Modularity and Mind-reading" *Mind & Language* 17(1-2):3-23) — needs specialist sanity check; (c) Marocchini § 8.2 narrative in category-10-relevance-theory-research-autism.md — renamed citation but narrative may need rephrasing.
+- **Total new misattributions across Stage 3.5 + pending pass**: 84 (original) + 8 (pending) = **92 metadata/attribution errors on real papers, still 0 contradictions and no new fabrications detected.**
+
 **Hub-file remediation pass — COMPLETE 2026-04-15**:
 - **Mechanical pass** (`/tmp/apply_remediation.py`): 51 safe string replacements across 36 hub files (Crompton 2020 pagination across ~36 files, Vicente/Malkin/Sirota/Sutherland DOI typos, Haruvi-Lamdan year, Lampri/Radford/Prosser author initials, Cook-single-author, Hendrickx-single-author, Binns/Depraetere/Fisher/Watson/Zane journal names, Robertson title, etc.).
 - **Agent follow-up pass**: 15 of 17 zero-match fixes applied via grep-then-Edit; 1 already-clean (Katz 2011); 0 still pending. 13 of 17 manual fixes applied (Paul 2005 split, Heasman 2018/2019 swap, Rennie 2016 → Bolden 2009, Harsey 2017/2020 split, Eisner 2024 dropped, Lewy 2020 → Crane 2016, Zalta 2021 variant split, Andrés-Roqueta → Wilson & Bishop, nuance tightening for Wehrle/Gunraj/Sheppard/Edey/Shield). 2 recommendation-only skipped (Carney 2010, Overskeid 2016).

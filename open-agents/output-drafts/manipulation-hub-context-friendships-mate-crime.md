@@ -52,7 +52,7 @@ This section treats the safety dimension first.
 
 **Key sources:**
 - **Thomas, P. (2011).** "'Mate crime': Ridicule, hostility and targeted attacks against disabled people." *Disability & Society* 26(1): 107–111.
-- **Doherty, P. (2015), Quarmby, K., and other UK disability rights advocates** have written extensively on the mate crime pattern.
+- **Quarmby, K. (2011).** *Scapegoat: How We Are Failing Disabled People*. London: Portobello Books. — The canonical book-length treatment of disability hate crime and mate crime in the UK context.
 - **Mencap and Dimensions** (UK learning disability and autism advocacy organizations) have published guidance and case studies on mate crime.
 - **The Ann Craft Trust** specializes in safeguarding adults at risk and has published on disability-targeted exploitation including mate crime.
 - **The Hoskin case** (2006): Steven Hoskin, a 39-year-old man with learning disability in Cornwall, was befriended and then exploited by people who eventually killed him. The case prompted significant reform of UK safeguarding practice and is one of the most-cited mate crime cases.

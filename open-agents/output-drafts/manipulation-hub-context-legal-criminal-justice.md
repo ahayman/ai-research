@@ -204,10 +204,10 @@ A small but growing research literature documents autism in CJS contexts specifi
 - **Brewer, N., Young, R. L., & Barnett, E. (2017).** "Brief Report: Perceptions of credibility of autistic adults."
 - **Allely, C. S.** Series of papers on autism and the criminal justice system, including offending patterns and false confessions.
 - **King, C., & Murphy, G. H. (2014).** "A Systematic Review of People with Autism Spectrum Disorder and the Criminal Justice System." *Journal of Autism and Developmental Disorders.*
-- **Hepworth, D. (2017).** Autism and police custody experiences.
+- **Hepworth, D. (2017).** "A critical review of current police training and policy for autism spectrum disorder." *Journal of Intellectual Disabilities and Offending Behaviour*, 8(4), 212-222. [DOI](https://doi.org/10.1108/JIDOB-06-2017-0011)
 - **Robertson, C. E., & McGillivray, J. A. (2015).** Autism behind bars: a review of the research literature and discussion of key issues.
 - **Crane, L. et al. (2016).** Experiences of autism spectrum disorder and policing in England and Wales. *JADD*, 46(6), 2028-2041.
-- **Allely, C. S., & Cooper, P. (2017).** Predicting and preventing vulnerabilities in autism and CJS.
+- **Allely, C. S., & Cooper, P. (2017).** "Jurors' and judges' evaluation of defendants with autism and the impact on sentencing: A systematic PRISMA review of autism spectrum disorder in the courtroom." *Journal of Law and Medicine*, 25(1), 105-123. [PubMed 29978627](https://pubmed.ncbi.nlm.nih.gov/29978627/)
 
 **What the literature collectively documents:**
 - Autistic adults are overrepresented in some categories of CJS contact relative to their share of the population.
@@ -506,10 +506,10 @@ The standing recovery frame applies: **the goal is not to become a person whose 
 - Brewer, N., Young, R. L., & Barnett, E. (2017). "Brief Report: Perceptions of credibility of adults with autism spectrum disorder by mock jurors." *Journal of Autism and Developmental Disorders.*
 - Allely, C. S. Series of papers on autism and the criminal justice system, including offending patterns and false confessions.
 - King, C., & Murphy, G. H. (2014). "A Systematic Review of People with Autism Spectrum Disorder and the Criminal Justice System." *Journal of Autism and Developmental Disorders* 44(11): 2717–2733.
-- Hepworth, D. (2017). On autism and police custody experiences.
+- Hepworth, D. (2017). "A critical review of current police training and policy for autism spectrum disorder." *Journal of Intellectual Disabilities and Offending Behaviour*, 8(4), 212-222. [DOI](https://doi.org/10.1108/JIDOB-06-2017-0011)
 - Robertson, C. E., & McGillivray, J. A. (2015). Autism behind bars: a review of the research literature and discussion of key issues.
 - Crane, L. et al. (2016). Experiences of autism spectrum disorder and policing in England and Wales: Surveying police and the autism community. *Journal of Autism and Developmental Disorders*, 46(6), 2028-2041.
-- Allely, C. S., & Cooper, P. (2017). "Predicting and preventing vulnerabilities in autism and the criminal justice system."
+- Allely, C. S., & Cooper, P. (2017). "Jurors' and judges' evaluation of defendants with autism and the impact on sentencing: A systematic PRISMA review of autism spectrum disorder in the courtroom." *Journal of Law and Medicine*, 25(1), 105-123. [PubMed 29978627](https://pubmed.ncbi.nlm.nih.gov/29978627/)
 
 **The credibility discount:**
 - Lim, A., Young, R. L., & Brewer, N. (2022). "Autistic Adults May Be Erroneously Perceived as Deceptive and Lacking Credibility." PMC8813809.

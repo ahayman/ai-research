@@ -469,7 +469,6 @@ If a therapist or recovery framework pushes you to become more neurotypical as a
 
 **Social support and trauma recovery:**
 - Zalta, A. K., et al. (2021). "Examining moderators of the relationship between social support and self-reported PTSD symptoms: A meta-analysis." *Psychological Bulletin* 147(1): 33–54.
-- Bryant, R. A., et al. (2023). Review on social support as a trauma recovery factor.
 - Coker, A. L., et al. (2002). "Social support protects against the negative effects of partner violence on mental health." *Journal of Women's Health* 11(5): 465–476.
 
 **Self-compassion in trauma recovery:**

@@ -728,7 +728,7 @@ Autistic individuals may find **strong communication** more comfortable (clear, 
 ### Primary Sources (Sperber, Wilson, Carston)
 - [Wilson & Sperber (2004). "Relevance Theory." In The Handbook of Pragmatics](https://www.dan.sperber.fr/wp-content/uploads/2004_wilson_relevance-theory.pdf)
 - [Wilson & Sperber (2002). "Relevance Theory." UCL Working Papers in Linguistics](https://www.phon.ucl.ac.uk/publications/WPL/02papers/wilson_sperber.pdf)
-- [Sperber & Wilson (2002). "Relevance Theory Revisited"](https://people.bu.edu/bfraser/Relevance%20Theory%20Oriented/Sperber%20&%20Wilson%20-%20RT%20Revisited.pdf)
+- Sperber, D. & Wilson, D. (2002). "Pragmatics, Modularity and Mind-reading." *Mind & Language*, 17(1-2), 3-23. [Wiley](https://onlinelibrary.wiley.com/doi/10.1111/1468-0017.00186) — also informally circulated as "Relevance Theory Revisited" ([BU archive PDF](https://people.bu.edu/bfraser/Relevance%20Theory%20Oriented/Sperber%20&%20Wilson%20-%20RT%20Revisited.pdf))
 - [Sperber & Wilson. "Precis of Relevance: Communication and Cognition"](https://www.dan.sperber.fr/wp-content/uploads/Pr%C3%A9cis-of-Relevance-Communication-and-Cognition.pdf)
 - [Carston (2002). *Thoughts and Utterances: The Pragmatics of Explicit Communication* (full text)](https://coehuman.uodiyala.edu.iq/uploads/Coehuman%20library%20pdf/English%20library%D9%83%D8%AA%D8%A8%20%D8%A7%D9%84%D8%A7%D9%86%D9%83%D9%84%D9%8A%D8%B2%D9%8A/linguistics/thoughts_and_utterances_by_ROBYN_CARSTON.pdf)
 - [Carston (2000). "Explicature and Semantics." UCL Working Papers](https://www.phon.ucl.ac.uk/home/PUB/WPL/00papers/carston.pdf)

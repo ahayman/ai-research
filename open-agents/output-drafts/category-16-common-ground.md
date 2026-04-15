@@ -302,7 +302,7 @@ Because grounding depends on listener feedback (backchannels, acknowledgments), 
 - Clark, H.H. & Wilkes-Gibbs, D. (1986). "Referring as a Collaborative Process." *Cognition*, 22, 1-39. [Elsevier (paywalled)](https://doi.org/10.1016/0010-0277(86)90010-7)
 
 ### Autism Research
-- Karin, I. et al. (2025). "Common Ground Generation in ASD." [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.70006)
+- Karin, E., Bauminger-Zviely, N., Estrugo, Y., Sabag, M. & Geva, R. (2025). "Paths to Common Ground in ASD." *Autism Research*, 18(4), 845-856. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/aur.70006)
 - Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12, 616664. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8117104/)
 - Cola, M. et al. (2022). "Conversational Adaptation in Autism." [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167260/)
 - Malkin, L. & Abbot-Smith, K. (2021). "Context-Appropriate Language in Autism." *Autism*. [Sage](https://journals.sagepub.com/doi/10.1177/13623613211012860)

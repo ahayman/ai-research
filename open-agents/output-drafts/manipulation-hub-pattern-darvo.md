@@ -37,7 +37,6 @@ The original DARVO formulation was conceptual. Subsequent empirical work has tes
 
 - **Harsey, Zurbriggen, & Freyd (2017)**, *Journal of Aggression, Maltreatment & Trauma* 26(6): 644–663. The first major empirical study. Asked adult participants who had confronted someone about wrongdoing to describe the response they received. DARVO behaviors were common in the confrontation responses, and exposure to DARVO was associated with increased *victim self-blame*. The mechanism is direct: when the perpetrator's response moves from denying the act to attacking the victim's character and reframing themselves as the wronged party, the victim is more likely to internalize the blame than to maintain their original assessment.
 - **Harsey & Freyd (2020)**, *Journal of Aggression, Maltreatment & Trauma* 29(8): 897–916. Tested whether DARVO affects how *third parties* perceive credibility. Result: when participants were shown perpetrator accounts that used DARVO, they rated the perpetrator as more believable and the victim as less believable. The effect was moderated by education — when participants were briefly informed about DARVO before reading the accounts, the persuasive effect of DARVO was reduced. **Knowing about DARVO partially inoculates third parties against being convinced by it.** This is one of the few empirical findings in the manipulation literature that supports a direct educational intervention.
-- **Harsey & Freyd (2022)**, follow-up empirical work refining the operational definition.
 
 **Evidence quality:** DARVO has [PRELIMINARY-to-MODERATE] empirical support. The phenomenon is consistently identified across studies; the persuasive effect on third parties is replicated; the inoculation effect of education is demonstrated. The literature is small (a handful of empirical studies, mostly from Freyd's own lab), and the effect sizes are modest, so the framework should be presented as a useful descriptive and predictive model rather than as a fully validated clinical tool. The acronym itself is descriptive — its strength is recognizability, not measurement precision.
 
@@ -336,9 +335,6 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 **Empirical work on DARVO and third-party persuasion (the inoculation finding):**
 - Harsey, S. J., & Freyd, J. J. (2020). "Deny, Attack, and Reverse Victim and Offender (DARVO): What Is the Influence on Perceived Perpetrator and Victim Credibility?" *Journal of Aggression, Maltreatment & Trauma* 29(8): 897–916. — [Tandfonline](https://www.tandfonline.com/doi/full/10.1080/10926771.2020.1774695) [paywalled]
 
-**Empirical refinement of the DARVO definition:**
-- Harsey, S. J., & Freyd, J. J. (2022). Continuing empirical work refining the operational definition of DARVO. (See [Freyd Dynamics Lab publications](https://dynamic.uoregon.edu/jjf/articles/), for the current state of the literature.)
-
 **Betrayal trauma theory (the conceptual backdrop for Freyd's work on DARVO):**
 - Freyd, J. J. (1996). *Betrayal Trauma: The Logic of Forgetting Childhood Abuse.* Harvard University Press. — [Amazon](https://www.amazon.com/Betrayal-Trauma-Logic-Forgetting-Childhood/dp/0674068068)
 - Freyd, J. J., & Birrell, P. J. (2013). *Blind to Betrayal.* Wiley. — [Amazon](https://www.amazon.com/Blind-Betrayal-People-Deceive-Deceived/dp/0470604409)
@@ -375,7 +371,7 @@ If your DARVO is occurring in a workplace, school, medical, or legal context, th
 - [manipulation-foundation-research-trauma-frameworks.md](manipulation-foundation-research-trauma-frameworks.md) — including the Section 12 forbidden claims this page commits to avoiding.
 - [manipulation-foundation-research-autism-application.md](manipulation-foundation-research-autism-application.md) — particularly the sections on the credibility discount, compliance training, and the internalization trap.
 
-*Note on the foundational documents:* The foundational DV-frameworks doc does not include a dedicated DARVO section. The primary sources cited above (Freyd 1997; Harsey, Zurbriggen, & Freyd 2017; Harsey & Freyd 2020, 2022) are the core literature and are cited directly here. A future update to the foundational doc should add a Section 11 on DARVO, drawing on the same sources, to align the foundational document with this page.
+*Note on the foundational documents:* The foundational DV-frameworks doc does not include a dedicated DARVO section. The primary sources cited above (Freyd 1997; Harsey, Zurbriggen, & Freyd 2017; Harsey & Freyd 2020) are the core literature and are cited directly here. A future update to the foundational doc should add a Section 11 on DARVO, drawing on the same sources, to align the foundational document with this page.
 
 ---
 

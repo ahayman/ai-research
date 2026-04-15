@@ -529,7 +529,7 @@ For the Pragmatics Hub: if "cognitive emancipation" language is used at all, it 
 ### 8.4 Treatment adaptation research (very thin)
 
 **Systematic review:**
-- Rumball, F., et al. (2024). The assessment and treatment of PTSD in autistic people: A systematic review. *Review Journal of Autism and Developmental Disorders*. https://link.springer.com/article/10.1007/s40489-024-00430-9.
+- Quinton, A. M. G., Ali, D., Danese, A., Happé, F., & Rumball, F. (2024). The assessment and treatment of post-traumatic stress disorder in autistic people: A systematic review. *Review Journal of Autism and Developmental Disorders*. [Springer](https://link.springer.com/article/10.1007/s40489-024-00430-9)
 
 **Current state:**
 - EMDR: some case-study and small-sample evidence suggesting tolerability in autistic individuals, possibly because the protocol is less dependent on verbal processing than CPT or PE.
@@ -656,7 +656,7 @@ For the Pragmatics Hub: if "cognitive emancipation" language is used at all, it 
 **Meta-analyses:**
 - Lyons, N., et al. (2021). A systematic review and meta-analysis of group peer support interventions. https://pubmed.ncbi.nlm.nih.gov/34162340/.
 - White, S., et al. (2020). The effectiveness of one-to-one peer support in mental health services. *BMC Psychiatry*. https://bmcpsychiatry.biomedcentral.com/articles/10.1186/s12888-020-02923-3.
-- Pitt, V., et al. (2023). The effectiveness of peer support for individuals with mental illness. https://pmc.ncbi.nlm.nih.gov/articles/PMC10476060/.
+- Smit, D., Miguel, C., Vrijsen, J. N., Groeneweg, B., Spijker, J. & Cuijpers, P. (2023). The effectiveness of peer support for individuals with mental illness: systematic review and meta-analysis. *Psychological Medicine*. [PMC10476060](https://pmc.ncbi.nlm.nih.gov/articles/PMC10476060/)
 - Effectiveness in personal/clinical recovery: https://psychiatryonline.org/doi/10.1176/appi.ps.202100138.
 
 **Findings:**
@@ -769,7 +769,7 @@ For each downstream topic, the following is the minimum primary-source anchor to
 | "Trauma-informed care principles" | SAMHSA 2014 | SAMHSA 2023 practical guide |
 | "Self-compassion and recovery" | Neff 2003, 2023 | Germer & Neff 2015 |
 | "Post-traumatic growth (with hedges)" | Tedeschi & Calhoun 1996, 2004 | Frazier et al. 2009 (critique) |
-| "Social support in recovery" | Zalta et al. 2021 meta; Bryant et al. 2023 review | |
+| "Social support in recovery" | Zalta et al. 2021 meta | |
 | "Autism and trauma" | Rumball et al. 2020, 2024; Haruvi-Lamdan et al. 2018; Kildahl et al. 2020 | Peterson et al. 2019 adaptations |
 | "Self-help that works" | Cuijpers et al. bibliotherapy meta-analyses; Pennebaker expressive writing meta-analyses | Lyons et al. 2021 peer support |
 | "CPT specifically" | Resick & Schnicke 1992; Resick et al. 2017 manual; Asmundson et al. 2019 meta | VA National Center for PTSD |
@@ -847,7 +847,7 @@ For each downstream topic, the following is the minimum primary-source anchor to
 - [Kuhfuß et al. (2021) SE scoping review](https://pmc.ncbi.nlm.nih.gov/articles/PMC8276649/)
 - [Andersen et al. (2017) SE RCT for back pain + PTSD](https://pmc.ncbi.nlm.nih.gov/articles/PMC5489867/)
 - [Wikipedia: Somatic experiencing](https://en.wikipedia.org/wiki/Somatic_experiencing)
-- [Harwood-Gross et al. (2025) SE and PE qualitative comparison](https://bpspsychub.onlinelibrary.wiley.com/doi/10.1111/papt.12570)
+- Harwood-Gross, A., et al. (2025). "Veterans' experiences of somatic experiencing and prolonged exposure therapies for post-traumatic stress disorder: A qualitative analysis." *Psychology and Psychotherapy: Theory, Research and Practice*. [DOI](https://bpspsychub.onlinelibrary.wiley.com/doi/10.1111/papt.12570) | [PubMed 39807650](https://pubmed.ncbi.nlm.nih.gov/39807650/)
 
 ### Internal Family Systems
 - [IFS for PTSD among multiple childhood trauma survivors (Hodgdon et al. 2021)](https://www.tandfonline.com/doi/full/10.1080/10926771.2021.2013375)

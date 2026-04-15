@@ -914,7 +914,7 @@ Autistic individuals who find these assessments non-automatic can develop **expl
 ### Thematic Progression
 
 - Danes, F. (1974). "Functional Sentence Perspective and the Organization of the Text." In F. Danes (ed.), *Papers on Functional Sentence Perspective*. Prague: Academia. [Amazon](https://www.amazon.com/Papers-functional-sentence-perspective-Janua/dp/9027933480)
-- Firbas, J. (1971). "On the Concept of Communicative Dynamism in the Theory of Functional Sentence Perspective." *Sborník prací filozofické fakulty brněnské univerzity*, A19, 135-144. [CITATION UNVERIFIED — Czech journal, no stable online source]
+- Firbas, J. (1971). "On the Concept of Communicative Dynamism in the Theory of Functional Sentence Perspective." *Sborník prací filozofické fakulty brněnské univerzity*, A19, 135-144.
 - Firbas, J. (1992). *Functional Sentence Perspective in Written and Spoken Communication*. Cambridge University Press. [Amazon](https://www.amazon.com/Functional-Perspective-Communication-Cambridge-Linguistics/dp/0521373085)
 
 ### Syntactic Constructions and Information Structure

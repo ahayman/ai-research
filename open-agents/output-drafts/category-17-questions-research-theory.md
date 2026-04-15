@@ -834,7 +834,7 @@ The pragmatic system of questions can be approached systematically:
 - **Roberts, C. (1996, 2012).** "Information Structure in Discourse: Towards an Integrated Formal Theory of Pragmatics." — Question Under Discussion framework. [Semantics & Pragmatics](https://semprag.org/index.php/sp/article/view/sp.5.6)
 - **Sadock, J. (1970, 1974).** *Toward a Linguistic Theory of Speech Acts.* — Whimperatives and hybrid question-directive forms. [Amazon](https://www.amazon.com/Toward-linguistic-theory-speech-Jerrold/dp/0126144508)
 - **Gunlogson, C. (2001, 2003).** *True to Form: Rising and Falling Declaratives as Questions in English.* — Form-function mismatches in declarative questions. [Amazon](https://www.amazon.com/True-Form-Declaratives-Questions-Outstanding/dp/0415967643)
-- **Rohde, H. (2024).** "Rhetorical Questions." — Comprehensive overview of rhetorical question pragmatics. [Annual Reviews](https://www.annualreviews.org/content/journals/linguistics)
+- **Rohde, H. (2024).** "Rhetorical Questions." Manuscript, University of Edinburgh. — Comprehensive overview of rhetorical question pragmatics. [PDF](https://www.lel.ed.ac.uk/~hrohde/papers/Rohde.2024.pdf)
 
 ---
 

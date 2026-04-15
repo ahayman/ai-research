@@ -372,7 +372,7 @@ A three-tier priority system for learning:
 - Fraser, B. (1999). "What Are Discourse Markers?" *Journal of Pragmatics*, 31, 931-952. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0378-2166(98)00101-5)
 - Blakemore, D. (2002). *Relevance and Linguistic Meaning: The Semantics and Pragmatics of Discourse Markers*. Cambridge University Press. [Amazon](https://www.amazon.com/Relevance-Linguistic-Meaning-Semantics-Pragmatics/dp/0521640075)
 - Heritage, J. (1984). "A Change-of-State Token and Aspects of Its Sequential Placement." In Atkinson & Heritage (eds.), *Structures of Social Action*. [Amazon](https://www.amazon.com/Structures-Social-Action-Studies-Conversation/dp/0521318629)
-- Jucker, A.H. (1993). "The Discourse Marker 'Well': A Relevance-Theoretic Account." *Journal of Pragmatics*, 19, 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166(93)90004-9)
+- Jucker, A.H. (1993). "The Discourse Marker 'Well': A Relevance-Theoretic Account." *Journal of Pragmatics*, 19, 435-452. [ScienceDirect (paywalled)](https://doi.org/10.1016/0378-2166%2893%2990004-9)
 
 ### Research in Autism Spectrum Disorders
 - Gorman, K. et al. (2016). "Uh and Um in Children with ASD or Language Impairment." *Research in Autism Spectrum Disorders*. [PMC4958035](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/)

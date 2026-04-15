@@ -955,7 +955,7 @@ The entire system reduces to a learnable pattern:
 
 ### Autism and Pragmatic Communication
 - Milton, D. E. M. (2012). On the ontological status of autism: The 'double empathy problem'. *Disability & Society*, 27(6), 883-887. [Taylor & Francis (paywalled)](https://doi.org/10.1080/09687599.2012.710008)
-- Cummings, L. (2023). Divergent social communication between autistic and non-autistic individuals revisited. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10594999/)
+- Xu, C., Mao, T. & Du, S. (2023). Divergent social communication between autistic and non-autistic individuals revisited: unraveled via an Integrated Model of Pragmatic Competence. *Frontiers in Psychology*, 14, 1248557. [PMC10690413](https://pmc.ncbi.nlm.nih.gov/articles/PMC10690413/)
 
 ### Conflict and De-Escalation
 - Directness and Oppositional Intensity of Conflict Expression research.

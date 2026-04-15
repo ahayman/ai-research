@@ -93,7 +93,7 @@ Research shows a mixed picture:
 
 **Non-conventionalized forms are more challenging.** Non-conventionalized indirect requests such as "It's cold in here" (implying: turn on the heater) require more inferencing and present substantially more difficulty for autistic individuals, because the conditional relevance is carried by pragmatic inference rather than linguistic convention.
 
-**The "what to say" dimension.** The Conversation Questionnaire (CQ), developed with autistic community engagement (Crompton et al., 2022), identified two dimensions of conversational challenge: (1) difficulties knowing what to say, and (2) engaging in behaviors possibly disruptive to neurotypical conversation. The first dimension maps directly onto adjacency pair challenges — not knowing what response is conditionally relevant given the first pair part.
+**The "what to say" dimension.** The Conversation Questionnaire (CQ), developed with autistic community engagement (Wilson, 2022), identified two dimensions of conversational challenge: (1) difficulties knowing what to say, and (2) engaging in behaviors possibly disruptive to neurotypical conversation. The first dimension maps directly onto adjacency pair challenges — not knowing what response is conditionally relevant given the first pair part.
 
 ### 2.3 The Greeting Problem: "How Are You?"
 
@@ -432,7 +432,7 @@ When declining, disagreeing, or refusing:
 
 7. **Volden, J. (2004).** "Conversational repair in speakers with autism spectrum disorder." *International Journal of Language & Communication Disorders*. [https://pubmed.ncbi.nlm.nih.gov/15204450/](https://pubmed.ncbi.nlm.nih.gov/15204450/)
 
-8. **Crompton, C.J. et al. (2022).** "Development and validation of the conversation questionnaire." *PMC*. [https://pmc.ncbi.nlm.nih.gov/articles/PMC9685143/](https://pmc.ncbi.nlm.nih.gov/articles/PMC9685143/)
+8. **Wilson, A. C. (2022).** "Development and validation of the conversation questionnaire: A psychometric measure of communication challenges generated from the self-reports of autistic people." *Autism & Developmental Language Impairments*, 7. [PMC9685143](https://pmc.ncbi.nlm.nih.gov/articles/PMC9685143/)
 
 9. **Crompton, C.J. et al. (2020).** "Neurotype-matching, but not being autistic, influences self and observer ratings of interpersonal rapport." *Frontiers in Psychology*. [https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2020.586171/full](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2020.586171/full)
 

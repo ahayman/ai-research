@@ -411,7 +411,7 @@ For survivors of childhood sensory gaslighting specifically, the recovery work i
 
 **Interoception in autism:**
 - Garfinkel, S. N., Tiley, C., O'Keeffe, S., Harrison, N. A., Seth, A. K., & Critchley, H. D. (2016). "Discrepancies between dimensions of interoception in autism: Implications for emotion and anxiety." *Biological Psychology* 114: 117–126.
-- Quadt, L., Esposito, G., Critchley, H. D., & Garfinkel, S. N. (2021). Reviews of interoception and autism, including the relationship to alexithymia.
+- Quadt, L., Garfinkel, S. N., Mulcahy, J. S., Larsson, D. E. O., Silva, M., Jones, A.-M., Strauss, C., & Critchley, H. D. (2021). "Interoceptive training to target anxiety in autistic adults (ADIE): A single-center, superiority randomized controlled trial." *eClinicalMedicine*, 39, 101042. [PMC8350004](https://pmc.ncbi.nlm.nih.gov/articles/PMC8350004/)
 - Nicholson, T. M., Williams, D. M., Grainger, C., Christensen, J. F., Calvo-Merino, B., & Gaigg, S. B. (2018). "Interoceptive impairments do not lie at the heart of autism or alexithymia." *Journal of Abnormal Psychology* 127(6): 612–622. (A more cautious finding on the interoception-autism relationship, included for balance.)
 
 **Autism-specific PTSD profile and broader trauma triggers:**

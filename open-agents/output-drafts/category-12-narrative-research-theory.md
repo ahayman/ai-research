@@ -674,7 +674,7 @@ These markers are crucial for narrative coherence because they help the listener
 
 ### Secondary/Supplementary Sources
 - Clark, H. H., & Murphy, G. L. (1982). Audience design in meaning and reference. In J. F. Le Ny & W. Kintsch (Eds.), *Language and comprehension* (pp. 287-299). North-Holland. [ScienceDirect (paywalled)](https://doi.org/10.1016/S0166-4115(09)60088-8)
-- Enkvist, N. E. (1978). Coherence, pseudo-coherence, and non-coherence. In J. O. Östman (Ed.), *Cohesion and semantics* (pp. 109-128). Åbo Akademi Foundation. [CITATION UNVERIFIED]
+- Enkvist, N. E. (1978). Coherence, pseudo-coherence, and non-coherence. In J. O. Östman (Ed.), *Cohesion and semantics* (pp. 109-128). Åbo Akademi Foundation.
 - Grice, H. P. (1975). Logic and conversation. In P. Cole & J. L. Morgan (Eds.), *Syntax and semantics: Speech acts* (pp. 41-58). Academic Press. [PDF](https://www.ucl.ac.uk/ls/studypacks/Grice-Logic.pdf)
 
 ---

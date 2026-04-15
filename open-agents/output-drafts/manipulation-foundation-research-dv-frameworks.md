@@ -162,8 +162,8 @@ The legal codification of Stark's framework is a major empirical and legal devel
 
 **Primary sources:**
 - Home Office. *Controlling or Coercive Behaviour: Statutory Guidance Framework.* GOV.UK.
-- Sheley, E. (2024). "Criminalizing Coercive Control Within the Limits of Due Process." *Duke Law Journal.*
-- Bettinson, V., & Bishop, C., eds. (2024). *Criminalizing Coercive Control: Cross-Jurisdictional Lessons.* Oxford Academic, *Statute Law Review.*
+- Sheley, E. (2021). "Criminalizing Coercive Control Within the Limits of Due Process." *Duke Law Journal*, 70(6), 1321-1386. [Duke Scholarship](https://scholarship.law.duke.edu/dlj/vol70/iss6/2/)
+- Bettinson, V., & Bishop, C. (2024). "Criminalizing Coercive Control: Cross-Jurisdictional Lessons." *Statute Law Review*, 46(1), hmaf010. [Oxford Academic](https://academic.oup.com/slr/article/46/1/hmaf010/8101313)
 - Time Magazine (2019). "Why These Nations Took the Lead in Criminalizing Controlling Behavior in Relationships."
 
 ### 3.5 How Coercive Control Operates Through Pragmatic Mechanisms
@@ -584,7 +584,7 @@ Sweet's framework makes explicit what Duluth's "Minimizing, Denying, and Blaming
 ### 11.3 What Is MISSING from the Research Base
 
 - **Autistic samples:** The overwhelming majority of IPV, coercive control, and gaslighting research was conducted on neurotypical samples. Autistic-specific prevalence and vulnerability research is beginning to emerge (Douglas & Sedgewick 2024; Weir et al. 2021; Pecora et al. systematic reviews 2023) but strategy-level research is nearly nonexistent. Autistic adults appear to face **40–90% lifetime victimization rates** across categories, with cis-female and gender-minority autistics at highest risk.
-- **LGBTQ+ samples**, particularly for coercive control specifically. A 2024 scoping review (PMC11545122) flagged the paucity of research. Legal help-seeking research is newer (Ball et al. 2023, *Journal of Family Violence*).
+- **LGBTQ+ samples**, particularly for coercive control specifically. A 2024 scoping review (PMC11545122) flagged the paucity of research. Legal help-seeking research is newer (Reeves et al. 2023, *Journal of Family Violence*).
 - **Racial and immigrant populations:** The Duluth Model's original sample was disproportionately white and working-class; adaptations exist (e.g., Incite!, Creative Interventions) but have less formal validation.
 - **Disability-specific IPV research** beyond Baylor College of Medicine's Center for Research on Women with Disabilities.
 - **Pure-pragmatic-abuse research:** There is essentially no dedicated empirical literature on coercive control operating exclusively through verbal/pragmatic mechanisms without physical violence at all. Stark's framework *accommodates* such cases theoretically, but most empirical samples have physical violence in the history.
@@ -713,7 +713,7 @@ The following citations have been independently verified with working URLs. Entr
 ### Peer-reviewed articles — coercive control theory
 - Stark, E. (2009). "Rethinking Coercive Control." *Violence Against Women* 15(12): 1509–1525.
 - Stark, E., & Hester, M. (2019). "Coercive Control: Update and Review." *Violence Against Women* 25(1): 81–104.
-- Sheley, E. (2024). "Criminalizing Coercive Control Within the Limits of Due Process." *Duke Law Journal.*
+- Sheley, E. (2021). "Criminalizing Coercive Control Within the Limits of Due Process." *Duke Law Journal*, 70(6), 1321-1386. [Duke Scholarship](https://scholarship.law.duke.edu/dlj/vol70/iss6/2/)
 
 ### Peer-reviewed articles — stalking
 - Logan, T. K., & Walker, R. (2017). "Stalking: A Multidimensional Framework." *Trauma, Violence, & Abuse* 18(2): 200–222.
@@ -763,7 +763,7 @@ The following citations have been independently verified with working URLs. Entr
 
 ### Peer-reviewed articles — LGBTQ+ coercive control gap
 - "Coercive Control in 2SLGBTQQIA+ Relationships: A Scoping Review" (PMC11545122, 2024).
-- Ball, M., et al. (2023). "'It was Dangerous, Corrosive and Cruel but not Illegal': Legal Help-seeking Behaviours Amongst LGBTQA+ DV Survivors." *Journal of Family Violence.*
+- Reeves, E., McGowan, J., & Scott, B. (2023). "'It was Dangerous, Corrosive and Cruel but not Illegal': Legal Help-seeking Behaviours Amongst LGBTQA+ Domestic and Family Violence Victim-survivors Experiencing Coercive Control in Australia." *Journal of Family Violence.* [DOI](https://doi.org/10.1007/s10896-023-00569-9)
 
 ### Legislation and policy
 - *Serious Crime Act 2015* (UK), Section 76. legislation.gov.uk/ukpga/2015/9/section/76.

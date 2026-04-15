@@ -613,7 +613,7 @@ The system is complex but systematic, and it rewards pattern recognition.
 - Büring, D. (2003). [On D-Trees, Beans, and B-Accents](https://link.springer.com/article/10.1023/A:1025887707652). Linguistics and Philosophy, 26(5), 511-545.
 - Büring, D. (2014). [(Contrastive) Topic](https://semanticsarchive.net/Archive/mMxNzBlY/buring.2014.topic.oxfordhandbookinfostruc.pdf). In Oxford Handbook of Information Structure.
 - Selkirk, E. & Katz, J. (2011). [Contrastive Focus vs. Discourse-New: Evidence from phonetic prominence in English](https://www.cambridge.org/core/journals/language/article/abs/contrastive-focus-vs-discoursenew-evidence-from-phonetic-prominence-in-english/D6D4AC72DC319DDFFEB642CED6D774AC). Language, 87(4).
-- Wagner, M. (2019). [Prosodic Focus](https://semanticsarchive.net/Archive/TFhYTYxO/wagner_2019_prosodic-focus.pdf). Semantics Archive.
+- Wagner, M. (2019). "Prosodic Focus." Manuscript, McGill University (chapter prepared for the *Wiley Companion to Semantics*). [Semantics Archive PDF](https://semanticsarchive.net/Archive/TFhYTYxO/wagner_2019_prosodic-focus.pdf)
 - Büring, D. (2012). [Focus and Intonation](https://semanticsarchive.net/Archive/zFmZmM4N/Buring.2012.Focus%20and%20Intonation.RoutlegdePhilLgCompanion.pdf). Routledge Philosophy of Language Companion.
 - Partee, B. (2009). [Focus and Information Structure: Semantics and Pragmatics](https://people.umass.edu/partee/MGU_2009/materials/MGU0910.pdf). MGU Lecture Notes.
 - [The role of focus intonation in implicature computation](https://link.springer.com/article/10.1007/s11050-019-09154-7). Natural Language Semantics.

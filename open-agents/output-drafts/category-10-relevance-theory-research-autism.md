@@ -513,13 +513,13 @@ When you realize that communication has broken down (the other person reacts une
 
 Crompton et al. (2020, "Autistic peer-to-peer information transfer is highly effective," *Autism*, 24(7), 1704-1712) provided independent empirical support for the Williams et al. findings. Using a "telephone" task (information passed along a chain of people), they found that information degraded significantly when passed between autistic and non-autistic individuals, but was preserved effectively when passed between people of the same neurotype. A parallel study (Crompton et al. 2020, "Neurotype-Matching, but Not Being Autistic, Influences Self and Observer Ratings of Interpersonal Rapport," *Frontiers in Psychology*, 11: 586171) found that rapport ratings were significantly higher in neurotype-matched pairs. These findings are consistent with RT's prediction that matched cognitive environments facilitate mutual manifestness.
 
-### 8.2 Marocchini (2024, 2026): Cross-Neurotype Communication as Intercultural
+### 8.2 Cross-Neurotype Communication as Intercultural (Żuromski & Pacholik-Żuromska 2026)
 
-Marocchini and colleagues have extended this line of work in two important directions:
+Two recent contributions support and extend the double-empathy / RT framework — one empirical, one theoretical:
 
-- **Marocchini & Baldin (2024,** "Cross-neurotype communication from an autistic point of view," *International Journal of Language & Communication Disorders*) conducted focus groups with 23 autistic adults and found that participants described autistic-autistic communication as markedly easier, confirming the mutual manifestness account.
+- **Empirical support.** Marocchini & Baldin (2024, "Cross-neurotype communication from an autistic point of view," *International Journal of Language & Communication Disorders*) conducted focus groups with 23 autistic adults and found that participants described autistic-autistic communication as markedly easier, confirming the mutual manifestness account.
 
-- **Marocchini (2026,** "Intercultural Cognitive Pragmatics as a tool for understanding autism," *Frontiers in Human Neuroscience*) proposed applying the framework of **Intercultural Cognitive Pragmatics** to cross-neurotype communication. This treats autistic-non-autistic communication as analogous to cross-cultural communication -- a mismatch in pragmatic systems, not a deficit in one system. This is fully consistent with the RT account: just as speakers from different cultures may have different cognitive environments leading to different relevance expectations, speakers from different neurotypes may have similarly different cognitive environments.
+- **Framework extension.** Żuromski & Pacholik-Żuromska (2026, "Intercultural Cognitive Pragmatics as a tool for understanding autism," *Frontiers in Human Neuroscience*) proposed applying the framework of **Intercultural Cognitive Pragmatics** to cross-neurotype communication. This treats autistic-non-autistic communication as analogous to cross-cultural communication -- a mismatch in pragmatic systems, not a deficit in one system. This is fully consistent with the RT account: just as speakers from different cultures may have different cognitive environments leading to different relevance expectations, speakers from different neurotypes may have similarly different cognitive environments.
 
 ### 8.3 Compensatory Strategies and Masking
 
@@ -541,7 +541,7 @@ RT thus provides a framework for understanding *why* masking is so exhausting: i
 
 - Williams, G. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0378216621001715) | [Author manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
 
-- Wharton, T. & Jagoe, C. (2024). "Relevance Theory and Communication Atypicalities." In *The Handbook of Clinical Linguistics*, Second Edition. Wiley. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/9781119875949.ch3)
+- Wharton, T. & Ifantidou, E. (2024). "Relevance Theory and Communication Atypicalities." In M. Ball, N. Müller & E. Spencer (Eds.), *The Handbook of Clinical Linguistics*, Second Edition, pp. 31-41. Wiley. [Wiley](https://onlinelibrary.wiley.com/doi/10.1002/9781119875949.ch3)
 
 ### RT Extensions and Autism
 
@@ -565,7 +565,7 @@ RT thus provides a framework for understanding *why* masking is so exhausting: i
 
 - Marocchini, E. & Baldin, A. (2024). "Cross-neurotype communication from an autistic point of view." *International Journal of Language & Communication Disorders*. [Wiley](https://onlinelibrary.wiley.com/doi/10.1111/1460-6984.13095)
 
-- Marocchini, E. (2026). "Intercultural Cognitive Pragmatics as a tool for understanding autism." *Frontiers in Human Neuroscience*. [Frontiers](https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2026.1729076/full)
+- Żuromski, D. & Pacholik-Żuromska, A. (2026). "Intercultural Cognitive Pragmatics as a tool for understanding autism." *Frontiers in Human Neuroscience*, 20, 1729076. [Frontiers](https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2026.1729076/full) | [PMC12917209](https://pmc.ncbi.nlm.nih.gov/articles/PMC12917209/)
 
 ### Cognitive Theories of Autism
 

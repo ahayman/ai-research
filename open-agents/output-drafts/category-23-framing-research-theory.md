@@ -552,8 +552,8 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 - D'Angelo, P. (2002). News framing as a multiparadigmatic research program. *Journal of Communication*, 52(4), 870-888. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.2002.tb02578.x)
 - Entman, R. M. (1993). Framing: Toward clarification of a fractured paradigm. *Journal of Communication*, 43(4), 51-58. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1993.tb01304.x)
 - Fairclough, N. (1989). *Language and Power*. Longman. [Amazon](https://www.amazon.com/Language-Power-Norman-Fairclough/dp/0582414830)
-- Fillmore, C. J. (1982). Frame semantics. In *Linguistics in the Morning Calm*. Hanshin. [CITATION UNVERIFIED — Korean volume, limited online access]
-- Fillmore, C. J. (1985). Frames and the semantics of understanding. *Quaderni di Semantica*, 6(2), 222-254. [CITATION UNVERIFIED — Italian journal, no stable online source]
+- Fillmore, C. J. (1982). Frame semantics. In Linguistic Society of Korea (Ed.), *Linguistics in the Morning Calm* (pp. 111-137). Hanshin.
+- Fillmore, C. J. (1985). Frames and the semantics of understanding. *Quaderni di Semantica*, 6(2), 222-254.
 - Gitlin, T. (1980). *The Whole World Is Watching*. University of California Press. [Amazon](https://www.amazon.com/Whole-World-Watching-Unmaking-Anniversary/dp/0520239326)
 - Goffman, E. (1961). *Asylums*. Anchor. [Amazon](https://www.amazon.com/Asylums-Essays-Situation-Patients-Inmates/dp/0385000162)
 - Goffman, E. (1963). *Stigma: Notes on the Management of Spoiled Identity*. Prentice-Hall. [Amazon](https://www.amazon.com/Stigma-Notes-Management-Spoiled-Identity/dp/0671622447)
@@ -570,7 +570,7 @@ Taken together, these give us the vocabulary we need to describe what is happeni
 - Ruppenhofer, J. et al. (2016). *FrameNet II: Extended Theory and Practice*. International Computer Science Institute. [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/the_book)
 - Scheufele, D. A. (1999). Framing as a theory of media effects. *Journal of Communication*, 49(1), 103-122. [Wiley (paywalled)](https://doi.org/10.1111/j.1460-2466.1999.tb02784.x)
 - Schank, R. C., & Abelson, R. P. (1977). *Scripts, Plans, Goals, and Understanding*. Lawrence Erlbaum. [Amazon](https://www.amazon.com/Scripts-Understanding-Artificial-Intelligence-Psychology/dp/0470990333)
-- Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. *International Social Movement Research*, 1, 197-217. [CITATION UNVERIFIED — out-of-print serial]
+- Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. *International Social Movement Research*, 1, 197-217.
 - Snow, D. A., Rochford, E. B., Worden, S. K., & Benford, R. D. (1986). Frame alignment processes. *American Sociological Review*, 51(4), 464-481. [JSTOR (paywalled)](https://doi.org/10.2307/2095581)
 - Gamson, W. A., & Modigliani, A. (1989). Media discourse and public opinion on nuclear power. *American Journal of Sociology*, 95(1), 1-37. [University of Chicago (paywalled)](https://doi.org/10.1086/229213)
 - Tannen, D. (1984). *Conversational Style: Analyzing Talk Among Friends*. Ablex. [Amazon](https://www.amazon.com/Conversational-Style-Analyzing-Talk-Among/dp/0195221818)

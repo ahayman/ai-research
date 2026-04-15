@@ -210,8 +210,8 @@ The finding is consistent with the double empathy prediction: the breakdown is n
 
 Subsequent studies have extended the finding:
 
-- **Crompton, Hallett, et al. (2020)** on rapport in autistic-autistic versus mixed interactions. This study found that autistic adults reported significantly higher rapport, ease, and enjoyment when interacting with other autistic adults than when interacting in mixed pairs. The rapport finding is particularly important for stance theory because rapport is precisely the interactional outcome that stance alignment is supposed to produce. When rapport is high in autistic-autistic pairs, it means that the stance alignment work is landing — that each speaker's stance moves are being read the way they were intended.
-- **Crompton et al. (2022)** on the specific conversational features that support autistic-autistic rapport.
+- **Crompton, Sharp, Axbey et al. (2020, "Neurotype-Matching, but Not Being Autistic, Influences Self and Observer Ratings of Interpersonal Rapport," *Frontiers in Psychology* 11:586171)** on rapport in autistic-autistic versus mixed interactions. This study found that autistic adults reported significantly higher rapport, ease, and enjoyment when interacting with other autistic adults than when interacting in mixed pairs. The rapport finding is particularly important for stance theory because rapport is precisely the interactional outcome that stance alignment is supposed to produce. When rapport is high in autistic-autistic pairs, it means that the stance alignment work is landing — that each speaker's stance moves are being read the way they were intended.
+- **Crompton, Hallett, et al. (2020, "I never realised everybody felt as happy as I do when I am around autistic people," *Autism* 24(6):1438-1448)** (the thematic-analysis companion paper to the diffusion-chain study) on the specific conversational features that support autistic-autistic rapport.
 - **Morrison et al. (2020)** on first impressions between autistic and non-autistic participants.
 - **Heasman & Gillespie (2018)** qualitative work on perspective-taking in autistic family interactions (*Autism* 22(6):740-750).
 - **Heasman & Gillespie (2019)** on "neurodivergent intersubjectivity," arguing that autistic interactants develop specific coordinated strategies for shared understanding that look different from non-autistic strategies but are functionally equivalent (*Autism* 23(4):910-921).
@@ -589,6 +589,8 @@ Cook, J., Hull, L., Crane, L., & Mandy, W. (2021). Camouflaging in autism: A sys
 Cooper, K., Smith, L. G. E., & Russell, A. (2017). Social identity, self-esteem, and mental health in autism. *European Journal of Social Psychology*, 47(7), 844-854. [Wiley](https://doi.org/10.1002/ejsp.2297)
 
 Crompton, C. J., Ropar, D., Evans-Williams, C. V., Flynn, E. G., & Fletcher-Watson, S. (2020). Autistic peer-to-peer information transfer is highly effective. *Autism*, 24(7), 1704-1712. [SAGE](https://journals.sagepub.com/doi/10.1177/1362361320919286)
+
+Crompton, C. J., Sharp, H., Axbey, H., Fletcher-Watson, S., Flynn, E. G., & Ropar, D. (2020). Neurotype-Matching, but Not Being Autistic, Influences Self and Observer Ratings of Interpersonal Rapport. *Frontiers in Psychology*, 11, 586171. [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2020.586171/full) | [PMC7645034](https://pmc.ncbi.nlm.nih.gov/articles/PMC7645034/)
 
 Crompton, C. J., Hallett, S., Ropar, D., Flynn, E., & Fletcher-Watson, S. (2020). "I never realised everybody felt as happy as I do when I am around autistic people": A thematic analysis of autistic adults' relationships with autistic and neurotypical friends and family. *Autism*, 24(6), 1438-1448. [SAGE](https://doi.org/10.1177/1362361320908976)
 

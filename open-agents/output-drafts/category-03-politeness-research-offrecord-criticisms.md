@@ -672,7 +672,7 @@ The power critique of politeness is particularly relevant for autistic people be
 ### Gender Critique
 - Lakoff, R. (1975). *Language and Woman's Place*. New York: Harper & Row. [Amazon](https://www.amazon.com/Language-Womans-Place-Revised-Commentaries/dp/0195167570)
 - Holmes, J. (1995). *Women, Men and Politeness*. London: Longman. [Amazon](https://www.amazon.com/Women-Men-Politeness-Real-Language/dp/0582063612)
-- Burrow, S. (2010). "Gendered Politeness, Self-Respect, and Autonomy." In *De la Croix et al.* (eds.). [CITATION UNVERIFIED]
+- Burrow, S. (2010). "Verbal Sparring and Apologetic Points: Politeness in Gendered Argumentation Contexts." *Informal Logic*, 30(3), 235-262. [DOI](https://doi.org/10.22329/il.v30i3.3036)
 - Cameron, D. (1995). *Verbal Hygiene*. London: Routledge. [Amazon](https://www.amazon.com/Verbal-Hygiene-Routledge-Linguistics-Classics/dp/0415691559)
 
 ### Power Critique

@@ -692,7 +692,7 @@ The honest limits of this page, named explicitly because the gap between recogni
 **Stages of change applied to leaving:**
 - Burke, J. G., Denison, J. A., Gielen, A. C., McDonnell, K. A., & O'Campo, P. (2004). "Ending Intimate Partner Violence: An Application of the Transtheoretical Model." *American Journal of Health Behavior* 28(2): 122–133. (The 95% precontemplation/contemplation finding.)
 - Brown, J. (1997). "Working Toward Freedom From Violence: The Process of Change in Battered Women." *Violence Against Women* 3(1): 5–26.
-- Khaw, L., & Hardesty, J. L. (2007). On separation-and-return patterns.
+- Khaw, L., & Hardesty, J. L. (2007). "Theorizing the process of leaving: Turning points and trajectories in the stages of change." *Family Relations*, 56(4), 413-425. [Wiley (paywalled)](https://doi.org/10.1111/j.1741-3729.2007.00470.x)
 - Prochaska, J. O., & DiClemente, C. C. (1983). "Stages and Processes of Self-Change in Smoking: Toward an Integrative Model of Change." *Journal of Consulting and Clinical Psychology* 51(3): 390–395.
 
 **The Duluth Model:**

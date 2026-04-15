@@ -573,7 +573,7 @@ Bandwagon exploits **common ground construction** (Category 16). The phrase "eve
 It also exploits the **informational cascade** effect: people use others' beliefs as evidence. If many people believe X, then (absent other information) X is probabilistically more likely to be true. This is a legitimate heuristic in many situations (you should probably eat at the crowded restaurant rather than the empty one). The fallacy exploits this legitimate heuristic.
 
 #### 14.3 Why It Works Socially
-- **Conformity pressure** is a powerful social force (Asch, 1951; demonstrated that individuals will deny their own perceptions when a group disagrees)
+- **Conformity pressure** is a powerful social force (Asch, 1951, 1955; demonstrated that individuals will deny their own perceptions when a group disagrees)
 - **In-group membership** is signaled by shared beliefs. Rejecting a popular belief risks being perceived as an outsider.
 - **Cognitive offloading**: if "everyone" already believes X, the listener is spared the effort of evaluating X independently
 
@@ -1018,7 +1018,8 @@ Even then, the meta-commentary should be **specific** ("You asked me to provide 
 - Hurley, P. J. (2003). *A Concise Introduction to Logic*. 8th ed. Wadsworth. [Amazon](https://www.amazon.com/Concise-Introduction-Logic-Patrick-Hurley/dp/1305958098)
 
 #### Cognitive Science and Bias
-- Asch, S. E. (1951). Effects of group pressure upon the modification and distortion of judgments. In H. Guetzkow (Ed.), *Groups, Leadership and Men*. Carnegie Press. [CITATION UNVERIFIED — out-of-print volume]
+- Asch, S. E. (1951). Effects of group pressure upon the modification and distortion of judgments. In H. Guetzkow (Ed.), *Groups, Leadership and Men*. Carnegie Press.
+- Asch, S. E. (1955). Opinions and social pressure. *Scientific American*, 193(5), 31-35. [JSTOR](https://www.jstor.org/stable/24943779) (accessible companion citation)
 - Lakoff, G. (2004). *Don't Think of an Elephant!* Chelsea Green. [Amazon](https://www.amazon.com/Dont-Think-Elephant-Values-Frame/dp/1931498717)
 
 ---

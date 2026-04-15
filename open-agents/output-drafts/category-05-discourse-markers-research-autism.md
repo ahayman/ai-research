@@ -38,7 +38,7 @@ One of the most robust and theoretically important findings in this area is the 
 
 **Clinical significance:**
 - "Um" usage has been proposed as an easily quantifiable behavioral marker that, in concert with other observations, may help distinguish ASD from language impairment (where both "um" and "uh" may be affected differently).
-- The "um" fillers have been shown to distinguish children with and without ASD with notable reliability (Gorman et al., 2018 brief report).
+- The "um" fillers have been shown to distinguish children with and without ASD with notable reliability (McGregor & Hadden, 2020 brief report).
 
 ### 1.3 The Discourse Marker "Like": A Counterexample
 
@@ -494,7 +494,7 @@ The BAP research suggests:
 - [Jones, Zane, & Grossman (2022) - "Like, It's Important: The Frequency and Use of the Discourse Marker Like in Older Autistic Children"](https://pmc.ncbi.nlm.nih.gov/articles/PMC9620696/) - PMC9620696
 - [Gorman et al. (2016) - "Uh and Um in Children With Autism Spectrum Disorders or Language Impairment"](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958035/) - PMC4958035
 - [Irvine, Eigsti & Fein (2016) - "Uh, Um, and Autism: Filler Disfluencies as Pragmatic Markers in Adolescents with Optimal Outcomes from Autism Spectrum Disorder"](https://pmc.ncbi.nlm.nih.gov/articles/PMC7536647/) - *J Autism Dev Disord* 46(3):1061-1070, PMC7536647
-- [Gorman et al. (2018) - "Um Fillers Distinguish Children With and Without ASD"](https://pmc.ncbi.nlm.nih.gov/articles/PMC6395582/) - PMC6395582
+- [McGregor, K. K. & Hadden, R. R. (2020) - Brief Report: "Um" Fillers Distinguish Children With and Without ASD](https://pmc.ncbi.nlm.nih.gov/articles/PMC6395582/) - *J Autism Dev Disord*, PMC6395582
 - [Pragmatic Language Markers of Autism Diagnosis and Severity (2022)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9075340/) - PMC9075340
 - [Zane & Grossman (2024) - "Normal but Different: Autistic Adolescents Who Score Within Normal Ranges"](https://pmc.ncbi.nlm.nih.gov/articles/PMC11447814/) - PMC11447814
 - [Zane & Grossman (2021) - "Judgments of Spoken Discourse and Impression Formation"](https://www.sciencedirect.com/science/article/pii/S1750946721000179)

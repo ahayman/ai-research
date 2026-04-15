@@ -546,7 +546,7 @@ There is active debate about whether this process is best described as grammatic
 - [Discourse Markers as Turn-Transition Devices](https://www.tandfonline.com/doi/abs/10.1080/0163853X.2016.1198136)
 - [Discourse Markers - Descriptions and Theory - John Benjamins](https://benjamins.com/catalog/pbns.57)
 - [Grammaticalization or Pragmaticalization of Discourse Markers](https://benjamins.com/catalog/jhp.16.1.03deg)
-- [Wilson & Sperber, Relevance Theory Revisited](https://people.bu.edu/bfraser/Relevance%20Theory%20Oriented/Sperber%20&%20Wilson%20-%20RT%20Revisited.pdf)
+- [Sperber & Wilson (2002), "Pragmatics, Modularity and Mind-reading," *Mind & Language* 17(1-2):3-23](https://onlinelibrary.wiley.com/doi/10.1111/1468-0017.00186) — also archived as "Relevance Theory Revisited" ([BU PDF](https://people.bu.edu/bfraser/Relevance%20Theory%20Oriented/Sperber%20&%20Wilson%20-%20RT%20Revisited.pdf))
 - [Wilson, Conceptual-Procedural Distinction](https://discovery.ucl.ac.uk/id/eprint/1332007/1/Wilson_2011_Conceptual-Procedural_Distinction_TEMPLATE.pdf)
 - [(Im)politeness strategies and use of discourse markers](https://www.tandfonline.com/doi/full/10.1080/23311983.2018.1461048)
 - [Rethinking Social Language Learning and Politeness in Autism](https://onlinelibrary.wiley.com/doi/10.1111/ijal.12783)

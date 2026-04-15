@@ -632,7 +632,7 @@ Research on turn-taking in autistic individuals provides important context for a
 
 ### Filled Pauses and Floor Management
 - Clark, H.H. & Fox Tree, J.E. (2002). Using uh and um in spontaneous speaking. *Cognition*, 84(1), 73-111. [Elsevier (paywalled)](https://doi.org/10.1016/S0010-0277(02)00017-3)
-- Kendon, A. (1967). Some functions of gaze-direction in social interaction. *Acta Psychologica*, 26, 22-63. [Elsevier (paywalled)](https://doi.org/10.1016/0001-6918(67)90005-4)
+- Kendon, A. (1967). Some functions of gaze-direction in social interaction. *Acta Psychologica*, 26, 22-63. [Elsevier (paywalled)](https://doi.org/10.1016/0001-6918%2867%2990005-4)
 
 ### Gaze and Turn-Taking
 - Auer, P. (2021). Turn-allocation and gaze: A multimodal revision of the "current-speaker-selects-next" rule. *Discourse Studies*, 23(2), 117-140. [SAGE (paywalled)](https://doi.org/10.1177/1461445620966922)

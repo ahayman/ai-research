@@ -894,7 +894,7 @@ The RT comprehension procedure is a STARTING tool, not an end state. The goal ov
 - Wilson, D. & Sperber, D. (2012). *Meaning and Relevance*. Cambridge University Press. [Amazon](https://www.amazon.com/Meaning-Relevance-Deirdre-Wilson/dp/1107605997)
 
 ### RT and Autism
-- Wharton, T. & Jagoe, C. (2024). "Relevance Theory and Communication Atypicalities." *The Handbook of Clinical Linguistics*, 2nd ed. Wiley. [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/10.1002/9781119875949.ch3)
+- Wharton, T. & Ifantidou, E. (2024). "Relevance Theory and Communication Atypicalities." In M. Ball, N. Müller & E. Spencer (Eds.), *The Handbook of Clinical Linguistics*, 2nd ed., pp. 31-41. Wiley. [Wiley (paywalled)](https://onlinelibrary.wiley.com/doi/10.1002/9781119875949.ch3)
 - Williams, G.L., Wharton, T. & Jagoe, C. (2021). "Mutual (Mis)understanding: Reframing Autistic Pragmatic 'Impairments' Using Relevance Theory." *Frontiers in Psychology*, 12:616664. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8117104/) | [Frontiers](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.616664/full)
 - Williams, G.L. (2021). "Theory of autistic mind: A renewed relevance theoretic perspective on so-called autistic pragmatic 'impairment'." *Journal of Pragmatics*, 180, 121-130. [ScienceDirect (paywalled)](https://doi.org/10.1016/j.pragma.2021.04.032) | [Author manuscript](https://cris.brighton.ac.uk/ws/files/30801473/JPrag_author_accepted_manuscript.pdf)
 
