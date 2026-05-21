@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 8: HRV Metrics Comparison — RMSSD, SDNN, HF, LF, LF/HF</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 1.5rem; background: #F9FAFB; color: #1F2937; line-height: 1.5; }
+  .container { max-width: 880px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); }
+  h1 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+  .lead { color: #6B7280; font-size: 0.95rem; margin: 0 0 1.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th, td { padding: 0.65rem 0.75rem; text-align: left; border: 1px solid #E5E7EB; vertical-align: top; }
+  th { background: #F3F4F6; font-weight: 700; font-size: 0.82rem; }
+  .domain-time { background: #DBEAFE; }
+  .domain-freq { background: #DCFCE7; }
+  .metric-name { font-weight: 700; font-size: 0.95rem; color: #1F2937; }
+  .caption { color: #4B5563; font-size: 0.9rem; font-style: italic; margin-top: 1.2rem; padding: 0.8rem 1rem; background: #F3F4F6; border-radius: 8px; border-left: 4px solid #6366F1; }
+  .warning { background: #FEE2E2; border-left: 4px solid #DC2626; padding: 1rem 1.2rem; border-radius: 8px; margin: 1.2rem 0; font-size: 0.92rem; }
+  .warning strong { color: #7F1D1D; }
+  .key-relationships { background: #EDE9FE; border-left: 4px solid #7C3AED; padding: 1rem 1.2rem; border-radius: 8px; margin: 1.2rem 0; font-size: 0.92rem; }
+  .key-relationships strong { color: #5B21B6; }
+  svg { display: block; margin: 1.5rem auto; max-width: 100%; height: auto; }
+  .freq-band { stroke-width: 1; }
+  .label-svg { font-family: system-ui; font-size: 12px; font-weight: 600; fill: #1F2937; }
+  .sublabel-svg { font-family: system-ui; font-size: 10px; fill: #4B5563; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>HRV Metrics Comparison</h1>
+<p class="lead">Heart rate variability is not one number. Different metrics index different things, and they don't always agree. Knowing which is which makes wearable readings less mysterious.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 13%;">Metric</th>
+      <th style="width: 12%;">Domain</th>
+      <th style="width: 28%;">What it measures</th>
+      <th style="width: 25%;">Primary interpretation</th>
+      <th style="width: 22%;">Caveats / use case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="domain-time">
+      <td class="metric-name">RMSSD</td>
+      <td>Time</td>
+      <td>Root mean square of successive differences between adjacent RR intervals (ms)</td>
+      <td><strong>Vagal / parasympathetic</strong>. Highly correlated with RSA and HF.</td>
+      <td>Best single short-term vagal index. Recommended for recordings of ≤5 min. Used by most "HRV" wearable apps.</td>
+    </tr>
+    <tr class="domain-time">
+      <td class="metric-name">SDNN</td>
+      <td>Time</td>
+      <td>Standard deviation of all NN intervals across the recording (ms)</td>
+      <td><strong>Overall variability</strong> — mixed sympathetic + parasympathetic contributions.</td>
+      <td>Standard for 24-hour ambulatory recordings. Less specific to vagal control than RMSSD.</td>
+    </tr>
+    <tr class="domain-time">
+      <td class="metric-name">SDANN</td>
+      <td>Time</td>
+      <td>Standard deviation of 5-minute mean NN intervals across a 24-hour recording (ms)</td>
+      <td><strong>Long-period rhythms</strong> — circadian and ultradian.</td>
+      <td>Captures variability across hour-to-hour shifts; not relevant for short recordings.</td>
+    </tr>
+    <tr class="domain-time">
+      <td class="metric-name">pNN50</td>
+      <td>Time</td>
+      <td>% of successive RR intervals differing by >50 ms</td>
+      <td><strong>Vagal / parasympathetic</strong>. Similar to RMSSD.</td>
+      <td>Older metric, mostly replaced by RMSSD. Still appears in some studies.</td>
+    </tr>
+    <tr class="domain-freq">
+      <td class="metric-name">HF</td>
+      <td>Frequency</td>
+      <td>Spectral power in 0.15–0.40 Hz band (ms²)</td>
+      <td><strong>Cardiac vagal control / RSA</strong>. Highest-frequency band corresponds to typical adult breathing rates.</td>
+      <td>Most direct frequency-domain analog of RSA. Affected by all the RSA confounds (breathing rate, position, etc.).</td>
+    </tr>
+    <tr class="domain-freq">
+      <td class="metric-name">LF</td>
+      <td>Frequency</td>
+      <td>Spectral power in 0.04–0.15 Hz band (ms²)</td>
+      <td><strong>Mixed</strong> — baroreflex modulation, some sympathetic, some parasympathetic.</td>
+      <td>Older literature interpreted as "sympathetic." This interpretation is now contested. Treat as a mixed band.</td>
+    </tr>
+    <tr class="domain-freq">
+      <td class="metric-name">VLF</td>
+      <td>Frequency</td>
+      <td>Spectral power in 0.0033–0.04 Hz band (ms²)</td>
+      <td><strong>Slow rhythms</strong> — thermoregulation, hormonal, RAAS.</td>
+      <td>Only meaningful in 24-hour recordings. Captures very slow autonomic shifts.</td>
+    </tr>
+    <tr class="domain-freq">
+      <td class="metric-name">LF/HF ratio</td>
+      <td>Frequency</td>
+      <td>Ratio of LF to HF power</td>
+      <td><strong>Once interpreted as "sympathovagal balance"</strong> — this interpretation is largely abandoned.</td>
+      <td><strong>Caution.</strong> Heathers (2012) called it "an obituary." Modern HRV literature treats with skepticism. Still appears on consumer devices.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 style="font-size: 1.05rem; margin: 1.4rem 0 0.6rem;">Frequency bands visualized</h2>
+
+<svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-8 desc-8">
+  <title id="title-8">HRV frequency bands</title>
+  <desc id="desc-8">A horizontal frequency axis from 0 to 0.5 Hz showing the VLF, LF, and HF bands of heart rate variability.</desc>
+
+  <!-- Axis -->
+  <line x1="60" y1="140" x2="720" y2="140" stroke="#1F2937" stroke-width="1.5" />
+
+  <!-- Tick marks -->
+  <line x1="60" y1="135" x2="60" y2="145" stroke="#1F2937" stroke-width="1.5" />
+  <text x="60" y="160" text-anchor="middle" class="sublabel-svg">0</text>
+  <line x1="106" y1="135" x2="106" y2="145" stroke="#1F2937" stroke-width="1.5" />
+  <text x="106" y="160" text-anchor="middle" class="sublabel-svg">0.04</text>
+  <line x1="250" y1="135" x2="250" y2="145" stroke="#1F2937" stroke-width="1.5" />
+  <text x="250" y="160" text-anchor="middle" class="sublabel-svg">0.15</text>
+  <line x1="585" y1="135" x2="585" y2="145" stroke="#1F2937" stroke-width="1.5" />
+  <text x="585" y="160" text-anchor="middle" class="sublabel-svg">0.40</text>
+  <line x1="720" y1="135" x2="720" y2="145" stroke="#1F2937" stroke-width="1.5" />
+  <text x="720" y="160" text-anchor="middle" class="sublabel-svg">0.5 Hz</text>
+
+  <!-- VLF band -->
+  <rect class="freq-band" x="60" y="60" width="46" height="78" fill="#FEF3C7" stroke="#B45309" />
+  <text x="83" y="50" text-anchor="middle" class="label-svg" fill="#92400E">VLF</text>
+  <text x="83" y="105" text-anchor="middle" class="sublabel-svg">slow rhythms</text>
+
+  <!-- LF band -->
+  <rect class="freq-band" x="106" y="60" width="144" height="78" fill="#DBEAFE" stroke="#1D4ED8" />
+  <text x="178" y="50" text-anchor="middle" class="label-svg" fill="#1D4ED8">LF</text>
+  <text x="178" y="100" text-anchor="middle" class="sublabel-svg">mixed band —</text>
+  <text x="178" y="113" text-anchor="middle" class="sublabel-svg">baroreflex modulation</text>
+  <text x="178" y="126" text-anchor="middle" class="sublabel-svg">(NOT pure sympathetic)</text>
+
+  <!-- HF band -->
+  <rect class="freq-band" x="250" y="60" width="335" height="78" fill="#DCFCE7" stroke="#15803D" />
+  <text x="417" y="50" text-anchor="middle" class="label-svg" fill="#15803D">HF</text>
+  <text x="417" y="100" text-anchor="middle" class="sublabel-svg">cardiac vagal control / RSA</text>
+  <text x="417" y="115" text-anchor="middle" class="sublabel-svg">(matches typical adult breathing rate)</text>
+
+  <!-- > HF region -->
+  <rect class="freq-band" x="585" y="60" width="135" height="78" fill="#F3F4F6" stroke="#9CA3AF" stroke-dasharray="4,3" />
+  <text x="652" y="100" text-anchor="middle" class="sublabel-svg">noise / non-physiological</text>
+
+  <!-- Frequency interpretation -->
+  <text x="60" y="200" class="label-svg">Frequency (Hz):</text>
+  <text x="60" y="218" class="sublabel-svg">VLF = 0.0033–0.04 &middot; LF = 0.04–0.15 &middot; HF = 0.15–0.40 (standard adult bands per Task Force 1996)</text>
+
+</svg>
+
+<div class="key-relationships">
+  <strong>Key practical relationships:</strong>
+  <br><br>
+  &bull; <strong>RMSSD ≈ HF</strong> — they capture almost the same physiological signal (cardiac vagal control). Correlate 0.85–0.95 in most recordings.<br>
+  &bull; <strong>SDNN</strong> includes contributions from multiple bands; useful as a global index but less specific.<br>
+  &bull; <strong>RSA (peak-to-trough or band-passed)</strong> is conceptually close to HF; one is computed in the time domain, the other in the frequency domain.<br>
+  &bull; <strong>LF/HF</strong> is best treated as a curiosity, not a meaningful biomarker. If a wearable foregrounds it, take it with skepticism.
+</div>
+
+<div class="warning">
+  <strong>The LF/HF ratio "obituary."</strong> When you see consumer apps or older clinical writeups talk about "your
+  sympathetic-parasympathetic balance" using the LF/HF ratio, that interpretation has been substantially undermined
+  in the contemporary HRV literature. Billman (2013) and Heathers (2012) — among others — demonstrated that the
+  assumptions underlying the ratio (LF as pure sympathetic, HF as pure parasympathetic, linear interaction) don't hold.
+  Use RMSSD or HF for vagal estimation, and avoid reading "balance" claims from LF/HF.
+</div>
+
+<div class="caption"><strong>Figure 8.</strong> If you're looking at a wearable's HRV display and want to know what to pay attention to, RMSSD (or HF in frequency-domain dashboards) is your best single vagal index. Use trends over weeks rather than single readings, and remember the confounds in Figure 7. Don't read meaning into LF/HF.</div>
+</div>
+</body>
+</html>

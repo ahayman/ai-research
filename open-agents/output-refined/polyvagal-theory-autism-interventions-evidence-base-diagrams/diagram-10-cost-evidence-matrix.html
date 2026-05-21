@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram 10 — Cost / Evidence Matrix</title>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg-alt: #F9FAFB;
+  --text: #1F2937;
+  --text-light: #6B7280;
+  --primary: #6366F1;
+  --primary-light: #EEF2FF;
+  --tier-a: #059669;
+  --tier-a-light: #D1FAE5;
+  --tier-b: #2563EB;
+  --tier-b-light: #DBEAFE;
+  --tier-c: #D97706;
+  --tier-c-light: #FEF3C7;
+  --tier-d: #DC2626;
+  --tier-d-light: #FEE2E2;
+  --tier-e: #7C2D12;
+  --tier-e-light: #FECACA;
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+  --radius: 10px;
+  --shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0F172A;
+  --bg-alt: #1E293B;
+  --text: #F9FAFB;
+  --text-light: #CBD5E1;
+  --primary: #818CF8;
+  --primary-light: #1E1B4B;
+  --tier-a: #34D399;
+  --tier-a-light: #064E3B;
+  --tier-b: #60A5FA;
+  --tier-b-light: #1E3A8A;
+  --tier-c: #FBBF24;
+  --tier-c-light: #78350F;
+  --tier-d: #F87171;
+  --tier-d-light: #7F1D1D;
+  --tier-e: #FCA5A5;
+  --tier-e-light: #450A0A;
+  --border: #334155;
+  --border-light: #1E293B;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg-alt);
+  color: var(--text);
+  margin: 0;
+  padding: 1.5rem 1rem;
+  line-height: 1.55;
+}
+.diagram-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+}
+h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin: 0 0 1.25rem;
+}
+.matrix {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  grid-template-rows: 50px 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.matrix-axis-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  text-align: center;
+}
+.axis-x-low { grid-column: 2 / 3; grid-row: 1 / 2; background: var(--tier-a-light); color: var(--tier-a); border-radius: 8px; }
+.axis-x-high { grid-column: 3 / 4; grid-row: 1 / 2; background: var(--tier-d-light); color: var(--tier-d); border-radius: 8px; }
+.axis-y-strong { grid-column: 1 / 2; grid-row: 2 / 3; background: var(--tier-a-light); color: var(--tier-a); border-radius: 8px; writing-mode: vertical-rl; transform: rotate(180deg); }
+.axis-y-weak { grid-column: 1 / 2; grid-row: 3 / 4; background: var(--tier-d-light); color: var(--tier-d); border-radius: 8px; writing-mode: vertical-rl; transform: rotate(180deg); }
+.quadrant {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  min-height: 230px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.quadrant-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.q1 { grid-column: 2/3; grid-row: 2/3; background: var(--tier-a-light); border-color: var(--tier-a); }
+.q1 .quadrant-title { color: var(--tier-a); }
+.q2 { grid-column: 3/4; grid-row: 2/3; background: var(--tier-b-light); border-color: var(--tier-b); }
+.q2 .quadrant-title { color: var(--tier-b); }
+.q3 { grid-column: 2/3; grid-row: 3/4; background: var(--tier-c-light); border-color: var(--tier-c); }
+.q3 .quadrant-title { color: var(--tier-c); }
+.q4 { grid-column: 3/4; grid-row: 3/4; background: var(--tier-d-light); border-color: var(--tier-d); }
+.q4 .quadrant-title { color: var(--tier-d); }
+.quadrant-list {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.quadrant-list li {
+  padding: 0.18rem 0 0.18rem 1rem;
+  position: relative;
+  color: var(--text);
+}
+.quadrant-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--text-light);
+  font-weight: 700;
+}
+.legend {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.legend strong { color: var(--text); }
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+@media (max-width: 640px) {
+  .matrix { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto auto auto auto auto; }
+  .axis-x-low, .axis-x-high { grid-column: 1; }
+  .axis-y-strong, .axis-y-weak { display: none; }
+  .q1, .q2, .q3, .q4 { grid-column: 1; grid-row: auto; }
+  .legend-grid { grid-template-columns: 1fr; }
+}
+.takeaway {
+  margin-top: 1rem;
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  padding: 0.9rem 1.05rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.takeaway strong { color: var(--primary); }
+</style>
+</head>
+<body>
+<div class="diagram-wrapper">
+  <h1>Cost / Evidence Matrix</h1>
+  <p class="subtitle">Where to put your time and money. The top-left quadrant dominates — start there. The bottom-right quadrant is the one to be skeptical of.</p>
+
+  <div class="matrix">
+    <div class="matrix-axis-label axis-x-low">Low cost</div>
+    <div class="matrix-axis-label axis-x-high">High cost</div>
+    <div class="matrix-axis-label axis-y-strong">Strong evidence</div>
+    <div class="matrix-axis-label axis-y-weak">Weak evidence</div>
+
+    <div class="quadrant q1">
+      <div class="quadrant-title">Low cost · Strong evidence — the dominant quadrant</div>
+      <ul class="quadrant-list">
+        <li>Slow breathing at ~6 bpm (Tier A · free)</li>
+        <li>Humming / Bhramari (Tier A–B · free)</li>
+        <li>Cold face splash via diving reflex (Tier A · free)</li>
+        <li>Alternate-nostril, "voo," slow pranayama (Tier B · free)</li>
+        <li>HRV biofeedback apps (Tier B · ~$10–30 one-time)</li>
+      </ul>
+    </div>
+
+    <div class="quadrant q2">
+      <div class="quadrant-title">High cost · Strong evidence (for cleared indications)</div>
+      <ul class="quadrant-list">
+        <li>gammaCore for FDA-cleared headache indications (Tier B · Rx)</li>
+        <li>Trauma-Sensitive Yoga with certified instructor (Tier B · ~$15–40/class × multi-week)</li>
+        <li>Research-grade taVNS in a clinical trial setting</li>
+      </ul>
+    </div>
+
+    <div class="quadrant q3">
+      <div class="quadrant-title">Low cost · Weak evidence</div>
+      <ul class="quadrant-list">
+        <li>"Vagus nerve" YouTube exercises with no published validation</li>
+        <li>"Polyvagal" massagers (Tier D · $30–200)</li>
+        <li>Magnesium / vagus-nerve oil framing (Tier D · $10–30/mo)</li>
+        <li>"Brain retraining" free-tier YouTube content (Tier D–E for cure-claims)</li>
+      </ul>
+    </div>
+
+    <div class="quadrant q4">
+      <div class="quadrant-title">High cost · Weak evidence — the skeptical quadrant</div>
+      <ul class="quadrant-list">
+        <li>SSP via licensed provider (Tier B–C · several hundred dollars)</li>
+        <li>Sensate (Tier D · ~$249)</li>
+        <li>Pulsetto (Tier D · ~$269)</li>
+        <li>Truvaga (Tier C–D · ~$299)</li>
+        <li>Apollo Neuro (Tier C · ~$349)</li>
+        <li>Cold plunge tubs (Tier B–C for facility · $5,000+)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-grid">
+      <div>
+        <strong>How to read this.</strong> The horizontal axis is direct out-of-pocket cost (time costs apply across the board; only money is plotted). The vertical axis is the strength of the published efficacy evidence for the specific use case relevant to an autistic adult with burnout. Tier classifications come from the framework in Diagram 1.
+      </div>
+      <div>
+        <strong>Risk overlay.</strong> Items not shown here that would fall on a third axis: Wim Hof + water (Tier E), holotropic breathwork unscreened (Tier E), brain-retraining cure-claims for ME/CFS (Tier E). These are kept off the matrix because cost/evidence misses the relevant variable for them.
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>The dominant strategy.</strong> Start in the top-left quadrant. Exhaust the free, high-evidence interventions before paying for anything in the bottom-right. If you do pay, prefer trauma-sensitive yoga with a certified instructor (top-right) over consumer wearables (bottom-right). For acute crisis interruption: cold face splash. For sustained autonomic flexibility: daily slow breathing + humming. For trauma context: TSY. The expensive devices add convenience and novelty but rarely add evidence-based benefit beyond what these basics provide.
+  </div>
+</div>
+
+<script>
+(function() {
+  try {
+    if (window.parent && window.parent !== window) {
+      var parentTheme = window.parent.document.documentElement.getAttribute('data-theme');
+      if (parentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } else {
+      var stored = localStorage.getItem('theme');
+      if (stored === 'dark' || (!stored && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
