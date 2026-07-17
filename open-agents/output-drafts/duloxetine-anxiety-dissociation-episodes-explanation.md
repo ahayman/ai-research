@@ -5,10 +5,11 @@ topic_slug: "duloxetine"
 category: "Anxiety, Dissociation & the Episode Pattern"
 category_slug: "anxiety-dissociation-episodes"
 category_position: "5 of 12"
-status: "complete — REBUILD"
-date: "2026-07-16"
-binding_source: "output-drafts/duloxetine-BINDING-CORRECTIONS.md (v3)"
+status: "complete — REVISED for the corrected escitalopram history"
+date: "2026-07-17"
+binding_source: "output-drafts/duloxetine-BINDING-CORRECTIONS.md (v3, incl. §0.5)"
 sources_merged:
+  - "duloxetine-exploration-research-supplement-8.md (corrected history; within-person control; the empty literature) — SUPERSEDES the escitalopram history in every prior document"
   - "duloxetine-exploration-research-supplement-1.md (GAD trial evidence)"
   - "duloxetine-exploration-research-supplement-4.md (durability; acute-serotonin findings; the exposure math)"
   - "duloxetine-exploration-research-supplement-6.md (the decoupling; the gating ladder)"
@@ -16,6 +17,8 @@ sources_merged:
   - "duloxetine-exploration-validation-supplement-1.md (binding adjudications)"
   - "duloxetine-exploration-validation.md (binding — NFPD adjudication)"
 guardrail: "§8 — HAM-A somatic anxiety is NOT 'anxiety without cognitive content'. Never mapped."
+guardrail_2: "The escitalopram dissociation and the reader's native episodes are TWO OBJECTS. The drug-induced one habituated in ~1 week; the native ones ran 1-2 weeks and did not habituate over decades. Never merged."
+guardrail_3: "Activation/jitteriness syndrome (Arai 2023, PMID 38868737) must NOT be offered as the name for the escitalopram dissociation. All 11 of its constituent symptoms are over-arousal; dissociation is not among them. Reaching for it repeats the NFPD category error."
 ---
 
 # Anxiety, Dissociation & the Episode Pattern
@@ -66,6 +69,28 @@ That argument is worth keeping, and it is worth being clear about what it is not
 
 **Drop the label. Keep the argument.** The CBT-mismatch insight never needed NFPD to work, because it follows directly from your own report rather than from anyone else's diagnostic category. If there is no negative cognition, cognitive restructuring has nothing to restructure. That conclusion stands on its own, and it is probably the most immediately useful paragraph in this deep dive, because it retires an explanation you have likely been carrying for years, which is that the therapies failed because you failed at them.
 
+## Two things have been called dissociation here, and they are not the same thing
+
+Before the drug evidence, a correction, because this page has been reasoning from a fact that is not true. Every version of this deep dive has described your escitalopram trial as producing a persistent dissociated state, which implied a short or inadequate trial that you sensibly abandoned. You corrected it, and the correction changes the shape rather than the details.
+
+What actually happened: almost six months on the drug. Ten to twenty milligrams over the first month, then several months held at twenty. The dissociation was severe enough that you could not drive or work, and it lasted about a week at the start and about a week again at the titration. Then it faded, and it stayed faded across months at an unchanged dose, and the drug left you exactly where it found you. So there were two transient episodes at two transitions, not a state you lived in.
+
+Two things follow immediately. The first is that **"he did not take enough" and "he did not take it long enough" are both dead** `[reader report — definitive; no literature can override a dose-duration fact]`, because six months at a full dose held for months is an adequate trial by any standard. The second is that this makes the escitalopram result *stronger* rather than weaker. It is a clean, fair negative: the drug does not work for you. Every candidate mechanism that has to explain the escitalopram failure now has a harder job than it had yesterday.
+
+And the third is the one that matters most on this page. **Your escitalopram dissociation habituated. Your own episodes never have** `[reasoning, not evidence — though both sides are the reader's own report]`. The drug-induced one arrived within days of a dose change, ran about a week, faded on its own, and did not return across months at a steady dose. Your episodes are set off by sensory overwhelm rather than by a dose change, run one to two weeks, arrive two to four times a month, bring severe anxiety and intense depression with them, and have not habituated in decades. One went away by itself in a week. The other did not go away in twenty years. A shared word is not a shared object, and using the first as a model of the second is a mistake this page was making.
+
+There is one more thing in the correction, and it is the strongest single finding this project has produced. Your two drug initiations delivered **almost exactly the same serotonin transporter engagement and produced opposite outcomes.** Escitalopram 0→10mg is a step of **+69.2 occupancy points** and it dissociated you for a week. Duloxetine 0→20mg is a step of **+71.7 points** and it produced mild floatiness. **Matched within 2.5 points** `[reasoning, not evidence — occupancy modelled from Klein 2006 (PMID 16955282) and Takano 2006 (PMID 16506079), both primary, verified]`. The tracer-matched version is tighter: duloxetine 20mg thalamus **71.3%**, escitalopram 10mg thalamus **~70%**, both [11C]DASB, both PET, both single-dose, both healthy Japanese volunteers `[primary, verified ×2]`.
+
+Same brain, one year apart, matched engagement, opposite results. **Whatever separated those two drugs in you, it was not how much serotonin transporter they occupied.** You reasoned to that from first principles before anyone here assembled the numbers, and the numbers were in this project's corpus the whole time. Caveats travel: retrospective, about a year old, and even the best-matched pair comes from two laboratories. But it is within-person, and given that individual EC50 spreads **8.5-fold** between people `[primary, verified — Abanades 2011, PMID 20940733]`, your own body is the only control immune to that.
+
+## So is what escitalopram did to you a known thing? No.
+
+Search for antidepressant-induced depersonalisation or derealisation and **44** papers come back. Most are **burnout studies**, because the Maslach Burnout Inventory has a "depersonalization" subscale that is an unrelated construct sharing a word. The rest treat dissociation *with* an SSRI rather than describing one caused by it. Narrow properly and it returns **4 papers, none on topic** `[no evidence exists]`. No prevalence. No time course. No habituation data. Nobody has asked.
+
+There *is* a described dose-transition syndrome, and the sentence you would want exists almost verbatim: Arai 2023 calls jitteriness/anxiety syndrome *"a recognized adverse effect observed during the initiation or change of dose in antidepressant treatment"* `[primary, verified — PMID 38868737]`. Then look at its eleven items: anxiety, agitation, panic attacks, insomnia, irritability, hostility, aggressiveness, impulsivity, akathisia, hypomania, mania `[primary, verified — PMID 18781664]`. **Every one is over-arousal. Dissociation is not on it, and you reported the opposite pole.** Handing you activation syndrome would be the NFPD error with a new word, so this page does not reach for it.
+
+Two more things cap what could be borrowed. Its systematic review covered 107 articles and found **no validated rating scales**, an incidence range of **4–65%**, and concluded the syndrome *"remains poorly characterised"* `[primary, verified — PMID 19478285]`. And the one prospective study that measured a time course required enrolees to be off antidepressants for a month beforehand, so it studied **initiation only and contains no dose-increase data** `[primary, verified — PMID 25419134]`. The "or change of dose" half of Arai's sentence is an unreferenced background assertion in a three-case report.
+
 ## The decoupling, and the tension underneath it
 
 The central observation on duloxetine is not that your episodes stopped. It is stranger and more informative than that.
@@ -76,7 +101,7 @@ Two effects moving in opposite directions, same drug, same person, same day. Tha
 
 Now the part that is genuinely uncomfortable, and it belongs here rather than in a caveat box. **Four verified lines of evidence say that acute serotonin makes your exact problem worse.**
 
-Escitalopram at 15mg significantly decreased P50 sensory gating and habituation in healthy volunteers, double-blind and placebo-controlled `[primary, verified — PMID 20971512]`. Escitalopram at 10mg significantly delayed habituation of the startle response in the same lab's earlier study `[primary, verified — PMID 17299503]`. Habituation is the exact function whose failure produces sensory overwhelm, and the drug in both studies is the one that made you dissociate and go non-functional. Separately, the serotonin agonist m-CPP induced depersonalisation significantly more than placebo in a 67-subject challenge study, with 18% experiencing depersonalisation or derealisation `[primary, verified — PMID 8570768]`. And in Maier and Watkins' work on stressor controllability, which is the most influential animal model of stress-induced collapse there is, the mechanism runs through serotonin as the **effector**: uncontrollable stress sensitises the dorsal raphe, the sensitised raphe releases exaggerated serotonin in response to subsequent input, and that exaggerated release is what produces the behavioural collapse `[primary, verified — PMID 15893820]`. The reader's intuitive question was whether serotonin sets a stress-resilience threshold. There is a real, well-developed story about serotonin and stress, and it runs the other way: serotonin is closer to the thing that causes the collapse than the thing that prevents it.
+Escitalopram at 15mg significantly decreased P50 sensory gating and habituation in healthy volunteers, double-blind and placebo-controlled `[primary, verified — PMID 20971512]`. Escitalopram at 10mg significantly delayed habituation of the startle response in the same lab's earlier study `[primary, verified — PMID 17299503]`. Habituation is the exact function whose failure produces sensory overwhelm, and the drug in both studies is the one that dissociated you for a week at each of two dose changes. Separately, the serotonin agonist m-CPP induced depersonalisation significantly more than placebo in a 67-subject challenge study, with 18% experiencing depersonalisation or derealisation `[primary, verified — PMID 8570768]`. And in Maier and Watkins' work on stressor controllability, which is the most influential animal model of stress-induced collapse there is, the mechanism runs through serotonin as the **effector**: uncontrollable stress sensitises the dorsal raphe, the sensitised raphe releases exaggerated serotonin in response to subsequent input, and that exaggerated release is what produces the behavioural collapse `[primary, verified — PMID 15893820]`. The reader's intuitive question was whether serotonin sets a stress-resilience threshold. There is a real, well-developed story about serotonin and stress, and it runs the other way: serotonin is closer to the thing that causes the collapse than the thing that prevents it.
 
 **Duloxetine is also serotonergic, and at 20mg it is predominantly serotonergic.** Its serotonin transporter affinity is nine times its noradrenaline transporter affinity `[primary, verified — PMID 11750180]`, and your dose sits high on the serotonergic occupancy curve and low on the noradrenergic one. So the four lines are not about a different drug class. They are about the arm of duloxetine that is doing most of the work at your dose.
 
@@ -295,7 +320,7 @@ The reader asked for mechanism. What the adjacent evidence supplies is a problem
 | **Simeon 1995** (PMID 8570768) `[primary, verified]` | 67 subjects, double-blind placebo-controlled challenge with the partial serotonin agonist **m-CPP**. *"Challenge with m-CPP induced depersonalization significantly more than did placebo."* **18%** experienced depersonalisation or derealisation. | **Against** |
 | **Maier & Watkins 2005** (PMID 15893820) `[primary, verified]` | Verbatim: *"uncontrollable stressors sensitize serotonergic neurons in the dorsal raphe... and the **consequent exaggerated release of serotonin** in response to subsequent input **is at least in part responsible for the behavioral changes that occur**."* | **Against** |
 
-**Habituation is the exact function whose failure produces sensory overwhelm** `[reasoning, not evidence]`. **And the drug in the first two studies is escitalopram, the drug that made you dissociate and go non-functional** `[reasoning, not evidence]`.
+**Habituation is the exact function whose failure produces sensory overwhelm** `[reasoning, not evidence]`. **And the drug in the first two studies is escitalopram, the drug that dissociated you for a week at each of two dose changes** `[reasoning, not evidence]`.
 
 **And there is a fifth line with the same sign, which is the one that matters most for the stress model.** In Maier and Watkins' framework, serotonin is closer to the **effector** of stress-induced collapse than to the buffer against it. The question "does serotonin set a stress-resilience threshold?" has a real, well-developed answer in the literature, and the answer runs the other way.
 
@@ -315,20 +340,22 @@ The reader asked for mechanism. What the adjacent evidence supplies is a problem
 
 If acute serotonin elevation is anxiogenic, dissociogenic and gating-disrupting, and chronic treatment produces adaptation at the relevant receptors, then:
 
-- **The acute phase looks like your escitalopram experience**: dissociation, no anxiolysis, non-functional.
+- **The acute phase looks like the week escitalopram cost you at each dose change**: dissociation, no anxiolysis, non-functional.
 - **The chronic phase looks like your current experience**: episodes suppressed.
 - **The therapeutic effect is not "more serotonin." It is the adaptation to more serotonin**, a receptor-level change running opposite to the drug's acute pharmacology.
 
-**Three virtues**: it explains the escitalopram failure and the duloxetine response with one mechanism; it explains the two-to-six-week onset delay every antidepressant shows; and it makes a falsifiable prediction, which is that a dose increase should re-create the acute state.
+**Two virtues**: it explains the two-to-six-week onset delay every antidepressant shows; and it makes a falsifiable prediction, which is that a dose increase should transiently re-create the acute state. That prediction was written before the chain knew the corrected history, and the history confirmed it twice.
 
-**Four problems, and they travel with it**:
+**Six problems, and they travel with it**:
 
-1. **The desensitisation timeline in humans is not established** `[secondary — unverified]`.
-2. **You are at two weeks, which is early for a chronic adaptation.** The account is in tension with your own timeline `[reasoning, not evidence]`. This is flagged against the account's own interest.
-3. **The whole desensitisation family is under sustained attack.** The best-known version, built on 5-HT1A autoreceptors, has failed repeatedly: molecular imaging and postmortem work found no consistent 5-HT1A alterations in depression; 5-HT1A antagonists failed to produce consistent antidepressant efficacy, which the theory predicts they should; firing rate normalises *despite* ongoing inhibition rather than because inhibition was removed `[secondary — unverified]`. The critiques are specific to 5-HT1A and do not automatically transfer to a 5-HT2C version, but they should induce real humility about the entire family.
-4. **Nobody has tested any of this in an autistic adult, in this phenotype, or with duloxetine** `[no evidence exists]`.
+1. **⚠ The virtue it used to lead with is DEAD, and the corrected history killed it.** This account's headline claim was that it explained the escitalopram failure and the duloxetine response with **one** mechanism, by mapping escitalopram onto the acute phase. That mapping required escitalopram never to have reached the chronic phase. **It did: six months, full 20mg, held.** The account says that is when the benefit arrives. Nothing arrived. The only rescue is to make the adaptation drug-specific, which abandons the single mechanism and concedes the drug difference is doing the work `[reasoning, not evidence — the premise is the reader's own report]`.
+2. **The confirmed prediction is worth very little and must not compensate.** Wrong drug (near-circular, since drug-difference is the question at issue); n=1; retrospective at ~1 year's recall; unblinded; and **NOT DISCRIMINATING** — activation folklore, the gating ladder and plain intuition all predict a dose increase transiently worsens things. **A prediction its rivals share selects nothing.** Net evidential value: low but non-zero. It moves no ranking.
+3. **The desensitisation timeline in humans is not established** `[secondary — unverified]`.
+4. **You are at two weeks, which is early for a chronic adaptation.** The account is in tension with your own timeline as well as your history `[reasoning, not evidence]`. This is flagged against the account's own interest.
+5. **The whole desensitisation family is under sustained attack.** The best-known version, built on 5-HT1A autoreceptors, has failed repeatedly: molecular imaging and postmortem work found no consistent 5-HT1A alterations in depression; 5-HT1A antagonists failed to produce consistent antidepressant efficacy, which the theory predicts they should; firing rate normalises *despite* ongoing inhibition rather than because inhibition was removed `[secondary — unverified]`. The critiques are specific to 5-HT1A and do not automatically transfer to a 5-HT2C version, but they should induce real humility about the entire family.
+6. **Nobody has tested any of this in an autistic adult, in this phenotype, or with duloxetine** `[no evidence exists]`.
 
-**Grade: the best available reasoning. Not a mechanism. Not evidence.**
+**Grade: live but wounded, and more wounded than it was.** Reasoning, not a mechanism, not evidence.
 
 There is also one human study pointing the other way on the adaptation half, and it belongs here. **Zohar 1988 (PMID 3276283)**: n=9 OCD patients given m-CPP challenge before and after four months of clomipramine, showing *"adaptive subsensitivity to the serotonergic agonist mCPP"* `[primary, verified]`. Read straight, that predicts the acute state should get **better** with chronic treatment, not that a dose step would re-create it. The objections are real (n=9, no control group, uncontrolled order effect, four months, clomipramine, OCD), but they are heterogeneity-grade objections rather than logic-grade ones, so the direction claim survives as weak evidence against the account.
 
@@ -510,6 +537,7 @@ Stated plainly rather than softened, because these are the most valuable claims 
 5. **Nobody has measured whether the acute sensory-gating cost persists with chronic dosing.** Every relevant study is a single acute dose `[no evidence exists]`.
 6. **Nobody has measured whether duloxetine's psychic/somatic split relates to anxiety-without-cognitive-content.** The constructs have never been put in the same room `[no evidence exists]`.
 7. **Duloxetine-specific tachyphylaxis has never been studied** `[no evidence exists]`.
+8. **Nobody has studied antidepressant-dose-change-induced dissociation.** 44 papers, mostly burnout studies false-hitting on an unrelated subscale; narrowed properly, 4 papers, none on topic. No prevalence, no time course, no habituation data. The only named dose-transition syndrome does not list dissociation among its eleven constituent symptoms `[no evidence exists]`.
 
 ### Sources
 
@@ -536,6 +564,11 @@ Stated plainly rather than softened, because these are the most valuable claims 
 
 **Marked dead — do not resurrect**
 
+- ❌ **"The escitalopram trial was inadequate / the dose was wrong."** Six months, titrated to a full 20mg, held for months. Killed by a dose-and-duration fact; heterogeneity cannot revive it.
+- ❌ **"The escitalopram dissociation was a persistent state."** Two transients at two transitions, and it habituated. Every earlier version reasoned from the persistent version.
+- ❌ **Merging the escitalopram dissociation with the reader's native episodes.** One habituated in a week; the other has not habituated in decades.
+- ❌ **"Activation / jitteriness syndrome explains the escitalopram dissociation."** All 11 constituent symptoms are over-arousal; dissociation is not among them. The NFPD category error with a new label.
+- ❌ **The chronic-adaptation account's claim to explain both drugs with one mechanism.** It required escitalopram never to have reached the chronic phase. It spent six months there.
 - ❌ **"NFPD maps onto the reader's phenomenology."** Duration (minutes vs weeks); absent fear vs absent cognitions; cardiology chest-pain population. **Keep the CBT-mismatch argument only.**
 - ❌ **"HAM-A somatic anxiety" as a description of anxiety without cognitive content.** Different constructs, different axes. Mapping them repeats the NFPD error.
 - ❌ **"All changes statistically significant vs placebo"** (Nicolini 20mg). False; the somatic factor was p=0.07.

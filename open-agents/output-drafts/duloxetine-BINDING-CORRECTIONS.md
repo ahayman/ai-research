@@ -35,6 +35,54 @@ authority: "binding — overrides all research documents wherever they conflict"
 
 ---
 
+## 0.5 THE WITHIN-PERSON CONTROL — the strongest finding in the project (supplement 8)
+
+**The reader's corrected escitalopram history supplies the control nine passes of cross-study comparison could not.**
+
+| | Occupancy step | Outcome |
+|---|---|---|
+| **Escitalopram 0→10mg** | **+69.2 points** | **Dissociated. Couldn't drive or work. A week.** |
+| **Duloxetine 0→20mg** | **+71.7 points** | **Mild floatiness.** |
+
+**Matched within 2.5 points** — and within ~1 point on tracer-matched thalamic data (71.3% vs ~70%). **Same brain. Same SERT engagement. Opposite outcomes.**
+
+**This establishes his premise as FACT, not inference: SERT occupancy is not the explanatory variable.** Every earlier version of this argument leaned on cross-study comparisons that collapsed into artifacts. This one is within-person and matched. **It should be prominent on Cats 2 and 4.**
+
+**He reasoned to it himself from first principles. Say so.** The evidence was in the corpus the whole time and needed his correction to become visible.
+
+### His regional-distribution candidate — LIVE, well-formed, untestable (NOT unfalsifiable)
+
+- **The FORM has published precedent**: **Kim 2017 (PMID 27557550)** explains the SSRI onset delay *by a regional occupancy gradient* — DRN > putamen, p<0.001, different Hill coefficients. **The identical explanatory move.** **Baldinger 2014 (PMID 24121201)** states his hypothesis almost verbatim as established preclinical fact: *"regionally varying SERT activity **and antidepressant drug concentration**."*
+- **The amplifier is real and named**: the DRN autoreceptor gradient can **invert** net serotonin in the projection fields. Small regional difference → large behavioural difference is a described mechanism, not hand-waving.
+- **Why it can't be tested: escitalopram has been imaged in 14 brain regions; duloxetine in 3** (thalamus, midbrain, striatum). **Every region the dissociation literature implicates — insula, ACC, prefrontal — has NEVER been measured for duloxetine at any dose.** The 3 overlapping regions show parity.
+- **As stated it is a schema** (14 regions × 2 directions = 28 post-hoc stories). **Made specific it is falsifiable in one PET scan nobody has run.** That is a good place for a hypothesis to be. **Rate it accordingly; do not manufacture support because he proposed it.**
+- **His "slight difference, outsized effect" intuition is VINDICATED on a different axis**: converting the Jensen/Oranje ladder to occupancy, **10→15mg is +3.7 occupancy points and it flipped the sensory filter.** **Therefore the gating effect CANNOT be a SERT-occupancy effect.** Candidate 2 and supplement 2's survivor are **the same finding twice**.
+
+### The taper math — matches his descent exactly, FAILS on his ascent
+
+Fitted from Klein 2006 (escitalopram ED50 1.82mg, Emax 81.8%):
+
+| Step | Points lost | What happened |
+|---|---|---|
+| 20→15 | 2.0 | nothing |
+| 15→10 | 3.7 | nothing |
+| 10→5 | 9.2 | nothing |
+| **5→0** | **60.0** | **two weeks** |
+
+**The last step is 30× the first. He lived the hyperbolic cliff.** Takano's ED50 (7.9mg) independently reproduces the corpus's duloxetine figures (16.7 / 71.7 vs "~16 / ~72") — **both verified.**
+
+**But report the failure too**: his **ascent** 10→20 was only **+5.8 points and cost a week**, while a *larger* 9.2-point reduction cost nothing. **So: the cliff's SHAPE reads across (it stands on duloxetine's own ED50, not his history). How it will FEEL does not — his own data refutes that.** Do not smooth this.
+
+### Corrections to earlier claims
+
+- **The "confirmed prediction" was OVERCLAIMED.** Supplement 4's *"a dose increase transiently re-opens the acute window"* is confirmed only in the weakest sense: **wrong drug** (predicted for duloxetine, confirmed by escitalopram — near-circular, since drug-difference is the very question), n=1, retrospective, **and NOT DISCRIMINATING** — activation folklore, the gating ladder, and plain intuition all predict it. **A prediction its rivals share selects nothing. It must not move any ranking.**
+- **"Transient dissociation at dose changes" is NOT a described phenomenon.** A dose-transition syndrome exists (**Arai 2023, PMID 38868737**, "during the initiation or **change of dose**") but its 11 items are all **over-arousal** (agitation, panic, akathisia, mania). **Dissociation is not on it; he reports the opposite pole.** Reaching for it repeats the NFPD category error exactly. **The literature on antidepressant-induced dissociation is EMPTY** — 44 PubMed hits, mostly burnout studies false-matching on a subscale; narrowed properly, 4 hits, none on topic. **No prevalence, no time course, no habituation data. This is EVIDENCE-ABSENCE #7.**
+- **Candidate 4 (allosteric S2) is much weaker than the corpus says.** The corpus says "untested, never studied." **It was tested TWICE in vivo with purpose-built knockin mice and FAILED both times** — **Murray 2016** (all-Emory, no manufacturer) and **Jacobsen 2014**, whose COI reads *"Lundbeck Research, USA"* and which **concluded AGAINST the manufacturer's own differentiator.** (That last point cuts *for* its credibility.)
+- **The dose warning has a counterweight from his own data.** A 20→60mg step is **4.5× Oranje's filter-flipping step** — but **his own duloxetine initiation was 4.3× larger still and produced mild floatiness.** **Both belong on the page.**
+- **The brief's PK framing was backwards**: shorter half-life = *faster* transition, not sharper. **There is no paradox to resolve.**
+- **"Occupancy plateaus therefore engagement plateaus" is invalid arithmetic.** Do not use it.
+- **PMC7613095 is a trap** — it is a *commentary* on Horowitz, not Horowitz.
+
 ## 1. The chain's failure mode — you will commit it unless you actively resist
 
 **Eight passes. Every one found real errors in the last.** The re-validator's meta-finding:
@@ -79,7 +127,23 @@ Verified instance: **5+ hours at two crowded festivals, two panic attacks with H
 ### His presentation (rate every candidate against all of it)
 
 - Episodes historically **2–4/month**: dissociation → severe anxiety → intense depression. **NO negative cognitive content.** Load-bearing — it is why cognitive therapies never worked; the state is not a thought pattern. **Never flatten into ordinary depression/anxiety.**
-- **Prior escitalopram** → dissociation, non-functional, **zero anxiolysis**.
+- **Prior escitalopram — CORRECTED 2026-07-17 BY THE READER. THIS SUPERSEDES EVERY DOCUMENT IN THE CORPUS.**
+
+> **The corpus says "a prior escitalopram trial → dissociation, non-functional, zero anxiolysis," implying a short or inadequate trial with a persistent adverse state. That is wrong in shape, and the shape is the whole point.**
+
+In his words: *"I took Lexapro for almost 6 months. I went from 10 - 20mg over the course of a month, then stayed at 20mg for several months. Both the initial dose and the titration up caused me to lose a week each of functionality. It dissociated me so strongly I couldn't drive or work. But once that was done...the drug faded away and left me exactly where I started... Every 2 weeks I reduce the dose by 5mg... Each dosage reduction did nothing as far as I could tell. When I finally quit, though, (from 2 weeks at 5mg -> 0mg), I lost 2 weeks of functionality."*
+
+**What this establishes:**
+1. **It was an ADEQUATE trial** — 6 months, titrated to a full 20mg, held for months. **"Wrong dose" and "inadequate trial" are DEAD as candidates.** Remove them wherever they appear.
+2. **The dissociation was DOSE-CHANGE-LINKED AND TRANSIENT, NOT A STEADY STATE.** ~1 week at 0→10, ~1 week at 10→20, then it **faded**. Every page currently reads it as a persistent state. **It is not.** This changes Cats 2, 5, 10, 11, 12.
+3. **Zero benefit at any dose over 6 months** — a clean, fair negative for escitalopram in him. **Strengthened, not weakened.**
+4. **The 5mg → 0mg step cost 2 WEEKS — worse than initiation** — while every intermediate 5mg reduction did nothing.
+
+**It retroactively confirms supplement 4's falsifiable prediction** that *"a dose increase should transiently re-open the acute window."* **He ran that experiment twice, unknowingly, and it passed both times.** Treat this as the chain's most suspicious moment, not its most triumphant — a confirmed prediction is exactly when §1's failure mode bites. It is **n=1, retrospective, on a different drug**.
+
+**He has LIVED the hyperbolic taper cliff.** Every 5mg step on the flat part of the curve did nothing; the final step off the steep bottom cost two weeks. **This is the single strongest argument in the deep dive for asking about a compounded liquid**, and it is his own data, not a model.
+
+**And it gives the dose question a shape it did not have**: based on his own history with serotonergic dose transitions, a duloxetine increase plausibly costs **about a week, then passes** — a transient toll, not a permanent trade. **State the inferential distance honestly** (different drug, different receptor profile, n=1). **Do NOT let this become a recommendation to increase.** §10 is absolute.
 - **Pain improvement "noted but minimal."** Effect is *"mostly psychological and with my sleep."*
 - **Sleep improved** (he values this highly); **vivid dreams**; **less morning fatigue**.
 - **Worse RLS**. Mild non-impairing **"floaty"** feeling.
@@ -119,7 +183,11 @@ Verified instance: **5+ hours at two crowded festivals, two panic attacks with H
 **It does not predict acute-worse. It predicts acute-BETTER, twice over:**
 - **The source was misread.** Bari & Aston-Jones (**PMID 22820275 — correct citation is 2013, Bari & Aston-Jones**, not the chain's "2012, unnamed") say verbatim that atomoxetine decreased tonic *"although leaving **INTACT** the sensory-evoked excitatory component"*, and the ratio rose because **tonic FELL and the INHIBITORY component was INCREASED and PROLONGED.** **A ratio rising because its denominator falls is not "acute reactivity up."** Also: isoflurane-anaesthetised rats, **single acute injection**, α2 **cited not tested**.
 - **The theory itself contradicts it.** Aston-Jones & Cohen 2005 (PMID 16022602), verbatim: high tonic = *"disengagement from the current task and a search for alternative behaviors (exploration)."* **Tonic is not "baseline arousal" — it is a distractible mode.** Lowering it predicts **better** filtering. Sanity check: **atomoxetine is prescribed to REDUCE distractibility.**
-- **The decisive test, found by nobody in eight passes: Alba-Delgado 2012 (PMID 22591831)** — duloxetine 5 mg/kg/day, **7 days, osmotic minipump, in vivo LC recording. The only chronic-duloxetine LC recording in existence.** The sensory-evoked **excitatory response DECREASED.**
+- ~~**The decisive test: Alba-Delgado 2012 (PMID 22591831)** — the sensory-evoked excitatory response DECREASED.~~ **← THIS WAS A MISREADING. RETRACTED (supplement 8).**
+
+> **⚠ THE PAPER IS TITLED *"Analgesic antidepressants PROMOTE the responsiveness of locus coeruleus neurons."*** It reports **three** effects; supplement 7 quoted **one** and dropped the two running the other way (**inhibitory period reduced**, **late response augmented**, both *"in all animals"*) — while **the quoted decrease was only in the nerve-injured group.** **This is the IDENTICAL cherry-pick supplement 7 caught in Bari & Aston-Jones, committed by supplement 7 in the act of catching it.**
+>
+> **Consequence: candidate 5's phasic limb moves from "dead" to UNRESOLVED.** It **stays at #5** — the other demotion arguments (not NET-specific, silent on the crash, dose-silent, and the escitalopram counterexample inside his own history) are **independent and still stand.** But do not present the phasic limb as refuted. It is unresolved.
 - **The counterexample inside his own history**: the tonic limb is **not NET-specific** — **SSRIs lower LC tonic firing too**, via serotonin's inhibitory input, and **Szabo proposes that as the anxiolytic mechanism. Escitalopram is an SSRI and gave him ZERO anxiolysis.**
 - **Silent on the crash** ("less arousal → no 2-week collapse" is a hope with a receptor attached) and **dose-silent** (Bari: *"different doses affecting different aspects of LC firing"* — three doses, three qualitatively different patterns).
 
