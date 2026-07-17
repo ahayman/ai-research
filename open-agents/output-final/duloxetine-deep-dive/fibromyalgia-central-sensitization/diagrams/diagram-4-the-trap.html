@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 4: The Trap</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --a: #7C3AED; --a-bg: #F3E8FF; --a-br: #E9D5FF;
+    --b: #0891B2; --b-bg: #CFFAFE; --b-br: #A5F3FC;
+    --danger: #DC2626; --danger-bg: #FEE2E2; --danger-br: #FECACA;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+      --a: #A78BFA; --a-bg: rgba(124,58,237,0.18); --a-br: rgba(124,58,237,0.45);
+      --b: #22D3EE; --b-bg: rgba(8,145,178,0.18); --b-br: rgba(8,145,178,0.45);
+      --danger: #F87171; --danger-bg: rgba(239,68,68,0.18); --danger-br: rgba(239,68,68,0.4);
+      --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+      --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4); }
+  }
+  :root[data-theme="dark"] { --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+    --a: #A78BFA; --a-bg: rgba(124,58,237,0.18); --a-br: rgba(124,58,237,0.45);
+    --b: #22D3EE; --b-bg: rgba(8,145,178,0.18); --b-br: rgba(8,145,178,0.45);
+    --danger: #F87171; --danger-bg: rgba(239,68,68,0.18); --danger-br: rgba(239,68,68,0.4);
+    --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+    --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4); }
+  :root[data-theme="light"] { --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --a: #7C3AED; --a-bg: #F3E8FF; --a-br: #E9D5FF;
+    --b: #0891B2; --b-bg: #CFFAFE; --b-br: #A5F3FC;
+    --danger: #DC2626; --danger-bg: #FEE2E2; --danger-br: #FECACA;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 1.5rem; background: var(--bg); color: var(--text); line-height: 1.55; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.5rem; text-align: center; }
+  .sub { text-align: center; max-width: 880px; margin: 0 auto 1.75rem; font-size: 0.95rem; color: var(--muted); }
+
+  .models { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+  @media (max-width: 800px) { .models { grid-template-columns: 1fr; } }
+  .model { border-radius: 12px; border: 1px solid; padding: 1rem 1.15rem; }
+  .model.A { background: var(--a-bg); border-color: var(--a-br); }
+  .model.B { background: var(--b-bg); border-color: var(--b-br); }
+  .model .lbl { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 999px; color: #fff; display: inline-block; margin-bottom: 0.45rem; }
+  .model.A .lbl { background: var(--a); }
+  .model.B .lbl { background: var(--b); }
+  .model h3 { font-size: 0.98rem; margin-bottom: 0.4rem; }
+  .model.A h3 { color: var(--a); }
+  .model.B h3 { color: var(--b); }
+  .model .chain { font-size: 0.84rem; }
+  .model .chain code { font-family: inherit; font-weight: 700; }
+
+  .matrix { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 0.8rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  thead th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); background: var(--bg); }
+  thead th.now { color: var(--pass); }
+  thead th.later { color: var(--danger); }
+  tbody th { font-weight: 800; width: 26%; }
+  tbody tr.A th { color: var(--a); }
+  tbody tr.B th { color: var(--b); }
+  td.same { background: var(--danger-bg); }
+  td.diff { background: var(--pass-bg); }
+  tr.verdict td, tr.verdict th { border-bottom: none; font-weight: 800; font-size: 0.9rem; }
+  tr.verdict td.diff { color: var(--pass); }
+  tr.verdict td.same { color: var(--danger); }
+  .yes { color: var(--pass); font-weight: 800; }
+  .no { color: var(--danger); font-weight: 800; }
+  @media (max-width: 700px) { th, td { padding: 0.55rem 0.5rem; font-size: 0.78rem; } tbody th { width: 22%; } }
+
+  .kill { margin-top: 1.4rem; background: var(--danger-bg); border: 2px solid var(--danger); border-radius: 12px; padding: 1.2rem 1.3rem; }
+  .kill h3 { color: var(--danger); font-size: 1.05rem; margin-bottom: 0.5rem; }
+  .kill p { font-size: 0.9rem; margin-bottom: 0.6rem; }
+  .kill p:last-child { margin-bottom: 0; }
+  .kill strong { color: var(--danger); }
+
+  .sep { margin-top: 1.4rem; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--pass); border-radius: 0 12px 12px 0; padding: 1.1rem 1.2rem; }
+  .sep h3 { color: var(--pass); font-size: 1rem; margin-bottom: 0.5rem; }
+  .sep p { font-size: 0.87rem; margin-bottom: 0.6rem; }
+  .sep p:last-child { margin-bottom: 0; }
+  .paths { display: grid; grid-template-columns: 1fr; gap: 0.4rem; margin: 0.8rem 0; }
+  .path { display: grid; grid-template-columns: 1fr auto; gap: 0.8rem; align-items: center; padding: 0.5rem 0.75rem; border-radius: 7px; background: var(--bg); border: 1px solid var(--border); font-size: 0.82rem; }
+  .path .r { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .path.ok .r { color: var(--pass); }
+  .path.null { border-color: var(--danger-br); background: var(--danger-bg); }
+  .path.null .r { color: var(--danger); }
+  .path code { font-family: inherit; font-weight: 700; }
+
+  .tag { font-family: 'SF Mono', SFMono-Regular, Consolas, monospace; font-size: 0.68rem; padding: 0.08rem 0.35rem; border-radius: 4px; background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass-br); white-space: nowrap; }
+  .tag.reason { background: var(--mixed-bg); color: var(--mixed); border-color: var(--mixed-br); }
+  .quote { font-style: italic; border-left: 3px solid var(--border); padding-left: 0.8rem; font-size: 0.84rem; margin: 0.5rem 0; }
+  .trade { margin-top: 1.4rem; background: var(--card); border: 1px solid var(--mixed-br); border-left: 4px solid var(--mixed); border-radius: 0 12px 12px 0; padding: 1.1rem 1.2rem; }
+  .trade h3 { color: var(--mixed); font-size: 1rem; margin-bottom: 0.5rem; }
+  .trade p { font-size: 0.87rem; margin-bottom: 0.5rem; }
+  .trade p:last-child { margin-bottom: 0; }
+  .scales { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 0.8rem 0; }
+  @media (max-width: 620px) { .scales { grid-template-columns: 1fr; } }
+  .pan { padding: 0.7rem 0.85rem; border-radius: 8px; font-size: 0.83rem; }
+  .pan.cost { background: var(--danger-bg); border: 1px solid var(--danger-br); }
+  .pan.ben { background: var(--pass-bg); border: 1px solid var(--pass-br); }
+  .pan b { display: block; margin-bottom: 0.2rem; }
+  .pan.cost b { color: var(--danger); }
+  .pan.ben b { color: var(--pass); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Trap</h1>
+  <p class="sub">Your hypothesis and the standard account make <strong>different predictions right now, at 20mg</strong>, and <strong>identical predictions at 60mg</strong>. That asymmetry is the single most decision-relevant fact on this page, and it has a deadline.</p>
+
+  <div class="models">
+    <div class="model A">
+      <span class="lbl">Model A &mdash; yours</span>
+      <h3>The crash-aggravation route</h3>
+      <p class="chain"><code>20mg prevents crashes &rarr; cumulative load falls &rarr; fibromyalgia / ME-CFS eases &rarr; pain improves slowly over months</code></p>
+      <p class="chain" style="margin-top: 0.4rem;"><strong>No threshold to cross. The dose you are already on is enough.</strong></p>
+    </div>
+    <div class="model B">
+      <span class="lbl">Model B &mdash; the standing analysis</span>
+      <h3>The noradrenergic threshold</h3>
+      <p class="chain"><code>Pain relief requires noradrenergic reuptake inhibition at ~40&ndash;60mg &rarr; descending inhibition engages &rarr; pain improves</code></p>
+      <p class="chain" style="margin-top: 0.4rem;"><strong>20mg does approximately nothing for pain, ever.</strong></p>
+    </div>
+  </div>
+
+  <div class="matrix">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="now">At 20mg &mdash; right now</th>
+          <th class="later">At 60mg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="A">
+          <th>Model A predicts</th>
+          <td class="diff">Pain drifts down <strong>slowly over months</strong>. <strong>Fatigue moves first or alongside.</strong> Improvement is <strong>contingent on exposure history</strong>. A breakthrough crash leaves a <strong>durable</strong> pain signature.</td>
+          <td class="same"><strong>Pain improves.</strong></td>
+        </tr>
+        <tr class="B">
+          <th>Model B predicts</th>
+          <td class="diff"><strong>Nothing.</strong> Pain stays flat and is <strong>indifferent to exposure</strong>. Whatever moves, it is not pain.</td>
+          <td class="same"><strong>Pain improves.</strong></td>
+        </tr>
+        <tr class="verdict">
+          <th>Can you tell them apart?</th>
+          <td class="diff">YES &nbsp;&mdash;&nbsp; the predictions diverge completely</td>
+          <td class="same">NO &nbsp;&mdash;&nbsp; both models are satisfied</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="kill">
+    <h3>Going up to 60mg does not test anything. It destroys the experiment.</h3>
+    <p>At 60mg you cross the noradrenergic threshold <strong>and</strong> you carry on preventing crashes. Both mechanisms are running. So if your pain improves at 60mg, <strong>both models are satisfied and you will never know which one was right.</strong> <span class="tag reason">reasoning, not evidence</span></p>
+    <p><strong>The 20mg window is the only clean test of your own hypothesis that will ever exist for you.</strong> It is open right now, it costs nothing but time, and <strong>a dose increase closes it irreversibly.</strong></p>
+    <p>The converse is also true and it is good news: <strong>if you hold 20mg for three to six months and pain is unchanged while crashes stay prevented, Model A's pain limb is cleanly falsified and the dose decision becomes trivial.</strong></p>
+  </div>
+
+  <div class="sep">
+    <h3>The separating observation, and it is free</h3>
+    <p><strong>Model A must run through the fatigue limb.</strong> In the highest-resolution within-person dataset that exists in fibromyalgia (Okifuji 2011, PMID 20591745: 81 women, 30 days, sampled 3&times;/day, lagged mixed-effects models), the direct route from distress to pain <strong>does not exist</strong>:</p>
+
+    <div class="paths">
+      <div class="path ok"><span>fatigue <code>&rarr;</code> pain</span><span class="r">+7% epoch, +3% day &nbsp; p&lt;.001</span></div>
+      <div class="path ok"><span>pain <code>&rarr;</code> emotional distress</span><span class="r">+7% &nbsp; p&lt;.001</span></div>
+      <div class="path ok"><span>emotional distress <code>&rarr;</code> fatigue</span><span class="r">+7% &nbsp; p&lt;.001</span></div>
+      <div class="path null"><span><strong>emotional distress <code>&rarr;</code> pain</strong> (the direct path)</span><span class="r">NULL</span></div>
+    </div>
+
+    <p>The authors, verbatim:</p>
+    <p class="quote">"The failure of emotional distress to predict subsequent pain may seem counterintuitive." <span class="tag">primary, verified</span></p>
+    <p><strong>So the only surviving route is indirect: distress &rarr; fatigue &rarr; pain.</strong> That is the best empirical scaffold your model has, and it is also what makes your model testable. <span class="tag reason">reasoning, not evidence &mdash; the individual legs are primary, the chained inference is not</span></p>
+    <p style="background: var(--pass-bg); border: 1px solid var(--pass-br); border-radius: 8px; padding: 0.7rem 0.85rem; margin-bottom: 0;"><strong>Track fatigue and pain as two separate lines, not one. If pain improves while fatigue does not, Model A is dead</strong>, and whatever is helping you is not the crash route. If fatigue improves and pain follows with a lag, Model A gains real support. <strong>This is the sharpest and cheapest test available to you, and it works whichever way the dose goes.</strong></p>
+  </div>
+
+  <div class="trade">
+    <h3>The real trade, stated honestly</h3>
+    <p>Note first that <strong>"just wait and see if pain improves at 20mg" is not sufficient</strong>, because placebo, expectancy and regression to the mean produce slow improvement under either model. <span class="tag reason">reasoning, not evidence</span> The test needs the fatigue-versus-pain ordering, and it needs a threshold set <strong>in advance</strong>, because without one every outcome reads as confirmation ("it's working, just slowly"), which is exactly how an unfalsifiable belief forms.</p>
+
+    <div class="scales">
+      <div class="pan cost">
+        <b>Cost of holding at 20mg</b>
+        Months of unrelieved pain, against a real (if modest) 60mg upside of roughly 1 in 11 for at least half the pain gone.
+      </div>
+      <div class="pan ben">
+        <b>Benefit of holding at 20mg</b>
+        A clean, unrepeatable answer to a question you raised and that nobody has ever studied in anybody.
+      </div>
+    </div>
+
+    <p><strong>The information value is asymmetric in time.</strong> The trade is not "which model is right." It is <strong>"how much is the answer worth, against months of pain?"</strong></p>
+    <p style="margin-bottom: 0;"><strong>That question belongs to you and your doctor. Nothing here directs a dose.</strong> This diagram's only job is to make sure you know the window exists before it shuts, because eight research passes went by without anyone noticing it.</p>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

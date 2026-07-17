@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 8: Why the Threshold Sits Where It Sits</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --sert: #9333EA; --sert-bg: #F3E8FF; --sert-br: #E9D5FF;
+    --net: #2563EB; --net-bg: #DBEAFE; --net-br: #BFDBFE;
+    --mil: #0891B2; --warn: #DC2626; --warn-bg: #FEE2E2; --warn-br: #FECACA;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --grid: #E5E7EB;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+      --sert: #C084FC; --sert-bg: rgba(147,51,234,0.18); --sert-br: rgba(147,51,234,0.45);
+      --net: #60A5FA; --net-bg: rgba(37,99,235,0.18); --net-br: rgba(37,99,235,0.45);
+      --mil: #22D3EE; --warn: #F87171; --warn-bg: rgba(239,68,68,0.18); --warn-br: rgba(239,68,68,0.4);
+      --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4);
+      --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+      --grid: #334155; }
+  }
+  :root[data-theme="dark"] { --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+    --sert: #C084FC; --sert-bg: rgba(147,51,234,0.18); --sert-br: rgba(147,51,234,0.45);
+    --net: #60A5FA; --net-bg: rgba(37,99,235,0.18); --net-br: rgba(37,99,235,0.45);
+    --mil: #22D3EE; --warn: #F87171; --warn-bg: rgba(239,68,68,0.18); --warn-br: rgba(239,68,68,0.4);
+    --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4);
+    --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+    --grid: #334155; }
+  :root[data-theme="light"] { --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --sert: #9333EA; --sert-bg: #F3E8FF; --sert-br: #E9D5FF;
+    --net: #2563EB; --net-bg: #DBEAFE; --net-br: #BFDBFE;
+    --mil: #0891B2; --warn: #DC2626; --warn-bg: #FEE2E2; --warn-br: #FECACA;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --grid: #E5E7EB; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 1.5rem; background: var(--bg); color: var(--text); line-height: 1.55; }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin-bottom: 0.5rem; text-align: center; }
+  .sub { text-align: center; max-width: 880px; margin: 0 auto 1.75rem; font-size: 0.95rem; color: var(--muted); }
+
+  .chartcard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .chartcard h3 { font-size: 0.98rem; margin-bottom: 0.15rem; text-align: center; }
+  .chartcard .cn { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 1rem; }
+  svg { display: block; width: 100%; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; margin-top: 0.8rem; font-size: 0.8rem; }
+  .legend span { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); }
+  .ln { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+
+  .inference { margin-top: 1.3rem; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--mixed); border-radius: 0 12px 12px 0; padding: 1.1rem 1.2rem; }
+  .inference h3 { color: var(--mixed); font-size: 0.98rem; margin-bottom: 0.5rem; }
+  .inference p { font-size: 0.87rem; margin-bottom: 0.6rem; }
+  .inference p:last-child { margin-bottom: 0; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 0.9rem 0; }
+  @media (max-width: 780px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 0.7rem; font-size: 0.79rem; position: relative; }
+  .step .sn { font-size: 0.62rem; font-weight: 800; color: var(--mixed); letter-spacing: 0.05em; }
+  .step p { font-size: 0.79rem; margin: 0.2rem 0 0; }
+
+  .conv { margin-top: 1.3rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.2rem; }
+  .conv h3 { font-size: 0.98rem; margin-bottom: 0.2rem; }
+  .conv .cn { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.9rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  th, td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  td.v { font-variant-numeric: tabular-nums; font-weight: 700; }
+  tr.match td { background: var(--pass-bg); }
+  tr.submatch td { background: var(--warn-bg); }
+  .match-note { font-size: 0.8rem; margin-top: 0.7rem; }
+
+  .thin { margin-top: 1.3rem; background: var(--warn-bg); border: 2px solid var(--warn); border-radius: 12px; padding: 1.1rem 1.2rem; }
+  .thin h3 { color: var(--warn); font-size: 1rem; margin-bottom: 0.5rem; }
+  .thin p { font-size: 0.86rem; margin-bottom: 0.6rem; }
+  .thin p:last-child { margin-bottom: 0; }
+  .cis { margin: 0.8rem 0; }
+  .ci { display: grid; grid-template-columns: 110px 1fr 150px; gap: 0.6rem; align-items: center; padding: 0.35rem 0; font-size: 0.8rem; }
+  @media (max-width: 640px) { .ci { grid-template-columns: 1fr; gap: 0.1rem; } }
+  .ci .k { font-weight: 700; }
+  .ci .bar { position: relative; height: 16px; background: var(--card); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+  .ci .fillb { position: absolute; top: 0; bottom: 0; border-radius: 3px; opacity: 0.8; }
+  .ci .val { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; }
+  .ci.bad .val { color: var(--warn); }
+  .noinfo { background: var(--card); border: 1px dashed var(--warn); border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.83rem; margin-top: 0.5rem; }
+
+  .dead { margin-top: 1.3rem; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--warn); border-radius: 0 12px 12px 0; padding: 1.05rem 1.2rem; }
+  .dead h3 { color: var(--warn); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .dead .d { font-size: 0.83rem; padding: 0.5rem 0; border-bottom: 1px dashed var(--border); }
+  .dead .d:last-child { border-bottom: none; }
+  .dead .d b { color: var(--warn); }
+  .tag { font-family: 'SF Mono', SFMono-Regular, Consolas, monospace; font-size: 0.68rem; padding: 0.08rem 0.35rem; border-radius: 4px; background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass-br); white-space: nowrap; }
+  .tag.reason { background: var(--mixed-bg); color: var(--mixed); border-color: var(--mixed-br); }
+  .quote { font-style: italic; border-left: 3px solid var(--border); padding-left: 0.8rem; font-size: 0.83rem; margin: 0.5rem 0; }
+  .final { margin-top: 1.3rem; background: var(--mixed-bg); border: 2px solid var(--mixed); border-radius: 12px; padding: 1.1rem 1.2rem; text-align: center; }
+  .final b { color: var(--mixed); }
+  .final p { font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Why the Threshold Sits Where It Sits</h1>
+  <p class="sub">Duloxetine is <strong>9 times more selective for the serotonin transporter than the norepinephrine transporter</strong> (Ki 0.8 nM vs 7.5 nM). The two occupancy curves therefore do very different things across the clinical dose range, and that difference predicts the threshold. It is also much thinner evidence than it looks.</p>
+
+  <div class="chartcard">
+    <h3>The two curves across the clinical dose range</h3>
+    <p class="cn">Measured human occupancy. SERT: Takano 2006, thalamus, [<sup>11</sup>C]DASB. NET: Moriguchi 2017, thalamus, [<sup>18</sup>F]FMeNER-D2.</p>
+    <!-- Linear dose axis: x = 60 + dose * 10.5  (5mg=112.5, 20mg=270, 40mg=480, 60mg=690)
+         Linear occupancy axis: y = 270 - value * 2.4  (0%=270, 100%=30) -->
+    <svg viewBox="0 0 760 342" role="img" aria-label="Occupancy versus dose. SERT rises steeply then plateaus near 80 percent by 20mg. NET stays near 30 percent to 40mg then rises to 40 percent at 60mg, where n equals 2.">
+      <!-- grid -->
+      <g stroke="var(--grid)" stroke-width="1">
+        <line x1="60" y1="30" x2="700" y2="30"/>
+        <line x1="60" y1="90" x2="700" y2="90"/>
+        <line x1="60" y1="150" x2="700" y2="150"/>
+        <line x1="60" y1="210" x2="700" y2="210"/>
+      </g>
+      <!-- y labels -->
+      <g fill="var(--muted)" font-size="11" text-anchor="end">
+        <text x="52" y="34">100%</text>
+        <text x="52" y="94">75%</text>
+        <text x="52" y="154">50%</text>
+        <text x="52" y="214">25%</text>
+        <text x="52" y="274">0%</text>
+      </g>
+      <!-- axes -->
+      <line x1="60" y1="270" x2="700" y2="270" stroke="var(--muted)" stroke-width="1.5"/>
+      <line x1="60" y1="30" x2="60" y2="270" stroke="var(--muted)" stroke-width="1.5"/>
+      <!-- x labels -->
+      <g fill="var(--muted)" font-size="11" text-anchor="middle">
+        <text x="112.5" y="290">5mg</text>
+        <text x="270" y="290">20mg</text>
+        <text x="480" y="290">40mg</text>
+        <text x="690" y="290">60mg</text>
+        <text x="380" y="314" font-size="12" font-weight="700">Daily dose</text>
+      </g>
+      <!-- reader marker at 20mg -->
+      <line x1="270" y1="30" x2="270" y2="270" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="277" y="44" fill="var(--warn)" font-size="11" font-weight="800">You are here</text>
+
+      <!-- SERT: 5mg 43.6 (y165.4) -> 20mg 71.3 (y98.9) -> 40mg 80.6 (y76.6) -> 60mg 81.8 (y73.7) -->
+      <path d="M112.5,165.4 C170,120 220,102 270,98.9 C340,88 420,79 480,76.6 C560,75 630,74 690,73.7"
+            fill="none" stroke="var(--sert)" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="var(--sert)">
+        <circle cx="112.5" cy="165.4" r="5"/><circle cx="270" cy="98.9" r="6.5"/>
+        <circle cx="480" cy="76.6" r="5"/><circle cx="690" cy="73.7" r="5"/>
+      </g>
+      <g fill="var(--sert)" font-size="11.5" font-weight="800">
+        <text x="112.5" y="183" text-anchor="middle">43.6%</text>
+        <text x="262" y="89" text-anchor="end">71.3%</text>
+        <text x="480" y="66" text-anchor="middle">80.6%</text>
+        <text x="690" y="62" text-anchor="end">81.8%</text>
+      </g>
+      <text x="585" y="103" fill="var(--sert)" font-size="12" font-weight="800" text-anchor="middle">PLATEAU &asymp; 80%</text>
+      <text x="150" y="126" fill="var(--sert)" font-size="11" font-weight="700" text-anchor="start">rises steeply,</text>
+      <text x="150" y="140" fill="var(--sert)" font-size="11" font-weight="700" text-anchor="start">then flattens</text>
+
+      <!-- NET: 20mg 29.7 (y198.7) -> 40mg 30.5 (y196.8) -> 60mg 40.0 (y174) -->
+      <path d="M270,198.7 C340,198.2 420,197.3 480,196.8 C560,190 630,181 690,174"
+            fill="none" stroke="var(--net)" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="var(--net)">
+        <circle cx="270" cy="198.7" r="6.5"/><circle cx="480" cy="196.8" r="5"/><circle cx="690" cy="174" r="5"/>
+      </g>
+      <g fill="var(--net)" font-size="11.5" font-weight="800">
+        <text x="262" y="216" text-anchor="end">29.7%</text>
+        <text x="480" y="216" text-anchor="middle">30.5%</text>
+        <text x="690" y="164" text-anchor="end">40.0%</text>
+      </g>
+      <text x="575" y="232" fill="var(--net)" font-size="12" font-weight="800" text-anchor="middle">STILL CLIMBING</text>
+      <!-- n=2 flag on the 60mg NET point -->
+      <text x="690" y="192" fill="var(--warn)" font-size="10" font-weight="800" text-anchor="end">n=2 &#9888;</text>
+    </svg>
+    <div class="legend">
+      <span><i class="ln" style="background: var(--sert);"></i> SERT (serotonin transporter)</span>
+      <span><i class="ln" style="background: var(--net);"></i> NET (norepinephrine transporter)</span>
+    </div>
+  </div>
+
+  <div class="inference">
+    <h3>The inference, and it is an inference</h3>
+    <div class="steps">
+      <div class="step"><span class="sn">STEP 1 &mdash; MEASURED</span><p>SERT is <strong>near its ceiling at 20mg</strong>. Sørensen's cross-drug synthesis: <em>"reached an apparent plateau at approximately 80%&mdash;at the usual minimum recommended dose."</em></p></div>
+      <div class="step"><span class="sn">STEP 2 &mdash; MEASURED</span><p>NET shows <strong>no plateau anywhere</strong> in the clinical range: 29.7% &rarr; 30.5% &rarr; 40.0%.</p></div>
+      <div class="step"><span class="sn">STEP 3 &mdash; INFERRED</span><p>So the extra 40mg <strong>cannot be buying much more serotonin</strong>. Whatever the 20&rarr;60mg step buys is <strong>mostly noradrenergic</strong>.</p></div>
+      <div class="step"><span class="sn">STEP 4 &mdash; ESTABLISHED</span><p>And <strong>descending inhibition is the noradrenergic limb</strong>. So a noradrenergic threshold is exactly where you would expect analgesia to appear.</p></div>
+    </div>
+    <p><strong>Two independent evidence streams, the occupancy curve and the clinical trials, put the line in the same place.</strong> That convergence is the reason to take the threshold seriously as a mechanism rather than a coincidence. <span class="tag reason">reasoning, not evidence</span></p>
+    <p style="margin-bottom: 0;"><strong>Steps 3 and 4 are reasoning, not measurement. Nobody has measured what the 20&rarr;60mg step does to descending inhibition in a human being.</strong></p>
+  </div>
+
+  <div class="conv">
+    <h3>The cleanest comparison available: milnacipran</h3>
+    <p class="cn">Same tracer, same region, same institute, in humans. Milnacipran is <strong>FDA-approved for fibromyalgia</strong>, which makes its dose-occupancy relationship a usable yardstick.</p>
+    <table>
+      <thead><tr><th>Drug and dose</th><th>NET occupancy</th><th>Clinical status of that dose</th></tr></thead>
+      <tbody>
+        <tr class="submatch"><td><strong>Duloxetine 20mg</strong> (n=3)</td><td class="v">29.7%</td><td>Your dose</td></tr>
+        <tr class="submatch"><td>Milnacipran 25mg (n=6)</td><td class="v">25.3%</td><td><strong>Sub-therapeutic starting dose</strong></td></tr>
+        <tr class="match"><td><strong>Duloxetine 60mg</strong> (n=2)</td><td class="v">40.0%</td><td>The dose under discussion</td></tr>
+        <tr class="match"><td>Milnacipran 100mg (n=6)</td><td class="v">40.0%</td><td><strong>Therapeutic. Savella's target is 100mg twice daily.</strong></td></tr>
+        <tr><td>Milnacipran 200mg (n=6)</td><td class="v">49.9%</td><td>Full target dose</td></tr>
+      </tbody>
+    </table>
+    <p class="match-note"><strong>The defensible statement:</strong> duloxetine 20mg delivers NET occupancy comparable to a <strong>sub-therapeutic</strong> dose of another approved fibromyalgia SNRI, and duloxetine 60mg delivers occupancy comparable to a <strong>therapeutic</strong> dose of it. <span class="tag">primary, verified</span></p>
+  </div>
+
+  <div class="thin">
+    <h3>Now break it, because it is elegant and that is the warning sign</h3>
+    <p>This project's single most reliable finding is that <strong>every elegant synthesis in it has had a disconfirming detail sitting within reach.</strong> Here is this one's. <strong>The occupancy numbers underneath the whole story are thin to the point of fragility.</strong></p>
+
+    <div class="cis">
+      <div class="ci"><span class="k">SERT 20mg</span><span class="bar"><i class="fillb" style="left: 46.5%; width: 21.1%; background: var(--sert);"></i></span><span class="val">95% CI 58.1 &ndash; 84.5%</span></div>
+      <div class="ci"><span class="k">SERT 60mg</span><span class="bar"><i class="fillb" style="left: 56.9%; width: 17.1%; background: var(--sert);"></i></span><span class="val">95% CI 71.1 &ndash; 92.5%</span></div>
+      <div class="ci"><span class="k">NET 20mg</span><span class="bar"><i class="fillb" style="left: 21.2%; width: 5.1%; background: var(--net);"></i></span><span class="val">95% CI 26.5 &ndash; 32.9%</span></div>
+      <div class="ci bad"><span class="k">NET 40mg</span><span class="bar"><i class="fillb" style="left: 0.7%; width: 47.4%; background: var(--net);"></i></span><span class="val">95% CI 0.9 &ndash; 60.1%</span></div>
+      <div class="ci bad"><span class="k">NET 60mg</span><span class="bar"><i class="fillb" style="left: 0%; width: 100%; background: var(--warn);"></i></span><span class="val">95% CI &minus;20.2 &ndash; +100.2%</span></div>
+    </div>
+
+    <div class="noinfo"><strong>The SERT 20mg and 60mg intervals overlap across 71.1% to 84.5%.</strong> At n&asymp;3 per dose, Takano's data <strong>cannot statistically distinguish 20mg from 40mg from 60mg on serotonin occupancy at all.</strong></div>
+    <div class="noinfo" style="margin-top: 0.4rem;"><strong>The 60mg NET point, which anchors the entire "norepinephrine engages at higher doses" claim, is n=2 with an interval running from &minus;20% to over +100%. It carries essentially no information.</strong></div>
+
+    <p style="margin-top: 0.9rem;"><strong>Provenance of the whole evidence base:</strong> 48 subjects, 4 studies, 2 institutions. SERT has <strong>25 subjects across 2 independent labs</strong> (Takano at NIRS Chiba, and Abanades at the GSK Clinical Imaging Centre, Hammersmith, London), so it is genuinely replicated. <strong>NET has 23 subjects, one institute, the same first author on both papers, and no independent replication by anyone, ever.</strong></p>
+    <p style="margin-bottom: 0;"><strong>So the mechanism is a coherent account of why a threshold exists. The trials are the reason to believe there is one. Trust the trials. The imaging is a story about the trials, not a substitute for them.</strong> <span class="tag reason">reasoning, not evidence</span></p>
+  </div>
+
+  <div class="dead">
+    <h3>Two occupancy figures this page refuses to use</h3>
+    <div class="d"><b>"NET ED50 = 76.8mg, which is above the standard 60mg maintenance dose."</b> This is an extrapolation <strong>28% beyond the highest dose tested</strong>, from a hyperbola whose own authors report that <strong>a straight line fit their data better</strong> (RMSE 7.3 linear vs 11.8 nonlinear), with no confidence intervals, and the model misses its own best-measured point by 9 percentage points. The 2025 paper's ED50 of 92.4mg has the same problem and disagrees by 20%. <strong>Neither number should carry weight.</strong> Moriguchi's own words: <em>"In our data, linear fitting was better than nonlinear fitting. However, linear fitting is not theoretical, because occupancy over 100% is not realistic."</em></div>
+    <div class="d"><b>"30mg gets you ~79% SERT, so ~97% of the serotonergic benefit of 60mg."</b> False precision: the confidence intervals overlap, and the honest 30mg SERT band is <strong>~63&ndash;92%</strong>. More decisively, <strong>30mg was tested directly in fibromyalgia and failed the pain primary at P=0.202</strong>, which settles the question without any modelling at all. <strong>A dose can be pharmacologically elegant and clinically inert at the same time.</strong></div>
+  </div>
+
+  <div class="final">
+    <p><b>And the reason no occupancy number on this page describes you.</b> Abanades fitted <b>individual EC50 values across 10 people and found an 8.5-fold spread: 0.54 to 4.61 ng/mL.</b> Same drug, same dose, same protocol, ten people, an 8.5-fold range in the concentration each needed for the same effect. <span class="tag">primary, verified</span></p>
+    <p style="margin-top: 0.5rem;"><b>The population curve does not describe any individual in it.</b> This is why forums show wild variance, why "try it and see" is sound clinical practice rather than laziness, and why every number here is a statement about groups rather than about you.</p>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

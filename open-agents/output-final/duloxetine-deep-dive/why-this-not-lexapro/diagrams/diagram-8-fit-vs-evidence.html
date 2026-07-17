@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram 8 — Fit Against Evidence: The Uncomfortable Shape of the Answer</title>
+<style>
+:root{--bg:#FFFFFF;--bg-alt:#F9FAFB;--text:#1F2937;--text-light:#6B7280;--primary:#6366F1;--primary-dark:#4338CA;--primary-light:#EEF2FF;--accent:#F59E0B;--accent-light:#FEF3C7;--danger:#DC2626;--danger-light:#FEE2E2;--success:#059669;--success-light:#D1FAE5;--warn:#EA580C;--border:#E5E7EB;--radius:10px;--shadow:0 2px 6px rgba(0,0,0,0.06);--q-tl:rgba(245,158,11,.10);--q-tr:rgba(5,150,105,.10);--q-bl:rgba(100,116,139,.08);--q-br:rgba(99,102,241,.08)}
+[data-theme="dark"]{--bg:#0F172A;--bg-alt:#1E293B;--text:#F9FAFB;--text-light:#CBD5E1;--primary:#818CF8;--primary-dark:#A5B4FC;--primary-light:#1E1B4B;--accent:#FBBF24;--accent-light:#78350F;--danger:#F87171;--danger-light:#7F1D1D;--success:#34D399;--success-light:#064E3B;--warn:#FB923C;--border:#334155;--q-tl:rgba(251,191,36,.10);--q-tr:rgba(52,211,153,.10);--q-bl:rgba(148,163,184,.07);--q-br:rgba(129,140,248,.10)}
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg-alt);color:var(--text);margin:0;padding:1.5rem 1rem;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;background:var(--bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.75rem;border:1px solid var(--border)}
+h1{font-size:1.25rem;font-weight:700;margin:0 0 .25rem}
+.sub{font-size:.9rem;color:var(--text-light);margin:0 0 1.4rem}
+/* the absolutely-positioned nowrap labels can reach past the plot edge, so the whole
+   scatter lives in its own horizontal scroll container. The page body never scrolls. */
+.plot-scroll{overflow-x:auto;margin:1.2rem 0 .3rem;padding:0 .5rem}
+.plot-outer{display:grid;grid-template-columns:34px 1fr;gap:.5rem;min-width:580px}
+.y-title{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-size:.78rem;font-weight:800;color:var(--text-light);letter-spacing:.05em;display:flex;align-items:center;justify-content:center}
+.plot{position:relative;aspect-ratio:1.45/1;min-height:420px;border-left:2px solid var(--text-light);border-bottom:2px solid var(--text-light);background:linear-gradient(to right,var(--q-tl) 0 50%,var(--q-tr) 50% 100%);overflow:visible}
+.qsplit-h{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--border)}
+.qsplit-v{position:absolute;top:0;bottom:0;left:50%;border-left:1px dashed var(--border)}
+.qbg{position:absolute;width:50%;height:50%}
+.qbg.bl{left:0;bottom:0;background:var(--q-bl)}
+.qbg.br{right:0;bottom:0;background:var(--q-br)}
+.qlabel{position:absolute;font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--text-light);opacity:.85;max-width:44%;line-height:1.3}
+.ql-tl{top:.5rem;left:.6rem}
+.ql-tr{top:.5rem;right:.6rem;text-align:right}
+.ql-bl{bottom:.5rem;left:.6rem}
+.ql-br{bottom:.5rem;right:.6rem;text-align:right}
+.dot{position:absolute;transform:translate(-50%,50%);z-index:5}
+.dot-mark{width:16px;height:16px;border-radius:50%;border:3px solid var(--bg);margin:0 auto;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.dot-lab{position:absolute;left:50%;transform:translateX(-50%);top:19px;font-size:.7rem;font-weight:700;text-align:center;white-space:nowrap;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:.2rem .4rem;box-shadow:0 1px 3px rgba(0,0,0,.08);line-height:1.25}
+.dot-lab small{display:block;font-weight:500;font-size:.62rem;color:var(--text-light)}
+.dot.up .dot-lab{top:auto;bottom:19px}
+.d-gate .dot-mark{background:var(--accent)}
+.d-gate .dot-lab{border-color:var(--accent)}
+.d-indiv .dot-mark{background:var(--success)}
+.d-indiv .dot-lab{border-color:var(--success)}
+.d-sero .dot-mark{background:var(--warn)}
+.d-allo .dot-mark{background:var(--primary)}
+.d-dose .dot-mark{background:var(--text-light)}
+.d-blunt .dot-mark{background:var(--danger)}
+.d-blunt .dot-lab{border-color:var(--danger)}
+.x-title{text-align:center;font-size:.78rem;font-weight:800;color:var(--text-light);letter-spacing:.05em;margin:.35rem 0 0;padding-left:42px}
+.axis-ends{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-light);padding-left:42px;margin-top:.15rem;font-style:italic}
+.scroll-hint{font-size:.68rem;color:var(--text-light);font-style:italic;text-align:center;margin:.3rem 0 0}
+@media(min-width:700px){.scroll-hint{display:none}}
+.punch{margin-top:1.5rem;background:var(--accent-light);border-left:4px solid var(--accent);padding:1.1rem 1.2rem;border-radius:0 var(--radius) var(--radius) 0}
+.punch h3{margin:0 0 .4rem;font-size:.95rem}
+.punch p{font-size:.86rem;margin:.45rem 0}
+.empty{margin-top:1.1rem;background:var(--danger-light);border:2px solid var(--danger);border-radius:var(--radius);padding:1.05rem 1.2rem}
+.empty h3{margin:0 0 .4rem;font-size:.95rem;color:var(--danger)}
+.empty p{font-size:.86rem;margin:.4rem 0}
+.close{margin-top:1.1rem;background:var(--primary-light);border:2px solid var(--primary);border-radius:var(--radius);padding:1.05rem 1.2rem;text-align:center}
+.close .big{font-size:.98rem;font-weight:800;color:var(--primary-dark);line-height:1.45}
+[data-theme="dark"] .close .big{color:var(--primary-dark)}
+@media(max-width:640px){.wrap{padding:1.1rem}.plot{aspect-ratio:.95/1;min-height:520px}.dot-lab{font-size:.62rem;padding:.15rem .3rem}.qlabel{font-size:.58rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Fit Against Evidence</h1>
+<p class="sub">Every live candidate, plotted on the two axes that matter. The shape of the scatter <em>is</em> the answer to the page.</p>
+
+<div class="plot-scroll">
+<div class="plot-outer">
+  <div class="y-title">FIT TO HIM &rarr;</div>
+  <div class="plot">
+    <div class="qbg bl"></div><div class="qbg br"></div>
+    <div class="qsplit-h"></div><div class="qsplit-v"></div>
+
+    <div class="qlabel ql-tl">Fits him<br>Thin evidence</div>
+    <div class="qlabel ql-tr">Fits him<br>Well evidenced</div>
+    <div class="qlabel ql-bl">Neither</div>
+    <div class="qlabel ql-br">Well evidenced<br>Doesn't explain him</div>
+
+    <div class="dot d-gate" style="left:18%;bottom:87%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Sensory gating ladder<small>1 lab &middot; 3 papers &middot; all single-dose</small></div>
+    </div>
+
+    <div class="dot d-indiv up" style="left:84%;bottom:84%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Individual variation<small>8.5&times; spread &middot; n=10 &middot; primary</small></div>
+    </div>
+
+    <div class="dot d-sero up" style="left:64%;bottom:56%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Acute serotonin as effector<small>fits Lexapro, fails the difference</small></div>
+    </div>
+
+    <div class="dot d-allo up" style="left:27%;bottom:58%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Allosteric site<small>drug-specific &middot; no link to outcome</small></div>
+    </div>
+
+    <div class="dot d-dose" style="left:11%;bottom:38%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Wrong dose / short trial<small>unfalsifiable now</small></div>
+    </div>
+
+    <div class="dot d-blunt up" style="left:72%;bottom:14%">
+      <div class="dot-mark"></div>
+      <div class="dot-lab">Emotional blunting<small>no difference by agent</small></div>
+    </div>
+  </div>
+</div>
+<p class="x-title">EVIDENCE QUALITY &rarr;</p>
+<div class="axis-ends"><span>weak / absent</span><span>strong / primary / replicated</span></div>
+</div>
+<p class="scroll-hint">Scroll the chart sideways to see the full plot.</p>
+
+<div class="punch">
+  <h3>The diagonal is the problem</h3>
+  <p>Read the two dots at the top. <strong>The candidate that describes his experience most precisely sits at the far left, on the weakest evidence on the page:</strong> one laboratory, three papers in existence, two studies laid side by side rather than one dose-response experiment, and not a single chronic dose administered to anyone.</p>
+  <p><strong>The candidate with the best evidence sits at the far right, and it explains his divergence by saying that divergences of this size are ordinary.</strong> It is well measured, it is his own argument, and it removes the need for a mechanism rather than supplying one.</p>
+  <p>These two do not combine into a verdict. They are not even competing for the same job.</p>
+</div>
+
+<div class="empty">
+  <h3>Look at what is in the top-right quadrant</h3>
+  <p>The top-right is where an <em>answer</em> would live: something that both fits him and is well evidenced. <strong>The only thing in it is a candidate whose content is "there is no specific answer here, only a distribution."</strong></p>
+  <p>That is not a rhetorical trick. It is the actual state of the evidence, and it has a practical consequence: <strong>his own tracking is not a poor substitute for the literature on this question. It is the only measurement that exists.</strong> Nobody has studied duloxetine in autistic adults, and nobody has studied whether a previous drug-induced dissociation predicts the next one.</p>
+</div>
+
+<div class="close">
+  <p class="big">The scatter has no winner, and that is the output.<br>He asked for candidates rated for fit, not an answer. This chain flip-flopped eight times proving him right.</p>
+</div>
+</div>
+<script>(function(){try{if(window.parent&&window.parent!==window){var t=window.parent.document.documentElement.getAttribute('data-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark')}else{var s=localStorage.getItem('theme');if(s==='dark'||(!s&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark')}}catch(e){}})();</script>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

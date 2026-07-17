@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 1: What Nicolini 2009 Tested, and What It Never Asked</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pass: #059669; --pass-bg: #ECFDF5; --pass-dark: #065F46;
+    --fail: #DC2626; --fail-bg: #FEF2F2; --fail-dark: #991B1B;
+    --never: #B45309; --never-bg: #FEF3C7; --never-dark: #78350F;
+    --panel: #F3F4F6; --you: #4338CA; --you-bg: #EEF2FF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --pass: #34D399; --pass-bg: rgba(52,211,153,0.10); --pass-dark: #6EE7B7;
+      --fail: #F87171; --fail-bg: rgba(248,113,113,0.10); --fail-dark: #FCA5A5;
+      --never: #FBBF24; --never-bg: rgba(251,191,36,0.12); --never-dark: #FDE68A;
+      --panel: #334155; --you: #A5B4FC; --you-bg: rgba(99,102,241,0.14);
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --pass: #34D399; --pass-bg: rgba(52,211,153,0.10); --pass-dark: #6EE7B7;
+    --fail: #F87171; --fail-bg: rgba(248,113,113,0.10); --fail-dark: #FCA5A5;
+    --never: #FBBF24; --never-bg: rgba(251,191,36,0.12); --never-dark: #FDE68A;
+    --panel: #334155; --you: #A5B4FC; --you-bg: rgba(99,102,241,0.14);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pass: #059669; --pass-bg: #ECFDF5; --pass-dark: #065F46;
+    --fail: #DC2626; --fail-bg: #FEF2F2; --fail-dark: #991B1B;
+    --never: #B45309; --never-bg: #FEF3C7; --never-dark: #78350F;
+    --panel: #F3F4F6; --you: #4338CA; --you-bg: #EEF2FF;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.32rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 800px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+
+  .arms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 1.3rem; }
+  @media (max-width: 700px) { .arms { grid-template-columns: repeat(2, 1fr); } }
+  .arm { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 0.6rem; text-align: center; }
+  .arm.focus { border: 2px solid var(--you); background: var(--you-bg); }
+  .arm .lbl { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+  .arm .n { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.2rem; font-variant-numeric: tabular-nums; }
+  .arm.focus .n { color: var(--you); }
+  .arm .tag { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.3rem; color: var(--muted); }
+  .arm.focus .tag { color: var(--you); }
+
+  .trial-meta { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.4rem; }
+  .trial-meta b { color: var(--text); }
+
+  .sec-head { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin: 1.5rem 0 0.6rem; }
+
+  .rows { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .row { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .row:last-child { border-bottom: none; }
+  .row .what { flex: 1 1 220px; font-weight: 700; font-size: 0.92rem; }
+  .row .what .sub { font-weight: 400; font-size: 0.76rem; color: var(--muted); display: block; margin-top: 0.1rem; }
+  .row .p { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; font-weight: 700; color: var(--muted); min-width: 92px; }
+  .badge { display: inline-block; padding: 0.24rem 0.7rem; border-radius: 999px; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap; }
+  .badge.pass { background: var(--pass); color: #FFFFFF; }
+  .badge.fail { background: var(--fail); color: #FFFFFF; }
+  .row.pass { background: var(--pass-bg); }
+  .row.fail { background: var(--fail-bg); }
+
+  .never-bar { margin-top: 0.9rem; background: var(--never-bg); border: 2px dashed var(--never); border-radius: 10px; padding: 1rem 1.2rem; }
+  .never-bar .top { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+  .never-bar .top .what { flex: 1 1 220px; font-weight: 800; font-size: 0.95rem; color: var(--never-dark); }
+  .never-bar .badge.never { background: var(--never); color: #FFFFFF; letter-spacing: 0.06em; }
+  .never-bar .why { font-size: 0.83rem; color: var(--text); margin-top: 0.6rem; }
+  .never-bar .why b { color: var(--never-dark); }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.95rem 1.05rem; }
+  .box h3 { margin: 0 0 0.55rem; font-size: 0.87rem; }
+  .box.pl h3 { color: var(--fail-dark); }
+  .box.hd h3 { color: var(--text); }
+  .mini { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.28rem 0; border-bottom: 1px dotted var(--border); }
+  .mini:last-of-type { border-bottom: none; }
+  .mini .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .box .note { font-size: 0.76rem; color: var(--muted); margin-top: 0.55rem; line-height: 1.4; }
+  .box.pl { border-left: 4px solid var(--fail); }
+  .box.hd { border-left: 4px solid var(--panel); }
+
+  .verdict { margin-top: 1.4rem; background: var(--panel); border-left: 4px solid var(--you); padding: 1rem 1.2rem; border-radius: 0 10px 10px 0; font-size: 0.93rem; }
+  .verdict strong { color: var(--you); }
+  .prov { text-align: center; font-size: 0.76rem; color: var(--muted); margin-top: 1.2rem; font-style: italic; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>What Nicolini 2009 Tested, and What It Never Asked</h1>
+  <p class="subtitle">The only trial in duloxetine's entire record with a genuinely fixed 20mg arm. It answered one question about your dose and left the other one untouched. Both facts are on this page.</p>
+
+  <div class="arms">
+    <div class="arm">
+      <div class="lbl">Placebo</div>
+      <div class="n">170</div>
+      <div class="tag">control</div>
+    </div>
+    <div class="arm focus">
+      <div class="lbl">Duloxetine 20 mg</div>
+      <div class="n">84</div>
+      <div class="tag">your dose &middot; fixed</div>
+    </div>
+    <div class="arm">
+      <div class="lbl">Duloxetine 60&ndash;120 mg</div>
+      <div class="n">158</div>
+      <div class="tag">flexible</div>
+    </div>
+    <div class="arm">
+      <div class="lbl">Venlafaxine XR</div>
+      <div class="n">169</div>
+      <div class="tag">active comparator</div>
+    </div>
+  </div>
+
+  <p class="trial-meta">
+    <b>PMID 18485261</b> &middot; <i>Psychological Medicine</i> 2009;39(2):267&ndash;276 &middot; <b>581 adults</b> with DSM-IV generalised anxiety disorder &middot; <b>10 weeks</b>, multi-centre, double-blind &middot;
+    the 20mg arm was fixed for the whole trial because European regulators required it &middot; <b>Eli Lilly sponsored; 6 of 9 authors were Lilly employees or shareholders.</b>
+  </p>
+
+  <div class="sec-head">What was asked, and what came back</div>
+
+  <div class="rows">
+    <div class="row pass">
+      <div class="what">HAM-A total score<span class="sub">Does 20mg beat placebo on overall anxiety?</span></div>
+      <div class="p">p = 0.01&ndash;0.001</div>
+      <span class="badge pass">SEPARATED</span>
+    </div>
+    <div class="row pass">
+      <div class="what">HAM-A psychic factor<span class="sub">Anxious mood, tension, fears, insomnia, cognitive, depressed mood, behaviour at interview</span></div>
+      <div class="p">p = 0.01&ndash;0.001</div>
+      <span class="badge pass">SEPARATED</span>
+    </div>
+    <div class="row fail">
+      <div class="what">HAM-A somatic factor<span class="sub">Muscular, sensory, cardiovascular, respiratory, GI, genitourinary, autonomic</span></div>
+      <div class="p">p = 0.07</div>
+      <span class="badge fail">DID NOT SEPARATE</span>
+    </div>
+  </div>
+
+  <div class="never-bar">
+    <div class="top">
+      <div class="what">Non-inferiority of 20mg to 60&ndash;120mg</div>
+      <span class="badge never">NEVER ASKED</span>
+    </div>
+    <div class="why">
+      Not tested badly. Not underpowered. Not inconclusive. <b>The question was never put.</b> The formal non-inferiority analysis (Allgulander 2008, PMID 18635722) pooled only the 60&ndash;120mg arms and excluded the 84 people on 20mg entirely. See diagram 2 for the arithmetic that proves it.
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="box hd">
+      <h3>Did the higher dose do better or worse?</h3>
+      <div class="mini"><span>HAM-A change, 20mg</span><span class="v">&minus;14.7</span></div>
+      <div class="mini"><span>HAM-A change, 60&ndash;120mg</span><span class="v">&minus;15.3</span></div>
+      <div class="mini"><span>Response, 20mg &rarr; 60&ndash;120mg</span><span class="v">60% &rarr; 65%</span></div>
+      <div class="mini"><span>Remission, 20mg &rarr; 60&ndash;120mg</span><span class="v">42% &rarr; 44%</span></div>
+      <div class="note"><b>Slightly better, not worse.</b> All three comparisons point the same way. So the story is not &ldquo;20mg is the sweet spot and more would spoil it.&rdquo; It is &ldquo;20mg cleared the bar, and 60mg cleared it by a little more.&rdquo; These point estimates are secondary-source; the widely-quoted &ldquo;45% vs 55%&rdquo; percentages are internally inconsistent with them and are not reproduced here.</div>
+    </div>
+    <div class="box pl">
+      <h3>The placebo arm, which does not collapse</h3>
+      <div class="mini"><span>HAM-A change, placebo</span><span class="v">&minus;11.6</span></div>
+      <div class="mini"><span>Response, placebo</span><span class="v">42%</span></div>
+      <div class="mini"><span>Remission, placebo</span><span class="v">20%</span></div>
+      <div class="mini"><span>Drug&ndash;placebo gap at 20mg</span><span class="v">&asymp; 3.1 pts</span></div>
+      <div class="note">The drug adds roughly three HAM-A points and eighteen percentage points <b>on top of a large placebo effect</b>. An earlier pass of this project claimed the 20mg evidence made the placebo explanation collapse. It does not. What collapses is only the narrower claim that a 20mg anxiolytic benefit is pharmacologically unsupported.</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <strong>The claim that survives, in full:</strong> 20mg beat placebo on HAM-A total and the psychic factor, in one 84-patient fixed-dose arm of one Lilly trial, over ten weeks, never replicated. It was never compared to 60mg. It failed on the somatic factor. That is simultaneously the best dose-matched evidence in this entire deep dive <em>and</em> a thin foundation, and both halves of that sentence are load-bearing.
+  </div>
+
+  <p class="prov">
+    <b>Provenance:</b> significance results are <b>primary, verified</b> (abstract verbatim; the full text is paywalled and was not retrieved).
+    Point estimates and response/remission rates are <b>secondary &mdash; unverified</b> (from a review, not the primary paper).
+    The drug&ndash;placebo gap and NNTs are <b>reasoning, not evidence</b> (derived arithmetic).
+  </p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

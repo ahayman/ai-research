@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 8: What Is Knowable, and When</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --none: #DC2626; --none-bg: #FEF2F2; --none-dark: #991B1B;
+    --weak: #F59E0B; --weak-bg: #FFFBEB; --weak-dark: #92400E;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+    --panel: #F3F4F6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --none: #F87171; --none-bg: rgba(248,113,113,0.10); --none-dark: #FCA5A5;
+      --weak: #FBBF24; --weak-bg: rgba(251,191,36,0.10); --weak-dark: #FDE68A;
+      --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+      --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+      --panel: #334155;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --none: #F87171; --none-bg: rgba(248,113,113,0.10); --none-dark: #FCA5A5;
+    --weak: #FBBF24; --weak-bg: rgba(251,191,36,0.10); --weak-dark: #FDE68A;
+    --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+    --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+    --panel: #334155;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --none: #DC2626; --none-bg: #FEF2F2; --none-dark: #991B1B;
+    --weak: #F59E0B; --weak-bg: #FFFBEB; --weak-dark: #92400E;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+    --panel: #F3F4F6;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 800px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .band { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 0.7rem 0.8rem; margin-bottom: 1.2rem; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .rows { display: flex; flex-direction: column; gap: 0.6rem; }
+  .row { display: grid; grid-template-columns: 130px 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+  @media (max-width: 680px) { .row { grid-template-columns: 1fr; } }
+  .row .when { padding: 0.8rem 0.85rem; font-weight: 900; font-size: 0.85rem; display: flex; align-items: center; border-right: 1px solid var(--border); }
+  @media (max-width: 680px) { .row .when { border-right: none; border-bottom: 1px solid var(--border); } }
+  .row .what { padding: 0.8rem 1rem; font-size: 0.83rem; color: var(--muted); }
+  .row .what b { color: var(--text); }
+  .row.n { border-left: 4px solid var(--none); }
+  .row.n .when { background: var(--none-bg); color: var(--none-dark); }
+  .row.w { border-left: 4px solid var(--weak); }
+  .row.w .when { background: var(--weak-bg); color: var(--weak-dark); }
+  .row.g { border-left: 4px solid var(--good); }
+  .row.g .when { background: var(--good-bg); color: var(--good-dark); }
+  .row.appt { border: 2px solid var(--acc); }
+  .row.appt .when { background: var(--acc-bg); color: var(--acc-dark); }
+  .tag { display: inline-block; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.12rem 0.38rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle; }
+  .tag.now { background: var(--acc); color: #FFF; }
+
+  .punch { margin-top: 1.2rem; background: var(--acc-bg); border: 2px solid var(--acc); border-radius: 12px; padding: 1.05rem 1.2rem; text-align: center; }
+  .punch .big { font-size: 1.05rem; font-weight: 900; color: var(--acc-dark); line-height: 1.35; margin-bottom: 0.4rem; }
+  .punch .small { font-size: 0.85rem; color: var(--muted); max-width: 740px; margin: 0 auto; }
+  .punch .small b { color: var(--text); }
+
+  .two { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .tc { border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.83rem; }
+  .tc.dies { background: var(--good-bg); border: 2px solid var(--good); }
+  .tc.lives { background: var(--none-bg); border: 2px solid var(--none); }
+  .tc h3 { margin: 0 0 0.35rem; font-size: 0.88rem; }
+  .tc.dies h3 { color: var(--good-dark); }
+  .tc.lives h3 { color: var(--none-dark); }
+  .tc p { margin: 0.25rem 0; color: var(--muted); }
+  .tc p b { color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>What Is Knowable, and When</h1>
+  <p class="subtitle">The single most useful thing you can bring into the room is <b>an accurate account of what you cannot yet know</b>. Here is the shape of it.</p>
+
+  <div class="band">
+    <svg viewBox="0 0 900 200" role="img" aria-label="A timeline showing that the appointment at four weeks arrives before the evidence does">
+      <text x="450" y="18" font-size="12.5" font-weight="900" fill="var(--text)" text-anchor="middle">Probability that a drug doing NOTHING would produce your zero-episode run</text>
+
+      <!-- axis -->
+      <line x1="60" y1="150" x2="860" y2="150" stroke="var(--border)" stroke-width="2"/>
+
+      <!-- zones -->
+      <rect x="60" y="34" width="180" height="116" fill="var(--none)" opacity="0.09"/>
+      <rect x="240" y="34" width="150" height="116" fill="var(--weak)" opacity="0.09"/>
+      <rect x="390" y="34" width="180" height="116" fill="var(--weak)" opacity="0.05"/>
+      <rect x="570" y="34" width="290" height="116" fill="var(--good)" opacity="0.09"/>
+
+      <text x="150" y="50" font-size="10.5" font-weight="900" fill="var(--none-dark)" text-anchor="middle">NOTHING KNOWABLE</text>
+      <text x="465" y="50" font-size="10.5" font-weight="900" fill="var(--weak-dark)" text-anchor="middle">CHANCE BECOMING IMPLAUSIBLE</text>
+      <text x="715" y="50" font-size="10.5" font-weight="900" fill="var(--good-dark)" text-anchor="middle">CHANCE IS DEAD</text>
+
+      <!-- decay curve (lambda=3) -->
+      <path d="M 90 78 C 130 96, 170 116, 240 130 C 320 142, 420 147, 570 149 L 850 150" fill="none" stroke="var(--none)" stroke-width="3.5" stroke-linecap="round"/>
+
+      <!-- points -->
+      <circle cx="90" cy="78" r="6" fill="var(--none)"/>
+      <text x="90" y="70" font-size="11" font-weight="900" fill="var(--none-dark)" text-anchor="middle">22%</text>
+      <text x="90" y="168" font-size="11" font-weight="900" fill="var(--none-dark)" text-anchor="middle">2 weeks</text>
+      <text x="90" y="182" font-size="9.5" font-weight="800" fill="var(--muted)" text-anchor="middle">you are here</text>
+
+      <circle cx="240" cy="130" r="7" fill="var(--acc)" stroke="var(--card)" stroke-width="2"/>
+      <line x1="240" y1="34" x2="240" y2="158" stroke="var(--acc)" stroke-width="2.5" stroke-dasharray="5,4"/>
+      <text x="240" y="168" font-size="11" font-weight="900" fill="var(--acc-dark)" text-anchor="middle">~4 weeks</text>
+      <text x="240" y="182" font-size="9.5" font-weight="900" fill="var(--acc-dark)" text-anchor="middle">THE APPOINTMENT</text>
+      <text x="252" y="122" font-size="10.5" font-weight="800" fill="var(--acc-dark)">2–14%</text>
+
+      <circle cx="390" cy="143" r="6" fill="var(--weak)"/>
+      <text x="390" y="168" font-size="11" font-weight="800" fill="var(--muted)" text-anchor="middle">6 weeks</text>
+      <text x="390" y="135" font-size="10" font-weight="800" fill="var(--weak-dark)" text-anchor="middle">1.1%</text>
+
+      <circle cx="570" cy="149" r="6" fill="var(--good)"/>
+      <text x="570" y="168" font-size="11" font-weight="800" fill="var(--muted)" text-anchor="middle">3 months</text>
+      <text x="570" y="141" font-size="10" font-weight="800" fill="var(--good-dark)" text-anchor="middle">0.01%</text>
+
+      <text x="790" y="168" font-size="11" font-weight="800" fill="var(--muted)" text-anchor="middle">6 months</text>
+
+      <!-- the gap -->
+      <path d="M 240 96 L 380 96" stroke="var(--acc)" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="386" y="100" font-size="10.5" font-weight="900" fill="var(--acc-dark)">← the data arrives here, after the decision</text>
+    </svg>
+  </div>
+
+  <div class="rows">
+    <div class="row n">
+      <div class="when">Now — 2 weeks</div>
+      <div class="what"><b>Nothing.</b> 13–37% chance of a pure fluke, depending on your true baseline rate. <b>This is not a reason for pessimism. It is a reason not to treat two weeks as informative.</b></div>
+    </div>
+    <div class="row appt">
+      <div class="when">~4 weeks <span class="tag now">appointment</span></div>
+      <div class="what"><b>Still weak</b> (2–14% fluke). <b>Meaningful only if a real trigger has been survived</b> — and unless chance supplies one, you will have no exposure-conditional data at all.</div>
+    </div>
+    <div class="row w">
+      <div class="when">6–8 weeks</div>
+      <div class="what"><b>"Random fluctuation" becomes implausible.</b> Placebo and regression are <b>still fully live</b>.</div>
+    </div>
+    <div class="row w">
+      <div class="when">3 months</div>
+      <div class="what">Chance is dead (&lt;0.25%). <b>Placebo decay should be starting if it is placebo</b> — that is the point at which the two stories begin to separate.</div>
+    </div>
+    <div class="row g">
+      <div class="when">3–6 months<br>+ 3 survived triggers</div>
+      <div class="what"><b>The strongest realistic evidence available to you.</b> Drug vs placebo becomes genuinely separable, because the exposure test is the one regression to the mean cannot fake.</div>
+    </div>
+    <div class="row g">
+      <div class="when">6–12 months</div>
+      <div class="what">Matches where the <b>trial evidence</b> sits: staying on duloxetine → <b>13.7% relapse at 26 weeks</b> (GAD, PMID 18559291), <b>14.4% at 52 weeks</b> (MDD, PMID 19552867). That ~14% is an <b>upper bound</b>. <b>Past 12 months, nobody has data on anyone</b> — there is no placebo-controlled duloxetine data beyond a year. <b>[primary, verified / no evidence exists]</b></div>
+    </div>
+  </div>
+
+  <div class="punch">
+    <div class="big">The appointment arrives before the data does.</div>
+    <div class="small">That is not a reason to delay anything, and it is not an argument for any particular dose. <b>It is a reason to walk in knowing precisely what you do not yet know, and to say so.</b> The strongest thing you can bring to that room is an accurate account of the size of your own uncertainty, because <b>a doctor can work with a calibrated patient and cannot work with a confident one who is guessing.</b></div>
+  </div>
+
+  <div class="two">
+    <div class="tc dies">
+      <h3>✓ What the calendar kills</h3>
+      <p><b>Random fluctuation.</b> That's it. At six weeks, chance is under 5% even at the most conservative baseline. At three months it is under 1 in 400.</p>
+      <p><b>You do not need six months. You need about eight to twelve weeks.</b></p>
+    </div>
+    <div class="tc lives">
+      <h3>✗ What survives the calendar entirely</h3>
+      <p><b>Placebo. Regression to the mean. Natural course.</b></p>
+      <p>These are <b>systematic, not random</b>, so waiting does not touch them. <b>They produce exactly the same zero-episode observation.</b></p>
+      <p><b>A three-month clean run proves the improvement is real. It says nothing about whether the drug caused it.</b> Only the <b>exposure test</b> separates those.</p>
+    </div>
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> The decay curve and all percentages are <b>[reasoning, not evidence]</b> — a standard Poisson process for recurrent events, P(0) = e<sup>−λt</sup>, plotted at λ=3/month. <b>The arithmetic is checkable; the input is his own retrospective estimate of "several times a month," which carries recall bias and which does not arithmetically reconcile with "episodes last 1–2 weeks" (see the exposure-denominator diagram).</b> Relapse figures: GAD PMID 18559291, MDD PMID 19552867 <b>[primary, verified]</b> — and note these are the <b>best available numbers, presented as an upper bound</b>, because the famous ~25% "poop-out" figure is Solomon 2005, an observational NIMH cohort <b>enrolled 1978–81</b> on TCAs and MAOIs whose definition <b>cannot separate tachyphylaxis from natural course or non-adherence</b>. The canonical range is <b>9–57%</b>, which is a confession rather than an estimate. <b>Duloxetine-specific tachyphylaxis has never been studied.</b>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

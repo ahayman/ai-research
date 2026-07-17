@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 2: The Ramp and the Cliff — Two Journeys, Side by Side</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --ramp: #059669; --ramp-bg: #ECFDF5; --ramp-dark: #065F46;
+    --cliff: #DC2626; --cliff-bg: #FEF2F2; --cliff-dark: #991B1B;
+    --panel: #F3F4F6; --you: #B45309;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --ramp: #34D399; --ramp-bg: rgba(52,211,153,0.10); --ramp-dark: #6EE7B7;
+      --cliff: #F87171; --cliff-bg: rgba(248,113,113,0.10); --cliff-dark: #FCA5A5;
+      --panel: #334155; --you: #FBBF24;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --ramp: #34D399; --ramp-bg: rgba(52,211,153,0.10); --ramp-dark: #6EE7B7;
+    --cliff: #F87171; --cliff-bg: rgba(248,113,113,0.10); --cliff-dark: #FCA5A5;
+    --panel: #334155; --you: #FBBF24;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --ramp: #059669; --ramp-bg: #ECFDF5; --ramp-dark: #065F46;
+    --cliff: #DC2626; --cliff-bg: #FEF2F2; --cliff-dark: #991B1B;
+    --panel: #F3F4F6; --you: #B45309;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.32rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 800px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  @media (max-width: 780px) { .panels { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .panel-head { padding: 0.85rem 1.05rem; color: #FFFFFF; }
+  .panel.ramp .panel-head { background: var(--ramp); }
+  .panel.cliff .panel-head { background: var(--cliff); }
+  .panel-head h2 { margin: 0; font-size: 1.02rem; }
+  .panel-head .sub { font-size: 0.79rem; opacity: 0.92; margin-top: 0.15rem; }
+  .steps { padding: 1rem; }
+  .node { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.7rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
+  .node .occ { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 800; }
+  .panel.ramp .node { background: var(--ramp-bg); color: var(--ramp-dark); }
+  .panel.cliff .node { background: var(--cliff-bg); color: var(--cliff-dark); }
+  .node.here { background: var(--you); color: #FFFFFF; }
+  .step { display: flex; align-items: center; gap: 0.55rem; padding: 0.5rem 0.7rem 0.5rem 1.5rem; font-size: 0.8rem; position: relative; }
+  .step::before { content: ""; position: absolute; left: 1.35rem; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .step .arrow { font-size: 1rem; line-height: 1; z-index: 1; background: var(--card); }
+  .step .cost { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; margin-left: auto; }
+  .pill.yes { background: var(--ramp); color: #FFFFFF; }
+  .pill.no { background: var(--cliff); color: #FFFFFF; }
+  .totals { border-top: 1px solid var(--border); padding: 0.9rem 1.05rem; background: var(--panel); }
+  .totals .row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.18rem 0; }
+  .totals .row .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .panel.ramp .totals .v { color: var(--ramp); }
+  .panel.cliff .totals .v { color: var(--cliff); }
+  .verdict { margin-top: 1.2rem; background: var(--panel); border-left: 4px solid var(--you); padding: 1rem 1.2rem; border-radius: 0 10px 10px 0; font-size: 0.93rem; }
+  .verdict strong { color: var(--you); }
+  .ratio { display: flex; align-items: center; justify-content: center; gap: 1.4rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .ratio .cell { text-align: center; }
+  .ratio .n { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .ratio .l { font-size: 0.76rem; color: var(--muted); margin-top: 0.25rem; }
+  .ratio .op { font-size: 1.3rem; color: var(--muted); font-weight: 300; }
+  .prov { text-align: center; font-size: 0.76rem; color: var(--muted); margin-top: 1.1rem; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Ramp and the Cliff: Two Journeys, Side by Side</h1>
+  <p class="subtitle">Both panels are descents. One has a capsule for every step. The other has none. The available dose forms are overlaid on each step so you can see exactly where the drug runs out.</p>
+
+  <div class="panels">
+
+    <div class="panel ramp">
+      <div class="panel-head">
+        <h2>60mg &rarr; 20mg &mdash; the ramp</h2>
+        <div class="sub">The stretch a dose increase would add</div>
+      </div>
+      <div class="steps">
+        <div class="node">60mg <span class="occ">88%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--ramp)">&darr;</span> <span class="cost">&minus;9 pts</span> <span class="pill yes">30mg capsule exists</span></div>
+        <div class="node">30mg <span class="occ">79%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--ramp)">&darr;</span> <span class="cost">&minus;7 pts</span> <span class="pill yes">20mg capsule exists</span></div>
+        <div class="node here">20mg <span class="occ">72%</span></div>
+      </div>
+      <div class="totals">
+        <div class="row"><span>Milligrams travelled</span><span class="v">40mg</span></div>
+        <div class="row"><span>Occupancy points lost</span><span class="v">~16</span></div>
+        <div class="row"><span>Steps needing a compounder</span><span class="v">0</span></div>
+      </div>
+    </div>
+
+    <div class="panel cliff">
+      <div class="panel-head">
+        <h2>20mg &rarr; 0 &mdash; the cliff</h2>
+        <div class="sub">Identical whether the dose goes up or not</div>
+      </div>
+      <div class="steps">
+        <div class="node here">20mg <span class="occ">72%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--cliff)">&darr;</span> <span class="cost">&minus;16 pts</span> <span class="pill no">no 10mg capsule</span></div>
+        <div class="node">10mg <span class="occ">56%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--cliff)">&darr;</span> <span class="cost">&minus;17 pts</span> <span class="pill no">no 5mg capsule</span></div>
+        <div class="node">5mg <span class="occ">39%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--cliff)">&darr;</span> <span class="cost">&minus;15 pts</span> <span class="pill no">no 2.5mg capsule</span></div>
+        <div class="node">2.5mg <span class="occ">24%</span></div>
+        <div class="step"><span class="arrow" style="color:var(--cliff)">&darr;</span> <span class="cost">&minus;24 pts</span> <span class="pill no">nothing here either</span></div>
+        <div class="node">0 <span class="occ">0%</span></div>
+      </div>
+      <div class="totals">
+        <div class="row"><span>Milligrams travelled</span><span class="v">20mg</span></div>
+        <div class="row"><span>Occupancy points lost</span><span class="v">~72</span></div>
+        <div class="row"><span>Steps needing a compounder</span><span class="v">every one</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ratio">
+    <div class="cell"><div class="n" style="color:var(--cliff)">&frac12;</div><div class="l">the milligrams</div></div>
+    <div class="op">&bull;</div>
+    <div class="cell"><div class="n" style="color:var(--cliff)">4.3&times;</div><div class="l">the occupancy distance</div></div>
+    <div class="op">&bull;</div>
+    <div class="cell"><div class="n" style="color:var(--cliff)">0</div><div class="l">dose forms available</div></div>
+  </div>
+
+  <div class="verdict">
+    <strong>This is why the argument fails.</strong> "Don't go up, because coming down will be harder" treats the two panels as one journey. They are not. Going to 30 or 60mg adds the left panel, which is gentle and fully provisioned, in front of the right panel, which does not change at all. The cliff does not get taller. It is already there, and at 20mg you are already standing on its edge.
+  </div>
+
+  <p class="prov"><strong>Provenance:</strong> occupancy values <em>[reasoning, not evidence]</em> &mdash; modelled from Takano's ED50 of 7.9mg (PMID 16506079), not measured below 20mg. US capsule strengths 20 / 30 / 60mg delayed-release <em>[primary, verified &mdash; label-grade]</em>. Step costs rounded to whole points.</p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

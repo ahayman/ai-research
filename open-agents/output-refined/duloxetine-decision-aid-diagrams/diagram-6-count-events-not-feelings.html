@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 6: Count Events, Don't Rate Feelings</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --bad: #DC2626; --bad-bg: #FEF2F2; --bad-dark: #991B1B;
+    --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+      --bad: #F87171; --bad-bg: rgba(248,113,113,0.10); --bad-dark: #FCA5A5;
+      --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+      --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+      --panel: #334155;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+    --bad: #F87171; --bad-bg: rgba(248,113,113,0.10); --bad-dark: #FCA5A5;
+    --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+    --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+    --panel: #334155;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --bad: #DC2626; --bad-bg: #FEF2F2; --bad-dark: #991B1B;
+    --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 830px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .finding { background: var(--card); border: 2px solid var(--acc); border-radius: 12px; padding: 1.05rem 1.2rem; margin-bottom: 1.2rem; }
+  .finding h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--acc-dark); }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 480px; }
+  th, td { padding: 0.5rem 0.7rem; text-align: left; font-size: 0.82rem; border-bottom: 1px solid var(--border); }
+  thead th { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 800; }
+  tbody tr:last-child td { border-bottom: none; }
+  .hi { background: var(--bad-bg); }
+  .lo { background: var(--good-bg); }
+  .num { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-weight: 900; }
+  .finding p { margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--muted); }
+  .finding p b { color: var(--text); }
+
+  .gauge { margin: 1rem 0 0; background: var(--panel); border-radius: 10px; padding: 0.9rem 1rem; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .axis { background: var(--card); border: 2px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.2rem; }
+  .axis-head { padding: 0.85rem 1.1rem; background: var(--panel); border-bottom: 1px solid var(--border); }
+  .axis-head h2 { margin: 0 0 0.15rem; font-size: 1rem; }
+  .axis-head .n { font-size: 0.78rem; color: var(--muted); }
+  .axis-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .axis-cols { grid-template-columns: 1fr; } }
+  .ax { padding: 1rem 1.15rem; }
+  .ax.g { background: var(--good-bg); border-right: 1px solid var(--border); }
+  .ax.b { background: var(--bad-bg); }
+  @media (max-width: 720px) { .ax.g { border-right: none; border-bottom: 1px solid var(--border); } }
+  .ax h3 { margin: 0 0 0.5rem; font-size: 0.92rem; }
+  .ax.g h3 { color: var(--good-dark); }
+  .ax.b h3 { color: var(--bad-dark); }
+  .counter { background: var(--card); border-radius: 9px; padding: 0.7rem 0.85rem; margin-bottom: 0.55rem; border: 1px solid var(--border); }
+  .counter .lbl { font-weight: 800; font-size: 0.84rem; margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.45rem; }
+  .counter .q { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+  .chip { font-size: 0.62rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.14rem 0.4rem; border-radius: 4px; color: #FFF; }
+  .chip.g { background: var(--good); }
+  .chip.b { background: var(--bad); }
+  .sig { margin-top: 0.6rem; font-size: 0.82rem; color: var(--muted); }
+  .sig b { color: var(--text); }
+
+  .rule { margin-top: 1.1rem; background: var(--acc-bg); border: 2px solid var(--acc); border-radius: 12px; padding: 1rem 1.2rem; }
+  .rule h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--acc-dark); text-align: center; }
+  .rulegrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+  @media (max-width: 780px) { .rulegrid { grid-template-columns: 1fr; } }
+  .rc { background: var(--card); border: 1px solid var(--border); border-radius: 9px; padding: 0.7rem 0.8rem; font-size: 0.78rem; }
+  .rc .top { font-weight: 800; margin-bottom: 0.3rem; font-size: 0.75rem; }
+  .rc .out { color: var(--muted); }
+  .rc .out b { color: var(--text); }
+  .rc.alarm { border: 2px solid var(--bad); background: var(--bad-bg); }
+  .rc.alarm .out b { color: var(--bad-dark); }
+
+  .disc { margin-top: 1.1rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .disc h3 { margin: 0; padding: 0.8rem 1.1rem; font-size: 0.92rem; background: var(--panel); border-bottom: 1px solid var(--border); }
+  .disc table { min-width: 620px; }
+  .disc td, .disc th { padding: 0.65rem 0.8rem; vertical-align: top; }
+  tr.unavail td { background: var(--you-bg); }
+  tr.unavail td:first-child { color: var(--you); font-weight: 800; }
+
+  .limit { margin-top: 1rem; background: var(--you-bg); border: 2px solid var(--you); border-radius: 12px; padding: 1rem 1.2rem; }
+  .limit h3 { margin: 0 0 0.4rem; font-size: 0.92rem; color: var(--you); }
+  .limit p { margin: 0.3rem 0; font-size: 0.85rem; color: var(--muted); }
+  .limit p b { color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Count Events, Don't Rate Feelings</h1>
+  <p class="subtitle">You said: <i>"I'm not sure I would notice."</i> <b>Your conclusion was right. Your reason for it was not, and the correction is what makes the problem solvable.</b></p>
+
+  <div class="finding">
+    <h3>The finding that inverts it: the channel is hijacked, not buried</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Measure — Watson 2004, 20 MZ twin pairs discordant for ME/CFS</th><th>CFS twin</th><th>Healthy co-twin</th><th>p</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td><b>Epworth (ESS)</b> — how sleepy do you <i>feel</i></td><td class="num">10.9</td><td class="num">8.2</td><td class="num">.03</td></tr>
+          <tr class="hi"><td>Stanford (SSS) — subjective</td><td class="num">3.4</td><td class="num">2.1</td><td class="num">&lt;.001</td></tr>
+          <tr class="lo"><td><b>MSLT</b> — how fast do you <i>actually</i> fall asleep</td><td class="num">8.9 min</td><td class="num">10.0 min</td><td class="num">.33 — NS</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>ESS 10.9 crosses the clinical threshold for excessive daytime sleepiness — in people whose objective test says they are not sleepy at all.</b> <b>[primary, verified — PMID 15453557]</b></p>
+
+    <div class="gauge">
+      <svg viewBox="0 0 880 128" role="img" aria-label="The subjective channel is pinned near the top with no headroom; the objective channel is clean with full headroom">
+        <!-- subjective -->
+        <text x="8" y="26" font-size="12" font-weight="900" fill="var(--bad-dark)">SUBJECTIVE: "am I sleepy?"</text>
+        <rect x="8" y="34" width="700" height="22" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+        <rect x="8" y="34" width="640" height="22" rx="11" fill="var(--bad)" opacity="0.75"/>
+        <line x1="648" y1="28" x2="648" y2="62" stroke="var(--bad-dark)" stroke-width="2.5"/>
+        <text x="640" y="24" font-size="10.5" font-weight="900" fill="var(--bad-dark)" text-anchor="end">already at 10.9 before the drug does anything</text>
+        <text x="716" y="50" font-size="11" font-weight="800" fill="var(--bad-dark)">no headroom</text>
+
+        <!-- objective -->
+        <text x="8" y="94" font-size="12" font-weight="900" fill="var(--good-dark)">OBJECTIVE: "did I fall asleep?"</text>
+        <rect x="8" y="102" width="700" height="22" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+        <rect x="8" y="102" width="60" height="22" rx="11" fill="var(--good)" opacity="0.75"/>
+        <line x1="68" y1="96" x2="68" y2="130" stroke="var(--good-dark)" stroke-width="2.5"/>
+        <text x="78" y="92" font-size="10.5" font-weight="900" fill="var(--good-dark)">floor near zero — a rise to 2/day is unmistakable</text>
+        <text x="716" y="118" font-size="11" font-weight="800" fill="var(--good-dark)">enormous headroom</text>
+      </svg>
+    </div>
+
+    <p><b>When you introspect "am I sleepy?", your fatigue answers.</b> The needle is already pinned. Meanwhile the objective channel is clean, normal, and has room to move. <b>So route around introspection. Ask "did I fall asleep?", never "do I feel sleepy?"</b> <b>[reasoning, not evidence — the premises are primary]</b></p>
+    <p>Mechanistically supported: <b>Olson 1998 (PMID 9844851, n=225 including 12% with CFS)</b> found <b>ESS correlated with every SCL-90 psychological subscale except psychoticism; mean sleep latency correlated with none of them.</b> Verbatim: <i>"The ESS cannot be used to demonstrate or exclude sleepiness as it is measured by MSLT."</i> <b>[primary, verified]</b></p>
+  </div>
+
+  <div class="axis">
+    <div class="axis-head">
+      <h2>The discriminator that works: volitional vs intrusive</h2>
+      <div class="n">Two counters. Never merge them. <b>Requires no introspection at all</b>, because "did I choose this?" is a question your fatigue cannot answer for you.</div>
+    </div>
+    <div class="axis-cols">
+      <div class="ax g">
+        <h3>Counter 1 — the benefit channel</h3>
+        <div class="counter">
+          <div class="lbl">Deliberate nap attempts that <b>succeeded</b> <span class="chip g">count</span></div>
+          <div class="q">"I decided to try to sleep, and I did."</div>
+        </div>
+        <div class="sig"><b>Benefit looks like: this rises, and Counter 2 stays at zero.</b></div>
+        <div class="sig" style="margin-top:0.35rem">Maps onto the <b>MSLT</b>: can you sleep when you try?</div>
+      </div>
+      <div class="ax b">
+        <h3>Counter 2 — the harm channel</h3>
+        <div class="counter">
+          <div class="lbl">Unintended dozes <span class="chip b">count</span></div>
+          <div class="q">"I fell asleep without deciding to" — reading, in conversation, as a passenger.</div>
+        </div>
+        <div class="counter">
+          <div class="lbl">Head-nods / microsleeps <span class="chip b">count</span></div>
+          <div class="q">Plus: re-read the same paragraph, rewound the same scene.</div>
+        </div>
+        <div class="counter" style="border-color:var(--bad)">
+          <div class="lbl">Drowsy driving or near-miss <span class="chip b">binary</span></div>
+          <div class="q">Safety-critical. Any occurrence is a finding.</div>
+        </div>
+        <div class="sig"><b>Somnolence looks like: this rises, whatever Counter 1 does.</b></div>
+        <div class="sig" style="margin-top:0.35rem">Maps onto the <b>MWT</b>: can you stay awake when you must?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule">
+    <h3>The decision rule this buys</h3>
+    <div class="rulegrid">
+      <div class="rc"><div class="top" style="color:var(--bad-dark)">Counts RISE<br>Feeling RISES</div><div class="out"><b>Real somnolence.</b> The dose trade-off is live.</div></div>
+      <div class="rc alarm"><div class="top" style="color:var(--bad-dark)">Counts RISE<br>Feeling FLAT</div><div class="out"><b>Real somnolence you cannot feel — exactly the failure mode you feared. Trust the counts.</b></div></div>
+      <div class="rc"><div class="top" style="color:var(--muted)">Counts FLAT<br>Feeling RISES</div><div class="out">Likely <b>expectancy</b> or the Watson fatigue-misattribution effect. Not by itself a reason to avoid 60mg.</div></div>
+      <div class="rc"><div class="top" style="color:var(--good-dark)">Counts FLAT<br>Feeling FLAT</div><div class="out">No detectable somnolence at this dose.</div></div>
+    </div>
+    <div style="margin-top:0.7rem; font-size:0.8rem; color:var(--muted); text-align:center"><b>Both can happen at once. They are not mutually exclusive, and you should not expect a clean verdict.</b></div>
+  </div>
+
+  <div class="disc scroll">
+    <h3>The four discriminators, ranked — and the sharpest one is unavailable to you</h3>
+    <table>
+      <thead><tr><th>Discriminator</th><th>Reduced arousal (benefit)</th><th>Somnolence (adverse)</th><th>Strength</th></tr></thead>
+      <tbody>
+        <tr><td><b>Volitional vs intrusive</b></td><td>Sleeps <b>when he tries</b>. Unintended dozes stay at <b>zero</b>.</td><td>Sleeps <b>when not trying</b>. Unintended dozes <b>rise</b>.</td><td><b style="color:var(--good-dark)">STRONGEST</b> — opposite on "did I choose it?", and <b>needs no introspection</b></td></tr>
+        <tr><td><b>MSLT / MWT dissociation</b></td><td>Moves MSLT, leaves MWT alone</td><td>Moves <b>both</b></td><td><b>Strong and principled.</b> Sangal 1992 (PMID 1555459): r=0.41, <b>&lt;17% shared variance, two factors</b>. The home version: "did I ever fight to stay awake and lose?"</td></tr>
+        <tr><td><b>Time-locking to dose</b></td><td>Tonic — <b>flat across the day</b></td><td>Tracks the plasma curve — a post-dose trough</td><td>Moderate. Requires fixed-time sampling and a dose-time log.</td></tr>
+        <tr class="unavail"><td><b>Dose-dependence</b></td><td>Unknown direction at 60mg</td><td><b>Label-confirmed dose-dependent.</b> Rises on going up.</td><td><b>⚠ UNAVAILABLE BEFORE THE APPOINTMENT. You are at one dose. This discriminator only exists AFTER the decision it would inform.</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="limit">
+    <h3>The honest limit, stated because it matters more than the taxonomy</h3>
+    <p>If you can nap, function better, and nothing intrudes, then <b>whether a physiologist would call it "reduced tonic arousal" or "mild somnolence" does not change what you should do.</b></p>
+    <p><b>The question that actually bears on the dose decision is not "which is it?" but "does it cost me anything?"</b> — and that is answered by the unintended-doze count, the night-sleep log, and whether hours disappear. <b>Those are countable. The mechanism label is not.</b> <b>[reasoning, not evidence]</b></p>
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> Watson 2004 PMID 15453557 <b>[primary, verified — n=20 MZ twin pairs; the co-twin control design is genuinely the strongest in this literature, but it is ONE study and its MSLT result is a NULL at n=20]</b> · Olson 1998 PMID 9844851 <b>[primary, verified]</b> · Sangal 1992 PMID 1555459 <b>[primary, verified]</b> · Åkerstedt 2014 PMID 24750198 <b>[primary, verified]</b> · Togo 2008 PMID 18474105 <b>[primary, verified — separate sleepiness and fatigue scales within CFS recovered meaningful subgroups, so separated items do carry signal in this population]</b> · FDA label dose-dependence footnote <b>[primary, verified]</b>.
+    <br><br><b>⚠ Two honesty notes.</b> <b>(1) [no evidence exists]:</b> no study validates a behavioural dozing-event diary against drug somnolence in <i>any</i> population. This design is mechanistic reasoning from the MSLT/ESS dissociation, <b>not a validated instrument</b>. Said plainly rather than dressed up. <b>(2) Do not over-cite Watson.</b> Its <i>"may mistake"</i> line is an <b>inference from a group-level dissociation</b>, not a measurement of any individual's discrimination. <b>No study has ever tested, as a psychophysical question, whether an ME/CFS patient can distinguish sleepiness from fatigue. Your exact problem is real and scientifically unaddressed.</b>
+    <br><br><b>Safety note that travels with this design:</b> if sleep-propensity events do rise, duloxetine is not the only candidate. Mariman 2013 (PMID 24182640): of 279 patients referred with presumed CFS, only <b>23.3% had unequivocal CFS</b> and <b>49.8% had a sleep disorder</b>, mostly OSA <b>[primary, verified]</b>. <b>Undiagnosed sleep apnoea is the main competing explanation for any new objective sleepiness signal, and that is a clinician conversation.</b>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

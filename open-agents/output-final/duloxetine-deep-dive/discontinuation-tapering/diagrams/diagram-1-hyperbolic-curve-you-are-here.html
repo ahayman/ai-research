@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 1: The Occupancy Curve — Where the Taper Cliff Actually Is</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --line: #4338CA; --cliff: #DC2626; --cliff-fill: rgba(220,38,38,0.10); --cliff-band: #FEE2E2;
+    --ramp: #059669; --ramp-fill: rgba(5,150,105,0.09); --grid: #E5E7EB; --you: #B45309;
+    --axis: #9CA3AF; --panel: #F3F4F6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --line: #A5B4FC; --cliff: #F87171; --cliff-fill: rgba(248,113,113,0.16); --cliff-band: rgba(248,113,113,0.18);
+      --ramp: #34D399; --ramp-fill: rgba(52,211,153,0.13); --grid: #334155; --you: #FBBF24;
+      --axis: #64748B; --panel: #334155;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --line: #A5B4FC; --cliff: #F87171; --cliff-fill: rgba(248,113,113,0.16); --cliff-band: rgba(248,113,113,0.18);
+    --ramp: #34D399; --ramp-fill: rgba(52,211,153,0.13); --grid: #334155; --you: #FBBF24;
+    --axis: #64748B; --panel: #334155;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --line: #4338CA; --cliff: #DC2626; --cliff-fill: rgba(220,38,38,0.10); --cliff-band: #FEE2E2;
+    --ramp: #059669; --ramp-fill: rgba(5,150,105,0.09); --grid: #E5E7EB; --you: #B45309;
+    --axis: #9CA3AF; --panel: #F3F4F6;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 940px; margin: 0 auto; }
+  h1 { font-size: 1.32rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 780px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  svg { display: block; width: 100%; height: auto; }
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.1rem; }
+  @media (max-width: 720px) { .cmp { grid-template-columns: 1fr; } }
+  .box { border-radius: 10px; padding: 0.9rem 1rem; border: 1px solid var(--border); background: var(--card); }
+  .box.ramp { border-left: 4px solid var(--ramp); }
+  .box.cliff { border-left: 4px solid var(--cliff); }
+  .box h3 { margin: 0 0 0.35rem; font-size: 0.95rem; }
+  .box.ramp h3 { color: var(--ramp); }
+  .box.cliff h3 { color: var(--cliff); }
+  .box .big { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
+  .box p { margin: 0.3rem 0 0; font-size: 0.85rem; color: var(--muted); }
+  .takeaway { background: var(--panel); border-left: 4px solid var(--you); padding: 0.95rem 1.15rem; border-radius: 0 10px 10px 0; margin-top: 1.1rem; font-size: 0.92rem; }
+  .takeaway strong { color: var(--you); }
+  .prov { text-align: center; font-size: 0.76rem; color: var(--muted); margin-top: 1rem; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Occupancy Curve, and Where the Taper Cliff Actually Is</h1>
+  <p class="subtitle">Serotonin transporter occupancy modelled as occupancy = dose &divide; (dose + 7.9), using Takano's fitted ED50 of 7.9mg. The curve is steep at the bottom and flat at the top. Every capsule that exists sits on the flat part.</p>
+
+  <div class="chart-card">
+    <svg viewBox="0 0 900 520" role="img" aria-label="Hyperbolic curve of SERT occupancy against duloxetine dose, showing the steep region below 20mg where no capsule exists">
+      <!-- cliff shaded region: dose 0 to 20mg -->
+      <rect x="90" y="60" width="233.8" height="380" fill="var(--cliff-fill)"/>
+      <!-- ramp shaded region: dose 20 to 60mg -->
+      <rect x="323.8" y="60" width="467.7" height="380" fill="var(--ramp-fill)"/>
+
+      <!-- gridlines -->
+      <g stroke="var(--grid)" stroke-width="1" stroke-dasharray="3,4">
+        <line x1="90" y1="440" x2="850" y2="440"/>
+        <line x1="90" y1="364" x2="850" y2="364"/>
+        <line x1="90" y1="288" x2="850" y2="288"/>
+        <line x1="90" y1="212" x2="850" y2="212"/>
+        <line x1="90" y1="136" x2="850" y2="136"/>
+        <line x1="90" y1="60" x2="850" y2="60"/>
+      </g>
+
+      <!-- axes -->
+      <line x1="90" y1="60" x2="90" y2="440" stroke="var(--axis)" stroke-width="1.5"/>
+      <line x1="90" y1="440" x2="850" y2="440" stroke="var(--axis)" stroke-width="1.5"/>
+
+      <!-- y labels -->
+      <g fill="var(--muted)" font-size="12" text-anchor="end">
+        <text x="82" y="444">0%</text>
+        <text x="82" y="368">20%</text>
+        <text x="82" y="292">40%</text>
+        <text x="82" y="216">60%</text>
+        <text x="82" y="140">80%</text>
+        <text x="82" y="64">100%</text>
+      </g>
+      <text x="30" y="250" fill="var(--muted)" font-size="12.5" font-weight="600" text-anchor="middle" transform="rotate(-90 30 250)">SERT occupancy</text>
+
+      <!-- x labels -->
+      <g fill="var(--muted)" font-size="12" text-anchor="middle">
+        <text x="90" y="460">0</text>
+        <text x="148.5" y="460">5</text>
+        <text x="206.9" y="460">10</text>
+        <text x="323.8" y="460">20</text>
+        <text x="440.8" y="460">30</text>
+        <text x="791.5" y="460">60</text>
+      </g>
+      <text x="470" y="482" fill="var(--muted)" font-size="12.5" font-weight="600" text-anchor="middle">Duloxetine dose (mg/day)</text>
+
+      <!-- the curve -->
+      <polyline fill="none" stroke="var(--line)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"
+        points="90.0,440.0 95.8,417.4 101.7,397.3 107.5,379.4 113.4,363.2 119.2,348.7 125.1,335.4 136.8,312.3 148.5,292.7 160.2,276.0 171.8,261.5 182.4,250.0 195.2,237.6 206.9,227.7 230.3,210.9 253.7,197.1 277.1,185.6 300.5,175.9 323.8,167.6 358.9,157.2 394.0,148.6 440.8,139.2 487.5,131.6 534.3,125.4 581.1,120.2 627.8,115.7 674.6,111.8 733.1,107.7 791.5,104.2 850.0,101.2"/>
+
+      <!-- cliff region label -->
+      <line x1="323.8" y1="60" x2="323.8" y2="440" stroke="var(--cliff)" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="96" y="68" width="222" height="46" rx="7" fill="var(--cliff)" opacity="0.92"/>
+      <text x="207" y="86" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">THE CLIFF</text>
+      <text x="207" y="103" fill="#FFFFFF" font-size="11" text-anchor="middle">No capsule exists in this region</text>
+
+      <!-- ramp region label -->
+      <rect x="470" y="68" width="290" height="46" rx="7" fill="var(--ramp)" opacity="0.92"/>
+      <text x="615" y="86" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">THE RAMP</text>
+      <text x="615" y="103" fill="#FFFFFF" font-size="11" text-anchor="middle">Capsules at 20, 30 and 60mg</text>
+
+      <!-- capsule markers -->
+      <g>
+        <circle cx="323.8" cy="167.6" r="7" fill="var(--you)" stroke="var(--card)" stroke-width="2.5"/>
+        <circle cx="440.8" cy="139.2" r="6" fill="var(--ramp)" stroke="var(--card)" stroke-width="2.5"/>
+        <circle cx="791.5" cy="104.2" r="6" fill="var(--ramp)" stroke="var(--card)" stroke-width="2.5"/>
+      </g>
+      <text x="452" y="132" fill="var(--ramp)" font-size="11.5" font-weight="700">30mg &bull; 79%</text>
+      <text x="803" y="98" fill="var(--ramp)" font-size="11.5" font-weight="700" text-anchor="end">60mg &bull; 88%</text>
+
+      <!-- points below 20mg with no capsule -->
+      <g>
+        <circle cx="206.9" cy="227.7" r="4.5" fill="none" stroke="var(--cliff)" stroke-width="2" stroke-dasharray="2,2"/>
+        <circle cx="148.5" cy="292.7" r="4.5" fill="none" stroke="var(--cliff)" stroke-width="2" stroke-dasharray="2,2"/>
+        <circle cx="119.2" cy="348.7" r="4.5" fill="none" stroke="var(--cliff)" stroke-width="2" stroke-dasharray="2,2"/>
+      </g>
+      <text x="216" y="224" fill="var(--cliff)" font-size="11" font-weight="600">10mg &bull; 56% &mdash; no capsule</text>
+      <text x="158" y="290" fill="var(--cliff)" font-size="11" font-weight="600">5mg &bull; 39% &mdash; no capsule</text>
+      <text x="129" y="346" fill="var(--cliff)" font-size="11" font-weight="600">2.5mg &bull; 24% &mdash; no capsule</text>
+
+      <!-- YOU ARE HERE -->
+      <g>
+        <line x1="323.8" y1="167.6" x2="360" y2="235" stroke="var(--you)" stroke-width="2"/>
+        <rect x="330" y="238" width="176" height="52" rx="8" fill="var(--you)"/>
+        <text x="418" y="257" fill="#FFFFFF" font-size="13" font-weight="800" text-anchor="middle">YOU ARE HERE</text>
+        <text x="418" y="276" fill="#FFFFFF" font-size="11.5" text-anchor="middle">20mg &bull; ~72% &bull; the floor</text>
+      </g>
+
+      <!-- distance annotations -->
+      <g stroke="var(--ramp)" stroke-width="2">
+        <line x1="812" y1="104.2" x2="812" y2="167.6"/>
+        <line x1="806" y1="104.2" x2="818" y2="104.2"/>
+        <line x1="806" y1="167.6" x2="818" y2="167.6"/>
+      </g>
+      <text x="826" y="140" fill="var(--ramp)" font-size="11.5" font-weight="800">~16 pts</text>
+
+      <g stroke="var(--cliff)" stroke-width="2.5">
+        <line x1="68" y1="167.6" x2="68" y2="440"/>
+        <line x1="61" y1="167.6" x2="75" y2="167.6"/>
+        <line x1="61" y1="440" x2="75" y2="440"/>
+      </g>
+      <text x="52" y="308" fill="var(--cliff)" font-size="12.5" font-weight="800" text-anchor="middle" transform="rotate(-90 52 308)">~72 points</text>
+    </svg>
+  </div>
+
+  <div class="cmp">
+    <div class="box ramp">
+      <h3>60mg &rarr; 20mg: the ramp</h3>
+      <div class="big" style="color:var(--ramp)">~16 points</div>
+      <p>40 milligrams of travel. A capsule for every step: 60, then 30, then 20. This is the stretch a dose increase would add.</p>
+    </div>
+    <div class="box cliff">
+      <h3>20mg &rarr; 0: the cliff</h3>
+      <div class="big" style="color:var(--cliff)">~72 points</div>
+      <p>20 milligrams of travel. No capsule at any step. This stretch is identical whether the dose goes up or not.</p>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>Read it from the bottom up.</strong> Half the milligrams, more than four times the biological distance, and nothing to stand on. The entire steep region of the curve lies underneath the smallest dose form the manufacturer makes. Hyperbolic tapering says the last steps should be the smallest; duloxetine makes the last steps impossible with commercial products. That is the taper-granularity problem, and going up does not create it.
+  </div>
+
+  <p class="prov"><strong>Provenance:</strong> curve shape <em>[primary, verified]</em> &mdash; Takano 2006, PMID 16506079, ED50 = 7.9mg. Plotted values <em>[reasoning, not evidence]</em> &mdash; an Emax model fitted to n&asymp;3 per dose, single-dose, thalamus only. Modelled 20mg (72%) and 60mg (88%) track the measured 71.3% and 81.8%, but the model was fitted to those points. <strong>Occupancy below 20mg has never been measured in a human</strong> <em>[no evidence exists]</em>.</p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

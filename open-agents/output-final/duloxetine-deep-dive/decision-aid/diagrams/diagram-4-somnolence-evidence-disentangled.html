@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 4: Somnolence — The Dose Evidence, Disentangled</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --som: #DC2626; --som-bg: #FEF2F2; --som-dark: #991B1B;
+    --ins: #0EA5E9; --ins-bg: #F0F9FF; --ins-dark: #075985;
+    --fat: #B45309; --fat-bg: #FFFBEB;
+    --you: #B45309; --panel: #F3F4F6;
+    --ok: #059669; --ok-bg: #ECFDF5; --ok-dark: #065F46;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --som: #F87171; --som-bg: rgba(248,113,113,0.10); --som-dark: #FCA5A5;
+      --ins: #38BDF8; --ins-bg: rgba(56,189,248,0.10); --ins-dark: #7DD3FC;
+      --fat: #FBBF24; --fat-bg: rgba(251,191,36,0.10);
+      --you: #FBBF24; --panel: #334155;
+      --ok: #34D399; --ok-bg: rgba(52,211,153,0.10); --ok-dark: #6EE7B7;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --som: #F87171; --som-bg: rgba(248,113,113,0.10); --som-dark: #FCA5A5;
+    --ins: #38BDF8; --ins-bg: rgba(56,189,248,0.10); --ins-dark: #7DD3FC;
+    --fat: #FBBF24; --fat-bg: rgba(251,191,36,0.10);
+    --you: #FBBF24; --panel: #334155;
+    --ok: #34D399; --ok-bg: rgba(52,211,153,0.10); --ok-dark: #6EE7B7;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --som: #DC2626; --som-bg: #FEF2F2; --som-dark: #991B1B;
+    --ins: #0EA5E9; --ins-bg: #F0F9FF; --ins-dark: #075985;
+    --fat: #B45309; --fat-bg: #FFFBEB;
+    --you: #B45309; --panel: #F3F4F6;
+    --ok: #059669; --ok-bg: #ECFDF5; --ok-dark: #065F46;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 830px; margin: 0 auto 1.5rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .correction { background: var(--som-bg); border: 2px solid var(--som); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; }
+  .correction h2 { margin: 0 0 0.45rem; font-size: 0.98rem; color: var(--som-dark); }
+  .correction p { margin: 0.3rem 0; font-size: 0.85rem; color: var(--muted); }
+  .correction p b { color: var(--text); }
+
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 700px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  th, td { padding: 0.75rem 0.8rem; text-align: left; font-size: 0.83rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  thead th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); background: var(--panel); font-weight: 800; }
+  tbody tr:last-child td { border-bottom: none; }
+  tr.hisstep td { background: var(--ok-bg); }
+  tr.hisstep td:first-child { border-left: 4px solid var(--ok); }
+  tr.above td { background: var(--som-bg); }
+  tr.above td:first-child { border-left: 4px solid var(--som); }
+  tr.mecfs td { background: var(--fat-bg); }
+  tr.mecfs td:first-child { border-left: 4px solid var(--fat); }
+  .step { font-weight: 900; white-space: nowrap; }
+  .val { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-weight: 800; white-space: nowrap; }
+  .dir { font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.2rem 0.45rem; border-radius: 4px; white-space: nowrap; }
+  .dir.flat { background: var(--ok); color: #FFF; }
+  .dir.up { background: var(--som); color: #FFF; }
+  .dir.na { background: var(--fat); color: #FFF; }
+
+  .bars { margin: 1.2rem 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 0.7rem 0.8rem; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .verdict { margin-top: 1.1rem; background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 1.05rem 1.2rem; }
+  .verdict h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .verdict ul { margin: 0; padding-left: 1.15rem; font-size: 0.85rem; color: var(--muted); }
+  .verdict li { margin: 0.35rem 0; }
+  .verdict li b { color: var(--text); }
+
+  .trap { margin-top: 1rem; background: var(--panel); border-left: 4px solid var(--som); border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; font-size: 0.84rem; color: var(--muted); }
+  .trap b { color: var(--text); }
+  .trap h3 { margin: 0 0 0.35rem; font-size: 0.86rem; color: var(--som-dark); }
+
+  .why { margin-top: 1rem; background: var(--fat-bg); border: 2px solid var(--fat); border-radius: 12px; padding: 1rem 1.2rem; text-align: center; }
+  .why .big { font-size: 0.98rem; font-weight: 800; color: var(--fat); line-height: 1.4; margin-bottom: 0.35rem; }
+  .why .small { font-size: 0.84rem; color: var(--muted); max-width: 740px; margin: 0 auto; }
+  .why .small b { color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Somnolence: The Dose Evidence, Disentangled</h1>
+  <p class="subtitle">This is the most tangled evidence on the page, and it does not resolve. <b>The direction is label-confirmed. The magnitude at your specific step is not measured.</b> Anyone who tells you confidently that 60mg will make you sleepy, or confidently that it will not, is going beyond the data.</p>
+
+  <div class="correction">
+    <h2>⚠ A correction this diagram makes against its own binding brief</h2>
+    <p>The brief states that somnolence <b>"rises at the 20→60 step (2.6%→10.2%, 7.8%→14.3%)."</b> <b>Both of those are 30→60 steps, not 20→60.</b></p>
+    <p>The only trial that ever tested 20mg against 60mg directly found somnolence <b>flat: 5.08% → 4.31%.</b></p>
+    <p>The brief's version makes the case against a dose increase look stronger than the evidence supports. <b>That is precisely the failure mode §1 of the brief warns about, committed by the brief itself.</b> The correct picture is below, and it is genuinely mixed.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Trial</th><th>Population</th><th>Step</th><th>Somnolence</th><th>Direction</th><th>Caveat</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hisstep">
+          <td><b>NCT00408876</b></td>
+          <td>Chronic low back pain</td>
+          <td class="step">20 → 60mg</td>
+          <td class="val">5.08% → 4.31%</td>
+          <td><span class="dir flat">Flat</span></td>
+          <td style="color:var(--muted)"><b>n=59 at 20mg — underpowered.</b> The only direct test of his step that exists.</td>
+        </tr>
+        <tr>
+          <td>NCT00408876</td>
+          <td>Chronic low back pain</td>
+          <td class="step">60 → 120mg</td>
+          <td class="val">4.31% → 12.50%</td>
+          <td><span class="dir up">Triples</span></td>
+          <td style="color:var(--muted)">The inflection is here, not at 60mg</td>
+        </tr>
+        <tr class="above">
+          <td><b>NCT00849693</b></td>
+          <td>MDD, <b>adolescents</b></td>
+          <td class="step">30 → 60mg</td>
+          <td class="val">2.6% → 10.2%</td>
+          <td><span class="dir up">~4×</span></td>
+          <td style="color:var(--muted)"><b>One step above him.</b> Children/adolescents.</td>
+        </tr>
+        <tr class="above">
+          <td><b>NCT00960986</b></td>
+          <td>MDD, Korean adults</td>
+          <td class="step">30 → 60mg</td>
+          <td class="val">0% → 6.8%<br>7.8% → 14.3%</td>
+          <td><span class="dir up">~2×</span></td>
+          <td style="color:var(--muted)"><b>One step above him.</b> With / without food arms.</td>
+        </tr>
+        <tr class="mecfs">
+          <td><b>Arnold 2015</b><br><span style="color:var(--muted);font-size:0.75rem">NCT00375973</span></td>
+          <td><b>ME/CFS</b> — his diagnosis</td>
+          <td class="step">60–120mg vs placebo</td>
+          <td class="val">41.38% vs 10.00%</td>
+          <td><span class="dir na">Highest in corpus</span></td>
+          <td style="color:var(--muted)"><b>n=29. NOT dose-stratified</b>, so it cannot separate 60 from 120mg. Also: dizziness 31.0% vs 6.7%.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bars">
+    <svg viewBox="0 0 900 260" role="img" aria-label="Sleep adverse events by dose in NCT00408876, the only trial with a fixed 20mg arm">
+      <text x="450" y="18" font-size="13" font-weight="900" fill="var(--text)" text-anchor="middle">NCT00408876 — the only duloxetine trial with a fixed 20mg arm (all 135 registry trials were scanned)</text>
+      <line x1="70" y1="215" x2="870" y2="215" stroke="var(--border)" stroke-width="2"/>
+
+      <!-- group labels -->
+      <text x="145" y="238" font-size="11.5" font-weight="800" fill="var(--muted)" text-anchor="middle">Insomnia</text>
+      <text x="415" y="238" font-size="11.5" font-weight="800" fill="var(--muted)" text-anchor="middle">Somnolence</text>
+      <text x="685" y="238" font-size="11.5" font-weight="800" fill="var(--muted)" text-anchor="middle">Fatigue</text>
+
+      <!-- scale -->
+      <line x1="70" y1="35" x2="870" y2="35" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,4" opacity="0.5"/>
+      <text x="62" y="39" font-size="10" fill="var(--muted)" text-anchor="end">20%</text>
+      <line x1="70" y1="125" x2="870" y2="125" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,4" opacity="0.5"/>
+      <text x="62" y="129" font-size="10" fill="var(--muted)" text-anchor="end">10%</text>
+
+      <!-- INSOMNIA: placebo 2.56, 20mg 10.17, 60mg 8.62, 120mg 18.75 ; scale 9px per % -->
+      <rect x="80" y="192" width="30" height="23" fill="var(--muted)" opacity="0.45" rx="2"/>
+      <text x="95" y="188" font-size="9.5" fill="var(--muted)" text-anchor="middle">2.6</text>
+      <rect x="118" y="123" width="30" height="92" fill="var(--ins)" rx="2"/>
+      <text x="133" y="119" font-size="10" font-weight="900" fill="var(--ins-dark)" text-anchor="middle">10.2</text>
+      <rect x="156" y="137" width="30" height="78" fill="var(--ins)" opacity="0.75" rx="2"/>
+      <text x="171" y="133" font-size="10" font-weight="900" fill="var(--ins-dark)" text-anchor="middle">8.6</text>
+      <rect x="194" y="46" width="30" height="169" fill="var(--ins)" opacity="0.5" rx="2"/>
+      <text x="209" y="42" font-size="10" font-weight="900" fill="var(--ins-dark)" text-anchor="middle">18.8</text>
+
+      <!-- SOMNOLENCE: placebo 0, 20mg 5.08, 60mg 4.31, 120mg 12.5 -->
+      <rect x="350" y="213" width="30" height="2" fill="var(--muted)" opacity="0.45" rx="1"/>
+      <text x="365" y="209" font-size="9.5" fill="var(--muted)" text-anchor="middle">0</text>
+      <rect x="388" y="169" width="30" height="46" fill="var(--som)" rx="2"/>
+      <text x="403" y="165" font-size="10" font-weight="900" fill="var(--som-dark)" text-anchor="middle">5.1</text>
+      <rect x="426" y="176" width="30" height="39" fill="var(--som)" opacity="0.75" rx="2"/>
+      <text x="441" y="172" font-size="10" font-weight="900" fill="var(--som-dark)" text-anchor="middle">4.3</text>
+      <rect x="464" y="102" width="30" height="113" fill="var(--som)" opacity="0.5" rx="2"/>
+      <text x="479" y="98" font-size="10" font-weight="900" fill="var(--som-dark)" text-anchor="middle">12.5</text>
+
+      <!-- FATIGUE: placebo 0, 20mg 0, 60mg 6.03, 120mg 8.93 -->
+      <rect x="620" y="213" width="30" height="2" fill="var(--muted)" opacity="0.45" rx="1"/>
+      <text x="635" y="209" font-size="9.5" fill="var(--muted)" text-anchor="middle">0</text>
+      <rect x="658" y="213" width="30" height="2" fill="var(--fat)" rx="1"/>
+      <text x="673" y="209" font-size="10" font-weight="900" fill="var(--fat)" text-anchor="middle">0</text>
+      <rect x="696" y="161" width="30" height="54" fill="var(--fat)" opacity="0.85" rx="2"/>
+      <text x="711" y="157" font-size="10" font-weight="900" fill="var(--fat)" text-anchor="middle">6.0</text>
+      <rect x="734" y="135" width="30" height="80" fill="var(--fat)" opacity="0.6" rx="2"/>
+      <text x="749" y="131" font-size="10" font-weight="900" fill="var(--fat)" text-anchor="middle">8.9</text>
+
+      <!-- fatigue callout -->
+      <path d="M 673 205 C 640 175, 640 78, 690 70 L 860 70" fill="none" stroke="var(--fat)" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.8"/>
+      <text x="860" y="60" font-size="10.5" font-weight="900" fill="var(--fat)" text-anchor="end">the one clean rise at 20→60</text>
+
+      <!-- legend -->
+      <g transform="translate(80, 250)">
+        <rect x="0" y="-8" width="11" height="9" fill="var(--muted)" opacity="0.45" rx="1"/><text x="16" y="0" font-size="9.5" fill="var(--muted)">placebo</text>
+        <rect x="70" y="-8" width="11" height="9" fill="var(--text)" opacity="0.9" rx="1"/><text x="86" y="0" font-size="9.5" fill="var(--muted)">20mg</text>
+        <rect x="132" y="-8" width="11" height="9" fill="var(--text)" opacity="0.6" rx="1"/><text x="148" y="0" font-size="9.5" fill="var(--muted)">60mg</text>
+        <rect x="194" y="-8" width="11" height="9" fill="var(--text)" opacity="0.35" rx="1"/><text x="210" y="0" font-size="9.5" fill="var(--muted)">120mg</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="verdict">
+    <h3>What is actually established</h3>
+    <ul>
+      <li><b>Incidence 10–11% vs 3% placebo</b> (11% in pain indications specifically). <b>[primary, verified — FDA label]</b></li>
+      <li><b>The FDA label flags somnolence as one of four events with "a significant dose-dependent relationship in fixed-dose studies"</b> (with constipation, insomnia, decreased appetite). <b>The direction is verified. But the label asserts the relationship without publishing the per-dose percentages, and the pooled fibromyalgia safety analysis does not stratify somnolence by dose either. So the magnitude is not established.</b> <b>[primary, verified / no evidence found]</b></li>
+      <li><b>"It wears off" is UNSUPPORTED.</b> One open-label Japanese study claims somnolence <i>"resolved with continuing drug administration"</i> <b>[secondary — weak, do not rely]</b>, and the pooled fibromyalgia data trend the other way: <b>9.6% short-term → 11.8% at ≥6 months → 14.0% at 1 year</b> (non-identical samples, so exposure-time artifacts are likely). Somnolence was the <b>only</b> specific adverse event with a significant difference in discontinuation (p=0.003). <b>[primary — PMC2721139]</b></li>
+      <li><b>You are bracing for the wrong thing. Insomnia does not rise from 20→60 anywhere</b> (10.2%→8.6% here; 12.7%→13.6% and 9.4%→7.9% in Korean adults). It rises at <b>120mg</b>.</li>
+      <li><b>Wilson 95% CIs at 20 vs 60mg overlap almost entirely</b> (insomnia ≈4.8–20.5% vs ≈4.8–15.1%). Even the 120mg spike is suggestive rather than decisive within a single trial. <b>[reasoning — calculated from registry counts]</b></li>
+    </ul>
+  </div>
+
+  <div class="trap">
+    <h3>⚠ The number trap, flagged because this project keeps falling into exactly this one</h3>
+    Secondary sources report duloxetine somnolence as <b>"1.5% vs 0.0%"</b> or <b>"1.1% vs 0.0%."</b> <b>Those are DISCONTINUATION rates, not incidence.</b> The incidence is <b>10–11% vs 3%</b>. Any source quoting ~1% has conflated <i>discontinuation-due-to</i> with <i>occurrence-of</i>. <b>A plausible-looking number, off by an order of magnitude, from a real document</b> — caught only by reading the label tables directly. <b>[primary, verified]</b>
+  </div>
+
+  <div class="why">
+    <div class="big">Why this one matters more than its size suggests</div>
+    <div class="small">Your reported gain from this drug is <b>waking less tired</b>. Somnolence is the one adverse effect that <b>spends exactly the benefit you actually got</b>. And you told us you might not detect it: <i>"Just feeling 'sleepy' isn't a bother. It's mostly that bone-weary, pain-laden exhaustion where my brain is filled with so much fog I can barely function."</i> <b>Your conclusion was right. Your reason for it was not — the channel is hijacked, not buried. That is what makes it solvable, and it is the next diagram.</b></div>
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> All trial figures <b>[primary, verified — retrieved directly from the ClinicalTrials.gov results registry via API, not from secondary summaries; the numbers are the registry's own]</b>: NCT00408876 (Lilly, chronic low back pain, 13 weeks, fixed doses; placebo n=117, 20mg n=59, 60mg n=116, 120mg n=112) · NCT00849693 · NCT00960986. Arnold 2015 <b>[primary, verified — PMID 25660434, <i>Psychosomatics</i> 2015;56(3):242-53]</b>. FDA-approved Cymbalta prescribing information via DailyMed, cross-checked across two independent renderings <b>[primary, verified]</b>. Pooled fibromyalgia safety <b>[primary — full text, PMC2721139]</b>. <b>Context notes:</b> 20mg is below the fibromyalgia therapeutic dose, so most label figures reflect 60mg+ exposure; and <b>he is currently at the dose with the least somnolence exposure data in existence.</b>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

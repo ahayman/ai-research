@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 2: The Trap — Why 60mg Closes the Experiment</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --a: #7C3AED; --a-bg: #F5F3FF; --a-dark: #5B21B6;
+    --b: #0EA5E9; --b-bg: #F0F9FF; --b-dark: #075985;
+    --open: #059669; --open-bg: #ECFDF5; --open-dark: #065F46;
+    --shut: #DC2626; --shut-bg: #FEF2F2; --shut-dark: #991B1B;
+    --panel: #F3F4F6; --amber: #B45309; --amber-bg: #FFFBEB;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --a: #A78BFA; --a-bg: rgba(167,139,250,0.12); --a-dark: #C4B5FD;
+      --b: #38BDF8; --b-bg: rgba(56,189,248,0.10); --b-dark: #7DD3FC;
+      --open: #34D399; --open-bg: rgba(52,211,153,0.10); --open-dark: #6EE7B7;
+      --shut: #F87171; --shut-bg: rgba(248,113,113,0.10); --shut-dark: #FCA5A5;
+      --panel: #334155; --amber: #FBBF24; --amber-bg: rgba(251,191,36,0.10);
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --a: #A78BFA; --a-bg: rgba(167,139,250,0.12); --a-dark: #C4B5FD;
+    --b: #38BDF8; --b-bg: rgba(56,189,248,0.10); --b-dark: #7DD3FC;
+    --open: #34D399; --open-bg: rgba(52,211,153,0.10); --open-dark: #6EE7B7;
+    --shut: #F87171; --shut-bg: rgba(248,113,113,0.10); --shut-dark: #FCA5A5;
+    --panel: #334155; --amber: #FBBF24; --amber-bg: rgba(251,191,36,0.10);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --a: #7C3AED; --a-bg: #F5F3FF; --a-dark: #5B21B6;
+    --b: #0EA5E9; --b-bg: #F0F9FF; --b-dark: #075985;
+    --open: #059669; --open-bg: #ECFDF5; --open-dark: #065F46;
+    --shut: #DC2626; --shut-bg: #FEF2F2; --shut-dark: #991B1B;
+    --panel: #F3F4F6; --amber: #B45309; --amber-bg: #FFFBEB;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 800px; margin: 0 auto 1.5rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 620px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  th, td { padding: 0.85rem 0.9rem; text-align: left; font-size: 0.85rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); background: var(--panel); font-weight: 800; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.lab { font-weight: 800; width: 32%; }
+  th.ma, td.ma { border-left: 3px solid var(--a); }
+  th.mb, td.mb { border-left: 3px solid var(--b); }
+  thead th.ma { color: var(--a-dark); background: var(--a-bg); }
+  thead th.mb { color: var(--b-dark); background: var(--b-bg); }
+  tr.now td { background: var(--open-bg); }
+  tr.now td.lab { color: var(--open-dark); }
+  tr.at60 td { background: var(--shut-bg); }
+  tr.at60 td.lab { color: var(--shut-dark); }
+  .badge { display: inline-block; font-size: 0.63rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.16rem 0.44rem; border-radius: 4px; margin-top: 0.35rem; }
+  .badge.y { background: var(--open); color: #FFF; }
+  .badge.n { background: var(--shut); color: #FFF; }
+
+  .visual { margin: 1.4rem 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 0.7rem 0.9rem; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .kill { margin-top: 1.1rem; background: var(--shut-bg); border: 2px solid var(--shut); border-radius: 12px; padding: 1.05rem 1.2rem; text-align: center; }
+  .kill .big { font-size: 1.02rem; font-weight: 900; color: var(--shut-dark); line-height: 1.35; margin-bottom: 0.4rem; }
+  .kill .small { font-size: 0.85rem; color: var(--muted); max-width: 740px; margin: 0 auto; }
+  .kill .small b { color: var(--text); }
+
+  .sep { margin-top: 1rem; background: var(--open-bg); border: 2px solid var(--open); border-radius: 12px; padding: 1rem 1.2rem; }
+  .sep h3 { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--open-dark); }
+  .sep p { margin: 0.3rem 0; font-size: 0.85rem; color: var(--muted); }
+  .sep p b { color: var(--text); }
+
+  .caveat { margin-top: 1rem; background: var(--amber-bg); border-left: 4px solid var(--amber); border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; }
+  .caveat h3 { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--amber); }
+  .caveat ul { margin: 0; padding-left: 1.1rem; font-size: 0.81rem; color: var(--muted); }
+  .caveat li { margin: 0.28rem 0; }
+  .caveat li b { color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Trap: Why 60mg Closes the Experiment Permanently</h1>
+  <p class="subtitle">Your hypothesis and the standard model make <b>different predictions right now</b> and <b>identical predictions at 60mg</b>. That asymmetry is the most decision-relevant thing on this page, and it is not an argument for either choice.</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="ma">Your model — crashes aggravate CFS/fibro</th>
+          <th class="mb">Standard model — pain needs the 40–60mg threshold</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lab">The claim</td>
+          <td class="ma">Preventing crashes reduces cumulative load, so pain improves <b>slowly</b>, at any dose, with no threshold to cross</td>
+          <td class="mb">Analgesia requires noradrenergic engagement that only appears at <b>40–60mg</b>. Nothing below it works.</td>
+        </tr>
+        <tr class="now">
+          <td class="lab">Prediction at 20mg — NOW</td>
+          <td class="ma"><b>Pain improves slowly, no dose change needed</b><br><span class="badge y">They disagree</span></td>
+          <td class="mb"><b>Pain does not improve</b><br><span class="badge y">They disagree</span></td>
+        </tr>
+        <tr class="at60">
+          <td class="lab">Prediction at 60mg</td>
+          <td class="ma"><b>Pain improves</b><br><span class="badge n">Identical</span></td>
+          <td class="mb"><b>Pain improves</b><br><span class="badge n">Identical</span></td>
+        </tr>
+        <tr>
+          <td class="lab">Distinguishable?</td>
+          <td class="ma" colspan="2" style="text-align:center; font-weight:800;"><span style="color:var(--open-dark)">YES — right now, at 20mg</span> &nbsp;·&nbsp; <span style="color:var(--shut-dark)">NO — ever again, after a dose change</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="visual">
+    <svg viewBox="0 0 880 250" role="img" aria-label="Two model predictions diverging at 20mg and converging at 60mg">
+      <defs>
+        <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="currentColor"/></marker>
+      </defs>
+      <!-- axis -->
+      <line x1="70" y1="205" x2="820" y2="205" stroke="var(--border)" stroke-width="2"/>
+      <text x="70" y="228" font-size="12" font-weight="800" fill="var(--muted)">20mg (now)</text>
+      <text x="440" y="228" font-size="12" font-weight="800" fill="var(--muted)" text-anchor="middle">the dose decision</text>
+      <text x="820" y="228" font-size="12" font-weight="800" fill="var(--muted)" text-anchor="end">60mg</text>
+
+      <!-- window shading -->
+      <rect x="70" y="30" width="300" height="175" fill="var(--open)" opacity="0.09"/>
+      <text x="220" y="48" font-size="12.5" font-weight="900" fill="var(--open-dark)" text-anchor="middle">THE 20mg WINDOW — OPEN NOW</text>
+      <text x="220" y="66" font-size="10.5" fill="var(--muted)" text-anchor="middle">the models predict different things here</text>
+
+      <rect x="520" y="30" width="300" height="175" fill="var(--shut)" opacity="0.09"/>
+      <text x="670" y="48" font-size="12.5" font-weight="900" fill="var(--shut-dark)" text-anchor="middle">CLOSED — FOREVER</text>
+      <text x="670" y="66" font-size="10.5" fill="var(--muted)" text-anchor="middle">both models predict the same thing here</text>
+
+      <!-- Model A line: rises slowly from 20mg -->
+      <path d="M 90 165 C 200 148, 300 132, 440 118 C 560 106, 700 96, 800 92" fill="none" stroke="var(--a)" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="90" cy="165" r="5" fill="var(--a)"/>
+      <text x="98" y="152" font-size="11.5" font-weight="800" fill="var(--a-dark)">Your model: already improving</text>
+
+      <!-- Model B line: flat then jumps -->
+      <path d="M 90 185 L 440 185" fill="none" stroke="var(--b)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 440 185 C 520 182, 560 130, 640 108 C 710 95, 760 92, 800 90" fill="none" stroke="var(--b)" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="90" cy="185" r="5" fill="var(--b)"/>
+      <text x="98" y="200" font-size="11.5" font-weight="800" fill="var(--b-dark)">Standard model: flat until the threshold</text>
+
+      <!-- divergence bracket -->
+      <line x1="250" y1="152" x2="250" y2="185" stroke="var(--open)" stroke-width="2" stroke-dasharray="3,3"/>
+      <text x="258" y="174" font-size="10.5" font-weight="800" fill="var(--open-dark)">gap = the signal</text>
+
+      <!-- convergence -->
+      <circle cx="800" cy="91" r="9" fill="none" stroke="var(--shut)" stroke-width="2.5"/>
+      <text x="785" y="78" font-size="11" font-weight="900" fill="var(--shut-dark)" text-anchor="end">they meet here</text>
+
+      <!-- decision line -->
+      <line x1="440" y1="30" x2="440" y2="212" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5,4"/>
+
+      <text x="440" y="16" font-size="11" font-weight="800" fill="var(--muted)" text-anchor="middle">pain relief →</text>
+    </svg>
+  </div>
+
+  <div class="kill">
+    <div class="big">Going to 60mg satisfies both models and destroys the experiment permanently.</div>
+    <div class="small">If pain improves at 60mg, you will never know whether it was <b>norepinephrine crossing a threshold</b> or <b>the accumulated absence of crashes</b> doing what you thought it would. The experiment does not pause. It closes, because <b>you cannot un-know a dose.</b> The 20mg window is the only clean test of your own hypothesis that will ever exist, and it is open now. <span style="color:var(--text)"><b>This is not an argument for staying.</b> It is an argument that the information has a finite, time-limited value, and that you should price it deliberately rather than discover afterwards that you spent it without noticing.</span></div>
+  </div>
+
+  <div class="sep">
+    <h3>The separating observation — free, and available at any dose</h3>
+    <p>Your model <b>must run through the fatigue limb</b>, because Okifuji found the <b>direct</b> distress→pain path was <b>null</b>; only distress→fatigue→pain survived. <b>[primary, verified — PMID 20591745]</b></p>
+    <p><b>So: track fatigue and pain in separate columns and never average them. If pain improves while fatigue does not, your model is dead.</b> That falsifier costs nothing, and it works whichever dose you end up on.</p>
+    <p><b>Second discriminator — speed.</b> Direct analgesia is fast; allostatic unloading is slow by construction. Pain dropping <b>within 2–4 weeks of a dose change</b> points to the standard model. Pain drifting down <b>over months at an unchanged dose</b> points to yours, or to noise. <b>The noise floor is known:</b> Bergenheim followed 126 women with fibromyalgia for 10–12 years and found only <b>16% achieved ≥50% improvement, mean 9.2mm (13%) over a decade</b> <b>[primary, verified — PMID 31286111]</b>. Fibromyalgia pain is largely stable across ten years, so a substantial drift down at a fixed 20mg would be genuinely surprising and therefore informative.</p>
+  </div>
+
+  <div class="caveat">
+    <h3>⚠ The honesty this owes you: your hypothesis is three claims, and they are not equally supported</h3>
+    <ul>
+      <li><b>(1) Overload triggers crashes — ESTABLISHED as clinical description.</b> The Canadian Consensus Criteria 2003 say it verbatim, using your own word: <i>"Overload phenomena may trigger a 'crash' where the patient becomes temporarily immobilized"</i> <b>[primary, verified]</b>. You independently rediscovered a documented phenomenon.</li>
+      <li><b>(2) Crashes then aggravate the illness — NO EVIDENCE. Never studied.</b> <b>[no evidence exists]</b> This is the load-bearing limb.</li>
+      <li><b>(3) Therefore preventing crashes improves pain — SPECULATION.</b></li>
+      <li><b>Three places adjacent evidence leans against it:</b> allostatic load in CFS correlates <i>inversely</i> with fatigue duration (r=−.26, p=.047) <b>[primary abstract only]</b>; prospectively the AL limb predicting pain is <b>metabolic</b> while <b>parasympathetic dysregulation predicted nothing</b> <b>[primary, verified]</b>, and your model runs entirely through the limb that fails; and Okifuji's direct path was null.</li>
+      <li><b>It survives because it was killed by absence of research, not by logic</b> — a distinction you drew yourself. Your exact intersection is the population these studies exclude: <code>"autistic burnout" AND ("chronic fatigue" OR "ME/CFS" OR "post-exertional")</code> returns <b>one result</b> <b>[primary, verified — search-level]</b>. <b>Survival is not support.</b></li>
+    </ul>
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> The trap itself is <b>[reasoning, not evidence]</b> — no study has compared these two models. Canadian Consensus Criteria 2003 <b>[primary, verified]</b> · Okifuji 2011 PMID 20591745 <b>[primary, verified]</b> · Bergenheim 2019 PMID 31286111 <b>[primary, verified]</b> · Maloney 2009 allostatic load <b>[primary abstract only]</b> · Liang &amp; Booker 2024 <b>[primary, verified]</b>. <b>Pre-commitment is not optional:</b> without a threshold written down in advance, any outcome reads as confirmation ("it's working, just slowly"), which is how an unfalsifiable belief forms. Something like <i>"≥30% pain reduction by month 4, with ≥2 survived exposures and 0 crashes"</i> — and <b>failing it must count.</b> <b>[reasoning, not evidence]</b>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

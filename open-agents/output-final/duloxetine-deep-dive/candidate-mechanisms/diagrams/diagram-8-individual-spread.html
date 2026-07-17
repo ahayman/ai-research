@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 8: The 8.5-Fold Spread &mdash; Why the Population Curve Describes Nobody</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --range: #8B5CF6; --range-soft: rgba(139,92,246,0.18);
+    --mean: #EF4444; --mean-tx: #991B1B;
+    --good: #10B981; --good-soft: rgba(16,185,129,0.10); --good-tx: #047857;
+    --bad: #EF4444; --bad-soft: rgba(239,68,68,0.10); --bad-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+      --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+      --range: #A78BFA; --range-soft: rgba(167,139,250,0.22);
+      --mean: #F87171; --mean-tx: #FCA5A5;
+      --good: #34D399; --good-soft: rgba(52,211,153,0.12); --good-tx: #6EE7B7;
+      --bad: #F87171; --bad-soft: rgba(239,68,68,0.14); --bad-tx: #FCA5A5;
+      --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+      --shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+    --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+    --range: #A78BFA; --range-soft: rgba(167,139,250,0.22);
+    --mean: #F87171; --mean-tx: #FCA5A5;
+    --good: #34D399; --good-soft: rgba(52,211,153,0.12); --good-tx: #6EE7B7;
+    --bad: #F87171; --bad-soft: rgba(239,68,68,0.14); --bad-tx: #FCA5A5;
+    --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+    --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --range: #8B5CF6; --range-soft: rgba(139,92,246,0.18);
+    --mean: #EF4444; --mean-tx: #991B1B;
+    --good: #10B981; --good-soft: rgba(16,185,129,0.10); --good-tx: #047857;
+    --bad: #EF4444; --bad-soft: rgba(239,68,68,0.10); --bad-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; margin: 0; padding: 1.5rem 1rem;
+         background: var(--bg); color: var(--text); line-height: 1.55; }
+  .container { max-width: 900px; margin: 0 auto; background: var(--card); padding: 1.75rem;
+               border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  h1 { font-size: 1.4rem; margin: 0 0 0.4rem; line-height: 1.25; }
+  .lead { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.4rem; }
+  .panel-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+                 color: var(--muted); margin: 1.7rem 0 0.5rem; }
+  .svg-wrap { overflow-x: auto; }
+  svg { display: block; margin: 0 auto; max-width: 100%; height: auto; min-width: 560px; }
+  .lbl { font-family: system-ui, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--text); }
+  .lbl-sm { font-family: system-ui, sans-serif; font-size: 10.5px; fill: var(--muted); }
+  .lbl-val { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 800; fill: var(--text); }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.4rem; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); }
+  th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; }
+  td { color: var(--muted); }
+  td.num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
+  td.sp { font-weight: 800; color: var(--range); }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  .lic { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 0.5rem; }
+  .li { display: grid; grid-template-columns: 26px 1fr; gap: 0.7rem; padding: 0.75rem 0.9rem;
+        border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .li:last-child { border-bottom: none; }
+  .li.no { background: var(--bad-soft); }
+  .li .m { font-weight: 800; }
+  .li.yes .m { color: var(--good-tx); }
+  .li.no .m { color: var(--bad-tx); }
+  .li p { margin: 0; color: var(--muted); }
+  .li p b { color: var(--text); }
+  .flip { background: var(--warn-bg); border-left: 4px solid var(--warn-br); padding: 0.9rem 1.1rem;
+          border-radius: 8px; margin: 1.3rem 0; font-size: 0.88rem; }
+  .flip strong { color: var(--warn-tx); }
+  .caption { color: var(--muted); font-size: 0.86rem; font-style: italic; margin-top: 1.3rem;
+             padding: 0.8rem 1rem; background: var(--accent-soft); border-radius: 8px;
+             border-left: 4px solid var(--accent); }
+  .caption em { font-style: normal; font-weight: 700; color: var(--text); }
+  .prov { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;
+          padding: 0.05rem 0.4rem; border-radius: 4px; background: var(--accent-soft);
+          color: var(--accent-dark); border: 1px solid var(--accent); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Ten men. Same drug, same dose, same protocol. An 8.5-fold spread.</h1>
+<p class="lead">This is the quantitative backbone of his whole argument, and it is a single table in a single paper. Abanades 2011 fitted an EC50 to each of ten individuals rather than to the group, which almost nobody does.</p>
+
+<div class="panel-title">Panel A &mdash; Individual EC50, in ng/mL. Same drug. Same 20mg. Same four days. Same lab.</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t8 d8">
+  <title id="t8">Individual EC50 range across ten subjects on identical dosing</title>
+  <desc id="d8">A horizontal number line from 0 to 5 nanograms per millilitre. A wide purple band spans from 0.54 to 4.61, marking the observed individual range across ten people. A red vertical line at 2.29 marks the group mean. The band is 8.5 times wider at its top than at its bottom, illustrating that the group mean sits inside a range no individual is guaranteed to occupy.</desc>
+
+  <!-- range band -->
+  <rect x="142" y="42" width="472" height="46" rx="6" fill="var(--range-soft)" stroke="var(--range)" stroke-width="2" />
+
+  <!-- endpoints -->
+  <line x1="142" y1="34" x2="142" y2="96" stroke="var(--range)" stroke-width="3" />
+  <text x="142" y="26" class="lbl-val" text-anchor="middle" fill="var(--range)">0.54</text>
+  <text x="142" y="112" class="lbl-sm" text-anchor="middle">lowest individual</text>
+
+  <line x1="615" y1="34" x2="615" y2="96" stroke="var(--range)" stroke-width="3" />
+  <text x="615" y="26" class="lbl-val" text-anchor="middle" fill="var(--range)">4.61</text>
+  <text x="615" y="112" class="lbl-sm" text-anchor="middle">highest individual</text>
+
+  <!-- mean -->
+  <line x1="346" y1="30" x2="346" y2="100" stroke="var(--mean)" stroke-width="3" stroke-dasharray="5 3" />
+  <text x="346" y="22" class="lbl-val" text-anchor="middle" fill="var(--mean)">2.29</text>
+  <text x="346" y="128" class="lbl-sm" text-anchor="middle" font-weight="700">the group mean</text>
+  <text x="346" y="142" class="lbl-sm" text-anchor="middle">the number everyone reasons from</text>
+
+  <!-- span label -->
+  <text x="378" y="72" class="lbl" fill="var(--range)" text-anchor="middle" font-size="17" font-weight="800">8.5&times; SPREAD</text>
+
+  <!-- axis -->
+  <line x1="80" y1="160" x2="660" y2="160" stroke="var(--border)" stroke-width="1.5" />
+  <text x="80" y="176" class="lbl-sm" text-anchor="middle">0</text>
+  <text x="196" y="176" class="lbl-sm" text-anchor="middle">1</text>
+  <text x="312" y="176" class="lbl-sm" text-anchor="middle">2</text>
+  <text x="428" y="176" class="lbl-sm" text-anchor="middle">3</text>
+  <text x="544" y="176" class="lbl-sm" text-anchor="middle">4</text>
+  <text x="660" y="176" class="lbl-sm" text-anchor="middle">5 ng/mL</text>
+</svg>
+</div>
+
+<div class="panel-title">Panel B &mdash; The same ten people, on three different measures</div>
+<div class="tbl-wrap">
+<table>
+  <thead>
+    <tr><th>Measure</th><th>Group value</th><th>Individual range</th><th>Spread</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>EC50 (direct fit)</td><td class="num">2.29 &plusmn; 1.11 ng/mL</td><td class="num">0.54 &ndash; 4.61</td><td class="sp">8.5&times;</td></tr>
+    <tr><td>Plasma concentration at scan</td><td class="num">19.74 &plusmn; 7.8 ng/mL</td><td class="num">5.98 &ndash; 34.17</td><td class="sp">5.7&times;</td></tr>
+    <tr><td>Striatal SERT occupancy</td><td class="num">75.2%</td><td class="num">59% &ndash; 86%</td><td class="sp">27 points</td></tr>
+  </tbody>
+</table>
+</div>
+<p style="font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">Abanades S, et al. <i>J Cereb Blood Flow Metab.</i> 2011 Mar;31(3):944-52. PMID 20940733. n=10 healthy males, duloxetine 20mg single dose then 20mg daily &times; 4 days, [11C]DASB PET. <span class="prov">[primary, verified]</span> <b>This paper was once discarded by this project as a misattribution. It is a real, independent GlaxoSmithKline / Imperial / Oxford replication, and the discard was itself confirmed by a validator before being overturned.</b></p>
+
+<div class="panel-title">What the spread licenses, and what it does not</div>
+<div class="lic">
+  <div class="li yes"><span class="m">&#10003;</span><p><b>"The population curve does not describe any individual in it."</b> That is a direct reading of the table, not an inference.</p></div>
+  <div class="li yes"><span class="m">&#10003;</span><p><b>"Try and see is correct clinical practice rather than laziness."</b> There is no measurement a prescriber could take that would place him inside that 8.5-fold band. Titration is not sloppiness; it is the only instrument available.</p></div>
+  <div class="li yes"><span class="m">&#10003;</span><p><b>"His Lexapro / duloxetine divergence is expected, not anomalous."</b> He does not need a special explanation for responding differently from a trial average, <b>because responding differently from a trial average is the normal condition.</b></p></div>
+  <div class="li yes"><span class="m">&#10003;</span><p><b>"Forum variance is real, not noise."</b> Reports of the same drug read like reports of different drugs because, pharmacokinetically, they nearly are.</p></div>
+  <div class="li no"><span class="m">&#10007;</span><p><b>"Therefore any mechanism might be true for him."</b> <b>This is the move the page exists to refuse.</b> Individual variation rescues a null average. It does <b>not</b> rescue a model that runs backwards, whose timescale is off by 1000&times;, or that rests on a misread source.</p></div>
+</div>
+
+<div class="flip">
+  <strong>The distinction, once more, because it is what makes the list finite.</strong> An 8.5-fold spread is a fact about <strong>magnitude</strong>. It says an effect measured as zero on average can be large in one person. It says nothing about <strong>direction</strong>. A candidate that predicts the opposite of what he reports is not saved by variance, because it is not claiming an average.
+</div>
+
+<div class="caption">
+  <em>He knew this before the project did.</em> "Every study will have counter-evidence since for every measured effect, there will be some population that doesn't experience that effect, and even some population that may experience its opposite." <em>Abanades is what that sentence looks like as a measurement.</em>
+</div>
+
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

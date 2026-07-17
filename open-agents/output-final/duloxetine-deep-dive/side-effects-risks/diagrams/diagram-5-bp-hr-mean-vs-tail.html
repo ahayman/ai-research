@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 5: The Mean Is Small, The Tail Is Real</title>
+<style>
+  :root {
+    --bg: #F8FAFC; --card: #FFFFFF; --text: #0F172A; --muted: #64748B;
+    --border: #E2E8F0; --soft: #F1F5F9; --shade: #F8FAFC;
+    --danger: #DC2626; --danger-bg: #FEF2F2; --danger-tx: #991B1B;
+    --green: #059669; --green-bg: #F0FDF4; --green-tx: #065F46;
+    --accent: #6366F1; --accent-bg: #EEF2FF; --accent-tx: #4338CA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8;
+      --border: #334155; --soft: #263449; --shade: #172033;
+      --danger: #F87171; --danger-bg: rgba(220,38,38,0.13); --danger-tx: #FCA5A5;
+      --green: #34D399; --green-bg: rgba(5,150,105,0.13); --green-tx: #6EE7B7;
+      --accent: #818CF8; --accent-bg: rgba(99,102,241,0.15); --accent-tx: #A5B4FC;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8;
+    --border: #334155; --soft: #263449; --shade: #172033;
+    --danger: #F87171; --danger-bg: rgba(220,38,38,0.13); --danger-tx: #FCA5A5;
+    --green: #34D399; --green-bg: rgba(5,150,105,0.13); --green-tx: #6EE7B7;
+    --accent: #818CF8; --accent-bg: rgba(99,102,241,0.15); --accent-tx: #A5B4FC;
+  }
+  :root[data-theme="light"] {
+    --bg: #F8FAFC; --card: #FFFFFF; --text: #0F172A; --muted: #64748B;
+    --border: #E2E8F0; --soft: #F1F5F9; --shade: #F8FAFC;
+    --danger: #DC2626; --danger-bg: #FEF2F2; --danger-tx: #991B1B;
+    --green: #059669; --green-bg: #F0FDF4; --green-tx: #065F46;
+    --accent: #6366F1; --accent-bg: #EEF2FF; --accent-tx: #4338CA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.55; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin-bottom: 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 820px; margin: 0 auto 1.7rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle strong { color: var(--text); }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+  .side { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .side.mean { border-top: 4px solid var(--green); }
+  .side.tail { border-top: 4px solid var(--danger); }
+  .side h2 { font-size: 1rem; padding: 0.9rem 1.1rem 0.15rem; }
+  .side.mean h2 { color: var(--green-tx); }
+  .side.tail h2 { color: var(--danger-tx); }
+  @media (prefers-color-scheme: dark) { .side.mean h2 { color: var(--green); } .side.tail h2 { color: var(--danger); } }
+  .side .lead { padding: 0 1.1rem 0.85rem; font-size: 0.82rem; color: var(--muted); border-bottom: 1px solid var(--soft); }
+  .side .body { padding: 1rem 1.1rem; font-size: 0.86rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th, td { padding: 0.5rem 0.6rem; text-align: left; border: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--shade); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  td.num { font-weight: 700; white-space: nowrap; }
+
+  .case { background: var(--danger-bg); border-radius: 9px; padding: 0.85rem 1rem; font-size: 0.85rem; margin-top: 0.3rem; }
+  .case h4 { font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .timeline { margin: 0.8rem 0 0; }
+  .tl { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.35rem 0; font-size: 0.81rem; }
+  .tl .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); margin-top: 0.35rem; flex-shrink: 0; }
+  .tl .dot.off { background: var(--green); }
+  .verdict-chip { display: inline-block; background: var(--card); border: 1px solid var(--danger); color: var(--danger-tx); border-radius: 999px; padding: 0.2rem 0.6rem; font-size: 0.72rem; font-weight: 700; margin-top: 0.5rem; }
+  @media (prefers-color-scheme: dark) { .verdict-chip { color: var(--danger); } }
+
+  .dist { background: var(--card); border: 2px solid var(--accent); border-radius: 12px; padding: 1.3rem 1.4rem; margin-bottom: 1.3rem; }
+  .dist h3 { font-size: 1.02rem; color: var(--accent-tx); margin-bottom: 0.5rem; text-align: center; }
+  @media (prefers-color-scheme: dark) { .dist h3 { color: var(--accent); } }
+  .dist p { font-size: 0.9rem; text-align: center; margin-bottom: 1rem; }
+  .hist { display: flex; align-items: flex-end; gap: 3px; height: 120px; margin: 1.2rem 0 0.4rem; }
+  .bar { flex: 1; background: var(--accent); border-radius: 3px 3px 0 0; opacity: 0.75; position: relative; }
+  .bar.tailbar { background: var(--danger); opacity: 1; }
+  .hist-x { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.35rem; }
+  .hist-note { display: flex; justify-content: space-between; font-size: 0.78rem; margin-top: 0.7rem; }
+  .hist-note .l { color: var(--accent-tx); font-weight: 700; }
+  .hist-note .r { color: var(--danger-tx); font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .hist-note .l { color: var(--accent); } .hist-note .r { color: var(--danger); } }
+  .caveat { font-size: 0.78rem; color: var(--muted); font-style: italic; text-align: center; margin-top: 0.8rem; }
+
+  .label-box { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.1rem 1.3rem; font-size: 0.88rem; }
+  .label-box h3 { font-size: 0.92rem; margin-bottom: 0.5rem; }
+  .label-box blockquote { background: var(--shade); border-radius: 8px; padding: 0.7rem 0.9rem; font-style: italic; font-size: 0.84rem; margin: 0.6rem 0; }
+  .amps { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.7rem 0; }
+  .amp { background: var(--shade); border: 1px solid var(--border); border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.78rem; }
+  .amp.hit { border-color: var(--danger); background: var(--danger-bg); font-weight: 700; }
+  .readout { background: var(--accent-bg); border-radius: 8px; padding: 0.75rem 0.9rem; font-size: 0.86rem; margin-top: 0.6rem; }
+  .footnote { font-size: 0.79rem; color: var(--muted); margin-top: 1.1rem; text-align: center; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Blood Pressure and Heart Rate: The Mean Is Small, The Tail Is Real</h1>
+  <p class="subtitle">Both halves of this are true, and holding them together is the whole skill. <strong>A population mean of +2.22 bpm is arithmetically compatible with most people sitting at zero and a minority sitting at +40.</strong></p>
+
+  <div class="split">
+
+    <div class="side mean">
+      <h2>The mean: genuinely small</h2>
+      <p class="lead">42 placebo-controlled studies. 8,504 patients. This is a large, well-powered evidence base and it says the average effect is trivial.</p>
+      <div class="body">
+        <table>
+          <thead><tr><th>Parameter</th><th>Effect</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Mean systolic BP vs placebo</td><td class="num">+0.5 mmHg</td><td>FDA label</td></tr>
+            <tr><td>Mean diastolic BP vs placebo</td><td class="num">+0.8 mmHg</td><td>FDA label</td></tr>
+            <tr><td>Heart rate, 17 trials</td><td class="num">+2.22 bpm<br><small style="font-weight:400">95% CI 1.53&ndash;2.91</small></td><td>Park 2020</td></tr>
+            <tr><td>Diastolic BP, meta-analysis</td><td class="num">+0.82 mmHg<br><small style="font-weight:400">95% CI 0.17&ndash;1.47</small></td><td>Park 2020</td></tr>
+            <tr style="background: var(--green-bg)"><td><strong>Sustained</strong> elevated BP<br><small>3 consecutive visits</small></td><td class="num">No significant<br>difference vs placebo</td><td>Wernicke 2007<br>42 studies / 8,504</td></tr>
+            <tr><td>Supratherapeutic (to 200mg BID)</td><td class="num">+4.7&ndash;6.8 / +4.5&ndash;7.0</td><td>FDA label</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:0.8rem"><strong>Wernicke's conclusion, verbatim:</strong> <em>"use of duloxetine does not appear to be associated with significant cardiovascular risks in patients with conditions for which the drug has been approved or studied."</em> Even patients with elevated baseline BP showed <strong>no increased risk</strong> of sustained elevation. <span style="font-family:monospace;font-size:0.7rem;color:var(--muted)">[primary, verified]</span></p>
+      </div>
+    </div>
+
+    <div class="side tail">
+      <h2>The tail: real, and at your exact dose</h2>
+      <p class="lead">One case report, and it is uncomfortably on point. This is the strongest form of single-case causal evidence that exists.</p>
+      <div class="body">
+        <div class="case">
+          <h4>Stevens DL, 2008 &mdash; "Duloxetine-associated tachycardia"</h4>
+          A 26-year-old man presenting with fatigue, tachycardia, diaphoresis and chest pain, about two months after starting <strong>duloxetine 20 mg/day</strong>. Cardiac workup including echocardiogram, exercise treadmill testing and Holter monitoring was negative <em>except for tachycardia at 110&ndash;120 bpm</em>.
+          <div class="timeline">
+            <div class="tl"><span class="dot"></span><div><strong>On 20mg</strong> &mdash; HR 110&ndash;120 bpm</div></div>
+            <div class="tl"><span class="dot off"></span><div><strong>Duloxetine withheld</strong> &mdash; HR normalised in under a week <em>(positive dechallenge)</em></div></div>
+            <div class="tl"><span class="dot"></span><div><strong>Restarted at the same dose</strong> &mdash; tachycardia returned within 2 days <em>(positive rechallenge)</em></div></div>
+          </div>
+          <span class="verdict-chip">Naranjo score: PROBABLE</span>
+          <p style="margin-top:0.6rem"><strong>The authors' own conclusion:</strong> duloxetine can cause clinically significant tachycardia <em>"even in low doses."</em> <span style="font-family:monospace;font-size:0.7rem;color:var(--muted)">[primary, verified]</span></p>
+        </div>
+        <p style="margin-top:0.8rem"><strong>20 mg/day is your exact dose.</strong> This does not mean it will happen to you. It means the population mean does not rule it out, and it is the reason "monitor your blood pressure" is a reasonable instruction rather than an alarm.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="dist">
+    <h3>Why these two facts are not in tension</h3>
+    <p>A mean is a property of a population. It is not a property of any individual in it.</p>
+    <div class="hist">
+      <div class="bar" style="height: 14%"></div>
+      <div class="bar" style="height: 40%"></div>
+      <div class="bar" style="height: 78%"></div>
+      <div class="bar" style="height: 100%"></div>
+      <div class="bar" style="height: 72%"></div>
+      <div class="bar" style="height: 34%"></div>
+      <div class="bar" style="height: 16%"></div>
+      <div class="bar" style="height: 8%"></div>
+      <div class="bar" style="height: 5%"></div>
+      <div class="bar" style="height: 3%"></div>
+      <div class="bar" style="height: 2%"></div>
+      <div class="bar tailbar" style="height: 3%"></div>
+      <div class="bar tailbar" style="height: 4%"></div>
+      <div class="bar tailbar" style="height: 2%"></div>
+    </div>
+    <div class="hist-x"><span>&minus;10 bpm</span><span>0</span><span>+20</span><span>+40 bpm</span></div>
+    <div class="hist-note">
+      <span class="l">Most people: near zero. This is what makes the mean +2.22.</span>
+      <span class="r">A minority: +40. This is Stevens 2008.</span>
+    </div>
+    <p class="caveat">Illustrative shape, not measured data. Nobody has published the individual distribution &mdash; which is itself the point. The published number is a mean, and a mean is compatible with many different distributions underneath it.</p>
+    <p style="text-align:center; font-size:0.9rem; margin-top:0.9rem; margin-bottom:0"><strong>This is the same argument the 8.5-fold individual EC50 spread makes elsewhere in this deep dive, arriving from a different direction: the population curve does not describe any individual in it.</strong></p>
+  </div>
+
+  <div class="label-box">
+    <h3>The label's own risk amplifiers, read precisely</h3>
+    <blockquote>"Orthostatic hypotension and syncope have been reported with therapeutic doses of duloxetine. Syncope and orthostatic hypotension tend to occur within the first week of therapy but can occur at any time during duloxetine treatment, <strong>particularly after dose increases</strong>. The risk of blood pressure decreases may be greater in patients taking concomitant medications that induce orthostatic hypotension (such as antihypertensives) or are <strong>potent CYP1A2 inhibitors</strong>&hellip; and in patients taking duloxetine at <strong>doses above 60 mg daily</strong>."</blockquote>
+    <p><strong>Four amplifiers, and a timing statement that is often misread as a fifth:</strong></p>
+    <div class="amps">
+      <span class="amp">Antihypertensives</span>
+      <span class="amp">Potent CYP1A2 inhibitors</span>
+      <span class="amp hit">Doses above 60 mg daily</span>
+      <span class="amp">Concomitant hypotensives</span>
+      <span class="amp" style="border-style:dashed">"particularly after dose increases" &mdash; a <em>timing</em> statement, not an amplifier</span>
+    </div>
+    <div class="readout"><strong>The calibration that matters, and it runs against caution:</strong> the label's dose threshold is <strong>above 60mg</strong>. The label does not support treating a 20&rarr;30mg or a 20&rarr;60mg step as a high-risk event. That is worth having, because it is the kind of fact that gets lost when a warning is summarised rather than read.</div>
+  </div>
+
+  <p class="footnote">Nothing here directs a dose. It is what to understand and what to raise.</p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

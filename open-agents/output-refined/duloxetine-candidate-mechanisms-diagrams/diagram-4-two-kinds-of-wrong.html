@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 4: The Two Kinds of Wrong &mdash; Why the Graveyard Is Short</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --live: #10B981; --live-soft: rgba(16,185,129,0.10); --live-tx: #047857;
+    --dead: #EF4444; --dead-soft: rgba(239,68,68,0.10); --dead-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+      --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+      --live: #34D399; --live-soft: rgba(52,211,153,0.12); --live-tx: #6EE7B7;
+      --dead: #F87171; --dead-soft: rgba(239,68,68,0.14); --dead-tx: #FCA5A5;
+      --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+      --shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+    --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+    --live: #34D399; --live-soft: rgba(52,211,153,0.12); --live-tx: #6EE7B7;
+    --dead: #F87171; --dead-soft: rgba(239,68,68,0.14); --dead-tx: #FCA5A5;
+    --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+    --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --live: #10B981; --live-soft: rgba(16,185,129,0.10); --live-tx: #047857;
+    --dead: #EF4444; --dead-soft: rgba(239,68,68,0.10); --dead-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; margin: 0; padding: 1.5rem 1rem;
+         background: var(--bg); color: var(--text); line-height: 1.55; }
+  .container { max-width: 900px; margin: 0 auto; background: var(--card); padding: 1.75rem;
+               border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  h1 { font-size: 1.4rem; margin: 0 0 0.4rem; line-height: 1.25; }
+  .lead { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.4rem; }
+  .panel-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+                 color: var(--muted); margin: 1.7rem 0 0.6rem; }
+  blockquote { border-left: 4px solid var(--accent); margin: 1.2rem 0; padding: 0.4rem 0 0.4rem 1rem;
+               font-style: italic; color: var(--muted); font-size: 0.9rem; }
+  blockquote b { color: var(--text); font-style: normal; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 680px) { .cols { grid-template-columns: 1fr; } }
+  .col { border-radius: 10px; border: 2px solid; padding: 1rem 1.1rem; }
+  .col.l { border-color: var(--live); background: var(--live-soft); }
+  .col.d { border-color: var(--dead); background: var(--dead-soft); }
+  .col h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 0.15rem; }
+  .col.l h2 { color: var(--live-tx); }
+  .col.d h2 { color: var(--dead-tx); }
+  .verdict { font-size: 1.35rem; font-weight: 800; margin: 0 0 0.7rem; letter-spacing: 0.02em; }
+  .col.l .verdict { color: var(--live-tx); }
+  .col.d .verdict { color: var(--dead-tx); }
+  .col dl { margin: 0; }
+  .col dt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+            font-weight: 700; margin-top: 0.75rem; }
+  .col dd { margin: 0.15rem 0 0; font-size: 0.85rem; color: var(--text); }
+  .col dd.q { color: var(--muted); font-size: 0.82rem; }
+  .col ul { margin: 0.2rem 0 0; padding-left: 1.1rem; font-size: 0.82rem; color: var(--muted); }
+  .col li { margin-bottom: 0.28rem; }
+  .col li b { color: var(--text); }
+  .svg-wrap { overflow-x: auto; }
+  svg { display: block; margin: 0 auto; max-width: 100%; height: auto; min-width: 560px; }
+  .lbl { font-family: system-ui, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--text); }
+  .lbl-sm { font-family: system-ui, sans-serif; font-size: 10.5px; fill: var(--muted); }
+  .flip { background: var(--warn-bg); border-left: 4px solid var(--warn-br); padding: 0.9rem 1.1rem;
+          border-radius: 8px; margin: 1.3rem 0; font-size: 0.88rem; }
+  .flip strong { color: var(--warn-tx); }
+  .caption { color: var(--muted); font-size: 0.86rem; font-style: italic; margin-top: 1.3rem;
+             padding: 0.8rem 1rem; background: var(--accent-soft); border-radius: 8px;
+             border-left: 4px solid var(--accent); }
+  .caption em { font-style: normal; font-weight: 700; color: var(--text); }
+  .prov { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;
+          padding: 0.05rem 0.4rem; border-radius: 4px; background: var(--accent-soft);
+          color: var(--accent-dark); border: 1px solid var(--accent); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Two kinds of wrong, and only one of them is fatal</h1>
+<p class="lead">This is the distinction that makes a rated list possible instead of an infinite one. It is also the reason the graveyard at the bottom of this page is short.</p>
+
+<blockquote>
+  "Any reasonable hypothesis will always find a counter example in the population. That doesn't prove the hypothesis wrong; it just proves the hypothesis wrong <b>for some of the population</b>. The problem, to my mind, is you're trying to find a single explanation that can't be disproved instead of compiling a list of possibly valid explanations."
+</blockquote>
+
+<div class="panel-title">The test that sorts them</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t4 d4">
+  <title id="t4">Decision test separating heterogeneity-killed candidates from logic-killed ones</title>
+  <desc id="d4">A single question box asks: what killed it? One branch, labelled a null average or a population that did not respond, leads to a green box marked CANDIDATE, because a null average is compatible with a large individual effect. The other branch, labelled predicts the opposite, wrong timescale, cross-study artifact, or misread source, leads to a red box marked DEAD, because individual variation cannot revive a backwards model.</desc>
+
+  <defs>
+    <marker id="aL" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="var(--live)" />
+    </marker>
+    <marker id="aD" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="var(--dead)" />
+    </marker>
+  </defs>
+
+  <rect x="10" y="72" width="176" height="56" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2" />
+  <text x="98" y="97" class="lbl" text-anchor="middle">A candidate looks wrong.</text>
+  <text x="98" y="115" class="lbl" text-anchor="middle" fill="var(--accent)">What killed it?</text>
+
+  <path d="M192,88 C 260,88 280,44 348,44" stroke="var(--live)" stroke-width="3" fill="none" marker-end="url(#aL)" />
+  <text x="266" y="38" class="lbl-sm" text-anchor="middle">a null average; a population</text>
+  <text x="266" y="51" class="lbl-sm" text-anchor="middle">that didn't respond</text>
+
+  <path d="M192,112 C 260,112 280,156 348,156" stroke="var(--dead)" stroke-width="3" fill="none" marker-end="url(#aD)" />
+  <text x="266" y="150" class="lbl-sm" text-anchor="middle">predicts the OPPOSITE; wrong timescale;</text>
+  <text x="266" y="163" class="lbl-sm" text-anchor="middle">cross-study artifact; misread source</text>
+
+  <rect x="358" y="14" width="352" height="60" rx="8" fill="var(--live-soft)" stroke="var(--live)" stroke-width="2.5" />
+  <text x="374" y="38" class="lbl" fill="var(--live)" font-size="15">&#10003; NOT DEAD &#183; CANDIDATE</text>
+  <text x="374" y="58" class="lbl-sm">A null average is compatible with a large individual effect.</text>
+
+  <rect x="358" y="126" width="352" height="60" rx="8" fill="var(--dead-soft)" stroke="var(--dead)" stroke-width="2.5" />
+  <text x="374" y="150" class="lbl" fill="var(--dead)" font-size="15">&#10007; GENUINELY DEAD</text>
+  <text x="374" y="170" class="lbl-sm">Being unusual does not make a backwards model run forwards.</text>
+</svg>
+</div>
+
+<div class="cols">
+  <div class="col l">
+    <h2>Killed by heterogeneity</h2>
+    <p class="verdict">NOT DEAD</p>
+    <dl>
+      <dt>What happened</dt>
+      <dd class="q">A trial found no average effect. A population did not respond.</dd>
+      <dt>Does individual variation rescue it?</dt>
+      <dd><b>Yes.</b> A null average is a statement about a mean. You are not a mean.</dd>
+      <dt>Honest label</dt>
+      <dd class="q">"Untested in anyone like you." Not "refuted."</dd>
+      <dt>On this list</dt>
+      <dd>
+        <ul>
+          <li><b>Candidate 6</b> &mdash; his exact intersection is the population these studies exclude or never assemble</li>
+          <li><b>Candidate 2</b> &mdash; chronic dosing has never been studied at all</li>
+          <li><b>Candidate 3</b> &mdash; the join has never been tested</li>
+          <li><b>Candidate 4</b> &mdash; survives by never having been examined</li>
+        </ul>
+      </dd>
+    </dl>
+  </div>
+
+  <div class="col d">
+    <h2>Killed by logic or measurement</h2>
+    <p class="verdict">DEAD</p>
+    <dl>
+      <dt>What happened</dt>
+      <dd class="q">It predicts the opposite of his report. Or its timescale is off by orders of magnitude. Or it rests on comparing two incomparable studies. Or somebody misread the paper.</dd>
+      <dt>Does individual variation rescue it?</dt>
+      <dd><b>No.</b> The model is not making a claim about averages. It is making a claim about direction.</dd>
+      <dt>Honest label</dt>
+      <dd class="q">"It was never a claim about people."</dd>
+      <dt>On this list</dt>
+      <dd>
+        <ul>
+          <li><b>DRN 5-HT1A</b> &mdash; inverted; predicts the drug <b>installs</b> the crash</li>
+          <li><b>BNST duration story</b> &mdash; off by ~1000&times;</li>
+          <li><b>Escitalopram occupancy</b> &mdash; cross-study artifact</li>
+          <li><b>Propranolol parallel</b> &mdash; an anti-parallel</li>
+        </ul>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<div class="flip">
+  <strong>The practical consequence, and it is the point.</strong> Almost nothing on this page died because a trial came out negative. <strong>The things that died, died of arithmetic.</strong> That is a much shorter list than eight passes of hypothesis-killing would suggest, and it is why <strong>"possibly valid" is the correct ceiling for nearly everything that remains.</strong> <span class="prov">[reasoning, not evidence]</span>
+</div>
+
+<div class="caption">
+  <em>He was right and the project proved it by flip-flopping eight times.</em> The failure mode was not a chain of increasing accuracy. It was <em>alternating over-correction</em>: each pass correctly diagnosed its predecessor's methodological sin, then committed the same sin in reverse. Recency is not reliability, and the ninth pass has no special claim either.
+</div>
+
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

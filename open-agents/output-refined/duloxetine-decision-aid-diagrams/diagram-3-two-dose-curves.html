@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 3: The Two Dose Curves</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pain: #DC2626; --pain-bg: #FEF2F2; --pain-dark: #991B1B;
+    --anx: #7C3AED; --anx-bg: #F5F3FF; --anx-dark: #5B21B6;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6; --ok: #059669; --no: #DC2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --pain: #F87171; --pain-bg: rgba(248,113,113,0.10); --pain-dark: #FCA5A5;
+      --anx: #A78BFA; --anx-bg: rgba(167,139,250,0.12); --anx-dark: #C4B5FD;
+      --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+      --panel: #334155; --ok: #34D399; --no: #F87171;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --pain: #F87171; --pain-bg: rgba(248,113,113,0.10); --pain-dark: #FCA5A5;
+    --anx: #A78BFA; --anx-bg: rgba(167,139,250,0.12); --anx-dark: #C4B5FD;
+    --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+    --panel: #334155; --ok: #34D399; --no: #F87171;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pain: #DC2626; --pain-bg: #FEF2F2; --pain-dark: #991B1B;
+    --anx: #7C3AED; --anx-bg: #F5F3FF; --anx-dark: #5B21B6;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6; --ok: #059669; --no: #DC2626;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 820px; margin: 0 auto 1.5rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .chart { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 0.7rem 0.8rem; margin-bottom: 1.1rem; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 820px) { .cols { grid-template-columns: 1fr; } }
+  .col { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .col.p { border-top: 4px solid var(--pain); }
+  .col.a { border-top: 4px solid var(--anx); }
+  .col-head { padding: 0.85rem 1rem 0.7rem; border-bottom: 1px solid var(--border); }
+  .col.p .col-head { background: var(--pain-bg); }
+  .col.a .col-head { background: var(--anx-bg); }
+  .col-head h2 { margin: 0 0 0.15rem; font-size: 1rem; }
+  .col.p .col-head h2 { color: var(--pain-dark); }
+  .col.a .col-head h2 { color: var(--anx-dark); }
+  .col-head .n { font-size: 0.75rem; color: var(--muted); font-weight: 700; }
+  .col-body { padding: 0.85rem 1rem; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.79rem; min-width: 380px; }
+  th, td { padding: 0.42rem 0.4rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); font-weight: 800; }
+  tbody tr:last-child td { border-bottom: none; }
+  .yes { color: var(--ok); font-weight: 900; }
+  .no { color: var(--no); font-weight: 900; }
+  .note { margin-top: 0.65rem; font-size: 0.79rem; color: var(--muted); }
+  .note b { color: var(--text); }
+
+  .quote { margin-top: 1rem; background: var(--panel); border-left: 4px solid var(--pain); border-radius: 0 8px 8px 0; padding: 0.85rem 1.1rem; font-size: 0.87rem; }
+  .quote b { color: var(--text); }
+
+  .compare { margin-top: 1.1rem; background: var(--you-bg); border: 2px solid var(--you); border-radius: 12px; padding: 1rem 1.2rem; text-align: center; }
+  .compare .big { font-size: 0.98rem; font-weight: 800; color: var(--you); line-height: 1.4; margin-bottom: 0.4rem; }
+  .compare .small { font-size: 0.83rem; color: var(--muted); max-width: 760px; margin: 0 auto; }
+  .compare .small b { color: var(--text); }
+
+  .corr { margin-top: 1rem; background: var(--card); border: 1px dashed var(--border); border-radius: 10px; padding: 0.85rem 1.1rem; font-size: 0.8rem; color: var(--muted); }
+  .corr b { color: var(--text); }
+  .corr h3 { margin: 0 0 0.4rem; font-size: 0.83rem; color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Two Dose Curves</h1>
+  <p class="subtitle">This is why "should I go up?" has no single answer. <b>Duloxetine's two effects on you do not share a dose-response.</b> Which curve you are trying to move decides whether an increase makes sense — and nobody asked which one it was for.</p>
+
+  <div class="chart">
+    <svg viewBox="0 0 900 300" role="img" aria-label="Pain shows a threshold at 40 to 60mg; anxiety is essentially flat from 20mg upward">
+      <!-- grid -->
+      <line x1="70" y1="255" x2="860" y2="255" stroke="var(--border)" stroke-width="2"/>
+      <line x1="70" y1="30" x2="70" y2="255" stroke="var(--border)" stroke-width="2"/>
+      <line x1="70" y1="60" x2="860" y2="60" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+      <line x1="70" y1="145" x2="860" y2="145" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+
+      <text x="46" y="36" font-size="11" fill="var(--muted)" text-anchor="end">high</text>
+      <text x="46" y="259" font-size="11" fill="var(--muted)" text-anchor="end">none</text>
+      <text x="30" y="150" font-size="11" font-weight="800" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 30 150)">effect</text>
+
+      <!-- x labels -->
+      <text x="150" y="278" font-size="12" font-weight="900" fill="var(--you)" text-anchor="middle">20mg</text>
+      <text x="150" y="292" font-size="10" font-weight="800" fill="var(--you)" text-anchor="middle">YOU ARE HERE</text>
+      <text x="330" y="278" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">30mg</text>
+      <text x="560" y="278" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">60mg</text>
+      <text x="820" y="278" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">120mg</text>
+
+      <!-- threshold band -->
+      <rect x="400" y="30" width="160" height="225" fill="var(--pain)" opacity="0.07"/>
+      <text x="480" y="46" font-size="10.5" font-weight="900" fill="var(--pain-dark)" text-anchor="middle">THE THRESHOLD</text>
+      <text x="480" y="60" font-size="9.5" fill="var(--muted)" text-anchor="middle">~40–60mg</text>
+
+      <!-- you-are-here marker -->
+      <line x1="150" y1="30" x2="150" y2="262" stroke="var(--you)" stroke-width="2.5" stroke-dasharray="5,4"/>
+
+      <!-- PAIN curve: flat at zero to 40, steps up to 60, flat after -->
+      <path d="M 150 250 L 400 248" fill="none" stroke="var(--pain)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 400 248 C 460 244, 500 160, 560 132" fill="none" stroke="var(--pain)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 560 132 L 820 129" fill="none" stroke="var(--pain)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="150" cy="250" r="6" fill="var(--pain)"/>
+      <circle cx="330" cy="249" r="6" fill="var(--pain)"/>
+      <circle cx="560" cy="132" r="6" fill="var(--pain)"/>
+      <circle cx="820" cy="129" r="6" fill="var(--pain)"/>
+      <text x="160" y="240" font-size="11.5" font-weight="900" fill="var(--pain-dark)">PAIN — a threshold, not a slope</text>
+      <text x="596" y="120" font-size="10.5" font-weight="700" fill="var(--pain-dark)">flat above 60mg</text>
+
+      <!-- crosses on failed doses -->
+      <text x="150" y="232" font-size="13" font-weight="900" fill="var(--pain)" text-anchor="middle">✗</text>
+      <text x="330" y="232" font-size="13" font-weight="900" fill="var(--pain)" text-anchor="middle">✗</text>
+
+      <!-- ANXIETY curve: high already at 20, near flat -->
+      <path d="M 150 100 C 300 96, 420 92, 560 88 C 680 86, 760 85, 820 85" fill="none" stroke="var(--anx)" stroke-width="4" stroke-linecap="round" stroke-dasharray="9,5"/>
+      <circle cx="150" cy="100" r="6" fill="var(--anx)"/>
+      <circle cx="560" cy="88" r="6" fill="var(--anx)"/>
+      <text x="160" y="90" font-size="11.5" font-weight="900" fill="var(--anx-dark)">ANXIETY — essentially flat from 20mg</text>
+      <text x="600" y="106" font-size="10" fill="var(--muted)">dashed = never formally compared</text>
+    </svg>
+  </div>
+
+  <div class="cols">
+    <div class="col p">
+      <div class="col-head">
+        <div class="n">Curve 1</div>
+        <h2>Pain: a threshold at ~40–60mg</h2>
+      </div>
+      <div class="col-body">
+        <div class="scroll">
+        <table>
+          <thead><tr><th>Trial</th><th>Dose</th><th>n / arm</th><th>Powered?</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><b>Goldstein 2005</b><br><span style="color:var(--muted)">diabetic neuropathy</span></td><td><b>20mg</b></td><td>≈114 vs ≈114</td><td><b class="yes">YES</b><br><span style="font-size:0.72rem;color:var(--muted)">equal to the 60mg arm</span></td><td class="no">ns</td></tr>
+            <tr><td>Goldstein 2005</td><td>60mg</td><td>≈114</td><td>Yes</td><td class="yes">separates</td></tr>
+            <tr><td><b>Arnold 2012</b><br><span style="color:var(--muted)">fibromyalgia</span></td><td><b>30mg</b></td><td>155 / 153</td><td><b class="yes">YES</b></td><td class="no">P=0.202</td></tr>
+            <tr><td>Russell 2008<br><span style="color:var(--muted)">fibromyalgia</span></td><td>20mg</td><td>79 (1:2:2:2)</td><td>No</td><td style="color:var(--muted)"><b>contested</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="note"><b>0-for-3 below 40mg. ~350 patients. Twice adequately powered.</b> Goldstein is the one that closes the argument: <b>the 20mg and 60mg arms had the same number of patients</b>, so "the low-dose arm was too small" is unavailable.</div>
+        <div class="note" style="margin-top:0.5rem"><b>⚠ Russell 2008 is UNRESOLVED, and Cochrane contradicts itself.</b> Analysis 3.8: PGI-I improved <i>"significantly in favour... at the 20 mg, 30 mg, 60 mg and 120 mg doses."</i> The fibromyalgia narrative: 20mg <i>"did not show significant differences in any of the reported measures."</i> <b>Both are Cochrane's words.</b> Probable reconciliation: PGI-I separates at <b>every</b> dose with <b>no dose effect</b> and never reaches clinical significance, making it a weak instrument rather than evidence for 20mg.</div>
+      </div>
+    </div>
+
+    <div class="col a">
+      <div class="col-head">
+        <div class="n">Curve 2</div>
+        <h2>Anxiety: flat from 20mg — but never tested</h2>
+      </div>
+      <div class="col-body">
+        <div class="scroll">
+        <table>
+          <thead><tr><th>Arm</th><th>HAM-A change</th><th>Response</th><th>Remission</th></tr></thead>
+          <tbody>
+            <tr><td>Placebo</td><td>−11.6</td><td>42%</td><td>20%</td></tr>
+            <tr><td><b>20mg</b></td><td><b>−14.7 ± 1.0</b></td><td><b>60%</b></td><td><b>42%</b></td></tr>
+            <tr><td><b>60–120mg</b></td><td><b>−15.3 ± 0.7</b></td><td><b>65%</b></td><td><b>44%</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="note">Nicolini 2009 is <b>the only trial that ever contained a fixed 20mg arm for anxiety</b>. The higher-dose arm did <b>slightly better, not worse</b>. So the fear that going up trades the anxiety benefit away has no trial evidence behind it.</div>
+        <div class="note" style="margin-top:0.5rem"><b>What it does and does not establish:</b><br>
+          • HAM-A <b>total</b> at 20mg vs placebo: <b class="yes">SIGNIFICANT</b> (p=0.01–0.001)<br>
+          • HAM-A <b>psychic factor</b>: <b class="yes">SIGNIFICANT</b><br>
+          • HAM-A <b>somatic factor</b>: <b class="no">NOT significant (p=0.07)</b><br>
+          • <b>20mg vs 60–120mg: NEVER TESTED.</b> The non-inferiority analysis pooled the 60–120mg arms against venlafaxine and <b>excluded the 20mg arm entirely</b>. With n=84 vs n=158 there was no power for it.
+        </div>
+        <div class="note" style="margin-top:0.5rem"><b>⚠ Guardrail.</b> "HAM-A somatic anxiety" is <b>NOT</b> your "anxiety without cognitive content." The somatic factor measures <b>bodily</b> symptoms; your episodes are notable for absent <b>cognitions</b>. Mapping them repeats an error this project already made and retracted.</div>
+        <div class="note" style="margin-top:0.5rem"><b>Funding:</b> six of nine authors are Lilly employees or shareholders; both academic authors have Lilly financial relationships. The review states <i>"all five efficacy studies were sponsored by Eli Lilly."</i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <b>Cochrane's own authors, verbatim:</b> <i>"doses of 60 mg and 120 mg daily are efficacious... <b>but lower daily doses are not.</b>"</i> <b>[primary, verified]</b>
+  </div>
+
+  <div class="compare">
+    <div class="big">The comparison that falls out of putting the two curves side by side</div>
+    <div class="small">NNT for <b>anxiety response at 20mg ≈ 5.6</b>. NNTB for <b>fibromyalgia pain at 60mg = 11 (9–14)</b>, which its own review authors called <b>"no clinically relevant benefit."</b> If those numbers hold, <b>you are already on a dose with better evidence for the thing you report benefiting from than the target dose has for the thing you were prescribed it for.</b> The first number is derived from a secondary-source table and is <b>provisional</b>; the second is primary and verified.</div>
+  </div>
+
+  <div class="corr">
+    <h3>A correction this diagram makes against its own binding brief</h3>
+    The brief quotes Nicolini's arms as <b>"−15.3/55% vs −14.7/45%."</b> Supplement 1 established that <b>those percentages are internally inconsistent</b>: if −14.7 is a 45% decrease, baseline HAM-A ≈ 32.7; if −15.3 is a 55% decrease, baseline ≈ 27.8. Both implied baselines are too high for a GAD registration trial (typically 24–26) <b>and they disagree with each other</b>. Supplement 1's instruction was explicit: <i>"Do not put these percentages in front of the reader as facts."</i> <b>This diagram shows the absolute changes and the response/remission rates instead.</b>
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> Goldstein 2005 PMID 15927394 <b>[primary, verified on design and result via multiple independent reviews; full text not retrieved — the ≈114 arm size is inferred from 457 ÷ 4]</b> · Arnold 2012 PMID 22971669 <b>[primary, verified — this is the RCT that killed "30mg is the efficient dose," a claim derived from PET modelling that nobody checked against a trial]</b> · Russell 2008 <b>[primary, verified — presented as UNRESOLVED, per Cochrane's self-contradiction]</b> · Nicolini 2009 PMID 18485261 <b>[significance: primary, verified. Magnitudes: secondary-source (PMC2840566); full text not retrieved — Cambridge paywall]</b> · Allgulander 2008 PMID 18635722 <b>[primary, verified — the non-inferiority design that excluded 20mg]</b> · Welsch 2018 CD010292, PMID 29489029 <b>[primary, verified]</b> · NNT 5.6 <b>[reasoning, not evidence — my calculation from a secondary-source table]</b>. <b>Curve shapes are schematic</b>, drawn to the trial results above; they are <b>[reasoning, not evidence]</b>, not fitted dose-response models.
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 1: The Threshold, Not a Slope</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --fail: #DC2626; --fail-bg: #FEE2E2; --fail-br: #FECACA;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A;
+    --band: rgba(217, 119, 6, 0.10); --accent: #6366F1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+      --fail: #F87171; --fail-bg: rgba(239,68,68,0.18); --fail-br: rgba(239,68,68,0.4);
+      --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+      --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4);
+      --band: rgba(245, 158, 11, 0.12); --accent: #818CF8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF; --border: #334155;
+    --fail: #F87171; --fail-bg: rgba(239,68,68,0.18); --fail-br: rgba(239,68,68,0.4);
+    --pass: #34D399; --pass-bg: rgba(16,185,129,0.18); --pass-br: rgba(16,185,129,0.4);
+    --mixed: #FBBF24; --mixed-bg: rgba(245,158,11,0.16); --mixed-br: rgba(245,158,11,0.4);
+    --band: rgba(245, 158, 11, 0.12); --accent: #818CF8;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --fail: #DC2626; --fail-bg: #FEE2E2; --fail-br: #FECACA;
+    --pass: #059669; --pass-bg: #D1FAE5; --pass-br: #A7F3D0;
+    --mixed: #D97706; --mixed-bg: #FEF3C7; --mixed-br: #FDE68A;
+    --band: rgba(217, 119, 6, 0.10); --accent: #6366F1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 1.5rem; background: var(--bg); color: var(--text); line-height: 1.55; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin-bottom: 0.5rem; text-align: center; }
+  .sub { text-align: center; max-width: 900px; margin: 0 auto 1.75rem; font-size: 0.95rem; color: var(--muted); }
+
+  .axis { position: relative; margin: 0 0 0.5rem; }
+  .zones { display: grid; grid-template-columns: 1.9fr 1.1fr 2fr; gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .zone { padding: 0.85rem 1rem; text-align: center; }
+  .zone.below { background: var(--fail-bg); border-right: 2px dashed var(--mixed); }
+  .zone.thresh { background: var(--band); border-right: 2px dashed var(--pass); }
+  .zone.above { background: var(--pass-bg); }
+  .zone .zlabel { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 800; }
+  .zone.below .zlabel { color: var(--fail); }
+  .zone.thresh .zlabel { color: var(--mixed); }
+  .zone.above .zlabel { color: var(--pass); }
+  .zone .zdesc { font-size: 0.85rem; margin-top: 0.2rem; }
+  .ticks { display: grid; grid-template-columns: 1.9fr 1.1fr 2fr; font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
+  .ticks div { text-align: center; font-variant-numeric: tabular-nums; }
+  @media (max-width: 780px) { .zones, .ticks { grid-template-columns: 1fr; } .zone.below, .zone.thresh { border-right: none; border-bottom: 2px dashed var(--border); } }
+
+  .grid { display: grid; grid-template-columns: 1.9fr 1.1fr 2fr; gap: 0.75rem; margin-top: 1rem; align-items: start; }
+  @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
+  .col { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .trial { background: var(--card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 10px; padding: 0.7rem 0.85rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .trial.fail { border-left-color: var(--fail); }
+  .trial.pass { border-left-color: var(--pass); }
+  .trial.mixed { border-left-color: var(--mixed); }
+  .trial .top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .trial .name { font-weight: 700; font-size: 0.9rem; }
+  .trial .dose { font-size: 0.78rem; font-weight: 800; font-variant-numeric: tabular-nums; padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); white-space: nowrap; }
+  .trial .meta { font-size: 0.76rem; color: var(--muted); }
+  .trial .res { font-size: 0.82rem; margin-top: 0.35rem; }
+  .trial .res b.no { color: var(--fail); }
+  .trial .res b.yes { color: var(--pass); }
+  .trial .note { font-size: 0.75rem; margin-top: 0.3rem; padding-top: 0.3rem; border-top: 1px dashed var(--border); color: var(--muted); }
+  .star { display: inline-block; background: var(--accent); color: #fff; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; padding: 0.08rem 0.35rem; border-radius: 4px; vertical-align: middle; margin-left: 0.3rem; }
+
+  .tally { margin-top: 0.7rem; padding: 0.7rem 0.85rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; text-align: center; }
+  .tally.f { background: var(--fail-bg); color: var(--fail); border: 1px solid var(--fail-br); }
+  .tally.p { background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass-br); }
+  .tally.m { background: var(--mixed-bg); color: var(--mixed); border: 1px solid var(--mixed-br); }
+
+  .callout { margin-top: 1.5rem; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1rem 1.2rem; }
+  .callout h3 { font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--accent); }
+  .callout p { font-size: 0.88rem; margin-bottom: 0.5rem; }
+  .callout p:last-child { margin-bottom: 0; }
+  .quote { font-style: italic; border-left: 3px solid var(--border); padding-left: 0.8rem; margin: 0.5rem 0; font-size: 0.86rem; }
+  .tag { font-family: 'SF Mono', SFMono-Regular, Consolas, monospace; font-size: 0.68rem; padding: 0.08rem 0.35rem; border-radius: 4px; background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass-br); white-space: nowrap; }
+  .tag.reason { background: var(--mixed-bg); color: var(--mixed); border-color: var(--mixed-br); }
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1.2rem; font-size: 0.8rem; color: var(--muted); }
+  .legend span { display: flex; align-items: center; gap: 0.35rem; }
+  .sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Threshold, Not a Slope</h1>
+  <p class="sub">Every duloxetine pain trial with a fixed or identifiable dose, plotted by dose and by what happened to the <strong>pain primary endpoint</strong>. The effect is not a smooth curve and it is not a flat non-effect. It is a threshold with a fragile plateau.</p>
+
+  <div class="axis">
+    <div class="zones">
+      <div class="zone below">
+        <div class="zlabel">Below 40mg &mdash; reliably absent</div>
+        <div class="zdesc"><strong>0 for 3</strong> on pain primaries, <strong>~350 patients</strong>, twice with adequate power</div>
+      </div>
+      <div class="zone thresh">
+        <div class="zlabel">40&ndash;60mg &mdash; the effect appears</div>
+        <div class="zdesc">Separates across <strong>two indications</strong></div>
+      </div>
+      <div class="zone above">
+        <div class="zlabel">Above 60mg &mdash; flat benefit, rising harm</div>
+        <div class="zdesc">120mg is <strong>no better</strong> than 60mg. Adverse events keep climbing.</div>
+      </div>
+    </div>
+    <div class="ticks">
+      <div>20mg &nbsp;&bull;&nbsp; 30mg</div>
+      <div>40mg &nbsp;&bull;&nbsp; 60mg</div>
+      <div>120mg</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="trial fail">
+        <div class="top"><span class="name">Goldstein 2005<span class="star">DECISIVE</span></span><span class="dose">20mg</span></div>
+        <div class="meta">Diabetic neuropathy &nbsp;|&nbsp; PMID 15927394 &nbsp;|&nbsp; 12wk, fixed dose</div>
+        <div class="res"><b class="no">Pain primary: NOT SIGNIFICANT</b></div>
+        <div class="note"><strong>Randomised 1:1:1:1, n=457, &asymp;114 per arm.</strong> The 20mg arm and the 60mg arm had the <strong>same number of patients</strong>. 60mg separated. 20mg did not. <strong>The "underpowered" excuse is unavailable here.</strong></div>
+      </div>
+      <div class="trial fail">
+        <div class="top"><span class="name">Russell 2008</span><span class="dose">20mg</span></div>
+        <div class="meta">Fibromyalgia &nbsp;|&nbsp; PMID 18395345 &nbsp;|&nbsp; n=79 vs 144 placebo</div>
+        <div class="res"><b class="no">Pain primary: NOT SIGNIFICANT</b></div>
+        <div class="note">Randomised <strong>1:2:2:2</strong>, so ~70&ndash;90% power. Titrated up to 60mg at <strong>week 15</strong>, so the "20mg arm" at 6 months <strong>is not a 20mg arm</strong>. Lilly designated it a <em>"subtherapeutic control."</em> PGI-I separation is <strong>contested</strong> (see Diagram 6).</div>
+      </div>
+      <div class="trial fail">
+        <div class="top"><span class="name">Arnold 2012<span class="star">KILLS "30mg"</span></span><span class="dose">30mg</span></div>
+        <div class="meta">Fibromyalgia &nbsp;|&nbsp; PMID 22971669 &nbsp;|&nbsp; n=155 vs 153</div>
+        <div class="res"><b class="no">Pain primary: NOT SIGNIFICANT, P = 0.202</b></div>
+        <div class="note"><strong>Adequately powered.</strong> The modelling argument that "30mg is the efficient dose" was derived from imaging and never trial-checked. <strong>It was tested. It failed.</strong> Drug&ndash;placebo difference on BPI: only <strong>0.34</strong>.</div>
+      </div>
+      <div class="tally f">Low dose: 0 for 3 on pain &nbsp;&bull;&nbsp; ~350 patients &nbsp;&bull;&nbsp; 2 indications</div>
+    </div>
+
+    <div class="col">
+      <div class="trial pass">
+        <div class="top"><span class="name">Japanese trial</span><span class="dose">40mg</span></div>
+        <div class="meta">Diabetic neuropathy</div>
+        <div class="res"><b class="yes">Pain primary: SEPARATES</b></div>
+        <div class="note">40mg and 60mg both superior to placebo, comparable effect sizes. <strong>The lowest dose shown to work.</strong></div>
+      </div>
+      <div class="trial pass">
+        <div class="top"><span class="name">Goldstein 2005</span><span class="dose">60mg</span></div>
+        <div class="meta">Diabetic neuropathy &nbsp;|&nbsp; same trial, equal arm</div>
+        <div class="res"><b class="yes">Pain primary: SEPARATES</b></div>
+        <div class="note">Separated from placebo <strong>from week 1 onward</strong>, sustained through 12 weeks.</div>
+      </div>
+      <div class="trial pass">
+        <div class="top"><span class="name">Russell 2008</span><span class="dose">60mg</span></div>
+        <div class="meta">Fibromyalgia &nbsp;|&nbsp; n=150</div>
+        <div class="res"><b class="yes">SEPARATES</b> at 3 months on both co-primaries; at 6 months on BPI</div>
+      </div>
+      <div class="trial pass">
+        <div class="top"><span class="name">Arnold 2004 / 2005</span><span class="dose">60mg</span></div>
+        <div class="meta">Fibromyalgia</div>
+        <div class="res"><b class="yes">SEPARATES</b></div>
+      </div>
+      <div class="tally p">The effect appears here</div>
+    </div>
+
+    <div class="col">
+      <div class="trial mixed">
+        <div class="top"><span class="name">Murakami 2015</span><span class="dose">&rarr;60mg</span></div>
+        <div class="meta">Fibromyalgia &nbsp;|&nbsp; PMID 26296539 &nbsp;|&nbsp; n=196 vs 197</div>
+        <div class="res"><b class="no">Missed primary, P = 0.0988</b> &nbsp;/&nbsp; <b class="yes">&ge;30% AND &ge;50% responders separated; 6 of 7 pain secondaries</b></div>
+        <div class="note"><strong>NOT a pain failure.</strong> The responder rates are the exact endpoints Cochrane's NNT is built from, and they separated. An earlier pass filed the pain secondaries under "global/function." They are pain measures.</div>
+      </div>
+      <div class="trial mixed">
+        <div class="top"><span class="name">Chappell 2008</span><span class="dose">60&rarr;120mg</span></div>
+        <div class="meta">Fibromyalgia &nbsp;|&nbsp; PMID 20428412 &nbsp;|&nbsp; n=162 vs 168</div>
+        <div class="res"><b class="no">Missed co-primaries, P = 0.053 / 0.073</b> &nbsp;/&nbsp; <b class="yes">BPI least pain P=0.046; FIQ pain P=0.030</b></div>
+        <div class="note"><strong>NOT a 60mg trial.</strong> Non-responders were <em>blindly escalated to 120mg at week 13</em>. <strong>84% escalated; mean dose 113.4mg.</strong> The authors called it <em>"this supportive study."</em> Reading it as evidence against dose-response is backwards: its design <strong>is</strong> a dose escalation.</div>
+      </div>
+      <div class="trial fail">
+        <div class="top"><span class="name">Cochrane, on 120mg</span><span class="dose">120mg</span></div>
+        <div class="meta">CD007115.pub3 &nbsp;|&nbsp; and Lilly's own pooled analysis</div>
+        <div class="res"><b class="no">No additional benefit over 60mg</b></div>
+        <div class="note"><em>"120 mg was no more effective than 60 mg."</em> <em>"No dose effect exists from 60 mg to 120 mg."</em> But <strong>adverse events ARE dose-dependent.</strong> Past 60mg the curves diverge.</div>
+      </div>
+      <div class="tally m">At 60mg the effect is small enough that well-powered trials miss the primary</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h3>The sentence that settles it, which no pass of this project quoted until late</h3>
+    <p><strong>Cochrane CD007115.pub3, Authors' conclusions, verbatim:</strong></p>
+    <p class="quote">"There is adequate amounts of moderate quality evidence from eight studies performed by the manufacturers of duloxetine that <strong>doses of 60 mg and 120 mg daily are efficacious for treating pain in diabetic peripheral neuropathy but lower daily doses are not.</strong>" <span class="tag">primary, verified</span></p>
+    <p>That is not a hostile reading of Cochrane. That is the sentence Cochrane chose to conclude with.</p>
+    <p><strong>One independent synthesis disagrees, and it belongs here rather than in a footnote.</strong> Sultan 2008 (PMID 18673529, Oxford Pain Research, no author stock holdings, one of very few non-conflicted sources in this literature) concluded: <em>"The dose of duloxetine made little difference to the result."</em> <span class="tag">primary, verified</span> Weigh it against Cochrane's formal conclusion. Note Sultan pools all doses including 120mg. <strong>Two independent syntheses disagree. That disagreement is real and unresolved.</strong></p>
+  </div>
+
+  <div class="callout" style="border-left-color: var(--mixed);">
+    <h3 style="color: var(--mixed);">What this means at 20mg</h3>
+    <p>A reported pain improvement that is <strong>"noted but minimal"</strong>, with the effect <strong>"mostly psychological and with my sleep"</strong>, is not a disappointment and it is not a placebo confession. <strong>It is the sub-threshold signature</strong>, and it is what the trial record predicts from 20mg. <span class="tag reason">reasoning, not evidence</span></p>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background: var(--fail);"></i> Pain primary failed</span>
+    <span><i class="sw" style="background: var(--pass);"></i> Pain primary separated</span>
+    <span><i class="sw" style="background: var(--mixed);"></i> Missed primary, positive on responders / secondaries</span>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

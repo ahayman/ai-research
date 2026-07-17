@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 2: The Occupancy Curves, With The Confidence Intervals Nobody Draws</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF;
+    --sert: #6366F1; --sert-fill: rgba(99,102,241,0.16);
+    --net: #F59E0B; --net-fill: rgba(245,158,11,0.16);
+    --grid: #E5E7EB; --overlap: rgba(239,68,68,0.14); --overlap-br: #EF4444;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --danger-bg: #FEE2E2; --danger-br: #EF4444; --danger-tx: #991B1B;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+      --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B;
+      --sert: #818CF8; --sert-fill: rgba(129,140,248,0.20);
+      --net: #FBBF24; --net-fill: rgba(251,191,36,0.20);
+      --grid: #334155; --overlap: rgba(248,113,113,0.20); --overlap-br: #F87171;
+      --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+      --danger-bg: rgba(239,68,68,0.14); --danger-br: #F87171; --danger-tx: #FCA5A5;
+      --shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+    --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B;
+    --sert: #818CF8; --sert-fill: rgba(129,140,248,0.20);
+    --net: #FBBF24; --net-fill: rgba(251,191,36,0.20);
+    --grid: #334155; --overlap: rgba(248,113,113,0.20); --overlap-br: #F87171;
+    --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+    --danger-bg: rgba(239,68,68,0.14); --danger-br: #F87171; --danger-tx: #FCA5A5;
+    --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF;
+    --sert: #6366F1; --sert-fill: rgba(99,102,241,0.16);
+    --net: #F59E0B; --net-fill: rgba(245,158,11,0.16);
+    --grid: #E5E7EB; --overlap: rgba(239,68,68,0.14); --overlap-br: #EF4444;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --danger-bg: #FEE2E2; --danger-br: #EF4444; --danger-tx: #991B1B;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; margin: 0; padding: 1.5rem 1rem;
+         background: var(--bg); color: var(--text); line-height: 1.55; }
+  .container { max-width: 900px; margin: 0 auto; background: var(--card); padding: 1.75rem;
+               border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  h1 { font-size: 1.4rem; margin: 0 0 0.4rem; line-height: 1.25; }
+  .lead { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.2rem; }
+  .svg-wrap { overflow-x: auto; }
+  svg { display: block; margin: 0 auto; max-width: 100%; height: auto; min-width: 640px; }
+  .ax { font-family: system-ui, sans-serif; font-size: 12px; fill: var(--muted); }
+  .ax-t { font-family: system-ui, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--text); }
+  .pt-lbl { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 800; fill: var(--text); }
+  .note { font-family: system-ui, sans-serif; font-size: 11.5px; fill: var(--muted); }
+  .note-r { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 800; fill: var(--overlap-br); }
+  .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; margin: 0.8rem 0 0; font-size: 0.82rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .sw { width: 26px; height: 3px; border-radius: 2px; display: inline-block; }
+  .sw.dot { width: 10px; height: 10px; border-radius: 50%; }
+  .callout { background: var(--danger-bg); border-left: 4px solid var(--danger-br); padding: 0.95rem 1.1rem;
+             border-radius: 8px; margin: 1.2rem 0 0; font-size: 0.9rem; }
+  .callout strong { color: var(--danger-tx); }
+  .warn { background: var(--warn-bg); border-left: 4px solid var(--warn-br); padding: 0.95rem 1.1rem;
+          border-radius: 8px; margin: 0.9rem 0 0; font-size: 0.9rem; }
+  .warn strong { color: var(--warn-tx); }
+  .caption { color: var(--muted); font-size: 0.86rem; font-style: italic; margin-top: 1.1rem;
+             padding: 0.8rem 1rem; background: var(--accent-soft); border-radius: 8px;
+             border-left: 4px solid var(--accent); }
+  .caption em { font-style: normal; font-weight: 700; color: var(--text); }
+  .prov { display: inline-block; font-size: 0.68rem; font-weight: 700;
+          padding: 0.05rem 0.4rem; border-radius: 4px; background: var(--accent-soft);
+          color: var(--accent); border: 1px solid var(--accent); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>The occupancy curves, drawn with the confidence intervals nobody draws</h1>
+<p class="lead">These are the same numbers that get quoted to one decimal place. The error bars are computed from the studies' own reported standard deviations and sample sizes. <strong>Neither study published a confidence interval.</strong></p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t2 d2">
+  <title id="t2">Duloxetine SERT and NET occupancy by dose with 95% confidence intervals</title>
+  <desc id="d2">Scatter plot of serotonin transporter occupancy (upper, about 71 to 82 percent from 20 to 60 milligrams) and norepinephrine transporter occupancy (lower, about 30 to 40 percent), each with wide 95% confidence intervals. The 20mg and 60mg serotonin intervals overlap across a band from 71.1 to 84.5 percent, meaning the study cannot statistically tell the doses apart. The 60mg norepinephrine point has an interval from minus 20 to plus 100 percent and runs off the chart in both directions.</desc>
+
+  <!-- Y grid -->
+  <g stroke="var(--grid)" stroke-width="1">
+    <line x1="90" y1="60"  x2="660" y2="60" />
+    <line x1="90" y1="140" x2="660" y2="140" />
+    <line x1="90" y1="220" x2="660" y2="220" />
+    <line x1="90" y1="300" x2="660" y2="300" />
+    <line x1="90" y1="380" x2="660" y2="380" />
+    <line x1="90" y1="460" x2="660" y2="460" stroke-width="1.5" />
+  </g>
+  <g class="ax" text-anchor="end">
+    <text x="80" y="65">100%</text>
+    <text x="80" y="145">80%</text>
+    <text x="80" y="225">60%</text>
+    <text x="80" y="305">40%</text>
+    <text x="80" y="385">20%</text>
+    <text x="80" y="465">0%</text>
+  </g>
+  <text x="26" y="270" class="ax-t" text-anchor="middle" transform="rotate(-90 26 270)">Transporter occupancy</text>
+
+  <!-- X axis -->
+  <line x1="90" y1="460" x2="660" y2="460" stroke="var(--text)" stroke-width="1.5" />
+  <g class="ax" text-anchor="middle">
+    <text x="90"  y="482">0</text>
+    <text x="131" y="482">5</text>
+    <text x="253" y="482">20</text>
+    <text x="416" y="482">40</text>
+    <text x="579" y="482">60</text>
+  </g>
+  <text x="375" y="506" class="ax-t" text-anchor="middle">Dose (mg)</text>
+  <g class="note" text-anchor="middle">
+    <text x="131" y="497">n=3</text>
+    <text x="253" y="497">n=3</text>
+    <text x="416" y="497">n=3</text>
+    <text x="579" y="497">n=3 / n=2</text>
+  </g>
+
+  <!-- THE OVERLAP BAND: 71.1 to 84.5 -->
+  <rect x="253" y="122" width="326" height="54" fill="var(--overlap)" stroke="var(--overlap-br)"
+        stroke-width="1.5" stroke-dasharray="5 3" />
+  <text x="416" y="115" class="note-r" text-anchor="middle">the 20mg and 60mg intervals overlap across this whole band</text>
+
+  <!-- SERT model curve (dashed) -->
+  <polyline fill="none" stroke="var(--sert)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"
+    points="90,460 110,364 131,305 171,236 212,198 253,173 334,143 416,126 497,114 579,106 660,100" />
+  <text x="664" y="98" class="note" fill="var(--sert)">model</text>
+
+  <!-- NET model curve (dashed) -->
+  <polyline fill="none" stroke="var(--net)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"
+    points="90,460 171,414 253,377 334,348 416,323 497,302 579,284 660,269" />
+  <text x="664" y="272" class="note" fill="var(--net)">model</text>
+
+  <!-- SERT CIs and points -->
+  <g stroke="var(--sert)" stroke-width="2.5">
+    <!-- 5mg: 21.7 to 65.5 -->
+    <line x1="131" y1="373" x2="131" y2="198" />
+    <line x1="123" y1="373" x2="139" y2="373" />
+    <line x1="123" y1="198" x2="139" y2="198" />
+    <!-- 20mg: 58.1 to 84.5 -->
+    <line x1="253" y1="228" x2="253" y2="122" stroke-width="3.5" />
+    <line x1="243" y1="228" x2="263" y2="228" stroke-width="3.5" />
+    <line x1="243" y1="122" x2="263" y2="122" stroke-width="3.5" />
+    <!-- 40mg: 68.7 to 92.5 -->
+    <line x1="416" y1="185" x2="416" y2="90" />
+    <line x1="408" y1="185" x2="424" y2="185" />
+    <line x1="408" y1="90"  x2="424" y2="90" />
+    <!-- 60mg: 71.1 to 92.5 -->
+    <line x1="579" y1="176" x2="579" y2="90" stroke-width="3.5" />
+    <line x1="569" y1="176" x2="589" y2="176" stroke-width="3.5" />
+    <line x1="569" y1="90"  x2="589" y2="90" stroke-width="3.5" />
+  </g>
+  <g fill="var(--sert)">
+    <circle cx="131" cy="286" r="5.5" />
+    <circle cx="253" cy="175" r="7" stroke="var(--card)" stroke-width="2" />
+    <circle cx="416" cy="138" r="5.5" />
+    <circle cx="579" cy="133" r="7" stroke="var(--card)" stroke-width="2" />
+  </g>
+  <text x="131" y="278" class="pt-lbl" text-anchor="middle">43.6%</text>
+  <text x="253" y="196" class="pt-lbl" text-anchor="middle">71.3%</text>
+  <text x="416" y="160" class="pt-lbl" text-anchor="middle">80.6%</text>
+  <text x="600" y="137" class="pt-lbl">81.8%</text>
+  <text x="112" y="70" class="ax-t" fill="var(--sert)">SERT (serotonin) &mdash; Takano 2006, thalamus, single dose</text>
+
+  <!-- NET CIs and points -->
+  <g stroke="var(--net)" stroke-width="2.5">
+    <!-- 20mg: 26.5 to 32.9 -->
+    <line x1="253" y1="354" x2="253" y2="328" />
+    <line x1="245" y1="354" x2="261" y2="354" />
+    <line x1="245" y1="328" x2="261" y2="328" />
+    <!-- 40mg: 0.9 to 60.1 -->
+    <line x1="416" y1="456" x2="416" y2="220" />
+    <line x1="408" y1="456" x2="424" y2="456" />
+    <line x1="408" y1="220" x2="424" y2="220" />
+    <!-- 60mg: -20.2 to +100.2 : runs off both ends -->
+    <line x1="579" y1="460" x2="579" y2="64" stroke-width="3.5" stroke-dasharray="6 4" />
+  </g>
+  <!-- off-scale arrows for the 60mg NET CI -->
+  <polygon points="579,54 573,68 585,68" fill="var(--net)" />
+  <polygon points="579,472 573,458 585,458" fill="var(--net)" />
+  <g fill="var(--net)">
+    <circle cx="253" cy="341" r="5.5" />
+    <circle cx="416" cy="338" r="5.5" />
+    <circle cx="579" cy="300" r="7" stroke="var(--card)" stroke-width="2" />
+  </g>
+  <text x="253" y="372" class="pt-lbl" text-anchor="middle">29.7%</text>
+  <text x="450" y="342" class="pt-lbl">30.5%</text>
+  <text x="600" y="304" class="pt-lbl">40.0%</text>
+  <text x="112" y="440" class="ax-t" fill="var(--net)">NET (norepinephrine) &mdash; Moriguchi 2017, thalamus, single dose</text>
+
+  <!-- annotation for the runaway NET CI -->
+  <text x="668" y="200" class="note" fill="var(--net)">95% CI:</text>
+  <text x="668" y="216" class="note" fill="var(--net)">&minus;20% to</text>
+  <text x="668" y="232" class="note" fill="var(--net)">+100%</text>
+  <text x="668" y="252" class="note" fill="var(--net)">(n = 2)</text>
+</svg>
+</div>
+
+<div class="legend">
+  <span><i class="sw dot" style="background:var(--sert)"></i> SERT measured mean</span>
+  <span><i class="sw dot" style="background:var(--net)"></i> NET measured mean</span>
+  <span><i class="sw" style="background:var(--sert)"></i> 95% CI (computed, never published)</span>
+  <span><i class="sw" style="background:var(--overlap-br)"></i> the overlap band</span>
+</div>
+
+<div class="callout">
+  <strong>The finding that matters more than any number on this chart:</strong> the 20mg interval is [58.1%, 84.5%] and the 60mg interval is [71.1%, 92.5%]. They overlap across the entire band from 71.1 to 84.5. <strong>At n&asymp;3 per dose, this study cannot statistically distinguish 20mg from 40mg from 60mg on serotonin transporter occupancy.</strong> Every decimal place ever quoted from it, including repeatedly by this project, is false precision.
+</div>
+
+<div class="warn">
+  <strong>And the NET point at 60mg carries no information at all.</strong> It is n=2. Its 95% confidence interval runs from &minus;20% to +100%, which is why the bar above runs off the chart in both directions. This is the single point that anchors the whole "norepinephrine engages at higher doses" story. Note also that the fitted model misses its own best-measured point: it predicts 20.7% at 20mg against a measured 29.7% (SD 1.3).
+</div>
+
+<div class="caption">
+  <em>Trust the shape, never the decimals.</em> The shape, a steep rise flattening into a plateau by roughly 20 to 40mg on serotonin, replicates across two laboratories on two continents with different subjects, sponsors and scanners. The individual numbers printed on it are one small study's arithmetic. <span class="prov">[primary, verified]</span>
+</div>
+
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+<script defer src="../../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

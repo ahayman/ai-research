@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 9: Does It Keep Working? The Famous Number, Dissected</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --bad: #DC2626; --bad-bg: #FEF2F2; --bad-dark: #991B1B;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --warn: #B45309; --warn-bg: #FEF3C7; --warn-dark: #78350F;
+    --panel: #F3F4F6; --accent: #6366F1; --accent-bg: #EEF2FF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --bad: #F87171; --bad-bg: rgba(248,113,113,0.10); --bad-dark: #FCA5A5;
+      --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+      --warn: #FBBF24; --warn-bg: rgba(251,191,36,0.12); --warn-dark: #FDE68A;
+      --panel: #334155; --accent: #818CF8; --accent-bg: rgba(99,102,241,0.14);
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --bad: #F87171; --bad-bg: rgba(248,113,113,0.10); --bad-dark: #FCA5A5;
+    --good: #34D399; --good-bg: rgba(52,211,153,0.10); --good-dark: #6EE7B7;
+    --warn: #FBBF24; --warn-bg: rgba(251,191,36,0.12); --warn-dark: #FDE68A;
+    --panel: #334155; --accent: #818CF8; --accent-bg: rgba(99,102,241,0.14);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --bad: #DC2626; --bad-bg: #FEF2F2; --bad-dark: #991B1B;
+    --good: #059669; --good-bg: #ECFDF5; --good-dark: #065F46;
+    --warn: #B45309; --warn-bg: #FEF3C7; --warn-dark: #78350F;
+    --panel: #F3F4F6; --accent: #6366F1; --accent-bg: #EEF2FF;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.32rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 840px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+
+  .famous { display: grid; grid-template-columns: 190px 1fr; gap: 1.1rem; background: var(--card); border: 2px solid var(--bad); border-radius: 12px; padding: 1.1rem 1.2rem; align-items: start; }
+  @media (max-width: 700px) { .famous { grid-template-columns: 1fr; } }
+  .famous .big { text-align: center; }
+  .famous .big .n { font-size: 3.6rem; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; color: var(--bad); }
+  .famous .big .l { font-size: 0.76rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.35; }
+  .famous .big .src { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.68rem; color: var(--muted); margin-top: 0.5rem; }
+  .famous .diss h2 { margin: 0 0 0.5rem; font-size: 0.92rem; color: var(--bad-dark); }
+  .prov-rows { display: grid; gap: 0.3rem; }
+  .pr { display: flex; gap: 0.7rem; align-items: baseline; font-size: 0.81rem; padding: 0.32rem 0.55rem; background: var(--bad-bg); border-radius: 6px; flex-wrap: wrap; }
+  .pr .k { font-weight: 800; min-width: 128px; color: var(--bad-dark); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pr .v { flex: 1 1 200px; line-height: 1.4; }
+  .fatal { margin-top: 0.7rem; background: var(--bad); color: #FFFFFF; border-radius: 8px; padding: 0.7rem 0.85rem; font-size: 0.83rem; line-height: 1.45; }
+  .fatal b { color: #FFFFFF; }
+
+  .sec-head { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin: 1.6rem 0 0.65rem; text-align: center; }
+
+  .range { background: var(--warn-bg); border: 2px dashed var(--warn); border-radius: 10px; padding: 1rem 1.2rem; }
+  .range .bar { position: relative; height: 34px; background: var(--card); border-radius: 999px; margin: 0.7rem 0 0.5rem; overflow: hidden; border: 1px solid var(--border); }
+  .range .fill { position: absolute; left: 9%; width: 48%; top: 0; bottom: 0; background: var(--warn); opacity: 0.55; }
+  .range .ticks { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .range .lo, .range .hi { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.82rem; font-weight: 800; color: var(--warn-dark); }
+  .range .lo { left: 10%; }
+  .range .hi { right: 5%; }
+  .range .verdict { font-size: 0.88rem; margin-top: 0.55rem; }
+  .range .verdict b { color: var(--warn-dark); }
+
+  .invert { margin-top: 1.4rem; background: var(--card); border: 2px solid var(--accent); border-radius: 12px; overflow: hidden; }
+  .invert .head { background: var(--accent); color: #FFFFFF; padding: 0.75rem 1rem; }
+  .invert .head h2 { margin: 0; font-size: 0.96rem; }
+  .invert .head .c { font-size: 0.72rem; opacity: 0.94; margin-top: 0.15rem; }
+  .invert .body { padding: 1rem; }
+  .vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.9rem; align-items: center; }
+  @media (max-width: 620px) { .vs { grid-template-columns: 1fr; } }
+  .vsb { text-align: center; border-radius: 10px; padding: 0.85rem 0.7rem; }
+  .vsb.pl { background: var(--bad-bg); border: 1px solid var(--bad); }
+  .vsb.dr { background: var(--good-bg); border: 1px solid var(--good); }
+  .vsb .n { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .vsb.pl .n { color: var(--bad-dark); }
+  .vsb.dr .n { color: var(--good-dark); }
+  .vsb .l { font-size: 0.77rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.35; }
+  .vs .op { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--muted); }
+  .invert .read { margin-top: 0.85rem; font-size: 0.86rem; line-height: 1.5; background: var(--accent-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 0.75rem 0.9rem; }
+  .invert .read b { color: var(--accent); }
+
+  .best { margin-top: 1.4rem; background: var(--card); border: 2px solid var(--good); border-radius: 12px; overflow: hidden; }
+  .best .head { background: var(--good); color: #FFFFFF; padding: 0.75rem 1rem; }
+  .best .head h2 { margin: 0; font-size: 0.96rem; }
+  .best .head .c { font-size: 0.72rem; opacity: 0.94; margin-top: 0.15rem; }
+  .best .body { padding: 1rem; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 0.84rem; }
+  th { background: var(--panel); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); padding: 0.5rem 0.6rem; text-align: left; font-weight: 800; }
+  td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  td.hl { font-weight: 800; color: var(--good-dark); font-size: 0.95rem; }
+  .bound { margin-top: 0.85rem; background: var(--warn-bg); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0; padding: 0.75rem 0.9rem; font-size: 0.84rem; line-height: 1.5; }
+  .bound b { color: var(--warn-dark); }
+  .stack { display: flex; gap: 0.4rem; margin-top: 0.6rem; flex-wrap: wrap; }
+  .stack .piece { flex: 1 1 130px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.5rem; font-size: 0.73rem; line-height: 1.3; text-align: center; }
+  .stack .piece b { display: block; color: var(--text); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.1rem; }
+
+  .absences { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.4rem; }
+  @media (max-width: 700px) { .absences { grid-template-columns: 1fr; } }
+  .ab { background: var(--bad-bg); border: 2px solid var(--bad); border-radius: 10px; padding: 0.9rem 1rem; text-align: center; }
+  .ab .t { font-weight: 800; color: var(--bad-dark); font-size: 0.9rem; line-height: 1.35; }
+  .ab .s { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.45; }
+  .trap { margin-top: 1.2rem; background: var(--panel); border-left: 4px solid var(--muted); border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; font-size: 0.81rem; line-height: 1.5; color: var(--muted); }
+  .trap b { color: var(--text); }
+  .prov { text-align: center; font-size: 0.76rem; color: var(--muted); margin-top: 1.2rem; font-style: italic; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Does It Keep Working? The Famous Number, Dissected</h1>
+  <p class="subtitle">You asked about durability directly. Here is the figure everyone quotes, where it comes from, and why its own design cannot support the thing it is used to say.</p>
+
+  <div class="famous">
+    <div class="big">
+      <div class="n">25%</div>
+      <div class="l">of people on an antidepressant experience &ldquo;poop-out&rdquo;</div>
+      <div class="src">Solomon 2005<br>PMID 15766292</div>
+    </div>
+    <div class="diss">
+      <h2>What Solomon 2005 actually is</h2>
+      <div class="prov-rows">
+        <div class="pr"><span class="k">Design</span><span class="v"><b>Observational</b>, not randomised. No control condition of any kind.</span></div>
+        <div class="pr"><span class="k">Cohort</span><span class="v">NIMH Collaborative Depression Study, <b>enrolled 1978&ndash;81</b>.</span></div>
+        <div class="pr"><span class="k">Drugs</span><span class="v"><b>Tricyclics and MAOIs</b>, because that is what people took in 1980.</span></div>
+        <div class="pr"><span class="k">Median interval</span><span class="v">20 weeks of maintenance treatment.</span></div>
+        <div class="pr"><span class="k">Its definition</span><span class="v"><b>&ldquo;Recurrence of depression while on maintenance pharmacotherapy.&rdquo;</b></span></div>
+      </div>
+      <div class="fatal">
+        <b>The fatal problem, and it follows directly from the design:</b> in an uncontrolled observational cohort, &ldquo;recurrence during maintenance&rdquo; <b>cannot distinguish tachyphylaxis from the natural course of a recurring illness, from non-adherence, or from a drug that never worked in the first place.</b> Solomon 2005 does not measure how often antidepressants stop working. It measures how often depression comes back in people who are taking one. Those are different quantities and the design cannot separate them.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head">The other figure in circulation</div>
+
+  <div class="range">
+    <div style="font-size:0.86rem"><b>The canonical range for antidepressant tachyphylaxis:</b> verbatim from the source review, <i>&ldquo;Rates of tachyphylaxis varied from 9% to 57% depending on the patient population and duration of follow-up&rdquo;</i>; <i>&ldquo;studies of antidepressant tachyphylaxis are largely heterogeneous&rdquo;</i>; <i>&ldquo;few established treatment strategies exist.&rdquo;</i></div>
+    <div class="bar">
+      <div class="fill"></div>
+      <span class="lo">9%</span>
+      <span class="hi">57%</span>
+    </div>
+    <div class="ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+    <div class="verdict"><b>A quantity whose credible range spans six-fold is not an estimate. It is a confession that the field has no measurement instrument.</b></div>
+  </div>
+
+  <div class="invert">
+    <div class="head">
+      <h2>The single most informative result, and it inverts the usual story</h2>
+      <div class="c">Zimmerman &amp; Thongy &middot; PMID 17854252 &middot; relapse during continuation treatment</div>
+    </div>
+    <div class="body">
+      <div class="vs">
+        <div class="vsb pl">
+          <div class="n">24.1%</div>
+          <div class="l">relapse in people who responded to <b>PLACEBO</b></div>
+        </div>
+        <div class="op">vs</div>
+        <div class="vsb dr">
+          <div class="n">7.4%</div>
+          <div class="l">relapse in people who responded to the <b>DRUG</b></div>
+        </div>
+      </div>
+      <div class="read">
+        If people who responded to a dummy pill lose their response <b>more than three times as often</b> as people who responded to the drug, then <b>most of what gets called &ldquo;poop-out&rdquo; is placebo-response decay</b>. The phenomenon is real as an experience and largely illusory as a pharmacology. And note the arithmetic: <b>24.1% sits remarkably close to Solomon's famous 25%.</b> That may be coincidence. It may also be the whole story, which is that the famous 25% is the placebo-decay rate wearing a pharmacological costume. That cannot be established from here, and it is flagged as a pattern worth noticing rather than as a finding.
+      </div>
+    </div>
+  </div>
+
+  <div class="best">
+    <div class="head">
+      <h2>The best numbers that exist for duloxetine specifically</h2>
+      <div class="c">And the reason they survive the critique that antidepressant relapse trials are contaminated by withdrawal</div>
+    </div>
+    <div class="body">
+      <div class="scroll">
+      <table>
+        <thead><tr><th>Trial</th><th>Indication</th><th>Duration</th><th>Relapse ON duloxetine</th><th>Placebo arm</th></tr></thead>
+        <tbody>
+          <tr><td>Davidson 2008 &middot; PMID 18559291</td><td>GAD</td><td>26 weeks</td><td class="hl">13.7%</td><td>41.8% (P&le;0.001)</td></tr>
+          <tr><td>Perahia 2009 &middot; PMID 19552867</td><td>Depression recurrence</td><td>up to 52 weeks</td><td class="hl">14.4%</td><td>33.1% (p&lt;0.001)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="bound">
+        <b>Why these survive the withdrawal critique:</b> the critique attacks the <i>placebo</i> arms, because those people were taken off a drug, which inflates their relapse rate. So the <i>contrast</i> (41.8% vs 13.7%) is confounded. <b>But the 13.7% itself is not confounded by withdrawal, because those people did not withdraw from anything.</b>
+        <div style="margin-top:0.6rem"><b>What that ~14% is, precisely: an UPPER BOUND on tachyphylaxis, not a measure of it.</b> It bundles together:</div>
+        <div class="stack">
+          <div class="piece"><b>a</b>genuine loss of drug effect</div>
+          <div class="piece"><b>b</b>natural illness course breaking through a partially effective drug</div>
+          <div class="piece"><b>c</b>people who stopped taking their tablets</div>
+        </div>
+        <div style="margin-top:0.6rem"><b>Tachyphylaxis is at most 14% and probably well under it</b>, because that figure is everyone who relapsed for any reason at all.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="absences">
+    <div class="ab">
+      <div class="t">No placebo-controlled duloxetine data exists past 12 months.</div>
+      <div class="s">On anyone. For any indication. Past a year, nobody has data on anybody.</div>
+    </div>
+    <div class="ab">
+      <div class="t">Duloxetine-specific tachyphylaxis has never been studied.</div>
+      <div class="s">Not &ldquo;studied and found reassuring.&rdquo; <b>Never measured.</b> Targeted searches for duloxetine tachyphylaxis, duloxetine loss of efficacy, and SNRI poop-out returned no study measuring it for duloxetine in any indication.</div>
+    </div>
+  </div>
+
+  <div class="trap">
+    <b>One trap worth naming, because it is the shape of source that has damaged this project before.</b> An AI-generated medical answer site asserts that &ldquo;there is no documented evidence of tachyphylaxis with duloxetine,&rdquo; citing an open-label compassionate-use study. <b>That is not a source.</b> &ldquo;No documented evidence of tachyphylaxis&rdquo; in an open-label uncontrolled study that was not measuring tachyphylaxis is not evidence of absence. It is absence of measurement. <b>And one counter-pattern worth knowing:</b> where recurrence has been examined closely, second recurrences were significantly <i>less</i> severe than the first (25.1 &rarr; 21.6, P&lt;0.0001). That is not the pattern tachyphylaxis predicts, because pharmacological tolerance predicts escalating failure. Attenuating severity looks more like a drug still doing something partial against an illness running its own course.
+  </div>
+
+  <p class="prov"><b>Provenance:</b> Solomon 2005, the 9&ndash;57% range, Zimmerman &amp; Thongy, Davidson 2008 and Perahia 2009 are all <b>primary, verified</b> (abstracts retrieved; quotations verbatim). The critique of Solomon's definition, the reading of Zimmerman, and the upper-bound argument are <b>reasoning, not evidence</b>. The two absences are <b>no evidence exists</b> (negative search findings).</p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

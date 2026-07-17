@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 5: The Nap Protocol — And Why a Null Means Nothing</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pos: #059669; --pos-bg: #ECFDF5; --pos-dark: #065F46;
+    --neg: #DC2626; --neg-bg: #FEF2F2; --neg-dark: #991B1B;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6; --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --pos: #34D399; --pos-bg: rgba(52,211,153,0.10); --pos-dark: #6EE7B7;
+      --neg: #F87171; --neg-bg: rgba(248,113,113,0.10); --neg-dark: #FCA5A5;
+      --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+      --panel: #334155; --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --pos: #34D399; --pos-bg: rgba(52,211,153,0.10); --pos-dark: #6EE7B7;
+    --neg: #F87171; --neg-bg: rgba(248,113,113,0.10); --neg-dark: #FCA5A5;
+    --you: #FBBF24; --you-bg: rgba(251,191,36,0.10);
+    --panel: #334155; --acc: #818CF8; --acc-bg: rgba(99,102,241,0.12); --acc-dark: #A5B4FC;
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --pos: #059669; --pos-bg: #ECFDF5; --pos-dark: #065F46;
+    --neg: #DC2626; --neg-bg: #FEF2F2; --neg-dark: #991B1B;
+    --you: #B45309; --you-bg: #FFFBEB;
+    --panel: #F3F4F6; --acc: #6366F1; --acc-bg: #EEF2FF; --acc-dark: #4338CA;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 820px; margin: 0 auto 1.4rem; font-size: 0.93rem; color: var(--muted); }
+  .subtitle b { color: var(--text); }
+
+  .asym { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+  @media (max-width: 780px) { .asym { grid-template-columns: 1fr; } }
+  .ac { border-radius: 12px; padding: 1rem 1.15rem; }
+  .ac.p { background: var(--pos-bg); border: 2px solid var(--pos); }
+  .ac.n { background: var(--neg-bg); border: 2px solid var(--neg); }
+  .ac h2 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .ac.p h2 { color: var(--pos-dark); }
+  .ac.n h2 { color: var(--neg-dark); }
+  .ac p { margin: 0.3rem 0; font-size: 0.84rem; color: var(--muted); }
+  .ac p b { color: var(--text); }
+  .verdictline { text-align: center; font-size: 0.95rem; font-weight: 900; margin: 0 0 1.2rem; color: var(--text); background: var(--panel); border-radius: 10px; padding: 0.7rem 1rem; }
+
+  .confound { background: var(--card); border: 2px solid var(--neg); border-radius: 12px; padding: 1.05rem 1.2rem; margin-bottom: 1.2rem; }
+  .confound h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--neg-dark); }
+  .confound p { margin: 0.35rem 0; font-size: 0.85rem; color: var(--muted); }
+  .confound p b { color: var(--text); }
+  .push { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.75rem; align-items: center; margin: 0.85rem 0; }
+  @media (max-width: 640px) { .push { grid-template-columns: 1fr; } }
+  .pb { background: var(--panel); border-radius: 9px; padding: 0.7rem 0.85rem; font-size: 0.8rem; }
+  .pb b { display: block; margin-bottom: 0.2rem; }
+  .pb.down b { color: var(--pos-dark); }
+  .pb.up b { color: var(--neg-dark); }
+  .vs { font-weight: 900; color: var(--muted); text-align: center; font-size: 0.85rem; }
+
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 560px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; font-size: 0.82rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); background: var(--panel); font-weight: 800; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.n { width: 34px; text-align: center; font-weight: 900; color: var(--acc-dark); }
+  td.rule { font-weight: 700; width: 42%; }
+  td.why { color: var(--muted); }
+  td.why b { color: var(--text); }
+  tr.key td { background: var(--you-bg); }
+  tr.key td.rule { color: var(--you); }
+
+  .box { margin-top: 1.1rem; border-radius: 12px; padding: 1rem 1.2rem; }
+  .box.acc { background: var(--acc-bg); border: 2px solid var(--acc); }
+  .box.acc h3 { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--acc-dark); }
+  .box.you { background: var(--you-bg); border: 2px solid var(--you); text-align: center; }
+  .box.you .big { font-size: 1rem; font-weight: 900; color: var(--you); margin-bottom: 0.35rem; }
+  .box p { margin: 0.3rem 0; font-size: 0.85rem; color: var(--muted); }
+  .box p b { color: var(--text); }
+
+  .against { margin-top: 1rem; background: var(--card); border: 1px dashed var(--neg); border-radius: 12px; padding: 1rem 1.2rem; }
+  .against h3 { margin: 0 0 0.4rem; font-size: 0.9rem; color: var(--neg-dark); }
+  .against p { margin: 0.3rem 0; font-size: 0.84rem; color: var(--muted); }
+  .against p b { color: var(--text); }
+
+  .dead { margin-top: 1rem; background: var(--panel); border-left: 4px solid var(--muted); border-radius: 0 8px 8px 0; padding: 0.85rem 1.1rem; font-size: 0.8rem; color: var(--muted); }
+  .dead b { color: var(--text); }
+  .dead h3 { margin: 0 0 0.35rem; font-size: 0.83rem; color: var(--text); }
+
+  .prov { margin-top: 1.1rem; font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; line-height: 1.6; }
+  .prov b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Nap Protocol — And Why a Null Means Nothing</h1>
+  <p class="subtitle">Worth running, but not for the reason you would guess, and <b>the asymmetry has to come first because it is the verdict.</b></p>
+
+  <div class="asym">
+    <div class="ac p">
+      <h2>✓ Sound for a POSITIVE</h2>
+      <p>A channel that has been at zero for decades has <b>no false-positive noise to speak of</b>. If P(nap) ≈ 0 across your whole life, <b>one unambiguous success is genuinely surprising and therefore informative</b>.</p>
+      <p>It would also be <b>the first thing anyone has ever recorded about duloxetine and daytime sleep propensity, in any population.</b> <b>[no evidence exists — no MSLT study of duloxetine, or of any SNRI, exists at any dose]</b></p>
+    </div>
+    <div class="ac n">
+      <h2>✗ Near-worthless for a NEGATIVE</h2>
+      <p><b>A null is uninterpretable</b>, because the improved-sleep confound predicts a null under <i>both</i> hypotheses.</p>
+      <p>"Still can't nap" is fully compatible with <i>"tonic arousal reduced, but I'm also less sleep-deprived than I've been in thirty years."</i></p>
+      <p><b>You should know this before you start, so that a null does not read to you as a refutation.</b></p>
+    </div>
+  </div>
+
+  <div class="verdictline">The asymmetry <i>is</i> the verdict. This is not a test that can tell you "no."</div>
+
+  <div class="confound">
+    <h3>⚠ The killer confound: the drug pushes both ways at once</h3>
+    <div class="push">
+      <div class="pb down"><b>If it lowered your arousal →</b> latency should <b>FALL</b>. You would nap.</div>
+      <div class="vs">but at the<br>same time</div>
+      <div class="pb up"><b>It improved your sleep →</b> less sleep drive → latency should <b>RISE</b>. Napping gets <b>harder</b>.</div>
+    </div>
+    <p><b>These cancel, and nobody knows by how much.</b> And the direction of dominance is measured: <b>sleep drive wins.</b></p>
+    <p><b>Bonnet &amp; Arand 2000 (PMID 10737337)</b>, 12 patients with psychophysiological insomnia, measured nap latency directly:</p>
+    <div class="scroll" style="margin-top:0.6rem">
+      <table style="min-width:420px">
+        <thead><tr><th>Condition</th><th>Nap sleep latency</th><th>Reading</th></tr></thead>
+        <tbody>
+          <tr><td class="rule">Baseline</td><td><b>13.4 min</b></td><td class="why">The starting point</td></tr>
+          <tr class="key"><td class="rule">After sleep deprivation</td><td><b>3.8 min</b></td><td class="why"><b>Sleep drive collapses latency by 3.5×. It dominates arousal.</b></td></tr>
+          <tr><td class="rule">After a 5-minute walk</td><td><b>11.9 min</b></td><td class="why"><b>A five-minute walk is a bigger effect than any plausible drug effect</b></td></tr>
+          <tr><td class="rule">After 15 min watching TV</td><td><b>6.9 min</b></td><td class="why">Same person, same day, nearly double the difference</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:0.6rem">Their conclusion, verbatim: <i>"measured sleep tendency is a <b>combination of sleep drive and level of central nervous system arousal</b>, where arousal has both state and trait components."</i> <b>[primary, verified]</b></p>
+  </div>
+
+  <div class="box acc">
+    <h3>So why run it at all? Because you have been running an ABORTED version your whole life.</h3>
+    <p><b>The Multiple Sleep Latency Test protocol allows 20 minutes and scores a no-sleep trial as 20.</b> You lie there for 10 to 20 minutes and give up.</p>
+    <p><b>Your lifelong "hard zero" may be a lifelong latency of 18 minutes that you have never once let run to completion.</b> A 20-minute latency is long, but it is a <b>number</b>, and a number can move. A "no" cannot. <b>Running the full 20 converts a lifelong binary into a measurement.</b> <b>[reasoning, not evidence]</b></p>
+  </div>
+
+  <div class="scroll" style="margin-top:1.1rem">
+    <table>
+      <thead><tr><th></th><th>Rule</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="rule">Four attempts, not one</td><td class="why">Four consecutive days, or the MSLT's own design of 4–5 trials at 2-hour intervals in one day. <b>One trial is an anecdote. Four is a latency.</b></td></tr>
+        <tr class="key"><td class="n">2</td><td class="rule">Run the FULL 20 minutes. Do not give up at 10.</td><td class="why">Score the minutes to sleep; if no sleep, score 20. <b>The single highest-value change on this list.</b></td></tr>
+        <tr><td class="n">3</td><td class="rule">Fixed time: early afternoon, ~13:00–15:00</td><td class="why">Same time every attempt. The circadian nap zone. <b>Testing at the wrong hour guarantees a null.</b></td></tr>
+        <tr class="key"><td class="n">4</td><td class="rule">No exertion for 30+ minutes before. Sit or lie quietly first.</td><td class="why">Bonnet &amp; Arand: <b>a 5-minute walk raised latency from 6.9 to 11.9 min</b> — larger than any plausible drug effect. <b>[primary, verified]</b></td></tr>
+        <tr><td class="n">5</td><td class="rule">Fixed conditions: same room, dark, quiet, lying down, no screen</td><td class="why">Åkerstedt 2014: context moves sleepiness ratings by 1–2 units either way. <b>[primary, verified]</b></td></tr>
+        <tr><td class="n">6</td><td class="rule">No caffeine for 8h. Log it regardless.</td><td class="why">The one covariate that <b>actively masks</b> the outcome being measured.</td></tr>
+        <tr class="key"><td class="n">7</td><td class="rule">Log the previous night's sleep duration and quality</td><td class="why"><b>The dominant covariate.</b> If you slept 8 hours, sleep drive is low and <b>the test is stacked toward a null before you lie down.</b></td></tr>
+        <tr><td class="n">8</td><td class="rule">Log dose time; keep the nap at the same interval from it</td><td class="why">Distinguishes a plasma-tracking effect from a tonic one.</td></tr>
+        <tr><td class="n">9</td><td class="rule">Pre-register the prediction in writing before attempt 1</td><td class="why"><b>Substitutes for the blinding you cannot have.</b></td></tr>
+        <tr><td class="n">10</td><td class="rule">Record three things per attempt</td><td class="why">Minutes to sleep (or 20) · fell asleep Y/N · and <i>separately</i>, "did I feel I could have?" <b>The third is introspective and therefore the least trustworthy (Olson 1998). Record it; do not let it outvote the first two.</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box you">
+    <div class="big">Now. Before the appointment.</div>
+    <p><b>The 20mg window closes the moment the dose moves, and it does not reopen.</b></p>
+  </div>
+
+  <div class="against">
+    <h3>Four more things that weaken it, stated because selling you this test would be dishonest</h3>
+    <p><b>1. The effort paradox is your specific risk.</b> Trying to sleep prevents sleep, and that is the <i>defining</i> mechanism of psychophysiological insomnia — the very phenotype you most resemble. <b>A deliberate test with a hypothesis attached maximises exactly the performance anxiety that raises latency.</b> <b>[reasoning, not evidence]</b></p>
+    <p><b>2. The denominator is unknown.</b> "I don't nap, ever" plus "I haven't tried since the duloxetine" means your attempts are rare, self-selected and uncontrolled. <b>A lifelong zero over an unknown and possibly small number of badly-run attempts is a weaker prior than it feels.</b></p>
+    <p><b>3. One nap is an event, not a rate.</b> A single success does not establish nap ability.</p>
+    <p><b>4. You have no comparison dose.</b> The dose-dependence discriminator — the sharpest one — <b>only exists after the decision it would inform.</b></p>
+  </div>
+
+  <div class="against" style="border-style:solid; border-color:var(--border)">
+    <h3>⚠ And one finding that runs against your own theory</h3>
+    <p>You wondered whether not napping might be <i>causing</i> your poor sleep. <b>Gotts 2015 (PMID 25575044)</b> followed 101 ME/CFS patients with 14-day sleep diaries. Two findings:</p>
+    <p><b>21 of 101 (20.8%) did not nap at all across the fortnight.</b> You are in a common fifth, not an anomalous one. <b>[primary, verified]</b></p>
+    <p>And, verbatim: <i>"<b>Napping, particularly in the afternoon is associated with poorer cognitive functioning and more daytime sleepiness in CFS.</b>"</i> Cross-sectional, so the direction is unresolvable, and confounded by severity. <b>But the sign is the opposite of your assumption</b>, and it converges with standard sleep medicine: daytime napping reduces nocturnal sleep pressure.</p>
+    <p><b>Your causal arrow may run backwards. Not napping may be PROTECTING your night sleep rather than damaging it.</b> Untested, live, and worth knowing before you treat learning to nap as a goal. <b>[reasoning, not evidence]</b> <span style="color:var(--muted)">One limit: Gotts measured <b>reported napping, not nap ability</b>. It cannot separate "cannot nap" from "chooses not to." Your claim is about ability. It is the closest number that exists and it is not the number you need.</span></p>
+  </div>
+
+  <div class="dead">
+    <h3>A retraction carried from supplement 7</h3>
+    The claim that <b>"his nap-failure IS the ME/CFS MSLT finding lived"</b> is <b>DEAD</b>. <b>Watson's twins fell asleep in 8.9 minutes. That is not nap failure.</b> And where the ME/CFS MSLT literature is directional at all, it runs the <b>other</b> way: <b>Neu 2008 found CFS patients fall asleep significantly FASTER than controls</b>; Spitzer 2010 found 80% abnormal in the sleepy direction <b>[primary, verified ×2]</b>. Maksoud's systematic review calls MSLT findings <i>"inconsistent"</i> and <i>"non-replicated"</i>; CDC's Decker found <i>"no reproducible perturbations."</i> <b>Your phenotype resembles the insomnia hyperarousal profile (increased MSLT latency), not the ME/CFS one — and even that fit is imperfect, because you do not report insomnia; you report that your sleep improved.</b> You sit between two literatures, and the field's own 2023 review (Dressle &amp; Riemann) names the between-space as an <b>open question</b> rather than a settled overlap.
+  </div>
+
+  <div class="prov">
+    <b>Provenance.</b> Bonnet &amp; Arand 2000 PMID 10737337 <b>[primary, verified — n=12, psychophysiological insomnia]</b> · Bonnet &amp; Arand 2010 PMID 19640748 <b>[primary, verified]</b> · Gotts 2015 PMID 25575044 <b>[primary, verified — full text]</b> · Olson 1998 PMID 9844851 <b>[primary, verified]</b> · Åkerstedt 2014 PMID 24750198 <b>[primary, verified]</b> · Watson 2004 PMID 15453557 · Neu 2008 PMID 19021860 · Spitzer 2010 PMID 20230458 · Maksoud 2021 PMID 34065013 · Decker 2009 PMID 19807920 · Dressle &amp; Riemann 2023 PMID 37183177 <b>[primary, verified ×6; Wiley full text 403 on the last]</b>. <b>The protocol design is [reasoning, not evidence]</b> — the parameters are taken from the MSLT protocol and from Bonnet &amp; Arand's measured confounds, but <b>no study has validated a home nap test against anything.</b>
+  </div>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

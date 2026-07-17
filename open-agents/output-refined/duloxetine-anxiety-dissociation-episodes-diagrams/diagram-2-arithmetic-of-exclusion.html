@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 2: The Arithmetic of the Exclusion</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --ok: #059669; --ok-bg: #ECFDF5; --ok-dark: #065F46;
+    --gone: #DC2626; --gone-bg: #FEF2F2; --gone-dark: #991B1B;
+    --panel: #F3F4F6; --accent: #6366F1; --accent-bg: #EEF2FF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+      --ok: #34D399; --ok-bg: rgba(52,211,153,0.10); --ok-dark: #6EE7B7;
+      --gone: #F87171; --gone-bg: rgba(248,113,113,0.10); --gone-dark: #FCA5A5;
+      --panel: #334155; --accent: #818CF8; --accent-bg: rgba(99,102,241,0.14);
+    }
+  }
+  /* The media query above answers to the OS only. These two blocks let the parent
+     page's theme toggle win in both directions; values are copied verbatim. */
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F1F5F9; --muted: #94A3B8; --border: #334155;
+    --ok: #34D399; --ok-bg: rgba(52,211,153,0.10); --ok-dark: #6EE7B7;
+    --gone: #F87171; --gone-bg: rgba(248,113,113,0.10); --gone-dark: #FCA5A5;
+    --panel: #334155; --accent: #818CF8; --accent-bg: rgba(99,102,241,0.14);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280; --border: #E5E7EB;
+    --ok: #059669; --ok-bg: #ECFDF5; --ok-dark: #065F46;
+    --gone: #DC2626; --gone-bg: #FEF2F2; --gone-dark: #991B1B;
+    --panel: #F3F4F6; --accent: #6366F1; --accent-bg: #EEF2FF;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 1.5rem 1rem; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 1.32rem; margin: 0 0 0.5rem; text-align: center; line-height: 1.25; }
+  .subtitle { text-align: center; max-width: 820px; margin: 0 auto 1.5rem; font-size: 0.93rem; color: var(--muted); }
+
+  .scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 620px; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; font-size: 0.9rem; }
+  thead th { background: var(--panel); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); padding: 0.7rem 0.7rem; text-align: center; font-weight: 800; border-bottom: 2px solid var(--border); }
+  thead th:first-child { text-align: left; }
+  thead th .cite { display: block; font-size: 0.64rem; font-weight: 600; letter-spacing: 0; text-transform: none; margin-top: 0.15rem; opacity: 0.85; }
+  tbody td { padding: 0.75rem 0.7rem; text-align: center; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; font-weight: 700; }
+  tbody td:first-child { text-align: left; font-weight: 700; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.ok { background: var(--ok-bg); }
+  tbody tr.gone { background: var(--gone-bg); }
+  tbody tr.gone td { color: var(--gone-dark); }
+  .op { color: var(--muted); font-weight: 400; }
+  .tick { color: var(--ok); font-weight: 800; }
+  .pooled { font-size: 1.08rem; font-weight: 800; }
+  tbody tr.ok .pooled { color: var(--ok-dark); }
+  .excl { display: inline-block; background: var(--gone); color: #FFFFFF; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em; }
+  .dash { color: var(--muted); font-weight: 400; }
+
+  .readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; margin-top: 1.4rem; }
+  @media (max-width: 780px) { .readout { grid-template-columns: 1fr; } }
+  .r { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+  .r .n { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: var(--accent); }
+  .r .l { font-size: 0.79rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.4; }
+
+  .two-claims { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+  @media (max-width: 780px) { .two-claims { grid-template-columns: 1fr; } }
+  .claim { border-radius: 10px; padding: 1rem 1.15rem; border: 1px solid var(--border); background: var(--card); }
+  .claim.asked { border-left: 5px solid var(--ok); }
+  .claim.unasked { border-left: 5px solid var(--gone); }
+  .claim .head { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .claim.asked .head { color: var(--ok-dark); }
+  .claim.unasked .head { color: var(--gone-dark); }
+  .claim .q { font-size: 1.02rem; font-weight: 800; line-height: 1.35; margin-bottom: 0.45rem; }
+  .claim .a { font-size: 0.84rem; color: var(--muted); line-height: 1.45; }
+
+  .verdict { margin-top: 1.5rem; background: var(--accent-bg); border-left: 4px solid var(--accent); padding: 1rem 1.25rem; border-radius: 0 10px 10px 0; font-size: 0.95rem; }
+  .verdict strong { color: var(--accent); }
+  .prov { text-align: center; font-size: 0.76rem; color: var(--muted); margin-top: 1.2rem; font-style: italic; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>The Arithmetic of the Exclusion</h1>
+  <p class="subtitle">Duloxetine ran two nearly identical anxiety trials, then pooled them by prespecified plan to run the formal non-inferiority comparison. Add the arms up. Three of them reconcile to the digit. One vanishes.</p>
+
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Arm</th>
+        <th>Hartford 2007<span class="cite">PMID 17414743</span></th>
+        <th></th>
+        <th>Nicolini 2009<span class="cite">PMID 18485261</span></th>
+        <th></th>
+        <th>Allgulander 2008 pooled<span class="cite">PMID 18635722</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="ok">
+        <td>Placebo</td>
+        <td>161</td>
+        <td class="op">+</td>
+        <td>170</td>
+        <td class="op">=</td>
+        <td><span class="pooled">331</span> <span class="tick">&check;</span></td>
+      </tr>
+      <tr class="ok">
+        <td>Duloxetine 60&ndash;120 mg</td>
+        <td>162</td>
+        <td class="op">+</td>
+        <td>158</td>
+        <td class="op">=</td>
+        <td><span class="pooled">320</span> <span class="tick">&check;</span></td>
+      </tr>
+      <tr class="ok">
+        <td>Venlafaxine XR</td>
+        <td>164</td>
+        <td class="op">+</td>
+        <td>169</td>
+        <td class="op">=</td>
+        <td><span class="pooled">333</span> <span class="tick">&check;</span></td>
+      </tr>
+      <tr class="gone">
+        <td>Duloxetine <b>20 mg</b></td>
+        <td class="dash">no such arm</td>
+        <td class="op">+</td>
+        <td>84</td>
+        <td class="op">=</td>
+        <td><span class="excl">EXCLUDED</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="readout">
+    <div class="r">
+      <div class="n">3 of 4</div>
+      <div class="l">arms reconcile <b>exactly</b>. This is not an estimate or an inference. The addition is the proof.</div>
+    </div>
+    <div class="r">
+      <div class="n">84</div>
+      <div class="l">people on your dose appear in <b>none</b> of the pooled totals. The only fixed 20mg arm that has ever existed was left out of the only comparison that mattered.</div>
+    </div>
+    <div class="r">
+      <div class="n">0</div>
+      <div class="l">statistical tests of 20mg against 60mg have ever been performed. Not against venlafaxine, not against the higher duloxetine arm, not at all.</div>
+    </div>
+  </div>
+
+  <div class="two-claims">
+    <div class="claim asked">
+      <div class="head">Asked, and answered</div>
+      <div class="q">&ldquo;Does 20mg beat placebo?&rdquo;</div>
+      <div class="a"><b>Yes</b>, on HAM-A total and the psychic factor, at p=0.01&ndash;0.001, in n=84. <b>No</b>, on the somatic factor, at p=0.07.</div>
+    </div>
+    <div class="claim unasked">
+      <div class="head">Never asked</div>
+      <div class="q">&ldquo;Is 20mg as good as 60mg?&rdquo;</div>
+      <div class="a"><b>Unknown, and unknowable from this trial.</b> With n=84 against n=158 and no comparison performed, the trial had neither the analysis nor the power to answer it. The 60% versus 65% response gap is a naive between-arm eyeball, not a test.</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <strong>&ldquo;Beat placebo&rdquo; and &ldquo;as good as 60mg&rdquo; are different claims, and only the first was ever asked.</strong> An earlier pass of this project described 20mg as showing &ldquo;near-parity&rdquo; with 60&ndash;120mg. That is a gap in the record being mistaken for a finding in it. The distinction is worth carrying into the appointment intact, because it is exactly the kind of thing that flattens in a ten-minute conversation.
+  </div>
+
+  <p class="prov"><b>Provenance:</b> <b>primary, verified</b>. The arm sizes come from the three trials' own abstracts, and the pooling plan is stated in Allgulander 2008's abstract. The reconciliation is exact.</p>
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>

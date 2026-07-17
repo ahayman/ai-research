@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rated Candidate List: Seven Live Candidates, No Winner</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --up: #EF4444; --up-soft: rgba(239,68,68,0.10); --up-tx: #991B1B;
+    --down: #10B981; --down-soft: rgba(16,185,129,0.10); --down-tx: #047857;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+      --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+      --up: #F87171; --up-soft: rgba(248,113,113,0.16); --up-tx: #FCA5A5;
+      --down: #34D399; --down-soft: rgba(52,211,153,0.14); --down-tx: #6EE7B7;
+      --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+      --shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+    --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+    --up: #F87171; --up-soft: rgba(248,113,113,0.16); --up-tx: #FCA5A5;
+    --down: #34D399; --down-soft: rgba(52,211,153,0.14); --down-tx: #6EE7B7;
+    --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+    --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --up: #EF4444; --up-soft: rgba(239,68,68,0.10); --up-tx: #991B1B;
+    --down: #10B981; --down-soft: rgba(16,185,129,0.10); --down-tx: #047857;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: 1.25rem; -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  .d-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .d-sub { font-size: 0.9375rem; color: var(--muted); margin-bottom: 0.9rem; }
+
+  .key {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.6rem 0.85rem; font-size: 0.75rem; color: var(--muted); margin-bottom: 1rem;
+  }
+  .key b { color: var(--text); }
+  .g2 { color: var(--down-tx); font-weight: 800; }
+  .g1 { color: var(--down-tx); font-weight: 700; }
+  .g0 { color: var(--muted); font-weight: 700; }
+  .gx { color: var(--up-tx); font-weight: 800; }
+
+  .cand {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: var(--shadow); margin-bottom: 0.7rem; overflow: hidden;
+    display: grid; grid-template-columns: 3.25rem 1fr; align-items: stretch;
+  }
+  @media (max-width: 560px) { .cand { grid-template-columns: 1fr; } }
+
+  .rank {
+    background: var(--accent-soft); color: var(--accent-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.375rem; font-weight: 800; border-right: 1px solid var(--border);
+  }
+  @media (max-width: 560px) { .rank { border-right: none; border-bottom: 1px solid var(--border); padding: 0.35rem; font-size: 1rem; } }
+  .cand.top .rank { background: var(--accent); color: #fff; }
+
+  .body { padding: 0.85rem 1rem; }
+  .name { font-size: 0.9375rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .tier { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.55rem; }
+  .tier b { color: var(--text); }
+
+  .lines { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.4rem 1rem; }
+  .line { font-size: 0.8125rem; display: flex; gap: 0.4rem; }
+  .line-k { flex: 0 0 3.1rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding-top: 0.15rem; }
+  .line-v { flex: 1; }
+
+  .note { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); font-size: 0.75rem; color: var(--muted); }
+  .note b { color: var(--warn-tx); }
+
+  .close {
+    background: var(--warn-bg); border: 1px solid var(--warn-br); border-left: 4px solid var(--warn-br);
+    border-radius: 10px; padding: 1rem 1.15rem; font-size: 0.9375rem; color: var(--warn-tx); margin-top: 1rem;
+  }
+  .close b { font-weight: 800; }
+  .foot { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="d-title">The Rated Candidate List</div>
+  <div class="d-sub">Seven live candidates, rated for fit to him rather than ranked toward a winner. Ranking is by fit &times; evidence quality, not elegance. The dullest candidate ranks first and the most elegant ranks third.</div>
+
+  <div class="key">
+    <b>Fit scoring:</b> <span class="g2">&#10003;&#10003;</span> predicts it natively &middot; <span class="g1">&#10003;</span> consistent with it &middot; <span class="g0">&#9675;</span> silent &middot; <span class="gx">&#10007;</span> predicts the opposite.
+    <b>The one distinction that shortens the list:</b> a candidate killed by <i>heterogeneity</i> (a null average) is <b>not dead</b>, because a null average is compatible with a large individual effect. A candidate killed by <i>logic or measurement error</i> is dead, and no amount of individual variation revives it.
+  </div>
+
+  <div class="cand top">
+    <div class="rank">1</div>
+    <div class="body">
+      <div class="name">Anxiolysis + sleep continuity (&ldquo;the boring one&rdquo;)</div>
+      <div class="tier"><b>RCT-backed.</b> The only candidate with a positive trial at his actual dose: Nicolini 2009, fixed 20mg GAD, n=84, HAM-A total and psychic separated. Somatic did not (p=0.07).</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">sleep <span class="g2">&#10003;&#10003;</span> &middot; dreams <span class="g2">&#10003;&#10003;</span> &middot; morning fatigue <span class="g2">&#10003;&#10003;</span> &middot; pain-minimal <span class="g2">&#10003;&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">acute-worse <span class="gx">&#10007;</span> &middot; escitalopram <span class="gx">&#10007;</span></div></div>
+      </div>
+      <div class="note"><b>The hole:</b> escitalopram gave him zero anxiolysis. If the benefit is just &ldquo;an antidepressant reduced his anxiety,&rdquo; why did the last one not? This candidate needs candidate 7 to explain its own biggest anomaly. Six passes were so busy hunting mechanism that nobody rated the obvious explanation.</div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">2</div>
+    <div class="body">
+      <div class="name">Serotonergic sensory-gating dose ladder</div>
+      <div class="tier"><b>Human, dose-graded, blind, placebo-controlled, crossover, and single-lab.</b> Jensen 2008: 10mg, P50 intact. Oranje 2011: 15mg, P50 disrupted. A 1.5&times; step flipped the filter.</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">acute-worse <span class="g2">&#10003;&#10003;</span> <b>the only candidate that predicts it</b> &middot; escitalopram <span class="g2">&#10003;&#10003;</span> &middot; no-cognitive-content <span class="g1">&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">crash <span class="g0">&#9675;</span> &middot; sleep <span class="g0">&#9675;</span></div></div>
+      </div>
+      <div class="note"><b>Limits:</b> all four studies are a single acute dose, so chronicity is unmeasured and &ldquo;the cost is transient&rdquo; is <b>unsupported</b>. Cross-study, not one dose-response experiment. The only independent lab ran the opposite manipulation and got a mirror image, which argues for an inverted-U rather than one dial.</div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">3</div>
+    <div class="body">
+      <div class="name">Chattarji delayed amygdala + Musazzi glutamate decoupling</div>
+      <div class="tier"><b>Animal-only, and the join has never been tested.</b> A 2-hour stressor produces amygdala changes 10 days later; chronic antidepressants at 14 days prevent the glutamate surge while corticosterone rises normally.</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">crash-absent <span class="g2">&#10003;&#10003;</span> <b>the only matching timescale</b> &middot; no-cognitive-content <span class="g2">&#10003;&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">acute-worse <span class="gx">&#10007;</span> predicts acute-<b>intact</b> &middot; escitalopram <span class="gx">&#10007;</span></div></div>
+      </div>
+      <div class="note"><b>Why it ranks third despite the best timescale:</b> it is the most elegant account in the chain and it has zero human evidence, an untested cross-region join (prefrontal vs amygdala), and a vehicle-gavage confound. <b>Elegance ranks below a positive RCT.</b></div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">4</div>
+    <div class="body">
+      <div class="name">Escitalopram-specific allosteric S2 mechanism</div>
+      <div class="tier"><b>Mechanistic inference.</b> The allosteric effect is real and characterised. Its relevance to his dissociation is entirely unevidenced.</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">escitalopram <span class="g2">&#10003;&#10003;</span> the only candidate that addresses it at all</div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">everything else <span class="g0">&#9675;</span></div></div>
+      </div>
+      <div class="note"><b>Conflict of interest, disclosed because nobody applied it:</b> the review is Zhong, Haddjeri &amp; S&aacute;nchez 2012 (PMID 21901317), cited throughout this corpus as &ldquo;Sanchez 2011.&rdquo; <b>S&aacute;nchez is at H. Lundbeck A/S, escitalopram's manufacturer</b>, and the abstract opens by asserting escitalopram's superiority. The allosteric-site literature is substantially a manufacturer research programme. This project applies exactly that standard to a Viatris-funded pregabalin meta-analysis. Also: &ldquo;escitalopram is the only SSRI with that site&rdquo; is <b>wrong</b>. The site belongs to the transporter.</div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">5</div>
+    <div class="body">
+      <div class="name">Tonic/phasic LC-NE shift <span style="font-weight:400;color:var(--muted)">(demoted from #1)</span></div>
+      <div class="tier"><b>Animal-only for the tonic limb. Contradicted for the phasic limb.</b> Alba-Delgado 2012, the only chronic-duloxetine locus coeruleus recording in existence: 7 days, osmotic minipump, and the sensory-evoked excitatory response <b>decreased</b>.</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">nap-failure <span class="g1">&#10003;</span> <b>this is where it earns its place</b> &middot; sleep <span class="g1">&#10003;</span> &middot; morning fatigue <span class="g1">&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">acute-worse <span class="gx">&#10007;</span> predicts acute-<b>better</b>, twice over &middot; crash <span class="g0">&#9675;</span> &middot; escitalopram <span class="gx">&#10007;</span></div></div>
+      </div>
+      <div class="note"><b>Why the orchestrator's favourite dropped from #1 to #5:</b> the source was misread. Bari &amp; Aston-Jones say the excitatory component was left <b>intact</b>; the ratio rose because tonic <i>fell</i> and the <i>inhibitory</i> component grew. A ratio rising because its denominator falls is not &ldquo;acute reactivity up.&rdquo; And in the theory it invokes, high tonic means <i>distractible</i>, not <i>aroused</i>, so lowering it predicts <b>better</b> filtering. Sanity check: atomoxetine is prescribed to <i>reduce</i> distractibility. It survives as a decent theory of his sleep, not a theory of everything.</div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">6</div>
+    <div class="body">
+      <div class="name">His own CFS-aggravation hypothesis</div>
+      <div class="tier"><b>Claim 1 established, claim 2 unstudied, claim 3 speculation.</b> The Canadian Consensus Criteria describe the sequence using his own word: <i>&ldquo;Overload phenomena may trigger a 'crash'.&rdquo;</i> That crashes <i>aggravate</i> the illness has no evidence either way.</div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">pain-minimal <span class="g2">&#10003;&#10003;</span> it explains why pain has not moved: the mechanism is slow by construction &middot; crash-absent <span class="g1">&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">acute-worse <span class="g0">&#9675;</span> &middot; everything else <span class="g0">&#9675;</span></div></div>
+      </div>
+      <div class="note"><b>It survives because it was killed by absence of research, not by logic.</b> His exact intersection is the population these studies exclude or never assemble. But three adjacent findings lean against it, and honesty requires saying so: allostatic load in CFS correlates <i>inversely</i> with fatigue duration; prospectively the limb that predicts pain is metabolic, and the parasympathetic limb his model runs through predicted nothing; and the direct distress-to-pain path was null. <b>The sharp free test:</b> his model must run through fatigue. If pain improves while fatigue does not, it is dead.</div>
+    </div>
+  </div>
+
+  <div class="cand">
+    <div class="rank">7</div>
+    <div class="body">
+      <div class="name">Chronic 5-HT2C adaptation opposing acute action</div>
+      <div class="tier"><b>Dead as an account of the dissociation, by logic. Alive but redundant for the crash half.</b></div>
+      <div class="lines">
+        <div class="line"><div class="line-k">Fits</div><div class="line-v">crash <span class="g1">&#10003;</span> &middot; escitalopram <span class="g1">&#10003;</span></div></div>
+        <div class="line"><div class="line-k">Fails</div><div class="line-v">acute-worse <span class="gx">&#10007;</span> Zohar 1988 predicts acute-<b>better</b></div></div>
+      </div>
+      <div class="note">It is a <b>single-mechanism</b> account, and a single mechanism cannot move two things in opposite directions. It has no state in which the acute is worse and the crash is absent. <b>That is a logic argument, so it kills the candidate for the job it was hired for</b>, and only for that job. It stays on the list, at the bottom, with the reason, because &ldquo;supplement 6 killed it&rdquo; is too coarse a verdict.</div>
+    </div>
+  </div>
+
+  <div class="close">
+    <b>There is no winner, and the absence of one is the finding.</b> Candidate 2 explains the acute half. Candidate 3 explains the crash half. Candidates 1 and 5 explain the sleep half. Candidates 4 and 7 gesture at the escitalopram failure. Nothing explains all of it, and nothing has been tested in a human resembling him.
+  </div>
+
+  <div class="foot">Twelve further candidates are on a dead list, killed by logic or measurement rather than heterogeneity, and are not revivable by individual variation. See Category 4 for the full table, the graveyard, and the falsifiers attached to each live candidate.</div>
+</div>
+<script>
+  window.addEventListener('message', function (e) {
+    if (e.data && (e.data.theme === 'dark' || e.data.theme === 'light')) {
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1; postHeight();
+    }
+  });
+  // Measure the BODY box, not documentElement.scrollHeight: scrollHeight returns
+  // max(content, iframe viewport), so it can never report a height smaller than
+  // the frame already is. That makes the frame's height attribute a floor and
+  // leaves dead space under short content. The body border-box is the true height.
+  function contentHeight() {
+    var b = document.body;
+    var cs = getComputedStyle(b);
+    return Math.ceil(
+      b.getBoundingClientRect().height +
+      parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0)
+    );
+  }
+  var lastH = -1;
+  function postHeight() {
+    if (window.parent === window) return;
+    var h = contentHeight();
+    if (h === lastH) return;
+    lastH = h;
+    window.parent.postMessage({ diagramHeight: h }, '*');
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+  if (document.readyState === 'complete') postHeight();
+</script>
+<script defer src="../../progress-tracker.js" data-rh-tracker></script>
+</body>
+</html>

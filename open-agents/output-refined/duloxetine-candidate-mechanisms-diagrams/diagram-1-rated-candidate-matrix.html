@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram 1: The Rated Candidate List &mdash; Seven Candidates, Ten Features, No Winner</title>
+<style>
+  :root {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --good: #10B981; --good-soft: rgba(16,185,129,0.14); --good-tx: #047857;
+    --ok: #94A3B8; --ok-soft: rgba(148,163,184,0.14);
+    --bad: #EF4444; --bad-soft: rgba(239,68,68,0.14); --bad-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+      --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+      --good: #34D399; --good-soft: rgba(52,211,153,0.16); --good-tx: #6EE7B7;
+      --ok: #64748B; --ok-soft: rgba(100,116,139,0.20);
+      --bad: #F87171; --bad-soft: rgba(239,68,68,0.20); --bad-tx: #FCA5A5;
+      --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+      --shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F172A; --card: #1E293B; --text: #F9FAFB; --muted: #9CA3AF;
+    --border: #334155; --accent: #818CF8; --accent-soft: #1E1B4B; --accent-dark: #A5B4FC;
+    --good: #34D399; --good-soft: rgba(52,211,153,0.16); --good-tx: #6EE7B7;
+    --ok: #64748B; --ok-soft: rgba(100,116,139,0.20);
+    --bad: #F87171; --bad-soft: rgba(239,68,68,0.20); --bad-tx: #FCA5A5;
+    --warn-bg: rgba(245,158,11,0.12); --warn-br: #F59E0B; --warn-tx: #FCD34D;
+    --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #F9FAFB; --card: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --border: #E5E7EB; --accent: #6366F1; --accent-soft: #EEF2FF; --accent-dark: #4338CA;
+    --good: #10B981; --good-soft: rgba(16,185,129,0.14); --good-tx: #047857;
+    --ok: #94A3B8; --ok-soft: rgba(148,163,184,0.14);
+    --bad: #EF4444; --bad-soft: rgba(239,68,68,0.14); --bad-tx: #991B1B;
+    --warn-bg: #FEF3C7; --warn-br: #B45309; --warn-tx: #92400E;
+    --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; margin: 0; padding: 1.5rem 1rem;
+         background: var(--bg); color: var(--text); line-height: 1.55; }
+  .container { max-width: 1040px; margin: 0 auto; background: var(--card); padding: 1.75rem;
+               border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  h1 { font-size: 1.4rem; margin: 0 0 0.4rem; line-height: 1.25; }
+  .lead { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.4rem; }
+  .panel-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+                 color: var(--muted); margin: 1.6rem 0 0.5rem; }
+  .key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.1rem; font-size: 0.8rem; color: var(--muted);
+         background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+         padding: 0.7rem 0.9rem; margin-bottom: 1.2rem; }
+  .key b { color: var(--text); }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 860px; }
+  th, td { padding: 0.5rem 0.45rem; border-bottom: 1px solid var(--border); text-align: center; }
+  thead th { background: var(--bg); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.03em;
+             color: var(--muted); font-weight: 700; vertical-align: bottom; line-height: 1.3; }
+  thead th.cand { text-align: left; width: 210px; min-width: 190px; }
+  thead th.tier { text-align: left; width: 118px; }
+  td.cand { text-align: left; font-weight: 700; color: var(--text); font-size: 0.83rem; line-height: 1.35; }
+  /* Sub-label only. Must exclude .rank, whose colour/weight/display it would otherwise
+     clobber on specificity (0,1,2 beats 0,1,0), leaving an unreadable grey digit. */
+  td.cand span:not(.rank) { display: block; font-weight: 400; font-size: 0.72rem; color: var(--muted); }
+  td.tier { text-align: left; font-size: 0.7rem; color: var(--muted); line-height: 1.35; }
+  .rank { display: inline-block; width: 18px; height: 18px; line-height: 18px; border-radius: 50%;
+          background: var(--accent); color: #fff; font-size: 0.68rem; font-weight: 800;
+          text-align: center; margin-right: 0.35rem; vertical-align: 1px; }
+  .cell { font-weight: 800; font-size: 0.85rem; }
+  .yy { background: var(--good-soft); color: var(--good-tx); }
+  .y  { background: var(--good-soft); color: var(--good-tx); opacity: 0.75; font-weight: 700; }
+  .o  { background: transparent; color: var(--ok); font-weight: 400; }
+  .x  { background: var(--bad-soft); color: var(--bad-tx); }
+  tbody tr:hover td { background-color: var(--accent-soft); }
+  tbody tr:hover td.yy { background-color: var(--good-soft); }
+  tbody tr:hover td.x { background-color: var(--bad-soft); }
+  .flip { background: var(--warn-bg); border-left: 4px solid var(--warn-br); padding: 0.9rem 1.1rem;
+          border-radius: 8px; margin: 1.2rem 0; font-size: 0.88rem; }
+  .flip strong { color: var(--warn-tx); }
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
+  .rd { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 0.9rem; }
+  .rd h3 { margin: 0 0 0.3rem; font-size: 0.8rem; color: var(--accent-dark); letter-spacing: 0.02em; }
+  .rd p { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .rd p b { color: var(--text); }
+  .caption { color: var(--muted); font-size: 0.86rem; font-style: italic; margin-top: 1.3rem;
+             padding: 0.8rem 1rem; background: var(--accent-soft); border-radius: 8px;
+             border-left: 4px solid var(--accent); }
+  .caption em { font-style: normal; font-weight: 700; color: var(--text); }
+  .prov { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;
+          padding: 0.05rem 0.4rem; border-radius: 4px; background: var(--accent-soft);
+          color: var(--accent-dark); border: 1px solid var(--accent); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Seven candidates, ten features, and no row that covers you</h1>
+<p class="lead">Ranked by fit-to-you multiplied by evidence quality, and deliberately not by elegance. The most elegant candidate ranks third. The dullest ranks first. Nothing on this list explains more than half of you.</p>
+
+<div class="key">
+  <div><b>&#10003;&#10003;</b> predicts it natively</div>
+  <div><b>&#10003;</b> consistent with it</div>
+  <div><b>&#9675;</b> silent</div>
+  <div><b>&#10007;</b> predicts the <b>opposite</b></div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="cand">Candidate</th>
+      <th class="tier">Evidence tier</th>
+      <th>acute<br>worse</th>
+      <th>crash<br>absent</th>
+      <th>no cog.<br>content</th>
+      <th>sleep<br>better</th>
+      <th>vivid<br>dreams</th>
+      <th>less AM<br>fatigue</th>
+      <th>RLS<br>worse</th>
+      <th>pain<br>minimal</th>
+      <th>escit.<br>failed</th>
+      <th>nap<br>failure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="cand"><span class="rank">1</span>Anxiolysis + sleep continuity<span>"the boring one"</span></td>
+      <td class="tier"><b>RCT-backed.</b> The only positive trial at 20mg (Nicolini 2009)</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">2</span>Serotonergic sensory-gating dose ladder<span>Jensen 10mg vs Oranje 15mg</span></td>
+      <td class="tier"><b>Human, dose-graded.</b> Single lab; all single-dose</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">3</span>Chattarji delayed amygdala + Musazzi glutamate<span>the elegant one</span></td>
+      <td class="tier"><b>Animal-only.</b> The join has never been tested</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">4</span>Escitalopram-specific allosteric S2<span>a well-posed question</span></td>
+      <td class="tier"><b>Mechanistic inference.</b> Relevance never studied</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">5</span>Tonic/phasic LC-NE shift<span>demoted from #1</span></td>
+      <td class="tier"><b>Animal-only</b> for tonic. <b>Contradicted</b> for phasic</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell y">&#10003;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">6</span>Your CFS-aggravation hypothesis<span>your own idea</span></td>
+      <td class="tier"><b>Claim 1 established.</b> Claim 2 unstudied. Claim 3 speculation</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell yy">&#10003;&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+    <tr>
+      <td class="cand"><span class="rank">7</span>Chronic 5-HT2C adaptation<span>dead as a dissociation account</span></td>
+      <td class="tier"><b>Inference</b>, with one n=9 human study pointing the wrong way</td>
+      <td class="cell x">&#10007;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell o">&#9675;</td>
+      <td class="cell y">&#10003;</td>
+      <td class="cell o">&#9675;</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="panel-title">Three things to read off the matrix</div>
+<div class="readout">
+  <div class="rd">
+    <h3>NO ROW IS COMPLETE</h3>
+    <p>Not one candidate scores above <b>&#9675;</b> on more than five of the ten. <b>The best account is a composite, and the composite is the honest answer.</b></p>
+  </div>
+  <div class="rd">
+    <h3>ONE COLUMN IS EMPTY</h3>
+    <p><b>Nothing explains the restless legs.</b> Ten features, seven candidates, and that column has no hit at all. The list is not being stretched to cover everything.</p>
+  </div>
+  <div class="rd">
+    <h3>THE ACUTE COLUMN IS WHERE IT BREAKS</h3>
+    <p>One candidate predicts acute-worse. <b>Four predict its opposite.</b> That single column is why no unified theory survives.</p>
+  </div>
+</div>
+
+<div class="flip">
+  <strong>Why the order is what it is.</strong> Rank is fit-to-him &times; evidence quality. The dull candidate ranks first because it is the only one with a positive randomised trial at his actual dose, and it explains the three features he values most. The elegant candidate ranks third because elegance loses to a positive RCT. The candidate that was ranked <strong>first</strong> by the orchestrator now ranks <strong>fifth</strong>, because its central claim turned out to be a misreading of its own source. <span class="prov">[reasoning, not evidence]</span> on the ranking; each row's evidence tier is primary and verified.
+</div>
+
+<div class="caption">
+  The reader asked for <em>a list, not a verdict</em>, and said explicitly that he does not want a winner. He gets a list. But he is entitled to know the list has a shape: <em>candidate 2 for the acute half, candidate 3 for the crash half, candidates 1 and 5 for the sleep half</em>. Three mechanisms, three literatures, joined by nobody, tested in no human resembling him. <span class="prov">[reasoning, not evidence]</span>
+</div>
+
+</div>
+<script data-bridge="duloxetine-diagram-bridge">
+  /* Diagram bridge. Reports true content height to the embedding page so the iframe
+     can size itself: a fixed height cannot serve both desktop and mobile, and the
+     overflow is silently clipped. Also follows the parent page's theme.
+     postMessage is required because file:// iframes are opaque-origin, so the parent
+     cannot read contentDocument. The iframe's height attribute remains the no-JS
+     fallback. */
+  (function () {
+    // Measure the BODY border-box, never documentElement.scrollHeight: scrollHeight
+    // returns max(content, iframe viewport), so the frame's own height feeds back
+    // into the measurement. That makes the height attribute a floor -- the frame can
+    // only ever grow, leaving dead padding under short content -- and makes any check
+    // that compares rendered height to scrollHeight circular. The body border-box
+    // plus its margins is content-driven and viewport-independent.
+    function contentHeight() {
+      var b = document.body;
+      var cs = getComputedStyle(b);
+      return Math.ceil(
+        b.getBoundingClientRect().height +
+        (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      );
+    }
+    var lastH = -1;
+    function postHeight() {
+      if (window.parent === window) return;
+      var h = contentHeight();
+      if (h === lastH) return;
+      lastH = h;
+      window.parent.postMessage({ diagramHeight: h }, '*');
+    }
+    window.addEventListener('message', function (e) {
+      if (!e.data || (e.data.theme !== 'dark' && e.data.theme !== 'light')) return;
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+      lastH = -1;
+      postHeight();
+    });
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    // Text metrics change once fonts settle, which changes content height.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(postHeight);
+    if (document.readyState === 'complete') postHeight();
+  })();
+</script>
+</body>
+</html>
